@@ -36,7 +36,14 @@ definitions of done; the beads tracker (`br`) holds the executable work.
   Apache License 2.0, at your option; see LICENSE-MIT and LICENSE-APACHE.
   -/
   ```
-  Copied code (lean4-hash, lean-miniscript) keeps its own header, with its MIT notice beside it.
+  Third-party material:
+  - Admitted in the tree, each with a provenance sidecar or header line (source URL, commit, path,
+    licence), never the dual-licence header: MIT, BSD, ISC, CC0 or public domain, and CC-BY-4.0
+    (attribution kept in the sidecar).
+  - Kept out of the tree: Apache-2.0-only, share-alike (CC-BY-SA) and unlicensed material. Use a
+    pinned non-flake input read at test time, or replace it with vectors we generate ourselves.
+  - Copied code whose upstream file has no header gets a provenance comment (upstream repo, commit,
+    path, "MIT") with the upstream MIT notice in a file beside it, never the dual-licence header.
 - **Git.** Work on a feature branch; never commit or push to `master`; the owner merges PRs.
   Conventional commits (`feat(bitcoin): ...`). Commit messages and PR text describe the change
   only, with no tool or co-author attribution trailers. Never commit machine-local instruction files.
