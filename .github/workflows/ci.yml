@@ -1,0 +1,28 @@
+name: CI
+
+on:
+  push:
+    branches: [master]
+  pull_request:
+
+jobs:
+  check:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v6
+
+      - uses: cachix/install-nix-action@v31
+        with:
+          github_access_token: ${{ secrets.GITHUB_TOKEN }}
+
+      - name: Toolchain is Lean 4.35.0
+        run: nix develop -c lean --version | grep -F 'version 4.35.0,'
+
+      - name: No sorry
+        run: "! grep -rn sorry --include='*.lean' packages"
+
+      - name: nix flake check (lake build and lake test for every package)
+        run: nix flake check -L
+
+      - name: nix build
+        run: nix build -L && ./result/bin/cyberkrill

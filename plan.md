@@ -1,0 +1,186 @@
+# lean-cyberkrill: plan for a Lean 4 port of cyberkrill (v1)
+
+Goal: grow the Lean 4 ecosystem with reusable Bitcoin, Lightning and Fedimint libraries, and ship the
+cyberkrill CLI on top of them. Reference implementation: `github.com/douglaz/cyberkrill` @ `27cad1f`
+(read-only; all `file:line` references below are at that commit).
+
+Status: approved by the owner on 2026-10-19, with all eight defaults in section 6 (default #4 as
+amended there). Phase 0 bootstrapped this repository.
+
+## 1. Decisions
+
+| Topic | Decision |
+|---|---|
+| v1 scope | Offline libraries and commands **plus** the network commands (Bitcoin Core RPC, price feeds, LNURL-pay, Fedimint config fetch, DCA report). |
+| Out of v1 | Hardware wallets (Coldcard, Trezor, Jade, Tapsigner, Satscard); BDK (Electrum, Esplora, BDK bitcoind backend, BDK coin selection). |
+| MCP server | Never ported. |
+| Proof level | **M**: published test vectors for every library; proofs of encode/decode round-trips, of checksums catching what their spec says they catch, and of exact BTC/sats/msats conversions. No verified crypto. |
+| HTTPS | Our own ~100-line C wrapper over libcurl (OpenSSL backend) behind a small Lean interface that Lean core's HTTP client can replace later. Bitcoin Core RPC uses it too. |
+| Curve ops | libsecp256k1 (nixpkgs 0.7.1, recovery module on) for verify, recover and sign, behind one small Lean interface so a verified implementation can replace it after v1. |
+| SHA-256 | Copied from `pure-algebra/lean4-hash` @ `ab7eda4` (v4.33.1, MIT; `sha256_spec` proven against FIPS 180-4), ported to v4.35.0, attributed, spec reviewed. |
+| C code | Only in the `secp256k1` and `http-curl` packages. |
+| lean-miniscript | Copy a narrow subset of `febyeji/lean-miniscript` @ `cb9bc5f` (v4.32.0, MIT) and own it: `LeanMiniscript/Psbt/Codec.lean`, `Psbt/Fields.lean` and their dependencies (tx, serialization, script syntax, base64), about 1,400 lines, plus tests and the BIP174/370/371 vectors. Drop its `Secp256k1`/`LeanHash160` imports; hash through `sha256`. PSBT role modules are **not** copied (v1 only parses PSBTs; Core builds them). Base58Check: take only its vectors, write our own codec. Send general fixes upstream. |
+| Layout | One repo, `douglaz/lean-cyberkrill`, local path `/home/user/p/lean-cyberkrill`, several Lake packages in subdirectories, one nix flake and toolchain. At v1, decide package by package whether to split one out. |
+| Visibility | Private until v1, then public. Repo creation, pushes and Reservoir publication need the owner's go-ahead. |
+| Toolchain | Lean v4.35.0, packaged by this repo's flake (nixpkgs `lean4` is 4.29.1; lean4-nix stops at 4.34.0). Dynamic glibc build while private; static musl only for the public v1 release. |
+| frozenkrill | `--wallet-file` is in v1 for `onchain-list-utxos` only: a `Lean.Json` reader for both export shapes (single-sig, multisig; `cyberkrill-core/src/frozenkrill.rs:10-104`). `onchain-create-psbt`, `onchain-create-funded-psbt` and `onchain-move-utxos` reject the flag until BDK lands (in cyberkrill it only feeds the BDK route: `cyberkrill/src/main.rs:1617-1638`). Fixtures come from a published test mnemonic; the fixture at `frozenkrill.rs:243` is not copied. |
+| Licence | Dual **MIT OR Apache-2.0**, as cyberkrill. Detection details in section 5. |
+| Tracker and runs | beads (`br`) tracker; work runs as rloop Runs on feature branches; the owner merges PRs. |
+
+## 2. Packages and dependency order
+
+```
+sha256 ──► bitcoin ──► lightning
+                  └──► fedimint-invite
+secp256k1 (FFI)      http-curl (FFI)        (no Lean deps; nothing pure imports them)
+all six ──► cyberkrill (app)
+```
+
+Pure packages never import an FFI package. Curve operations that pure code needs (the PSBT pubkey
+check, BOLT11 recovery and signing) arrive as a supplied capability (a structure of functions) that the
+app fills from `secp256k1`. Proofs needing Mathlib, if any, go in a separate `<pkg>-proofs` package so
+the libraries stay Mathlib-free.
+
+| Package | v1 contents | Vectors | Proof obligations (level M) |
+|---|---|---|---|
+| `sha256` | SHA-256 and SHA-256d, ported from lean4-hash; MIT notice kept beside the copied files. | NIST SHA-256 examples (FIPS 180-4 / CAVP short and long messages). | Keep `sha256_spec` (implementation equals the FIPS 180-4 spec) proven after the port; review that the spec matches FIPS 180-4. |
+| `secp256k1` | Custom Lake target building a small C adapter over nix libsecp256k1 0.7.1 (recovery module): parse pubkey (33/65 bytes), ECDSA verify, recover from a 64-byte compact sig plus recid, recoverable RFC 6979 signing. | BOLT #11 spec signatures (recover the published payee key); Wycheproof ECDSA secp256k1 verify vectors. | None (FFI). The interface is documented so a verified implementation can replace it. |
+| `bitcoin` | hex; CompactSize and consensus serialization; base58 and Base58Check (own); bech32/bech32m (own); scriptPubKey ↔ address (P2PKH, P2SH, P2WPKH, P2WSH, P2TR) per network; exact `Amount` in msat with BTC/sats/msats parse and print; BIP39 entropy → English words; tx and PSBT codec subset from lean-miniscript, with `validPublicKey` (`Psbt/Fields.lean:206`, which called `ECDSA.parsePublicKey`) taking the supplied pubkey check; SLIP-132 version-byte table and conversion (see defaults, section 6); P2WPKH weight and fee estimation ported from cyberkrill (section 3). | BIP173/BIP350 valid/invalid strings and segwit addresses; lean-miniscript's base58 vectors; BIP174/370/371 vectors; Trezor BIP39 `vectors.json` (English); SLIP-0132 examples; cyberkrill's weight test (`cyberkrill-core/src/bitcoin_rpc.rs:1928`). | bech32/m: `decode (encode hrp data) = some (hrp, data)`; `decode s = some _ → checksum s verifies`; for strings of at most 90 characters, any substitution of at most 4 data characters is rejected (BIP173 "Checksum", data part at most 89 chars). Base58: bytes ↔ string round-trip including leading zeros. Base58Check: round-trip plus soundness (decode succeeds only when the 4-byte SHA-256d checksum matches). It gives no error-detection guarantee, so none is claimed. CompactSize and serialization: round-trip; non-canonical CompactSize rejected. Address ↔ script round-trip per type. Amounts: parse/print round-trip; BTC ↔ sats ↔ msats exact; sub-msat precision rejected. PSBT: `parse (serialize p) = some p` for valid `p`; parser rejects duplicate keys and trailing data (existing upstream proofs cover framing round-trip only). BIP39: words ↔ entropy round-trip; decode rejects a bad checksum. SLIP-132: conversion round-trip. |
+| `lightning` | BOLT11 decode and encode: hrp (currency, amount multiplier), timestamp, tagged fields, signing hash (SHA-256 over hrp bytes plus data), 65-byte recoverable signature as bytes (recover/sign through the supplied capability); LNURL bech32 decode (LUD-01); Lightning address → LNURL-pay URL (LUD-16); LNURL-pay response models (LUD-06). | BOLT #11 spec examples (published key and invoices); LUD examples. | Tagged-field round-trip; hrp amount ↔ msat exact round-trip with rejection of invalid pico amounts; signing hash equals its spec definition; bech32 round-trip and checksum soundness. Invoices exceed 90 characters, so the 4-error theorem does not apply. |
+| `fedimint-invite` | `fed1…` bech32m invite codes with Fedimint consensus encoding (peers, API URLs, federation id, optional API secret; `--skip-api-secret` compatibility with fedimint-cli). | The `fed1…` strings in `fedimint-lite/src/lib.rs` tests (public; review each before copying). | Invite encode/decode round-trip; consensus-encoding round-trip. |
+| `http-curl` | ~100-line C wrapper over nix libcurl (OpenSSL backend) plus a Lean interface: GET/POST, headers, basic auth, bounded response size, connect and total timeouts, structured errors. CA fix: probe core Lean's CA-path list or embed nix's cacert bundle, and always honour `SSL_CERT_FILE`. | Localhost stub server only (plain HTTP plus TLS with a self-signed cert via `SSL_CERT_FILE`); no internet in tests. | None (FFI). |
+| `cyberkrill` | CLI (lean4-cli if it has a v4.35-compatible release, else a small hand-written parser); entropy; capability wiring; Core JSON-RPC client (cookie or user/password); price feeds and median; DCA report; LNURL-pay flow; Fedimint config fetch (rewrites guardian `wss://` to `https://`, GET/POST); frozenkrill reader; JSON output. | Golden outputs (offline commands); recorded RPC and HTTPS responses for network commands. | None beyond what its libraries carry. |
+
+v1 commands (from the `Commands` enum in `cyberkrill/src/main.rs`): `ln-decode-invoice`,
+`ln-decode-lnurl`, `ln-encode-invoice`, `ln-generate-invoice`, `fm-decode-invite`, `fm-encode-invite`,
+`fm-fetch-config`, `onchain-list-utxos`, `onchain-create-psbt`, `onchain-create-funded-psbt`,
+`onchain-move-utxos`, `onchain-decode-psbt`, `onchain-dca-report`, `convert-amount`, `version`,
+`generate-mnemonic`. Not ported: every `hw-*` command, `mcp-server`, `--electrum`, `--esplora`.
+
+## 3. Outstanding facts each phase must honour
+
+- **Full Core RPC list.** `listunspent`, `scantxoutset`, `getdescriptorinfo`, `deriveaddresses`,
+  `createpsbt`, `walletcreatefundedpsbt`, plus four that were missing from the first list:
+  `importdescriptors` (`bitcoin_rpc.rs:764`), `getblockchaininfo` (`:725`), `getreceivedbyaddress`
+  (`:1172`), `getrawtransaction` (`:1310`). `list_unspent_for_descriptor` imports the descriptor into
+  the node's wallet and ignores errors (`:774`). Keep that behaviour and document it.
+- **Local weight and fee estimation.** `onchain-create-psbt` and `onchain-move-utxos` compute fees
+  locally. The estimate assumes every input is `P2WPKH_MAX` and every output script is 22 bytes
+  (`bitcoin_rpc.rs:982-993`), rounded up to vbytes as in `calculate_fee_with_feerate` (`:997`). Port it
+  exactly. `move_utxos` selects inputs locally, largest first, when `--max-amount` is set (`:1329-1345`).
+  Only `onchain-create-funded-psbt` leaves coin selection to Core.
+- **Exact amounts vs `f64`.** cyberkrill sorts and sums BTC as `f64` (`bitcoin_rpc.rs:1330-1345`), and
+  `onchain-decode-psbt` prints `value_btc` from `f64` (`main.rs` `decode_psbt`, from `:2293`). The port
+  parses Core's JSON numbers exactly and uses msat `Amount` throughout. Golden tests compare parsed
+  JSON values, not bytes, and any edge-case difference from cyberkrill is listed in the README.
+- **BDK route on `--descriptor` + `--bitcoin-dir`.** cyberkrill sends that combination to BDK on
+  `onchain-list-utxos` (`main.rs:1506-1508`) and on the three PSBT commands (`:1628-1630`, `:1738-1740`,
+  `:1871-1873`). v1 rejects it with a clear message (section 6) and does not quietly run Core.
+- **Exactly one OpenSSL.** Lean 4.35 only puts OpenSSL on the link line; its runtime hooks are stubs,
+  and the flags depend on Lean's build configuration (`src/CMakeLists.txt` L386-395 @ v4.35.0). The
+  toolchain links OpenSSL 3.6.0, nix curl 3.6.5. The final executable must contain exactly one
+  OpenSSL: build curl against the toolchain's OpenSSL or the reverse, settled in Phase 1.
+- **Lake linking.** Lake v4.35 deprecates `extern_lib`. Use a custom target with
+  `moreLinkObjs`/`moreLinkLibs` (Lake README @ v4.35.0). An executable gets its dependencies' link objects and
+  libraries, but only the root package's raw link flags (`Lake/Build/Module.lean` L1216-1254,
+  `Build/Executable.lean` L20-29), so each FFI package ships its own link targets.
+- **CA bundle.** See `http-curl` above. A nix-built binary otherwise finds no CA bundle on non-NixOS
+  hosts.
+- **Price feeds.** `cyberkrill-core/src/price_feed.rs` has nine feed URLs (Coinbase, CoinGecko,
+  Kraken, Bitstamp, Gemini, CEX.io, Yadio, blockchain.info, Fedi), but `convert-amount --help` says
+  "median of 5". Check which is right in Phase 9 and match the code's behaviour.
+- **Entropy.** `generate-mnemonic` uses `rand::rng()` (`main.rs:2651-2669`). Verify that Lean 4.35's
+  `IO.getRandomBytes` draws from the OS CSPRNG before using it; otherwise read `getrandom` through a
+  C call in `secp256k1`.
+- **SLIP-132 has no v1 caller.** Its only caller is `trezor.rs:12,196` (out of v1). The scope lists it,
+  so see section 6.
+- **Static musl release task (Phase 10).** Known to work: source-build the Lean 4.35 toolchain against
+  musl (~36 min, no patches; prefetch mimalloc, cadical and leantar; turn the baked-in `.so` paths into
+  `-l` flags) plus a `LEAN_CC` wrapper ending in `-Wl,-Bstatic`. The probe recipe is committed under
+  `nix/musl/` in Phase 0. Mixing the official glibc runtime with musl also links, but it is not shipped.
+- **Safety.** Fixtures and published vectors only. No real devices, no signing outside test vectors, no
+  broadcast, no mainnet funds. No keys, seeds, xprvs or personal addresses, xpubs or device dumps in
+  the repo (cyberkrill's root `trezor_address.json` and `test.psbt` are not copied).
+
+## 4. Phases (one rloop Run each unless noted)
+
+Every Run's definition of done (DoD) includes:
+- `nix build` and `nix flake check` exit 0;
+- each touched package's `lake build` and `lake test` exit 0;
+- no `sorry` (`grep -rn sorry --include=*.lean` is empty);
+- `#print axioms` on every listed theorem shows only `propext`, `Classical.choice` and `Quot.sound`;
+- the stated vector counts pass;
+- README updated.
+
+| # | Phase | Depends on | DoD (beyond the common one) |
+|---|---|---|---|
+| 0 | **Bootstrap** (by hand after go-ahead; rloop needs a branch and a tracker): local repo; flake packaging the official v4.35.0 release (dynamic); seven package skeletons with lakefiles; licence files and headers; this `plan.md` at the repo root; `nix/musl/` (the musl toolchain build script and nix shell from the earlier probe, reviewed before commit); `AGENTS.md`; GitHub Actions CI (install-nix-action only, no binary cache action); `br init`; transfer this plan to beads; private GitHub repo (owner go-ahead). | — | `nix develop -c lean --version` reports 4.35.0; a hello executable builds; CI green on a PR; subdirectory `licenseFiles` paths verified (section 5); beads graph exists. |
+| 1a | `secp256k1` package + **link spike**: one executable linking libsecp256k1 and the real nix libcurl through Lake targets (wrapper not yet written). | 0 | Recovery and signing vectors pass, using precomputed 32-byte message hashes (`sha256` arrives in Phase 2); `ldd`/`nm` shows exactly one libssl/libcrypto; OpenSSL mismatch resolved. |
+| 1b | `http-curl` package | 1a | Localhost GET/POST, auth, size limit, timeout and error-path tests pass; `SSL_CERT_FILE` and the CA fallback work with a self-signed cert. |
+| 2 | `sha256` port | 0 | `sha256_spec` re-proven on 4.35; NIST vectors pass; attribution in place. |
+| 3a | `bitcoin` codecs: hex, CompactSize, base58/Base58Check, bech32/m, amounts, address ↔ script | 2 | BIP173/350 and base58 vectors pass; all codec obligations in section 2 proven except the 4-error theorem. |
+| 3b | bech32 4-error theorem (strings ≤ 90 chars) | 3a | Theorem proven (in `bitcoin` or `bitcoin-proofs`), or the Run stops and reports to the owner. No weaker statement without approval. |
+| 4 | `bitcoin` II: tx/PSBT subset copied and ported, pubkey capability, BIP39, SLIP-132, weight estimation | 3a | BIP174/370/371, BIP39 and SLIP-132 vectors pass; PSBT, BIP39 and SLIP-132 obligations proven; weight matches cyberkrill's test values. |
+| 5 | `lightning` | 3a | BOLT #11 vectors decode and re-encode, including signatures through a test capability; obligations proven. |
+| 6 | `fedimint-invite` | 3a | fedimint-lite vectors round-trip; obligations proven. |
+| 7 | App, offline commands: `ln-decode-invoice`, `ln-decode-lnurl`, `ln-encode-invoice`, `fm-decode-invite`, `fm-encode-invite`, `onchain-decode-psbt`, `convert-amount` (units only), `generate-mnemonic`, `version` | 1a, 4, 5, 6 | Goldens captured from cyberkrill @ `27cad1f` (`nix build --no-link github:douglaz/cyberkrill/27cad1faba86260b06665a89f0af5134d23525c2`) on the published inputs match as JSON values; mnemonic tested with injected entropy and the BIP39 vectors. |
+| 8 | App, Core RPC commands: `onchain-list-utxos` (incl. `--wallet-file`), `onchain-create-psbt`, `onchain-create-funded-psbt`, `onchain-move-utxos` | 1b, 4, 7 | Recording generator committed (throwaway nix regtest `bitcoind`, published test mnemonics; section 6 #4) and its recordings checked in; every RPC call in section 3 exercised against those recorded responses on a localhost stub; cookie and user/password auth; local fee and selection match cyberkrill on fixtures; BDK combinations and `--wallet-file` rejections tested. |
+| 9 | App, HTTPS commands: price feeds and median (`convert-amount` fiat, fiat output amounts), `ln-generate-invoice`, `fm-fetch-config`, `onchain-dca-report` | 1b, 5, 6, 7 | Recorded responses for every feed and endpoint, via the stub server; feed count settled; `wss://`→`https://` rewrite tested. |
+| 10 | v1 release: static musl toolchain and static binary; licence and Reservoir checks; per-package split decisions; upstream fixes to lean-miniscript and lean4-hash | all | Static binary runs on a non-nix host; the owner decides going public, splits and Reservoir publication. |
+
+Order: 0 → 1a → 1b → 2 → 3a → {3b, 4, 5, 6} → 7 → 8 → 9 → 10. rloop works one checked-out branch
+at a time, so phases run one after another unless separate worktrees and branches are set up for
+the independent ones (1 vs 2–3a; 3b–6).
+
+## 5. Licence: making dual-licence detection work
+
+- **Root layout: `LICENSE-MIT` + `LICENSE-APACHE`, no root `LICENSE`**, exactly as cyberkrill.
+  - GitHub's server reports this layout as GraphQL `licenseInfo.spdxId = Apache-2.0`. Checked
+    2026-10-19 on `douglaz/cyberkrill`, `serde-rs/serde`, `rust-lang/cargo` and `rust-lang/rust`.
+  - Reservoir's indexer reads exactly that field (`scripts/utils/repo.py`, `license_id(repo['licenseInfo'])`)
+    and admits OSI-approved ids. So this layout passes, and Reservoir shows "Apache 2.0".
+- **Rejected: one root `LICENSE` holding both texts.** licensee 9.18 (the library GitHub uses) returns
+  NOASSERTION for it when run locally, and Reservoir drops NOASSERTION. This was not tested on GitHub's
+  server, but the risk isn't worth taking. Note that the same local run also returned NOASSERTION for the
+  two-file layout that GitHub's server detects, so the CLI is not a reliable stand-in for the server.
+  Mixed layouts (`LICENSE` + `LICENSE-MIT`) are untested on the server.
+- **Lakefiles:** `license := "MIT OR Apache-2.0"` (a valid SPDX expression) and
+  `licenseFiles := #["LICENSE-MIT", "LICENSE-APACHE"]`. The default `#["LICENSE"]` would not exist.
+  - Trade-off: Lake's own docstring (`Lake/Config/PackageConfig.lean` @ v4.35.0) says Reservoir
+    "currently only supports single identifier SPDX expressions". Reservoir's package page shows the
+    GitHub-detected id anyway.
+  - So the accurate expression lives in the metadata while Reservoir displays "Apache 2.0", which
+    understates the MIT option. `license := "Apache-2.0"` would match the display but misstate the
+    grant. Default: the accurate expression; re-check at v1.
+- **Subdirectory packages:** Phase 0 checks whether `licenseFiles` accepts `../../LICENSE-MIT`. If not,
+  each package carries copies of both files (GitHub detection only reads the repo root).
+- **Copied code** (lean4-hash, lean-miniscript) stays MIT: its original licence notice sits beside the
+  copied files, never at the root, and each copied file keeps its original copyright header.
+- **Our headers:** `Copyright (c) 2026 lean-cyberkrill developers. Released under the MIT License or the
+  Apache License 2.0, at your option; see LICENSE-MIT and LICENSE-APACHE.`
+
+## 6. Defaults needing approval (approving the plan approves these)
+
+1. SLIP-132 ships as a library function in `bitcoin` with vectors, but no CLI command (its only
+   cyberkrill caller is the Trezor code).
+2. bech32 proof scope:
+   - The 4-error theorem covers strings of at most 90 characters (addresses).
+   - BOLT11, LNURL and invites get round-trip plus checksum soundness, because BIP173 gives no 4-error
+     guarantee past 89 data characters.
+   - If the theorem needs Mathlib, it goes in `bitcoin-proofs`.
+   - If it proves out of reach, it comes back to the owner.
+3. Proof hygiene: no `sorry`; no `native_decide` in library or proof modules; axioms limited to
+   `propext`, `Classical.choice` and `Quot.sound`. lean4-hash already enforces this
+   (`HashTest/Audit/AxiomGate.lean`). lean-miniscript's PSBT proof files are clean, but its
+   `Psbt/CodecExamples.lean` (22) and `Psbt/FieldsExamples.lean` (3) use `native_decide`. Those vectors
+   become `lake test` checks, and `native_decide` stays allowed in test-only files.
+4. Network tests replay recorded responses on a localhost stub only; no test needs a live `bitcoind`
+   or the internet. (Amended on approval.) The Core RPC recordings are generated by a committed
+   script that runs a throwaway regtest `bitcoind` from nix in a temporary directory, with wallets
+   restored from published test mnemonics. Never record from the owner's own node or wallets.
+5. `--descriptor` + `--bitcoin-dir` (the BDK route in cyberkrill) is rejected in v1 with a clear
+   message, as is `--wallet-file` on the three PSBT commands.
+6. Golden parity compares JSON values, not bytes; any exact-amount differences from cyberkrill's `f64`
+   are documented.
+7. Lakefile licence string `MIT OR Apache-2.0`; copyright holder "lean-cyberkrill developers".
+8. Fall back to a hand-written CLI parser if lean4-cli has no v4.35-compatible release.

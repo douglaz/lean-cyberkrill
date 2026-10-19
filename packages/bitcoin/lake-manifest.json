@@ -1,0 +1,14 @@
+{"version": "1.3.0",
+ "packagesDir": ".lake/packages",
+ "packages":
+ [{"type": "path",
+   "scope": "",
+   "name": "sha256",
+   "manifestFile": "lake-manifest.json",
+   "inherited": false,
+   "dir": "../sha256",
+   "copy": false,
+   "configFile": "lakefile.lean"}],
+ "name": "bitcoin",
+ "lakeDir": ".lake",
+ "fixedToolchain": false}
