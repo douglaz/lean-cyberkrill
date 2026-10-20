@@ -52,7 +52,7 @@ definitions of done; the beads tracker (`br`) holds the executable work.
   - Admitted in the tree, each with a provenance sidecar or header line (source URL, commit, path,
     licence), never the dual-licence header: MIT, BSD, ISC, CC0 or public domain, and CC-BY-4.0
     (attribution and a note of any changes, for example "extracted and reformatted", kept in the
-    sidecar). Material offered under a choice that includes MIT (such as cyberkrill's
+    sidecar). Material offered under a choice that includes MIT (such as fedimint-lite's
     `MIT OR Apache-2.0`) is taken under MIT.
   - Kept out of the tree: Apache-2.0-only, share-alike (CC-BY-SA) and unlicensed material. Use a
     pinned non-flake input read at test time, or replace it with vectors we generate ourselves.
