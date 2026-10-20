@@ -16,20 +16,32 @@ definitions of done; the beads tracker (`br`) holds the executable work.
 
 ## Rules for this codebase
 
-- **Reference only.** cyberkrill @ `27cad1f` is read, never modified. Golden outputs come from
-  `nix build --no-link github:douglaz/cyberkrill/27cad1faba86260b06665a89f0af5134d23525c2`, never
-  from a local working copy.
+- **Reference only.** cyberkrill @ `27cad1f` is read, never modified. Golden outputs and derived
+  expectations come from
+  `nix build --no-link github:douglaz/cyberkrill/27cad1faba86260b06665a89f0af5134d23525c2`, or from
+  a throwaway clone of that commit in a temp dir built with that commit's own `nix develop`, never
+  from `/home/user/p/cyberkrill`. A clone only gains a temporary test that calls the pure functions
+  its bead names, never one that opens a connection. Fetch its dependencies first (network allowed
+  for that step only), then run the test offline inside `unshare -rn sh -c 'ip link set lo up && …'`
+  with `HOME` set to a temp dir. Commit the script and its output. If the clone does not build, use
+  the cross-check the bead names and mark the expectation hand-derived in README.
 - **Package boundaries.** Pure packages never import `secp256k1` or `http-curl`. Curve operations reach
   pure code as a supplied structure of functions. C code lives only in those two packages. Proofs
   that need Mathlib go in a separate `<pkg>-proofs` package.
 - **Proof hygiene.** No `sorry` anywhere. No `native_decide` in library or proof modules (test files
   may use it). `#print axioms` on every theorem a phase lists shows only `propext`,
   `Classical.choice` and `Quot.sound`. Never weaken a theorem the plan states; stop and report.
-- **Safety.** Tests use published vectors, published test mnemonics and recordings from a throwaway
-  regtest node only, and never reach the internet. Nothing committed contains keys, seeds, xprvs, or
-  real addresses, xpubs or device dumps. No hardware wallets, no signing outside test vectors, no
-  broadcast, no mainnet funds.
-- **Licence.** New files start with:
+- **Safety.** Tests use only published vectors, published test mnemonics, the BOLT #11
+  specification's published example private key (tests only), recordings from a throwaway regtest
+  node, and synthetic or script-generated fixtures under the third-party rule (for example
+  cyberkrill's captured outputs on those inputs, synthetic provider responses, our own LNURL and LUD
+  JSON, values a committed script derives from published inputs). Never anything from the owner's
+  node, wallets or devices. Tests never reach the internet, port 8332 or `~/.bitcoin`. Nothing
+  committed contains private keys, seeds, xprvs, tprvs or WIF keys, or real addresses, xpubs or
+  device dumps, apart from that BOLT #11 example key. No hardware wallets, no signing outside test
+  vectors, no broadcast, no mainnet funds.
+- **Licence.** New Lean, C and script files we write start with (third-party and copied files follow
+  the rule below; JSON and other formats without comments need none):
   ```
   /-
   Copyright (c) 2026 lean-cyberkrill developers. Released under the MIT License or the
@@ -39,13 +51,16 @@ definitions of done; the beads tracker (`br`) holds the executable work.
   Third-party material:
   - Admitted in the tree, each with a provenance sidecar or header line (source URL, commit, path,
     licence), never the dual-licence header: MIT, BSD, ISC, CC0 or public domain, and CC-BY-4.0
-    (attribution kept in the sidecar).
+    (attribution and a note of any changes, for example "extracted and reformatted", kept in the
+    sidecar). Material offered under a choice that includes MIT (such as cyberkrill's
+    `MIT OR Apache-2.0`) is taken under MIT.
   - Kept out of the tree: Apache-2.0-only, share-alike (CC-BY-SA) and unlicensed material. Use a
     pinned non-flake input read at test time, or replace it with vectors we generate ourselves.
   - Copied code whose upstream file has no header gets a provenance comment (upstream repo, commit,
     path, "MIT") with the upstream MIT notice in a file beside it, never the dual-licence header.
 - **Git.** Work on a feature branch; never commit or push to `master`; the owner merges PRs.
-  Conventional commits (`feat(bitcoin): ...`). Commit messages and PR text describe the change
+  Pushes need the owner's go-ahead (plan.md §1 Visibility), and rloop Runs never push; this
+  overrides the `git push` line in the beads Session Protocol below. Conventional commits (`feat(bitcoin): ...`). Commit messages and PR text describe the change
   only, with no tool or co-author attribution trailers. Never commit machine-local instruction files.
 
 <!-- agent-discipline-v1 -->
