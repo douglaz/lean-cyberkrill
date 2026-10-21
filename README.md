@@ -349,8 +349,13 @@ tests cover both matching and mismatched parity. This matches rust-bitcoin
 `partial_sigs` keys and descriptors. libsecp256k1's own parse, and so
 `secp256k1::PublicKey::from_slice`, accepts a hybrid key whose prefix matches
 the y parity; cyberkrill reaches it for PSBT `bip32_derivation` keys and for
-`ln-encode-invoice`'s JSON keys. Bead `lck-decide-hybrid-pubkey-xgr` decides
-whether those two paths follow it. All buffer lengths and the
+`ln-encode-invoice`'s JSON keys. Owner decision (2026-10-21, bead
+`lck-decide-hybrid-pubkey-xgr`): both paths follow it, through a second
+function, `compressPubkey`, that Phase 4a (1 of 3) adds. The `bitcoin`
+PSBT codec keeps 04 and hybrid bip32 keys as the bytes it read, where
+rust-bitcoin rewrites them to 33-byte compressed, and the app rejects two
+encodings of one point in one bip32 map, as cyberkrill does.
+All buffer lengths and the
 recovery-id range are guarded before libsecp256k1 sees the corresponding input.
 The package keeps `"packages": []` in its Lake manifest and uses the existing
 `moreLinkObjs` / `moreLinkLibs` targets.
