@@ -67,6 +67,10 @@ def mutations():
     yield "S8", "launcher-failure", "launcher", 'args := #["-I", "../http-curl/test/responder.py", "--port", toString config.port,', 'args := #["-I", "../http-curl/test/responder.py", "--port", "0",', "S8 occupied launcher message"
     yield "S8", "double-reap", "launcher", 'unless ← reaped.get do', 'if true then', "S8 occupied launcher message"
     yield "S8", "missing-recording-error", "launcher", 'config.recordings\n', '(config.recordings.filter fun path => !path.endsWith "missing-recording.json")\n', "S8 missing recording launcher message"
+    framing = '("content-length", "transfer-encoding")'
+    yield "S8", "framing-content-length", "stub", framing, '("transfer-encoding",)', "S8 framing content-length rejected"
+    yield "S8", "framing-transfer-encoding", "stub", framing, '("content-length",)', "S8 framing transfer-encoding rejected"
+    yield "S8", "framing-case", "stub", 'name.lower() in ' + framing, 'name in ("Content-Length", "Transfer-Encoding")', "S8 framing transfer-encoding rejected"
     yield "S9", "recorded-status", "stub", 'self.send_response(int(response.get("status", 200)))', 'self.send_response(200 if response.get("status") == 404 else int(response.get("status", 200)))', "S9 recorded 404"
     yield "S9", "text-body", "stub", 'return 0 if body_key(body) == self.body else None', 'return 0', "S9 text near miss"
     yield "S9", "binary-body", "stub", 'base64.b64decode(selector["base64"], validate=True)', 'b"wrong"', "S9 binary match"
@@ -120,9 +124,9 @@ def main():
             assert path.read_bytes() == originals[kind]
         # Rebuild restored sources, so subsequent test runs cannot use a mutated binary.
         subprocess.run(["lake", "build", "HttpCurlTests"], check=True)
-    assert len(records) == 69, ("dropped mutation", len(records))
+    assert len(records) == 72, ("dropped mutation", len(records))
     (logs / "records.json").write_text(json.dumps(records, indent=2) + "\n")
-    print(f"stub mutations: {len(records)}/69 detected; production sources restored", flush=True)
+    print(f"stub mutations: {len(records)}/72 detected; production sources restored", flush=True)
 
 
 if __name__ == "__main__":

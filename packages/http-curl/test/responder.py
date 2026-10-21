@@ -74,6 +74,11 @@ class Entry:
             raise ValueError("responses must be nonempty")
         if "authorization" in spec and int(spec["unauthorized"]["status"]) != 401:
             raise ValueError("unauthorized response must have status 401")
+        recorded = spec["responses"] + ([spec["unauthorized"]] if "unauthorized" in spec else [])
+        for response in recorded:
+            for name in response.get("headers", {}):
+                if name.lower() in ("content-length", "transfer-encoding"):
+                    raise ValueError(f"recorded framing header not allowed: {name}")
 
     def match(self, method, path, body):
         if method != self.spec["method"]:

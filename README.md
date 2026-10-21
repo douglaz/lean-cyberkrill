@@ -981,8 +981,10 @@ A response object has optional `status` (default 200), optional `headers` (a
 name/value object), and either `json` (any JSON value, emitted with exact decimal
 values and application/json) or `text` (UTF-8, text/plain; omission means empty).
 A recorded `Content-Type` replaces the default, with a case-insensitive header
-name comparison. The stub writes Content-Length. Fixture headers should not
-override framing.
+name comparison. The stub writes Content-Length itself. A recorded
+`Content-Length` or `Transfer-Encoding` header, in any letter case and in any
+response including `unauthorized`, is rejected at load: the stub exits 1 with a
+`framing header` error before printing READY.
 
 Both 599 diagnostics and each request-log line include `method`, `path` and
 `body`. Body is the original UTF-8 text, or `{"base64":"..."}` for non-UTF-8
@@ -1044,7 +1046,7 @@ The driver pins **35/35**: the unchanged 22 T1–T13/C1–C9 cases above plus:
 | S5 | Example file over plain HTTP; response status, body, header and cleanup |
 | S6 | Same example over trusted TLS and cleanup |
 | S7 | Same example at a runtime-selected fixed port |
-| S8 | Occupied listening port: nonzero exit, no READY, launcher error with that exit code; missing recording error with exit 1 |
+| S8 | Occupied listening port: nonzero exit, no READY, launcher error with that exit code; missing recording error with exit 1; recorded `Content-Length` (title case) and `transfer-encoding` (lower case) response headers fail nonzero before READY with a `framing header` error, while the same entry without them starts and serves its recorded status |
 | S9 | Raw/binary bodies, recorded 404, binary log/diagnostic, first-entry precedence, no legacy fallback |
 | S10 | Certificate/key/directory cleanup on callback exception |
 | S11 | S6 from the sibling cyberkrill package directory |
@@ -1066,7 +1068,7 @@ requires both a nonzero exit and the named assertion, and restores exact source
 bytes in `finally`. It also rebuilds the restored executable. No tests, expected
 values, fixtures or index entries are changed. Run without concurrent writers.
 The measured run exited 0 and printed
-`stub mutations: 69/69 detected; production sources restored`.
+`stub mutations: 72/72 detected; production sources restored`.
 
 The following red-run table records every mutation. Each command is
 `lake test -- --only <Case>` inside `nix develop`; each exit was **1**.
@@ -1130,6 +1132,9 @@ names identify the exact replacements in `check-stub-mutations.py`.
 | S8 | `launcher-failure` | 1 | `S8 occupied launcher message` |
 | S8 | `double-reap` | 1 | `S8 occupied launcher message` |
 | S8 | `missing-recording-error` | 1 | `S8 missing recording launcher message` |
+| S8 | `framing-content-length` | 1 | `S8 framing content-length rejected` |
+| S8 | `framing-transfer-encoding` | 1 | `S8 framing transfer-encoding rejected` |
+| S8 | `framing-case` | 1 | `S8 framing transfer-encoding rejected` |
 | S9 | `recorded-status` | 1 | `S9 recorded 404` |
 | S9 | `text-body` | 1 | `S9 text near miss` |
 | S9 | `binary-body` | 1 | `S9 binary match` |
@@ -1164,7 +1169,7 @@ streams in `.lake/`. No gate output was piped through a filter.
 | `packages/cyberkrill` | `nix develop -c lake test` | 0; builds the launcher import and declaration reference |
 | root | `nix develop -c bash scripts/check-link-spike.sh` | 0; includes HttpCurlTests one-OpenSSL audit |
 | `packages/http-curl` | `nix develop -c python3 -I check-negative-mutations.py` | 0; `negative mutations: 36/36 detected; production sources restored` |
-| `packages/http-curl` | `nix develop -c python3 -I check-stub-mutations.py` | 0; `stub mutations: 69/69 detected; production sources restored` |
+| `packages/http-curl` | `nix develop -c python3 -I check-stub-mutations.py` | 0; `stub mutations: 69/69 detected; production sources restored` (before review round 1; 72/72 after it, below) |
 | root | `grep -rnw sorry --include='*.lean' --exclude-dir=.lake packages` | 1; no matches |
 | root | `git ls-files -- '*.key' '*.pem' '*.crt' '*.p12'` | 0; no paths |
 | root | `git grep -n -e 'PRIVATE'' KEY'` | 1; no matches |
@@ -1191,7 +1196,15 @@ re-run after the rebase: the files they mutate (`test/responder.py` and
 `HttpCurlTestSupport.lean` for the stub script; `link_shim.c` and
 `HttpCurl.lean` for Part 1's) are byte-identical to the pre-rebase tree and to
 `master` respectively, and all 38 of Part 1's mutation targets still occur
-exactly once.
+exactly once. Review round 1 then made `test/responder.py` reject recorded
+framing headers at load, so it is no longer byte-identical to the pre-rebase
+tree and the stub script was re-run: in `packages/http-curl`,
+`nix develop -c lake test` exited **0** with `http-curl cases: 35/35` and
+`nix develop -c python3 -I check-stub-mutations.py` exited **0** with
+`stub mutations: 72/72 detected; production sources restored`; at the root,
+`nix flake check -L` exited **0** and the check drv is now
+`/nix/store/4hqvfxcmg9f5lcnp91gj1b274230kar0-cyberkrill-0.1.0.drv`, whose
+`nix log` holds `http-curl cases: 35/35` and `S8: PASS`.
 
 After host tests, `pgrep -af 'python3 -I [^ ]*responder[.]py'` exited 1 with
 no output. Gate streams are captured separately in root

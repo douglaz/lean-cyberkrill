@@ -245,6 +245,27 @@ private def runStubCase (name : String) : IO Unit := do
       catch error => pure error.toString
     check "S8 missing recording launcher message"
       (raised.startsWith "stub failed before READY (exit 1):")
+    let entry (headers : String) :=
+      "{\"entries\":[{\"method\":\"GET\",\"path\":\"/framing\",\"responses\":[{\"status\":202," ++
+        "\"headers\":{\"X-Fixture\":\"framing\"" ++ headers ++ "},\"text\":\"framing\"}]}]}"
+    let fixture (label : String) := occupied.tempDir / s!"framing-{label}.json"
+    let rejected := #[("content-length", ",\"Content-Length\":\"7\""),
+      ("transfer-encoding", ",\"transfer-encoding\":\"chunked\"")]
+    -- withStub's final removeDir needs its directory empty again, even after a failed check.
+    try
+      IO.FS.writeFile (fixture "control") (entry "")
+      HttpCurlTestSupport.withStub { recordings := #[(fixture "control").toString] } fun stub => do
+        check "S8 framing control starts" ((← replayRequest stub "/framing").status == 202)
+      for (label, headers) in rejected do
+        IO.FS.writeFile (fixture label) (entry headers)
+        let result ← IO.Process.output {
+          cmd := "python3", args := #["-I", "../http-curl/test/responder.py", "--log",
+            (occupied.tempDir / "requests.jsonl").toString, (fixture label).toString] }
+        check s!"S8 framing {label} rejected" (result.exitCode != 0 &&
+          !(result.stdout.startsWith "READY") && (result.stderr.splitOn "framing header").length > 1)
+    finally
+      for label in #["control"] ++ rejected.map (·.1) do
+        if ← (fixture label).pathExists then IO.FS.removeFile (fixture label)
   | "S9" => withReplay fun stub => do
     check "S9 text near miss" ((← replayRequest stub "/text" "other").status == 599)
     let r ← replayRequest stub "/text" "synthetic raw"
