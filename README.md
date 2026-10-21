@@ -1168,14 +1168,30 @@ streams in `.lake/`. No gate output was piped through a filter.
 | root | `grep -rnw sorry --include='*.lean' --exclude-dir=.lake packages` | 1; no matches |
 | root | `git ls-files -- '*.key' '*.pem' '*.crt' '*.p12'` | 0; no paths |
 | root | `git grep -n -e 'PRIVATE'' KEY'` | 1; no matches |
-| root | `git diff --exit-code 7c7a0ad -- packages/http-curl/HttpCurl.lean packages/http-curl/link_shim.c scripts/check-link-spike.sh scripts/check-one-openssl.sh flake.lock flake.nix packages/secp256k1` | 0 |
-| root | `git diff --exit-code 7c7a0ad -- ':(glob)**/lake-manifest.json'` | 0 |
+| root | `git diff --exit-code e75cfaa -- packages/http-curl/HttpCurl.lean packages/http-curl/link_shim.c scripts/check-link-spike.sh scripts/check-one-openssl.sh flake.lock flake.nix packages/secp256k1` | 0 |
+| root | `git diff --exit-code e75cfaa -- ':(glob)**/lake-manifest.json'` | 0 |
 | root | `git diff --check` | 0 |
 
 The sandbox log includes the 35/35 summary, the app test's
 `HttpCurlTestSupport.withStub` declaration, and the final HttpCurlTests
 `http-curl wrapper executable: one nix OpenSSL, version and ldd: PASS` line.
 No flake change or new C code was needed.
+
+The table above was recorded before this work was rebased onto `master`
+`e75cfaa`, which brought in Part 1's one-time `curl_global_init` change to
+`link_shim.c`; the two `git diff --exit-code` rows were re-run against
+`e75cfaa` (exit **0**). On the rebased tree, `nix flake check -L` rebuilt and
+exited **0**; `nix eval --raw .#checks.x86_64-linux.default.drvPath` (exit
+**0**) names the check
+`/nix/store/qc5abg9iz4k9prjbywb0fb0nadgl2nqq-cyberkrill-0.1.0.drv`, and its
+`nix log` (exit **0**) holds `http-curl cases: 35/35`, `S12: PASS`,
+`S13: PASS`, `Built CyberkrillTests`, the `HttpCurlTestSupport.withStub`
+declaration and the one-OpenSSL PASS line. The mutation scripts were not
+re-run after the rebase: the files they mutate (`test/responder.py` and
+`HttpCurlTestSupport.lean` for the stub script; `link_shim.c` and
+`HttpCurl.lean` for Part 1's) are byte-identical to the pre-rebase tree and to
+`master` respectively, and all 38 of Part 1's mutation targets still occur
+exactly once.
 
 After host tests, `pgrep -af 'python3 -I [^ ]*responder[.]py'` exited 1 with
 no output. Gate streams are captured separately in root
