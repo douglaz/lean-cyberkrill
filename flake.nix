@@ -11,6 +11,8 @@
 
       # The official Lean v4.35.0 release, patched the way nixpkgs' elan patches toolchains:
       # set the ELF interpreter, and route lake/leanc through nix's cc so linking honours NIX_LDFLAGS.
+      # Prepend -L${pkgs.openssl.out}/lib so -lssl -lcrypto resolve to curl's shared nix OpenSSL
+      # ahead of the toolchain's static archives (decision B).
       lean = pkgs.stdenv.mkDerivation {
         pname = "lean4-bin";
         version = "4.35.0";
@@ -37,7 +39,7 @@
           mv leanc leanc.orig
           cat > cc <<EOF
           #!${pkgs.runtimeShell}
-          exec ${cc}/bin/cc "\$@" -L$out/lib
+          exec ${cc}/bin/cc -L${pkgs.openssl.out}/lib "\$@" -L$out/lib
           EOF
           cat > lake <<EOF
           #!${pkgs.runtimeShell}
@@ -45,7 +47,7 @@
           EOF
           cat > leanc <<EOF
           #!${pkgs.runtimeShell}
-          LEAN_CC="\''${LEAN_CC:-${cc}/bin/cc}" exec -a "\$0" $out/bin/leanc.orig "\$@" -L$out/lib
+          LEAN_CC="\''${LEAN_CC:-$out/bin/cc}" exec -a "\$0" $out/bin/leanc.orig -L${pkgs.openssl.out}/lib "\$@" -L$out/lib
           EOF
           chmod +x cc lake leanc
           ln -sf ${cc}/bin/ar llvm-ar
@@ -55,25 +57,34 @@
       # Every package, in dependency order; the app comes last.
       lakePackages = [ "sha256" "secp256k1" "bitcoin" "lightning" "fedimint-invite" "http-curl" "cyberkrill" ];
 
-      cyberkrill = pkgs.stdenv.mkDerivation {
+      ffiEnvironment = {
+        SECP256K1_LIB_DIR = "${pkgs.secp256k1}/lib";
+        CURL_LIB_DIR = "${pkgs.curl.out}/lib";
+        OPENSSL_LIB_DIR = "${pkgs.openssl.out}/lib";
+        OPENSSL_VERSION = pkgs.openssl.version;
+      };
+
+      cyberkrill = pkgs.stdenv.mkDerivation (ffiEnvironment // {
         pname = "cyberkrill";
         version = "0.1.0";
         src = pkgs.lib.fileset.toSource {
           root = ./.;
-          fileset = pkgs.lib.fileset.unions [ ./lean-toolchain ./packages ];
+          fileset = pkgs.lib.fileset.unions [ ./lean-toolchain ./packages ./scripts ];
         };
-        nativeBuildInputs = [ lean ];
+        nativeBuildInputs = [ lean pkgs.glibc.bin pkgs.binutils ];
+        buildInputs = [ pkgs.secp256k1 pkgs.curl pkgs.openssl ];
         buildPhase = ''
           export HOME=$TMPDIR
           for p in ${pkgs.lib.concatStringsSep " " lakePackages}; do
             (cd packages/$p && lake build && lake test)
           done
+          bash scripts/check-link-spike.sh
         '';
         installPhase = ''
           install -Dm755 packages/cyberkrill/.lake/build/bin/cyberkrill $out/bin/cyberkrill
           $out/bin/cyberkrill
         '';
-      };
+      });
     in
     {
       packages.${system} = {
@@ -84,7 +95,10 @@
       checks.${system}.default = cyberkrill;
 
       devShells.${system} = {
-        default = pkgs.mkShell { packages = [ lean ]; };
+        default = pkgs.mkShell (ffiEnvironment // {
+          packages = [ lean pkgs.glibc.bin pkgs.binutils ];
+          buildInputs = [ pkgs.secp256k1 pkgs.curl pkgs.openssl ];
+        });
         # Phase 10 probe: build the Lean toolchain against musl. See nix/musl/build-lean-musl.sh.
         musl = import ./nix/musl/musl-shell.nix { inherit pkgs; };
       };
