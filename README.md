@@ -3,10 +3,11 @@
 Bitcoin, Lightning and Fedimint libraries for Lean 4, and a Lean port of the
 [cyberkrill](https://github.com/douglaz/cyberkrill) command-line tool built on them.
 
-Status: Phase 1a, both parts of Phase 1b, Phase 2, and Phase 3a (1 of 4) implemented: secp256k1 bindings,
+Status: Phase 1a, both parts of Phase 1b, Phase 2, and Phase 3a (1–2 of 4) implemented: secp256k1 bindings,
 a bounded HTTP(S) client with per-request CA selection, a reusable HTTP/TLS recording stub,
 proved SHA-256 and SHA-256d with NIST vectors, and hex, canonical CompactSize and exact
-millisatoshi amounts with String round-trip proofs. Other packages remain skeletons;
+millisatoshi amounts with String round-trip proofs, plus proved Base58 and Base58Check codecs.
+Other packages remain skeletons;
 `plan.md` is the plan for v1.
 
 ## Packages
@@ -1728,6 +1729,194 @@ None. The accepted named grammar forms above are retained. No additional policy
 bound, input-length cap, whole-sat helper, golden harness or unrelated codec is
 added; those belong to their later phases. Tracker updates and commits are left
 to the Manager.
+
+## Phase 3a: base58 and Base58Check (2 of 4)
+
+### Public API
+
+Import `Bitcoin.Base58` for `Bitcoin.Base58.base58Encode : ByteArray → String`
+and `base58Decode : String → Option ByteArray`. Import `Bitcoin.Base58Check`
+for `base58CheckEncode : ByteArray → String` and
+`base58CheckDecode : String → Except CheckError ByteArray`, in the same namespace.
+The root `Bitcoin` module imports both library modules. The address phase can
+import `Bitcoin.Base58Check` directly.
+
+The codec converts between base 256 and base 58 using arbitrary-precision `Nat`,
+counting leading zeros separately. The alphabet is
+`123456789ABCDEFGHJKLMNPQRSTUVWXYZabcdefghijkmnopqrstuvwxyz`. Each leading
+zero byte becomes one `1`; empty bytes encode as the empty string. Character
+lookup compares complete `Char` values, without truncating them to bytes.
+Bitcoin Core's `DecodeBase58` skips leading and trailing whitespace; this
+decoder rejects all whitespace, including a trailing space.
+
+Base58Check appends `(Sha256.sha256d payload).extract 0 4` before encoding.
+The three distinct error constructors are `CheckError.invalidBase58`,
+`CheckError.tooShort` (fewer than four decoded bytes), and
+`CheckError.checksumMismatch`. Four bytes are sufficient for an empty payload.
+**Base58Check gives no error-detection guarantee.** No error-detection theorem
+is claimed.
+
+### Copied vectors and independent answers
+
+`Bitcoin/Base58Vectors.lean` contains only `rawVectors`, L29–50 of
+[`LeanMiniscript/Bitcoin/KeyEncodingExamples.lean`](https://github.com/febyeji/lean-miniscript/blob/cb9bc5f2f80987ad18b696a9c660f90f4bc1b6bd/LeanMiniscript/Bitcoin/KeyEncodingExamples.lean),
+`febyeji/lean-miniscript` at `cb9bc5f2f80987ad18b696a9c660f90f4bc1b6bd`.
+Its 21 raw Base58 vectors originate in Bitcoin Core's
+`src/test/data/base58_encode_decode.json` at
+`9be056a8a72b624dae9623b2f7bded92c2a21c91`. They contain no keys and none is
+valid Base58Check. The file's first line is:
+
+```text
+-- Copied from febyeji/lean-miniscript @ cb9bc5f, LeanMiniscript/Bitcoin/KeyEncodingExamples.lean L29-50; MIT, see LICENSE-miniscript; originally Bitcoin Core src/test/data/base58_encode_decode.json @ 9be056a, MIT
+```
+
+The adjacent existing `Bitcoin/LICENSE-miniscript` is upstream's MIT notice,
+Copyright (c) 2026 Yeji Han. A comparison with the freshly fetched pinned
+LICENSE exited **0**. Integration removes `private` from `rawVectors` and wraps
+the slice in `namespace BitcoinTests`; there are no port fixes. No upstream
+helpers, WIF, invalid-key or BIP32 vectors are copied. Only the test executable
+imports the vector module; `Bitcoin.lean` does not import it. The existing Lake
+library layout builds it without a lakefile change.
+
+Each runtime set pins its loaded count and exits nonzero on any failed assertion:
+
+| Set | Pinned count | Source |
+|---|---|---|
+| `base58 vectors` | 21 | Copied slice above, case-insensitive hex decoded by `Bitcoin.Hex.decode`; both directions checked |
+| `base58 leading zeros` | 5 | Hand-derived: empty, one zero, three zeros, `000001` ↔ `112`, `003a` ↔ `121` |
+| `base58 invalid characters` | 6 | Our `0`, `O`, `I`, `l`, trailing space, U+0132 cases, each within or beside valid digits |
+| `Base58Check known answers` | 4 | Our independently generated empty, leading-zero, all-zero and 40-byte synthetic payloads |
+| `Base58Check rejections` | 2 | `111` gives `tooShort`; `3QJmnh` with its last character changed to `i` gives `checksumMismatch` |
+| `Base58Check invalid alphabet` | 1 | Trailing space gives `invalidBase58` |
+
+From `packages/bitcoin`, `python3 -I derive-base58check.py --write` and
+`python3 -I derive-base58check.py` each exited **0**, reporting
+`independent base58 vectors: 21/21` and `independent Base58Check answers: 4/4`.
+The script first checks its own small Base58 encoder against all 21 copied
+vectors, then uses Python `hashlib` for SHA-256d and writes or verifies
+`test-data/base58check.json`. The Lean tests read that file. Expected values
+never come from the Lean implementation. Payload lengths are 0, 5, 3 and 40
+bytes; none is key- or address-shaped.
+
+### Proofs and axiom audit
+
+All four public theorems have the full required statements:
+
+```lean
+base58Decode_encode (b : ByteArray) :
+  base58Decode (base58Encode b) = some b
+base58Encode_of_decode (s : String) (b : ByteArray)
+  (h : base58Decode s = some b) : base58Encode b = s
+base58CheckDecode_encode (p : ByteArray) :
+  base58CheckDecode (base58CheckEncode p) = .ok p
+base58CheckDecode_sound (s : String) (p : ByteArray)
+  (h : base58CheckDecode s = .ok p) :
+  base58Decode s = some (p ++ (Sha256.sha256d p).extract 0 4)
+```
+
+`BitcoinTests/AxiomGate.lean` names all four and prints:
+
+```text
+'Bitcoin.Base58.base58Decode_encode' depends on axioms: [propext, Classical.choice, Quot.sound]
+'Bitcoin.Base58.base58Encode_of_decode' depends on axioms: [propext, Classical.choice, Quot.sound]
+'Bitcoin.Base58.base58CheckDecode_encode' depends on axioms: [propext, Classical.choice, Quot.sound]
+'Bitcoin.Base58.base58CheckDecode_sound' depends on axioms: [propext, Classical.choice, Quot.sound]
+Bitcoin axiom gate: 226 library theorems; 30 named; 0 offenders
+```
+
+The gate covers both new library modules and all previously imported Bitcoin
+modules, with the same three-axiom allowlist and no exemptions. The earlier
+section's 146/26 totals describe Phase 3a (1 of 4); 226/30 are the current totals.
+
+### Red runs
+
+From `packages/bitcoin`, both
+`TMPDIR=/var/tmp nix develop -c python3 -I check-mutations.py` and
+`TMPDIR=/var/tmp nix develop -c python3 -I check-base58-mutations.py` exited **0**.
+The first reruns the six existing mutations. The second changes production
+code one property at a time, asserts a diagnostic inside the named theorem or
+the runtime assertion below, and restores the source in `finally`.
+Every mutated `lake test` exited **1**; both final restored runs exited **0**.
+
+| New production mutation | Observed failure |
+|---|---|
+| Drop encoder leading zeros | B1, `Bitcoin.Base58.base58Decode_encode`, type mismatch |
+| Map `0` to `1` before decoder alphabet lookup | B2, `Bitcoin.Base58.base58Encode_of_decode`, unsolved goals/type mismatch |
+| Skip checksum comparison | K2, `Bitcoin.Base58.base58CheckDecode_sound`, application type mismatch |
+| Merge short-input error into checksum-mismatch error | `assertion failed: Base58Check rejections short` |
+| Use single SHA-256 in the shared checksum helper | K2, `Bitcoin.Base58.base58CheckDecode_sound`, deterministic elaboration timeout at `whnf` inside the theorem |
+| Swap `A` and `B` in the shared alphabet | Proofs pass; `assertion failed: base58 vectors 516b6fcd0f` |
+
+Separate stdout/stderr are retained under `.lake/base58-mutation-checks/` and
+`.lake/mutation-checks/`. Compact records are in
+`test-data/base58-mutations.json` and the regenerated `test-data/mutations.json`.
+The single-SHA mutation is caught by K2 before runtime vectors. K2 states the
+checksum as the first four bytes of `Sha256.sha256d`, so any checksum change that
+alters what the decoder accepts makes K2 false and stops the build. The known
+answers are a second, independent check of the same property: for each of their
+four payloads, single SHA-256 and the last four bytes of SHA-256d both differ from
+the committed checksum (checked with Python `hashlib`).
+
+### Final validation
+
+On 2026-10-21, Lean v4.35.0 (`eb6cafb7290e8bd5f2937522d8d804f58f02bafc`),
+with `TMPDIR=/var/tmp`, all gate commands ran in the foreground under the
+repository's supervisor. New files were staged before the flake check; the
+combined supervisor returned `EXIT=0`.
+
+| Command | Working directory | Exit |
+|---|---|---|
+| `nix develop -c lean --version` | `packages/bitcoin` | 0; Lean 4.35.0 |
+| `nix develop -c lake build` | `packages/bitcoin` | 0 |
+| `nix develop -c lake test` | `packages/bitcoin` | 0; all existing and new counted sets |
+| `python3 -I derive-base58check.py` | `packages/bitcoin` | 0; 21/21 and 4/4 |
+| `python3 -I check-base58-copy.py /var/tmp/lck-base58-20261021/KeyEncodingExamples.lean` | `packages/bitcoin` | 0; diff shows only removal of `private` |
+| `cmp /var/tmp/lck-base58-20261021/LICENSE-miniscript Bitcoin/LICENSE-miniscript` | `packages/bitcoin` | 0 |
+| `nix flake check -L` | repository root | 0 |
+| `nix build && ./result/bin/cyberkrill` | repository root | 0; `cyberkrill 0.1.0` |
+| `rc=0; grep -rnw sorry --include='*.lean' --exclude-dir=.lake packages \|\| rc=$?; test "$rc" -eq 1` | repository root | 0; no matches |
+| `grep -rn native_decide --include='*.lean' packages/bitcoin/Bitcoin packages/bitcoin/Bitcoin.lean` | repository root | 1, expected; supervising `test "$rc" -eq 1` exited 0 |
+| `grep -nE '\[[^]]*\]!\|get!\|head!\|tail!\|getLast!\|panic!\|unreachable!' packages/bitcoin/Bitcoin/Base58.lean packages/bitcoin/Bitcoin/Base58Check.lean` | repository root | 1, expected; supervising `test "$rc" -eq 1` exited 0 |
+| `git diff --check` | repository root | 0 |
+
+`nix log /nix/store/5jfcy7d8zf377gm8lwpqrqmydynawiwk-cyberkrill-0.1.0.drv`
+exited **0**. Its separate streams are retained under
+`packages/bitcoin/.lake/final-checks/nix-log.stdout` and `nix-log.stderr`.
+The sandbox log confirms all new Base58 sets, the SHA-256 gate and vector sets,
+BOLT11 recovery/signing `16/16` each, Wycheproof
+`252 loaded / 95 accepted / 157 rejected`, `http-curl cases: 35/35`,
+`S12: PASS`, `S13: PASS`, and the link-spike/OpenSSL checks. All seven packages
+built in the package loop, and the app printed `cyberkrill 0.1.0`.
+The known-answer generation, both mutation runners and final restored tests
+have their commands and exits recorded above.
+
+The pinned upstream file and notice were fetched with `curl -fL` from
+`raw.githubusercontent.com/febyeji/lean-miniscript/cb9bc5f2f80987ad18b696a9c660f90f4bc1b6bd/`,
+paths `LeanMiniscript/Bitcoin/KeyEncodingExamples.lean` and `LICENSE`,
+respectively; both fetches exited **0**. After the comparison checks,
+these foreground cleanup commands each exited **0**:
+
+```bash
+unlink /var/tmp/lck-base58-20261021/KeyEncodingExamples.lean
+unlink /var/tmp/lck-base58-20261021/LICENSE-miniscript
+rmdir /var/tmp/lck-base58-20261021
+test ! -e /var/tmp/lck-base58-20261021
+```
+
+No temporary clone, private dependency cache or external result link was
+created for this phase. The repository's `result` link remains available for
+the app smoke test.
+
+### Deltas not taken
+
+No stricter v1 acceptance rule, input-length cap, address/network logic, WIF,
+BIP32/SLIP-132, or Base58Check error-detection theorem is added. A decode-side
+length cap would contradict B1, which covers every byte array. Decode time grows
+faster than linearly with input length: a compiled `base58Decode` of 10,000 `z`
+characters took 135 ms and one of 100,000 took 4,451 ms. Runs at 300,000 and
+1,000,000 were killed under a 16 GiB memory cap shared with other processes;
+memory use itself was not measured. Addresses and extended keys are far shorter.
+Tracker item `lck-base58-long-input-3qk` records the probe and its commands.
 
 ## Deltas taken
 

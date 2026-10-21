@@ -3,10 +3,12 @@ Copyright (c) 2026 lean-cyberkrill developers. Released under the MIT License or
 Apache License 2.0, at your option; see LICENSE-MIT and LICENSE-APACHE.
 -/
 import BitcoinTests.AxiomGate
+import Bitcoin.Base58Vectors
 
 open Bitcoin
 open Bitcoin.Amount
 open Bitcoin.CompactSize
+open Bitcoin.Base58
 
 namespace BitcoinTests
 
@@ -148,6 +150,40 @@ private def cliTests : IO Unit := do
       check s!"cyberkrill equality {name}" ((parseInput (← text c "input")).toOption.map Amount.msat == upstream)
   IO.println "cyberkrill cross-check: 124/124"
 
+private def base58Tests : IO Unit := do
+  check "base58 vectors count" (rawVectors.size == 21)
+  for (raw, encoded) in rawVectors do
+    match Hex.decode raw with
+    | none => throw (IO.userError "invalid hex in base58 vectors")
+    | some b =>
+      check s!"base58 vectors {raw}" (base58Encode b == encoded && base58Decode encoded == some b)
+  IO.println "base58 vectors: 21/21"
+  let zeros : Array (List Nat × String) :=
+    #[([], ""), ([0], "1"), ([0,0,0], "111"), ([0,0,1], "112"), ([0,58], "121")]
+  checks "base58 leading zeros" 5 (zeros.map fun (raw, encoded) =>
+    (encoded, base58Encode (bytes raw) == encoded && base58Decode encoded == some (bytes raw)))
+  checks "base58 invalid characters" 6
+    ((#["20g", "2Og", "2Ig", "2lg", "2g ", "2Ĳg"] : Array String).map fun s =>
+      (s, base58Decode s == none))
+  let answers ← load "test-data/base58check.json"
+  check "Base58Check known answers count" (answers.size == 4)
+  for row in answers do
+    let name ← text row "name"
+    let raw ← text row "payloadHex"
+    let encoded ← text row "encoded"
+    match Hex.decode raw with
+    | none => throw (IO.userError "invalid hex in Base58Check known answers")
+    | some p =>
+      check s!"Base58Check known answers {name}"
+        (base58CheckEncode p == encoded && base58CheckDecode encoded == .ok p)
+  IO.println "Base58Check known answers: 4/4"
+  -- The empty-payload answer is 3QJmnh; change its last alphabet character.
+  checks "Base58Check rejections" 2 #[
+    ("short", base58CheckDecode "111" == .error .tooShort),
+    ("checksum", base58CheckDecode "3QJmni" == .error .checksumMismatch)]
+  checks "Base58Check invalid alphabet" 1 #[
+    ("invalid", base58CheckDecode "2g " == .error .invalidBase58)]
+
 end BitcoinTests
 
 def main : IO Unit := do
@@ -156,3 +192,4 @@ def main : IO Unit := do
   BitcoinTests.compactTests
   BitcoinTests.amountTests
   BitcoinTests.cliTests
+  BitcoinTests.base58Tests

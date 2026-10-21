@@ -7,8 +7,9 @@ import Bitcoin.CompactSizeProofs
 import Bitcoin.Amount
 import Bitcoin.AmountText
 import Bitcoin.AmountCli
+import Bitcoin.Base58Check
 
 /-! # Bitcoin
 
-Hex, canonical CompactSize and exact millisatoshi amounts, including the CLI
-amount grammar. Further Bitcoin encodings arrive in later phases (plan.md section 4). -/
+Hex, canonical CompactSize, Base58 and Base58Check, and exact millisatoshi
+amounts including the CLI grammar. Further encodings arrive in later phases. -/

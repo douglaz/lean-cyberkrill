@@ -21,8 +21,10 @@ semantic changes. No theorem statement is weakened.
 
 Source: `febyeji/lean-miniscript` at
 `cb9bc5f2f80987ad18b696a9c660f90f4bc1b6bd` (MIT, Copyright (c) 2026 Yeji Han).
-Only serialization and the initial deserialization/proof slices are copied in
-Phase 3a (1 of 4). The module carries their exact ranges and its adjacent notice.
+Serialization and the initial deserialization/proof slices are copied in
+Phase 3a (1 of 4), followed by the 21 `rawVectors` from
+`LeanMiniscript/Bitcoin/KeyEncodingExamples.lean` L29–50 in Phase 3a (2 of 4).
+Each module carries its exact ranges and uses the adjacent MIT notice.
 
 | File | Problem | Fix used in this port |
 |---|---|---|
@@ -31,3 +33,10 @@ Phase 3a (1 of 4). The module carries their exact ranges and its adjacent notice
 The slices are combined in `Bitcoin/CompactSize.lean`, importing only `Lean`.
 `LeanMiniscript.Bitcoin` becomes `Bitcoin.CompactSize`. Those integration changes
 and the provenance comment are the only other changes to the copied slices.
+
+`Bitcoin/Base58Vectors.lean` copies only the raw Base58 vector definition.
+No Lean 4.35 port fix was needed. Its integration changes remove `private` so
+the runtime test driver can read the array, wrap it in `namespace BitcoinTests`,
+and add the first-line provenance comment. No upstream helpers or other vector
+sets are copied. The adjacent `Bitcoin/LICENSE-miniscript` remains byte-identical
+to upstream's notice. The Base58 and Base58Check codecs and proofs are our own.
