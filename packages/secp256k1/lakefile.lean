@@ -31,4 +31,4 @@ lean_lib Secp256k1 where
   moreLinkLibs := #[secpLib]
 
 @[test_driver]
-lean_lib Secp256k1Tests
+lean_exe Secp256k1Tests

@@ -3,15 +3,41 @@ Copyright (c) 2026 lean-cyberkrill developers. Released under the MIT License or
 Apache License 2.0, at your option; see LICENSE-MIT and LICENSE-APACHE.
 -/
 
-/-! # Secp256k1
-
-Link target and context smoke check. Parsing, verification, recovery and signing
-bindings arrive in Phase 1a (2 of 2). -/
+/-! Pure, deterministic, thread-safe curve operations over borrowed byte arrays.
+No input is mutated; successful object results are freshly allocated. -/
 
 namespace Secp256k1
 
 /-- Create and destroy a context without touching any key material. -/
 @[extern "lck_secp_context_round_trip"]
 opaque contextRoundTrip : IO Bool
+
+/-- `isValidPubkey key` accepts a 33-byte compressed (02/03) or 65-byte
+uncompressed (04) SEC1 public key. Returns false for wrong lengths, hybrid
+encodings, invalid prefixes, or points outside the curve. -/
+@[extern "lck_secp_pubkey_parse"]
+opaque isValidPubkey (key : @& ByteArray) : Bool
+
+/-- `verify hash signature key` checks a 32-byte message hash and 64-byte compact
+ECDSA signature (big-endian r ‖ s) against a SEC1 key as in `isValidPubkey`.
+Returns false for malformed lengths/keys, r or s ≥ the curve order, zero scalars,
+high-S signatures (no normalisation), or a signature that does not verify. -/
+@[extern "lck_secp_verify"]
+opaque verify (hash signature key : @& ByteArray) : Bool
+
+/-- `recover hash signature recid` returns a fresh 33-byte compressed SEC1 key.
+The hash is 32 bytes, signature is 64-byte big-endian r ‖ s, and recid is 0–3.
+High-S is preserved. Returns none for wrong lengths, recid > 3, r or s ≥ the
+curve order, zero scalars, or failure to recover a curve point. -/
+@[extern "lck_secp_recover"]
+opaque recover (hash signature : @& ByteArray) (recid : UInt8) : Option ByteArray
+
+/-- `sign hash secretKey` returns a fresh 65-byte recoverable ECDSA signature:
+64-byte big-endian r ‖ s (low-S), followed by recid (0–3). Uses deterministic
+RFC 6979, without extra entropy. Both inputs must be 32 bytes. Returns none for
+wrong lengths, secret key zero or ≥ the curve order, or signing/context failure.
+Signing is used only with published test vectors in v1. -/
+@[extern "lck_secp_sign"]
+opaque sign (hash secretKey : @& ByteArray) : Option ByteArray
 
 end Secp256k1
