@@ -1,0 +1,622 @@
+[
+  {
+    "input": "5msats",
+    "msat": "5",
+    "name": "suffix-msats"
+  },
+  {
+    "input": "5MSATS",
+    "msat": "5",
+    "name": "suffix-MSATS"
+  },
+  {
+    "input": "5msat",
+    "msat": "5",
+    "name": "suffix-msat"
+  },
+  {
+    "input": "5MSAT",
+    "msat": "5",
+    "name": "suffix-MSAT"
+  },
+  {
+    "input": "5sats",
+    "msat": "5000",
+    "name": "suffix-sats"
+  },
+  {
+    "input": "5SATS",
+    "msat": "5000",
+    "name": "suffix-SATS"
+  },
+  {
+    "input": "5sat",
+    "msat": "5000",
+    "name": "suffix-sat"
+  },
+  {
+    "input": "5SAT",
+    "msat": "5000",
+    "name": "suffix-SAT"
+  },
+  {
+    "input": "5btc",
+    "msat": "500000000000",
+    "name": "suffix-btc"
+  },
+  {
+    "input": "5BTC",
+    "msat": "500000000000",
+    "name": "suffix-BTC"
+  },
+  {
+    "input": "0.5bTc",
+    "msat": "50000000000",
+    "name": "mixed-case"
+  },
+  {
+    "input": "1",
+    "msat": "100000000000",
+    "name": "bare"
+  },
+  {
+    "input": "0.00000001",
+    "msat": "1000",
+    "name": "one-satoshi"
+  },
+  {
+    "input": "21000000",
+    "msat": "2100000000000000000",
+    "name": "supply"
+  },
+  {
+    "input": "007btc",
+    "msat": "700000000000",
+    "name": "leading-zeros"
+  },
+  {
+    "input": "00.5",
+    "msat": "50000000000",
+    "name": "leading-zeros-fraction"
+  },
+  {
+    "input": "0.100000000000btc",
+    "msat": "10000000000",
+    "name": "trailing-zero-btc"
+  },
+  {
+    "input": "0.000000000010btc",
+    "msat": "1",
+    "name": "trailing-zero-msat"
+  },
+  {
+    "input": "0.5000sat",
+    "msat": "500",
+    "name": "trailing-zero-sats"
+  },
+  {
+    "input": ".5",
+    "msat": "50000000000",
+    "name": "leading-dot"
+  },
+  {
+    "input": "5.",
+    "msat": "500000000000",
+    "name": "trailing-dot"
+  },
+  {
+    "input": "+5msat",
+    "msat": "5",
+    "name": "leading-plus-msat"
+  },
+  {
+    "input": "+0.5btc",
+    "msat": "50000000000",
+    "name": "leading-plus-btc"
+  },
+  {
+    "input": "+0.5",
+    "msat": "50000000000",
+    "name": "leading-plus-bare"
+  },
+  {
+    "input": "-0",
+    "msat": "0",
+    "name": "negative-zero"
+  },
+  {
+    "input": "-0.0btc",
+    "msat": "0",
+    "name": "negative-zero-btc"
+  },
+  {
+    "input": "-0.000sat",
+    "msat": "0",
+    "name": "negative-zero-sats"
+  },
+  {
+    "input": "18446744073709551615msat",
+    "msat": "18446744073709551615",
+    "name": "max-cli-msat"
+  },
+  {
+    "input": "9007199254740993msat",
+    "msat": "9007199254740993",
+    "name": "large-exact-msat"
+  },
+  {
+    "input": "200000000btc",
+    "msat": "18446744073709551615",
+    "name": "saturated-btc"
+  },
+  {
+    "input": "20000000000000000sat",
+    "msat": "18446744073709551615",
+    "name": "saturated-sats"
+  },
+  {
+    "input": "90071992.54740993btc",
+    "msat": "9007199254740994048",
+    "name": "rounded-btc"
+  },
+  {
+    "input": "9007199254740.993sat",
+    "msat": "9007199254740992",
+    "name": "rounded-sats"
+  },
+  {
+    "input": " \t\n5msat\r ",
+    "msat": "5",
+    "name": "ascii-trim"
+  },
+  {
+    "input": "\u000b5msat\u000b",
+    "msat": "5",
+    "name": "vertical-tab-trim"
+  },
+  {
+    "input": "\u00a05msat\u00a0",
+    "msat": "5",
+    "name": "nbsp-trim"
+  },
+  {
+    "input": "\t5sat\t",
+    "msat": "5000",
+    "name": "trim-U+0009"
+  },
+  {
+    "input": "\n5sat\n",
+    "msat": "5000",
+    "name": "trim-U+000A"
+  },
+  {
+    "input": "\u000b5sat\u000b",
+    "msat": "5000",
+    "name": "trim-U+000B"
+  },
+  {
+    "input": "\f5sat\f",
+    "msat": "5000",
+    "name": "trim-U+000C"
+  },
+  {
+    "input": "\r5sat\r",
+    "msat": "5000",
+    "name": "trim-U+000D"
+  },
+  {
+    "input": " 5sat ",
+    "msat": "5000",
+    "name": "trim-U+0020"
+  },
+  {
+    "input": "\u00855sat\u0085",
+    "msat": "5000",
+    "name": "trim-U+0085"
+  },
+  {
+    "input": "\u00a05sat\u00a0",
+    "msat": "5000",
+    "name": "trim-U+00A0"
+  },
+  {
+    "input": "\u16805sat\u1680",
+    "msat": "5000",
+    "name": "trim-U+1680"
+  },
+  {
+    "input": "\u20005sat\u2000",
+    "msat": "5000",
+    "name": "trim-U+2000"
+  },
+  {
+    "input": "\u20015sat\u2001",
+    "msat": "5000",
+    "name": "trim-U+2001"
+  },
+  {
+    "input": "\u20025sat\u2002",
+    "msat": "5000",
+    "name": "trim-U+2002"
+  },
+  {
+    "input": "\u20035sat\u2003",
+    "msat": "5000",
+    "name": "trim-U+2003"
+  },
+  {
+    "input": "\u20045sat\u2004",
+    "msat": "5000",
+    "name": "trim-U+2004"
+  },
+  {
+    "input": "\u20055sat\u2005",
+    "msat": "5000",
+    "name": "trim-U+2005"
+  },
+  {
+    "input": "\u20065sat\u2006",
+    "msat": "5000",
+    "name": "trim-U+2006"
+  },
+  {
+    "input": "\u20075sat\u2007",
+    "msat": "5000",
+    "name": "trim-U+2007"
+  },
+  {
+    "input": "\u20085sat\u2008",
+    "msat": "5000",
+    "name": "trim-U+2008"
+  },
+  {
+    "input": "\u20095sat\u2009",
+    "msat": "5000",
+    "name": "trim-U+2009"
+  },
+  {
+    "input": "\u200a5sat\u200a",
+    "msat": "5000",
+    "name": "trim-U+200A"
+  },
+  {
+    "input": "\u20285sat\u2028",
+    "msat": "5000",
+    "name": "trim-U+2028"
+  },
+  {
+    "input": "\u20295sat\u2029",
+    "msat": "5000",
+    "name": "trim-U+2029"
+  },
+  {
+    "input": "\u202f5sat\u202f",
+    "msat": "5000",
+    "name": "trim-U+202F"
+  },
+  {
+    "input": "\u205f5sat\u205f",
+    "msat": "5000",
+    "name": "trim-U+205F"
+  },
+  {
+    "input": "\u30005sat\u3000",
+    "msat": "5000",
+    "name": "trim-U+3000"
+  },
+  {
+    "input": "",
+    "msat": null,
+    "name": "empty"
+  },
+  {
+    "input": "\u000b\u00a0 ",
+    "msat": null,
+    "name": "white-only"
+  },
+  {
+    "input": "1 btc",
+    "msat": null,
+    "name": "embedded-btc-space"
+  },
+  {
+    "input": "5 sats",
+    "msat": null,
+    "name": "embedded-sat-space"
+  },
+  {
+    "input": "1.5msat",
+    "msat": null,
+    "name": "fractional-msat"
+  },
+  {
+    "input": "-1btc",
+    "msat": null,
+    "name": "negative-btc"
+  },
+  {
+    "input": "-5msat",
+    "msat": null,
+    "name": "negative-msat"
+  },
+  {
+    "input": "-0msat",
+    "msat": null,
+    "name": "negative-zero-msat"
+  },
+  {
+    "input": "abc",
+    "msat": null,
+    "name": "letters"
+  },
+  {
+    "input": ".",
+    "msat": null,
+    "name": "dot"
+  },
+  {
+    "input": "+",
+    "msat": null,
+    "name": "plus"
+  },
+  {
+    "input": "msat",
+    "msat": null,
+    "name": "empty-msat"
+  },
+  {
+    "input": "btc",
+    "msat": null,
+    "name": "empty-btc"
+  },
+  {
+    "input": "1,5",
+    "msat": null,
+    "name": "comma"
+  },
+  {
+    "input": "1_000sat",
+    "msat": null,
+    "name": "underscore"
+  },
+  {
+    "input": "0x10sat",
+    "msat": null,
+    "name": "hex-number"
+  },
+  {
+    "input": "5btcs",
+    "msat": null,
+    "name": "plural-btc"
+  },
+  {
+    "input": "18446744073709551616msat",
+    "msat": null,
+    "name": "cli-msat-overflow"
+  },
+  {
+    "input": "++5msat",
+    "msat": null,
+    "name": "double-plus"
+  },
+  {
+    "input": "+-0btc",
+    "msat": null,
+    "name": "double-sign"
+  },
+  {
+    "input": "1.2.3",
+    "msat": null,
+    "name": "double-dot"
+  },
+  {
+    "input": "1\nbtc",
+    "msat": null,
+    "name": "inner-newline"
+  },
+  {
+    "input": "\uff15sat",
+    "msat": null,
+    "name": "unicode-digits"
+  },
+  {
+    "input": "1\u212abtc",
+    "msat": null,
+    "name": "kelvin-sign"
+  },
+  {
+    "input": "\u001c5sat",
+    "msat": null,
+    "name": "not-white-U+001C"
+  },
+  {
+    "input": "\u180e5sat",
+    "msat": null,
+    "name": "not-white-U+180E"
+  },
+  {
+    "input": "\u200b5sat",
+    "msat": null,
+    "name": "not-white-U+200B"
+  },
+  {
+    "input": "\ufeff5sat",
+    "msat": null,
+    "name": "not-white-U+FEFF"
+  },
+  {
+    "input": "0.000000000001",
+    "msat": "0",
+    "name": "sub-msat-btc"
+  },
+  {
+    "input": "0.0001sat",
+    "msat": "0",
+    "name": "sub-msat-sats"
+  },
+  {
+    "input": "1e-3",
+    "msat": "100000000",
+    "name": "exponent-1e-3"
+  },
+  {
+    "input": "1E-3",
+    "msat": "100000000",
+    "name": "exponent-1E-3"
+  },
+  {
+    "input": "1e3",
+    "msat": "100000000000000",
+    "name": "exponent-1e3"
+  },
+  {
+    "input": "1e-3sat",
+    "msat": "1",
+    "name": "exponent-1e-3sat"
+  },
+  {
+    "input": "+1e0btc",
+    "msat": "100000000000",
+    "name": "exponent-+1e0btc"
+  },
+  {
+    "input": "-0e3",
+    "msat": "0",
+    "name": "exponent--0e3"
+  },
+  {
+    "input": "inf",
+    "msat": "18446744073709551615",
+    "name": "nonfinite-inf"
+  },
+  {
+    "input": "infbtc",
+    "msat": "18446744073709551615",
+    "name": "nonfinite-infbtc"
+  },
+  {
+    "input": "infsat",
+    "msat": "18446744073709551615",
+    "name": "nonfinite-infsat"
+  },
+  {
+    "input": "+inf",
+    "msat": "18446744073709551615",
+    "name": "nonfinite-+inf"
+  },
+  {
+    "input": "+infbtc",
+    "msat": "18446744073709551615",
+    "name": "nonfinite-+infbtc"
+  },
+  {
+    "input": "+infsat",
+    "msat": "18446744073709551615",
+    "name": "nonfinite-+infsat"
+  },
+  {
+    "input": "-inf",
+    "msat": null,
+    "name": "nonfinite--inf"
+  },
+  {
+    "input": "-infbtc",
+    "msat": null,
+    "name": "nonfinite--infbtc"
+  },
+  {
+    "input": "-infsat",
+    "msat": null,
+    "name": "nonfinite--infsat"
+  },
+  {
+    "input": "infinity",
+    "msat": "18446744073709551615",
+    "name": "nonfinite-infinity"
+  },
+  {
+    "input": "infinitybtc",
+    "msat": "18446744073709551615",
+    "name": "nonfinite-infinitybtc"
+  },
+  {
+    "input": "infinitysat",
+    "msat": "18446744073709551615",
+    "name": "nonfinite-infinitysat"
+  },
+  {
+    "input": "+infinity",
+    "msat": "18446744073709551615",
+    "name": "nonfinite-+infinity"
+  },
+  {
+    "input": "+infinitybtc",
+    "msat": "18446744073709551615",
+    "name": "nonfinite-+infinitybtc"
+  },
+  {
+    "input": "+infinitysat",
+    "msat": "18446744073709551615",
+    "name": "nonfinite-+infinitysat"
+  },
+  {
+    "input": "-infinity",
+    "msat": null,
+    "name": "nonfinite--infinity"
+  },
+  {
+    "input": "-infinitybtc",
+    "msat": null,
+    "name": "nonfinite--infinitybtc"
+  },
+  {
+    "input": "-infinitysat",
+    "msat": null,
+    "name": "nonfinite--infinitysat"
+  },
+  {
+    "input": "nan",
+    "msat": "0",
+    "name": "nonfinite-nan"
+  },
+  {
+    "input": "nanbtc",
+    "msat": "0",
+    "name": "nonfinite-nanbtc"
+  },
+  {
+    "input": "nansat",
+    "msat": "0",
+    "name": "nonfinite-nansat"
+  },
+  {
+    "input": "+nan",
+    "msat": "0",
+    "name": "nonfinite-+nan"
+  },
+  {
+    "input": "+nanbtc",
+    "msat": "0",
+    "name": "nonfinite-+nanbtc"
+  },
+  {
+    "input": "+nansat",
+    "msat": "0",
+    "name": "nonfinite-+nansat"
+  },
+  {
+    "input": "-nan",
+    "msat": "0",
+    "name": "nonfinite--nan"
+  },
+  {
+    "input": "-nanbtc",
+    "msat": "0",
+    "name": "nonfinite--nanbtc"
+  },
+  {
+    "input": "-nansat",
+    "msat": "0",
+    "name": "nonfinite--nansat"
+  }
+]

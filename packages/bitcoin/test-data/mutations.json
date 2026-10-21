@@ -1,0 +1,94 @@
+[
+  {
+    "label": "canonical-minimum",
+    "command": [
+      "lake",
+      "test"
+    ],
+    "exit": 1,
+    "failures": [
+      "error: Bitcoin/CompactSize.lean:236:10: unsolved goals",
+      "error: Bitcoin/CompactSize.lean:249:12: unsolved goals",
+      "error: Bitcoin/CompactSize.lean:261:12: unsolved goals",
+      "error: Bitcoin/CompactSize.lean:237:28: This simp argument is unused:",
+      "error: Bitcoin/CompactSize.lean:237:39: This simp argument is unused:",
+      "error: Bitcoin/CompactSize.lean:237:56: This simp argument is unused:",
+      "error: Bitcoin/CompactSize.lean:250:30: This simp argument is unused:",
+      "error: Bitcoin/CompactSize.lean:250:41: This simp argument is unused:",
+      "error: Bitcoin/CompactSize.lean:250:58: This simp argument is unused:",
+      "error: Bitcoin/CompactSize.lean:262:30: This simp argument is unused:",
+      "error: Bitcoin/CompactSize.lean:262:41: This simp argument is unused:",
+      "error: Bitcoin/CompactSize.lean:262:58: This simp argument is unused:",
+      "error: build failed"
+    ],
+    "brokenTheorem": "Bitcoin.CompactSize.readCompactSize_ok"
+  },
+  {
+    "label": "uppercase-hex",
+    "command": [
+      "lake",
+      "test"
+    ],
+    "exit": 1,
+    "failures": [
+      "uncaught exception: assertion failed: hex upper"
+    ]
+  },
+  {
+    "label": "sub-msat-rounding",
+    "command": [
+      "lake",
+      "test"
+    ],
+    "exit": 1,
+    "failures": [
+      "error: Bitcoin/Amount.lean:59:4: `simp` made no progress",
+      "error: Bitcoin/Amount.lean:67:2: Type mismatch",
+      "error: build failed"
+    ],
+    "brokenTheorem": "Bitcoin.Amount.ofDecimal_iff"
+  },
+  {
+    "label": "suffix-order",
+    "command": [
+      "lake",
+      "test"
+    ],
+    "exit": 1,
+    "failures": [
+      "uncaught exception: assertion failed: CLI grammar suffix-msat"
+    ]
+  },
+  {
+    "label": "cli-u64-bound",
+    "command": [
+      "lake",
+      "test"
+    ],
+    "exit": 1,
+    "failures": [
+      "uncaught exception: assertion failed: CLI grammar cli-msat-overflow"
+    ]
+  },
+  {
+    "label": "axiom",
+    "command": [
+      "lake",
+      "test"
+    ],
+    "exit": 1,
+    "failures": [
+      "error: BitcoinTests/AxiomGate.lean:53:0: Bitcoin axiom gate: Bitcoin.Amount.ofSats_msat reaches disallowed axiom Bitcoin.Amount.auditProbe",
+      "error: build failed"
+    ]
+  },
+  {
+    "label": "restored-tests",
+    "command": [
+      "lake",
+      "test"
+    ],
+    "exit": 0,
+    "failures": []
+  }
+]

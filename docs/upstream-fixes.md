@@ -16,3 +16,18 @@ refer to that revision. Sending patches remains Phase 10 work.
 The module/namespace rename and the doc clarifications about upstream-only
 paths and tests are local integration changes, rather than proposed upstream
 semantic changes. No theorem statement is weakened.
+
+## lean-miniscript
+
+Source: `febyeji/lean-miniscript` at
+`cb9bc5f2f80987ad18b696a9c660f90f4bc1b6bd` (MIT, Copyright (c) 2026 Yeji Han).
+Only serialization and the initial deserialization/proof slices are copied in
+Phase 3a (1 of 4). The module carries their exact ranges and its adjacent notice.
+
+| File | Problem | Fix used in this port |
+|---|---|---|
+| `LeanMiniscript/Bitcoin/DeserializationProofs.lean` L7–179 | Lean 4.35 deprecates `if_true`, `if_false`, `if_pos` and `if_neg`; warnings fail the build. | Replace them with `ite_true`, `ite_false`, `ite_eq_left` and `ite_eq_right`, respectively. No theorem statement or proof strategy changes. |
+
+The slices are combined in `Bitcoin/CompactSize.lean`, importing only `Lean`.
+`LeanMiniscript.Bitcoin` becomes `Bitcoin.CompactSize`. Those integration changes
+and the provenance comment are the only other changes to the copied slices.

@@ -3,9 +3,10 @@
 Bitcoin, Lightning and Fedimint libraries for Lean 4, and a Lean port of the
 [cyberkrill](https://github.com/douglaz/cyberkrill) command-line tool built on them.
 
-Status: Phase 1a, both parts of Phase 1b, and Phase 2 complete: secp256k1 bindings,
+Status: Phase 1a, both parts of Phase 1b, Phase 2, and Phase 3a (1 of 4) implemented: secp256k1 bindings,
 a bounded HTTP(S) client with per-request CA selection, a reusable HTTP/TLS recording stub,
-and proved SHA-256 and SHA-256d with NIST vectors. Other packages remain skeletons;
+proved SHA-256 and SHA-256d with NIST vectors, and hex, canonical CompactSize and exact
+millisatoshi amounts with String round-trip proofs. Other packages remain skeletons;
 `plan.md` is the plan for v1.
 
 ## Packages
@@ -1474,6 +1475,274 @@ On the rebased tree, `nix flake check -L` rebuilt
 None. Incremental hashing, additional hash families, a public library hex
 codec, and performance work remain outside Phase 2. The brief reserves tracker
 updates and commits for the Manager; the tracker and other packages are untouched.
+
+## Phase 3a: bitcoin primitives (1 of 4)
+
+`import Bitcoin` exposes hex, canonical CompactSize and exact nonnegative amounts.
+The package remains pure Lean, depending only on `sha256`, with no C, FFI or
+Mathlib. The test driver is now an executable; `BitcoinTestSupport` roots the
+elaboration-time axiom gate at `BitcoinTests.AxiomGate`.
+
+### Public API
+
+| Module / namespace | API and behavior |
+|---|---|
+| `Bitcoin.Hex` | `encode : ByteArray → String` emits lower-case hex; `decode : String → Option ByteArray` accepts either case, rejects odd length, prefixes, whitespace and non-hex characters, and accepts empty input. It reuses `Sha256.Hex` with case normalization. |
+| `Bitcoin.CompactSize` | `compactSize`, `readCompactSize`, `unsignedLE`, `decodeLE`, `takeExact`, and the copied byte-vector/witness helpers. Readers return `Except DecodeError (value × rest)`, preserve unread bytes, distinguish truncation and noncanonical encodings, and accept only canonical widths. **Phase 4a imports `Bitcoin.CompactSize`.** The writer's round trip requires `value < 2^64`, the actual wire bound. |
+| `Bitcoin.CompactSizeProofs` | Explicit rejection of each noncanonical wide tag, and truncation for any payload shorter than its tag's width. |
+| `Bitcoin.Amount` | `Amount` has `msat : Nat`, `DecidableEq` and `Repr`. `Amount.Decimal` holds a natural mantissa and natural decimal exponent. `ofMsat`, `ofSats`, `toMsat`, `toSats?`, `toBtc`, `toSatDecimal`, `toMsatDecimal`, `ofDecimal`, `ofBtc?` and `ofJsonNumber` provide exact unit conversions. `ofJsonNumber` takes `Lean.JsonNumber` in BTC, rejecting a negative mantissa. |
+| `Bitcoin.AmountText` (`Bitcoin.Amount` namespace) | `parseDecimal` scans decimal syntax without signs, whitespace or exponents; `parseBtc`, `parseSats` and `parseMsat` return `Option Amount`. `printBtc`, `printSats` and `printMsat` return canonical Strings. `parseScaled` and `printScaled` share the converter and printer core. |
+| `Bitcoin.AmountCli` (`Bitcoin.Amount` namespace) | `parseInput : String → Except InputError Amount` follows `AmountInput::from_str` suffix order (`msats`, `msat`, `sats`, `sat`, `btc`, bare BTC), with exact arithmetic and the named rejections below. Errors distinguish empty input, invalid syntax, negative values, sub-msat values and CLI msat overflow. |
+
+`Amount` is a structure over **unbounded `Nat` msat**. Negative amounts are not
+representable. Amounts above 21,000,000 BTC and above 2^64−1 msat are representable;
+range checks belong to consumers whose formats require them, such as Core's
+`MAX_MONEY` and u64 wire fields. The library integer-msat parser is unbounded so
+its print/parse law holds for every amount. The CLI `msat`/`msats` path keeps the
+u64 bound because Rust parses that path as `u64`: its maximum is
+`18446744073709551615`, and the next integer is rejected.
+
+The shared converter accepts a decimal `m / 10^e` at scale `k` iff its value
+`m * 10^k / 10^e` is a whole number of msat (`k = 11` for BTC, `3` for sats,
+`0` for msat). Precision is judged **by value**, with no limit on written trailing
+zero digits: `0.100000000000` BTC, `0.000000000010` BTC and `0.5000` sats are
+accepted. A JsonNumber with exponent above 11 is accepted iff the extra power of
+ten divides its mantissa. This keeps written trailing zeros from changing an
+amount's validity. Nonzero sub-msat values are rejected rather than rounded.
+
+Printers emit a digit before the decimal point, at most 11 BTC / 3 sats fractional
+digits, no trailing fractional zeros and no exponent notation. Integral values
+print as `1`, zero as `0`, and one msat as `0.00000000001` BTC or `0.001` sats.
+The decimal scanner produces the exact mantissa/exponent and then calls the
+shared converter; the String theorems cover that same executable path.
+
+### Copy and portability
+
+Source: [febyeji/lean-miniscript](https://github.com/febyeji/lean-miniscript/tree/cb9bc5f2f80987ad18b696a9c660f90f4bc1b6bd),
+MIT, Copyright (c) 2026 Yeji Han. `Bitcoin/CompactSize.lean` combines the whole
+`LeanMiniscript/Bitcoin/Serialization.lean`, `Deserialization.lean` L11–79, and
+`DeserializationProofs.lean` L7–179. The verbatim upstream LICENSE is adjacent as
+`Bitcoin/LICENSE-miniscript`, and the first line records the full commit, paths,
+ranges and licence. `LeanMiniscript.Bitcoin` becomes `Bitcoin.CompactSize`.
+
+The only proof port fixes replace deprecated `if_true`, `if_false`, `if_pos` and
+`if_neg` with `ite_true`, `ite_false`, `ite_eq_left` and `ite_eq_right`.
+Every copied theorem statement is preserved. The module imports only `Lean`;
+transaction types and hashing imports are excluded. New rejection/truncation
+theorems are in our separate dual-licensed file. See
+[upstream fixes](docs/upstream-fixes.md#lean-miniscript).
+
+### CLI syntax and reference capture
+
+The decimal syntax follows the non-exponent, finite part of Rust's documented
+[`f64::from_str` grammar](https://doc.rust-lang.org/std/primitive.f64.html#impl-FromStr-for-f64).
+No whitespace is removed from the numeric substring, so `1 btc` and `5 sats`
+are rejected. Leading zeros and mixed-case suffixes are accepted. Outer trimming
+uses exactly Unicode White_Space: U+0009–000D, U+0020, U+0085, U+00A0, U+1680,
+U+2000–200A, U+2028, U+2029, U+202F, U+205F and U+3000. All 25 characters have
+individual capture/port cases; four nearby non-members are rejected.
+
+| Named form | Decision | Fixture name |
+|---|---|---|
+| `.5` | Accept as 0.5 BTC | `leading-dot` |
+| `5.` | Accept as 5 BTC | `trailing-dot` |
+| `+5msat` | Accept as 5 msat | `leading-plus-msat` |
+| `+0.5btc`, `+0.5` | Accept as 0.5 BTC | `leading-plus-btc`, `leading-plus-bare` |
+| `-0`, `-0.0btc`, `-0.000sat` | Accept as zero on decimal paths | `negative-zero`, `negative-zero-btc`, `negative-zero-sats` |
+| `-0msat` | Reject, matching Rust's unsigned integer parser | `negative-zero-msat` |
+| `infinity` | Reject as a nonfinite value | `nonfinite-infinity` |
+
+ASCII lowercasing suffices for the accepted language. Rechecked against default
+Unicode 17.0.0 simple and unconditional special casing: the only non-ASCII input
+mapping entirely to ASCII is U+212A KELVIN SIGN → `k`; no accepted form contains
+`k`. `check-unicode.py` checks externally fetched
+[UnicodeData.txt](https://www.unicode.org/Public/17.0.0/ucd/UnicodeData.txt) and
+[SpecialCasing.txt](https://www.unicode.org/Public/17.0.0/ucd/SpecialCasing.txt)
+offline. No Unicode data is vendored. The run
+`python3 -I packages/bitcoin/check-unicode.py /var/tmp/bitcoin-primitives.mOmN3Dbv/UnicodeData.txt /var/tmp/bitcoin-primitives.mOmN3Dbv/SpecialCasing.txt`
+exited **0**, reporting `U+212A -> k (1/1)`.
+
+From the repository root, this command exited **0**:
+
+```bash
+TMPDIR=/var/tmp python3 packages/bitcoin/capture-cyberkrill.py
+```
+
+It cloned `douglaz/cyberkrill` at
+`27cad1faba86260b06665a89f0af5134d23525c2` into a fresh `/var/tmp` directory,
+added one temporary test calling only `AmountInput::from_str` and
+`as_millisats`, and fetched dependencies with that revision's own `nix develop`.
+The fetch/version command was
+`nix develop -c bash -c 'rustc --version && cargo --version && cargo fetch --locked'`
+(exit **0**):
+
+```text
+rustc 1.89.0 (29483883e 2025-08-04)
+cargo 1.89.0 (c24e10642 2025-06-23)
+```
+
+The actual build/test command ran with a fresh temporary HOME and private cargo
+cache, no network interfaces except loopback, and exited **0**:
+
+```bash
+nix develop -c unshare -rn sh -c 'ip link set lo up && cargo test --offline --locked --target x86_64-unknown-linux-gnu -p cyberkrill-core --no-default-features --test amount_capture -- --nocapture --test-threads=1'
+```
+
+Output: `captured amounts: 124/124`. The script records stdout/stderr separately
+under `packages/bitcoin/.lake/capture-checks/`. Its extracted output is committed
+in `test-data/cyberkrill-amounts.json`; the adjacent provenance identifies the
+source commit/path, MIT OR Apache-2.0 taken under MIT, and **captured output on
+our own synthetic inputs**. The Lean executable reads every captured record and
+checks rejection parity, exact equality, named rejection or the listed exact-value
+difference. No hand-derived reference fallback was needed.
+
+Accepted values differ in these four captured cases. These are value differences,
+not additional rejection classes; no Phase 7a golden allowlist is introduced here.
+
+| Input | Exact port msat | Captured cyberkrill msat | Difference |
+|---|---|---|---|
+| `200000000btc` | 20000000000000000000 | 18446744073709551615 | u64 saturation |
+| `20000000000000000sat` | 20000000000000000000 | 18446744073709551615 | u64 saturation |
+| `90071992.54740993btc` | 9007199254740993000 | 9007199254740994048 | binary `f64` rounding |
+| `9007199254740.993sat` | 9007199254740993 | 9007199254740992 | binary `f64` rounding |
+
+### Proofs and axiom audit
+
+The gate first resolves all 26 named theorems below, then scans every theorem
+in every imported module named `Bitcoin` or below it. `Bitcoin.lean` imports all
+new library modules. Name components exclude `BitcoinTests` from the library
+scan. There are **146 library theorems, 26 named, 0 offenders** (generated
+structure/inductive theorems are included in the total). The allowlist is exactly
+`propext`, `Classical.choice`, `Quot.sound`, with no exemptions. The executable
+imports the gate, so audit failure fails `lake test`.
+
+H1 is the public String hex round trip. C1/C2 are the wire-bounded round trip
+and canonicality characterization; C3/C4 explicitly reject noncanonical and
+truncated inputs. A1 characterizes successful exact conversion, including signed
+JsonNumber inputs. A2 covers divisibility rejection and successful String parse
+semantics. A3 states the three public String print/parse round trips for **every**
+Amount. A4 covers constructors and inverse accessors. No theorem is weakened by
+an amount range assumption.
+
+The gate's `#print axioms` output, with the shared prefix `Bitcoin.` retained:
+
+```text
+'Bitcoin.Hex.decode_encode' depends on axioms: [propext, Classical.choice, Quot.sound]
+'Bitcoin.CompactSize.readCompactSize_compactSize' depends on axioms: [propext, Classical.choice, Quot.sound]
+'Bitcoin.CompactSize.readCompactSize_ok' depends on axioms: [propext, Quot.sound]
+'Bitcoin.CompactSize.reject_fd' depends on axioms: [propext, Classical.choice, Quot.sound]
+'Bitcoin.CompactSize.reject_fe' depends on axioms: [propext, Classical.choice, Quot.sound]
+'Bitcoin.CompactSize.reject_ff' depends on axioms: [propext, Classical.choice, Quot.sound]
+'Bitcoin.CompactSize.truncated_empty' does not depend on any axioms
+'Bitcoin.CompactSize.truncated_tag' depends on axioms: [propext]
+'Bitcoin.Amount.ofDecimal_iff' depends on axioms: [propext]
+'Bitcoin.Amount.ofJsonNumber_iff' depends on axioms: [propext, Quot.sound]
+'Bitcoin.Amount.ofDecimal_submsat' depends on axioms: [propext]
+'Bitcoin.Amount.parseBtc_submsat' depends on axioms: [propext, Classical.choice, Quot.sound]
+'Bitcoin.Amount.parseSats_submsat' depends on axioms: [propext, Classical.choice, Quot.sound]
+'Bitcoin.Amount.parseBtc_exact' depends on axioms: [propext, Classical.choice, Quot.sound]
+'Bitcoin.Amount.parseSats_exact' depends on axioms: [propext, Classical.choice, Quot.sound]
+'Bitcoin.Amount.parseBtc_printBtc' depends on axioms: [propext, Classical.choice, Quot.sound]
+'Bitcoin.Amount.parseSats_printSats' depends on axioms: [propext, Classical.choice, Quot.sound]
+'Bitcoin.Amount.parseMsat_printMsat' depends on axioms: [propext, Classical.choice, Quot.sound]
+'Bitcoin.Amount.ofSats_msat' does not depend on any axioms
+'Bitcoin.Amount.toSats_iff' depends on axioms: [propext, Classical.choice, Quot.sound]
+'Bitcoin.Amount.toSats_ofSats' depends on axioms: [propext, Classical.choice, Quot.sound]
+'Bitcoin.Amount.ofBtc_toBtc' depends on axioms: [propext]
+'Bitcoin.Amount.toBtc_exact' does not depend on any axioms
+'Bitcoin.Amount.ofSatDecimal_toSatDecimal' depends on axioms: [propext]
+'Bitcoin.Amount.ofMsatDecimal_toMsatDecimal' depends on axioms: [propext]
+'Bitcoin.Amount.toMsat_ofMsat' does not depend on any axioms
+```
+
+### Vectors and red runs
+
+All inputs are synthetic, derived from published format rules or captured on our
+own inputs. CompactSize expected bytes are hand-derived from Bitcoin Core's
+[`WriteCompactSize` in serialize.h](https://github.com/bitcoin/bitcoin/blob/v29.0/src/serialize.h).
+Hex covers the full 0–255 byte alphabet; amount expectations follow decimal integer
+arithmetic. No node, wallet, device, key or live service supplies a fixture.
+Each set checks its loaded count against a pinned constant before checking values:
+
+```text
+Bitcoin axiom gate: 146 library theorems; 26 named; 0 offenders
+hex: 12/12
+CompactSize boundaries: 8/8
+CompactSize noncanonical: 4/4
+CompactSize truncated: 4/4
+Amount: 36/36
+CLI grammar: 124/124
+cyberkrill cross-check: 124/124
+```
+
+From `packages/bitcoin`,
+`TMPDIR=/var/tmp nix develop -c python3 -I check-mutations.py` exited **0**.
+Every mutation ran `lake test` in the foreground and exited **1**, with these
+observed failures; the script asserts the named proof's diagnostic location or
+the exact vector/gate message, and restores the production file in `finally`.
+Hex's round-trip proof still checks after dropping upper-case decoding; its
+proof is adjusted to the simpler decoder without weakening the statement.
+
+| Production mutation | Observed failure |
+|---|---|
+| Disable CompactSize minimum check | `Bitcoin.CompactSize.readCompactSize_ok`: `CompactSize.lean:236:10: unsolved goals` (also its other wide-tag branches). |
+| Drop hex case normalization | `assertion failed: hex upper` |
+| Round sub-msat values instead of rejecting | `Bitcoin.Amount.ofDecimal_iff`: `Amount.lean:59:4: simp made no progress`; the rejection theorem also fails. |
+| Test `sat` before `msat` | `assertion failed: CLI grammar suffix-msat` |
+| Drop the CLI msat u64 bound | `assertion failed: CLI grammar cli-msat-overflow` |
+| Replace a library lemma's proof by a temporary axiom of the same statement | `Bitcoin.Amount.ofSats_msat reaches disallowed axiom Bitcoin.Amount.auditProbe` |
+
+The final restored `lake test` exited **0**. Separate streams are retained under
+`.lake/mutation-checks/`; compact command/exit/failure records are committed as
+`test-data/mutations.json`. No temporary axiom remains in the library.
+
+### Final validation
+
+On 2026-10-21, with Lean v4.35.0 and `TMPDIR=/var/tmp`, the following commands
+ran in the foreground under the repository's gate supervisor. New files were
+staged before the flake check. The combined supervisor returned `EXIT=0`.
+
+| Command | Working directory | Exit |
+|---|---|---|
+| `nix develop -c lake build` | `packages/bitcoin` | 0 |
+| `nix develop -c lake test` | `packages/bitcoin` | 0; all seven counted sets and the axiom summary above |
+| `nix flake check -L` | repository root | 0 |
+| `nix build && ./result/bin/cyberkrill` | repository root | 0; `cyberkrill 0.1.0` |
+| `rc=0; grep -rnw sorry --include='*.lean' --exclude-dir=.lake packages || rc=$?; test "$rc" -eq 1` | repository root | 0; no matches |
+| `grep -rn native_decide --include='*.lean' packages/bitcoin/Bitcoin packages/bitcoin/Bitcoin.lean` | repository root | 1, expected: no matches; supervising `test "$rc" -eq 1` exited 0 |
+
+The sandbox check built
+`/nix/store/bsd4hjywr14qpiff71kf8sql16i901kl-cyberkrill-0.1.0.drv`.
+`nix log` on that derivation exited **0** and confirms the new bitcoin sets plus
+the existing SHA-256 gate and four vector sets, BOLT11 recovery/signing `16/16`
+each, Wycheproof `252 loaded / 95 accepted / 157 rejected`, `http-curl cases:
+35/35`, `S12: PASS`, `S13: PASS`, and the link-spike/OpenSSL checks. Lightning,
+fedimint-invite and the app built in the same package loop. The app printed
+`cyberkrill 0.1.0`. The capture, Unicode check and six-mutation runner commands
+and exit codes are recorded in their sections above. No other package,
+workflow, flake or tracker change is part of this implementation.
+
+### Deltas not taken
+
+None. The accepted named grammar forms above are retained. No additional policy
+bound, input-length cap, whole-sat helper, golden harness or unrelated codec is
+added; those belong to their later phases. Tracker updates and commits are left
+to the Manager.
+
+## Deltas taken
+
+The following input classes are rejected although cyberkrill accepts them.
+All reference behavior here comes from the pinned offline capture above.
+
+| Class | Captured cyberkrill behavior | Port test names |
+|---|---|---|
+| Non-whole-msat precision | `0.000000000001` BTC and `0.0001sat` round to 0 msat. The port rejects both. Extra fractional **zero** digits remain accepted. | `sub-msat-btc`, `sub-msat-sats`; Amount `sub-msat`, `sats-sub-msat` |
+| Exponent forms, including upper-case `E` and signed zero | `1e-3` / `1E-3` → 100000000 msat; `1e3` → 100000000000000; `1e-3sat` → 1; `+1e0btc` → 100000000000; `-0e3` → 0. | All six `exponent-…` cases in `cli.json` |
+| Nonfinite `inf` / `nan` spellings, including leading `+`, signed NaN and case variants | `inf` / `+inf` saturate to 18446744073709551615; `nan`, `+nan`, `-nan` become 0. Tested bare and with BTC/sat suffixes. Negative infinity is already rejected by cyberkrill. | `nonfinite-inf`, `nonfinite-+inf`, `nonfinite-nan`, `nonfinite-+nan`, `nonfinite--nan` and their suffix variants |
+| Named `infinity` form, including leading `+` and case variants | `infinity` / `+infinity` saturate to 18446744073709551615, bare and with BTC/sat suffixes. The port rejects every spelling; negative infinity already fails upstream. | `nonfinite-infinity`, `nonfinite-+infinity` and their suffix variants |
+
+There are no other intentional rejection classes in this phase. Every input the
+reference rejects in the 124-case capture is rejected by the port.
 
 ## Licence
 
