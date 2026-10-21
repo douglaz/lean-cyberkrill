@@ -5,6 +5,7 @@ Apache License 2.0, at your option; see LICENSE-MIT and LICENSE-APACHE.
 #include <lean/lean.h>
 #include <curl/curl.h>
 #include <limits.h>
+#include <pthread.h>
 #include <stdlib.h>
 #include <string.h>
 #include <sys/stat.h>
@@ -75,6 +76,18 @@ static const char *ca_source(uint8_t has_fallback, const char *fallback) {
     return NULL;
 }
 
+/* curl_version_info may alter static data until curl_global_init has run, so
+   the thread-safety check and the init run exactly once, before any request.
+   No global_cleanup: other callers may still own easy handles. */
+static pthread_once_t init_once = PTHREAD_ONCE_INIT;
+static CURLcode init_code = CURLE_FAILED_INIT;
+
+static void init_curl(void) {
+    if (!(curl_version_info(CURLVERSION_NOW)->features & CURL_VERSION_THREADSAFE))
+        return;
+    init_code = curl_global_init(CURL_GLOBAL_DEFAULT);
+}
+
 LEAN_EXPORT lean_obj_res lck_curl_request(uint8_t post, b_lean_obj_arg url,
         b_lean_obj_arg headers, b_lean_obj_arg body, uint8_t auth,
         b_lean_obj_arg user, b_lean_obj_arg password, size_t limit,
@@ -86,13 +99,8 @@ LEAN_EXPORT lean_obj_res lck_curl_request(uint8_t post, b_lean_obj_arg url,
     long status = 0;
     CURL *curl = NULL;
     struct curl_slist *list = NULL;
-    /* Repeated global_init is safe only on a thread-safe libcurl build.
-       No global_cleanup: other callers may still own easy handles. */
-    if (!(curl_version_info(CURLVERSION_NOW)->features & CURL_VERSION_THREADSAFE)) {
-        code = CURLE_FAILED_INIT;
-        goto done;
-    }
-    code = curl_global_init(CURL_GLOBAL_DEFAULT);
+    pthread_once(&init_once, init_curl);
+    code = init_code;
     if (code != CURLE_OK) goto done;
     curl = curl_easy_init();
     if (!curl) { code = CURLE_FAILED_INIT; goto done; }

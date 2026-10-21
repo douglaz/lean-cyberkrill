@@ -593,7 +593,10 @@ The URL authority ends at the first `/`, `?` or `#` after `://`; only an `@`
 inside that authority denotes embedded credentials. Thus a pathless URL such as
 `http://127.0.0.1:<port>?q=a@b` is accepted.
 Each request owns a fresh easy handle; the wrapper checks
-`CURL_VERSION_THREADSAFE` before calling `curl_global_init`, and sets
+`CURL_VERSION_THREADSAFE` and then calls `curl_global_init` exactly once per
+process, under `pthread_once`, before the first request, because
+`curl_version_info` is not thread-safe until libcurl is initialized. Every
+request sees that one result, so a failed init is not retried. It sets
 `CURLOPT_NOSIGNAL`. The successful real requests exercise that check on the
 pinned curl build. Global cleanup is not called while other handles may exist.
 
@@ -688,7 +691,10 @@ On 2026-10-21, after the final changes under `packages/`, `scripts/` and
 `flake.nix` were staged, `nix flake check -L` rebuilt and exited **0**.
 `nix eval --raw .#checks.x86_64-linux.default.drvPath` (exit **0**) identified
 the final check as
-`/nix/store/y7983aprk7dw4pzgmiy3w2jci563y8j3-cyberkrill-0.1.0.drv`.
+`/nix/store/iwz1ka24dwbilyn0b1pp7mxwdrawbsvm-cyberkrill-0.1.0.drv` (after the
+one-time `curl_global_init` change; the check before it,
+`/nix/store/y7983aprk7dw4pzgmiy3w2jci563y8j3-cyberkrill-0.1.0.drv`, printed
+the same lines).
 The quoted sandbox lines in this section come from that derivation, replayed
 with `nix log` (exit **0**):
 
@@ -864,7 +870,7 @@ nix build && ./result/bin/cyberkrill
 (cd packages/http-curl && nix develop -c lake build && nix develop -c lake test)
 (cd packages/cyberkrill && nix develop -c lake build)
 nix develop -c bash scripts/check-link-spike.sh
-nix log /nix/store/y7983aprk7dw4pzgmiy3w2jci563y8j3-cyberkrill-0.1.0.drv
+nix log /nix/store/iwz1ka24dwbilyn0b1pp7mxwdrawbsvm-cyberkrill-0.1.0.drv
 nix eval --raw .#checks.x86_64-linux.default.drvPath
 ```
 
