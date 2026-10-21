@@ -2,8 +2,12 @@
   description = "lean-cyberkrill: Bitcoin, Lightning and Fedimint libraries for Lean 4, and the cyberkrill CLI";
 
   inputs.nixpkgs.url = "github:NixOS/nixpkgs/nixos-unstable";
+  inputs.wycheproof = {
+    url = "github:C2SP/wycheproof/7a325932231bd7a724c791c8b0d65ea4d6d2f435";
+    flake = false;
+  };
 
-  outputs = { self, nixpkgs }:
+  outputs = { self, nixpkgs, wycheproof }:
     let
       system = "x86_64-linux";
       pkgs = nixpkgs.legacyPackages.${system};
@@ -57,7 +61,25 @@
       # Every package, in dependency order; the app comes last.
       lakePackages = [ "sha256" "secp256k1" "bitcoin" "lightning" "fedimint-invite" "http-curl" "cyberkrill" ];
 
+      wycheproofJson = "${wycheproof}/testvectors_v1/ecdsa_secp256k1_sha256_p1363_test.json";
+      wycheproofDigests = pkgs.runCommand "secp256k1-verify-digests" {
+        nativeBuildInputs = [ pkgs.python3 ];
+      } ''
+        python3 -I - "${wycheproofJson}" "$out" <<'PY'
+        import hashlib
+        import json
+        import sys
+        with open(sys.argv[1]) as source, open(sys.argv[2], "w") as output:
+            for group in json.load(source)["testGroups"]:
+                for test in group["tests"]:
+                    digest = hashlib.sha256(bytes.fromhex(test["msg"])).hexdigest()
+                    output.write(f"{test['tcId']} {digest}\n")
+        PY
+      '';
+
       ffiEnvironment = {
+        WYCHEPROOF_JSON = wycheproofJson;
+        WYCHEPROOF_DIGESTS = "${wycheproofDigests}";
         SECP256K1_LIB_DIR = "${pkgs.secp256k1}/lib";
         CURL_LIB_DIR = "${pkgs.curl.out}/lib";
         OPENSSL_LIB_DIR = "${pkgs.openssl.out}/lib";

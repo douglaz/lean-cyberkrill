@@ -18,7 +18,25 @@
     },
     "root": {
       "inputs": {
-        "nixpkgs": "nixpkgs"
+        "nixpkgs": "nixpkgs",
+        "wycheproof": "wycheproof"
+      }
+    },
+    "wycheproof": {
+      "flake": false,
+      "locked": {
+        "lastModified": 1791812232,
+        "narHash": "sha256-ER2w529/lGdgeBBmFI1+8LbvGQfKjdQxhT5X9V+yoe8=",
+        "owner": "C2SP",
+        "repo": "wycheproof",
+        "rev": "7a325932231bd7a724c791c8b0d65ea4d6d2f435",
+        "type": "github"
+      },
+      "original": {
+        "owner": "C2SP",
+        "repo": "wycheproof",
+        "rev": "7a325932231bd7a724c791c8b0d65ea4d6d2f435",
+        "type": "github"
       }
     }
   },

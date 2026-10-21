@@ -3,7 +3,8 @@
 Bitcoin, Lightning and Fedimint libraries for Lean 4, and a Lean port of the
 [cyberkrill](https://github.com/douglaz/cyberkrill) command-line tool built on them.
 
-Status: Phase 1a (1 of 2): FFI link targets and the one-OpenSSL spike are implemented.
+Status: Phase 1a complete: FFI link targets, the one-OpenSSL spike, and secp256k1
+parse, verify, recovery and deterministic signing bindings with published vectors.
 Other packages remain skeletons; `plan.md` is the plan for v1.
 
 ## Packages
@@ -39,8 +40,8 @@ nix build && ./result/bin/cyberkrill
 `secp256k1` now supplies a context create/destroy smoke check, and `http-curl` supplies
 `curl_version()` as a Lean string. Both use custom Lake targets: `moreLinkObjs` carries
 the C object and `moreLinkLibs` carries the nix shared library into importing executables.
-Neither FFI package has a Lean dependency. Cryptographic bindings and vectors remain
-Phase 1a (2 of 2); HTTP requests remain Phase 1b.
+Neither FFI package has a Lean dependency. Cryptographic bindings and vectors are
+documented in Phase 1a (2 of 2) below; HTTP requests remain Phase 1b.
 
 `nix develop` and the sandbox supply headers through nix's compiler flags and library
 paths through `SECP256K1_LIB_DIR` and `CURL_LIB_DIR`. Missing paths produce an explicit
@@ -87,9 +88,10 @@ settle the musl static release separately.
 
 ### Evidence from the actual Lake artifacts
 
-The following evidence is copied from the sandboxed `nix flake check -L` run
-(exit 0, derivation `/nix/store/402f697b06bwpr5vvdavcbqxrrvajp5x-cyberkrill-0.1.0.drv`).
-`nix log` on that derivation replays it. Store paths can differ between sandbox
+The following is historical Phase 1a (1 of 2) evidence from its sandboxed `nix flake check -L` run
+(exit 0, derivation `/nix/store/402f697b06bwpr5vvdavcbqxrrvajp5x-cyberkrill-0.1.0.drv`),
+captured on the Phase 1a (1 of 2) tree, commit `68ac5c2`; later phases change the check
+derivation. `nix log` on that derivation replays it. Store paths can differ between sandbox
 and host builds. The same checks also ran under `nix develop` (exit 0).
 The check script captures fixture stdout and stderr separately before replaying
 them; its host captures are under `packages/http-curl/.lake/build/link-checks/`.
@@ -313,8 +315,222 @@ printed nothing and exited 1 (the expected no-match status).
 
 ### Deltas not taken
 
-None. Additional bindings, network tests and the musl release remain in their
+None. HTTP network tests and the musl release remain in their
 existing later tasks.
+
+## Phase 1a: secp256k1 bindings (2 of 2)
+
+`Secp256k1` exposes these pure functions; inputs are borrowed (`@& ByteArray`),
+never mutated, and successful object results are freshly allocated:
+
+```lean
+isValidPubkey (key : @& ByteArray) : Bool
+verify (hash signature key : @& ByteArray) : Bool
+recover (hash signature : @& ByteArray) (recid : UInt8) : Option ByteArray
+sign (hash secretKey : @& ByteArray) : Option ByteArray
+```
+
+The functions are deterministic and thread-safe, so a verified Lean implementation
+can replace them with the same types. Parse, verify and recover use the immutable
+static context. Signing creates and destroys a context per call and uses the
+default RFC 6979 nonce function without extra entropy. Signing is used only with
+published test vectors in v1. `contextRoundTrip : IO Bool` is unchanged.
+
+| Function | Bytes and returned errors |
+|---|---|
+| `isValidPubkey` | 33-byte compressed SEC1 (02/03) or 65-byte uncompressed (04). False for wrong lengths, invalid prefixes, invalid coordinates or off-curve points. |
+| `verify` | 32-byte hash, 64-byte compact signature (big-endian r ‖ s), SEC1 key as above. False for any malformed input, r or s ≥ the curve order, zero scalars, high-S, or failure to verify. No normalisation. |
+| `recover` | Same hash and compact signature; recid 0–3. Returns a 33-byte compressed SEC1 key, or none for wrong lengths, recid > 3, invalid scalars, or recovery failure. Preserves high-S. |
+| `sign` | 32-byte hash and 32-byte secret key. Returns 65 bytes: compact r ‖ s (always low-S), then recid 0–3. None for wrong lengths, secret zero or ≥ the curve order, context failure or signing failure. |
+
+Parse and verify both reject hybrid (06/07) keys, including matching parity;
+tests cover both matching and mismatched parity. This matches rust-bitcoin
+0.32.8's `PublicKey::from_slice` and `from_str`, which cyberkrill uses for PSBT
+`partial_sigs` keys and descriptors. libsecp256k1's own parse, and so
+`secp256k1::PublicKey::from_slice`, accepts a hybrid key whose prefix matches
+the y parity; cyberkrill reaches it for PSBT `bip32_derivation` keys and for
+`ln-encode-invoice`'s JSON keys. Bead `lck-decide-hybrid-pubkey-xgr` decides
+whether those two paths follow it. All buffer lengths and the
+recovery-id range are guarded before libsecp256k1 sees the corresponding input.
+The package keeps `"packages": []` in its Lake manifest and uses the existing
+`moreLinkObjs` / `moreLinkLibs` targets.
+
+### Vectors and generation
+
+The 16 BOLT #11 examples come from
+[`11-payment-encoding.md` at lightning/bolts @ `1914628`](https://github.com/lightning/bolts/blob/191462825ae341f0a27098765c075f01ca9bc6c2/11-payment-encoding.md),
+CC-BY-4.0. The contributors' attribution, exact commit, source path, and
+“extracted and reformatted” note are in
+`packages/secp256k1/bolt11.json.provenance`. The JSON contains heading lines,
+precomputed SHA-256 signing digests, compact signatures and recovery ids.
+
+Generation from the repository root (exit **0**, pinned nixpkgs Python 3.14.7):
+
+```bash
+nix shell --inputs-from . nixpkgs#python3 -c python3 -I packages/secp256k1/generate-bolt11.py
+```
+
+Generation is the only BOLT fixture step that fetches the spec; tests read local
+data. The generator lowercases the invoice, removes the checksum and 104 signature
+words, packs the remaining five-bit words MSB-first with zero padding, and hashes
+the hrp bytes followed by those bytes.
+
+Before adding the full vector assertions, `(cd packages/secp256k1 && nix develop
+-c lake build && nix develop -c lake test)` exited **0**: L382's RFC 6979 signature
+matched the published compact signature and recid byte-for-byte. The preliminary
+L762 recovery through this binding returned
+`02d0139ce7427d6dfffd26a326c18be754ef1e64672b42694ba5b23ef6e6e7803d`.
+That key is pinned for Phase 5 (1 of 3)'s lookup table. The other 15 examples
+recover the published payee `03e7156ae33b0a208d0744199163177e909e80176e55d97a2f221ede0f934dd9ad`.
+All 15 low-S signing results match the spec byte-for-byte. L762 signs as
+(r, n − s_spec), with recid 1, and recovers the published payee. Every signing
+result also passes recover and verify checks. No RFC 6979 fallback was needed.
+
+Wycheproof's Apache-2.0-only
+`testvectors_v1/ecdsa_secp256k1_sha256_p1363_test.json` is read from the non-flake
+input pinned at `C2SP/wycheproof` @ `7a325932231bd7a724c791c8b0d65ea4d6d2f435`.
+Neither its data nor derived data is committed. A nix `runCommand` uses Python's
+`hashlib.sha256` on each message and writes `tcId digest` lines in the store.
+`WYCHEPROOF_JSON` and `WYCHEPROOF_DIGESTS` expose both paths in the sandbox and
+dev shell; missing variables or files fail the tests. `flake.lock` adds only
+this input and its root reference; the nixpkgs node and narHash are unchanged.
+
+### Final validation
+
+On 2026-10-21, `nix flake check -L` rebuilt and exited **0**, using Lean 4.35.0
+and libsecp256k1 0.8.0. The final check derivation is
+`/nix/store/3v4n9j4qrf2c1k0kb3qh0zjnfdvvw6rr-cyberkrill-0.1.0.drv`.
+It supersedes the historical Phase 1a (1 of 2) derivation cited above; later
+phases change the derivation again. Replay its evidence with:
+
+```bash
+nix log /nix/store/3v4n9j4qrf2c1k0kb3qh0zjnfdvvw6rr-cyberkrill-0.1.0.drv
+```
+
+The final log records:
+
+```text
+bolt11 recovery: 16/16
+bolt11 signing: 16/16
+Wycheproof: 252 loaded / 95 accepted / 157 rejected
+Wycheproof: 108 groups / 167 valid / 85 invalid / 72 valid high-S / 18 invalid non-64-byte
+negative tests: PASS
+secp256k1 context round trip: true
+forced-static checker EXIT=1 (expected 1)
+link spike, Lake/leanc green twins, forced-static red fixture: PASS
+```
+
+Every Wycheproof outcome is asserted individually. Its 72 high-S entries labelled
+“valid” count as expected rejects: libsecp256k1 verify requires low-S and the
+binding does not normalise. The other 85 rejects are labelled invalid, including
+18 signatures of a length other than 64 bytes. Every group's key is 65 bytes,
+its hash is SHA-256, and its type is `EcdsaP1363Verify`. Counts and unique test
+and digest ids are checked, so missing data cannot silently pass.
+
+The unchanged OpenSSL checker passed on `linkspike`, `cyberkrill`, the Lake twin
+and the leanc twin: zero static and dynamic defined OpenSSL symbols in each,
+with one shared libssl and libcrypto at 3.5.8. The forced-static fixture still
+reported 1,110 static and 1,081 dynamic symbols, both 3.5.8 and 3.6.0 version
+strings, and exit 1. All four usage-error checks exited 2.
+
+These commands also exited **0**, with the host test printing the same counts:
+
+```bash
+nix build
+./result/bin/cyberkrill
+(cd packages/secp256k1 && nix develop -c lake build && nix develop -c lake test)
+(cd packages/cyberkrill && nix develop -c lake build)
+```
+
+The app printed `cyberkrill 0.1.0`. The regenerated
+`packages/secp256k1/.lake/build/ir/Secp256k1.c` declares the same five `lck_`
+functions as the shim: zero, one, three, three and two runtime arguments
+respectively, with recid as `uint8_t`, Bool as `uint8_t`, and arrays/results as
+object pointers. None has a world argument. In `packages/secp256k1`, this also
+compiled the generated declarations together with the definitions (exit **0**):
+
+```bash
+nix develop -c bash -c 'cc -fsyntax-only -I "$(lean --print-prefix)/include" -include .lake/build/ir/Secp256k1.c link_shim.c'
+```
+
+`grep -rn sorry --include='*.lean' packages` printed nothing and exited **1**
+(expected no-match). There are no theorems in this phase. A tracked-file scan
+found no Wycheproof files, and the BOLT example private key only in the test module.
+
+### Negative-test red runs
+
+From `packages/secp256k1`, `nix develop -c python3 -I check-negative-mutations.py`
+exited **0**, detecting **42/42** separate production mutations (Lean 4.35.0,
+libsecp256k1 0.8.0, host Python 3.13.15). Each case ran
+`lake test -- --negative '<property>'`. Tests and expected values were unchanged.
+The script captures stdout and stderr separately in `.lake/mutation-checks/`
+and writes its command, exit and failure records there as `records.json`.
+
+Each parse mutation returned true before parsing; each verify mutation returned
+true before verification. Each recover or sign mutation returned some empty
+bytes before validation. For recid cases only, the mutation removed `recid > 3`
+from the production guard, exposing the actual libsecp256k1 ARG_CHECK and abort.
+Each mutation was restored before the next one; the final green check used the
+restored adapter. The failure line for each exit-1 row below was exactly
+`assertion failed: <property>`. Both exit-134 rows reported
+`illegal argument: recid >= 0 && recid <= 3`.
+
+| Property (one command and mutation per row) | Exit |
+|---|---|
+| tampered signature | 1 |
+| wrong-length key parse | 1 |
+| wrong-length key verify | 1 |
+| off-curve key parse | 1 |
+| off-curve key verify | 1 |
+| recid 4 | 134 |
+| recid 255 | 134 |
+| verify hash length 0 | 1 |
+| recover hash length 0 | 1 |
+| sign hash length 0 | 1 |
+| sign secret length 0 | 1 |
+| verify hash length 31 | 1 |
+| recover hash length 31 | 1 |
+| sign hash length 31 | 1 |
+| sign secret length 31 | 1 |
+| verify hash length 33 | 1 |
+| recover hash length 33 | 1 |
+| sign hash length 33 | 1 |
+| sign secret length 33 | 1 |
+| verify signature length 0 | 1 |
+| recover signature length 0 | 1 |
+| verify signature length 63 | 1 |
+| recover signature length 63 | 1 |
+| verify signature length 65 | 1 |
+| recover signature length 65 | 1 |
+| verify r zero | 1 |
+| verify s zero | 1 |
+| recover r zero | 1 |
+| recover s zero | 1 |
+| sign secret zero | 1 |
+| verify r order | 1 |
+| verify s order | 1 |
+| recover r order | 1 |
+| recover s order | 1 |
+| sign secret order | 1 |
+| verify r overflow | 1 |
+| verify s overflow | 1 |
+| recover r overflow | 1 |
+| recover s overflow | 1 |
+| sign secret overflow | 1 |
+| invalid prefix parse | 1 |
+| invalid prefix verify | 1 |
+
+Here zero, order and overflow mean 0, n and 2²⁵⁶ − 1. The off-curve key uses
+compressed x = 0. The mutation script disables core dumps and restores the C
+source even on failure. To re-run it, then rebuild the restored binding:
+
+```bash
+(cd packages/secp256k1 && nix develop -c python3 -I check-negative-mutations.py && nix develop -c lake test)
+```
+
+### Deltas not taken
+
+None.
 
 ## Licence
 
