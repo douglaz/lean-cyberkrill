@@ -1462,6 +1462,13 @@ against `e75cfaa` is restricted to this package, this README, the CI step,
 exited **0**; the raw NIST LongMsg bytes intentionally retain upstream trailing
 space and a final blank line, checked by their digest instead.
 
+After review, the branch was rebased from `e75cfaa` onto `3e0e228` (#7, the
+replay stub). The only conflict was the status line at the top of this README.
+On the rebased tree, `nix flake check -L` rebuilt
+`/nix/store/fgxyls2a891awq54gv2pvcy0v7i087k6-cyberkrill-0.1.0.drv` and exited
+**0**, printing the five SHA-256 lines above plus `http-curl cases: 35/35`,
+`S12: PASS`, `S13: PASS` and `cyberkrill 0.1.0`.
+
 ### Deltas not taken
 
 None. Incremental hashing, additional hash families, a public library hex
