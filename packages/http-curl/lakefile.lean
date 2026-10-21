@@ -41,3 +41,5 @@ lean_lib HttpCurl where
 
 @[test_driver]
 lean_exe HttpCurlTests
+
+lean_lib HttpCurlTestSupport

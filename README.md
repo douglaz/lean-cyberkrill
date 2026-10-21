@@ -3,8 +3,8 @@
 Bitcoin, Lightning and Fedimint libraries for Lean 4, and a Lean port of the
 [cyberkrill](https://github.com/douglaz/cyberkrill) command-line tool built on them.
 
-Status: Phase 1a and Phase 1b (1 of 2) complete: secp256k1 bindings and a bounded
-HTTP(S) client with per-request CA selection and localhost transport/TLS tests.
+Status: Phase 1a and both parts of Phase 1b complete: secp256k1 bindings, a bounded
+HTTP(S) client with per-request CA selection, and a reusable HTTP/TLS recording stub.
 Other packages remain skeletons; `plan.md` is the plan for v1.
 
 ## Packages
@@ -628,10 +628,13 @@ There is no embedded bundle and no reliance on OpenSSL's default trust paths.
 
 The interpreter is nixpkgs Python **3.14.7**, using `http.server` and `ssl` in
 `packages/http-curl/test/responder.py`. It binds only literal `127.0.0.1` on
-port 0 and prints `READY <port> <closed-port>`. A separate bound, non-listening
+port 0 by default and prints `READY <port> <closed-port>`. A separate bound, non-listening
 socket reserves the connection-refused port for the server's lifetime.
-`HttpCurlTests` waits for the ready line and always terminates and waits for
-each responder in `finally`, including on assertion failures.
+`HttpCurlTestSupport.withStub` now waits for the ready line and terminates and
+waits for each responder in `finally`, including on assertion failures. The
+script also stops on stdin EOF if its launcher is killed. With no recording
+files it serves the legacy routes below; with recordings it serves only entries
+in those files (see Part 2).
 
 `/echo` echoes body bytes and all request headers as `X-Echo-<lowercase name>`
 response headers. Missing headers produce no echo, so an empty value can be
@@ -647,7 +650,7 @@ also requiring completion within 1,500 ms. Each case additionally runs under
 a separate two-second `timeout` deadline, so removing curl's timeout fails
 by name instead of hanging the suite.
 
-The Lean executable generates a fresh EC certificate and key in a private
+The `HttpCurlTestSupport` library generates a fresh EC certificate and key in a private
 temporary directory, using nix's `openssl`:
 
 ```bash
@@ -656,14 +659,14 @@ openssl req -x509 -newkey ec -pkeyopt ec_paramgen_curve:P-256 -nodes -days 1 \
   -keyout "$tmp/server.key" -out "$tmp/ca.crt"
 ```
 
-The driver removes those exact files and their directory in `finally`. No key
+The launcher removes those exact files and their directory in `finally`. No key
 or certificate is tracked. Missing tools fail the test. All URLs use literal
 `127.0.0.1`; no test resolves a hostname or reaches the internet. Each CA case
 runs in a fresh child whose environment explicitly sets or removes **both**
 `SSL_CERT_FILE` and `NIX_SSL_CERT_FILE`. C9 changes `SSL_CERT_FILE` between two
 requests in that child, proving the selection is per request.
 
-The pinned total is **22** cases:
+Part 1 pins **22** legacy cases, retained in the **35** total in Part 2:
 
 | Case | Acceptance property |
 |---|---|
@@ -884,7 +887,305 @@ with no concurrent reviewers or writers; then run the green checks again.
 
 ### Deltas not taken
 
-None. The reusable recording stub remains Phase 1b (2 of 2).
+None. The reusable recording stub is covered in Phase 1b (2 of 2) below.
+
+## Phase 1b: http-curl (2 of 2)
+
+### Replay server and command line
+
+`packages/http-curl/test/responder.py` uses isolated `python3 -I` with the standard
+library's `http.server`, `ssl`, `json` and `decimal`. The measured development
+tools (`nix develop -c python3 --version`, `nix develop -c openssl version`,
+`nix develop -c lean --version`, each exit 0) are Python 3.14.7, OpenSSL 3.5.8,
+and Lean 4.35.0. The wrapper, CA logic, C shim and flake are unchanged.
+
+From any `packages/<pkg>` directory:
+
+```bash
+python3 -I ../http-curl/test/responder.py --log requests.jsonl \
+  --port 0 ../http-curl/test/example.json
+# Add --tls --cert <certificate> --key <key> for TLS.
+```
+
+Recording files are positional, in precedence order; `--log` is required and
+appends to that file. `--port` defaults to 0 (OS-selected free port), or takes a
+fixed port. The address is always literal `127.0.0.1`; there is no host option.
+The server prints exactly `READY <port> <closed-port>` to stdout after binding
+and, for TLS, loading the certificate. A bound, non-listening socket reserves
+the second port for the legacy connection-refused cases. Binding an occupied
+listening port fails nonzero before READY. `SO_REUSEPORT` is not enabled.
+
+Keep stdin open while using the server. EOF on stdin exits the process directly
+with status 0, including when a silent TCP client stalls the TLS handshake in
+`accept()`. The Lean launcher supplies a pipe, so a killed launcher also closes
+it. On normal callback completion or an exception, the launcher calls Lean's
+`IO.Process.Child.kill` if the stub is still running and reaps it exactly once.
+In Lean 4.35 that sends SIGKILL, although its docstring says SIGTERM: a child
+trapping TERM, killed this way, was observed to exit with status 137.
+stderr is inherited, so unmatched diagnostics cannot fill an undrained pipe.
+The script's HTTP/1.0 legacy routes exist only when **no recording files** were
+passed. Loading even an empty recording disables all legacy fallback, for every
+method, including methods outside GET/POST.
+
+### Recording format and matching
+
+The tested synthetic example is [test/example.json](packages/http-curl/test/example.json).
+S5, S6 and S7 serve that same file over HTTP, trusted TLS and a runtime-selected
+fixed port. A recording is an object with an `entries` array. A minimal entry is:
+
+```json
+{"entries":[{"method":"GET","path":"/example?date=synthetic","responses":[
+  {"status":200,"headers":{"X-Fixture":"example"},"json":{"quote":0.10}}
+]}]}
+```
+
+That entry is the first entry of the committed example. Entries have:
+
+| Field | Meaning |
+|---|---|
+| `method`, `path` | Required HTTP method and exact request target, including query |
+| `body` | Optional selector: exactly one of `{"json": value}`, `{"text": "UTF-8"}`, `{"base64": "bytes"}`; omission means empty bytes |
+| `rpc` | Alternative to body matching: `{"method":"rpc-name","params":[variant1, variant2]}` |
+| `responses` | Required nonempty ordered array of response objects |
+| `repeat` | Optional boolean, default false; repeat the final response after exhaustion |
+| `authorization` | Optional expected Authorization header value |
+| `unauthorized` | Required with `authorization`; a response object with `status: 401` |
+
+Methods and paths are case-sensitive. Paths are compared as received: no
+percent-decoding, leading-slash collapse or query sorting. JSON matching sorts
+object keys recursively, preserves array order, and compares numbers as exact
+`Decimal` values: `0.1`, `0.10` and `1e-1` match. It performs no decimal arithmetic
+or normalization, so digits beyond the default 28-digit context remain distinct.
+Boolean values carry a separate type tag: `true` differs from `1`, and `false`
+from `0`. JSON null and strings also remain distinct from other types.
+
+`text` selectors encode UTF-8 and `base64` selectors decode bytes. If those bytes
+are valid JSON, they use the same canonical matching; otherwise they match byte
+for byte. Request bodies that are empty or invalid JSON follow that byte rule.
+For `rpc`, the HTTP method and path still match exactly; the body must be a JSON
+object with the specified `method` and one of the canonical `params` variants.
+`id`, `jsonrpc` and other envelope fields are ignored. Each listed variant has
+its **own cursor**, sharing the entry's response list. The S2 case exhausts each
+variant before trying the next, so the success of a later variant cannot depend
+on an earlier one leaving a shared response available. Canonically duplicate
+variants resolve to the first variant's cursor.
+
+The first matching entry in file/array order wins, even when exhausted. An auth
+mismatch returns that entry's `unauthorized` response without consuming its
+cursor. Auth is checked before exhaustion. Otherwise each matched request
+consumes one ordered response; exhaustion returns 599 with `error: "exhausted"`,
+or repeats the last response under `repeat: true`. An unmatched request returns
+599 with `error: "unmatched"`. Recorded 404s remain ordinary recorded responses.
+
+A response object has optional `status` (default 200), optional `headers` (a
+name/value object), and either `json` (any JSON value, emitted with exact decimal
+values and application/json) or `text` (UTF-8, text/plain; omission means empty).
+A recorded `Content-Type` replaces the default, with a case-insensitive header
+name comparison. The stub writes Content-Length. Fixture headers should not
+override framing.
+
+Both 599 diagnostics and each request-log line include `method`, `path` and
+`body`. Body is the original UTF-8 text, or `{"base64":"..."}` for non-UTF-8
+bytes. For example, an unmatched empty GET produces:
+
+```json
+{"error":"unmatched","method":"GET","path":"/missing?x=1","body":""}
+```
+
+599 diagnostics also go to stderr. The request log is UTF-8 JSONL, one object
+per received request, including successes, 401s, unmatched and exhausted requests.
+One lock serializes log append/flush, response-cursor allocation and replay
+responses. The log is flushed before a response is sent and follows the same
+handling order as cursor allocation. It records bodies, so fixtures must follow
+the repository's synthetic-data rules; it does not record Authorization headers.
+
+### Lean launcher
+
+`lean_lib HttpCurlTestSupport` exports:
+
+```lean
+withStub (config : Config) (action : Stub → IO α) : IO α
+Stub.url (stub : Stub) : String
+Stub.readLog (stub : Stub) : IO String
+```
+
+`Config` has `tls : Bool := false`, `port : UInt16 := 0`,
+`recordings : Array String := #[]`, and `logPath : Option FilePath := none`.
+`Stub` exposes `port`, `closedPort`, `caCert`, `logPath`, `tempDir` and `tls`.
+The CA path exists for TLS callbacks. TLS generates an EC key and one-day
+self-signed certificate in a private temporary directory with
+`subjectAltName=IP:127.0.0.1,DNS:localhost`. Set `SSL_CERT_FILE` to `stub.caCert`
+before making trusted HTTPS requests. Environment setup belongs to the caller;
+the launcher does not change it.
+
+The launcher locates `../http-curl/test/responder.py` from any package directory.
+It does not change working directory: recording paths and a supplied log path
+are relative to the caller. Default logs live in the launcher's private directory.
+The launcher removes its key, certificate, default log and directory in `finally`,
+including startup and callback exceptions. A supplied log belongs to the caller
+and is retained. A failure before READY raises
+`stub failed before READY (exit N): ...`, preserving the stub's exit code instead
+of masking it with a second `waitpid` error. If the stub exits during the
+callback, cleanup observes that exit once and preserves the callback's result
+or exception. `packages/cyberkrill/CyberkrillTests.lean` imports this library
+and checks `HttpCurlTestSupport.withStub`; S11 also exercises trusted TLS with
+the `cyberkrill` package as its working directory.
+
+### Cases and negative checks
+
+The driver pins **35/35**: the unchanged 22 T1–T13/C1–C9 cases above plus:
+
+| Case | Assertions |
+|---|---|
+| S1 | Method/path/query/percent/body near misses; recursive key sorting, exact decimals, bool tags, array order; ordered responses |
+| S2 | RPC method/params near misses; string id, numeric id and no-jsonrpc shapes; independent variant exhaustion |
+| S3 | Missing/wrong auth 401; correct auth succeeds without cursor consumption |
+| S4 | 599 diagnostics, unmatched/exhausted distinction, complete ordered flushed log, repeat-last |
+| S5 | Example file over plain HTTP; response status, body, header and cleanup |
+| S6 | Same example over trusted TLS and cleanup |
+| S7 | Same example at a runtime-selected fixed port |
+| S8 | Occupied listening port: nonzero exit, no READY, launcher error with that exit code; missing recording error with exit 1 |
+| S9 | Raw/binary bodies, recorded 404, binary log/diagnostic, first-entry precedence, no legacy fallback |
+| S10 | Certificate/key/directory cleanup on callback exception |
+| S11 | S6 from the sibling cyberkrill package directory |
+| S12 | TLS stub exits within one second of stdin EOF while a silent TCP client stalls the handshake |
+| S13 | Exactly one recorded content-type value for title, lower and mixed case header names, on text and JSON responses |
+
+`HttpCurlTests --only <CASE>` retains its interface. All stub tests use the same
+launcher that downstream tests import. S8 additionally runs the raw script to
+observe startup stdout and exit status. S12 uses the launcher's temporary TLS
+artifacts in `test/check-tls-eof.py`, which starts a second replay process, holds
+a silent TCP connection, closes stdin and waits at most one second. The helper
+kills and reaps that process in `finally` if it misses the deadline. Each case
+runs under the existing two-second outer deadline.
+
+Run `cd packages/http-curl && nix develop -c python3 -I check-stub-mutations.py`.
+It applies one production mutation at a time, captures stdout and stderr into
+separate `.lake/stub-mutation-checks/<case>-<mutation>.stdout`/`.stderr` files,
+requires both a nonzero exit and the named assertion, and restores exact source
+bytes in `finally`. It also rebuilds the restored executable. No tests, expected
+values, fixtures or index entries are changed. Run without concurrent writers.
+The measured run exited 0 and printed
+`stub mutations: 69/69 detected; production sources restored`.
+
+The following red-run table records every mutation. Each command is
+`lake test -- --only <Case>` inside `nix develop`; each exit was **1**.
+The assertion column omits the common `assertion failed: ` prefix. The mutation
+names identify the exact replacements in `check-stub-mutations.py`.
+
+| Case | Production mutation | Exit | Named assertion |
+|---|---|---|---|
+| S1 | `method` | 1 | `S1 method near miss` |
+| S1 | `path` | 1 | `S1 path near miss` |
+| S1 | `query` | 1 | `S1 query near miss` |
+| S1 | `percent` | 1 | `S1 percent near miss` |
+| S1 | `body` | 1 | `S1 body near miss` |
+| S1 | `boolean` | 1 | `S1 boolean distinct` |
+| S1 | `precision` | 1 | `S1 precision distinct` |
+| S1 | `array-order` | 1 | `S1 array order` |
+| S1 | `root-key-order` | 1 | `S1 key order and canonical exponent` |
+| S1 | `nested-key-order` | 1 | `S1 key order and canonical exponent` |
+| S1 | `exact-exponent` | 1 | `S1 key order and canonical exponent` |
+| S1 | `trailing-zero` | 1 | `S1 canonical trailing zero` |
+| S1 | `response-order` | 1 | `S1 ordered responses` |
+| S2 | `rpc-method` | 1 | `S2 rpc method near miss` |
+| S2 | `rpc-params` | 1 | `S2 rpc params near miss` |
+| S2 | `string-id` | 1 | `S2 variant string id` |
+| S2 | `numeric-id` | 1 | `S2 variant numeric id` |
+| S2 | `no-jsonrpc` | 1 | `S2 variant no jsonrpc` |
+| S2 | `per-variant-cursor` | 1 | `S2 variant numeric id` |
+| S2 | `variant-exhaustion-string-id` | 1 | `S2 exhausted variant string id` |
+| S2 | `variant-exhaustion-numeric-id` | 1 | `S2 exhausted variant numeric id` |
+| S2 | `variant-exhaustion-no-jsonrpc` | 1 | `S2 exhausted variant no jsonrpc` |
+| S3 | `missing-auth` | 1 | `S3 missing auth` |
+| S3 | `wrong-auth` | 1 | `S3 wrong auth` |
+| S3 | `auth-consumes` | 1 | `S3 right auth no consumption` |
+| S4 | `unmatched-status` | 1 | `S4 unmatched status` |
+| S4 | `diagnostic-method` | 1 | `S4 diagnostic method` |
+| S4 | `diagnostic-path` | 1 | `S4 diagnostic path` |
+| S4 | `diagnostic-body` | 1 | `S4 diagnostic body` |
+| S4 | `unmatched-reason` | 1 | `S4 unmatched reason` |
+| S4 | `exhausted-status` | 1 | `S4 exhausted status` |
+| S4 | `exhausted-reason` | 1 | `S4 exhausted reason` |
+| S4 | `log-complete` | 1 | `S4 log complete` |
+| S4 | `log-flush` | 1 | `S4 log complete` |
+| S4 | `log-order` | 1 | `S4 log order` |
+| S4 | `log-method` | 1 | `S4 log method` |
+| S4 | `log-body` | 1 | `S4 log body` |
+| S4 | `repeat-first` | 1 | `S4 repeat first` |
+| S4 | `repeat-last` | 1 | `S4 repeat last` |
+| S4 | `repeat-enabled` | 1 | `S4 repeat repeat` |
+| S5 | `example-status` | 1 | `S5 example status` |
+| S5 | `example-body` | 1 | `S5 example body` |
+| S5 | `example-header` | 1 | `S5 example header` |
+| S6 | `example-status` | 1 | `S6 example status` |
+| S6 | `example-body` | 1 | `S6 example body` |
+| S6 | `example-header` | 1 | `S6 example header` |
+| S7 | `example-status` | 1 | `S7 example status` |
+| S7 | `example-body` | 1 | `S7 example body` |
+| S7 | `example-header` | 1 | `S7 example header` |
+| S7 | `fixed-port` | 1 | `S7 fixed port` |
+| S8 | `occupied-exit` | 1 | `S8 occupied exit` |
+| S8 | `occupied-ready` | 1 | `S8 occupied no ready` |
+| S8 | `launcher-failure` | 1 | `S8 occupied launcher message` |
+| S8 | `double-reap` | 1 | `S8 occupied launcher message` |
+| S8 | `missing-recording-error` | 1 | `S8 missing recording launcher message` |
+| S9 | `recorded-status` | 1 | `S9 recorded 404` |
+| S9 | `text-body` | 1 | `S9 text near miss` |
+| S9 | `binary-body` | 1 | `S9 binary match` |
+| S9 | `binary-diagnostic` | 1 | `S9 diagnostic binary` |
+| S9 | `text-diagnostic` | 1 | `S9 diagnostic text` |
+| S9 | `post-diagnostic` | 1 | `S9 diagnostic POST` |
+| S9 | `precedence` | 1 | `S9 precedence` |
+| S9 | `precedence-exhaustion` | 1 | `S9 precedence exhausted` |
+| S9 | `binary-log` | 1 | `S9 log binary` |
+| S9 | `no-legacy-fallback` | 1 | `S9 no legacy fallback` |
+| S12 | `stalled-tls-eof` | 1 | `S12 TLS stdin EOF deadline` |
+| S13 | `duplicate-content-type` | 1 | `S13 single recorded content-type /content-type/title` |
+| S13 | `content-type-case` | 1 | `S13 single recorded content-type /content-type/lower` |
+| S13 | `content-type-mixed-case` | 1 | `S13 single recorded content-type /content-type/mixed` |
+
+### Final validation
+
+On 2026-10-21, the staged implementation passed the following foreground gates.
+Build/test gates used the AGENTS.md supervisor with separate stdout/stderr files
+and preserved exit statuses; its exec watchdog was omitted to honor this run's
+foreground-only rule. The mutation scripts also retain separate per-mutation
+streams in `.lake/`. No gate output was piped through a filter.
+
+| Directory | Command | Exit / observation |
+|---|---|---|
+| root | `nix flake check -L` | 0; sandbox `http-curl cases: 35/35`, `Built CyberkrillTests`, launcher declaration, link-spike and HttpCurlTests OpenSSL audits |
+| root | `nix build` | 0 |
+| root | `./result/bin/cyberkrill` | 0; `cyberkrill 0.1.0` |
+| `packages/http-curl` | `nix develop -c lake build` | 0 |
+| `packages/http-curl` | `nix develop -c lake test` | 0; `http-curl cases: 35/35` |
+| `packages/cyberkrill` | `nix develop -c lake build` | 0 |
+| `packages/cyberkrill` | `nix develop -c lake test` | 0; builds the launcher import and declaration reference |
+| root | `nix develop -c bash scripts/check-link-spike.sh` | 0; includes HttpCurlTests one-OpenSSL audit |
+| `packages/http-curl` | `nix develop -c python3 -I check-negative-mutations.py` | 0; `negative mutations: 36/36 detected; production sources restored` |
+| `packages/http-curl` | `nix develop -c python3 -I check-stub-mutations.py` | 0; `stub mutations: 69/69 detected; production sources restored` |
+| root | `grep -rnw sorry --include='*.lean' --exclude-dir=.lake packages` | 1; no matches |
+| root | `git ls-files -- '*.key' '*.pem' '*.crt' '*.p12'` | 0; no paths |
+| root | `git grep -n -e 'PRIVATE'' KEY'` | 1; no matches |
+| root | `git diff --exit-code 7c7a0ad -- packages/http-curl/HttpCurl.lean packages/http-curl/link_shim.c scripts/check-link-spike.sh scripts/check-one-openssl.sh flake.lock flake.nix packages/secp256k1` | 0 |
+| root | `git diff --exit-code 7c7a0ad -- ':(glob)**/lake-manifest.json'` | 0 |
+| root | `git diff --check` | 0 |
+
+The sandbox log includes the 35/35 summary, the app test's
+`HttpCurlTestSupport.withStub` declaration, and the final HttpCurlTests
+`http-curl wrapper executable: one nix OpenSSL, version and ldd: PASS` line.
+No flake change or new C code was needed.
+
+After host tests, `pgrep -af 'python3 -I [^ ]*responder[.]py'` exited 1 with
+no output. Gate streams are captured separately in root
+`.lake/round2-<gate>.stdout` and `.stderr` files. The existing Manager-owned
+tracker modification was left alone; implementation files are staged for the
+Manager to commit.
+
+### Deltas not taken
+
+None.
 
 ## Licence
 
