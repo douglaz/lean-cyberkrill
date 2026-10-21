@@ -1911,10 +1911,12 @@ the app smoke test.
 
 No stricter v1 acceptance rule, input-length cap, address/network logic, WIF,
 BIP32/SLIP-132, or Base58Check error-detection theorem is added. A decode-side
-length cap would contradict B1, which covers every byte array. Conversion time
-and memory grow faster than linearly with input length: a compiled
-`base58Decode` of 100,000 `z` characters took about 4.5 s, and one of 300,000
-was killed by a 16 GiB memory limit. Addresses and extended keys are far shorter.
+length cap would contradict B1, which covers every byte array. Decode time grows
+faster than linearly with input length: a compiled `base58Decode` of 10,000 `z`
+characters took 135 ms and one of 100,000 took 4,451 ms. Runs at 300,000 and
+1,000,000 were killed under a 16 GiB memory cap shared with other processes;
+memory use itself was not measured. Addresses and extended keys are far shorter.
+Tracker item `lck-base58-long-input-3qk` records the probe and its commands.
 
 ## Deltas taken
 
