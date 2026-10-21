@@ -61,10 +61,11 @@ v1 commands (from the `Commands` enum in `cyberkrill/src/main.rs`): `ln-decode-i
 ## 3. Outstanding facts each phase must honour
 
 - **Full Core RPC list.** `listunspent`, `scantxoutset`, `getdescriptorinfo`, `deriveaddresses`,
-  `createpsbt`, `walletcreatefundedpsbt`, plus four that were missing from the first list:
+  `createpsbt`, `walletcreatefundedpsbt`, plus five that were missing from the first list:
   `importdescriptors` (`bitcoin_rpc.rs:764`), `getblockchaininfo` (`:725`), `getreceivedbyaddress`
-  (`:1172`), `getrawtransaction` (`:1310`). `list_unspent_for_descriptor` imports the descriptor into
-  the node's wallet and ignores errors (`:774`). Keep that behaviour and document it.
+  (`:1172`), `getrawtransaction` (`:1310`), `getblock` (`dca_report.rs:204`, DCA report only).
+  `list_unspent_for_descriptor` imports the descriptor into the node's wallet and ignores errors
+  (`bitcoin_rpc.rs:774`). Keep that behaviour and document it.
 - **Local weight and fee estimation.** `onchain-create-psbt` and `onchain-move-utxos` compute fees
   locally. The estimate assumes every input is `P2WPKH_MAX` and every output script is 22 bytes
   (`bitcoin_rpc.rs:982-993`), rounded up to vbytes as in `calculate_fee_with_feerate` (`:997`). Port it
