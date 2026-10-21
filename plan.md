@@ -89,14 +89,17 @@ v1 commands (from the `Commands` enum in `cyberkrill/src/main.rs`): `ln-decode-i
   cyberkrill's lightning-invoice 0.34.0 hashes a re-encoding of the parsed fields (`de.rs:395`,
   `lib.rs:1084-1120`). The two agree on canonical invoices and on every spec example that decodes,
   and differ on the non-canonical encodings the crate accepts: padding that is not canonical (non-zero
-  padding bits, or a whole extra padding symbol), leading zero symbols in `x`, `c` or `9`, and an hrp
-  amount with leading zeros. The port rejects the first two, each with a named error (owner decision,
-  2026-10-21: BOLT #11 L208's writer MUST, L239-241's reader SHOULD, as Core Lightning mostly does),
-  so there it exits non-zero where cyberkrill decodes. It accepts a leading-zero amount, as cyberkrill
-  does; on such an invoice the two recover different payee keys (no `n` field), or only one of them
-  verifies (a valid `n`). Both are this third documented, tested exception to golden parity: Phase 5
-  tests the rejected classes as negative vectors and the leading-zero amount as positive ones, Phase
-  7b captures cyberkrill's output on each, and the README lists it.
+  padding bits, or a whole extra padding symbol) in a byte-valued field it decodes, leading zero
+  symbols in `x`, `c` or `9`, and an hrp amount with leading zeros. The port rejects the first two,
+  each with a named error (owner decision, 2026-10-21: BOLT #11 L208's writer MUST, L239-241's reader
+  SHOULD, as Core Lightning mostly does), so there it exits non-zero where cyberkrill decodes. Fields
+  both keep raw (unknown tags, an `f` above version 18, a wrong-length `p`/`s`/`h`/`n`, whose L214
+  rule is its own deferred owner decision) are hashed as written by both and get no padding check.
+  The port accepts a leading-zero amount, as cyberkrill does; on such an invoice the two recover
+  different payee keys (no `n` field), or only one of them verifies (a valid `n`). Both are this
+  third documented, tested exception to golden parity: Phase 5 tests the rejected classes as negative
+  vectors and the leading-zero amount as positive ones, Phase 7b captures cyberkrill's output on
+  each, and the README lists it.
 - **BDK route on `--descriptor` + `--bitcoin-dir`.** cyberkrill sends that combination to BDK on
   `onchain-list-utxos` (`main.rs:1506-1508`) and on the three PSBT commands (`:1628-1630`, `:1738-1740`,
   `:1871-1873`). v1 rejects it with a clear message (section 6) and does not quietly run Core.
