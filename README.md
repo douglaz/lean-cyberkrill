@@ -3,8 +3,8 @@
 Bitcoin, Lightning and Fedimint libraries for Lean 4, and a Lean port of the
 [cyberkrill](https://github.com/douglaz/cyberkrill) command-line tool built on them.
 
-Status: Phase 1a complete: FFI link targets, the one-OpenSSL spike, and secp256k1
-parse, verify, recovery and deterministic signing bindings with published vectors.
+Status: Phase 1a and Phase 1b (1 of 2) complete: secp256k1 bindings and a bounded
+HTTP(S) client with per-request CA selection and localhost transport/TLS tests.
 Other packages remain skeletons; `plan.md` is the plan for v1.
 
 ## Packages
@@ -531,6 +531,355 @@ source even on failure. To re-run it, then rebuild the restored binding:
 ### Deltas not taken
 
 None.
+
+## Phase 1b: http-curl (1 of 2)
+
+`HttpCurl.request : Request → IO (Except Error Response)` sends synchronous GET
+and POST requests through libcurl 8.22.0. `HttpCurl.version` is unchanged. The
+package has no Lean dependencies and retains Lake's `moreLinkObjs`/`moreLinkLibs`
+linking. Other packages and the OpenSSL checker are unchanged.
+
+### Interface and contract
+
+| Request field | Type, units and default |
+|---|---|
+| `method`, `url` | `Method.get` or `.post`; an `http://` or `https://` string |
+| `headers` | `Array (String × String)`, default `#[]`; every supplied header is sent |
+| `body` | `Option ByteArray`, default `none`; POST sends the bytes, including NULs |
+| `basicAuth` | Optional username/password pair; default `none` |
+| `maxResponseBytes` | `USize`, inclusive body-byte limit; default 1,048,576 |
+| `connectTimeoutMs` | `UInt32` milliseconds, default 5,000; zero uses curl's 300-second connect default |
+| `totalTimeoutMs` | `UInt32` milliseconds, default 30,000; zero disables the total timeout |
+| `caFallback` | Optional `System.FilePath`, default `none`; tests only |
+
+The connect timeout covers connection establishment, including TLS negotiation;
+the total timeout covers the whole transfer, including connection establishment.
+A GET with any `some body`, including an empty body, returns an input error.
+POST with `none` sends an empty body. Redirects are not followed. Environment
+proxies are disabled by `CURLOPT_PROXY = ""`, independently of host settings.
+
+The API sends the caller's headers and does not remove curl's own headers.
+An empty value, or one containing only spaces and tabs, is sent with an empty
+value using curl's `Name;` form. Other values use `Name: value`; duplicate names
+are preserved. Header-name and value validation applies before serialization.
+
+`Response` carries a `UInt32` HTTP status, response headers as lowercase names
+and trimmed UTF-8 values (duplicates preserved), and the body as `ByteArray`.
+HTTP 4xx/5xx statuses are normal results. A write callback refuses the chunk
+that would cross the body limit, without buffering it; exactly the limit is
+accepted. Response headers have a separate aggregate 65,536-byte cap.
+
+Errors are returned values. Generic curl failures carry `curl_easy_strerror(code)`
+text, which depends only on the code and contains no request data. For curl 8.22.0,
+code 52 is exactly `Server returned nothing (no headers, no data)`, pinned by T12.
+Other error kinds and wrapper input errors retain fixed messages. No error uses
+the request URL, headers, credentials or curl diagnostic buffer. Verbose curl
+logging is disabled.
+
+| Error | `CURLcode` mapping |
+|---|---|
+| `connect code message` | 6 (resolve host), 7 (connect) |
+| `timeout code message` | 28 |
+| `tls code message` | 35, 51, 53, 54, 58, 59, 60, 64, 66, 77, 80, 82, 83, 90, 91, 98 |
+| `tooLarge limit` | Body callback limit abort (internal marker 1000), or 63 |
+| `curl code message` | Every other curl failure; header-cap abort is 23 |
+
+No CA source produces `tls 77`; curl's peer-verification and bad-file failures
+remain `tls 60` and `tls 77`. Invalid input produces `curl 43`. Inputs reject
+NULs in C-string fields, non-token header names, CR/LF in header values,
+embedded URL credentials, and a colon in the basic-auth username. Invalid
+UTF-8 response headers return `curl 8` rather than invoking a partial decoder.
+The URL authority ends at the first `/`, `?` or `#` after `://`; only an `@`
+inside that authority denotes embedded credentials. Thus a pathless URL such as
+`http://127.0.0.1:<port>?q=a@b` is accepted.
+Each request owns a fresh easy handle; the wrapper checks
+`CURL_VERSION_THREADSAFE` and then calls `curl_global_init` exactly once per
+process, under `pthread_once`, before the first request, because
+`curl_version_info` is not thread-safe until libcurl is initialized. Every
+request sees that one result, so a failed init is not retried. It sets
+`CURLOPT_NOSIGNAL`. The successful real requests exercise that check on the
+pinned curl build. Global cleanup is not called while other handles may exist.
+
+### CA selection
+
+**CA selection and the missing-source pre-check apply only to HTTPS; plain
+HTTP is independent of CA state.** On every HTTPS request the wrapper reads
+`SSL_CERT_FILE` anew, choosing in this order:
+
+1. Non-empty `SSL_CERT_FILE`, used as given, including a missing path.
+2. The test-only request field `caFallback`, if present.
+3. The first existing path in this fixed probe list:
+   `/etc/ssl/certs/ca-certificates.crt`,
+   `/etc/pki/tls/certs/ca-bundle.crt`, `/etc/ssl/cert.pem`.
+
+Empty `SSL_CERT_FILE` counts as unset. Without a source the request returns
+the certificate error before connecting. Every HTTPS transfer explicitly sets
+`CURLOPT_CAINFO`; `CURLOPT_CAPATH = ""` also disables compiled-in CA directories.
+There is no embedded bundle and no reliance on OpenSSL's default trust paths.
+`NIX_SSL_CERT_FILE` has no effect. No environment variable or CLI flag supplies
+`caFallback`, so the release binary cannot set this hook.
+
+### Local responder and test driver
+
+The interpreter is nixpkgs Python **3.14.7**, using `http.server` and `ssl` in
+`packages/http-curl/test/responder.py`. It binds only literal `127.0.0.1` on
+port 0 and prints `READY <port> <closed-port>`. A separate bound, non-listening
+socket reserves the connection-refused port for the server's lifetime.
+`HttpCurlTests` waits for the ready line and always terminates and waits for
+each responder in `finally`, including on assertion failures.
+
+`/echo` echoes body bytes and all request headers as `X-Echo-<lowercase name>`
+response headers. Missing headers produce no echo, so an empty value can be
+distinguished from an absent header. `/auth` accepts the
+synthetic test credentials and returns 401 for others. `/exact` returns 64
+bytes and `/one-over` returns 65 bytes. `/empty-reply` accepts the request and
+closes the connection without sending headers or data, producing curl code 52.
+`/oversize` sends 4,096 bytes without `Content-Length`, then keeps the
+connection open for four seconds. `/stall` waits four seconds without answering.
+The size test requires the size error within 1,500 ms, against a 3,000 ms total
+timeout. The stall test uses a 300 ms total timeout and allows 1,200 ms slack,
+also requiring completion within 1,500 ms. Each case additionally runs under
+a separate two-second `timeout` deadline, so removing curl's timeout fails
+by name instead of hanging the suite.
+
+The Lean executable generates a fresh EC certificate and key in a private
+temporary directory, using nix's `openssl`:
+
+```bash
+openssl req -x509 -newkey ec -pkeyopt ec_paramgen_curve:P-256 -nodes -days 1 \
+  -subj /CN=localhost -addext 'subjectAltName=IP:127.0.0.1,DNS:localhost' \
+  -keyout "$tmp/server.key" -out "$tmp/ca.crt"
+```
+
+The driver removes those exact files and their directory in `finally`. No key
+or certificate is tracked. Missing tools fail the test. All URLs use literal
+`127.0.0.1`; no test resolves a hostname or reaches the internet. Each CA case
+runs in a fresh child whose environment explicitly sets or removes **both**
+`SSL_CERT_FILE` and `NIX_SSL_CERT_FILE`. C9 changes `SSL_CERT_FILE` between two
+requests in that child, proving the selection is per request.
+
+The pinned total is **22** cases:
+
+| Case | Acceptance property |
+|---|---|
+| T1 | GET status, outgoing header and response content type |
+| T2 | Binary POST body and both outgoing headers |
+| T3 | Correct synthetic basic auth succeeds |
+| T4 | Wrong basic auth returns 401 as a normal response |
+| T5 | Streaming size abort within 1,500 ms |
+| T6 | Exactly 64 bytes succeeds with a limit of 64 |
+| T7 | Stalled request times out within 1,500 ms |
+| T8 | Closed port returns the connect kind |
+| T9 | Error rendering contains neither synthetic username nor password |
+| T10 | Empty and whitespace-only headers are present; non-empty control retains its value |
+| T11 | Pathless query containing `@` succeeds; embedded userinfo is rejected |
+| T12 | Empty reply returns generic curl code 52 and its exact libcurl message |
+| T13 | Exactly 65 bytes returns the size error with a limit of 64 |
+| C1 | Environment test CA permits TLS |
+| C2 | Untrusted certificate fails |
+| C3 | NIX_SSL_CERT_FILE does not supply trust |
+| C4 | Empty SSL_CERT_FILE proceeds to the test-CA hook and TLS succeeds |
+| C5 | Hook permits TLS with both CA environment variables removed |
+| C6 | Missing hook path returns the certificate kind |
+| C7 | Plain HTTP succeeds without a CA source |
+| C8 | Non-empty environment CA takes precedence over the hook |
+| C9 | Missing CA fails, then a changed environment CA succeeds in the same child |
+
+### Final validation
+
+On 2026-10-21, after the final changes under `packages/`, `scripts/` and
+`flake.nix` were staged, `nix flake check -L` rebuilt and exited **0**.
+`nix eval --raw .#checks.x86_64-linux.default.drvPath` (exit **0**) identified
+the final check as
+`/nix/store/iwz1ka24dwbilyn0b1pp7mxwdrawbsvm-cyberkrill-0.1.0.drv` (after the
+one-time `curl_global_init` change; the check before it,
+`/nix/store/y7983aprk7dw4pzgmiy3w2jci563y8j3-cyberkrill-0.1.0.drv`, printed
+the same lines).
+The quoted sandbox lines in this section come from that derivation, replayed
+with `nix log` (exit **0**):
+
+```text
+T1: PASS
+T2: PASS
+T3: PASS
+T4: PASS
+T5: PASS
+T6: PASS
+T7: PASS
+T8: PASS
+T9: PASS
+T10: PASS
+T11: PASS
+T12: PASS
+T13: PASS
+C1: PASS
+C2: PASS
+C3: PASS
+C4: PASS
+C5: PASS
+C6: PASS
+C7: PASS
+C8: PASS
+C9: PASS
+http-curl cases: 22/22
+bolt11 recovery: 16/16
+bolt11 signing: 16/16
+Wycheproof: 252 loaded / 95 accepted / 157 rejected
+Wycheproof: 108 groups / 167 valid / 85 invalid / 72 valid high-S / 18 invalid non-64-byte
+forced-static checker EXIT=1 (expected 1)
+link spike, Lake/leanc green twins, forced-static red fixture: PASS
+```
+
+The same log retains every existing link-spike assertion, including both
+green twins, the 1,110/1,081-symbol forced-static rejection, and all four
+usage errors exiting 2. Its new audit names
+`packages/http-curl/.lake/build/bin/HttpCurlTests`, which calls the wrapper:
+
+```text
+defined OpenSSL symbols (static): 0
+defined OpenSSL symbols (dynamic): 0
+version strings in /nix/store/cxd8d2vg70c3pa31v2473hphaa1v0j44-openssl-3.5.8/lib/libcrypto.so.3:
+OpenSSL 3.5.8
+one-OpenSSL checks (a), (b), (c): PASS
+http-curl wrapper executable: one nix OpenSSL, version and ldd: PASS
+```
+
+The audit closure and the separately asserted `ldd` output both contain:
+
+```text
+libssl.so.3 => /nix/store/cxd8d2vg70c3pa31v2473hphaa1v0j44-openssl-3.5.8/lib/libssl.so.3 (0x00007ffff74dc000)
+libcrypto.so.3 => /nix/store/cxd8d2vg70c3pa31v2473hphaa1v0j44-openssl-3.5.8/lib/libcrypto.so.3 (0x00007ffff6a00000)
+```
+
+The script asserts both paths lie under `$OPENSSL_LIB_DIR` and the set of
+version lines is exactly `OpenSSL $OPENSSL_VERSION` (3.5.8).
+It builds `HttpCurlTests` before auditing it. After DoD build and ABI checks,
+`rm -rf packages/http-curl/.lake/build/bin` followed by
+`nix develop -c bash scripts/check-link-spike.sh` from the repository root exited
+**0**: the standalone script rebuilt the missing driver and passed its audit.
+`nix build` and `./result/bin/cyberkrill` also exited **0**; the app printed
+`cyberkrill 0.1.0`. In `packages/http-curl`, `nix develop -c lake build` and
+`nix develop -c lake test` exited **0**, with the same 22 case lines and total
+on the host. In `packages/cyberkrill`, `nix develop -c lake build` exited **0**.
+
+The regenerated `HttpCurl.c` declares `lck_curl_request` with twelve runtime
+arguments: `uint8_t`, three object pointers, `uint8_t`, two object pointers,
+`size_t`, two `uint32_t`, `uint8_t`, and an object pointer. All object inputs
+are borrowed. `RawResponse` has two object fields (headers/body), followed by
+code/status at scalar offsets 0/4; the generated reads match the C constructor.
+`lck_curl_version` still has no runtime arguments; the private
+`lck_curl_error_message` takes one `uint32_t` and returns a Lean IO string result.
+None of the three externs has a world argument. This combined
+declaration/definition check exited **0**:
+
+```bash
+cd packages/http-curl
+nix develop -c bash -c 'cc -fsyntax-only -I "$(lean --print-prefix)/include" -include .lake/build/ir/HttpCurl.c link_shim.c'
+```
+
+`grep -rn sorry --include='*.lean' packages` printed nothing and exited **1**
+(the expected no-match status). The tracked-file certificate/key extension scan
+and unchanged manifest check exited **0**. `git diff --exit-code 309e415 --
+flake.lock packages/secp256k1 scripts/check-one-openssl.sh` exited **0** with
+no output. After host `lake test`, `pgrep -af '^python3 -I test/responder.py'`
+printed nothing and exited **1**. The AGENTS.md supervisor also reported
+`EXIT=0` after both the host gates and final sandbox gate, including its
+lingering-process checks.
+
+### Production mutation red runs
+
+`check-negative-mutations.py` changes production Lean/C only, one property per
+run, then restores both source files in `finally`. The sandbox mode stages
+only the adapter and restores its original index bytes afterward. It captures
+stdout and stderr separately in `.lake/mutation-checks/`, and records the
+commands, exits and failing lines in `host-records.json` and
+`sandbox-records.json`. Tests and the responder are unchanged by mutations.
+
+From `packages/http-curl`, the host command
+`nix develop -c python3 -I check-negative-mutations.py` exited **0**, detecting
+36 production mutations. Each row marked H ran `lake test -- --only CASE` on
+the host, with CASE given in the first column. The sandbox command
+`nix develop -c python3 -I check-negative-mutations.py --sandbox` exited **0**,
+detecting two mutations. Each S row ran `nix flake check -L ../..` in the Nix
+sandbox, where no probe path exists. All **38** individual broken-production
+commands exited **1**. The last column records the failing line after the
+common prefix `assertion failed: `.
+
+| Case / environment | Production mutation | Failing assertion |
+|---|---|---|
+| T1 / H | Return status 0 | T1 status |
+| T1 / H | Omit outgoing headers | T1 request header |
+| T1 / H | Drop parsed content type | T1 response header |
+| T2 / H | Send an empty POST body | T2 body |
+| T2 / H | Drop first outgoing header | T2 headers |
+| T2 / H | Drop second outgoing header | T2 headers |
+| T3 / H | Omit basic auth | T3 right auth |
+| T4 / H | Enable curl FAILONERROR | T4 normal response |
+| T4 / H | Return status 0 | T4 status 401 |
+| T5 / H | Report limit abort as generic write error | T5 streaming size |
+| T5 / H | Remove streaming guard | T5 outer deadline (2s) |
+| T5 / H | Delay the size error by 1,700 ms | T5 abort bound |
+| T6 / H | Reject equality with the size limit | T6 inclusive limit |
+| T6 / H | Zero received bytes | T6 exact body |
+| T7 / H | Omit total timeout | T7 outer deadline (2s) |
+| T7 / H | Map timeout to generic error | T7 timeout kind |
+| T7 / H | Multiply total timeout by six | T7 timeout bound |
+| T8 / H | Omit code 7 from connect mapping | T8 connect kind |
+| T9 / H | Include username in error value | T9 user redaction |
+| T9 / H | Include password in error value | T9 password redaction |
+| T10 / H | Use the old `Name: value` form for empty values | T10 empty header present |
+| T10 / H | Drop the non-empty control header | T10 full header |
+| T10 / H | Use the empty-header form only for a zero-length value | T10 whitespace header present |
+| T11 / H | End the authority only at `/` | T11 query at-sign |
+| T11 / H | Remove the embedded-credential check | T11 reject userinfo |
+| T12 / H | Replace the generic curl code with 23 | T12 curl code 52 |
+| T12 / H | Replace libcurl's text with `HTTP transport failure` | T12 curl message |
+| T13 / H | Admit `limit + 1` bytes | T13 one byte over limit |
+| C1 / H | Replace environment CA with missing path | C1 environment CA |
+| C2 / H | Map certificate failure to generic error | C2 untrusted CA |
+| C3 / S | Remove missing-source precheck and CA-directory guard | C3 ignore NIX CA |
+| C4 / H | Treat an empty SSL_CERT_FILE as set | C4 empty environment CA |
+| C5 / H | Ignore fallback hook | C5 fallback hook |
+| C6 / H | Map certificate failure to generic error | C6 missing hook |
+| C7 / S | Apply CA rules to headerless plain `/echo` requests | C7 plain HTTP without CA |
+| C8 / H | Prefer hook over environment CA | C8 environment precedence |
+| C9 / H | Cache environment CA on first use | C9 per-request CA |
+| C9 / H | Treat bad CA file as success | C9 initial missing CA |
+
+C3 disables both independent guards of the same default-trust property; leaving
+the empty CA-directory setting in place was separately observed to keep C3 green.
+C7's mutation isolates the plain-HTTP CA property so the earlier transport
+cases still execute before C7 fails. Every mutation was restored before the
+final green builds. No mutation is part of the production wrapper.
+
+The final mutation summaries (both commands exited **0**) were:
+
+```text
+negative mutations: 36/36 detected; production sources restored
+negative mutations: 2/2 detected; production sources restored
+```
+
+### Re-running
+
+From the repository root (the per-package commands start in the same directory
+as the flake's package loop):
+
+```bash
+nix flake check -L
+nix build && ./result/bin/cyberkrill
+(cd packages/http-curl && nix develop -c lake build && nix develop -c lake test)
+(cd packages/cyberkrill && nix develop -c lake build)
+nix develop -c bash scripts/check-link-spike.sh
+nix log /nix/store/iwz1ka24dwbilyn0b1pp7mxwdrawbsvm-cyberkrill-0.1.0.drv
+nix eval --raw .#checks.x86_64-linux.default.drvPath
+```
+
+To repeat mutation checks, run the two commands above from `packages/http-curl`
+with no concurrent reviewers or writers; then run the green checks again.
+
+### Deltas not taken
+
+None. The reusable recording stub remains Phase 1b (2 of 2).
 
 ## Licence
 

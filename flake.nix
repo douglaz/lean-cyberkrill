@@ -93,7 +93,7 @@
           root = ./.;
           fileset = pkgs.lib.fileset.unions [ ./lean-toolchain ./packages ./scripts ];
         };
-        nativeBuildInputs = [ lean pkgs.glibc.bin pkgs.binutils ];
+        nativeBuildInputs = [ lean pkgs.glibc.bin pkgs.binutils pkgs.python3 pkgs.openssl ];
         buildInputs = [ pkgs.secp256k1 pkgs.curl pkgs.openssl ];
         buildPhase = ''
           export HOME=$TMPDIR
@@ -118,7 +118,7 @@
 
       devShells.${system} = {
         default = pkgs.mkShell (ffiEnvironment // {
-          packages = [ lean pkgs.glibc.bin pkgs.binutils ];
+          packages = [ lean pkgs.glibc.bin pkgs.binutils pkgs.python3 pkgs.openssl ];
           buildInputs = [ pkgs.secp256k1 pkgs.curl pkgs.openssl ];
         });
         # Phase 10 probe: build the Lean toolchain against musl. See nix/musl/build-lean-musl.sh.
