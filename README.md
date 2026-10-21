@@ -344,7 +344,13 @@ published test vectors in v1. `contextRoundTrip : IO Bool` is unchanged.
 | `sign` | 32-byte hash and 32-byte secret key. Returns 65 bytes: compact r ‖ s (always low-S), then recid 0–3. None for wrong lengths, secret zero or ≥ the curve order, context failure or signing failure. |
 
 Parse and verify both reject hybrid (06/07) keys, including matching parity;
-tests cover both matching and mismatched parity. All buffer lengths and the
+tests cover both matching and mismatched parity. This matches rust-bitcoin
+0.32.8's `PublicKey::from_slice` and `from_str`, which cyberkrill uses for PSBT
+`partial_sigs` keys and descriptors. libsecp256k1's own parse, and so
+`secp256k1::PublicKey::from_slice`, accepts a hybrid key whose prefix matches
+the y parity; cyberkrill reaches it for PSBT `bip32_derivation` keys and for
+`ln-encode-invoice`'s JSON keys. Bead `lck-decide-hybrid-pubkey-xgr` decides
+whether those two paths follow it. All buffer lengths and the
 recovery-id range are guarded before libsecp256k1 sees the corresponding input.
 The package keeps `"packages": []` in its Lake manifest and uses the existing
 `moreLinkObjs` / `moreLinkLibs` targets.
