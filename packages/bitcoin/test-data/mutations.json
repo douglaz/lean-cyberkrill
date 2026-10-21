@@ -78,7 +78,7 @@
     ],
     "exit": 1,
     "failures": [
-      "error: BitcoinTests/AxiomGate.lean:53:0: Bitcoin axiom gate: Bitcoin.Amount.ofSats_msat reaches disallowed axiom Bitcoin.Amount.auditProbe",
+      "error: BitcoinTests/AxiomGate.lean:55:0: Bitcoin axiom gate: Bitcoin.Amount.ofSats_msat reaches disallowed axiom Bitcoin.Amount.auditProbe",
       "error: build failed"
     ]
   },

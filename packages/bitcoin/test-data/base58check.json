@@ -1,0 +1,26 @@
+[
+  {
+    "name": "empty",
+    "payloadHex": "",
+    "checksumHex": "5df6e0e2",
+    "encoded": "3QJmnh"
+  },
+  {
+    "name": "leading-zeros",
+    "payloadHex": "0000010203",
+    "checksumHex": "bcfa6471",
+    "encoded": "113DV4HkAet"
+  },
+  {
+    "name": "all-zeros",
+    "payloadHex": "000000",
+    "checksumHex": "78e437f6",
+    "encoded": "11146EAsf"
+  },
+  {
+    "name": "long",
+    "payloadHex": "42434445464748494a4b4c4d4e4f505152535455565758595a5b5c5d5e5f60616263646566676869",
+    "checksumHex": "6a3d74bf",
+    "encoded": "NYahRCXYHJuRYabPt3cNvsbhC3kc52aB97WrohWivVtPc9LjgjogcE6EJSSz"
+  }
+]

@@ -1,0 +1,93 @@
+[
+  {
+    "label": "drop-leading-zeros",
+    "command": [
+      "lake",
+      "test"
+    ],
+    "exit": 1,
+    "failures": [
+      "error: Bitcoin/Base58.lean:286:4: Type mismatch: After simplification, term",
+      "error: Bitcoin/Base58.lean:297:12: unsolved goals",
+      "error: Bitcoin/Base58.lean:311:6: This simp argument is unused:",
+      "error: Bitcoin/Base58.lean:311:63: This simp argument is unused:",
+      "error: Bitcoin/Base58.lean:311:70: This simp argument is unused:",
+      "error: build failed"
+    ],
+    "brokenTheorem": "Bitcoin.Base58.base58Decode_encode"
+  },
+  {
+    "label": "admit-zero",
+    "command": [
+      "lake",
+      "test"
+    ],
+    "exit": 1,
+    "failures": [
+      "error: Bitcoin/Base58.lean:288:6: Tactic `rewrite` failed: Did not find an occurrence of the pattern",
+      "error: Bitcoin/Base58.lean:296:9: unsolved goals",
+      "error: Bitcoin/Base58.lean:299:6: Type mismatch: After simplification, term",
+      "error: Bitcoin/Base58.lean:296:18: This simp argument is unused:",
+      "error: build failed"
+    ],
+    "brokenTheorem": "Bitcoin.Base58.base58Encode_of_decode"
+  },
+  {
+    "label": "skip-checksum",
+    "command": [
+      "lake",
+      "test"
+    ],
+    "exit": 1,
+    "failures": [
+      "error: Bitcoin/Base58Check.lean:59:54: Application type mismatch: The argument",
+      "error: build failed"
+    ],
+    "brokenTheorem": "Bitcoin.Base58.base58CheckDecode_sound"
+  },
+  {
+    "label": "merge-errors",
+    "command": [
+      "lake",
+      "test"
+    ],
+    "exit": 1,
+    "failures": [
+      "uncaught exception: assertion failed: Base58Check rejections short"
+    ]
+  },
+  {
+    "label": "single-sha256",
+    "command": [
+      "lake",
+      "test"
+    ],
+    "exit": 1,
+    "failures": [
+      "error: Bitcoin/Base58Check.lean:59:8: (deterministic) timeout at `whnf`, maximum number of heartbeats (200000) has been reached",
+      "error: Bitcoin/Base58Check.lean:55:12: (deterministic) timeout at `\u00abtactic execution\u00bb`, maximum number of heartbeats (200000) has been reached",
+      "error: build failed"
+    ],
+    "brokenTheorem": "Bitcoin.Base58.base58CheckDecode_sound"
+  },
+  {
+    "label": "swapped-alphabet",
+    "command": [
+      "lake",
+      "test"
+    ],
+    "exit": 1,
+    "failures": [
+      "uncaught exception: assertion failed: base58 vectors 516b6fcd0f"
+    ]
+  },
+  {
+    "label": "restored-tests",
+    "command": [
+      "lake",
+      "test"
+    ],
+    "exit": 0,
+    "failures": []
+  }
+]
