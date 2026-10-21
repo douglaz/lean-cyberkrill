@@ -1,0 +1,24 @@
+{
+  "entries": [
+    {"method": "GET", "path": "/example?date=synthetic", "responses": [
+      {"status": 200, "headers": {"X-Fixture": "example"}, "json": {"quote": 0.10}}
+    ]},
+    {"method": "POST", "path": "/verb", "responses": [{"text": "post"}], "repeat": true},
+    {"method": "POST", "path": "/match?a=%2F&b=2", "body": {"json": {"nested": {"z": [true, 0.1], "a": 2}, "n": 123456789012345678901234567890.1}}, "responses": [
+      {"text": "first"}, {"text": "second"}, {"text": "third"}
+    ]},
+    {"method": "POST", "path": "/rpc", "rpc": {"method": "synthetic", "params": [["x", 0.10], {"n": 1}, []]}, "responses": [
+      {"json": {"result": "rpc-ok"}}
+    ]},
+    {"method": "GET", "path": "/auth", "authorization": "Bearer synthetic-test-only", "unauthorized": {"status": 401, "text": "synthetic unauthorized"}, "responses": [{"text": "authorized"}]},
+    {"method": "GET", "path": "/sequence", "responses": [{"text": "once"}]},
+    {"method": "GET", "path": "/repeat", "repeat": true, "responses": [{"text": "start"}, {"text": "last"}]},
+    {"method": "POST", "path": "/text", "body": {"text": "synthetic raw"}, "responses": [{"status": 404, "text": "recorded absence"}]},
+    {"method": "POST", "path": "/binary", "body": {"base64": "/wA="}, "responses": [{"text": "binary-ok"}]},
+    {"method": "GET", "path": "/precedence", "responses": [{"text": "earlier"}]},
+    {"method": "GET", "path": "/precedence", "responses": [{"text": "later"}]},
+    {"method": "GET", "path": "/content-type/title", "responses": [{"headers": {"Content-Type": "text/html"}, "text": "synthetic html"}]},
+    {"method": "GET", "path": "/content-type/lower", "responses": [{"headers": {"content-type": "application/synthetic+json"}, "json": {"synthetic": true}}]},
+    {"method": "GET", "path": "/content-type/mixed", "responses": [{"headers": {"cOnTeNt-TyPe": "text/synthetic"}, "text": "synthetic text"}]}
+  ]
+}

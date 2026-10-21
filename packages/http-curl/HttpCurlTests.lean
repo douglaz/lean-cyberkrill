@@ -3,6 +3,8 @@ Copyright (c) 2026 lean-cyberkrill developers. Released under the MIT License or
 Apache License 2.0, at your option; see LICENSE-MIT and LICENSE-APACHE.
 -/
 import HttpCurl
+import HttpCurlTestSupport
+import Lean.Data.Json
 import Std.Async.System
 
 open HttpCurl
@@ -118,35 +120,209 @@ private def runCase (name http tls closed ca : String) : IO Unit := do
     check "C9 per-request CA" (is2xx (← success "C9 per-request CA" (← request tlsReq)))
   | _ => throw <| IO.userError s!"unknown case: {name}"
 
-private def withResponder (args : Array String) (action : String → String → IO Unit) : IO Unit := do
-  let child ← IO.Process.spawn {
-    cmd := "python3", args := #["-I", "test/responder.py"] ++ args
-    stdin := .null, stdout := .piped, stderr := .inherit }
-  try
-    let ready ← child.stdout.getLine
-    let ["READY", port, closed] := ready.trimAscii.toString.splitOn " "
-      | throw <| IO.userError s!"responder failed to become ready: {ready}"
-    check "responder port" (port.toNat?.isSome && closed.toNat?.isSome)
-    action port closed
-  finally
-    child.kill
-    let _ ← child.wait
+private def stubNames : Array String :=
+  #["S1", "S2", "S3", "S4", "S5", "S6", "S7", "S8", "S9", "S10", "S11", "S12", "S13"]
+
+private def replayConfig : HttpCurlTestSupport.Config :=
+  { recordings := #["../http-curl/test/example.json"] }
+
+private def parsed (text : String) : IO Lean.Json :=
+  IO.ofExcept (Lean.Json.parse text)
+
+private def field (json : Lean.Json) (key : String) : IO Lean.Json :=
+  IO.ofExcept (json.getObjVal? key)
+
+private def stringField (json : Lean.Json) (key : String) : IO String := do
+  IO.ofExcept ((← field json key).getStr?)
+
+private def replayRequest (stub : HttpCurlTestSupport.Stub) (path : String)
+    (body : Option String := none) (headers : Array (String × String) := #[]) : IO Response := do
+  success "stub transport" (← request {
+    url := stub.url ++ path, method := if body.isSome then .post else .get
+    body := body.map String.toUTF8, headers, totalTimeoutMs := 1000 })
+
+private def textBody (r : Response) : String := String.fromUTF8! r.body
+
+private def runStubCase (name : String) : IO Unit := do
+  let withReplay := HttpCurlTestSupport.withStub replayConfig
+  match name with
+  | "S1" => withReplay fun stub => do
+    check "S1 method near miss" ((← replayRequest stub "/verb").status == 599)
+    check "S1 method match" (textBody (← replayRequest stub "/verb" (some "")) == "post")
+    let body := "{\"n\":123456789012345678901234567890.1,\"nested\":{\"a\":2,\"z\":[true,1e-1]}}"
+    check "S1 path near miss" ((← replayRequest stub "/other?a=%2F&b=2" body).status == 599)
+    check "S1 query near miss" ((← replayRequest stub "/match?b=2&a=%2F" body).status == 599)
+    check "S1 percent near miss" ((← replayRequest stub "/match?a=/&b=2" body).status == 599)
+    let path := "/match?a=%2F&b=2"
+    check "S1 body near miss" ((← replayRequest stub path (some "{} ")).status == 599)
+    let boolMiss := body.replace "true" "1"
+    check "S1 boolean distinct" ((← replayRequest stub path boolMiss).status == 599)
+    let precisionMiss := body.replace "890.1" "890.2"
+    check "S1 precision distinct" ((← replayRequest stub path precisionMiss).status == 599)
+    let arrayMiss := body.replace "[true,1e-1]" "[1e-1,true]"
+    check "S1 array order" ((← replayRequest stub path arrayMiss).status == 599)
+    check "S1 key order and canonical exponent" (textBody (← replayRequest stub path body) == "first")
+    check "S1 canonical trailing zero" (textBody (← replayRequest stub path
+      (body.replace "1e-1" "0.10")) == "second")
+    check "S1 ordered responses" (textBody (← replayRequest stub path
+      (body.replace "1e-1" "0.1")) == "third")
+  | "S2" => withReplay fun stub => do
+    check "S2 rpc method near miss" ((← replayRequest stub "/rpc"
+      "{\"method\":\"other\",\"params\":[]}").status == 599)
+    check "S2 rpc params near miss" ((← replayRequest stub "/rpc"
+      "{\"method\":\"synthetic\",\"params\":[1]}").status == 599)
+    for (shape, label) in #[
+        ("{\"jsonrpc\":\"2.0\",\"id\":\"cyberkrill\",\"method\":\"synthetic\",\"params\":[\"x\",0.1]}", "string id"),
+        ("{\"id\":7,\"method\":\"synthetic\",\"params\":{\"n\":1.0}}", "numeric id"),
+        ("{\"method\":\"synthetic\",\"params\":[]}", "no jsonrpc")] do
+      let r ← replayRequest stub "/rpc" shape
+      check s!"S2 variant {label}" (r.status == 200)
+      check s!"S2 variant {label}" ((← stringField (← parsed (textBody r)) "result") == "rpc-ok")
+      check s!"S2 exhausted variant {label}" ((← replayRequest stub "/rpc" shape).status == 599)
+  | "S3" => withReplay fun stub => do
+    let missing ← replayRequest stub "/auth"
+    check "S3 missing auth" (missing.status == 401 && textBody missing == "synthetic unauthorized")
+    check "S3 wrong auth" ((← replayRequest stub "/auth" none
+      #[("Authorization", "Bearer wrong-synthetic")]).status == 401)
+    check "S3 right auth no consumption" (textBody (← replayRequest stub "/auth" none
+      #[("Authorization", "Bearer synthetic-test-only")]) == "authorized")
+  | "S4" => withReplay fun stub => do
+    let paths := #["/sequence", "/missing?x=1", "/sequence", "/auth"]
+    let mut responses := #[]
+    for path in paths do responses := responses.push (← replayRequest stub path)
+    let some unmatched := responses[1]? | throw <| IO.userError "S4 missing unmatched response"
+    let some exhausted := responses[2]? | throw <| IO.userError "S4 missing exhausted response"
+    check "S4 unmatched status" (unmatched.status == 599)
+    let diagnostic ← parsed (textBody unmatched)
+    check "S4 diagnostic method" ((← stringField diagnostic "method") == "GET")
+    check "S4 diagnostic path" ((← stringField diagnostic "path") == "/missing?x=1")
+    check "S4 diagnostic body" ((← stringField diagnostic "body") == "")
+    check "S4 unmatched reason" ((← stringField diagnostic "error") == "unmatched")
+    check "S4 exhausted status" (exhausted.status == 599)
+    check "S4 exhausted reason" ((← stringField (← parsed (textBody exhausted)) "error") == "exhausted")
+    let lines := (← stub.readLog).splitOn "\n" |>.filter (!·.isEmpty)
+    check "S4 log complete" (lines.length == 4)
+    let mut seen := #[]
+    for line in lines do
+      let value ← parsed line
+      seen := seen.push (← stringField value "path")
+      check "S4 log method" ((← stringField value "method") == "GET")
+      check "S4 log body" ((← stringField value "body") == "")
+    check "S4 log order" (seen == paths)
+    for (expected, label) in #[("start", "first"), ("last", "last"), ("last", "repeat")] do
+      check s!"S4 repeat {label}" (textBody (← replayRequest stub "/repeat") == expected)
+  | "S5" | "S6" | "S7" =>
+    let port ← if name == "S7" then
+        HttpCurlTestSupport.withStub {} (fun s => pure s.port)
+      else pure 0
+    let savedDir ← IO.mkRef (none : Option System.FilePath)
+    HttpCurlTestSupport.withStub { replayConfig with tls := name == "S6", port } fun stub => do
+      savedDir.set (some stub.tempDir)
+      if name == "S6" then Std.Async.System.setEnvVar "SSL_CERT_FILE" stub.caCert.toString
+      if name == "S7" then check "S7 fixed port" (stub.port == port)
+      let r ← replayRequest stub "/example?date=synthetic"
+      check s!"{name} example status" (r.status == 200)
+      check s!"{name} example body" (textBody r == "{\"quote\":0.10}")
+      check s!"{name} example header" (r.headers.contains ("x-fixture", "example"))
+    if let some dir ← savedDir.get then
+      check s!"{name} cleanup" (!(← dir.pathExists))
+  | "S8" => HttpCurlTestSupport.withStub {} fun occupied => do
+    let result ← IO.Process.output {
+      cmd := "python3", args := #["-I", "../http-curl/test/responder.py", "--port",
+        toString occupied.port, "--log", (occupied.tempDir / "requests.jsonl").toString] }
+    check "S8 occupied exit" (result.exitCode != 0)
+    check "S8 occupied no ready" (!(result.stdout.startsWith "READY"))
+    let raised ← try
+        HttpCurlTestSupport.withStub { port := occupied.port } (fun _ => pure ())
+        pure ""
+      catch error => pure error.toString
+    check "S8 occupied launcher message"
+      (raised.startsWith s!"stub failed before READY (exit {result.exitCode}):")
+    let missing := (occupied.tempDir / "missing-recording.json").toString
+    let raised ← try
+        HttpCurlTestSupport.withStub { recordings := #[missing] } (fun _ => pure ())
+        pure ""
+      catch error => pure error.toString
+    check "S8 missing recording launcher message"
+      (raised.startsWith "stub failed before READY (exit 1):")
+    let entry (headers : String) :=
+      "{\"entries\":[{\"method\":\"GET\",\"path\":\"/framing\",\"responses\":[{\"status\":202," ++
+        "\"headers\":{\"X-Fixture\":\"framing\"" ++ headers ++ "},\"text\":\"framing\"}]}]}"
+    let fixture (label : String) := occupied.tempDir / s!"framing-{label}.json"
+    let rejected := #[("content-length", ",\"Content-Length\":\"7\""),
+      ("transfer-encoding", ",\"transfer-encoding\":\"chunked\"")]
+    -- withStub's final removeDir needs its directory empty again, even after a failed check.
+    try
+      IO.FS.writeFile (fixture "control") (entry "")
+      HttpCurlTestSupport.withStub { recordings := #[(fixture "control").toString] } fun stub => do
+        check "S8 framing control starts" ((← replayRequest stub "/framing").status == 202)
+      for (label, headers) in rejected do
+        IO.FS.writeFile (fixture label) (entry headers)
+        let result ← IO.Process.output {
+          cmd := "python3", args := #["-I", "../http-curl/test/responder.py", "--log",
+            (occupied.tempDir / "requests.jsonl").toString, (fixture label).toString] }
+        check s!"S8 framing {label} rejected" (result.exitCode != 0 &&
+          !(result.stdout.startsWith "READY") && (result.stderr.splitOn "framing header").length > 1)
+    finally
+      for label in #["control"] ++ rejected.map (·.1) do
+        if ← (fixture label).pathExists then IO.FS.removeFile (fixture label)
+  | "S9" => withReplay fun stub => do
+    check "S9 text near miss" ((← replayRequest stub "/text" "other").status == 599)
+    let r ← replayRequest stub "/text" "synthetic raw"
+    check "S9 recorded 404" (r.status == 404 && textBody r == "recorded absence")
+    let binary := ByteArray.mk #[255, 0]
+    let r ← success "S9 binary transport" (← request {
+      url := stub.url ++ "/binary", method := .post, body := some binary })
+    check "S9 binary match" (textBody r == "binary-ok")
+    let r ← success "S9 binary diagnostic" (← request {
+      url := stub.url ++ "/unknown", method := .post, body := some binary })
+    check "S9 diagnostic binary" ((← stringField (← field (← parsed (textBody r)) "body") "base64") == "/wA=")
+    let r ← replayRequest stub "/unknown" "synthetic body"
+    check "S9 diagnostic text" ((← stringField (← parsed (textBody r)) "body") == "synthetic body")
+    check "S9 diagnostic POST" ((← stringField (← parsed (textBody r)) "method") == "POST")
+    check "S9 precedence" (textBody (← replayRequest stub "/precedence") == "earlier")
+    check "S9 precedence exhausted" ((← replayRequest stub "/precedence").status == 599)
+    let lines := (← stub.readLog).splitOn "\n" |>.filter (!·.isEmpty)
+    let binaryLog ← parsed lines[2]!
+    check "S9 log binary" ((← stringField (← field binaryLog "body") "base64") == "/wA=")
+    check "S9 no legacy fallback" ((← replayRequest stub "/echo").status == 599)
+  | "S10" =>
+    let dirRef ← IO.mkRef (none : Option System.FilePath)
+    try
+      HttpCurlTestSupport.withStub { tls := true } fun stub => do
+        dirRef.set (some stub.tempDir)
+        throw <| IO.userError "synthetic callback failure"
+    catch _ => pure ()
+    let some dir ← dirRef.get | throw <| IO.userError "S10 callback not reached"
+    check "S10 exception cleanup" (!(← dir.pathExists))
+  | "S11" =>
+    let result ← IO.Process.output {
+      cmd := (← IO.appPath).toString, args := #["--stub-case", "S6"], cwd := some "../cyberkrill" }
+    IO.eprint result.stderr
+    check "S11 sibling package TLS" (result.exitCode == 0)
+  | "S12" => HttpCurlTestSupport.withStub { tls := true } fun stub => do
+    let result ← IO.Process.output {
+      cmd := "python3", args := #["-I", "../http-curl/test/check-tls-eof.py",
+        stub.tempDir.toString] }
+    IO.print result.stdout
+    IO.eprint result.stderr
+    check "S12 TLS stdin EOF deadline" (result.exitCode == 0)
+  | "S13" => withReplay fun stub => do
+    for (path, expected) in #[
+        ("/content-type/title", "text/html"),
+        ("/content-type/lower", "application/synthetic+json"),
+        ("/content-type/mixed", "text/synthetic")] do
+      let response ← replayRequest stub path
+      let types := response.headers.filter (fun header => header.1 == "content-type")
+      check s!"S13 single recorded content-type {path}" (types == #[("content-type", expected)])
+  | _ => throw <| IO.userError s!"unknown stub case: {name}"
 
 private def runTests (only : Option String) : IO Unit := do
-  let dir ← IO.FS.createTempDir
-  let cert := dir / "ca.crt"
-  let key := dir / "server.key"
-  try
-    let generated ← IO.Process.output {
-      cmd := "openssl", args := #["req", "-x509", "-newkey", "ec",
-      "-pkeyopt", "ec_paramgen_curve:P-256", "-nodes", "-days", "1", "-subj", "/CN=localhost",
-      "-addext", "subjectAltName=IP:127.0.0.1,DNS:localhost", "-keyout", key.toString,
-      "-out", cert.toString] }
-    check "openssl certificate generation" (generated.exitCode == 0)
-    withResponder #[] fun http closed => do
-      withResponder #["--cert", cert.toString, "--key", key.toString] fun tls _ => do
+    HttpCurlTestSupport.withStub {} fun http => do
+      HttpCurlTestSupport.withStub { tls := true } fun tls => do
+        let cert := tls.caCert
         let mut count := 0
-        for name in caseNames do
+        for name in caseNames ++ stubNames do
           if only.isSome && only != some name then continue
           let ssl : Option String :=
             if name == "C1" then some cert.toString
@@ -154,10 +330,10 @@ private def runTests (only : Option String) : IO Unit := do
             else if name == "C8" || name == "C9" then some (cert.toString ++ ".missing")
             else none
           let nix := if name == "C3" then some cert.toString else none
+          let args := if stubNames.contains name then #["--stub-case", name] else
+            #["--case", name, http.url, tls.url, s!"http://127.0.0.1:{http.closedPort}/", cert.toString]
           let result ← IO.Process.output {
-            cmd := "timeout", args := #["--kill-after=1s", "2s",
-            (← IO.appPath).toString, "--case", name, s!"http://127.0.0.1:{http}",
-            s!"https://127.0.0.1:{tls}", s!"http://127.0.0.1:{closed}/", cert.toString]
+            cmd := "timeout", args := #["--kill-after=1s", "2s", (← IO.appPath).toString] ++ args
             env := #[("SSL_CERT_FILE", ssl), ("NIX_SSL_CERT_FILE", nix)] }
           IO.print result.stdout
           IO.eprint result.stderr
@@ -165,15 +341,12 @@ private def runTests (only : Option String) : IO Unit := do
           check s!"{name} child exit {result.exitCode}" (result.exitCode == 0)
           IO.println s!"{name}: PASS"
           count := count + 1
-        check "pinned case count" (count == if only.isSome then 1 else 22)
-        IO.println s!"http-curl cases: {count}/{if only.isSome then 1 else 22}"
-  finally
-    if ← cert.pathExists then IO.FS.removeFile cert
-    if ← key.pathExists then IO.FS.removeFile key
-    IO.FS.removeDir dir
+        check "pinned case count" (count == if only.isSome then 1 else 35)
+        IO.println s!"http-curl cases: {count}/{if only.isSome then 1 else 35}"
 
 def main (args : List String) : IO Unit := do
   match args with
+  | ["--stub-case", name] => runStubCase name
   | ["--case", name, http, tls, closed, ca] => runCase name http tls closed ca
   | ["--only", name] => runTests (some name)
   | [] => runTests none
