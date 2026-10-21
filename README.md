@@ -3,9 +3,10 @@
 Bitcoin, Lightning and Fedimint libraries for Lean 4, and a Lean port of the
 [cyberkrill](https://github.com/douglaz/cyberkrill) command-line tool built on them.
 
-Status: Phase 1a and both parts of Phase 1b complete: secp256k1 bindings, a bounded
-HTTP(S) client with per-request CA selection, and a reusable HTTP/TLS recording stub.
-Other packages remain skeletons; `plan.md` is the plan for v1.
+Status: Phase 1a, both parts of Phase 1b, and Phase 2 complete: secp256k1 bindings,
+a bounded HTTP(S) client with per-request CA selection, a reusable HTTP/TLS recording stub,
+and proved SHA-256 and SHA-256d with NIST vectors. Other packages remain skeletons;
+`plan.md` is the plan for v1.
 
 ## Packages
 
@@ -1215,6 +1216,257 @@ Manager to commit.
 ### Deltas not taken
 
 None.
+
+## Phase 2: sha256
+
+`import Sha256` provides `Sha256.hash : ByteArray → ByteArray` and
+`Sha256.sha256d : ByteArray → ByteArray`. Both produce 32 bytes in raw digest
+order. `hash` is `(Sha256.sha256 msg).toByteArray`, and `sha256d` is
+`hash (hash msg)`: both use the copied implementation, with no second hash
+implementation. The copied `Sha256.sha256 : ByteArray → Digest 32` and its
+UTF-8 string wrapper remain available too.
+
+`hash_spec` equates the output list with `Spec.sha256_bytes` of the input;
+`hash_size` proves size 32. `sha256d_spec` equates its output list with the
+specification applied twice, and `sha256d_size` proves size 32. These four
+theorems connect the byte-array API that downstream packages call to the
+copied specification. The specification is total; its FIPS interpretation
+is for byte-aligned messages within the standard's length bound of fewer
+than 2⁶⁴ bits. No cryptographic security property is claimed.
+
+### Copy and port
+
+Source: [pure-algebra/lean4-hash](https://github.com/pure-algebra/lean4-hash/tree/ab7eda433f0390fde7aa240189761540c9744c79),
+commit `ab7eda433f0390fde7aa240189761540c9744c79`, MIT,
+Copyright (c) 2026 The Fold Lab. Its verbatim MIT notice is
+`packages/sha256/Sha256/LICENSE-MIT`; each copied file starts with a provenance
+line referring to that notice. New files carry this repository's dual licence.
+
+Modules **and namespaces** are renamed from `Hash.Sha256.*` to `Sha256.*`.
+This keeps the package's names under its existing root, avoids claiming the
+generic `Hash` module tree in a shared workspace, and avoids a collision with
+an unmodified lean4-hash dependency. Lake retains `autoImplicit = false`,
+`relaxedAutoImplicit = false`, and `warningAsError = true`. The package has
+zero Lean dependencies, no Mathlib, and no C. `lakefile.lean` stays in use;
+`Sha256Tests` is now an executable test driver, with a separate test-support
+library rooted at `Sha256Tests.AxiomGate`.
+
+All nine files come from upstream's `Hash/Sha256/`. Every file gains the
+provenance line and the module/namespace rename. Beyond those shared changes,
+the complete deviations are:
+
+| Upstream file | Additional changes |
+|---|---|
+| `Vec.lean` | None. |
+| `Spec.lean` | One `if_pos` → `ite_eq_left`, one `dif_pos` → `dite_eq_left`, two `dif_neg` → `dite_eq_right`; clarify that the PDF is vendored upstream, and that the known-answer tests on `Impl` are upstream's while this port's vectors run through the public API. |
+| `Impl.lean` | One `dif_pos` and one `dif_neg` replaced as above; clarify that `Hash.Sha256.Kats` and kernel witnesses belong to upstream, while this port tests the public API at runtime. |
+| `Lengths.lean` | None. |
+| `Bridge.lean` | Clarify that the `Hash.Sha256.Kats` reference names upstream tests. |
+| `Hex.lean` | None. It is required by `Digest`, retained with its proofs, and unused by our vector decoder. |
+| `Digest.lean` | One `dif_pos` → `dite_eq_left`. |
+| `Fast.lean` | Three `dif_pos` and three `dif_neg` replacements; clarify the historical kernel-witness statement and this port's runtime vector path. |
+| `Api.lean` | Remove the five build-time CAVP guards and their prose (all five records run in ShortMsg); remove their two unused meta imports; replace the obsolete v4.33.1/external `Verified` recheck claim with the v4.35.0 kernel and this port's actual allowlist audit. |
+
+No copied theorem statement changes except the namespace rename. All proofs
+keep their meaning. Documentation paths such as `docs/SHA256-DAG.md` and
+`test/contracts/…`, and historical v4.33.1 measurements, refer to upstream at
+`ab7eda4`. `Context`, SHA-224 modules, and upstream test/audit roots are not
+copied; the SHA-224 IV comparison within `Bridge` remains. General portability
+fixes are recorded in [docs/upstream-fixes.md](docs/upstream-fixes.md).
+
+### Specification review
+
+Compared `Sha256/Spec.lean` with
+[FIPS 180-4, August 2015](https://nvlpubs.nist.gov/nistpubs/FIPS/NIST.FIPS.180-4.pdf).
+Transcription fidelity between English/pseudocode and Lean remains a **human
+trust step**, rather than a formal theorem. The non-mechanized comparisons
+below cover the definitions, rather than inferring correctness from passing
+vectors. Constants additionally have an independent mechanical check.
+
+| Section | Comparison and result |
+|---|---|
+| §3.1 | `bitsOfNat (k+1)` emits bit `k` first; `bitsOfByte` uses 8 and `bitsOfWord` uses 32. `natOfBits` weights the head by 2^(tail length). Input and output are MSB first within each byte/word; words are emitted in state order. Non-mechanized comparison with the standard's big-endian convention. |
+| §4.1.2 | `Ch` is `(x ∧ y) ⊕ (¬x ∧ z)`; `Maj` is the xor of the three pairwise ands. The large sigmas rotate by (2,13,22) and (6,11,25); the small sigmas rotate by (7,18) and (17,19), with logical shifts 3 and 10. Matched all six definitions and 32-bit word width by inspection. |
+| §4.2.2 | Compared all 64 `K` literals, in order, with the table. `check-fips-constants.py` also independently derives all 64 from the fractional cube roots of the first 64 primes using integer arithmetic and exact floor-root inequalities; no floating-point approximation. |
+| §5.3.3 | Compared all eight `H0` words in order. The same script independently derives all eight from the fractional square roots of the first eight primes. |
+| §5.1.1 | `pad` appends `true`, then `(959 − length % 512) % 512` false bits, then `bitsOfNat 64 length`. Since 959 ≡ 447 modulo 512 and subtraction cannot truncate, the zero count is the least nonnegative solution of ℓ+1+k ≡ 448 modulo 512. The length is big endian. Non-mechanized arithmetic/transcription comparison; `length_pad` and `pad_prefix` also remain proved. |
+| §5.2.1 | `parse` takes successive 512-bit blocks; `blockOfBits` selects 16 successive 32-bit slices starting at offset `32*i`. Non-mechanized comparison. The trailing-short-block total extension is irrelevant on padded input. |
+| §6.2.2 | The first 16 schedule words are the block; the remaining 48 use offsets −2, −7, −15, −16 with σ1 and σ0 in the prescribed positions. `round` forms T1 and T2, updates all eight variables in the prescribed order, runs 64 rounds, then `compress` adds each final word to the incoming state modulo 2³². `hash` folds blocks in order from `H0`. Non-mechanized comparison of each recurrence, assignment, bound, and final addition. |
+
+From the repository root, `nix develop -c python3 -I
+packages/sha256/check-fips-constants.py` exited **0**, printing:
+
+```text
+FIPS K: 64/64 independently derived
+FIPS H0: 8/8 independently derived
+```
+
+### Vector sources and counts
+
+All vectors run through `Sha256.hash` or `Sha256.sha256d`, offline. The
+executable reads committed data relative to `packages/sha256`, the working
+directory used both by `nix develop -c lake test` and the flake's package loop.
+The parser accepts LF and CRLF, enforces field ordering and complete records,
+treats `Len = 0` as empty even when `Msg = 00`, and checks `Len = 8 × decoded
+message bytes` for every nonempty record. Expected digests must be 32 bytes.
+The hex helper is test-only; it does not call the copied `Hex` implementation.
+Each set asserts its loaded count before hashing and prints its passed count.
+
+| Set | Pinned count | Published source |
+|---|---|---|
+| FIPS examples | 3 | `abc` and the 448-bit message: [NIST SHA-256 intermediate examples](https://csrc.nist.gov/CSRC/media/Projects/Cryptographic-Standards-and-Guidelines/documents/examples/SHA256.pdf). One million `a`: [FIPS 180-2 Appendix B.3](https://csrc.nist.gov/files/pubs/fips/180-2/final/docs/fips180-2.pdf); all three are also published on [NIST NSRL Test Data](https://www.nist.gov/itl/ai/ai-standards-and-guidelines-group/nsrl-test-data). |
+| CAVP ShortMsg | 65 | [lean4-hash's pinned NIST data](https://github.com/pure-algebra/lean4-hash/blob/ab7eda433f0390fde7aa240189761540c9744c79/vendor/nist-cavp-sha256/SHA256ShortMsg.rsp), unchanged LF bytes, 10,031 bytes. It differs from the ShortMsg member in NIST's zip. |
+| CAVP LongMsg | 64 | [NIST byte-oriented SHA vectors](https://csrc.nist.gov/CSRC/media/Projects/Cryptographic-Algorithm-Validation-Program/documents/shs/shabytetestvectors.zip), member `shabytetestvectors/SHA256LongMsg.rsp`, downloaded 2026-10-21; unchanged CRLF bytes, 426,209 bytes. |
+| SHA-256d | 1 | [Bitcoin Core v28.0 mainnet genesis fields/hash](https://github.com/bitcoin/bitcoin/blob/v28.0/src/kernel/chainparams.cpp#L135-L138), MIT. Version 1, zero previous block, the published merkle root, time 1231006505, bits 0x1d00ffff, nonce 2083236893 form the 80-byte header, each serialised little-endian; so the header holds the merkle root byte-reversed relative to its published display form `4a5e1e4b…deda33b`. The conventional displayed block hash is byte-reversed for comparison with raw SHA-256d output. |
+
+The NIST `.rsp` files each have a `.provenance` sidecar recording the URL,
+source path, revision/date, public-domain US Government licence and committed
+byte digest. `sha256sum` reports:
+
+```text
+294ecec26959357405a621121bbfb01db4d45b9e834624b2d71aedd94ffde019  SHA256ShortMsg.rsp
+6fac36f37360bcf74ffcf4465c18e30d6d5a04cc90885b901fc3130c16060974  SHA256LongMsg.rsp
+```
+
+The downloaded zip's SHA-256 is
+`929ef80b7b3418aca026643f6f248815913b60e01741a44bba9e118067f4c9b8`.
+Monte Carlo vectors are outside this phase.
+
+### Axiom gate
+
+`Sha256Tests/AxiomGate.lean` is newly written, using the upstream gate's
+environment/axiom-collection approach, without copying its denylist or text.
+It allows **exactly** `propext`, `Classical.choice`, and `Quot.sound`, with no
+exemptions. It first resolves and checks these ten named theorems:
+
+```text
+Sha256.sha256_spec                 Sha256.sha256_impl
+Sha256.sha256_ofList               Sha256.Bridge.sha256_bridge
+Sha256.Fast.sha256_eq_impl          Sha256.Fast.size_sha256
+Sha256.hash_spec                   Sha256.hash_size
+Sha256.sha256d_spec                Sha256.sha256d_size
+```
+
+It then scans every theorem in every imported library module whose module name
+is `Sha256` or below it, including private/generated theorems. The current
+scan checks **346** theorems, including the copied proofs and four new API
+proofs. Names in the explicit list resolve during elaboration; missing names
+fail, and any reached axiom outside the allowlist fails `lake test` before
+vectors run. The executable prints one gate summary line, even on cached
+builds. `#print axioms` on all ten named theorems prints `[propext, Quot.sound]`.
+The gate file contains no placeholder substring.
+
+Later phases should create their own package's test-support gate with this
+same allowlist, import all of their library modules, change the scanned module
+prefix, and add their required named theorems as resolved name literals. Keep
+the gate imported by the executable test driver. Adding a theorem to an
+already imported module under the scanned prefix automatically includes it.
+
+### Production mutation red runs
+
+From `packages/sha256`, run:
+
+```bash
+nix develop -c python3 -I check-mutations.py
+```
+
+On Lean 4.35.0 with Lake 5.0.0-src+eb6cafb this exited **0**, printing `negative mutations: 3/3
+detected; production sources restored`. The script saves subprocess stdout and
+stderr separately, commands, working directories and exit codes in
+`.lake/mutation-checks/`. Each production mutation is restored in `finally`;
+no changed expectation or test setup is used to redden a vector.
+
+| Mutation | Foreground command and observed exit | Failing evidence |
+|---|---|---|
+| Change K[0] from `0x428a2f98` to `0x428a2f99` in **both** `Spec` and `Fast` | `lake test`, **1** | Axiom gate ran with 0 offenders; FIPS **0/3**, ShortMsg **0/65**, LongMsg **0/64**, SHA-256d **0/1**. Failing lines: `assertion failed: FIPS examples abc digest`; `assertion failed: CAVP ShortMsg Len=0 digest`; `assertion failed: CAVP LongMsg Len=1304 digest`; `assertion failed: SHA-256d genesis digest`. |
+| Make `Spec.length_bitsOfNat` use a temporary `Spec.auditProbe` axiom of the same statement | `lake test`, **1** | `SHA-256 axiom gate: Sha256.sha256_spec reaches disallowed axiom Sha256.Spec.auditProbe`. The allowlist stays unchanged. |
+| Create a temporary untracked `.lean` file with the placeholder word under `packages/sha256` | The exact CI command below, via `bash --noprofile --norc -eo pipefail -c`, **1** | `packages/sha256/Sha256CiProbe-te1yhcb0.lean:5:-- sorry`. The script deletes that exact generated path. The same command exited **0** before and after the mutation. |
+
+After restoring every mutation, the script's final `lake test` exited **0**
+with the four pinned counts passing. Removing the build-time guards from
+`Api.lean` is what lets the broken-constant run reach this executable suite;
+the five witnesses are all retained as ShortMsg records.
+
+### CI and validation
+
+The `No sorry` step in `.github/workflows/ci.yml` now runs exactly:
+
+```bash
+rc=0; grep -rnw sorry --include='*.lean' --exclude-dir=.lake packages || rc=$?; test "$rc" -eq 1
+```
+
+Unlike negating grep, this accepts only its no-match status and rejects errors.
+PyYAML **6.0.3** parsed the workflow and asserted the parsed `run` string equals
+the literal command, exit **0**. Reproduce from the repository root:
+
+```bash
+nix shell --impure --expr 'let pkgs = import (builtins.getFlake (toString ./.)).inputs.nixpkgs {}; in pkgs.python3.withPackages (p: [p.pyyaml])' -c python3 -c 'import pathlib, runpy, yaml; data = yaml.safe_load(pathlib.Path(".github/workflows/ci.yml").read_text()); step = next(s for s in data["jobs"]["check"]["steps"] if s.get("name") == "No sorry"); assert step["run"] == runpy.run_path("packages/sha256/check-mutations.py")["CI_COMMAND"]; print("CI parsed run string matches exactly")'
+```
+
+On 2026-10-21, after staging the new files, these foreground commands exited
+**0** (the repository's gate supervisor also returned `EXIT=0`):
+
+```bash
+nix flake check -L
+nix build && ./result/bin/cyberkrill
+(cd packages/sha256 && nix develop -c lake build && nix develop -c lake test)
+(cd packages/cyberkrill && nix develop -c lake build)
+sha256sum packages/sha256/testdata/SHA256ShortMsg.rsp packages/sha256/testdata/SHA256LongMsg.rsp
+```
+
+`nix develop -c lean --version` reported **4.35.0**, commit
+`eb6cafb7290e8bd5f2937522d8d804f58f02bafc`, Release;
+`nix develop -c lake --version` reported **5.0.0-src+eb6cafb (Lean version 4.35.0)**,
+both exit **0**. From `packages/sha256`, `time nix develop -c lake test` exited
+**0** in **0.655 seconds wall time** with cached build artifacts, including all
+vectors and the million-byte message. A prior invocation rebuilding the test
+modules took 3.481 seconds. Host and sandbox both printed:
+
+```text
+SHA-256 axiom gate: 346 library theorems; 10 named; 0 offenders
+FIPS examples: 3/3
+CAVP ShortMsg: 65/65
+CAVP LongMsg: 64/64
+SHA-256d: 1/1
+```
+
+The fresh sandbox check built derivation
+`/nix/store/854fhfa3vlf0ci4fv1b6dvy6nc8dl1np-cyberkrill-0.1.0.drv` (after a
+final doc-comment correction in `Spec.lean`; the run before it,
+`/nix/store/5mdhqn4i80vcw9kabz1g0zqhw0v9r0rc-cyberkrill-0.1.0.drv`, printed the
+same lines).
+It also ran all six other packages' builds/tests, including secp256k1's BOLT
+16/16 recovery and signing checks, all 252 Wycheproof vectors, and the
+HTTP client's 22/22 cases. The existing link-spike and one-OpenSSL checks
+ran unchanged, ending with `link spike, Lake/leanc green twins, forced-static
+red fixture: PASS` and `http-curl wrapper executable: one nix OpenSSL, version
+and ldd: PASS`. Both the sandbox install and `./result/bin/cyberkrill` printed
+`cyberkrill 0.1.0`.
+
+These additional commands printed nothing and exited **1**, their expected
+no-match status:
+
+```bash
+grep -rnw sorry --include='*.lean' --exclude-dir=.lake packages
+grep -F sorry packages/sha256/Sha256Tests/AxiomGate.lean
+grep -rn native_decide --include='*.lean' --exclude-dir=.lake packages/sha256
+```
+
+A comparison against the freshly fetched pinned upstream source confirmed
+all **114 authored theorem statements** unchanged after namespace substitution
+and whitespace normalization, and the MIT notice byte-identical. The diff
+against `e75cfaa` is restricted to this package, this README, the CI step,
+`docs/upstream-fixes.md`, and the pre-existing Manager tracker claim. No
+`flake.nix`, `flake.lock`, other package or OpenSSL script changed.
+`git diff --cached --check` excluding the two unchanged `.rsp` data files
+exited **0**; the raw NIST LongMsg bytes intentionally retain upstream trailing
+space and a final blank line, checked by their digest instead.
+
+### Deltas not taken
+
+None. Incremental hashing, additional hash families, a public library hex
+codec, and performance work remain outside Phase 2. The brief reserves tracker
+updates and commits for the Manager; the tracker and other packages are untouched.
 
 ## Licence
 
