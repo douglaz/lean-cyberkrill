@@ -3,10 +3,11 @@
 Bitcoin, Lightning and Fedimint libraries for Lean 4, and a Lean port of the
 [cyberkrill](https://github.com/douglaz/cyberkrill) command-line tool built on them.
 
-Status: Phase 1a, both parts of Phase 1b, Phase 2, and Phase 3a (1–2 of 4) implemented: secp256k1 bindings,
+Status: Phase 1a, both parts of Phase 1b, Phase 2, and Phase 3a (1–3 of 4) implemented: secp256k1 bindings,
 a bounded HTTP(S) client with per-request CA selection, a reusable HTTP/TLS recording stub,
 proved SHA-256 and SHA-256d with NIST vectors, and hex, canonical CompactSize and exact
-millisatoshi amounts with String round-trip proofs, plus proved Base58 and Base58Check codecs.
+millisatoshi amounts with String round-trip proofs, plus proved Base58, Base58Check and
+bech32/bech32m codecs with strict and lax bit regrouping.
 Other packages remain skeletons;
 `plan.md` is the plan for v1.
 
@@ -1826,7 +1827,8 @@ Bitcoin axiom gate: 226 library theorems; 30 named; 0 offenders
 
 The gate covers both new library modules and all previously imported Bitcoin
 modules, with the same three-axiom allowlist and no exemptions. The earlier
-section's 146/26 totals describe Phase 3a (1 of 4); 226/30 are the current totals.
+section's 146/26 totals describe Phase 3a (1 of 4); 226/30 describe Phase 3a (2 of 4).
+The bech32 section below lists the current totals.
 
 ### Red runs
 
@@ -1917,6 +1919,271 @@ characters took 135 ms and one of 100,000 took 4,451 ms. Runs at 300,000 and
 1,000,000 were killed under a 16 GiB memory cap shared with other processes;
 memory use itself was not measured. Addresses and extended keys are far shorter.
 Tracker item `lck-base58-long-input-3qk` records the probe and its commands.
+
+## Phase 3a: bech32 and bech32m (3 of 4)
+
+### Public API
+
+All names below are in `Bitcoin.Bech32`; `import Bitcoin` imports all three
+library modules. They are pure Lean, with no FFI dependencies.
+
+| Module | API and representation |
+|---|---|
+| `Bitcoin.Bech32` | `Symbol := BitVec 5`; `Variant.bech32` and `.bech32m`, with constants `1` and `0x2bc830a3`; `polymodStep`, `polymod`, `hrpExpand`, `verifyChecksum`, `createChecksum`, and `verifyChecksum_createChecksum` |
+| `Bitcoin.Bech32Codec` | `charset`, `charOf`, total `encode hrp data v : String`, ASCII `lower`, `decode limit s : Except DecodeError (String × List Symbol × Variant)`, R and S |
+| `Bitcoin.ConvertBits` | `convertbits8to5 : ByteArray → List (BitVec 5)`, strict `convertbits5to8 : List (BitVec 5) → Except PaddingError ByteArray`, `fesToBytesLax : List (BitVec 5) → ByteArray`, C and L |
+
+`polymod : List Nat → BitVec 30` folds left from one. Each step extracts the
+top five state bits, shifts the masked low 25 bits by five, XORs the input,
+and conditionally XORs the five reference generator constants. There are no
+lookup tables. `hrpExpand` returns the character code points shifted right
+by five, a zero, then the code points masked by 31.
+`verifyChecksum v hrp d` is the one-line residue comparison over the expanded
+HRP and all data symbols, including the six checksum symbols. The symbol
+type makes the five-bit bound intrinsic.
+
+`encode` preserves the supplied HRP and appends `1`, the payload characters
+and six checksum characters. It has no length limit. With a valid HRP that
+has no ASCII uppercase letters, its output is lowercase. `decode` uses the
+last `1`, accepts all-uppercase strings, lowercases ASCII letters, compares
+whole data `Char`s, and returns the payload without its checksum and the
+variant whose residue matched. Its rejection order is:
+
+| Order | Rejection | `DecodeError` |
+|---|---|---|
+| 1 | `s.length > limit` | `tooLong` |
+| 2 | Both uppercase and lowercase ASCII letters | `mixedCase` |
+| 3 | No separator | `missingSeparator` |
+| 4 | Empty HRP | `emptyHrp` |
+| 5 | HRP code point outside 33–126 | `invalidHrp` |
+| 6 | Data or checksum character outside the charset | `invalidCharacter` |
+| 7 | Fewer than six data-part symbols | `shortChecksum` |
+| 8 | Neither residue matches | `checksumMismatch` |
+
+The 8→5 conversion takes bits most-significant first and pads its last group
+with zero bits. Strict 5→8 rejects `PaddingError.excessPadding` when at least
+five bits remain, then `PaddingError.nonZeroPadding` when any remaining bit
+is one. Excess padding takes precedence when both apply. There is no lax
+mode flag. `fesToBytesLax` emits every complete byte and drops the remaining
+bits without checking either their count or their value.
+
+Later callers import `Bitcoin.Bech32Codec` for the string codec and
+`Bitcoin.ConvertBits` for regrouping. Phase 3a (4 of 4) passes limit **90**;
+BOLT11 in Phase 5 passes **7089** and uses the strict conversions; LNURL in
+Phase 5 passes **1023** and uses `fesToBytesLax`; Phase 6 invites pass
+**1023** and reuse `fesToBytesLax_convertbits8to5`. Phase 3b imports
+`Bitcoin.Bech32` for the exact `polymod`, `hrpExpand` and `verifyChecksum`,
+and `Bitcoin.Bech32Codec` for `decode_sound`.
+
+### Vectors
+
+`Bitcoin/Bech32Vectors.lean` contains exactly 40 strings extracted from
+[bitcoin/bips](https://github.com/bitcoin/bips/tree/130b8e0fa7f30fa45532f080b87b8db27a79e46e)
+at `130b8e0fa7f30fa45532f080b87b8db27a79e46e`:
+
+| Path | Lines | Strings |
+|---|---|---|
+| `bip-0173.mediawiki` | 277–283 | 7 valid bech32 |
+| `bip-0173.mediawiki` | 291–302 | 12 invalid bech32 |
+| `bip-0350.mediawiki` | 156–162 | 7 valid bech32m |
+| `bip-0350.mediawiki` | 167–180 | 14 invalid bech32m |
+
+Its first line is a `--` provenance comment naming the source URL, full
+commit, both paths and line ranges, BSD-2-Clause, and the adjacent
+`Bitcoin/LICENSE-bips` notice. It has no dual-licence header and contains
+only the strings in Lean definitions. The library root does not import it.
+No reasons, warning text, address vectors or reference code are copied.
+
+The strings are **extracted and reformatted**: the six `0x20`/`0x7F`/`0x80`
+prefixes become code points U+0020/U+007F/U+0080, and the trailing `0xFF`
+becomes U+00FF. These are code points in Lean strings, not raw invalid UTF-8
+bytes. `check-bech32-copy.py` compares the complete generated file against
+those exact line ranges in separately fetched sources, including the
+provenance first line. Its `--write` option only creates a previously absent
+vector file. The pinned root tree has no licence file; BIP2 links the BSD
+licence to `https://opensource.org/license/BSD-2-Clause`. The notice quotes
+both BIPs' `Authors:`, `License:` and Copyright sections, followed by the BSD
+conditions and disclaimer from that link. Neither BIP supplies a copyright
+year or holder line, and the notice does not invent one.
+
+Every set checks its loaded count and runs as runtime assertions in
+`lake test`, including in the Nix sandbox:
+
+| Set | Pinned count | Checks |
+|---|---|---|
+| BIP173 bech32 valid | 7/7 | Variant and re-encoding to ASCII lowercase |
+| BIP350 bech32m valid | 7/7 | Variant and re-encoding to ASCII lowercase |
+| bech32 cross-variant | 14/14 | All fourteen valid vectors never decode as the other variant |
+| BIP173 bech32 invalid | 12/12 | Exact error constructors at limit 90 |
+| BIP350 bech32m invalid | 14/14 | Exact error constructors at limit 90 |
+| bech32 length limits | 3/3 | `an83…` length is 90, accepted at 90, `tooLong` at 89 |
+| bech32 mixed case | 1/1 | `A12uel5l` → `mixedCase` |
+| bech32 non-ASCII | 1/1 | U+0132 in the data part → `invalidCharacter` |
+| bech32 convertbits | 10/10 | Five hand-derived encodings, two isolated padding errors, lax non-zero padding, strict empty and strict `ff` |
+
+The regrouping answers follow directly from splitting binary bytes into
+five-bit groups: `ff` is `11111|11100`, `0001` is
+`00000|00000|00000|10000`, and `ff00` is `11111|11100|00000|00000`.
+`[0]` leaves five zero bits and isolates excess padding. `[0,1]` is
+`00000|00001`: it yields byte `00` and remaining bits `01`, isolating
+non-zero padding; lax decoding drops those bits and returns exactly `[0]`.
+
+The BIP reasons map to constructors without deviations:
+
+| BIP reason and affected strings | Constructor |
+|---|---|
+| HRP character out of range: the six prefixed strings | `invalidHrp` |
+| Overall max length exceeded: both `an84…` strings | `tooLong` |
+| No separator: `pzry9x0s0muk`, `qyrz8wqd2c9m` | `missingSeparator` |
+| Empty HRP: `1pzry9x0s0muk`, `10a06t8`, `1qzzfhee`, `1qyrz8wqd2c9m`, `16plkw9`, `1p2gdwpf` | `emptyHrp` |
+| Invalid data character: `x1b4n0q5v`, `y1b0jsk6g`, `lt1igcx5c0` | `invalidCharacter` |
+| Too short checksum: `li1dgmt3`, `in1muywd` | `shortChecksum` |
+| Invalid checksum character: `de1lg7wt` + U+00FF, `mm1crxm3i`, `au1s5cgom` | `invalidCharacter` |
+| Checksum calculated over uppercase HRP: `A1G7SGD8`, `M1VUXWEZ` | `checksumMismatch` |
+
+### Proofs and axiom audit
+
+The four named theorems quantify over the public functions:
+
+| Obligation | Theorem | Statement |
+|---|---|---|
+| R | `decode_encode` | For every `limit`, variant, payload and non-empty HRP with code points 33–126, no ASCII uppercase letters, and `hrp.length + data.length + 7 ≤ limit`, decoding its encoding returns exactly `(hrp, data, v)`. There is no 83-character hypothesis or restriction on digits or `1`. |
+| S | `decode_sound` | Successful `decode limit s = .ok (hrp, data, v)` supplies `chk` of length 6 such that `lower s = hrp ++ "1" ++ String.ofList ((data ++ chk).map charOf)` and `verifyChecksum v hrp (data ++ chk) = true`. The symbols come from `s` itself. |
+| C | `convertbits5to8_convertbits8to5` | For every `bs : ByteArray`, `convertbits5to8 (convertbits8to5 bs) = .ok bs`. |
+| L | `fesToBytesLax_convertbits8to5` | For every `bs : ByteArray`, `fesToBytesLax (convertbits8to5 bs) = bs`, using the same public encoder as C. |
+
+The checksum proof uses linearity of the reference step and a six-symbol
+packing lemma. The regrouping proofs show that packing adds fewer than five
+zero bits and that complete-byte decoding drops the incomplete tail.
+The new named `#print axioms` outputs are:
+
+```text
+'Bitcoin.Bech32.decode_encode' depends on axioms: [propext, Classical.choice, Quot.sound]
+'Bitcoin.Bech32.decode_sound' depends on axioms: [propext, Classical.choice, Quot.sound]
+'Bitcoin.Bech32.convertbits5to8_convertbits8to5' depends on axioms: [propext, Classical.choice, Quot.sound]
+'Bitcoin.Bech32.fesToBytesLax_convertbits8to5' depends on axioms: [propext, Classical.choice, Quot.sound]
+Bitcoin axiom gate: 326 library theorems; 34 named; 0 offenders
+```
+
+The gate scans all library theorems, including private helpers. Its allowlist
+remains exactly `propext`, `Classical.choice`, and `Quot.sound`, with no
+exemptions. The new proofs use Lean core only, with no extra axioms or
+native proof evaluation.
+
+### Red runs
+
+`nix develop -c python3 -I check-bech32-mutations.py` from
+`packages/bitcoin` exited **0**, detecting **18/18** independent mutations.
+Every mutated `lake test` exited **1**; the final restored test exited **0**.
+The runner checks diagnostics inside the named theorem, or requires the
+axiom gate to pass before the specified runtime assertion fails. It restores
+each production file in `finally`. Separate streams remain under
+`packages/bitcoin/.lake/bech32-mutation-checks`; compact records are in
+`packages/bitcoin/test-data/bech32-mutations.json`.
+
+| # | Production mutation | Observed failure |
+|---|---|---|
+| 1 | First separator instead of last | Private `splitLast_append`, used by R |
+| 2 | Skip checksum verification | S, `decode_sound` |
+| 3 | Swap reported variants | S, `decode_sound` |
+| 4 | Pad incomplete groups with ones | Private `ConvertBits` helper `write_read`, used by C and L |
+| 5 | Emit the incomplete lax byte | L, `fesToBytesLax_convertbits8to5` |
+| 6 | Change bech32m constant | `BIP350 bech32m valid A1LQFN3A` |
+| 7 | Change one generator constant | `BIP173 bech32 valid A12UEL5L` |
+| 8 | Swap `q` and `p` in the shared charset | `BIP173 bech32 valid abcdef1…` |
+| 9 | Drop the zero from HRP expansion | `BIP173 bech32 valid A12UEL5L` |
+| 10 | Remove mixed-case rejection | `bech32 mixed case A12uel5l` |
+| 11 | Remove HRP range rejection | `BIP173 bech32 invalid` for U+0020 + `1nwldj5` |
+| 12 | Remove empty-HRP rejection | `BIP173 bech32 invalid 1pzry9x0s0muk` |
+| 13 | Ignore length limit | `BIP173 bech32 invalid an84…` |
+| 14 | Remove short-checksum rejection | S, `decode_sound`, at its six-symbol length proof |
+| 15 | Truncate charset input to its low byte | Private `charOf_readChar`, used by S |
+| 16 | Remove non-zero-padding rejection | `bech32 convertbits nonzero-padding-only` |
+| 17 | Remove excess-padding rejection | `bech32 convertbits excess-padding-only` |
+| 18 | Merge empty-HRP into missing-separator error | `BIP173 bech32 invalid 1pzry9x0s0muk` |
+
+The eleven runtime reds all report the passing 326/34 axiom gate first.
+`nix develop -c python3 -I check-mutations.py` and
+`nix develop -c python3 -I check-base58-mutations.py` were rerun afterwards:
+both exited **0**, each detected **6/6**, and each restored `lake test`
+exited **0**. The former's JSON record now records the gate's new line
+number; the latter's record is unchanged.
+
+### Final validation
+
+Commands ran in the foreground with `TMPDIR=/var/tmp`, Lean **4.35.0**
+(`eb6cafb7290e8bd5f2937522d8d804f58f02bafc`), and the repository gate
+supervisor. Separate stdout/stderr files and exact command arrays remain
+under `packages/bitcoin/.lake/final-bech32-checks`, with `commands.json`
+recording exits. New files were staged before the flake check.
+
+| Command | Directory | Exit |
+|---|---|---|
+| `nix develop -c lean --version` | root | 0 |
+| `nix develop -c lake build` | `packages/bitcoin` | 0 |
+| `nix develop -c lake test` | `packages/bitcoin` | 0; all existing and new pinned sets |
+| `nix flake check -L` | root | 0 |
+| `nix build --no-link --print-out-paths` | root | 0 |
+| `/nix/store/zsha1p5k9s3xx86fcjkmcz3hzcgraj1c-cyberkrill-0.1.0/bin/cyberkrill` | root | 0; `cyberkrill 0.1.0` |
+| `nix path-info --derivation /nix/store/zsha1p5k9s3xx86fcjkmcz3hzcgraj1c-cyberkrill-0.1.0` | root | 0 |
+| `nix log /nix/store/v58irbfp8fxgnan85i192q098b1cvqzw-cyberkrill-0.1.0.drv` | root | 0 |
+| `rc=0; grep -rnw sorry --include='*.lean' --exclude-dir=.lake packages \|\| rc=$?; test "$rc" -eq 1` | root | 0; no matches |
+| `grep -rn native_decide --include='*.lean' packages/bitcoin/Bitcoin packages/bitcoin/Bitcoin.lean` | root | 1, expected; no matches |
+| `grep -nE '\]!\|get!\|head!\|tail!\|getLast!\|panic!\|unreachable!' packages/bitcoin/Bitcoin/Bech32.lean packages/bitcoin/Bitcoin/Bech32Codec.lean packages/bitcoin/Bitcoin/ConvertBits.lean` | root | 1, expected; no matches |
+| `python3 -I packages/bitcoin/check-bech32-copy.py /var/tmp/lck-bech32-20261021-1464735 --write` | root | 0; initial extraction, 40/40 |
+| `python3 -I packages/bitcoin/check-bech32-copy.py /var/tmp/lck-bech32-20261021-1464735` | root | 0; final comparison, 40/40 |
+| `git diff --check 442e885d00225a89edb7286b372de0e888e08d84` | root | 0 |
+
+The sandbox log contains every new set, SHA-256's gate and vector sets,
+BOLT11 recovery/signing **16/16** each, Wycheproof
+**252 loaded / 95 accepted / 157 rejected**, `http-curl cases: 35/35`,
+`S12: PASS`, `S13: PASS`, and the link-spike and one-OpenSSL checks.
+All seven packages ran their build/test commands, and the app printed
+`cyberkrill 0.1.0`.
+
+### Cleanup
+
+The fetch directory was `/var/tmp/lck-bech32-20261021-1464735`.
+Its five `curl -fL <URL> -o <path>` fetches each exited **0**:
+
+| Destination in that directory | URL |
+|---|---|
+| `bip-0173.mediawiki` | `https://raw.githubusercontent.com/bitcoin/bips/130b8e0fa7f30fa45532f080b87b8db27a79e46e/bip-0173.mediawiki` |
+| `bip-0350.mediawiki` | `https://raw.githubusercontent.com/bitcoin/bips/130b8e0fa7f30fa45532f080b87b8db27a79e46e/bip-0350.mediawiki` |
+| `bip-0002.mediawiki` | `https://raw.githubusercontent.com/bitcoin/bips/130b8e0fa7f30fa45532f080b87b8db27a79e46e/bip-0002.mediawiki` |
+| `root.json` | `https://api.github.com/repos/bitcoin/bips/contents?ref=130b8e0fa7f30fa45532f080b87b8db27a79e46e` |
+| `BSD-2-Clause.html` | `https://opensource.org/license/BSD-2-Clause` |
+
+After the final copy comparison, each foreground cleanup command below
+exited **0**. No temporary clone, private dependency cache or external Nix
+result link was created. Required mutation logs, final validation logs and
+normal build outputs remain under the ignored package `.lake/` directory.
+
+```bash
+unlink /var/tmp/lck-bech32-20261021-1464735/bip-0173.mediawiki
+unlink /var/tmp/lck-bech32-20261021-1464735/bip-0350.mediawiki
+unlink /var/tmp/lck-bech32-20261021-1464735/bip-0002.mediawiki
+unlink /var/tmp/lck-bech32-20261021-1464735/root.json
+unlink /var/tmp/lck-bech32-20261021-1464735/BSD-2-Clause.html
+rmdir /var/tmp/lck-bech32-20261021-1464735
+test ! -e /var/tmp/lck-bech32-20261021-1464735
+unlink packages/bitcoin/.lake/bech32-work/Probe.lean
+unlink packages/bitcoin/.lake/bech32-work/Bech32.olean
+unlink packages/bitcoin/.lake/bech32-work/validate.py
+unlink packages/bitcoin/.lake/bech32-work/run-gate.py
+rmdir packages/bitcoin/.lake/bech32-work
+test ! -e packages/bitcoin/.lake/bech32-work
+```
+
+### Deltas not taken
+
+BIP173 L80's separate **83-character HRP maximum** is not enforced. At limit
+90 it follows from the non-empty HRP, separator, six-symbol checksum and
+overall length rule. With limits 1023 or 7089, HRPs longer than 83 are
+accepted when the total length fits and all other checks pass. Tracker item
+`lck-ist` (deferred, `owner-decision`) holds this question. No other
+stricter acceptance check is proposed here. Segwit address semantics,
+BOLT11, LNURL and invite semantics remain in their later phases.
 
 ## Deltas taken
 

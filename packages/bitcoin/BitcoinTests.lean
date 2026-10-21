@@ -4,6 +4,7 @@ Apache License 2.0, at your option; see LICENSE-MIT and LICENSE-APACHE.
 -/
 import BitcoinTests.AxiomGate
 import Bitcoin.Base58Vectors
+import Bitcoin.Bech32Vectors
 
 open Bitcoin
 open Bitcoin.Amount
@@ -184,6 +185,55 @@ private def base58Tests : IO Unit := do
   checks "Base58Check invalid alphabet" 1 #[
     ("invalid", base58CheckDecode "2g " == .error .invalidBase58)]
 
+private def bech32Tests : IO Unit := do
+  let valid (label : String) (vectors : Array String) (variant : Bech32.Variant) : IO Unit :=
+    checks label 7 (vectors.map fun s => (s, match Bech32.decode 90 s with
+      | .ok (hrp, data, v) => v == variant && Bech32.encode hrp data v == Bech32.lower s
+      | .error _ => false))
+  valid "BIP173 bech32 valid" Bech32Vectors.bech32Valid .bech32
+  valid "BIP350 bech32m valid" Bech32Vectors.bech32mValid .bech32m
+  let cross (vectors : Array String) (other : Bech32.Variant) :=
+    vectors.map fun s => (s, (Bech32.decode 90 s).toOption.map (fun (_, _, v) => v) != some other)
+  checks "bech32 cross-variant" 14
+    (cross Bech32Vectors.bech32Valid .bech32m ++ cross Bech32Vectors.bech32mValid .bech32)
+  let invalid (label : String) (pinned : Nat) (vectors : Array String)
+      (errors : Array Bech32.DecodeError) : IO Unit := do
+    check s!"{label} errors count" (errors.size == pinned)
+    check s!"{label} vectors count" (vectors.size == pinned)
+    checks label pinned ((vectors.zip errors).map fun (s, error) =>
+      (s, Bech32.decode 90 s == .error error))
+  invalid "BIP173 bech32 invalid" 12 Bech32Vectors.bech32Invalid
+    #[.invalidHrp, .invalidHrp, .invalidHrp, .tooLong, .missingSeparator, .emptyHrp,
+      .invalidCharacter, .shortChecksum, .invalidCharacter, .checksumMismatch, .emptyHrp, .emptyHrp]
+  invalid "BIP350 bech32m invalid" 14 Bech32Vectors.bech32mInvalid
+    #[.invalidHrp, .invalidHrp, .invalidHrp, .tooLong, .missingSeparator, .emptyHrp,
+      .invalidCharacter, .invalidCharacter, .shortChecksum, .invalidCharacter,
+      .invalidCharacter, .checksumMismatch, .emptyHrp, .emptyHrp]
+  let an83 := Bech32Vectors.bech32Valid[2]!
+  checks "bech32 length limits" 3 #[
+    ("an83-length", an83.length == 90),
+    ("at-limit", (Bech32.decode 90 an83).isOk),
+    ("over-limit", Bech32.decode 89 an83 == .error .tooLong)]
+  checks "bech32 mixed case" 1 #[
+    ("A12uel5l", Bech32.decode 90 "A12uel5l" == .error .mixedCase)]
+  checks "bech32 non-ASCII" 1 #[
+    ("whole-Char", Bech32.decode 90 "a1Ĳuel5l" == .error .invalidCharacter)]
+  -- Hand-derived by concatenating 8-bit binary bytes, cutting from the left
+  -- into groups of five, and adding zeros on the right of the last group:
+  -- ff = 11111|11100; 0001 = 00000|00000|00000|10000.
+  let symbols (xs : List Nat) := xs.map (BitVec.ofNat 5)
+  checks "bech32 convertbits" 10 #[
+    ("empty", Bech32.convertbits8to5 (bytes []) == symbols []),
+    ("zero", Bech32.convertbits8to5 (bytes [0]) == symbols [0,0]),
+    ("padded-ff", Bech32.convertbits8to5 (bytes [255]) == symbols [31,28]),
+    ("padded-0001", Bech32.convertbits8to5 (bytes [0,1]) == symbols [0,0,0,16]),
+    ("ff00", Bech32.convertbits8to5 (bytes [255,0]) == symbols [31,28,0,0]),
+    ("excess-padding-only", Bech32.convertbits5to8 (symbols [0]) == .error .excessPadding),
+    ("nonzero-padding-only", Bech32.convertbits5to8 (symbols [0,1]) == .error .nonZeroPadding),
+    ("lax-nonzero-padding", Bech32.fesToBytesLax (symbols [0,1]) == bytes [0]),
+    ("strict-empty", Bech32.convertbits5to8 (symbols []) == .ok (bytes [])),
+    ("strict-ff", Bech32.convertbits5to8 (symbols [31,28]) == .ok (bytes [255]))]
+
 end BitcoinTests
 
 def main : IO Unit := do
@@ -193,3 +243,4 @@ def main : IO Unit := do
   BitcoinTests.amountTests
   BitcoinTests.cliTests
   BitcoinTests.base58Tests
+  BitcoinTests.bech32Tests

@@ -25,7 +25,10 @@ def namedTheorems : List Name :=
    ``Bitcoin.Amount.toBtc_exact, ``Bitcoin.Amount.ofSatDecimal_toSatDecimal,
    ``Bitcoin.Amount.ofMsatDecimal_toMsatDecimal, ``Bitcoin.Amount.toMsat_ofMsat,
    ``Bitcoin.Base58.base58Decode_encode, ``Bitcoin.Base58.base58Encode_of_decode,
-   ``Bitcoin.Base58.base58CheckDecode_encode, ``Bitcoin.Base58.base58CheckDecode_sound]
+   ``Bitcoin.Base58.base58CheckDecode_encode, ``Bitcoin.Base58.base58CheckDecode_sound,
+   ``Bitcoin.Bech32.decode_encode, ``Bitcoin.Bech32.decode_sound,
+   ``Bitcoin.Bech32.convertbits5to8_convertbits8to5,
+   ``Bitcoin.Bech32.fesToBytesLax_convertbits8to5]
 
 private def allowedAxioms : List Name := [``propext, ``Classical.choice, ``Quot.sound]
 
@@ -84,5 +87,9 @@ elab "#bitcoin_axiom_gate" : command => do
 #print axioms Bitcoin.Base58.base58Encode_of_decode
 #print axioms Bitcoin.Base58.base58CheckDecode_encode
 #print axioms Bitcoin.Base58.base58CheckDecode_sound
+#print axioms Bitcoin.Bech32.decode_encode
+#print axioms Bitcoin.Bech32.decode_sound
+#print axioms Bitcoin.Bech32.convertbits5to8_convertbits8to5
+#print axioms Bitcoin.Bech32.fesToBytesLax_convertbits8to5
 
 end BitcoinTests
