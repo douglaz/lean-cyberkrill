@@ -5,4 +5,12 @@ Apache License 2.0, at your option; see LICENSE-MIT and LICENSE-APACHE.
 
 /-! # HttpCurl
 
-HTTP(S) client over libcurl. Contents arrive in later phases (plan.md section 4). -/
+Link target and version smoke check only. The HTTP(S) client arrives in Phase 1b. -/
+
+namespace HttpCurl
+
+/-- Report the linked libcurl and TLS backend versions; performs no network I/O. -/
+@[extern "lck_curl_version"]
+opaque version : IO String
+
+end HttpCurl

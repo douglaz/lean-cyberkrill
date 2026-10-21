@@ -24,5 +24,8 @@ lean_lib Cyberkrill
 lean_exe cyberkrill where
   root := `Main
 
+lean_exe linkspike where
+  root := `LinkSpike
+
 @[test_driver]
 lean_lib CyberkrillTests
