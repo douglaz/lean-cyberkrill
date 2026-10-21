@@ -10,9 +10,14 @@ package sha256 where
   description := "SHA-256 and SHA-256d"
   license := "MIT OR Apache-2.0"
   licenseFiles := #["../../LICENSE-MIT", "../../LICENSE-APACHE"]
+  leanOptions := #[⟨`autoImplicit, false⟩, ⟨`relaxedAutoImplicit, false⟩,
+    ⟨`warningAsError, true⟩]
 
 @[default_target]
 lean_lib Sha256
 
+lean_lib Sha256TestSupport where
+  roots := #[`Sha256Tests.AxiomGate]
+
 @[test_driver]
-lean_lib Sha256Tests
+lean_exe Sha256Tests

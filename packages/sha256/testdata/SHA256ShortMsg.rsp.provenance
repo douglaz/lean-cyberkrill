@@ -1,0 +1,6 @@
+Source: https://github.com/pure-algebra/lean4-hash/blob/ab7eda433f0390fde7aa240189761540c9744c79/vendor/nist-cavp-sha256/SHA256ShortMsg.rsp
+Commit: ab7eda433f0390fde7aa240189761540c9744c79
+Path: vendor/nist-cavp-sha256/SHA256ShortMsg.rsp
+Licence: public domain (US Government work), NIST CAVP data.
+Changes: none; upstream LF bytes retained (not identical to NIST's zip member).
+SHA-256: 294ecec26959357405a621121bbfb01db4d45b9e834624b2d71aedd94ffde019

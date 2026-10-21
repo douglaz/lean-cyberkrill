@@ -19,7 +19,8 @@ jobs:
         run: nix develop -c lean --version | grep -F 'version 4.35.0,'
 
       - name: No sorry
-        run: "! grep -rn sorry --include='*.lean' packages"
+        run: >-
+          rc=0; grep -rnw sorry --include='*.lean' --exclude-dir=.lake packages || rc=$?; test "$rc" -eq 1
 
       - name: nix flake check (lake build and lake test for every package)
         run: nix flake check -L
