@@ -1,0 +1,256 @@
+[
+  {
+    "label": "first-separator",
+    "command": [
+      "lake",
+      "test"
+    ],
+    "exit": 1,
+    "failures": [
+      "error: Bitcoin/Bech32Codec.lean:78:18: unsolved goals",
+      "error: Bitcoin/Bech32Codec.lean:77:28: This simp argument is unused:",
+      "error: Bitcoin/Bech32Codec.lean:91:14: unsolved goals",
+      "error: Bitcoin/Bech32Codec.lean:94:54: Type mismatch: After simplification, term",
+      "error: build failed"
+    ],
+    "brokenTheorem": "Bitcoin.Bech32.splitLast_append"
+  },
+  {
+    "label": "skip-checksum",
+    "command": [
+      "lake",
+      "test"
+    ],
+    "exit": 1,
+    "failures": [
+      "error: Bitcoin/Bech32Codec.lean:167:51: Application type mismatch: The argument",
+      "error: Bitcoin/Bech32Codec.lean:259:12: unsolved goals",
+      "error: Bitcoin/Bech32Codec.lean:258:20: This simp argument is unused:",
+      "error: Bitcoin/Bech32Codec.lean:264:10: This simp argument is unused:",
+      "error: Bitcoin/Bech32Codec.lean:264:17: This simp argument is unused:",
+      "error: build failed"
+    ],
+    "brokenTheorem": "Bitcoin.Bech32.decode_sound"
+  },
+  {
+    "label": "swapped-variants",
+    "command": [
+      "lake",
+      "test"
+    ],
+    "exit": 1,
+    "failures": [
+      "error: Bitcoin/Bech32Codec.lean:167:75: Application type mismatch: The argument",
+      "error: Bitcoin/Bech32Codec.lean:170:78: Application type mismatch: The argument",
+      "error: Bitcoin/Bech32Codec.lean:258:11: unsolved goals",
+      "error: Bitcoin/Bech32Codec.lean:259:12: unsolved goals",
+      "error: build failed"
+    ],
+    "brokenTheorem": "Bitcoin.Bech32.decode_sound"
+  },
+  {
+    "label": "one-padding",
+    "command": [
+      "lake",
+      "test"
+    ],
+    "exit": 1,
+    "failures": [
+      "error: Bitcoin/ConvertBits.lean:28:4: unsolved goals",
+      "error: build failed"
+    ],
+    "brokenTheorem": "Bitcoin.Bech32.write_read"
+  },
+  {
+    "label": "emit-lax-trailing-byte",
+    "command": [
+      "lake",
+      "test"
+    ],
+    "exit": 1,
+    "failures": [
+      "error: Bitcoin/ConvertBits.lean:131:13: Tactic `rewrite` failed: Did not find an occurrence of the pattern",
+      "error: build failed"
+    ],
+    "brokenTheorem": "Bitcoin.Bech32.fesToBytesLax_convertbits8to5"
+  },
+  {
+    "label": "bech32m-constant",
+    "command": [
+      "lake",
+      "test"
+    ],
+    "exit": 1,
+    "failures": [
+      "uncaught exception: assertion failed: BIP350 bech32m valid A1LQFN3A"
+    ],
+    "assertion": "BIP350 bech32m valid",
+    "axiomGatePassed": true
+  },
+  {
+    "label": "generator-constant",
+    "command": [
+      "lake",
+      "test"
+    ],
+    "exit": 1,
+    "failures": [
+      "uncaught exception: assertion failed: BIP173 bech32 valid A12UEL5L"
+    ],
+    "assertion": "BIP173 bech32 valid",
+    "axiomGatePassed": true
+  },
+  {
+    "label": "charset-order",
+    "command": [
+      "lake",
+      "test"
+    ],
+    "exit": 1,
+    "failures": [
+      "uncaught exception: assertion failed: BIP173 bech32 valid abcdef1qpzry9x8gf2tvdw0s3jn54khce6mua7lmqqqxw"
+    ],
+    "assertion": "BIP173 bech32 valid",
+    "axiomGatePassed": true
+  },
+  {
+    "label": "hrp-expansion-zero",
+    "command": [
+      "lake",
+      "test"
+    ],
+    "exit": 1,
+    "failures": [
+      "uncaught exception: assertion failed: BIP173 bech32 valid A12UEL5L"
+    ],
+    "assertion": "BIP173 bech32 valid",
+    "axiomGatePassed": true
+  },
+  {
+    "label": "allow-mixed-case",
+    "command": [
+      "lake",
+      "test"
+    ],
+    "exit": 1,
+    "failures": [
+      "uncaught exception: assertion failed: bech32 mixed case A12uel5l"
+    ],
+    "assertion": "bech32 mixed case A12uel5l",
+    "axiomGatePassed": true
+  },
+  {
+    "label": "allow-hrp-range",
+    "command": [
+      "lake",
+      "test"
+    ],
+    "exit": 1,
+    "failures": [
+      "uncaught exception: assertion failed: BIP173 bech32 invalid  1nwldj5"
+    ],
+    "assertion": "BIP173 bech32 invalid",
+    "axiomGatePassed": true
+  },
+  {
+    "label": "allow-empty-hrp",
+    "command": [
+      "lake",
+      "test"
+    ],
+    "exit": 1,
+    "failures": [
+      "uncaught exception: assertion failed: BIP173 bech32 invalid 1pzry9x0s0muk"
+    ],
+    "assertion": "BIP173 bech32 invalid 1pzry9x0s0muk",
+    "axiomGatePassed": true
+  },
+  {
+    "label": "ignore-length-limit",
+    "command": [
+      "lake",
+      "test"
+    ],
+    "exit": 1,
+    "failures": [
+      "uncaught exception: assertion failed: BIP173 bech32 invalid an84characterslonghumanreadablepartthatcontainsthenumber1andtheexcludedcharactersbio1569pvx"
+    ],
+    "assertion": "BIP173 bech32 invalid an84",
+    "axiomGatePassed": true
+  },
+  {
+    "label": "allow-short-checksum",
+    "command": [
+      "lake",
+      "test"
+    ],
+    "exit": 1,
+    "failures": [
+      "error: Bitcoin/Bech32Codec.lean:176:18: omega could not prove the goal:",
+      "error: build failed"
+    ],
+    "brokenTheorem": "Bitcoin.Bech32.decode_sound"
+  },
+  {
+    "label": "truncate-data-char",
+    "command": [
+      "lake",
+      "test"
+    ],
+    "exit": 1,
+    "failures": [
+      "error: Bitcoin/Bech32Codec.lean:18:88: Application type mismatch: The argument",
+      "error: Bitcoin/Bech32Codec.lean:17:20: unsolved goals",
+      "error: build failed"
+    ],
+    "brokenTheorem": "Bitcoin.Bech32.charOf_readChar"
+  },
+  {
+    "label": "allow-nonzero-padding",
+    "command": [
+      "lake",
+      "test"
+    ],
+    "exit": 1,
+    "failures": [
+      "uncaught exception: assertion failed: bech32 convertbits nonzero-padding-only"
+    ],
+    "assertion": "bech32 convertbits nonzero-padding-only",
+    "axiomGatePassed": true
+  },
+  {
+    "label": "allow-excess-padding",
+    "command": [
+      "lake",
+      "test"
+    ],
+    "exit": 1,
+    "failures": [
+      "uncaught exception: assertion failed: bech32 convertbits excess-padding-only"
+    ],
+    "assertion": "bech32 convertbits excess-padding-only",
+    "axiomGatePassed": true
+  },
+  {
+    "label": "merge-errors",
+    "command": [
+      "lake",
+      "test"
+    ],
+    "exit": 1,
+    "failures": [
+      "uncaught exception: assertion failed: BIP173 bech32 invalid 1pzry9x0s0muk"
+    ],
+    "assertion": "BIP173 bech32 invalid 1pzry9x0s0muk",
+    "axiomGatePassed": true
+  },
+  {
+    "label": "restored-tests",
+    "command": [
+      "lake",
+      "test"
+    ],
+    "exit": 0,
+    "failures": []
+  }
+]

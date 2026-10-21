@@ -1,0 +1,32 @@
+https://github.com/bitcoin/bips/blob/130b8e0fa7f30fa45532f080b87b8db27a79e46e/bip-0173.mediawiki
+
+  Authors: Pieter Wuille <pieter.wuille@gmail.com>
+           Greg Maxwell <greg@xiph.org>
+  License: BSD-2-Clause
+===Copyright===
+
+This BIP is licensed under the 2-clause BSD license.
+
+https://github.com/bitcoin/bips/blob/130b8e0fa7f30fa45532f080b87b8db27a79e46e/bip-0350.mediawiki
+
+  Authors: Pieter Wuille <pieter@wuille.net>
+  License: BSD-2-Clause
+===Copyright===
+
+This BIP is licensed under the 2-clause BSD license.
+
+Neither BIP supplies a copyright year or holder line. The authors are named above.
+The pinned repository root has no licence file. BIP2 links BSD-2-Clause to
+https://opensource.org/license/BSD-2-Clause . The conditions and disclaimer
+below are reproduced from that page. Only the codec vector strings are
+extracted and reformatted in Bech32Vectors.lean.
+
+Redistribution and use in source and binary forms, with or without modification, are permitted provided that the following conditions are met:
+
+1. Redistributions of source code must retain the above copyright notice, this list of conditions and the following disclaimer.
+
+2. Redistributions in binary form must reproduce the above copyright notice, this list of conditions and the following disclaimer in the documentation and/or other materials provided with the distribution.
+
+THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS “AS IS” AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE DISCLAIMED. IN NO EVENT SHALL THE COPYRIGHT HOLDER OR CONTRIBUTORS BE LIABLE FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF
+
+THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
