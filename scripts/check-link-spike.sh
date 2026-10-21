@@ -78,3 +78,16 @@ for bad in missing-argument missing-file non-ELF ldd-failure; do
     [[ $rc == 2 ]]
 done
 echo 'link spike, Lake/leanc green twins, forced-static red fixture: PASS'
+
+# Audit an executable that actually calls the request wrapper.
+(cd packages/http-curl && lake build HttpCurlTests)
+driver=packages/http-curl/.lake/build/bin/HttpCurlTests
+bash "$check" "$driver" >"$evidence/http-curl.audit" 2>"$evidence/http-curl.audit.stderr"
+cat "$evidence/http-curl.audit" "$evidence/http-curl.audit.stderr"
+ldd "$driver" >"$evidence/http-curl.ldd"
+for lib in libssl.so.3 libcrypto.so.3; do
+    grep -F "$OPENSSL_LIB_DIR/$lib" "$evidence/http-curl.ldd"
+done
+versions=$(grep -E '^OpenSSL [0-9]+\.[0-9]+\.[0-9]+$' "$evidence/http-curl.audit" | sort -u)
+[[ $versions == "OpenSSL $OPENSSL_VERSION" ]]
+echo 'http-curl wrapper executable: one nix OpenSSL, version and ldd: PASS'

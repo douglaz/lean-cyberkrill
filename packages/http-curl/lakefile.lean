@@ -40,4 +40,4 @@ lean_lib HttpCurl where
   moreLinkLibs := #[curlLib]
 
 @[test_driver]
-lean_lib HttpCurlTests
+lean_exe HttpCurlTests
