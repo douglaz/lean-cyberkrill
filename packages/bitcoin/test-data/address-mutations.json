@@ -1,0 +1,299 @@
+[
+  {
+    "label": "p2pkh-template",
+    "command": [
+      "lake",
+      "test"
+    ],
+    "exit": 1,
+    "failures": [
+      "error: Bitcoin/Address.lean:175:72: unsolved goals",
+      "error: Bitcoin/Address.lean:181:38: This simp argument is unused:",
+      "error: Bitcoin/Address.lean:181:44: This simp argument is unused:",
+      "error: build failed"
+    ],
+    "property": 1,
+    "brokenTheorem": "Bitcoin.Address.fromScript_p2pkh"
+  },
+  {
+    "label": "p2sh-template",
+    "command": [
+      "lake",
+      "test"
+    ],
+    "exit": 1,
+    "failures": [
+      "error: Bitcoin/Address.lean:184:70: unsolved goals",
+      "error: Bitcoin/Address.lean:190:37: This simp argument is unused:",
+      "error: Bitcoin/Address.lean:190:43: This simp argument is unused:",
+      "error: build failed"
+    ],
+    "property": 2,
+    "brokenTheorem": "Bitcoin.Address.fromScript_p2sh"
+  },
+  {
+    "label": "witness-opcode",
+    "command": [
+      "lake",
+      "test"
+    ],
+    "exit": 1,
+    "failures": [
+      "error: Bitcoin/Address.lean:201:50: omega could not prove the goal:",
+      "error: build failed"
+    ],
+    "property": 3,
+    "brokenTheorem": "Bitcoin.Address.fromScript_witness"
+  },
+  {
+    "label": "mainnet-base58-version",
+    "command": [
+      "lake",
+      "test"
+    ],
+    "exit": 1,
+    "failures": [
+      "error: Bitcoin/Address.lean:310:17: Tactic `rfl` failed: The left-hand side",
+      "error: build failed"
+    ],
+    "property": 4,
+    "brokenTheorem": "Bitcoin.Address.decodeLegacy_p2pkh"
+  },
+  {
+    "label": "legacy-regtest-network",
+    "command": [
+      "lake",
+      "test"
+    ],
+    "exit": 1,
+    "failures": [
+      "error: Bitcoin/Address.lean:352:2: unsolved goals",
+      "error: Bitcoin/Address.lean:362:2: unsolved goals",
+      "error: build failed"
+    ],
+    "property": 5,
+    "brokenTheorem": "Bitcoin.Address.p2pkh_string_roundtrip"
+  },
+  {
+    "label": "regtest-hrp",
+    "command": [
+      "lake",
+      "test"
+    ],
+    "exit": 1,
+    "failures": [
+      "error: Bitcoin/Address.lean:260:52: unsolved goals",
+      "error: Bitcoin/Address.lean:270:6: This simp argument is unused:",
+      "error: build failed"
+    ],
+    "property": 6,
+    "brokenTheorem": "Bitcoin.Address.decode_witness_encode"
+  },
+  {
+    "label": "merge-mismatch",
+    "command": [
+      "lake",
+      "test"
+    ],
+    "exit": 1,
+    "failures": [
+      "uncaught exception: assertion failed: address network mismatch bc-on-testnet"
+    ],
+    "property": 7,
+    "assertion": "address network mismatch bc-on-testnet",
+    "axiomGatePassed": true
+  },
+  {
+    "label": "unknown-hrp-mismatch",
+    "command": [
+      "lake",
+      "test"
+    ],
+    "exit": 1,
+    "failures": [
+      "uncaught exception: assertion failed: BIP350 segwit invalid tc1p0xlxvlhemja6c4dqv22uapctqupfhlxm9h8z3k2e72q4k9hcz7vq5zuyut"
+    ],
+    "property": 8,
+    "assertion": "BIP350 segwit invalid tc1",
+    "axiomGatePassed": true
+  },
+  {
+    "label": "allow-bech32-v1",
+    "command": [
+      "lake",
+      "test"
+    ],
+    "exit": 1,
+    "failures": [
+      "uncaught exception: assertion failed: BIP173 v1+ rejected bc1pw508d6qejxtdg4y5r3zarvary0c5xw7kw508d6qejxtdg4y5r3zarvary0c5xw7k7grplx"
+    ],
+    "property": 9,
+    "assertion": "BIP173 v1+ rejected",
+    "axiomGatePassed": true
+  },
+  {
+    "label": "allow-bech32m-v0",
+    "command": [
+      "lake",
+      "test"
+    ],
+    "exit": 1,
+    "failures": [
+      "uncaught exception: assertion failed: BIP350 segwit invalid bc1qw508d6qejxtdg4y5r3zarvary0c5xw7kemeawh"
+    ],
+    "property": 10,
+    "assertion": "BIP350 segwit invalid bc1qw508",
+    "axiomGatePassed": true
+  },
+  {
+    "label": "allow-high-version",
+    "command": [
+      "lake",
+      "test"
+    ],
+    "exit": 1,
+    "failures": [
+      "uncaught exception: assertion failed: BIP350 segwit invalid BC130XLXVLHEMJA6C4DQV22UAPCTQUPFHLXM9H8Z3K2E72Q4K9HCZ7VQ7ZWS8R"
+    ],
+    "property": 11,
+    "assertion": "BIP350 segwit invalid BC130",
+    "axiomGatePassed": true
+  },
+  {
+    "label": "allow-v1-program-length",
+    "command": [
+      "lake",
+      "test"
+    ],
+    "exit": 1,
+    "failures": [
+      "uncaught exception: assertion failed: BIP350 segwit invalid bc1pw5dgrnzv"
+    ],
+    "property": 12,
+    "assertion": "BIP350 segwit invalid bc1pw5",
+    "axiomGatePassed": true
+  },
+  {
+    "label": "allow-v0-program-length",
+    "command": [
+      "lake",
+      "test"
+    ],
+    "exit": 1,
+    "failures": [
+      "uncaught exception: assertion failed: BIP350 segwit invalid BC1QR508D6QEJXTDG4Y5R3ZARVARYV98GJ9P"
+    ],
+    "property": 13,
+    "assertion": "BIP350 segwit invalid BC1QR508",
+    "axiomGatePassed": true
+  },
+  {
+    "label": "lax-padding",
+    "command": [
+      "lake",
+      "test"
+    ],
+    "exit": 1,
+    "failures": [
+      "uncaught exception: assertion failed: BIP350 segwit invalid bc1p0xlxvlhemja6c4dqv22uapctqupfhlxm9h8z3k2e72q4k9hcz7v07qwwzcrf"
+    ],
+    "property": 14,
+    "assertion": "BIP350 segwit invalid bc1p0xlx",
+    "axiomGatePassed": true
+  },
+  {
+    "label": "allow-empty-data",
+    "command": [
+      "lake",
+      "test"
+    ],
+    "exit": 1,
+    "failures": [
+      "uncaught exception: assertion failed: BIP350 segwit invalid bc1gmk9yu"
+    ],
+    "property": 15,
+    "assertion": "BIP350 segwit invalid bc1gmk9yu",
+    "axiomGatePassed": true
+  },
+  {
+    "label": "allow-long-base58-payload",
+    "command": [
+      "lake",
+      "test"
+    ],
+    "exit": 1,
+    "failures": [
+      "uncaught exception: assertion failed: Base58 address negatives version-0-body-21"
+    ],
+    "property": 16,
+    "assertion": "Base58 address negatives version-0-body-21",
+    "axiomGatePassed": true
+  },
+  {
+    "label": "allow-unknown-base58-version",
+    "command": [
+      "lake",
+      "test"
+    ],
+    "exit": 1,
+    "failures": [
+      "uncaught exception: assertion failed: Base58 address negatives unknown-version"
+    ],
+    "property": 17,
+    "assertion": "Base58 address negatives unknown-version",
+    "axiomGatePassed": true
+  },
+  {
+    "label": "recognise-invalid-v0-script",
+    "command": [
+      "lake",
+      "test"
+    ],
+    "exit": 1,
+    "failures": [
+      "uncaught exception: assertion failed: address script negatives v0-length25"
+    ],
+    "property": 18,
+    "assertion": "address script negatives v0-length25",
+    "axiomGatePassed": true
+  },
+  {
+    "label": "ignore-expected-network",
+    "command": [
+      "lake",
+      "test"
+    ],
+    "exit": 1,
+    "failures": [
+      "error: Bitcoin/Address.lean:158:12: Variable name `net` is not explicitly referenced.",
+      "error: Bitcoin/Address.lean:260:52: unsolved goals",
+      "error: Bitcoin/Address.lean:368:71: unsolved goals",
+      "error: build failed"
+    ],
+    "property": 19,
+    "brokenTheorem": "Bitcoin.Address.decode_witness_encode"
+  },
+  {
+    "label": "premature-network-check",
+    "command": [
+      "lake",
+      "test"
+    ],
+    "exit": 1,
+    "failures": [
+      "uncaught exception: assertion failed: BIP173 v1+ rejected bc1pw508d6qejxtdg4y5r3zarvary0c5xw7kw508d6qejxtdg4y5r3zarvary0c5xw7k7grplx"
+    ],
+    "property": 20,
+    "assertion": "BIP173 v1+ rejected",
+    "axiomGatePassed": true
+  },
+  {
+    "label": "restored-tests",
+    "command": [
+      "lake",
+      "test"
+    ],
+    "exit": 0,
+    "failures": []
+  }
+]

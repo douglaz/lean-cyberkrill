@@ -18,8 +18,8 @@ This BIP is licensed under the 2-clause BSD license.
 Neither BIP supplies a copyright year or holder line. The authors are named above.
 The pinned repository root has no licence file. BIP2 links BSD-2-Clause to
 https://opensource.org/license/BSD-2-Clause . The conditions and disclaimer
-below are reproduced from that page. Only the codec vector strings are
-extracted and reformatted in Bech32Vectors.lean.
+below are reproduced from that page. Codec and address vector strings and
+scriptPubKey hex are extracted and reformatted in Bech32Vectors.lean and AddressVectors.lean.
 
 Redistribution and use in source and binary forms, with or without modification, are permitted provided that the following conditions are met:
 
