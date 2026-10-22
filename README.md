@@ -889,7 +889,7 @@ nix eval --raw .#checks.x86_64-linux.default.drvPath
 ```
 
 To repeat mutation checks, run the two commands above from `packages/http-curl`
-with no concurrent reviewers or writers; then run the green checks again.
+with no concurrent readers or writers; then run the green checks again.
 
 ### Deltas not taken
 
@@ -1214,9 +1214,9 @@ tree and the stub script was re-run: in `packages/http-curl`,
 
 After host tests, `pgrep -af 'python3 -I [^ ]*responder[.]py'` exited 1 with
 no output. Gate streams are captured separately in root
-`.lake/round2-<gate>.stdout` and `.stderr` files. The existing Manager-owned
-tracker modification was left alone; implementation files are staged for the
-Manager to commit.
+`.lake/round2-<gate>.stdout` and `.stderr` files. The existing
+tracker modification was left alone; implementation files are staged for a
+separate commit.
 
 ### Deltas not taken
 
@@ -1461,7 +1461,7 @@ A comparison against the freshly fetched pinned upstream source confirmed
 all **114 authored theorem statements** unchanged after namespace substitution
 and whitespace normalization, and the MIT notice byte-identical. The diff
 against `e75cfaa` is restricted to this package, this README, the CI step,
-`docs/upstream-fixes.md`, and the pre-existing Manager tracker claim. No
+`docs/upstream-fixes.md`, and the pre-existing tracker claim. No
 `flake.nix`, `flake.lock`, other package or OpenSSL script changed.
 `git diff --cached --check` excluding the two unchanged `.rsp` data files
 exited **0**; the raw NIST LongMsg bytes intentionally retain upstream trailing
@@ -1477,8 +1477,8 @@ On the rebased tree, `nix flake check -L` rebuilt
 ### Deltas not taken
 
 None. Incremental hashing, additional hash families, a public library hex
-codec, and performance work remain outside Phase 2. The brief reserves tracker
-updates and commits for the Manager; the tracker and other packages are untouched.
+codec, and performance work remain outside Phase 2. Tracker updates and
+commits are made separately; the tracker and other packages are untouched.
 
 ## Phase 3a: bitcoin primitives (1 of 4)
 
@@ -1563,17 +1563,17 @@ mapping entirely to ASCII is U+212A KELVIN SIGN → `k`; no accepted form contai
 [UnicodeData.txt](https://www.unicode.org/Public/17.0.0/ucd/UnicodeData.txt) and
 [SpecialCasing.txt](https://www.unicode.org/Public/17.0.0/ucd/SpecialCasing.txt)
 offline. No Unicode data is vendored. The run
-`python3 -I packages/bitcoin/check-unicode.py /var/tmp/bitcoin-primitives.mOmN3Dbv/UnicodeData.txt /var/tmp/bitcoin-primitives.mOmN3Dbv/SpecialCasing.txt`
+`python3 -I packages/bitcoin/check-unicode.py <tmpdir>/UnicodeData.txt <tmpdir>/SpecialCasing.txt`
 exited **0**, reporting `U+212A -> k (1/1)`.
 
 From the repository root, this command exited **0**:
 
 ```bash
-TMPDIR=/var/tmp python3 packages/bitcoin/capture-cyberkrill.py
+python3 packages/bitcoin/capture-cyberkrill.py
 ```
 
 It cloned `douglaz/cyberkrill` at
-`27cad1faba86260b06665a89f0af5134d23525c2` into a fresh `/var/tmp` directory,
+`27cad1faba86260b06665a89f0af5134d23525c2` into a fresh temporary directory,
 added one temporary test calling only `AmountInput::from_str` and
 `as_millisats`, and fetched dependencies with that revision's own `nix develop`.
 The fetch/version command was
@@ -1680,7 +1680,7 @@ cyberkrill cross-check: 124/124
 ```
 
 From `packages/bitcoin`,
-`TMPDIR=/var/tmp nix develop -c python3 -I check-mutations.py` exited **0**.
+`TMPDIR=<tmpdir> nix develop -c python3 -I check-mutations.py` exited **0**.
 Every mutation ran `lake test` in the foreground and exited **1**, with these
 observed failures; the script asserts the named proof's diagnostic location or
 the exact vector/gate message, and restores the production file in `finally`.
@@ -1702,7 +1702,7 @@ The final restored `lake test` exited **0**. Separate streams are retained under
 
 ### Final validation
 
-On 2026-10-21, with Lean v4.35.0 and `TMPDIR=/var/tmp`, the following commands
+On 2026-10-21, with Lean v4.35.0 and `TMPDIR=<tmpdir>`, the following commands
 ran in the foreground under the repository's gate supervisor. New files were
 staged before the flake check. The combined supervisor returned `EXIT=0`.
 
@@ -1730,8 +1730,8 @@ workflow, flake or tracker change is part of this implementation.
 
 None. The accepted named grammar forms above are retained. No additional policy
 bound, input-length cap, whole-sat helper, golden harness or unrelated codec is
-added; those belong to their later phases. Tracker updates and commits are left
-to the Manager.
+added; those belong to their later phases. Tracker updates and commits are made
+separately.
 
 ## Phase 3a: base58 and Base58Check (2 of 4)
 
@@ -1835,8 +1835,8 @@ The bech32 section below lists the current totals.
 ### Red runs
 
 From `packages/bitcoin`, both
-`TMPDIR=/var/tmp nix develop -c python3 -I check-mutations.py` and
-`TMPDIR=/var/tmp nix develop -c python3 -I check-base58-mutations.py` exited **0**.
+`TMPDIR=<tmpdir> nix develop -c python3 -I check-mutations.py` and
+`TMPDIR=<tmpdir> nix develop -c python3 -I check-base58-mutations.py` exited **0**.
 The first reruns the six existing mutations. The second changes production
 code one property at a time, asserts a diagnostic inside the named theorem or
 the runtime assertion below, and restores the source in `finally`.
@@ -1864,7 +1864,7 @@ the committed checksum (checked with Python `hashlib`).
 ### Final validation
 
 On 2026-10-21, Lean v4.35.0 (`eb6cafb7290e8bd5f2937522d8d804f58f02bafc`),
-with `TMPDIR=/var/tmp`, all gate commands ran in the foreground under the
+with `TMPDIR=<tmpdir>`, all gate commands ran in the foreground under the
 repository's supervisor. New files were staged before the flake check; the
 combined supervisor returned `EXIT=0`.
 
@@ -1874,8 +1874,8 @@ combined supervisor returned `EXIT=0`.
 | `nix develop -c lake build` | `packages/bitcoin` | 0 |
 | `nix develop -c lake test` | `packages/bitcoin` | 0; all existing and new counted sets |
 | `python3 -I derive-base58check.py` | `packages/bitcoin` | 0; 21/21 and 4/4 |
-| `python3 -I check-base58-copy.py /var/tmp/lck-base58-20261021/KeyEncodingExamples.lean` | `packages/bitcoin` | 0; diff shows only removal of `private` |
-| `cmp /var/tmp/lck-base58-20261021/LICENSE-miniscript Bitcoin/LICENSE-miniscript` | `packages/bitcoin` | 0 |
+| `python3 -I check-base58-copy.py <fetch-dir>/KeyEncodingExamples.lean` | `packages/bitcoin` | 0; diff shows only removal of `private` |
+| `cmp <fetch-dir>/LICENSE-miniscript Bitcoin/LICENSE-miniscript` | `packages/bitcoin` | 0 |
 | `nix flake check -L` | repository root | 0 |
 | `nix build && ./result/bin/cyberkrill` | repository root | 0; `cyberkrill 0.1.0` |
 | `rc=0; grep -rnw sorry --include='*.lean' --exclude-dir=.lake packages \|\| rc=$?; test "$rc" -eq 1` | repository root | 0; no matches |
@@ -1901,10 +1901,10 @@ respectively; both fetches exited **0**. After the comparison checks,
 these foreground cleanup commands each exited **0**:
 
 ```bash
-unlink /var/tmp/lck-base58-20261021/KeyEncodingExamples.lean
-unlink /var/tmp/lck-base58-20261021/LICENSE-miniscript
-rmdir /var/tmp/lck-base58-20261021
-test ! -e /var/tmp/lck-base58-20261021
+unlink <fetch-dir>/KeyEncodingExamples.lean
+unlink <fetch-dir>/LICENSE-miniscript
+rmdir <fetch-dir>
+test ! -e <fetch-dir>
 ```
 
 No temporary clone, private dependency cache or external result link was
@@ -2113,7 +2113,7 @@ number; the latter's record is unchanged.
 
 ### Final validation
 
-Commands ran in the foreground with `TMPDIR=/var/tmp`, Lean **4.35.0**
+Commands ran in the foreground with `TMPDIR=<tmpdir>`, Lean **4.35.0**
 (`eb6cafb7290e8bd5f2937522d8d804f58f02bafc`), and the repository gate
 supervisor. Separate stdout/stderr files and exact command arrays remain
 under `packages/bitcoin/.lake/final-bech32-checks`, with `commands.json`
@@ -2132,8 +2132,8 @@ recording exits. New files were staged before the flake check.
 | `rc=0; grep -rnw sorry --include='*.lean' --exclude-dir=.lake packages \|\| rc=$?; test "$rc" -eq 1` | root | 0; no matches |
 | `grep -rn native_decide --include='*.lean' packages/bitcoin/Bitcoin packages/bitcoin/Bitcoin.lean` | root | 1, expected; no matches |
 | `grep -nE '\]!\|get!\|head!\|tail!\|getLast!\|panic!\|unreachable!' packages/bitcoin/Bitcoin/Bech32.lean packages/bitcoin/Bitcoin/Bech32Codec.lean packages/bitcoin/Bitcoin/ConvertBits.lean` | root | 1, expected; no matches |
-| `python3 -I packages/bitcoin/check-bech32-copy.py /var/tmp/lck-bech32-20261021-1464735 --write` | root | 0; initial extraction, 40/40 |
-| `python3 -I packages/bitcoin/check-bech32-copy.py /var/tmp/lck-bech32-20261021-1464735` | root | 0; final comparison, 40/40 |
+| `python3 -I packages/bitcoin/check-bech32-copy.py <fetch-dir> --write` | root | 0; initial extraction, 40/40 |
+| `python3 -I packages/bitcoin/check-bech32-copy.py <fetch-dir>` | root | 0; final comparison, 40/40 |
 | `git diff --check 442e885d00225a89edb7286b372de0e888e08d84` | root | 0 |
 
 The sandbox log contains every new set, SHA-256's gate and vector sets,
@@ -2145,7 +2145,7 @@ All seven packages ran their build/test commands, and the app printed
 
 ### Cleanup
 
-The fetch directory was `/var/tmp/lck-bech32-20261021-1464735`.
+The fetch directory, `<fetch-dir>` below, was a fresh temporary directory.
 Its five `curl -fL <URL> -o <path>` fetches each exited **0**:
 
 | Destination in that directory | URL |
@@ -2162,13 +2162,13 @@ result link was created. Required mutation logs, final validation logs and
 normal build outputs remain under the ignored package `.lake/` directory.
 
 ```bash
-unlink /var/tmp/lck-bech32-20261021-1464735/bip-0173.mediawiki
-unlink /var/tmp/lck-bech32-20261021-1464735/bip-0350.mediawiki
-unlink /var/tmp/lck-bech32-20261021-1464735/bip-0002.mediawiki
-unlink /var/tmp/lck-bech32-20261021-1464735/root.json
-unlink /var/tmp/lck-bech32-20261021-1464735/BSD-2-Clause.html
-rmdir /var/tmp/lck-bech32-20261021-1464735
-test ! -e /var/tmp/lck-bech32-20261021-1464735
+unlink <fetch-dir>/bip-0173.mediawiki
+unlink <fetch-dir>/bip-0350.mediawiki
+unlink <fetch-dir>/bip-0002.mediawiki
+unlink <fetch-dir>/root.json
+unlink <fetch-dir>/BSD-2-Clause.html
+rmdir <fetch-dir>
+test ! -e <fetch-dir>
 unlink packages/bitcoin/.lake/bech32-work/Probe.lean
 unlink packages/bitcoin/.lake/bech32-work/Bech32.olean
 unlink packages/bitcoin/.lake/bech32-work/validate.py
@@ -2321,7 +2321,7 @@ The first line names that URL, commit, path and MIT notice
 commit, SHA-256 `b028769f3852a9368ab10bd754ff01ebb741f84a2fa658c9aff82a631bc6ecfc`.
 
 `python3 -I generate-core-addresses.py [--write]` fetches into a fresh
-`/var/tmp` directory, verifies the pinned hash, selects only public P2PKH/P2SH
+temporary directory, verifies the pinned hash, selects only public P2PKH/P2SH
 entries, and asserts 22 with chain counts main/testnet4/signet/regtest = 6/6/6/4.
 Only address, script and chain enter the vector file. The source contains secret
 entries; it never enters the repository or logs, and is deleted in `finally`.
@@ -2418,7 +2418,7 @@ the Base58 and bech32 records remain unchanged.
 
 ### Final validation
 
-Commands ran in the foreground with `TMPDIR=/var/tmp`, Lean **4.35.0**
+Commands ran in the foreground with `TMPDIR=<tmpdir>`, Lean **4.35.0**
 (`eb6cafb7290e8bd5f2937522d8d804f58f02bafc`), and the repository's gate
 supervisor. Files were staged before the flake check. Separate stdout/stderr
 and exact command arrays with exits remain in
@@ -2437,13 +2437,13 @@ and exact command arrays with exits remain in
 | `rc=0; grep -rnw sorry --include='*.lean' --exclude-dir=.lake packages \|\| rc=$?; test "$rc" -eq 1` | root | 0; no matches |
 | `grep -rn native_decide --include='*.lean' packages/bitcoin/Bitcoin packages/bitcoin/Bitcoin.lean` | root | 1, expected; no matches |
 | `grep -nE '\]!\|get!\|head!\|tail!\|getLast!\|panic!\|unreachable!' packages/bitcoin/Bitcoin/Address.lean` | root | 1, expected; no matches |
-| `python3 -I packages/bitcoin/check-address-copy.py /var/tmp/lck-address-bips-ya5byUpy --write` | root | 0; initial extraction |
-| `python3 -I packages/bitcoin/check-address-copy.py /var/tmp/lck-address-bips-ya5byUpy` | root | 0; fresh BIP comparison, 39/39 |
+| `python3 -I packages/bitcoin/check-address-copy.py <bips-dir> --write` | root | 0; initial extraction |
+| `python3 -I packages/bitcoin/check-address-copy.py <bips-dir>` | root | 0; fresh BIP comparison, 39/39 |
 | `python3 -I packages/bitcoin/generate-core-addresses.py --write` | root | 0; initial extraction |
 | `python3 -I packages/bitcoin/generate-core-addresses.py` | root | 0; fresh Core comparison, 22/22 |
 | `python3 -I packages/bitcoin/derive-addresses.py --write` | root | 0; initial derivation |
 | `python3 -I packages/bitcoin/derive-addresses.py` | root | 0; comparison, 11 BIP pairs, 2 regtest, 10 negatives |
-| `cmp packages/bitcoin/Bitcoin/LICENSE-bitcoin-core /var/tmp/lck-address-bips-ya5byUpy/COPYING` | root | 0; fresh notice fetch |
+| `cmp packages/bitcoin/Bitcoin/LICENSE-bitcoin-core <bips-dir>/COPYING` | root | 0; fresh notice fetch |
 | `git diff --check 73eedf608e59d7b4d404b729ab1b53462b2b6096` | root | 0 |
 | `nix develop -c python3 -I check-address-mutations.py` | `packages/bitcoin` | 0; 20/20 |
 | `nix develop -c python3 -I check-mutations.py` | `packages/bitcoin` | 0; 6/6 |
@@ -2470,27 +2470,27 @@ The initial Core generator and fresh comparison removed these paths, with each
 operation exiting **0**:
 
 ```bash
-unlink /var/tmp/lck-address-core-45wusq7g/key_io_valid.json
-rmdir /var/tmp/lck-address-core-45wusq7g
-unlink /var/tmp/lck-address-core-egrscc8d/key_io_valid.json
-rmdir /var/tmp/lck-address-core-egrscc8d
+unlink <core-dir-1>/key_io_valid.json
+rmdir <core-dir-1>
+unlink <core-dir-2>/key_io_valid.json
+rmdir <core-dir-2>
 ```
 
 The initial and final `curl -fL <URL> -o <path>` commands each exited **0**:
 
 | Path | URL |
 |---|---|
-| `/var/tmp/lck-address-bips-ya5byUpy/bip-0173.mediawiki` | `https://raw.githubusercontent.com/bitcoin/bips/130b8e0fa7f30fa45532f080b87b8db27a79e46e/bip-0173.mediawiki` |
-| `/var/tmp/lck-address-bips-ya5byUpy/bip-0350.mediawiki` | `https://raw.githubusercontent.com/bitcoin/bips/130b8e0fa7f30fa45532f080b87b8db27a79e46e/bip-0350.mediawiki` |
-| `/var/tmp/lck-address-bips-ya5byUpy/COPYING` | `https://raw.githubusercontent.com/bitcoin/bitcoin/9be056a8a72b624dae9623b2f7bded92c2a21c91/COPYING` |
+| `<bips-dir>/bip-0173.mediawiki` | `https://raw.githubusercontent.com/bitcoin/bips/130b8e0fa7f30fa45532f080b87b8db27a79e46e/bip-0173.mediawiki` |
+| `<bips-dir>/bip-0350.mediawiki` | `https://raw.githubusercontent.com/bitcoin/bips/130b8e0fa7f30fa45532f080b87b8db27a79e46e/bip-0350.mediawiki` |
+| `<bips-dir>/COPYING` | `https://raw.githubusercontent.com/bitcoin/bitcoin/9be056a8a72b624dae9623b2f7bded92c2a21c91/COPYING` |
 
 After the final comparisons, each command below exited **0**:
 
 ```bash
-unlink /var/tmp/lck-address-bips-ya5byUpy/bip-0173.mediawiki
-unlink /var/tmp/lck-address-bips-ya5byUpy/bip-0350.mediawiki
-unlink /var/tmp/lck-address-bips-ya5byUpy/COPYING
-rmdir /var/tmp/lck-address-bips-ya5byUpy
+unlink <bips-dir>/bip-0173.mediawiki
+unlink <bips-dir>/bip-0350.mediawiki
+unlink <bips-dir>/COPYING
+rmdir <bips-dir>
 unlink packages/bitcoin/.lake/address-work/validate.py
 unlink packages/bitcoin/.lake/address-work/gate-template.bash
 rmdir packages/bitcoin/.lake/address-work
@@ -2500,7 +2500,7 @@ All three fetch directories and the scratch directory were checked absent. No
 copy of the secret-bearing Core source created by this phase remains. Required
 mutation streams, final validation logs and ordinary build outputs remain under
 `.lake/`. No reference clone, private dependency cache or external Nix result link
-was created for this phase. Gate commands use `TMPDIR=/var/tmp`; their supervisor
+was created for this phase. Gate commands use `TMPDIR=<tmpdir>`; their supervisor
 removes its private files and directory before reporting the final status.
 
 ### Deltas not taken

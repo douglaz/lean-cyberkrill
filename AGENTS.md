@@ -20,7 +20,7 @@ definitions of done; the beads tracker (`br`) holds the executable work.
   expectations come from
   `nix build --no-link github:douglaz/cyberkrill/27cad1faba86260b06665a89f0af5134d23525c2`, or from
   a throwaway clone of that commit in a temp dir built with that commit's own `nix develop`, never
-  from `/home/user/p/cyberkrill`. A clone only gains a temporary test that calls the pure functions
+  from a local working checkout. A clone only gains a temporary test that calls the pure functions
   its bead names, never one that opens a connection. Fetch its dependencies first (network allowed
   for that step only), then run the test offline inside `unshare -rn sh -c 'ip link set lo up && …'`
   with `HOME` set to a temp dir. Commit the script and its output. If the clone does not build, use
@@ -60,10 +60,17 @@ definitions of done; the beads tracker (`br`) holds the executable work.
     path, "MIT") with the upstream MIT notice in a file beside it, never the dual-licence header.
 - **Git.** Work on a feature branch; never commit or push to `master`; the owner merges PRs.
   While the repo is private, the owner's standing go-ahead covers pushing feature branches and
-  opening PRs (plan.md §1 Visibility); nothing else is pushed. rloop Runs never push; this
+  opening PRs (plan.md §1 Visibility); nothing else is pushed. A work session never pushes; this
   overrides the `git push` line in the beads Session Protocol below. Conventional commits
   (`feat(bitcoin): ...`). Commit messages and PR text describe the change only, with no tool or
   co-author attribution trailers. Never commit machine-local instruction files.
+- **Public text.** Committed files, commit messages, bead text and PR text never name the agent or
+  automation tooling behind the work, its roles or flags, models, usage quotas, or machine-local
+  paths (home directories, specific temp directories). Write a temp directory as `<tmpdir>` and
+  cite a reference source by upstream URL and commit, not by a local copy. The committed
+  `.beads/config.yaml` sets the neutral `actor` that `br` records as `created_by`; never pass
+  `--actor`. `br` always records the workspace's absolute path as `source_repo_path` on create, so
+  clear it right after every `br create`: `br update <id> --source-repo-path ""`.
 
 <!-- agent-discipline-v1 -->
 

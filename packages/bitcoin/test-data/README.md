@@ -16,10 +16,10 @@ Only output is captured; no reference source code is copied here.
 From the repository root:
 
 ```bash
-TMPDIR=/var/tmp python3 packages/bitcoin/capture-cyberkrill.py
+python3 packages/bitcoin/capture-cyberkrill.py
 ```
 
-The script retains its fresh clone and private cache under `/var/tmp`, adds one
+The script retains its fresh clone and private cache in a temporary directory, adds one
 pure parser test, fetches with that revision's `nix develop`, then builds and runs
 only that test offline under `unshare -rn` with a throwaway HOME. The test never
 constructs a client or opens a connection. Its stdout/stderr are captured
