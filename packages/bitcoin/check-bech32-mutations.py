@@ -117,7 +117,7 @@ def main():
                 record["brokenTheorem"] = "Bitcoin.Bech32." + theorem
             else:
                 assert assertion in output, output
-                assert "Bitcoin axiom gate:" in output and "42 named; 0 offenders" in output
+                assert "Bitcoin axiom gate:" in output and "43 named; 0 offenders" in output
                 record["assertion"] = assertion.removeprefix("assertion failed: ")
                 record["axiomGatePassed"] = True
             records.append(record)
