@@ -3,11 +3,13 @@
 Bitcoin, Lightning and Fedimint libraries for Lean 4, and a Lean port of the
 [cyberkrill](https://github.com/douglaz/cyberkrill) command-line tool built on them.
 
-Status: Phase 1a, both parts of Phase 1b, Phase 2, and Phase 3a (1–3 of 4) implemented: secp256k1 bindings,
+Status: Phase 1a, both parts of Phase 1b, Phase 2, and Phase 3a implemented: secp256k1 bindings,
 a bounded HTTP(S) client with per-request CA selection, a reusable HTTP/TLS recording stub,
 proved SHA-256 and SHA-256d with NIST vectors, and hex, canonical CompactSize and exact
 millisatoshi amounts with String round-trip proofs, plus proved Base58, Base58Check and
-bech32/bech32m codecs with strict and lax bit regrouping.
+bech32/bech32m codecs with strict and lax bit regrouping, and scriptPubKey/address
+conversion per network with round-trip proofs. Phase 3a is complete apart from
+the 4-error theorem, which belongs to Phase 3b.
 Other packages remain skeletons;
 `plan.md` is the plan for v1.
 
@@ -2184,6 +2186,332 @@ accepted when the total length fits and all other checks pass. Tracker item
 `lck-ist` (deferred, `owner-decision`) holds this question. No other
 stricter acceptance check is proposed here. Segwit address semantics,
 BOLT11, LNURL and invite semantics remain in their later phases.
+
+## Phase 3a: addresses (4 of 4)
+
+### Public API
+
+`import Bitcoin` includes `Bitcoin.Address`, a pure Lean module. All names
+below are in `Bitcoin.Address`. The vector modules are imported only by tests.
+
+| API | Contract |
+|---|---|
+| `Network` | Exactly `mainnet`, `testnet`, `signet`, `regtest` |
+| `WitnessNetwork` | `mainnet`, shared `testnets`, or `regtest`; `hrp` gives `bc`, `tb`, or `bcrt` |
+| `Value` | `p2pkh main hash`, `p2sh main hash`, or `witness network version program`; retains the network class, with `BEq` and `DecidableEq` |
+| `Value.WellFormed`, `Value.validFor net` | Hash/program validity and the expected-network rule |
+| `fromScript net script`, `Value.toScript` | Checked script recognition and parsed-address script construction |
+| `encodeScript net script : Except Error String` | Address string, or `noAddress`; segwit output is lowercase and Base58 preserves case |
+| `decode net text : Except Error Value` | Checked address parsing, including expected-network validation |
+| `decodeScript net text : Except Error ByteArray` | Address to scriptPubKey, with named errors |
+| `decodeLegacy text`, `requireNetwork net value` | Public Base58 stage and the same network check used by `decode` |
+| `Value.encode` | Total formatter; use checked construction (`fromScript` or `decode`) for well-formed values |
+
+Phases 4a/7c and 8 call `encodeScript` when displaying scriptPubKeys, mapping
+`noAddress` to JSON `null`. Phase 5 calls it for fallback scripts and omits the
+fallback when it returns `noAddress`. Address inputs in Phases 5 and 8 call
+`decodeScript` with the expected `Network`; `networkMismatch` remains distinct.
+
+### Network and script rules
+
+These rules follow rust-bitcoin **0.32.8**, which cyberkrill @ `27cad1f` locks.
+References are relative to that crate unless explicitly named otherwise.
+
+| Rule | Source |
+|---|---|
+| P2PKH: exactly `76 a9 14 <20 bytes> 88 ac`; P2SH: exactly `a9 14 <20 bytes> 87` | `src/blockdata/script/borrowed.rs:200-216`; `src/address/mod.rs:568-604` |
+| Witness script: length 4–42, opcode `00` or `51`–`60`, direct push of 2–40 bytes matching the remaining length | `src/blockdata/script/borrowed.rs:178-196` |
+| Witness v0: exactly 20 or 32 bytes; v1–16: any 2–40 bytes, including v1/32 P2TR and generic witness programs | `src/blockdata/script/witness_program.rs:45-60` |
+| Base58Check payload: one version byte and 20 hash bytes; P2PKH `00`/`6f`, P2SH `05`/`c4`, main/test respectively | `src/blockdata/constants.rs:37-43`; `src/address/mod.rs:833-859` |
+| Legacy test versions work on testnet, signet and regtest; main versions only on mainnet | `src/network.rs:50-59`; `src/address/mod.rs:721-728` |
+| HRPs: `bc` only mainnet, `tb` testnet/signet, `bcrt` only regtest; HRP comparison is case-insensitive | `src/address/mod.rs:205-226,721-728`; bech32 0.11.1 `src/primitives/hrp.rs:206-218` |
+| Segwit: limit 90, non-empty data, version ≤16, bech32 for v0 and bech32m for v1–16, strict 5→8 padding and program lengths | `src/address/mod.rs:818-826`, calling bech32 0.11.1 `segwit::decode`; BIP173/BIP350 |
+| Try segwit first; fall back to Base58 on every failed segwit validation except unknown HRP; never fall back on an unknown HRP after otherwise successful segwit validation | `src/address/mod.rs:818-833`, particularly `KnownHrp::from_hrp(hrp)?` |
+| Check the expected network only after complete address validation; no trimming | `src/address/mod.rs:773-779,814-863` |
+
+Every other script gives `noAddress`. Errors are values, with no partial indexing
+or panics. The port has no `Testnet4`: cyberkrill selects only the four networks
+above (`cyberkrill/src/main.rs:1494-1502,2298-2306`). Core's `testnet4` vectors
+are tested as testnet because the prefixes and HRP agree.
+
+There is no 50-character legacy guard (`lck-base58-long-input-3qk`), unlike
+`src/address/mod.rs:830`. A canonical Base58 representation of a 25-byte body
+(21-byte payload plus checksum) cannot exceed 50 characters. Extra leading
+`1`s add decoded zero bytes, so cannot evade the exact body length. Omitting
+the guard changes cost and error kind, without changing the accepted set.
+`Bech32.decode` counts characters where Rust counts bytes; non-ASCII inputs are
+rejected by both, so their accepted sets agree. There is no separate 83-character
+HRP guard: at limit 90 it follows from the separator and six checksum symbols.
+
+The errors intentionally retain useful segwit diagnostics where Rust's `FromStr`
+falls through to a legacy error (or its length guard):
+
+| Failure | `Error` constructor |
+|---|---|
+| Unrecognised script | `noAddress` |
+| Empty segwit data; version >16; wrong bech32 variant | `emptyData`; `witnessVersion`; `checksumVariant` |
+| Strict regrouping fails | `padding excessPadding` or `padding nonZeroPadding` |
+| Invalid witness program length | `programLength` |
+| Otherwise valid segwit with unknown HRP | `unknownHrp`, with no legacy fallback |
+| Bech32 codec fails, then Base58Check fails | `base58 invalidBase58`, `base58 tooShort`, or `base58 checksumMismatch` |
+| Valid Base58Check but wrong payload length or unknown version | `payloadLength` or `unknownVersion` |
+| Fully valid address for another network | `networkMismatch`, used for no invalid string |
+
+If segwit semantic validation fails and the Base58 stage succeeds, its parsed
+value is used. If both fail, the segwit semantic error is retained. When the
+bech32 codec itself fails, the Base58 error is returned. There is no unused
+generic bech32 error constructor.
+
+### Vectors
+
+`Bitcoin/AddressVectors.lean` extracts only strings and scriptPubKey hex from
+[bitcoin/bips @ 130b8e0fa7f30fa45532f080b87b8db27a79e46e](https://github.com/bitcoin/bips/tree/130b8e0fa7f30fa45532f080b87b8db27a79e46e).
+Its first line names that URL, full commit, both paths and line ranges,
+BSD-2-Clause, `Bitcoin/LICENSE-bips`, and “extracted and reformatted”. That
+notice's extraction note covers both vector files. No reason prose or reference
+code was copied. `check-address-copy.py SOURCE_DIRECTORY [--write]` compares the
+entire file, provenance included, with exact lines in separately fetched BIPs.
+
+| Runtime set | Source | Pinned count |
+|---|---|---|
+| BIP350 segwit valid | `bip-0350.mediawiki:186-193` | 8/8 |
+| BIP173 v0 valid | `bip-0173.mediawiki:306,307,311` | 3/3 |
+| BIP173 v1+ rejected | `bip-0173.mediawiki:308-310`, superseded by BIP350 | 3/3 |
+| BIP350 segwit invalid | `bip-0350.mediawiki:197-211` | 15/15 |
+| BIP173 segwit invalid | `bip-0173.mediawiki:315-324` | 10/10 |
+| Core Base58 addresses | Public P2PKH/P2SH entries below | 22/22 |
+| Named network mismatches | `bc` on testnet, main Base58 on testnet, `tb` on regtest | 3/3 |
+| `bcrt` known answers | Independently derived encodings of BIP350 L186/L193 scripts | 2/2 |
+| Address network matrix | Every BIP350/Core/`bcrt` valid vector × four networks | 128/128 |
+| Script negatives | Hand-derived malformed scripts | 9/9 |
+| Base58 address negatives | Independently derived synthetic payloads and changed Core checksum | 10/10 |
+
+Every set checks its loaded count and uses runtime assertions in `lake test`,
+including in the Nix sandbox. Valid vectors check decoding to the source script
+and encoding back to the address (case-insensitively for segwit, exactly for
+Base58). Invalid vectors assert the exact constructor on all four networks,
+and never mismatch. Matrix expectations are written directly from the network
+rule rather than calculated by the implementation's `validFor`.
+
+The vector-to-constructor table uses the source line to identify each string:
+
+| Source lines | Constructor (and earlier rule, where relevant) |
+|---|---|
+| BIP173 308–310 | `checksumVariant` |
+| BIP350 197; BIP173 315 | `unknownHrp` |
+| BIP350 198–202 | `checksumVariant` |
+| BIP350 203,208; BIP173 316,321 | `base58 invalidBase58` after codec invalid-character/checksum/mixed-case failure |
+| BIP350 204; BIP173 317 | `witnessVersion` |
+| BIP350 205–207; BIP173 320 | `programLength` |
+| BIP350 209 | `padding excessPadding` |
+| BIP350 210; BIP173 323 | `padding nonZeroPadding` |
+| BIP350 211; BIP173 324 | `emptyData` |
+| BIP173 318,319,322 | `checksumVariant` precedes the listed program-length/padding reason: these v1+ strings use superseded bech32 |
+
+The fetched BIP173 and BIP350 files have SHA-256
+`b19eab06b264bbd15ad7f7d640fa34de8f4a8809fba8a6ecc3e165545b27a543` and
+`63634b06aa8bae88b31929674736e74964c4598684269ac2b0b140c43a7a0dec`.
+
+`Bitcoin/CoreAddressVectors.lean` comes from
+[bitcoin/bitcoin @ 9be056a8a72b624dae9623b2f7bded92c2a21c91](https://github.com/bitcoin/bitcoin/tree/9be056a8a72b624dae9623b2f7bded92c2a21c91),
+`src/test/data/key_io_valid.json`, SHA-256
+`90bd1d35d12763e0d00c5400b2c9fe551e532a821e1e466c20cad3aced70a7fe`.
+The first line names that URL, commit, path and MIT notice
+`Bitcoin/LICENSE-bitcoin-core`. The notice is Core's verbatim `COPYING` at that
+commit, SHA-256 `b028769f3852a9368ab10bd754ff01ebb741f84a2fa658c9aff82a631bc6ecfc`.
+
+`python3 -I generate-core-addresses.py [--write]` fetches into a fresh
+`/var/tmp` directory, verifies the pinned hash, selects only public P2PKH/P2SH
+entries, and asserts 22 with chain counts main/testnet4/signet/regtest = 6/6/6/4.
+Only address, script and chain enter the vector file. The source contains secret
+entries; it never enters the repository or logs, and is deleted in `finally`.
+Default mode compares the file with a fresh extraction.
+
+`python3 -I derive-addresses.py [--write]` is network-free and implements its own
+small bech32 encoder and Base58Check encoder using Python `hashlib`. It
+cross-checks all 11 valid BIP pairs, writes `test-data/address-regtest.json` and
+`test-data/address-negatives.json`, or compares them by default. The negatives
+cover unknown version `02` with a 20-byte body, every known version with 19- and
+21-byte bodies, and a one-character checksum change to a Core address. Script
+negatives cover v0/25 bytes, v1/1 and v1/41 bytes, non-version opcodes `50` and
+`61`, a wrong push length, near-miss P2PKH/P2SH, and the empty script.
+
+### Proofs and axiom audit
+
+All statements quantify over public functions, every network, and every hash or
+program of the stated size. F1 includes successful recognition in its conclusion.
+
+| Obligation | Theorem | Statement |
+|---|---|---|
+| F1, P2PKH/P2SH | `p2pkh_script_roundtrip`, `p2sh_script_roundtrip` | For every 20-byte hash, `(fromScript net template).map Value.toScript = .ok template` |
+| F1, witness | `witness_script_roundtrip` | The same equality for every `validProgram version program`, covering v0/20, v0/32, P2TR and all generic v1–16 programs |
+| F2, segwit | `witness_string_roundtrip` | Encoding every valid witness template succeeds with a string whose `decodeScript net` is the original script |
+| F2, legacy | `p2pkh_string_roundtrip`, `p2sh_string_roundtrip` | Encoding every 20-byte-hash template succeeds; `decodeLegacy`, then `requireNetwork net`, then `toScript` recovers that script |
+| F2, link | `decode_of_bech32_error` | If `Bech32.decode 90 text` fails, `decode net text = (decodeLegacy text).bind (requireNetwork net)` |
+| R, parsed-value form | `fromScript_toScript` | For every well-formed `a` valid on `net`, `fromScript net a.toScript = .ok a` |
+
+The legacy round trip uses the Base58 stage because a Base58 string could also
+be a single-case, checksummed segwit string with an unknown HRP. The general
+decoder must reject that collision class without falling back, like rust-bitcoin.
+The link theorem covers every Base58 string whose bech32 codec parse fails,
+without imposing any extra hypothesis on the Base58 stage's round trip. No
+assumption about SHA-256d outputs rules out the collision class.
+
+The new `#print axioms` results are:
+
+```text
+'Bitcoin.Address.p2pkh_script_roundtrip' depends on axioms: [propext]
+'Bitcoin.Address.p2sh_script_roundtrip' depends on axioms: [propext]
+'Bitcoin.Address.witness_script_roundtrip' depends on axioms: [propext, Classical.choice, Quot.sound]
+'Bitcoin.Address.witness_string_roundtrip' depends on axioms: [propext, Classical.choice, Quot.sound]
+'Bitcoin.Address.p2pkh_string_roundtrip' depends on axioms: [propext, Classical.choice, Quot.sound]
+'Bitcoin.Address.p2sh_string_roundtrip' depends on axioms: [propext, Classical.choice, Quot.sound]
+'Bitcoin.Address.decode_of_bech32_error' depends on axioms: [propext, Classical.choice, Quot.sound]
+'Bitcoin.Address.fromScript_toScript' depends on axioms: [propext, Classical.choice, Quot.sound]
+Bitcoin axiom gate: 478 library theorems; 42 named; 0 offenders
+```
+
+The gate imports the library root and scans every library theorem, including
+helpers. The allowlist remains exactly `propext`, `Classical.choice`, `Quot.sound`,
+with no exemptions. The only change to the existing codecs is the additive
+`convertbits8to5_length` lemma; their behaviour and theorem statements are unchanged.
+
+### Red runs
+
+`nix develop -c python3 -I check-address-mutations.py` from `packages/bitcoin`
+exited **0**, detecting **20/20** independent production mutations. Every
+mutated `lake test` exited **1**; restored tests exited **0**. The runner restores
+the file in `finally`, saves separate streams in `.lake/address-mutation-checks`,
+and records compact evidence in `test-data/address-mutations.json`.
+
+| # | Mutation | Observed failure |
+|---|---|---|
+| 1 | P2PKH terminal template byte | `fromScript_p2pkh` |
+| 2 | P2SH terminal template byte | `fromScript_p2sh` |
+| 3 | Witness opcode mapping | `fromScript_witness` |
+| 4 | Mainnet P2PKH version byte | `decodeLegacy_p2pkh` |
+| 5 | Legacy test class invalid on regtest | `p2pkh_string_roundtrip` (also P2SH) |
+| 6 | Regtest HRP becomes `tb` | `decode_witness_encode`, used by witness F2 |
+| 7 | Merge mismatch into unknown-version error | Named `bc-on-testnet` mismatch assertion |
+| 8 | Unknown HRP becomes mismatch | BIP350 L197 |
+| 9 | Accept bech32 for v1+ | BIP173 L308 |
+| 10 | Accept bech32m for v0 | BIP350 L201 |
+| 11 | Remove explicit witness-version bound | BIP350 L204: `witnessVersion` changes to `programLength` |
+| 12 | Remove v1+ program-length bounds | BIP350 L205 |
+| 13 | Remove v0's 20/32 length rule | BIP350 L207 |
+| 14 | Use lax regrouping on strict failure | BIP350 L209 |
+| 15 | Treat empty data as version zero and no program | BIP350 L211: `emptyData` changes to `programLength` |
+| 16 | Accept longer Base58 payloads | Synthetic version-0/body-21 assertion |
+| 17 | Map unknown Base58 version to main P2PKH | Synthetic unknown-version assertion |
+| 18 | Recognise v0 scripts of any program length | Script-negative v0/25 assertion |
+| 19 | Hard-code mainnet decoding | `decode_witness_encode` (also the link theorem) |
+| 20 | Check recognised HRP/network before witness semantics | BIP173 L308 on a nonmatching network |
+
+All thirteen runtime reds report a passing 42-named axiom gate first. No
+property was classified as redundant. In rows 11 and 15 another check still
+rejects the input, but the exact-constructor assertions distinguish the rules.
+The earlier `check-mutations.py`, `check-base58-mutations.py` and
+`check-bech32-mutations.py` were rerun afterwards: exits **0**, detecting
+**6/6**, **6/6**, and **18/18**, respectively. Each restored `lake test`
+exited **0**. The changed gate location is recorded in `test-data/mutations.json`;
+the Base58 and bech32 records remain unchanged.
+
+### Final validation
+
+Commands ran in the foreground with `TMPDIR=/var/tmp`, Lean **4.35.0**
+(`eb6cafb7290e8bd5f2937522d8d804f58f02bafc`), and the repository's gate
+supervisor. Files were staged before the flake check. Separate stdout/stderr
+and exact command arrays with exits remain in
+`packages/bitcoin/.lake/final-address-checks/commands.json` and its adjacent logs.
+
+| Command | Directory | Exit |
+|---|---|---|
+| `nix develop -c lean --version` | root | 0 |
+| `nix develop -c lake build` | `packages/bitcoin` | 0 |
+| `nix develop -c lake test` | `packages/bitcoin` | 0; every pinned set |
+| `nix flake check -L` | root | 0 |
+| `nix build --no-link --print-out-paths` | root | 0 |
+| `/nix/store/rrbpfdjww1lfdffa9w1i9ppm39knmd1x-cyberkrill-0.1.0/bin/cyberkrill` | root | 0; `cyberkrill 0.1.0` |
+| `nix path-info --derivation /nix/store/rrbpfdjww1lfdffa9w1i9ppm39knmd1x-cyberkrill-0.1.0` | root | 0 |
+| `nix log /nix/store/r3z3wkb4ff1yknq73x7vy6ipsrwlfm0i-cyberkrill-0.1.0.drv` | root | 0 |
+| `rc=0; grep -rnw sorry --include='*.lean' --exclude-dir=.lake packages \|\| rc=$?; test "$rc" -eq 1` | root | 0; no matches |
+| `grep -rn native_decide --include='*.lean' packages/bitcoin/Bitcoin packages/bitcoin/Bitcoin.lean` | root | 1, expected; no matches |
+| `grep -nE '\]!\|get!\|head!\|tail!\|getLast!\|panic!\|unreachable!' packages/bitcoin/Bitcoin/Address.lean` | root | 1, expected; no matches |
+| `python3 -I packages/bitcoin/check-address-copy.py /var/tmp/lck-address-bips-ya5byUpy --write` | root | 0; initial extraction |
+| `python3 -I packages/bitcoin/check-address-copy.py /var/tmp/lck-address-bips-ya5byUpy` | root | 0; fresh BIP comparison, 39/39 |
+| `python3 -I packages/bitcoin/generate-core-addresses.py --write` | root | 0; initial extraction |
+| `python3 -I packages/bitcoin/generate-core-addresses.py` | root | 0; fresh Core comparison, 22/22 |
+| `python3 -I packages/bitcoin/derive-addresses.py --write` | root | 0; initial derivation |
+| `python3 -I packages/bitcoin/derive-addresses.py` | root | 0; comparison, 11 BIP pairs, 2 regtest, 10 negatives |
+| `cmp packages/bitcoin/Bitcoin/LICENSE-bitcoin-core /var/tmp/lck-address-bips-ya5byUpy/COPYING` | root | 0; fresh notice fetch |
+| `git diff --check 73eedf608e59d7b4d404b729ab1b53462b2b6096` | root | 0 |
+| `nix develop -c python3 -I check-address-mutations.py` | `packages/bitcoin` | 0; 20/20 |
+| `nix develop -c python3 -I check-mutations.py` | `packages/bitcoin` | 0; 6/6 |
+| `nix develop -c python3 -I check-base58-mutations.py` | `packages/bitcoin` | 0; 6/6 |
+| `nix develop -c python3 -I check-bech32-mutations.py` | `packages/bitcoin` | 0; 18/18 |
+
+The sandbox log shows all seven packages building and testing, all new address
+sets, both axiom gates, BOLT11 recovery/signing **16/16** each, Wycheproof
+**252 loaded / 95 accepted / 157 rejected**, `http-curl cases: 35/35`,
+`S12: PASS`, `S13: PASS`, the link spike and one-OpenSSL checks, and
+`cyberkrill 0.1.0`. The final restored package test ran after all mutation suites.
+
+The staged secret-pattern scan is:
+
+```bash
+git diff --cached -U0 | grep '^+' | grep -n -E '[xt]prv|\b[5KLc9][1-9A-HJ-NP-Za-km-z]{50,51}\b'
+```
+
+It printed **nothing** on either stream and exited **1** (no matches).
+
+### Cleanup
+
+The initial Core generator and fresh comparison removed these paths, with each
+operation exiting **0**:
+
+```bash
+unlink /var/tmp/lck-address-core-45wusq7g/key_io_valid.json
+rmdir /var/tmp/lck-address-core-45wusq7g
+unlink /var/tmp/lck-address-core-egrscc8d/key_io_valid.json
+rmdir /var/tmp/lck-address-core-egrscc8d
+```
+
+The initial and final `curl -fL <URL> -o <path>` commands each exited **0**:
+
+| Path | URL |
+|---|---|
+| `/var/tmp/lck-address-bips-ya5byUpy/bip-0173.mediawiki` | `https://raw.githubusercontent.com/bitcoin/bips/130b8e0fa7f30fa45532f080b87b8db27a79e46e/bip-0173.mediawiki` |
+| `/var/tmp/lck-address-bips-ya5byUpy/bip-0350.mediawiki` | `https://raw.githubusercontent.com/bitcoin/bips/130b8e0fa7f30fa45532f080b87b8db27a79e46e/bip-0350.mediawiki` |
+| `/var/tmp/lck-address-bips-ya5byUpy/COPYING` | `https://raw.githubusercontent.com/bitcoin/bitcoin/9be056a8a72b624dae9623b2f7bded92c2a21c91/COPYING` |
+
+After the final comparisons, each command below exited **0**:
+
+```bash
+unlink /var/tmp/lck-address-bips-ya5byUpy/bip-0173.mediawiki
+unlink /var/tmp/lck-address-bips-ya5byUpy/bip-0350.mediawiki
+unlink /var/tmp/lck-address-bips-ya5byUpy/COPYING
+rmdir /var/tmp/lck-address-bips-ya5byUpy
+unlink packages/bitcoin/.lake/address-work/validate.py
+unlink packages/bitcoin/.lake/address-work/gate-template.bash
+rmdir packages/bitcoin/.lake/address-work
+```
+
+All three fetch directories and the scratch directory were checked absent. No
+copy of the secret-bearing Core source created by this phase remains. Required
+mutation streams, final validation logs and ordinary build outputs remain under
+`.lake/`. No reference clone, private dependency cache or external Nix result link
+was created for this phase. Gate commands use `TMPDIR=/var/tmp`; their supervisor
+removes its private files and directory before reporting the final status.
+
+### Deltas not taken
+
+The separate 83-character HRP maximum (`lck-ist`) remains deferred and is
+irrelevant at limit 90. The Base58 length guard (`lck-base58-long-input-3qk`)
+remains deferred. A Base58 fallback after unknown HRP would make an unrestricted
+legacy round trip through `decode` possible, but would accept strings that
+rust-bitcoin and cyberkrill reject; that exit-parity change requires the owner.
+No additional stricter v1 check is proposed: generic v1–16 witness programs
+retain rust-bitcoin's 2–40-byte rule.
 
 ## Deltas taken
 

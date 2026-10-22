@@ -171,4 +171,26 @@ theorem convertbits5to8_convertbits8to5 (bs : ByteArray) :
   rw [drop]
   simp [fesToBytesLax_convertbits8to5]
 
+/-- The padded encoder adds fewer than five bits, so addresses fit their 90-character limit. -/
+theorem convertbits8to5_length (bs : ByteArray) :
+    5 * (convertbits8to5 bs).length ≤ 8 * bs.size + 4 := by
+  have flatLength {w : Nat} (xs : List (BitVec w)) :
+      (xs.map writeBits).flatten.length = w * xs.length := by
+    induction xs with
+    | nil => simp
+    | cons x xs ih =>
+      simp only [List.map_cons, List.flatten_cons, List.length_append,
+        writeBits, List.length_ofFn, ih, List.length_cons, Nat.mul_add, Nat.mul_one]
+      omega
+  obtain ⟨padding, bound, eq⟩ := pack_flat 5 (by decide)
+    ((bs.data.toList.map fun b => writeBits b.toBitVec).flatten)
+  have bitsLength : (bs.data.toList.map fun b => writeBits b.toBitVec).flatten.length =
+      8 * bs.size := by
+    simpa only [List.map_map, Function.comp_def, List.length_map,
+      Array.length_toList, ByteArray.size] using flatLength (bs.data.toList.map UInt8.toBitVec)
+  have h := congrArg List.length eq
+  rw [flatLength, List.length_append, List.length_replicate, bitsLength] at h
+  change 5 * (convertbits8to5 bs).length = 8 * bs.size + padding at h
+  omega
+
 end Bitcoin.Bech32

@@ -5,6 +5,8 @@ Apache License 2.0, at your option; see LICENSE-MIT and LICENSE-APACHE.
 import BitcoinTests.AxiomGate
 import Bitcoin.Base58Vectors
 import Bitcoin.Bech32Vectors
+import Bitcoin.AddressVectors
+import Bitcoin.CoreAddressVectors
 
 open Bitcoin
 open Bitcoin.Amount
@@ -234,6 +236,114 @@ private def bech32Tests : IO Unit := do
     ("strict-empty", Bech32.convertbits5to8 (symbols []) == .ok (bytes [])),
     ("strict-ff", Bech32.convertbits5to8 (symbols [31,28]) == .ok (bytes [255]))]
 
+private def addressNetworks : Array Address.Network := #[.mainnet, .testnet, .signet, .regtest]
+
+private def addressNetwork (address : String) : Address.Network :=
+  if (Bech32.lower address).startsWith "bc1" then .mainnet else .testnet
+
+private def coreNetwork (chain : String) : Address.Network :=
+  match chain with
+  | "main" => .mainnet
+  | "signet" => .signet
+  | "regtest" => .regtest
+  | _ => .testnet
+
+private def addressTests : IO Unit := do
+  let valid (label : String) (count : Nat) (vectors : Array (String × String)) :=
+    checks label count (vectors.map fun (address, script) =>
+      (address, match Hex.decode script with
+        | none => false
+        | some raw => Address.decodeScript (addressNetwork address) address == .ok raw &&
+            Address.encodeScript (addressNetwork address) raw == .ok (Bech32.lower address)))
+  valid "BIP350 segwit valid" 8 AddressVectors.bip350Valid
+  valid "BIP173 v0 valid" 3 AddressVectors.bip173V0
+  let invalid (label : String) (count : Nat) (vectors : Array String)
+      (errors : Array Address.Error) : IO Unit := do
+    check s!"{label} errors count" (errors.size == count)
+    check s!"{label} vectors count" (vectors.size == count)
+    checks label count ((vectors.zip errors).map fun (address, error) =>
+      (address, error != .networkMismatch && addressNetworks.all fun net =>
+        Address.decode net address == .error error))
+  invalid "BIP173 v1+ rejected" 3 AddressVectors.bip173Replaced
+    #[.checksumVariant, .checksumVariant, .checksumVariant]
+  invalid "BIP350 segwit invalid" 15 AddressVectors.bip350Invalid
+    #[.unknownHrp, .checksumVariant, .checksumVariant, .checksumVariant,
+      .checksumVariant, .checksumVariant, .base58 .invalidBase58, .witnessVersion,
+      .programLength, .programLength, .programLength, .base58 .invalidBase58,
+      .padding .excessPadding, .padding .nonZeroPadding, .emptyData]
+  invalid "BIP173 segwit invalid" 10 AddressVectors.bip173Invalid
+    #[.unknownHrp, .base58 .invalidBase58, .witnessVersion, .checksumVariant,
+      .checksumVariant, .programLength, .base58 .invalidBase58, .checksumVariant,
+      .padding .nonZeroPadding, .emptyData]
+  checks "Core Base58 addresses" 22 (CoreAddressVectors.legacy.map fun (address, script, chain) =>
+    (address, match Hex.decode script with
+      | none => false
+      | some raw => Address.decodeScript (coreNetwork chain) address == .ok raw &&
+          Address.encodeScript (coreNetwork chain) raw == .ok address))
+  let bc := AddressVectors.bip350Valid[0]!.1
+  let tb := AddressVectors.bip350Valid[1]!.1
+  let mainLegacy := CoreAddressVectors.legacy[0]!.1
+  check "named mismatch fixture is mainnet" (CoreAddressVectors.legacy[0]!.2.2 == "main")
+  checks "address network mismatch" 3 #[
+    ("bc-on-testnet", Address.decode .testnet bc == .error .networkMismatch),
+    ("main-Base58-on-testnet", Address.decode .testnet mainLegacy == .error .networkMismatch),
+    ("tb-on-regtest", Address.decode .regtest tb == .error .networkMismatch)]
+  let regtest ← load "test-data/address-regtest.json"
+  check "bcrt known answers count" (regtest.size == 2)
+  let mut regtestPairs : Array (String × String) := #[]
+  for row in regtest do
+    let name ← text row "name"
+    let address ← text row "address"
+    let script ← text row "scriptHex"
+    let some raw := Hex.decode script | throw (IO.userError "invalid bcrt script hex")
+    check s!"bcrt known answers {name}"
+      (Address.decodeScript .regtest address == .ok raw && Address.encodeScript .regtest raw == .ok address)
+    regtestPairs := regtestPairs.push (address, script)
+  IO.println "bcrt known answers: 2/2"
+  -- Expected cells come directly from the network rule, without consulting validFor.
+  let witnessRows := AddressVectors.bip350Valid ++ regtestPairs
+  let mut matrix : Array (String × Bool) := #[]
+  for (address, script) in witnessRows do
+    let some raw := Hex.decode script | throw (IO.userError "invalid witness matrix hex")
+    let lower := Bech32.lower address
+    for net in addressNetworks do
+      let accepted := if lower.startsWith "bcrt1" then net == .regtest
+        else if lower.startsWith "bc1" then net == .mainnet
+        else net == .testnet || net == .signet
+      matrix := matrix.push (s!"{address}/{repr net}",
+        Address.decodeScript net address == (if accepted then .ok raw else .error .networkMismatch))
+  for (address, script, chain) in CoreAddressVectors.legacy do
+    let some raw := Hex.decode script | throw (IO.userError "invalid legacy matrix hex")
+    for net in addressNetworks do
+      let accepted := if chain == "main" then net == .mainnet else net != .mainnet
+      matrix := matrix.push (s!"{address}/{repr net}",
+        Address.decodeScript net address == (if accepted then .ok raw else .error .networkMismatch))
+  checks "address network matrix" 128 matrix
+  -- Hand-derived malformed scripts, independent of the production constructors.
+  let zeros (n : Nat) := List.replicate n 0
+  let badScripts : Array (String × List Nat) := #[
+    ("v0-length25", [0,25] ++ zeros 25), ("v1-length1", [0x51,1,0]),
+    ("v1-length41", [0x51,41] ++ zeros 41), ("non-version50", [0x50,2,0,0]),
+    ("non-version61", [0x61,2,0,0]), ("push-mismatch", [0x51,3,0,0]),
+    ("near-p2pkh", [0x76,0xa9,0x14] ++ zeros 20 ++ [0x88,0xad]),
+    ("near-p2sh", [0xa9,0x14] ++ zeros 20 ++ [0x88]), ("empty", [])]
+  checks "address script negatives" 9 (badScripts.map fun (name, raw) =>
+    (name, addressNetworks.all fun net => Address.encodeScript net (bytes raw) == .error .noAddress))
+  let negativeRows ← load "test-data/address-negatives.json"
+  check "Base58 address negatives count" (negativeRows.size == 10)
+  for row in negativeRows do
+    let name ← text row "name"
+    let address ← text row "address"
+    let reason ← text row "error"
+    let error ← match reason with
+      | "unknownVersion" => pure Address.Error.unknownVersion
+      | "payloadLength" => pure Address.Error.payloadLength
+      | "base58Checksum" => pure (Address.Error.base58 .checksumMismatch)
+      | _ => throw (IO.userError "unknown negative fixture error")
+    check s!"Base58 address negatives {name}" (addressNetworks.all fun net =>
+      Address.decode net address == .error error)
+  IO.println "Base58 address negatives: 10/10"
+
 end BitcoinTests
 
 def main : IO Unit := do
@@ -244,3 +354,4 @@ def main : IO Unit := do
   BitcoinTests.cliTests
   BitcoinTests.base58Tests
   BitcoinTests.bech32Tests
+  BitcoinTests.addressTests

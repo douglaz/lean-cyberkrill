@@ -1,0 +1,52 @@
+[
+  {
+    "name": "unknown-version",
+    "address": "ogCyDbaRMvkdsHB3qfdyFYaG1WtWyNoVK",
+    "error": "unknownVersion"
+  },
+  {
+    "name": "version-0-body-19",
+    "address": "111111111111111111117K4nzc",
+    "error": "payloadLength"
+  },
+  {
+    "name": "version-0-body-21",
+    "address": "11111111111111111111116iowaD",
+    "error": "payloadLength"
+  },
+  {
+    "name": "version-111-body-19",
+    "address": "B7v1J1FGbDZTTXvP94Pk1SCQJfsx3hKN4",
+    "error": "payloadLength"
+  },
+  {
+    "name": "version-111-body-21",
+    "address": "4Q91D4GcykZLUE7ateUXqLVsQFfEBawTPcbe",
+    "error": "payloadLength"
+  },
+  {
+    "name": "version-5-body-19",
+    "address": "TSNxdb5tBVdixDLHZYrVEgBTQBE4AVXv",
+    "error": "payloadLength"
+  },
+  {
+    "name": "version-5-body-21",
+    "address": "9t3d5KzXmov8VooTtL1LwhVPzcgnR5re7wm",
+    "error": "payloadLength"
+  },
+  {
+    "name": "version-196-body-19",
+    "address": "JsMSbjEhbHxDkiY2zbjFHSgU3TrCxAmbY",
+    "error": "payloadLength"
+  },
+  {
+    "name": "version-196-body-21",
+    "address": "716mnKqUztJuffqCmh3dgNNC997tVct3NHgq",
+    "error": "payloadLength"
+  },
+  {
+    "name": "Core-one-character-checksum",
+    "address": "1FsSia9rv4NeEwvJ2GvXrX7LyxYspbN2m1",
+    "error": "base58Checksum"
+  }
+]

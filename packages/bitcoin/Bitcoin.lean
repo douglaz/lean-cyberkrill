@@ -10,8 +10,10 @@ import Bitcoin.AmountCli
 import Bitcoin.Base58Check
 import Bitcoin.Bech32Codec
 import Bitcoin.ConvertBits
+import Bitcoin.Address
 
 /-! # Bitcoin
 
 Hex, canonical CompactSize, Base58 and Base58Check, bech32/bech32m with strict
-and lax bit regrouping, and exact millisatoshi amounts including the CLI grammar. -/
+and lax bit regrouping, scriptPubKey/address conversion per network, and exact
+millisatoshi amounts including the CLI grammar. -/

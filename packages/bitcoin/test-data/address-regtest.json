@@ -1,0 +1,12 @@
+[
+  {
+    "name": "v0-p2wpkh",
+    "scriptHex": "0014751e76e8199196d454941c45d1b3a323f1433bd6",
+    "address": "bcrt1qw508d6qejxtdg4y5r3zarvary0c5xw7kygt080"
+  },
+  {
+    "name": "v1-p2tr",
+    "scriptHex": "512079be667ef9dcbbac55a06295ce870b07029bfcdb2dce28d959f2815b16f81798",
+    "address": "bcrt1p0xlxvlhemja6c4dqv22uapctqupfhlxm9h8z3k2e72q4k9hcz7vqc8gma6"
+  }
+]

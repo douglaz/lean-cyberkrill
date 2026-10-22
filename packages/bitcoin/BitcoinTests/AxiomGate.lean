@@ -28,7 +28,15 @@ def namedTheorems : List Name :=
    ``Bitcoin.Base58.base58CheckDecode_encode, ``Bitcoin.Base58.base58CheckDecode_sound,
    ``Bitcoin.Bech32.decode_encode, ``Bitcoin.Bech32.decode_sound,
    ``Bitcoin.Bech32.convertbits5to8_convertbits8to5,
-   ``Bitcoin.Bech32.fesToBytesLax_convertbits8to5]
+   ``Bitcoin.Bech32.fesToBytesLax_convertbits8to5,
+   ``Bitcoin.Address.p2pkh_script_roundtrip,
+   ``Bitcoin.Address.p2sh_script_roundtrip,
+   ``Bitcoin.Address.witness_script_roundtrip,
+   ``Bitcoin.Address.witness_string_roundtrip,
+   ``Bitcoin.Address.p2pkh_string_roundtrip,
+   ``Bitcoin.Address.p2sh_string_roundtrip,
+   ``Bitcoin.Address.decode_of_bech32_error,
+   ``Bitcoin.Address.fromScript_toScript]
 
 private def allowedAxioms : List Name := [``propext, ``Classical.choice, ``Quot.sound]
 
@@ -91,5 +99,14 @@ elab "#bitcoin_axiom_gate" : command => do
 #print axioms Bitcoin.Bech32.decode_sound
 #print axioms Bitcoin.Bech32.convertbits5to8_convertbits8to5
 #print axioms Bitcoin.Bech32.fesToBytesLax_convertbits8to5
+
+#print axioms Bitcoin.Address.p2pkh_script_roundtrip
+#print axioms Bitcoin.Address.p2sh_script_roundtrip
+#print axioms Bitcoin.Address.witness_script_roundtrip
+#print axioms Bitcoin.Address.witness_string_roundtrip
+#print axioms Bitcoin.Address.p2pkh_string_roundtrip
+#print axioms Bitcoin.Address.p2sh_string_roundtrip
+#print axioms Bitcoin.Address.decode_of_bech32_error
+#print axioms Bitcoin.Address.fromScript_toScript
 
 end BitcoinTests
