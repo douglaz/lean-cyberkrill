@@ -12,6 +12,13 @@ namespace BitcoinTests
 def namedTheorems : List Name :=
   [``Bitcoin.Hex.decode_encode,
    ``Bitcoin.CompactSize.readCompactSize_compactSize, ``Bitcoin.CompactSize.readCompactSize_ok,
+   ``Bitcoin.CompactSize.unsignedLE_length, ``Bitcoin.CompactSize.decodeLE_unsignedLE,
+   ``Bitcoin.CompactSize.takeExact_append, ``Bitcoin.CompactSize.compactSize_ne_nil,
+   ``Bitcoin.CompactSize.serializeByteVector_data, ``Bitcoin.CompactSize.readByteVector_encode,
+   ``Bitcoin.CompactSize.decodeLE_lt, ``Bitcoin.CompactSize.unsignedLE_decodeLE,
+   ``Bitcoin.CompactSize.takeExact_ok,
+   ``Bitcoin.readByteVector_ok, ``Bitcoin.serializeWitness_foldl_data,
+   ``Bitcoin.readMany_readByteVector, ``Bitcoin.decodeAll_readWitnessStack,
    ``Bitcoin.CompactSize.reject_fd, ``Bitcoin.CompactSize.reject_fe, ``Bitcoin.CompactSize.reject_ff,
    ``Bitcoin.CompactSize.truncated_empty, ``Bitcoin.CompactSize.truncated_tag,
    ``Bitcoin.Amount.ofDecimal_iff, ``Bitcoin.Amount.ofJsonNumber_iff,
@@ -69,6 +76,19 @@ elab "#bitcoin_axiom_gate" : command => do
 #print axioms Bitcoin.Hex.decode_encode
 #print axioms Bitcoin.CompactSize.readCompactSize_compactSize
 #print axioms Bitcoin.CompactSize.readCompactSize_ok
+#print axioms Bitcoin.CompactSize.unsignedLE_length
+#print axioms Bitcoin.CompactSize.decodeLE_unsignedLE
+#print axioms Bitcoin.CompactSize.takeExact_append
+#print axioms Bitcoin.CompactSize.compactSize_ne_nil
+#print axioms Bitcoin.CompactSize.serializeByteVector_data
+#print axioms Bitcoin.CompactSize.readByteVector_encode
+#print axioms Bitcoin.CompactSize.decodeLE_lt
+#print axioms Bitcoin.CompactSize.unsignedLE_decodeLE
+#print axioms Bitcoin.CompactSize.takeExact_ok
+#print axioms Bitcoin.readByteVector_ok
+#print axioms Bitcoin.serializeWitness_foldl_data
+#print axioms Bitcoin.readMany_readByteVector
+#print axioms Bitcoin.decodeAll_readWitnessStack
 #print axioms Bitcoin.CompactSize.reject_fd
 #print axioms Bitcoin.CompactSize.reject_fe
 #print axioms Bitcoin.CompactSize.reject_ff

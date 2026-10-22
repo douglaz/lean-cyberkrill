@@ -10,6 +10,7 @@ import json
 from pathlib import Path
 import resource
 import subprocess
+import sys
 
 
 def cases():
@@ -50,10 +51,95 @@ def mutate(original, operation):
     return original[:position] + broken + original[position:]
 
 
+def compression_cases():
+    for name in ["uncompressed", "compressed identity"]:
+        yield name, "uncompressed-result"
+    yield "matching hybrid", "strict-prefix"
+    for name in ["mismatched hybrid", "33 prefix 4", "33 prefix 6", "33 prefix 7",
+                 "65 prefix 2", "65 prefix 3", "length 0", "length 32", "length 34",
+                 "length 64", "length 66", "off-curve compressed", "off-curve uncompressed"]:
+        yield name, "early-some"
+    for name in ["strict matching hybrid", "strict mismatched hybrid"]:
+        yield name, "strict-accept"
+
+
+def mutate_compression(original, operation):
+    start = original.index("lck_secp_compress_pubkey(")
+    end = original.index("\n}\n", start) + 3
+    body = original[start:end]
+    if operation == "strict-accept":
+        return mutate(original, "parse")
+    if operation == "early-some":
+        pos = body.index("{") + 1
+        body = body[:pos] + '\n    return some_bytes((const unsigned char *)"", 0);' + body[pos:]
+    elif operation == "strict-prefix":
+        old = "    secp256k1_pubkey parsed;"
+        assert body.count(old) == 1
+        body = body.replace(old, "    if (input_len == 65 && lean_sarray_cptr(key)[0] != 4) return lean_box(0);\n" + old)
+    elif operation == "uncompressed-result":
+        # Supply the larger buffer required by that serialization mode, so the
+        # failure is the tested result, never libsecp256k1's buffer assertion.
+        assert body.count("unsigned char bytes[33];") == 1
+        assert body.count("SECP256K1_EC_COMPRESSED") == 1
+        body = body.replace("unsigned char bytes[33];", "unsigned char bytes[65];")
+        body = body.replace("SECP256K1_EC_COMPRESSED", "SECP256K1_EC_UNCOMPRESSED")
+    elif operation == "no-length-guard":
+        old = "    if (input_len != 33 && input_len != 65) return lean_box(0);\n"
+        assert body.count(old) == 1
+        body = body.replace(old, "")
+    else:
+        raise AssertionError(operation)
+    return original[:start] + body + original[end:]
+
+
+def compression_mutations(adapter, original):
+    logs = Path(".lake/compression-mutation-checks")
+    logs.mkdir(parents=True, exist_ok=True)
+    records = []
+    try:
+        for index, (name, operation) in enumerate(compression_cases(), 1):
+            assert adapter.read_text() == original
+            changed = mutate_compression(original, operation)
+            adapter.write_text(changed)
+            assert adapter.read_text() == changed
+            command = ["lake", "test", "--", "--compression", name]
+            stdout, stderr = logs / f"{index:02}.stdout", logs / f"{index:02}.stderr"
+            with stdout.open("wb") as out, stderr.open("wb") as err:
+                result = subprocess.run(command, stdin=subprocess.DEVNULL, stdout=out, stderr=err)
+            output = stdout.read_text() + stderr.read_text()
+            expected = "assertion failed: compression " + name
+            assert result.returncode == 1 and expected in output, (name, output)
+            records.append(dict(property=name, mutation=operation, command=command,
+                                exit=result.returncode, failure=expected))
+            print(f"compression {name}: EXIT={result.returncode}; {expected}", flush=True)
+            adapter.write_text(original)
+            assert adapter.read_text() == original
+        # libsecp256k1 already checks these lengths. Measure the redundant guard
+        # removal without counting a surviving mutation as a detected property.
+        changed = mutate_compression(original, "no-length-guard")
+        adapter.write_text(changed)
+        command = ["lake", "test"]
+        with (logs / "no-length-guard.stdout").open("wb") as out, \
+                (logs / "no-length-guard.stderr").open("wb") as err:
+            result = subprocess.run(command, stdin=subprocess.DEVNULL, stdout=out, stderr=err)
+        assert result.returncode == 0
+        records.append(dict(property="length guard redundancy", mutation="no-length-guard",
+                            command=command, exit=result.returncode, detected=False))
+    finally:
+        adapter.write_text(original)
+        assert adapter.read_text() == original
+    (logs / "records.json").write_text(json.dumps(records, indent=2) + "\n")
+    print("compression mutations: 18/18 detected; removing length guard: EXIT=0; adapter restored")
+
+
 def main():
     resource.setrlimit(resource.RLIMIT_CORE, (0, 0))
     adapter = Path("link_shim.c")
     original = adapter.read_text()
+    if sys.argv[1:] == ["--compression-only"]:
+        compression_mutations(adapter, original)
+        return
+    assert not sys.argv[1:]
     logs = Path(".lake/mutation-checks")
     logs.mkdir(parents=True, exist_ok=True)
     records = []
@@ -84,6 +170,7 @@ def main():
         assert adapter.read_text() == original
     (logs / "records.json").write_text(json.dumps(records, indent=2) + "\n")
     print(f"negative mutations: {len(records)}/{len(list(cases()))} detected; adapter restored")
+    compression_mutations(adapter, original)
 
 
 if __name__ == "__main__":

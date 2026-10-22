@@ -146,6 +146,47 @@ private def requiredEnv (name : String) : IO String := do
   let some value ← IO.getEnv name | throw <| IO.userError s!"missing required environment variable: {name}"
   return value
 
+private def compressionChecks (key : ByteArray) (only : Option String := none) : IO Nat := do
+  let parity := key[64]! % 2
+  let compressed := (ByteArray.empty.push (2 + parity)) ++ key.extract 1 33
+  let matching := key.set! 0 (6 + parity)
+  let mismatched := key.set! 0 (7 - parity)
+  let mut ran := 0
+  let tests : Array (String × Bool) := #[
+    ("uncompressed", Secp256k1.compressPubkey key == some compressed),
+    ("matching hybrid", Secp256k1.compressPubkey matching == some compressed),
+    ("mismatched hybrid", (Secp256k1.compressPubkey mismatched).isNone),
+    ("strict matching hybrid", !Secp256k1.isValidPubkey matching),
+    ("strict mismatched hybrid", !Secp256k1.isValidPubkey mismatched),
+    ("compressed identity", Secp256k1.compressPubkey compressed == some compressed)]
+  let mut cases := tests
+  for tag in [4, 6, 7] do
+    cases := cases.push (s!"33 prefix {tag}", (Secp256k1.compressPubkey (compressed.set! 0 tag)).isNone)
+  for tag in [2, 3] do
+    cases := cases.push (s!"65 prefix {tag}", (Secp256k1.compressPubkey (key.set! 0 tag)).isNone)
+  for len in [0, 32, 34, 64, 66] do
+    let bad := if len == 66 then key.push 0 else key.extract 0 len
+    cases := cases.push (s!"length {len}", (Secp256k1.compressPubkey bad).isNone)
+  for (name, bad) in [("off-curve compressed", (ByteArray.empty.push 2) ++ scalarBytes 0),
+      ("off-curve uncompressed", (ByteArray.empty.push 4) ++ scalarBytes 0 ++ scalarBytes 0)] do
+    cases := cases.push (name, (Secp256k1.compressPubkey bad).isNone)
+  check "compression cases count" (cases.size == 18)
+  for (name, ok) in cases do
+    if only.isNone || only == some name then
+      check ("compression " ++ name) ok
+      ran := ran + 1
+  check "compression selection exists" (ran > 0)
+  return ran
+
+private def selectedCompression (name : String) : IO Unit := do
+  let path ← requiredEnv "WYCHEPROOF_JSON"
+  let json ← fromExcept <| Json.parse (← IO.FS.readFile path)
+  let groups ← fromExcept <| (← field json "testGroups").getArr?
+  let key ← bytes (← field groups[0]! "publicKey") "uncompressed"
+  let count ← compressionChecks key (some name)
+  check "compression selected count" (count == 1)
+  IO.println "compression selected: 1/1"
+
 private def wycheproofTests : IO Unit := do
   let jsonPath ← requiredEnv "WYCHEPROOF_JSON"
   let digestPath ← requiredEnv "WYCHEPROOF_DIGESTS"
@@ -168,12 +209,14 @@ private def wycheproofTests : IO Unit := do
   let mut invalid := 0
   let mut high := 0
   let mut short := 0
+  let mut compressionCount := 0
   for group in groups do
     check "Wycheproof group type" ((← str group "type") == "EcdsaP1363Verify")
     check "Wycheproof SHA" ((← str group "sha") == "SHA-256")
     let key ← bytes (← field group "publicKey") "uncompressed"
     check "Wycheproof uncompressed key" (key.size == 65 && key[0]! == 4)
     check "Wycheproof key parses" (Secp256k1.isValidPubkey key)
+    compressionCount := compressionCount + (← compressionChecks key)
     let tests ← fromExcept <| (← field group "tests").getArr?
     for test in tests do
       let id ← nat test "tcId"
@@ -201,14 +244,17 @@ private def wycheproofTests : IO Unit := do
   check "Wycheproof counts" (ids.size == 252 && accepted == 95 && invalid == 85 && high == 72 && short == 18)
   IO.println "Wycheproof: 252 loaded / 95 accepted / 157 rejected"
   IO.println "Wycheproof: 108 groups / 167 valid / 85 invalid / 72 valid high-S / 18 invalid non-64-byte"
+  check "compression group total" (compressionCount == 1944)
+  IO.println "compression keys: 108/108; compression checks: 1944/1944 (18 per key)"
 
 def main (args : List String) : IO Unit := do
   let vectors ← fromExcept <| (← fromExcept <| Json.parse (← IO.FS.readFile "bolt11.json")).getArr?
   check "BOLT count" (vectors.size == 16)
   match args with
   | ["--negative", name] => negativeTests vectors[0]! (some name); return
+  | ["--compression", name] => selectedCompression name; return
   | [] => pure ()
-  | _ => throw <| IO.userError "usage: Secp256k1Tests [--negative NAME]"
+  | _ => throw <| IO.userError "usage: Secp256k1Tests [--negative NAME | --compression NAME]"
   let first := vectors[0]!
   let digest ← bytes first "digest"
   let signature ← bytes first "signature"

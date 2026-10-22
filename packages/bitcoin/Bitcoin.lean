@@ -12,6 +12,9 @@ import Bitcoin.Bech32Codec
 import Bitcoin.Bech32Detection
 import Bitcoin.ConvertBits
 import Bitcoin.Address
+import Bitcoin.DeserializationProofs
+import Bitcoin.Base64
+import Bitcoin.Psbt.SamePoint
 
 /-! # Bitcoin
 

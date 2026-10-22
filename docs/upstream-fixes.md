@@ -40,3 +40,35 @@ the runtime test driver can read the array, wrap it in `namespace BitcoinTests`,
 and add the first-line provenance comment. No upstream helpers or other vector
 sets are copied. The adjacent `Bitcoin/LICENSE-miniscript` remains byte-identical
 to upstream's notice. The Base58 and Base58Check codecs and proofs are our own.
+
+### Transaction and PSBT subset (Phase 4a, 1 of 3)
+
+The same pinned revision supplies the following additional slices. The namespace
+`LeanMiniscript.Bitcoin` becomes `Bitcoin` for transactions and the four remaining
+deserialization proofs, and `LeanMiniscript.Bitcoin.Base64` becomes
+`Bitcoin.Base64`. `LeanMiniscript.Psbt` becomes `Bitcoin.Psbt`.
+The earlier `Bitcoin.CompactSize` mapping remains in place; the new code opens it
+and never duplicates its codec. Every copied file gains a first-line provenance
+comment referring to the reused MIT notice. No Lean 4.35 proof or deprecation fix
+was needed in these new slices; all four theorem statements and proofs are intact
+apart from the namespace context.
+
+| File / exact slice | Problem | Fix used in this port |
+|---|---|---|
+| `LeanMiniscript/Script/Syntax.lean` L1–2 | The transaction structures derive `Repr ByteArray`, which Lean 4.35 core does not supply. | Copy only the instance to `Bitcoin/ByteArrayRepr.lean`; no script syntax or opcodes. |
+| `LeanMiniscript/Bitcoin/Transaction.lean` L1–55 | Serialization already lives in the earlier copied codec; the script module is unnecessary. | Import `Bitcoin.CompactSize` and `Bitcoin.ByteArrayRepr`, open `CompactSize`. No other changes. |
+| `LeanMiniscript/Bitcoin/Deserialization.lean` L81–170 | The first reader slice is already present, and the transaction identifier depends on a sighash module. | Import `Bitcoin.Transaction` and `Sha256`, open `CompactSize`, and replace `doubleSHA256` by `Sha256.sha256d`. No sighash code is copied. |
+| `LeanMiniscript/Bitcoin/DeserializationProofs.lean` L180–232 | The first eleven theorems are already present. | Import `Bitcoin.Deserialization`, open `CompactSize`, retain the four remaining theorems unchanged. |
+| `LeanMiniscript/Bitcoin/Base64.lean` L1–79 | Integration only. | Namespace rename; no other change. |
+| `LeanMiniscript/Psbt/Codec.lean` L1–157 | The optional BIP32 point check needs its own structured diagnostic. | Import the new deserialization module, open `Bitcoin.CompactSize`, and add `duplicateBip32Point scope first second`. Framing and raw-byte serialization are unchanged. |
+| `LeanMiniscript/Psbt/Fields.lean` L1–582 | Hard-coded curve and hash implementations prevent pure consumers from supplying their own. | Replace the ECDSA import/helper by `PubkeyCapability`, thread it through input/output and whole-PSBT decoders, use the strict check for partial signatures and compression success for both BIP32 scopes. Thread one `PreimageHashes` argument after the capability through input and whole-PSBT decoders. RIPEMD160/HASH160 call that parameter; SHA256/HASH256 call qualified `Sha256.hash`/`Sha256.sha256d`. Open `Bitcoin.CompactSize`. Other field rules and raw key storage are unchanged. |
+
+The capability and optional `Psbt.checkBip32SamePoint` are separate, newly written
+dual-licensed modules. Parsing does not call the point check. The fixture module
+copies exactly `LeanMiniscript/Psbt/Fixtures.lean` L8–70 and L95–178 into
+`BitcoinTests.PsbtVectors`, with no other change beyond the wrapper and provenance
+line. The route is lean-miniscript, but the vectors originate in bitcoin/bips
+at `927b6de9915c9262615a6399de51b200f81e5aa4`, under BSD-2-Clause; their notice
+is `Bitcoin/LICENSE-psbt-bips`. The secret-bearing intermediate fixture slice is
+excluded. `check-tx-psbt-copy.py` reconstructs all eight files from a separately
+fetched checkout and asserts exact equality after precisely these edits.

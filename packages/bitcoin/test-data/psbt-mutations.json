@@ -1,0 +1,996 @@
+[
+  {
+    "property": "hybrid partial",
+    "mutation": "partial-compression",
+    "source": "Bitcoin/Psbt/Fields.lean",
+    "command": [
+      "lake",
+      "test",
+      "--",
+      "--psbt",
+      "hybrid partial"
+    ],
+    "exit": 1,
+    "failure": "uncaught exception: assertion failed: hybrid partial rejected"
+  },
+  {
+    "property": "hybrid input",
+    "mutation": "strict-inBip32Derivation",
+    "source": "Bitcoin/Psbt/Fields.lean",
+    "command": [
+      "lake",
+      "test",
+      "--",
+      "--psbt",
+      "hybrid input"
+    ],
+    "exit": 1,
+    "failure": "uncaught exception: assertion failed: hybrid parse: Bitcoin.Psbt.PsbtError.invalidKey \"input\" 6 \"invalid public key\""
+  },
+  {
+    "property": "hybrid input",
+    "mutation": "compress-stored-inBip32Derivation",
+    "source": "Bitcoin/Psbt/Fields.lean",
+    "command": [
+      "lake",
+      "test",
+      "--",
+      "--psbt",
+      "hybrid input"
+    ],
+    "exit": 1,
+    "failure": "uncaught exception: assertion failed: hybrid false raw decoded"
+  },
+  {
+    "property": "hybrid output",
+    "mutation": "strict-outBip32Derivation",
+    "source": "Bitcoin/Psbt/Fields.lean",
+    "command": [
+      "lake",
+      "test",
+      "--",
+      "--psbt",
+      "hybrid output"
+    ],
+    "exit": 1,
+    "failure": "uncaught exception: assertion failed: hybrid parse: Bitcoin.Psbt.PsbtError.invalidKey \"output\" 2 \"invalid public key\""
+  },
+  {
+    "property": "hybrid output",
+    "mutation": "compress-stored-outBip32Derivation",
+    "source": "Bitcoin/Psbt/Fields.lean",
+    "command": [
+      "lake",
+      "test",
+      "--",
+      "--psbt",
+      "hybrid output"
+    ],
+    "exit": 1,
+    "failure": "uncaught exception: assertion failed: hybrid true raw decoded"
+  },
+  {
+    "property": "same input collision",
+    "mutation": "same-raw-comparison",
+    "source": "Bitcoin/Psbt/SamePoint.lean",
+    "command": [
+      "lake",
+      "test",
+      "--",
+      "--psbt",
+      "same input collision"
+    ],
+    "exit": 1,
+    "failure": "uncaught exception: assertion failed: same point false/2"
+  },
+  {
+    "property": "same output collision",
+    "mutation": "same-ignore-output",
+    "source": "Bitcoin/Psbt/SamePoint.lean",
+    "command": [
+      "lake",
+      "test",
+      "--",
+      "--psbt",
+      "same output collision"
+    ],
+    "exit": 1,
+    "failure": "uncaught exception: assertion failed: same point true/2"
+  },
+  {
+    "property": "same input separate",
+    "mutation": "same-pool-input",
+    "source": "Bitcoin/Psbt/SamePoint.lean",
+    "command": [
+      "lake",
+      "test",
+      "--",
+      "--psbt",
+      "same input separate"
+    ],
+    "exit": 1,
+    "failure": "uncaught exception: assertion failed: same point separate false"
+  },
+  {
+    "property": "same input hybrid alone",
+    "mutation": "same-lone-input-hybrid",
+    "source": "Bitcoin/Psbt/SamePoint.lean",
+    "command": [
+      "lake",
+      "test",
+      "--",
+      "--psbt",
+      "same input hybrid alone"
+    ],
+    "exit": 1,
+    "failure": "uncaught exception: assertion failed: same point false/1"
+  },
+  {
+    "property": "same input compressed alone",
+    "mutation": "same-lone-input-compressed",
+    "source": "Bitcoin/Psbt/SamePoint.lean",
+    "command": [
+      "lake",
+      "test",
+      "--",
+      "--psbt",
+      "same input compressed alone"
+    ],
+    "exit": 1,
+    "failure": "uncaught exception: assertion failed: same point false/1"
+  },
+  {
+    "property": "same output separate",
+    "mutation": "same-pool-output",
+    "source": "Bitcoin/Psbt/SamePoint.lean",
+    "command": [
+      "lake",
+      "test",
+      "--",
+      "--psbt",
+      "same output separate"
+    ],
+    "exit": 1,
+    "failure": "uncaught exception: assertion failed: same point separate true"
+  },
+  {
+    "property": "same output hybrid alone",
+    "mutation": "same-lone-output-hybrid",
+    "source": "Bitcoin/Psbt/SamePoint.lean",
+    "command": [
+      "lake",
+      "test",
+      "--",
+      "--psbt",
+      "same output hybrid alone"
+    ],
+    "exit": 1,
+    "failure": "uncaught exception: assertion failed: same point true/1"
+  },
+  {
+    "property": "same output compressed alone",
+    "mutation": "same-lone-output-compressed",
+    "source": "Bitcoin/Psbt/SamePoint.lean",
+    "command": [
+      "lake",
+      "test",
+      "--",
+      "--psbt",
+      "same output compressed alone"
+    ],
+    "exit": 1,
+    "failure": "uncaught exception: assertion failed: same point true/1"
+  },
+  {
+    "property": "same invalid",
+    "mutation": "same-accept-invalid",
+    "source": "Bitcoin/Psbt/SamePoint.lean",
+    "command": [
+      "lake",
+      "test",
+      "--",
+      "--psbt",
+      "same invalid"
+    ],
+    "exit": 1,
+    "failure": "uncaught exception: assertion failed: same invalid"
+  },
+  {
+    "property": "same malformed",
+    "mutation": "same-skip-malformed",
+    "source": "Bitcoin/Psbt/SamePoint.lean",
+    "command": [
+      "lake",
+      "test",
+      "--",
+      "--psbt",
+      "same malformed"
+    ],
+    "exit": 1,
+    "failure": "uncaught exception: assertion failed: same malformed"
+  },
+  {
+    "property": "SHA256 preimage",
+    "mutation": "skip-sha256",
+    "source": "Bitcoin/Psbt/Fields.lean",
+    "command": [
+      "lake",
+      "test",
+      "--",
+      "--psbt",
+      "SHA256 preimage"
+    ],
+    "exit": 1,
+    "failure": "uncaught exception: assertion failed: preimage 11 mismatch"
+  },
+  {
+    "property": "HASH256 preimage",
+    "mutation": "skip-hash256",
+    "source": "Bitcoin/Psbt/Fields.lean",
+    "command": [
+      "lake",
+      "test",
+      "--",
+      "--psbt",
+      "HASH256 preimage"
+    ],
+    "exit": 1,
+    "failure": "uncaught exception: assertion failed: preimage 13 mismatch"
+  },
+  {
+    "property": "RIPEMD160 preimage",
+    "mutation": "skip-ripemd160",
+    "source": "Bitcoin/Psbt/Fields.lean",
+    "command": [
+      "lake",
+      "test",
+      "--",
+      "--psbt",
+      "RIPEMD160 preimage"
+    ],
+    "exit": 1,
+    "failure": "uncaught exception: assertion failed: preimage 10 mismatch"
+  },
+  {
+    "property": "HASH160 preimage",
+    "mutation": "skip-hash160",
+    "source": "Bitcoin/Psbt/Fields.lean",
+    "command": [
+      "lake",
+      "test",
+      "--",
+      "--psbt",
+      "HASH160 preimage"
+    ],
+    "exit": 1,
+    "failure": "uncaught exception: assertion failed: preimage 12 mismatch"
+  },
+  {
+    "property": "HASH256 preimage",
+    "mutation": "hash256-single",
+    "source": "Bitcoin/Psbt/Fields.lean",
+    "command": [
+      "lake",
+      "test",
+      "--",
+      "--psbt",
+      "HASH256 preimage"
+    ],
+    "exit": 1,
+    "failure": "uncaught exception: assertion failed: preimage 13 accepted"
+  },
+  {
+    "property": "SHA256 preimage",
+    "mutation": "sha256-double",
+    "source": "Bitcoin/Psbt/Fields.lean",
+    "command": [
+      "lake",
+      "test",
+      "--",
+      "--psbt",
+      "SHA256 preimage"
+    ],
+    "exit": 1,
+    "failure": "uncaught exception: assertion failed: preimage 11 accepted"
+  },
+  {
+    "property": "RIPEMD160 preimage",
+    "mutation": "swap-ripemd160",
+    "source": "Bitcoin/Psbt/Fields.lean",
+    "command": [
+      "lake",
+      "test",
+      "--",
+      "--psbt",
+      "RIPEMD160 preimage"
+    ],
+    "exit": 1,
+    "failure": "uncaught exception: assertion failed: preimage 10 accepted"
+  },
+  {
+    "property": "HASH160 preimage",
+    "mutation": "swap-hash160",
+    "source": "Bitcoin/Psbt/Fields.lean",
+    "command": [
+      "lake",
+      "test",
+      "--",
+      "--psbt",
+      "HASH160 preimage"
+    ],
+    "exit": 1,
+    "failure": "uncaught exception: assertion failed: preimage 12 accepted"
+  },
+  {
+    "property": "transactions",
+    "mutation": "txid-single",
+    "source": "Bitcoin/Deserialization.lean",
+    "command": [
+      "lake",
+      "test",
+      "--",
+      "--psbt",
+      "transactions"
+    ],
+    "exit": 1,
+    "failure": "uncaught exception: assertion failed: wire bip174Invalid[1] input txid"
+  },
+  {
+    "property": "transactions",
+    "mutation": "witness-marker-flag",
+    "source": "Bitcoin/Deserialization.lean",
+    "command": [
+      "lake",
+      "test",
+      "--",
+      "--psbt",
+      "transactions"
+    ],
+    "exit": 1,
+    "failure": "uncaught exception: assertion failed: wire bip174Invalid[1] input roundtrip"
+  },
+  {
+    "property": "transactions",
+    "mutation": "legacy-version",
+    "source": "Bitcoin/Transaction.lean",
+    "command": [
+      "lake",
+      "test",
+      "--",
+      "--psbt",
+      "transactions"
+    ],
+    "exit": 1,
+    "failure": "uncaught exception: assertion failed: wire bip174Invalid[0] network roundtrip"
+  },
+  {
+    "property": "malformed transaction 18",
+    "mutation": "malformed-witness-marker",
+    "source": "Bitcoin/Deserialization.lean",
+    "command": [
+      "lake",
+      "test",
+      "--",
+      "--psbt",
+      "malformed transaction 18"
+    ],
+    "exit": 1,
+    "failure": "uncaught exception: assertion failed: malformed transaction 18"
+  },
+  {
+    "property": "malformed transaction 19",
+    "mutation": "transaction-ignore-trailing",
+    "source": "Bitcoin/CompactSize.lean",
+    "command": [
+      "lake",
+      "test",
+      "--",
+      "--psbt",
+      "malformed transaction 19"
+    ],
+    "exit": 1,
+    "failure": "uncaught exception: assertion failed: malformed transaction 19"
+  },
+  {
+    "property": "BIP174 valid",
+    "mutation": "valid-base64-encode",
+    "source": "Bitcoin/Base64.lean",
+    "command": [
+      "lake",
+      "test",
+      "--",
+      "--psbt",
+      "BIP174 valid"
+    ],
+    "exit": 1,
+    "failure": "uncaught exception: assertion failed: BIP174 valid 0 base64 encode"
+  },
+  {
+    "property": "BIP174 valid",
+    "mutation": "valid-base64-decode",
+    "source": "Bitcoin/Base64.lean",
+    "command": [
+      "lake",
+      "test",
+      "--",
+      "--psbt",
+      "BIP174 valid"
+    ],
+    "exit": 1,
+    "failure": "uncaught exception: assertion failed: BIP174 valid 0 base64 parse"
+  },
+  {
+    "property": "BIP174 invalid",
+    "mutation": "vector-bip174-invalid",
+    "source": "Bitcoin/Psbt/Codec.lean",
+    "command": [
+      "lake",
+      "test",
+      "--",
+      "--psbt",
+      "BIP174 invalid"
+    ],
+    "exit": 1,
+    "failure": "uncaught exception: assertion failed: BIP174 invalid hex 4"
+  },
+  {
+    "property": "BIP370 invalid",
+    "mutation": "vector-bip370-invalid",
+    "source": "Bitcoin/Psbt/Fields.lean",
+    "command": [
+      "lake",
+      "test",
+      "--",
+      "--psbt",
+      "BIP370 invalid"
+    ],
+    "exit": 1,
+    "failure": "uncaught exception: assertion failed: BIP370 invalid hex 1"
+  },
+  {
+    "property": "BIP371 invalid",
+    "mutation": "vector-bip371-invalid",
+    "source": "Bitcoin/Psbt/Fields.lean",
+    "command": [
+      "lake",
+      "test",
+      "--",
+      "--psbt",
+      "BIP371 invalid"
+    ],
+    "exit": 1,
+    "failure": "uncaught exception: assertion failed: BIP371 invalid hex 1"
+  },
+  {
+    "property": "BIP174 valid",
+    "mutation": "vector-bip174-valid",
+    "source": "Bitcoin/Psbt/Codec.lean",
+    "command": [
+      "lake",
+      "test",
+      "--",
+      "--psbt",
+      "BIP174 valid"
+    ],
+    "exit": 1,
+    "failure": "uncaught exception: assertion failed: BIP174 valid 0 serialize"
+  },
+  {
+    "property": "BIP174 signer failures",
+    "mutation": "vector-bip174-signer",
+    "source": "Bitcoin/Psbt/Codec.lean",
+    "command": [
+      "lake",
+      "test",
+      "--",
+      "--psbt",
+      "BIP174 signer failures"
+    ],
+    "exit": 1,
+    "failure": "uncaught exception: assertion failed: BIP174 signer failures 0 serialize"
+  },
+  {
+    "property": "BIP370 valid",
+    "mutation": "vector-bip370-valid",
+    "source": "Bitcoin/Psbt/Codec.lean",
+    "command": [
+      "lake",
+      "test",
+      "--",
+      "--psbt",
+      "BIP370 valid"
+    ],
+    "exit": 1,
+    "failure": "uncaught exception: assertion failed: BIP370 valid 0 serialize"
+  },
+  {
+    "property": "BIP371 valid",
+    "mutation": "vector-bip371-valid",
+    "source": "Bitcoin/Psbt/Codec.lean",
+    "command": [
+      "lake",
+      "test",
+      "--",
+      "--psbt",
+      "BIP371 valid"
+    ],
+    "exit": 1,
+    "failure": "uncaught exception: assertion failed: BIP371 valid 0 serialize"
+  },
+  {
+    "property": "BIP174 roles",
+    "mutation": "vector-bip174-roles",
+    "source": "Bitcoin/Psbt/Codec.lean",
+    "command": [
+      "lake",
+      "test",
+      "--",
+      "--psbt",
+      "BIP174 roles"
+    ],
+    "exit": 1,
+    "failure": "uncaught exception: assertion failed: BIP174 roles 0 serialize"
+  },
+  {
+    "property": "BIP370 locktimes",
+    "mutation": "vector-locktimes",
+    "source": "Bitcoin/Psbt/Fields.lean",
+    "command": [
+      "lake",
+      "test",
+      "--",
+      "--psbt",
+      "BIP370 locktimes"
+    ],
+    "exit": 1,
+    "failure": "uncaught exception: assertion failed: locktime determine 0"
+  },
+  {
+    "property": "BIP370 locktimes",
+    "mutation": "unsigned-locktime",
+    "source": "Bitcoin/Psbt/Fields.lean",
+    "command": [
+      "lake",
+      "test",
+      "--",
+      "--psbt",
+      "BIP370 locktimes"
+    ],
+    "exit": 1,
+    "failure": "uncaught exception: assertion failed: locktime transaction 0"
+  },
+  {
+    "property": "BIP370 locktimes",
+    "mutation": "incompatible-locktime",
+    "source": "Bitcoin/Psbt/Fields.lean",
+    "command": [
+      "lake",
+      "test",
+      "--",
+      "--psbt",
+      "BIP370 locktimes"
+    ],
+    "exit": 1,
+    "failure": "uncaught exception: assertion failed: locktime incompatible 9"
+  },
+  {
+    "property": "invalid base64 bytes",
+    "mutation": "invalid-base64-bytes",
+    "source": "Bitcoin/Base64.lean",
+    "command": [
+      "lake",
+      "test",
+      "--",
+      "--psbt",
+      "invalid base64 bytes"
+    ],
+    "exit": 1,
+    "failure": "uncaught exception: assertion failed: invalid base64 bytes 0"
+  },
+  {
+    "property": "network magic",
+    "mutation": "network-magic",
+    "source": "Bitcoin/Psbt/Codec.lean",
+    "command": [
+      "lake",
+      "test",
+      "--",
+      "--psbt",
+      "network magic"
+    ],
+    "exit": 1,
+    "failure": "uncaught exception: assertion failed: network magic"
+  },
+  {
+    "property": "base64 syntax",
+    "mutation": "base64-error",
+    "source": "Bitcoin/Psbt/Fields.lean",
+    "command": [
+      "lake",
+      "test",
+      "--",
+      "--psbt",
+      "base64 syntax"
+    ],
+    "exit": 1,
+    "failure": "uncaught exception: assertion failed: base64 syntax"
+  },
+  {
+    "property": "same ignores partial",
+    "mutation": "same-check-partial",
+    "source": "Bitcoin/Psbt/SamePoint.lean",
+    "command": [
+      "lake",
+      "test",
+      "--",
+      "--psbt",
+      "same ignores partial"
+    ],
+    "exit": 1,
+    "failure": "uncaught exception: assertion failed: same ignores partial"
+  },
+  {
+    "property": "same ignores global",
+    "mutation": "same-check-global",
+    "source": "Bitcoin/Psbt/SamePoint.lean",
+    "command": [
+      "lake",
+      "test",
+      "--",
+      "--psbt",
+      "same ignores global"
+    ],
+    "exit": 1,
+    "failure": "uncaught exception: assertion failed: same ignores global"
+  },
+  {
+    "property": "hybrid input",
+    "mutation": "rewrite-raw-input",
+    "source": "Bitcoin/Psbt/Fields.lean",
+    "command": [
+      "lake",
+      "test",
+      "--",
+      "--psbt",
+      "hybrid input"
+    ],
+    "exit": 1,
+    "failure": "uncaught exception: assertion failed: hybrid false raw serialization"
+  },
+  {
+    "property": "hybrid output",
+    "mutation": "rewrite-raw-output",
+    "source": "Bitcoin/Psbt/Fields.lean",
+    "command": [
+      "lake",
+      "test",
+      "--",
+      "--psbt",
+      "hybrid output"
+    ],
+    "exit": 1,
+    "failure": "uncaught exception: assertion failed: hybrid true raw serialization"
+  },
+  {
+    "property": "exact duplicate",
+    "mutation": "exact-duplicate",
+    "source": "Bitcoin/Psbt/Codec.lean",
+    "command": [
+      "lake",
+      "test",
+      "--",
+      "--psbt",
+      "exact duplicate"
+    ],
+    "exit": 1,
+    "failure": "uncaught exception: assertion failed: exact duplicate"
+  },
+  {
+    "property": "exact unsigned",
+    "mutation": "exact-unsigned",
+    "source": "Bitcoin/Psbt/Fields.lean",
+    "command": [
+      "lake",
+      "test",
+      "--",
+      "--psbt",
+      "exact unsigned"
+    ],
+    "exit": 1,
+    "failure": "uncaught exception: assertion failed: exact unsigned"
+  },
+  {
+    "property": "exact excluded",
+    "mutation": "exact-excluded",
+    "source": "Bitcoin/Psbt/Fields.lean",
+    "command": [
+      "lake",
+      "test",
+      "--",
+      "--psbt",
+      "exact excluded"
+    ],
+    "exit": 1,
+    "failure": "uncaught exception: assertion failed: exact excluded"
+  },
+  {
+    "property": "exact missing",
+    "mutation": "exact-missing",
+    "source": "Bitcoin/Psbt/Fields.lean",
+    "command": [
+      "lake",
+      "test",
+      "--",
+      "--psbt",
+      "exact missing"
+    ],
+    "exit": 1,
+    "failure": "uncaught exception: assertion failed: exact missing"
+  },
+  {
+    "property": "exact signature",
+    "mutation": "exact-signature",
+    "source": "Bitcoin/Psbt/Fields.lean",
+    "command": [
+      "lake",
+      "test",
+      "--",
+      "--psbt",
+      "exact signature"
+    ],
+    "exit": 1,
+    "failure": "uncaught exception: assertion failed: exact signature"
+  },
+  {
+    "property": "exact control",
+    "mutation": "exact-control",
+    "source": "Bitcoin/Psbt/Fields.lean",
+    "command": [
+      "lake",
+      "test",
+      "--",
+      "--psbt",
+      "exact control"
+    ],
+    "exit": 1,
+    "failure": "uncaught exception: assertion failed: exact control"
+  },
+  {
+    "property": "sighash extra",
+    "mutation": "sighash-extra",
+    "source": "Bitcoin/Psbt/Fields.lean",
+    "command": [
+      "lake",
+      "test",
+      "--",
+      "--psbt",
+      "sighash extra"
+    ],
+    "exit": 1,
+    "failure": "uncaught exception: assertion failed: sighash extra"
+  },
+  {
+    "property": "sighash valid",
+    "mutation": "sighash-valid",
+    "source": "Bitcoin/Psbt/Fields.lean",
+    "command": [
+      "lake",
+      "test",
+      "--",
+      "--psbt",
+      "sighash valid"
+    ],
+    "exit": 1,
+    "failure": "uncaught exception: assertion failed: sighash valid"
+  },
+  {
+    "property": "map noncanonical",
+    "mutation": "map-noncanonical",
+    "source": "Bitcoin/CompactSize.lean",
+    "command": [
+      "lake",
+      "test",
+      "--",
+      "--psbt",
+      "map noncanonical"
+    ],
+    "exit": 1,
+    "failure": "error: Bitcoin/CompactSize.lean:236:10: unsolved goals"
+  },
+  {
+    "property": "map canonical",
+    "mutation": "map-canonical",
+    "source": "Bitcoin/Psbt/Codec.lean",
+    "command": [
+      "lake",
+      "test",
+      "--",
+      "--psbt",
+      "map canonical"
+    ],
+    "exit": 1,
+    "failure": "uncaught exception: assertion failed: map canonical"
+  },
+  {
+    "property": "key source",
+    "mutation": "key-source",
+    "source": "Bitcoin/Psbt/Fields.lean",
+    "command": [
+      "lake",
+      "test",
+      "--",
+      "--psbt",
+      "key source"
+    ],
+    "exit": 1,
+    "failure": "uncaught exception: assertion failed: key source"
+  },
+  {
+    "property": "tap key source",
+    "mutation": "tap-key-source",
+    "source": "Bitcoin/Psbt/Fields.lean",
+    "command": [
+      "lake",
+      "test",
+      "--",
+      "--psbt",
+      "tap key source"
+    ],
+    "exit": 1,
+    "failure": "uncaught exception: assertion failed: tap key source"
+  },
+  {
+    "property": "tap tree",
+    "mutation": "tap-tree",
+    "source": "Bitcoin/Psbt/Fields.lean",
+    "command": [
+      "lake",
+      "test",
+      "--",
+      "--psbt",
+      "tap tree"
+    ],
+    "exit": 1,
+    "failure": "uncaught exception: assertion failed: tap tree"
+  },
+  {
+    "property": "trailing data",
+    "mutation": "trailing-data",
+    "source": "Bitcoin/Psbt/Codec.lean",
+    "command": [
+      "lake",
+      "test",
+      "--",
+      "--psbt",
+      "trailing data"
+    ],
+    "exit": 1,
+    "failure": "uncaught exception: assertion failed: PSBT trailing data"
+  },
+  {
+    "property": "BIP174 invalid",
+    "mutation": "count-bip174Invalid",
+    "source": "Bitcoin/PsbtVectors.lean",
+    "command": [
+      "lake",
+      "test",
+      "--",
+      "--psbt",
+      "BIP174 invalid"
+    ],
+    "exit": 1,
+    "failure": "uncaught exception: assertion failed: BIP174 invalid count"
+  },
+  {
+    "property": "BIP370 invalid",
+    "mutation": "count-bip370Invalid",
+    "source": "Bitcoin/PsbtVectors.lean",
+    "command": [
+      "lake",
+      "test",
+      "--",
+      "--psbt",
+      "BIP370 invalid"
+    ],
+    "exit": 1,
+    "failure": "uncaught exception: assertion failed: BIP370 invalid count"
+  },
+  {
+    "property": "BIP371 invalid",
+    "mutation": "count-bip371Invalid",
+    "source": "Bitcoin/PsbtVectors.lean",
+    "command": [
+      "lake",
+      "test",
+      "--",
+      "--psbt",
+      "BIP371 invalid"
+    ],
+    "exit": 1,
+    "failure": "uncaught exception: assertion failed: BIP371 invalid count"
+  },
+  {
+    "property": "BIP174 valid",
+    "mutation": "count-bip174Valid",
+    "source": "Bitcoin/PsbtVectors.lean",
+    "command": [
+      "lake",
+      "test",
+      "--",
+      "--psbt",
+      "BIP174 valid"
+    ],
+    "exit": 1,
+    "failure": "uncaught exception: assertion failed: BIP174 valid count"
+  },
+  {
+    "property": "BIP174 signer failures",
+    "mutation": "count-bip174SignerFailures",
+    "source": "Bitcoin/PsbtVectors.lean",
+    "command": [
+      "lake",
+      "test",
+      "--",
+      "--psbt",
+      "BIP174 signer failures"
+    ],
+    "exit": 1,
+    "failure": "uncaught exception: assertion failed: BIP174 signer failures count"
+  },
+  {
+    "property": "BIP370 valid",
+    "mutation": "count-bip370Valid",
+    "source": "Bitcoin/PsbtVectors.lean",
+    "command": [
+      "lake",
+      "test",
+      "--",
+      "--psbt",
+      "BIP370 valid"
+    ],
+    "exit": 1,
+    "failure": "uncaught exception: assertion failed: BIP370 valid count"
+  },
+  {
+    "property": "BIP371 valid",
+    "mutation": "count-bip371Valid",
+    "source": "Bitcoin/PsbtVectors.lean",
+    "command": [
+      "lake",
+      "test",
+      "--",
+      "--psbt",
+      "BIP371 valid"
+    ],
+    "exit": 1,
+    "failure": "uncaught exception: assertion failed: BIP371 valid count"
+  },
+  {
+    "property": "BIP174 roles",
+    "mutation": "count-bip174Roles",
+    "source": "Bitcoin/PsbtVectors.lean",
+    "command": [
+      "lake",
+      "test",
+      "--",
+      "--psbt",
+      "BIP174 roles"
+    ],
+    "exit": 1,
+    "failure": "uncaught exception: assertion failed: BIP174 roles count"
+  },
+  {
+    "property": "BIP370 locktimes",
+    "mutation": "count-bip370Locktimes",
+    "source": "Bitcoin/PsbtVectors.lean",
+    "command": [
+      "lake",
+      "test",
+      "--",
+      "--psbt",
+      "BIP370 locktimes"
+    ],
+    "exit": 1,
+    "failure": "uncaught exception: assertion failed: BIP370 locktimes count"
+  }
+]
