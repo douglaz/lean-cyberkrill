@@ -42,7 +42,8 @@ nix build && ./result/bin/cyberkrill
 `nix/musl/` holds the recipe for building the toolchain against musl, for the static v1 release.
 
 The verification records below write each temporary directory a check used as a shell variable
-(`$TMP_ROOT`, `$UNICODE_DIR`, `$FETCH_DIR`, `$BIPS_DIR`, `$CORE_DIR_1`, `$CORE_DIR_2`). Each was a
+(`$TMP_ROOT`, `$UNICODE_DIR`, `$FETCH_DIR`, `$BIPS_DIR`, `$CORE_DIR_1`, `$CORE_DIR_2`). `$REPO`
+denotes the repository root. Each temporary-directory variable was a
 fresh directory outside the repository; set the variable to one before rerunning a command.
 
 ## Phase 1a: FFI link spike (1 of 2)
@@ -1828,13 +1829,13 @@ base58CheckDecode_sound (s : String) (p : ByteArray)
 'Bitcoin.Base58.base58Encode_of_decode' depends on axioms: [propext, Classical.choice, Quot.sound]
 'Bitcoin.Base58.base58CheckDecode_encode' depends on axioms: [propext, Classical.choice, Quot.sound]
 'Bitcoin.Base58.base58CheckDecode_sound' depends on axioms: [propext, Classical.choice, Quot.sound]
-Bitcoin axiom gate: 226 library theorems; 30 named; 0 offenders
+Bitcoin axiom gate: 502 library theorems; 42 named; 0 offenders
 ```
 
 The gate covers both new library modules and all previously imported Bitcoin
 modules, with the same three-axiom allowlist and no exemptions. The earlier
-section's 146/26 totals describe Phase 3a (1 of 4); 226/30 describe Phase 3a (2 of 4).
-The bech32 section below lists the current totals.
+section's 146/26 totals describe Phase 3a (1 of 4); the initial Phase 3a (2 of 4)
+totals were 226/30. The block above records the current full-library scan.
 
 ### Red runs
 
@@ -1915,16 +1916,145 @@ No temporary clone, private dependency cache or external result link was
 created for this phase. The repository's `result` link remains available for
 the app smoke test.
 
+### Base58 long-input conversion
+
+The executed conversion uses tail loops with proved `@[csimp]` substitutions.
+The original definitions remain the specifications:
+
+| Specification | Executed definition | Equality theorem and invariant |
+|---|---|---|
+| `value` | `valueTR`: Horner left fold over the reversed list | `value_eq_valueTR`, using `value_foldr` and `List.foldl_reverse` |
+| `digits` | `digitsTR`: `digitsAux` accumulates reversed digits, then reverses | `digits_eq_digitsTR`; `digitsAux_eq` proves `digitsAux base hb n acc = (digits base hb n).reverse ++ acc` |
+| `readChars` | `readCharsTR`: `readCharsAux` accumulates digits, then reverses | `readChars_eq_readCharsTR`; `readCharsAux_eq` proves equality to the original result with the reversed accumulator prefix |
+
+Each substitution precedes its first compiled caller. B1, B2, K1 and K2 keep
+their statements. No extra function was changed: `zeroCount` keeps its non-tail
+definition and completed both leading-zero paths at one million elements in
+the probe below.
+No input-length guard or caller-side cap was added: B1 covers every byte array.
+
+Decode time stays quadratic, as in base58ck **0.1.0**, `decode`,
+[`src/lib.rs:64–92`](https://docs.rs/crate/base58ck/0.1.0/source/src/lib.rs),
+whose per-character multiply-add traverses a base-256 buffer without a length
+guard. Bitcoin Core's `DecodeBase58`,
+[`src/base58.cpp:40–87` at 9be056a8a72b624dae9623b2f7bded92c2a21c91](https://github.com/bitcoin/bitcoin/blob/9be056a8a72b624dae9623b2f7bded92c2a21c91/src/base58.cpp#L40-L87),
+also uses nested multiply-add, with the caller-supplied `max_ret_len` bound
+checked at lines 50 and 71. A fresh `curl -fL` fetch of that pinned file exited
+**0**; the fetched file was read only and removed afterwards.
+
+The old measurements used a 16 GiB cap shared with other processes. The new
+measurements each used their own 8 GiB scope with no swap. Peak memory was not
+measured; these records establish completion under that cap and do not identify
+the cause of the old kills.
+
+| n | Old `z` decode, exit | New `z` decode, exit | New ones / zero-byte encode |
+|---|---|---|---|
+| 1,000 | 733 bytes in 1 ms, 0 | 733 bytes in 1 ms, 0 | 1,000 bytes / 1,000 chars |
+| 10,000 | 7,323 bytes in 135 ms, 0 | 7,323 bytes in 33 ms, 0 | 10,000 bytes / 10,000 chars |
+| 100,000 | 73,225 bytes in 4,451 ms, 0 | 73,225 bytes in 2,700 ms, 0 | 100,000 bytes / 100,000 chars |
+| 300,000 | no output, 137 | 219,675 bytes in 24,310 ms, 0 | 300,000 bytes / 300,000 chars |
+| 1,000,000 | no output, 137 | 732,248 bytes in 266,130 ms, 0 | 1,000,000 bytes / 1,000,000 chars |
+
+All five commands below ran from `"$TMP_ROOT"` against the final Base58 source,
+one at a time, with no build, tests or mutation check concurrent with a probe.
+Each command exited **0**; each block contains its full probe stdout. Probe
+stderr was empty. The supervisor additionally reported `EXIT=0` for each.
+
+```bash
+systemd-run --user --scope --quiet -p MemoryMax=8G -p MemorySwapMax=0 -p OOMPolicy=continue timeout 3600 ./.lake/build/bin/probe 1000
+```
+
+```text
+1000: 733 bytes in 1 ms
+1000 ones: 1000 bytes
+1000 zero bytes encode: 1000 chars
+```
+
+```bash
+systemd-run --user --scope --quiet -p MemoryMax=8G -p MemorySwapMax=0 -p OOMPolicy=continue timeout 3600 ./.lake/build/bin/probe 10000
+```
+
+```text
+10000: 7323 bytes in 33 ms
+10000 ones: 10000 bytes
+10000 zero bytes encode: 10000 chars
+```
+
+```bash
+systemd-run --user --scope --quiet -p MemoryMax=8G -p MemorySwapMax=0 -p OOMPolicy=continue timeout 3600 ./.lake/build/bin/probe 100000
+```
+
+```text
+100000: 73225 bytes in 2700 ms
+100000 ones: 100000 bytes
+100000 zero bytes encode: 100000 chars
+```
+
+```bash
+systemd-run --user --scope --quiet -p MemoryMax=8G -p MemorySwapMax=0 -p OOMPolicy=continue timeout 3600 ./.lake/build/bin/probe 300000
+```
+
+```text
+300000: 219675 bytes in 24310 ms
+300000 ones: 300000 bytes
+300000 zero bytes encode: 300000 chars
+```
+
+```bash
+systemd-run --user --scope --quiet -p MemoryMax=8G -p MemorySwapMax=0 -p OOMPolicy=continue timeout 3600 ./.lake/build/bin/probe 1000000
+```
+
+```text
+1000000: 732248 bytes in 266130 ms
+1000000 ones: 1000000 bytes
+1000000 zero bytes encode: 1000000 chars
+```
+
+To repeat, set `REPO` to the repository root and `TMP_ROOT` to a fresh scratch
+directory outside it, then paste this recipe. The build command exited **0**
+in the recorded check. The unquoted lakefile heredoc expands `"$REPO"`; its
+escaped backtick becomes Lean's name quotation. The probe source is unchanged.
+
+```bash
+cp "$REPO"/lean-toolchain "$TMP_ROOT"/
+cat > "$TMP_ROOT"/lakefile.lean <<EOF
+import Lake
+open Lake DSL
+package probe
+require bitcoin from "$REPO/packages/bitcoin"
+@[default_target]
+lean_exe probe where
+  root := \`Main
+EOF
+cat > "$TMP_ROOT"/Main.lean <<'EOF'
+import Bitcoin
+open Bitcoin.Base58
+def main (args : List String) : IO Unit := do
+  let n := args.head!.toNat!
+  let s := String.ofList (List.replicate n 'z')
+  let t0 ← IO.monoMsNow
+  match base58Decode s with
+  | none => IO.println s!"{n}: none"
+  | some b => IO.println s!"{n}: {b.size} bytes in {(← IO.monoMsNow) - t0} ms"
+  let s1 := String.ofList (List.replicate n '1')
+  match base58Decode s1 with
+  | none => IO.println s!"{n} ones: none"
+  | some b => IO.println s!"{n} ones: {b.size} bytes"
+  let enc := base58Encode (ByteArray.mk (Array.replicate n 0))
+  IO.println s!"{n} zero bytes encode: {enc.length} chars"
+EOF
+cd "$TMP_ROOT"
+TMPDIR="$(dirname "$TMP_ROOT")" nix develop "$REPO" -c lake build
+for n in 1000 10000 100000 300000 1000000; do
+  systemd-run --user --scope --quiet -p MemoryMax=8G -p MemorySwapMax=0 -p OOMPolicy=continue timeout 3600 ./.lake/build/bin/probe "$n"
+done
+```
+
 ### Deltas not taken
 
 No stricter v1 acceptance rule, input-length cap, address/network logic, WIF,
-BIP32/SLIP-132, or Base58Check error-detection theorem is added. A decode-side
-length cap would contradict B1, which covers every byte array. Decode time grows
-faster than linearly with input length: a compiled `base58Decode` of 10,000 `z`
-characters took 135 ms and one of 100,000 took 4,451 ms. Runs at 300,000 and
-1,000,000 were killed under a 16 GiB memory cap shared with other processes;
-memory use itself was not measured. Addresses and extended keys are far shorter.
-Tracker item `lck-base58-long-input-3qk` records the probe and its commands.
+BIP32/SLIP-132, or Base58Check error-detection theorem is added. Conversion
+retains the same accepted set and outputs. It is not subquadratic.
 
 ## Phase 3a: bech32 and bech32m (3 of 4)
 
@@ -1961,10 +2091,17 @@ variant whose residue matched. Its rejection order is:
 | 2 | Both uppercase and lowercase ASCII letters | `mixedCase` |
 | 3 | No separator | `missingSeparator` |
 | 4 | Empty HRP | `emptyHrp` |
-| 5 | HRP code point outside 33–126 | `invalidHrp` |
-| 6 | Data or checksum character outside the charset | `invalidCharacter` |
-| 7 | Fewer than six data-part symbols | `shortChecksum` |
-| 8 | Neither residue matches | `checksumMismatch` |
+| 5 | HRP over 83 characters | `hrpTooLong` |
+| 6 | HRP code point outside 33–126 | `invalidHrp` |
+| 7 | Data or checksum character outside the charset | `invalidCharacter` |
+| 8 | Fewer than six data-part symbols | `shortChecksum` |
+| 9 | Neither residue matches | `checksumMismatch` |
+
+These nine rejection reasons include the separate HRP maximum at every caller
+limit. Empty, then too-long, then invalid-character HRPs follow bech32 **0.11.1**,
+`Hrp::parse`, `src/primitives/hrp.rs:83–88` (`MAX_HRP_LEN = 83` at line 20).
+That crate counts bytes while this codec counts characters; non-ASCII HRPs are
+rejected by both, so the accepted sets agree, although error kinds may differ.
 
 The 8→5 conversion takes bits most-significant first and pads its last group
 with zero bits. Strict 5→8 rejects `PaddingError.excessPadding` when at least
@@ -2026,6 +2163,13 @@ Every set checks its loaded count and runs as runtime assertions in
 | bech32 mixed case | 1/1 | `A12uel5l` → `mixedCase` |
 | bech32 non-ASCII | 1/1 | U+0132 in the data part → `invalidCharacter` |
 | bech32 convertbits | 10/10 | Five hand-derived encodings, two isolated padding errors, lax non-zero padding, strict empty and strict `ff` |
+| bech32 HRP maximum | 8/8 | Published 84-character HRPs reject with `hrpTooLong`, and published 83-character HRPs return the correct HRP, empty payload and variant, at both 1023 and 7089 |
+
+The HRP set is last, after `bech32 convertbits`. It uses `bech32Invalid[3]`
+and `bech32mInvalid[3]`, whose checksums have residues 1 and `0x2bc830a3`,
+and `bech32Valid[2]` and `bech32mValid[2]` for the boundary. The existing
+limit-90 expectations are unchanged: the two `an84…` strings still give
+`tooLong` because the overall-length check comes first.
 
 The regrouping answers follow directly from splitting binary bytes into
 five-bit groups: `ff` is `11111|11100`, `0001` is
@@ -2053,7 +2197,7 @@ The four named theorems quantify over the public functions:
 
 | Obligation | Theorem | Statement |
 |---|---|---|
-| R | `decode_encode` | For every `limit`, variant, payload and non-empty HRP with code points 33–126, no ASCII uppercase letters, and `hrp.length + data.length + 7 ≤ limit`, decoding its encoding returns exactly `(hrp, data, v)`. There is no 83-character hypothesis or restriction on digits or `1`. |
+| R | `decode_encode` | For every `limit`, variant, payload and non-empty HRP with code points 33–126, no ASCII uppercase letters, `hrp.length ≤ 83`, and `hrp.length + data.length + 7 ≤ limit`, decoding its encoding returns exactly `(hrp, data, v)`. There is no restriction on digits or `1`. |
 | S | `decode_sound` | Successful `decode limit s = .ok (hrp, data, v)` supplies `chk` of length 6 such that `lower s = hrp ++ "1" ++ String.ofList ((data ++ chk).map charOf)` and `verifyChecksum v hrp (data ++ chk) = true`. The symbols come from `s` itself. |
 | C | `convertbits5to8_convertbits8to5` | For every `bs : ByteArray`, `convertbits5to8 (convertbits8to5 bs) = .ok bs`. |
 | L | `fesToBytesLax_convertbits8to5` | For every `bs : ByteArray`, `fesToBytesLax (convertbits8to5 bs) = bs`, using the same public encoder as C. |
@@ -2068,7 +2212,7 @@ The new named `#print axioms` outputs are:
 'Bitcoin.Bech32.decode_sound' depends on axioms: [propext, Classical.choice, Quot.sound]
 'Bitcoin.Bech32.convertbits5to8_convertbits8to5' depends on axioms: [propext, Classical.choice, Quot.sound]
 'Bitcoin.Bech32.fesToBytesLax_convertbits8to5' depends on axioms: [propext, Classical.choice, Quot.sound]
-Bitcoin axiom gate: 326 library theorems; 34 named; 0 offenders
+Bitcoin axiom gate: 502 library theorems; 42 named; 0 offenders
 ```
 
 The gate scans all library theorems, including private helpers. Its allowlist
@@ -2108,12 +2252,29 @@ each production file in `finally`. Separate streams remain under
 | 17 | Remove excess-padding rejection | `bech32 convertbits excess-padding-only` |
 | 18 | Merge empty-HRP into missing-separator error | `BIP173 bech32 invalid 1pzry9x0s0muk` |
 
-The eleven runtime reds all report the passing 326/34 axiom gate first.
+The HRP boundary has two additional independent production mutations, outside
+the unchanged eighteen-mutation list. Each command below is from
+`packages/bitcoin`, with the repository supervisor and separate captured streams:
+
+| Production mutation | Command | Exit | Observed failure |
+|---|---|---|---|
+| Change the new check from `> 83` to `> 84` | `nix develop -c lake test` | 1 | `uncaught exception: assertion failed: bech32 HRP maximum bech32-84-at-1023` |
+| Change the new check from `> 83` to `> 82` | `nix develop -c lake test` | 1 | R, `decode_encode`: `error: Bitcoin/Bech32Codec.lean:264:55: omega could not prove the goal:` and the same diagnostic at `270:52` |
+
+The first mutation printed
+`Bitcoin axiom gate: 504 library theorems; 42 named; 0 offenders` before
+the runtime assertion. The second stopped in R's two variant branches,
+before runtime. Source restoration was in `finally` after each mutation;
+the restored `nix develop -c lake test` exited **0**, with
+`bech32 HRP maximum: 8/8` and the final 502/42/0 gate. No expectation changed.
+
+The eleven existing runtime reds all report a passing gate with 42 named
+theorems and 0 offenders first.
 `nix develop -c python3 -I check-mutations.py` and
 `nix develop -c python3 -I check-base58-mutations.py` were rerun afterwards:
 both exited **0**, each detected **6/6**, and each restored `lake test`
-exited **0**. The former's JSON record now records the gate's new line
-number; the latter's record is unchanged.
+exited **0**. Their current JSON differences are listed with the follow-up
+validation below.
 
 ### Final validation
 
@@ -2183,12 +2344,7 @@ test ! -e packages/bitcoin/.lake/bech32-work
 
 ### Deltas not taken
 
-BIP173 L80's separate **83-character HRP maximum** is not enforced. At limit
-90 it follows from the non-empty HRP, separator, six-symbol checksum and
-overall length rule. With limits 1023 or 7089, HRPs longer than 83 are
-accepted when the total length fits and all other checks pass. Tracker item
-`lck-ist` (deferred, `owner-decision`) holds this question. No other
-stricter acceptance check is proposed here. Segwit address semantics,
+No stricter acceptance check is proposed here. Segwit address semantics,
 BOLT11, LNURL and invite semantics remain in their later phases.
 
 ## Phase 3a: addresses (4 of 4)
@@ -2244,8 +2400,10 @@ There is no 50-character legacy guard (`lck-base58-long-input-3qk`), unlike
 `1`s add decoded zero bytes, so cannot evade the exact body length. Omitting
 the guard changes cost and error kind, without changing the accepted set.
 `Bech32.decode` counts characters where Rust counts bytes; non-ASCII inputs are
-rejected by both, so their accepted sets agree. There is no separate 83-character
-HRP guard: at limit 90 it follows from the separator and six checksum symbols.
+rejected by both, so their accepted sets agree. The codec enforces the separate
+83-character HRP maximum. For an otherwise valid string at limit 90, that bound
+already follows from the separator and six checksum symbols; longer strings
+receive `tooLong` first.
 
 The errors intentionally retain useful segwit diagnostics where Rust's `FromStr`
 falls through to a legacy error (or its length guard):
@@ -2372,13 +2530,16 @@ The new `#print axioms` results are:
 'Bitcoin.Address.p2sh_string_roundtrip' depends on axioms: [propext, Classical.choice, Quot.sound]
 'Bitcoin.Address.decode_of_bech32_error' depends on axioms: [propext, Classical.choice, Quot.sound]
 'Bitcoin.Address.fromScript_toScript' depends on axioms: [propext, Classical.choice, Quot.sound]
-Bitcoin axiom gate: 478 library theorems; 42 named; 0 offenders
+Bitcoin axiom gate: 502 library theorems; 42 named; 0 offenders
 ```
 
 The gate imports the library root and scans every library theorem, including
 helpers. The allowlist remains exactly `propext`, `Classical.choice`, `Quot.sound`,
-with no exemptions. The only change to the existing codecs is the additive
-`convertbits8to5_length` lemma; their behaviour and theorem statements are unchanged.
+with no exemptions. The address proofs use the additive
+`convertbits8to5_length` lemma. The sole caller of Bech32's `decode_encode`,
+private `decode_witness_encode`, discharges the new HRP bound by the three
+literal HRPs `bc`, `tb`, and `bcrt`. Its statement and every public address
+theorem statement remain unchanged.
 
 ### Red runs
 
@@ -2417,8 +2578,9 @@ rejects the input, but the exact-constructor assertions distinguish the rules.
 The earlier `check-mutations.py`, `check-base58-mutations.py` and
 `check-bech32-mutations.py` were rerun afterwards: exits **0**, detecting
 **6/6**, **6/6**, and **18/18**, respectively. Each restored `lake test`
-exited **0**. The changed gate location is recorded in `test-data/mutations.json`;
-the Base58 and bech32 records remain unchanged.
+exited **0**. Current diagnostic-location and message differences are recorded
+in the follow-up validation below; the mutation lists and expected failures
+are unchanged.
 
 ### Final validation
 
@@ -2509,13 +2671,139 @@ removes its private files and directory before reporting the final status.
 
 ### Deltas not taken
 
-The separate 83-character HRP maximum (`lck-ist`) remains deferred and is
-irrelevant at limit 90. The Base58 length guard (`lck-base58-long-input-3qk`)
-remains deferred. A Base58 fallback after unknown HRP would make an unrestricted
-legacy round trip through `decode` possible, but would accept strings that
+Base58 conversion uses proved tail loops without a length guard
+(`lck-base58-long-input-3qk`); decode time stays quadratic, as in base58ck 0.1.0
+and Bitcoin Core. The 300,000- and 1,000,000-character probes each exited **0**
+under their own 8 GiB scope, yielding **219,675 bytes in 24,310 ms** and
+**732,248 bytes in 266,130 ms**, respectively; the Base58 section records all five
+probes and the rerun recipe. A Base58 fallback after unknown
+HRP would make an unrestricted legacy round trip through `decode` possible, but would accept strings that
 rust-bitcoin and cyberkrill reject; that exit-parity change requires the owner.
 No additional stricter v1 check is proposed: generic v1–16 witness programs
 retain rust-bitcoin's 2–40-byte rule.
+
+## Phase 3a follow-up validation
+
+The 2026-10-22 Base58 and HRP checks use Lean **4.35.0**, the repository's
+supervisor, foreground commands, and separately captured stdout/stderr.
+The five probe records and both HRP
+boundary mutations are above. The final package build and test each exited
+**0**, with every existing set at its pinned count, plus
+`bech32 HRP maximum: 8/8`:
+
+```text
+Bitcoin axiom gate: 502 library theorems; 42 named; 0 offenders
+```
+
+All sixteen named axiom-output lines in the Base58, bech32 and address blocks
+were compared against the final output and `63e561f`: **none changed**. The
+three blocks now show the final gate count. The named list remains at 42;
+the scan also includes the new private equality lemmas.
+
+In the earlier check, from `packages/bitcoin`, each of these commands exited
+**0**, detected the listed count, and ended with a restored `lake test` at exit
+**0**. These results describe the unchanged sources; the mutation commands
+were not repeated for the documentation update:
+
+| Command | Detected |
+|---|---|
+| `nix develop -c python3 -I check-mutations.py` | 6/6 |
+| `nix develop -c python3 -I check-base58-mutations.py` | 6/6 |
+| `nix develop -c python3 -I check-bech32-mutations.py` | 18/18 |
+| `nix develop -c python3 -I check-address-mutations.py` | 20/20 |
+
+The regenerated JSON was compared field by field against
+`63e561f36fcc1dd211dd560f9df05e0bea658286`. Command arrays, labels, exits,
+broken theorems, assertion text and gate classifications are unchanged.
+`test-data/mutations.json` is byte-identical. The differences in the other
+three records are exactly:
+
+| Record and mutation | Old → new diagnostic positions |
+|---|---|
+| `base58-mutations.json`, `drop-leading-zeros` | Lines 286→347, 297→358, 311→372 (all three columns on line 311); columns and messages unchanged |
+| `base58-mutations.json`, `admit-zero` | Lines 288→349, 296→357 (both columns), 299→360; columns and messages unchanged |
+| `address-mutations.json`, `mainnet-base58-version` | 310:17→311:17 |
+| `address-mutations.json`, `legacy-regtest-network` | 352:2→353:2, 362:2→363:2 |
+| `address-mutations.json`, `ignore-expected-network` | 368:71→369:71 |
+| `bech32-mutations.json`, `skip-checksum` | 167:51→172:53, 259:12→270:52, 258:20→264:20, 264:10→270:10, 264:17→270:17 |
+| `bech32-mutations.json`, `swapped-variants` | 167:75→172:77, 170:78→175:80, 258:11→264:55, 259:12→270:52 |
+| `bech32-mutations.json`, `allow-short-checksum` | 176:18→181:20 |
+
+The Base58 shifts follow the 61 inserted lines; the address shifts follow the
+one-line proof discharge. The bech32 S proof gained the HRP rejection branch,
+moving its diagnostics five lines and two indentation columns. R gained its
+bound and now finishes each variant with `simp` followed by `omega`. Its
+`skip-checksum` diagnostic at 270:52 and `swapped-variants` diagnostics at
+264:55 and 270:52 therefore say `omega could not prove the goal:` instead of
+`unsolved goals`. Those three message changes and the listed columns are the
+only differences beyond line numbers. The named failure for both mutations
+remains S, including its application-type-mismatch diagnostic.
+
+Final commands and observed exits are below. The `nix build` and source-scan
+rows are from the earlier check of the unchanged sources; the other commands
+were rerun for this documentation update.
+
+| Command | Directory | Exit |
+|---|---|---|
+| `nix develop -c lean --version` | root | 0; 4.35.0, commit `eb6cafb7290e8bd5f2937522d8d804f58f02bafc`, Release |
+| `nix develop -c lake build` | `packages/bitcoin` | 0 |
+| `nix develop -c lake test` | `packages/bitcoin` | 0; all pinned sets and 502/42/0 gate |
+| `nix flake check -L` | root | 0; existing derivation, `running 0 flake checks...`; build log retrieved below |
+| `nix build --no-link --print-out-paths` | root | 0; earlier check |
+| `nix log /nix/store/2dq1q14dvddssv3rkfi73h9qjh7782zj-cyberkrill-0.1.0.drv` | root | 0; includes HRP maximum 8/8 and 502/42/0 gate |
+| `rc=0; grep -rnw sorry --include='*.lean' --exclude-dir=.lake packages \|\| rc=$?; test "$rc" -eq 1` | root | 0; no matches, earlier check |
+| `grep -rn native_decide --include='*.lean' packages/bitcoin/Bitcoin packages/bitcoin/Bitcoin.lean` | root | 1; no matches, earlier check |
+| `grep -rn bv_decide --include='*.lean' packages/bitcoin/Bitcoin packages/bitcoin/Bitcoin.lean` | root | 1; no matches, earlier check |
+| `grep -nE '\]!\|get!\|head!\|tail!\|getLast!\|panic!\|unreachable!' packages/bitcoin/Bitcoin/Base58.lean packages/bitcoin/Bitcoin/Base58Check.lean packages/bitcoin/Bitcoin/Bech32Codec.lean packages/bitcoin/Bitcoin/Address.lean` | root | 1; no matches, earlier check |
+| `git diff --check 63e561f` | root | 0 |
+
+The statement check extracts each header from `theorem` through `:= by`,
+compares the worktree bytes to `git show 63e561f:<path>`, and requires equality
+for B1, B2, K1, K2, S, C, L, private `decode_witness_encode`, and the eight
+public address theorems. For R it requires equality after removing exactly
+`(maxHrp : hrp.length ≤ 83)` and its indentation/newline. This comparison was
+repeated for the documentation update and exited **0**. The only caller
+found by `rg -n decode_encode packages --glob '*.lean' --glob '!**/.lake/**'`
+(exit **0**), beyond declarations and axiom-print references, is the private
+address proof at `Bitcoin/Address.lean:276`.
+
+The sandbox log records the new HRP set at **8/8**, all other pinned Bitcoin
+sets, the 502/42/0 gate, the SHA-256 gate, BOLT11 recovery/signing **16/16**
+each, Wycheproof **252 loaded / 95 accepted / 157 rejected**, all seven
+packages' build/test steps, `http-curl cases: 35/35`, `S12: PASS`, `S13: PASS`,
+the link spike, one-OpenSSL checks, and `cyberkrill 0.1.0`. The build output is
+`/nix/store/qv3krg94mqq9hclpgfl3lkfbdmrsv8rc-cyberkrill-0.1.0`; no result
+link was created.
+
+The final public-text scan of added lines in
+`git diff 63e561f -- README.md packages` printed only the six probe command
+lines (five measurements and one loop form), with no other matches.
+`git diff --name-only 63e561f` lists the four Lean/test files, three mutation
+records, README and `.beads/issues.jsonl`.
+The Base58 source SHA-256 stayed
+`0e9c396955f0e144ca05c9f4fd115cf296a25a02c153b95c33f02a568664455e`
+after all five probes. Peak memory remains unmeasured; no extra conversion
+function or fallback was needed.
+
+### Follow-up cleanup
+
+`TMP_ROOT` was the fresh probe package and `CORE_FETCH_DIR` the fresh Core
+source fetch directory. Each exact-path command below exited **0**:
+
+```bash
+unlink "$CORE_FETCH_DIR"/base58.cpp
+rmdir "$CORE_FETCH_DIR"
+rm -r -- "$TMP_ROOT"
+test ! -e "$TMP_ROOT"
+test ! -e "$CORE_FETCH_DIR"
+```
+
+The probe work created only those two external directories. No reference
+clone, private dependency cache or Nix result link was created. The gate
+supervisor removed each of its private files with `unlink` and its directory
+with `rmdir` before reporting the recorded status. Ordinary build
+outputs remain in ignored `.lake/` directories. The probe directory's package
+links were removed as links; their repository targets were preserved.
 
 ## Deltas taken
 

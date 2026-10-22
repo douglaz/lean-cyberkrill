@@ -100,6 +100,7 @@ inductive DecodeError where
   | mixedCase
   | missingSeparator
   | emptyHrp
+  | hrpTooLong
   | invalidHrp
   | invalidCharacter
   | shortChecksum
@@ -110,7 +111,7 @@ def lower (s : String) : String := String.ofList (s.toList.map Char.toLower)
 
 private def validHrpChar (c : Char) : Bool := 33 ≤ c.toNat && c.toNat ≤ 126
 
-/-- Decode with the caller's character limit and eight distinct rejection reasons. -/
+/-- Decode with the caller's character limit and nine distinct rejection reasons. -/
 def decode (limit : Nat) (s : String) : Except DecodeError (String × List Symbol × Variant) :=
   if s.length > limit then .error .tooLong
   else if s.toList.any Char.isUpper && s.toList.any Char.isLower then .error .mixedCase
@@ -118,6 +119,7 @@ def decode (limit : Nat) (s : String) : Except DecodeError (String × List Symbo
   | none => .error .missingSeparator
   | some (hrp, chars) =>
     if hrp = [] then .error .emptyHrp
+    else if hrp.length > 83 then .error .hrpTooLong
     else if !hrp.all validHrpChar then .error .invalidHrp
     else match readChars chars with
     | none => .error .invalidCharacter
@@ -154,38 +156,42 @@ theorem decode_sound (limit : Nat) (s hrp : String) (data : List Symbol) (v : Va
           split at success
           next h => simp at success
           next h =>
-            cases hd : readChars chars with
-            | none => simp [hd] at success
-            | some ds =>
-              simp only [hd] at success
-              split at success
-              next h => simp at success
-              next long =>
-                have result : ∃ variant, verifyChecksum variant (String.ofList hc) ds = true ∧
-                    (String.ofList hc, ds.take (ds.length - 6), variant) = (hrp, data, v) := by
-                  split at success
-                  next verified => exact ⟨.bech32, verified, Except.ok.inj success⟩
-                  next notVerified =>
+            split at success
+            next h => simp at success
+            next h =>
+              cases hd : readChars chars with
+              | none => simp [hd] at success
+              | some ds =>
+                simp only [hd] at success
+                split at success
+                next h => simp at success
+                next long =>
+                  have result : ∃ variant, verifyChecksum variant (String.ofList hc) ds = true ∧
+                      (String.ofList hc, ds.take (ds.length - 6), variant) = (hrp, data, v) := by
                     split at success
-                    next verified => exact ⟨.bech32m, verified, Except.ok.inj success⟩
-                    next notVerified => simp at success
-                obtain ⟨variant, verified, eq⟩ := result
-                cases eq
-                refine ⟨ds.drop (ds.length - 6), ?_, ?_, ?_⟩
-                · simp only [List.length_drop]
-                  omega
-                · rw [List.take_append_drop]
-                  apply String.toList_inj.mp
-                  simp only [lower, String.toList_ofList, String.toList_append]
-                  rw [chars_readChars chars ds hd]
-                  simpa using splitLast_sound _ _ _ hs
-                · simpa only [List.take_append_drop] using verified
+                    next verified => exact ⟨.bech32, verified, Except.ok.inj success⟩
+                    next notVerified =>
+                      split at success
+                      next verified => exact ⟨.bech32m, verified, Except.ok.inj success⟩
+                      next notVerified => simp at success
+                  obtain ⟨variant, verified, eq⟩ := result
+                  cases eq
+                  refine ⟨ds.drop (ds.length - 6), ?_, ?_, ?_⟩
+                  · simp only [List.length_drop]
+                    omega
+                  · rw [List.take_append_drop]
+                    apply String.toList_inj.mp
+                    simp only [lower, String.toList_ofList, String.toList_append]
+                    rw [chars_readChars chars ds hd]
+                    simpa using splitLast_sound _ _ _ hs
+                  · simpa only [List.take_append_drop] using verified
 
-/-- R: round-trip for every caller limit, with no separate HRP length bound. -/
+/-- R: round-trip for every caller limit and an HRP of at most 83 characters. -/
 theorem decode_encode (limit : Nat) (hrp : String) (data : List Symbol) (v : Variant)
     (nonempty : hrp ≠ "")
     (range : ∀ c ∈ hrp.toList, 33 ≤ c.toNat ∧ c.toNat ≤ 126)
     (noUpper : ∀ c ∈ hrp.toList, c.isUpper = false)
+    (maxHrp : hrp.length ≤ 83)
     (fits : hrp.length + data.length + 7 ≤ limit) :
     decode limit (encode hrp data v) = .ok (hrp, data, v) := by
   let ds := data ++ createChecksum hrp data v
@@ -255,12 +261,12 @@ theorem decode_encode (limit : Nat) (hrp : String) (data : List Symbol) (v : Var
     nonemptyList, hrpOk, Bool.not_true, readChars_chars, enough,
     String.ofList_toList, dataPart]
   cases v with
-  | bech32 => simp [checked]
+  | bech32 => simp [checked, String.length_toList] <;> omega
   | bech32m =>
     have other : verifyChecksum .bech32 hrp ds = false := by
       unfold verifyChecksum at checked ⊢
       have residue := beq_iff_eq.mp checked
       simp [residue, Variant.constant]
-    simp [other, checked]
+    simp [other, checked, String.length_toList] <;> omega
 
 end Bitcoin.Bech32

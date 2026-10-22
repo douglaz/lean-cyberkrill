@@ -59,9 +59,10 @@ definitions of done; the beads tracker (`br`) holds the executable work.
   - Copied code whose upstream file has no header gets a provenance comment (upstream repo, commit,
     path, "MIT") with the upstream MIT notice in a file beside it, never the dual-licence header.
 - **Git.** Work on a feature branch; never commit or push to `master`; the owner merges PRs.
-  While the repo is private, the owner's standing go-ahead covers pushing feature branches and
-  opening PRs (plan.md §1 Visibility); nothing else is pushed. A work session never pushes; this
-  overrides the `git push` line in the beads Session Protocol below. Conventional commits
+  The repo has been public since 2026-10-22 (owner decision). The owner's standing go-ahead covers
+  pushing feature branches and opening PRs (plan.md §1 Visibility); nothing else is pushed. A
+  work session never pushes; this overrides the `git push` line in the beads Session Protocol
+  below. Conventional commits
   (`feat(bitcoin): ...`). Commit messages and PR text describe the change only, with no tool or
   co-author attribution trailers. Never commit machine-local instruction files.
 - **Public text.** Committed files, commit messages, bead text and PR text never name the agent or

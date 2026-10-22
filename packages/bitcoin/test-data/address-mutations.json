@@ -53,7 +53,7 @@
     ],
     "exit": 1,
     "failures": [
-      "error: Bitcoin/Address.lean:310:17: Tactic `rfl` failed: The left-hand side",
+      "error: Bitcoin/Address.lean:311:17: Tactic `rfl` failed: The left-hand side",
       "error: build failed"
     ],
     "property": 4,
@@ -67,8 +67,8 @@
     ],
     "exit": 1,
     "failures": [
-      "error: Bitcoin/Address.lean:352:2: unsolved goals",
-      "error: Bitcoin/Address.lean:362:2: unsolved goals",
+      "error: Bitcoin/Address.lean:353:2: unsolved goals",
+      "error: Bitcoin/Address.lean:363:2: unsolved goals",
       "error: build failed"
     ],
     "property": 5,
@@ -267,7 +267,7 @@
     "failures": [
       "error: Bitcoin/Address.lean:158:12: Variable name `net` is not explicitly referenced.",
       "error: Bitcoin/Address.lean:260:52: unsolved goals",
-      "error: Bitcoin/Address.lean:368:71: unsolved goals",
+      "error: Bitcoin/Address.lean:369:71: unsolved goals",
       "error: build failed"
     ],
     "property": 19,

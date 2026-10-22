@@ -12,10 +12,45 @@ private def value (base : Nat) : List Nat → Nat
   | [] => 0
   | d :: ds => d + base * value base ds
 
+private def valueTR (base : Nat) (ds : List Nat) : Nat :=
+  ds.reverse.foldl (fun acc d => d + base * acc) 0
+
+private theorem value_foldr (base : Nat) (ds : List Nat) :
+    value base ds = ds.foldr (fun d acc => d + base * acc) 0 := by
+  induction ds with
+  | nil => rfl
+  | cons d ds ih => simp [value, ih]
+
+@[csimp] private theorem value_eq_valueTR : @value = @valueTR := by
+  funext base ds
+  simp [valueTR, List.foldl_reverse, value_foldr]
+
 private def digits (base : Nat) (hb : 1 < base) (n : Nat) : List Nat :=
   if n = 0 then [] else n % base :: digits base hb (n / base)
 termination_by n
 decreasing_by exact Nat.div_lt_self (by omega) hb
+
+private def digitsAux (base : Nat) (hb : 1 < base) (n : Nat) (acc : List Nat) : List Nat :=
+  if n = 0 then acc else digitsAux base hb (n / base) (n % base :: acc)
+termination_by n
+decreasing_by exact Nat.div_lt_self (by omega) hb
+
+private theorem digitsAux_eq (base : Nat) (hb : 1 < base) (n : Nat) (acc : List Nat) :
+    digitsAux base hb n acc = (digits base hb n).reverse ++ acc := by
+  rw [digitsAux, digits]
+  split
+  · simp
+  · rw [digitsAux_eq base hb (n / base)]
+    simp [List.reverse_cons, List.append_assoc]
+termination_by n
+decreasing_by exact Nat.div_lt_self (by omega) hb
+
+private def digitsTR (base : Nat) (hb : 1 < base) (n : Nat) : List Nat :=
+  (digitsAux base hb n []).reverse
+
+@[csimp] private theorem digits_eq_digitsTR : @digits = @digitsTR := by
+  funext base hb n
+  simp [digitsTR, digitsAux_eq]
 
 private theorem value_digits (base : Nat) (hb : 1 < base) (n : Nat) :
     value base (digits base hb n) = n := by
@@ -229,6 +264,32 @@ private theorem digitOf_charOf (d : Nat) (hd : d < 58) : digitOf (charOf d) = so
 private def readChars : List Char → Option (List Nat)
   | [] => some []
   | c :: cs => do return (← digitOf c) :: (← readChars cs)
+
+private def readCharsAux : List Char → List Nat → Option (List Nat)
+  | [], acc => some acc.reverse
+  | c :: cs, acc =>
+    match digitOf c with
+    | none => none
+    | some d => readCharsAux cs (d :: acc)
+
+private theorem readCharsAux_eq (cs : List Char) (acc : List Nat) :
+    readCharsAux cs acc = (readChars cs).map (acc.reverse ++ ·) := by
+  induction cs generalizing acc with
+  | nil => simp [readCharsAux, readChars]
+  | cons c cs ih =>
+    simp only [readCharsAux, readChars]
+    cases hd : digitOf c with
+    | none => simp
+    | some d =>
+      change readCharsAux cs (d :: acc) = _
+      rw [ih]
+      cases readChars cs <;> simp [List.reverse_cons, List.append_assoc]
+
+private def readCharsTR (cs : List Char) : Option (List Nat) := readCharsAux cs []
+
+@[csimp] private theorem readChars_eq_readCharsTR : readChars = readCharsTR := by
+  funext cs
+  simp [readCharsTR, readCharsAux_eq]
 
 private theorem readChars_map (ds : List Nat) (bound : ∀ d ∈ ds, d < 58) :
     readChars (ds.map charOf) = some ds := by
