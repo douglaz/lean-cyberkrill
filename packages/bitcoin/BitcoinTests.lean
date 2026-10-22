@@ -235,6 +235,21 @@ private def bech32Tests : IO Unit := do
     ("lax-nonzero-padding", Bech32.fesToBytesLax (symbols [0,1]) == bytes [0]),
     ("strict-empty", Bech32.convertbits5to8 (symbols []) == .ok (bytes [])),
     ("strict-ff", Bech32.convertbits5to8 (symbols [31,28]) == .ok (bytes [255]))]
+  let mut hrpCases : Array (String × Bool) := #[]
+  for limit in [1023, 7089] do
+    for (name, tooLong, atBound, variant) in
+        [("bech32", Bech32Vectors.bech32Invalid[3]!, Bech32Vectors.bech32Valid[2]!,
+            Bech32.Variant.bech32),
+         ("bech32m", Bech32Vectors.bech32mInvalid[3]!, Bech32Vectors.bech32mValid[2]!,
+            Bech32.Variant.bech32m)] do
+      hrpCases := hrpCases.push (s!"{name}-84-at-{limit}",
+        Bech32.decode limit tooLong == .error .hrpTooLong)
+      hrpCases := hrpCases.push (s!"{name}-83-at-{limit}",
+        match Bech32.decode limit atBound with
+        | .error _ => false
+        | .ok (hrp, data, v) => hrp.length == 83 && data.isEmpty && v == variant &&
+            Bech32.encode hrp data v == Bech32.lower atBound)
+  checks "bech32 HRP maximum" 8 hrpCases
 
 private def addressNetworks : Array Address.Network := #[.mainnet, .testnet, .signet, .regtest]
 

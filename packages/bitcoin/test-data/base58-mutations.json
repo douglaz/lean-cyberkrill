@@ -7,11 +7,11 @@
     ],
     "exit": 1,
     "failures": [
-      "error: Bitcoin/Base58.lean:286:4: Type mismatch: After simplification, term",
-      "error: Bitcoin/Base58.lean:297:12: unsolved goals",
-      "error: Bitcoin/Base58.lean:311:6: This simp argument is unused:",
-      "error: Bitcoin/Base58.lean:311:63: This simp argument is unused:",
-      "error: Bitcoin/Base58.lean:311:70: This simp argument is unused:",
+      "error: Bitcoin/Base58.lean:347:4: Type mismatch: After simplification, term",
+      "error: Bitcoin/Base58.lean:358:12: unsolved goals",
+      "error: Bitcoin/Base58.lean:372:6: This simp argument is unused:",
+      "error: Bitcoin/Base58.lean:372:63: This simp argument is unused:",
+      "error: Bitcoin/Base58.lean:372:70: This simp argument is unused:",
       "error: build failed"
     ],
     "brokenTheorem": "Bitcoin.Base58.base58Decode_encode"
@@ -24,10 +24,10 @@
     ],
     "exit": 1,
     "failures": [
-      "error: Bitcoin/Base58.lean:288:6: Tactic `rewrite` failed: Did not find an occurrence of the pattern",
-      "error: Bitcoin/Base58.lean:296:9: unsolved goals",
-      "error: Bitcoin/Base58.lean:299:6: Type mismatch: After simplification, term",
-      "error: Bitcoin/Base58.lean:296:18: This simp argument is unused:",
+      "error: Bitcoin/Base58.lean:349:6: Tactic `rewrite` failed: Did not find an occurrence of the pattern",
+      "error: Bitcoin/Base58.lean:357:9: unsolved goals",
+      "error: Bitcoin/Base58.lean:360:6: Type mismatch: After simplification, term",
+      "error: Bitcoin/Base58.lean:357:18: This simp argument is unused:",
       "error: build failed"
     ],
     "brokenTheorem": "Bitcoin.Base58.base58Encode_of_decode"

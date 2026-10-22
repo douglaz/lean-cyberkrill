@@ -275,7 +275,8 @@ private theorem decode_witness_encode (net : Network) (version : Nat) (program :
     cases net <;> decide
   have encoded := Bitcoin.Bech32.decode_encode 90 net.witness.hrp
     (BitVec.ofNat 5 version :: Bitcoin.Bech32.convertbits8to5 program)
-    (witnessVariant version) nonempty range noUpper fits
+    (witnessVariant version) nonempty range noUpper
+    (by cases net <;> decide) fits
   simp only [Value.encode, decode, encoded]
   have notHigh : ¬ version > 16 := by have := valid.1; omega
   cases net <;>

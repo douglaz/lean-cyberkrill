@@ -23,11 +23,11 @@
     ],
     "exit": 1,
     "failures": [
-      "error: Bitcoin/Bech32Codec.lean:167:51: Application type mismatch: The argument",
-      "error: Bitcoin/Bech32Codec.lean:259:12: unsolved goals",
-      "error: Bitcoin/Bech32Codec.lean:258:20: This simp argument is unused:",
-      "error: Bitcoin/Bech32Codec.lean:264:10: This simp argument is unused:",
-      "error: Bitcoin/Bech32Codec.lean:264:17: This simp argument is unused:",
+      "error: Bitcoin/Bech32Codec.lean:172:53: Application type mismatch: The argument",
+      "error: Bitcoin/Bech32Codec.lean:270:52: omega could not prove the goal:",
+      "error: Bitcoin/Bech32Codec.lean:264:20: This simp argument is unused:",
+      "error: Bitcoin/Bech32Codec.lean:270:10: This simp argument is unused:",
+      "error: Bitcoin/Bech32Codec.lean:270:17: This simp argument is unused:",
       "error: build failed"
     ],
     "brokenTheorem": "Bitcoin.Bech32.decode_sound"
@@ -40,10 +40,10 @@
     ],
     "exit": 1,
     "failures": [
-      "error: Bitcoin/Bech32Codec.lean:167:75: Application type mismatch: The argument",
-      "error: Bitcoin/Bech32Codec.lean:170:78: Application type mismatch: The argument",
-      "error: Bitcoin/Bech32Codec.lean:258:11: unsolved goals",
-      "error: Bitcoin/Bech32Codec.lean:259:12: unsolved goals",
+      "error: Bitcoin/Bech32Codec.lean:172:77: Application type mismatch: The argument",
+      "error: Bitcoin/Bech32Codec.lean:175:80: Application type mismatch: The argument",
+      "error: Bitcoin/Bech32Codec.lean:264:55: omega could not prove the goal:",
+      "error: Bitcoin/Bech32Codec.lean:270:52: omega could not prove the goal:",
       "error: build failed"
     ],
     "brokenTheorem": "Bitcoin.Bech32.decode_sound"
@@ -186,7 +186,7 @@
     ],
     "exit": 1,
     "failures": [
-      "error: Bitcoin/Bech32Codec.lean:176:18: omega could not prove the goal:",
+      "error: Bitcoin/Bech32Codec.lean:181:20: omega could not prove the goal:",
       "error: build failed"
     ],
     "brokenTheorem": "Bitcoin.Bech32.decode_sound"
