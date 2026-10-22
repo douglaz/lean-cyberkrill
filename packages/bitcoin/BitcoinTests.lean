@@ -7,6 +7,7 @@ import Bitcoin.Base58Vectors
 import Bitcoin.Bech32Vectors
 import Bitcoin.AddressVectors
 import Bitcoin.CoreAddressVectors
+import BitcoinTests.Psbt
 
 open Bitcoin
 open Bitcoin.Amount
@@ -361,8 +362,12 @@ private def addressTests : IO Unit := do
 
 end BitcoinTests
 
-def main : IO Unit := do
+def main (args : List String) : IO Unit := do
   IO.println s!"Bitcoin axiom gate: {BitcoinTests.auditedTheoremCount} library theorems; {BitcoinTests.namedTheorems.length} named; 0 offenders"
+  match args with
+  | ["--psbt", name] => BitcoinTests.PsbtTests.run (some name); return
+  | [] => pure ()
+  | _ => throw <| IO.userError "usage: BitcoinTests [--psbt NAME]"
   BitcoinTests.hexTests
   BitcoinTests.compactTests
   BitcoinTests.amountTests
@@ -370,3 +375,9 @@ def main : IO Unit := do
   BitcoinTests.base58Tests
   BitcoinTests.bech32Tests
   BitcoinTests.addressTests
+  BitcoinTests.PsbtTests.run
+  let scan ← IO.Process.output { cmd := "grep", args := #["-rEn", "--exclude-dir=.lake",
+    "[tx]prv[1-9A-HJ-NP-Za-km-z]{100,}", ".."] }
+  unless scan.exitCode == 1 do
+    throw <| IO.userError s!"assertion failed: key-shaped grep: exit {scan.exitCode}\n{scan.stdout}{scan.stderr}"
+  IO.println "key-shaped grep: 1/1"

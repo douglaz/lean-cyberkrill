@@ -128,7 +128,7 @@ def main():
                 record["brokenTheorem"] = "Bitcoin.Address." + theorem
             else:
                 assert "assertion failed: " + assertion in output, output
-                gate = re.search(r"Bitcoin axiom gate: \d+ library theorems; 43 named; 0 offenders", output)
+                gate = re.search(r"Bitcoin axiom gate: \d+ library theorems; 56 named; 0 offenders", output)
                 assert gate, "axiom gate must pass before the runtime assertion\n" + output
                 record["assertion"] = assertion
                 record["axiomGatePassed"] = True

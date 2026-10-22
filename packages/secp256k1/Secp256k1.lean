@@ -18,6 +18,13 @@ encodings, invalid prefixes, or points outside the curve. -/
 @[extern "lck_secp_pubkey_parse"]
 opaque isValidPubkey (key : @& ByteArray) : Bool
 
+/-- Parse a 33-byte 02/03 or 65-byte 04 SEC1 key, also accepting a 65-byte
+06/07 hybrid key whose tag matches y's parity. Return its canonical 33-byte
+compressed encoding, or none for malformed lengths, prefixes or curve points.
+Uses libsecp256k1's parse rule without a separate prefix restriction. -/
+@[extern "lck_secp_compress_pubkey"]
+opaque compressPubkey (key : @& ByteArray) : Option ByteArray
+
 /-- `verify hash signature key` checks a 32-byte message hash and 64-byte compact
 ECDSA signature (big-endian r ‖ s) against a SEC1 key as in `isValidPubkey`.
 Returns false for malformed lengths/keys, r or s ≥ the curve order, zero scalars,

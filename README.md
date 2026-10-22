@@ -9,7 +9,9 @@ proved SHA-256 and SHA-256d with NIST vectors, and hex, canonical CompactSize an
 millisatoshi amounts with String round-trip proofs, plus proved Base58, Base58Check and
 bech32/bech32m codecs with strict and lax bit regrouping, and scriptPubKey/address
 conversion per network with round-trip proofs. Phase 3a is complete apart from
-the 4-error theorem, which belongs to Phase 3b. The Phase 3b (1 of 2)
+the 4-error theorem, which belongs to Phase 3b. Phase 4a (1 of 3) adds transaction
+and PSBT codecs, supplied curve/hash operations, an optional BIP32 same-point
+check, and hybrid-aware public-key compression. The Phase 3b (1 of 2)
 feasibility spike is delivered with a **stop** verdict: the complete split finite
 check (220 chunk files, all passing) took **1,198 s** with four files checked at
 once, against the ten-minute (600 s) added build budget. The full theorem remains
@@ -340,6 +342,7 @@ never mutated, and successful object results are freshly allocated:
 
 ```lean
 isValidPubkey (key : @& ByteArray) : Bool
+compressPubkey (key : @& ByteArray) : Option ByteArray
 verify (hash signature key : @& ByteArray) : Bool
 recover (hash signature : @& ByteArray) (recid : UInt8) : Option ByteArray
 sign (hash secretKey : @& ByteArray) : Option ByteArray
@@ -354,6 +357,7 @@ published test vectors in v1. `contextRoundTrip : IO Bool` is unchanged.
 | Function | Bytes and returned errors |
 |---|---|
 | `isValidPubkey` | 33-byte compressed SEC1 (02/03) or 65-byte uncompressed (04). False for wrong lengths, invalid prefixes, invalid coordinates or off-curve points. |
+| `compressPubkey` | libsecp256k1's own parse rule: 33-byte 02/03, 65-byte 04, or a 65-byte 06/07 hybrid whose tag matches y parity. Returns a fresh 33-byte compressed key, or none for an invalid encoding or point. |
 | `verify` | 32-byte hash, 64-byte compact signature (big-endian r ‖ s), SEC1 key as above. False for any malformed input, r or s ≥ the curve order, zero scalars, high-S, or failure to verify. No normalisation. |
 | `recover` | Same hash and compact signature; recid 0–3. Returns a 33-byte compressed SEC1 key, or none for wrong lengths, recid > 3, invalid scalars, or recovery failure. Preserves high-S. |
 | `sign` | 32-byte hash and 32-byte secret key. Returns 65 bytes: compact r ‖ s (always low-S), then recid 0–3. None for wrong lengths, secret zero or ≥ the curve order, context failure or signing failure. |
@@ -366,10 +370,11 @@ tests cover both matching and mismatched parity. This matches rust-bitcoin
 the y parity; cyberkrill reaches it for PSBT `bip32_derivation` keys and for
 `ln-encode-invoice`'s JSON keys. Owner decision (2026-10-21, bead
 `lck-decide-hybrid-pubkey-xgr`): both paths follow it, through a second
-function, `compressPubkey`, that Phase 4a (1 of 3) adds. The `bitcoin`
+function, `compressPubkey`, implemented in Phase 4a (1 of 3). The `bitcoin`
 PSBT codec keeps 04 and hybrid bip32 keys as the bytes it read, where
-rust-bitcoin rewrites them to 33-byte compressed, and the app rejects two
-encodings of one point in one bip32 map, as cyberkrill does.
+rust-bitcoin rewrites them to 33-byte compressed. The separate
+`Psbt.checkBip32SamePoint` rejects two encodings of one point in one bip32 map,
+as cyberkrill does; application wiring remains a later phase.
 All buffer lengths and the
 recovery-id range are guarded before libsecp256k1 sees the corresponding input.
 The package keeps `"packages": []` in its Lake manifest and uses the existing
@@ -2993,6 +2998,577 @@ The chunk files and the measurement's scratch directory, written here as
 `"$TMP_ROOT"`, were removed with `rm -r -- "$TMP_ROOT"`, and
 `test ! -e "$TMP_ROOT"` exited **0**. No reference clone or Mathlib source was
 created. The experiment sources remain fenced in the proof plan.
+
+## Phase 4a: transactions and PSBT (1 of 3)
+
+`import Bitcoin` now includes transaction wire serialization/deserialization,
+strict padded Base64, and BIP174 v0, BIP370 v2 and BIP371 PSBT framing and typed
+fields. This package still imports only pure Lean and `sha256`, with no FFI,
+Mathlib, sighash or PSBT role modules.
+
+### API and supplied operations
+
+| Module / namespace | Public interface |
+|---|---|
+| `Bitcoin.Transaction` / `Bitcoin` | `OutPoint`, `TxInput`, `TxOutput`, `Transaction`, `serializeOutPoint`, `serializeTxInput`, `serializeTxOutput`, `serializeTransaction`, `Transaction.signedVersion` |
+| `Bitcoin.Deserialization` / `Bitcoin` | `readOutPoint`, `readTxInput`, `readTxOutput`, `readWitnessStack`, `WitnessTransaction`, `readTransaction`, `parseTransaction bytes (allowWitness := true)`, `serializeWitnessTransaction`, `Transaction.txid` |
+| `Bitcoin.Base64` | `encode`, `decode`: RFC4648 standard alphabet, mandatory canonical padding |
+| `Bitcoin.Psbt.Codec` / `Bitcoin.Psbt` | `Record`, `KeyValueMap`, `Psbt`, `PsbtError`, framing, `Record.WellFormed`, `KeyValueMap.Unique`, `KeyValueMap.WellFormed`, `Psbt.WellFormed`, `Psbt.encode`, `Psbt.serialize`, `decodePsbtWith` |
+| `Bitcoin.Psbt.Fields` / `Bitcoin.Psbt` | Typed global/input/output fields, `Psbt.parse cap hashes bytes`, `p.decode cap hashes`, `Psbt.parseBase64 cap hashes text`, `p.toBase64`, `DecodedPsbt`, `determineLocktime`, `DecodedPsbt.unsignedTransaction` |
+| `Bitcoin.Psbt.Capability` / `Bitcoin.Psbt` | `PubkeyCapability` supplies `isValidPubkey : ByteArray → Bool` and `compressPubkey : ByteArray → Option ByteArray`; `PreimageHashes` supplies `ripemd160` and `hash160` as one argument |
+| `Bitcoin.Psbt.SamePoint` / `Bitcoin.Psbt` | `p.checkBip32SamePoint cap : Except PsbtError Unit`, with `duplicateBip32Point scope first second` retaining both raw key-data encodings |
+
+SHA256 preimages call `Sha256.hash`; HASH256 preimages and transaction identifiers
+call `Sha256.sha256d`. RIPEMD160 and HASH160 preimage checks call the supplied
+parameter. Their actual implementations remain Phase 4a (2 of 3). The strict
+curve check handles partial-signature keys; successful compression handles input
+and output BIP32 derivation keys, including matching-parity hybrids.
+`Secp256k1.compressPubkey` supplies that operation for later application wiring.
+
+The PSBT library keeps every key's raw bytes, including 04 and hybrid BIP32
+encodings. Framing rejects repeated raw keys. rust-bitcoin 0.32.8 instead rewrites
+BIP32 keys to 33-byte compressed encodings. The separate point check walks the raw
+input and output maps in wire order, starting a fresh point set in each map. It
+returns the first colliding pair and the scope (`"input"` or `"output"`), without
+pooling across maps. It ignores partial signatures and globals. A malformed key
+propagates its decoding error; a rejected BIP32 key returns `invalidKey`, just as
+parsing with that capability would. `parse` does not call the point check; the app
+will call it separately in a later phase. This preserves the intended raw-byte
+round-trip semantics for the later proof task.
+
+### Exact copied slices and provenance
+
+Source: [febyeji/lean-miniscript at cb9bc5f](https://github.com/febyeji/lean-miniscript/tree/cb9bc5f2f80987ad18b696a9c660f90f4bc1b6bd),
+MIT, Copyright (c) 2026 Yeji Han. A fresh temporary checkout's `git rev-parse HEAD`
+printed `cb9bc5f2f80987ad18b696a9c660f90f4bc1b6bd`, exit **0**.
+`cmp packages/bitcoin/Bitcoin/LICENSE-miniscript "$TMP_ROOT"/miniscript/LICENSE`
+exited **0**: the existing MIT notice is reused unchanged.
+
+| Destination under `packages/bitcoin` | Source under `LeanMiniscript/` |
+|---|---|
+| `Bitcoin/ByteArrayRepr.lean` | `Script/Syntax.lean` L1–2 only |
+| `Bitcoin/Transaction.lean` | `Bitcoin/Transaction.lean` L1–55 |
+| `Bitcoin/Deserialization.lean` | `Bitcoin/Deserialization.lean` L81–170 |
+| `Bitcoin/DeserializationProofs.lean` | `Bitcoin/DeserializationProofs.lean` L180–232 |
+| `Bitcoin/Base64.lean` | `Bitcoin/Base64.lean` L1–79 |
+| `Bitcoin/Psbt/Codec.lean` | `Psbt/Codec.lean` L1–157 |
+| `Bitcoin/Psbt/Fields.lean` | `Psbt/Fields.lean` L1–582 |
+| `Bitcoin/PsbtVectors.lean` (tests only) | `Psbt/Fixtures.lean` L8–70 and L95–178, byte-exact lists inside a namespace wrapper |
+
+The earlier whole serialization file, initial reader slice and eleven proofs
+remain in `Bitcoin.CompactSize`. It is the **only CompactSize codec**. The new
+transaction namespace is `Bitcoin`; the new PSBT namespace is `Bitcoin.Psbt`;
+the earlier `Bitcoin.CompactSize` namespace is opened where needed. The root
+imports every new library module, and only the test executable imports vectors.
+Lake's test-support roots now include `BitcoinTests.Psbt` as well as the gate.
+
+Besides the namespace/import changes, transaction hashing uses `Sha256.sha256d`,
+the framing error type gains `duplicateBip32Point`, and typed field decoding takes
+the capability and hash parameter as described above. Every other copied field
+rule and raw-key storage is unchanged. The four new proof slices needed no port
+fix; no theorem statement or proof was changed. All edits are enumerated in
+[upstream fixes](docs/upstream-fixes.md#transaction-and-psbt-subset-phase-4a-1-of-3)
+and reconstructed by `check-tx-psbt-copy.py`. The capability and point checker are
+separate dual-licensed files.
+
+The vector source is [bitcoin/bips at 927b6de](https://github.com/bitcoin/bips/tree/927b6de9915c9262615a6399de51b200f81e5aa4),
+BSD-2-Clause, extracted by lean-miniscript's `scripts/generate_psbt_fixtures.py`.
+Their first-line provenance names both sources, exact ranges and the new
+`Bitcoin/LICENSE-psbt-bips`, which quotes the freshly fetched BIP174/370/371
+author, licence and Copyright sections followed by the BSD conditions/disclaimer.
+The intervening upstream fixture slice L72–94 is never copied.
+
+### Vectors and synthetic checks
+
+Each runtime vector set pins its loaded count before inspecting its elements:
+
+| Set | Count | Assertions |
+|---|---|---|
+| BIP174 invalid | 20 | Hex and Base64 rejected |
+| BIP370 invalid | 24 | Hex and Base64 rejected |
+| BIP371 invalid | 11 | Hex and Base64 rejected |
+| BIP174 valid | 10 | Parse, byte-exact reserialization, exact Base64 encoding, same PSBT from Base64 |
+| BIP174 signer failures | 4 | Same four codec assertions; signer semantics are out of scope |
+| BIP370 valid | 14 | Same four codec assertions |
+| BIP371 valid | 6 | Same four codec assertions |
+| BIP174 roles | 14 | Thirteen round trips; network transaction at index 7 gives exactly `magic` |
+| BIP370 locktimes | 10 | Determined locktime, Base64 bytes, and unsigned-transaction locktime or exact incompatible-locktime error |
+
+Pure top-level `BitcoinTests.PsbtTests.testCapability` is a **shape-only** stand-in:
+strict validation accepts 33-byte 02/03 and 65-byte 04; compression additionally
+accepts 65-byte 06/07 with matching final-y-byte parity and returns parity plus x.
+It makes no on-curve claim. It suffices for every valid/invalid vector above.
+`testHashes.ripemd160` is the first 20 bytes of SHA256 of byte 160 followed by the
+input; `testHashes.hash160` uses byte 192 instead. They differ and are sensitive
+to input changes. Both are pure test definitions importable by later tests;
+real-curve end-to-end wiring belongs to Phase 7c.
+
+Additional named runtime checks cover the twenty invalid BIP174 Base64-to-hex
+equalities, all six upstream structured errors, the two sighash-key cases, the
+two CompactSize map cases, and key-source, Taproot-key-source and Taproot-tree
+round trips. Four synthetic preimage sets check matching acceptance and exact
+mismatch errors (**2/2 each**). Input and output hybrid tests each check raw
+decoded key data and byte-exact serialization (**2/2 each**); partial signatures
+reject that same synthetic hybrid. The hybrid and compressed keys share x and
+parity under the stand-in. Same-point tests cover collisions in both scopes,
+each encoding alone in both scopes, separate maps in both scopes, invalid keys
+and malformed keys. None of these tests contains Wycheproof-derived bytes.
+
+`audit-psbt-vectors.py` independently inventories all **113** published entries
+with a small Python wire reader and `hashlib` txids. Its deterministic record is
+`test-data/psbt-inventory.json`. There are **136** parseable transactions
+(including repeated occurrences), **60** non-witness UTXO txid checks,
+**56** matching checks, and **2** malformed global transactions. The Lean
+driver pins each count and verifies every inventory row through the public
+transaction parser/serializer with the appropriate `allowWitness` choice.
+It also pins the following published invalid-vector exceptions explicitly:
+
+| Published invalid entry | Observed property |
+|---|---|
+| `bip174Invalid[3]`, input 0 record 0 | No unsigned transaction is present, so its previous txid is unavailable |
+| `bip174Invalid[4]`, input 0 record 1 | Second duplicate non-witness UTXO has a different txid from its prevout |
+| `bip370Invalid[13]`, input 0 record 0 | Non-witness UTXO txid differs from the excluded global unsigned transaction's prevout |
+| `bip370Invalid[17]`, input 0 record 0 | No previous-txid field is present, so there is no matching txid |
+| `bip174Invalid[18]`, global record 0 | Witness-serialized unsigned transaction gives `truncated` with `allowWitness := false` |
+| `bip174Invalid[19]`, global record 0 | Incorrect stated value size leaves transaction `trailingData` |
+
+No exception is silently removed. The inventory also records unavailable map
+boundaries: truncated maps in `bip174Invalid[1]`; absent transaction/counts in
+`bip174Invalid[3]`, `[18]`, `[19]`, `bip370Invalid[14]` and `[15]`.
+The RIPEMD160/HASH160-only invalid preimage-vector list is **none**:
+`python3 -I packages/bitcoin/audit-psbt-vectors.py` reports input key type 10
+records **0** and type 12 records **0**. Its untyped scan also checks all **1,030**
+records across every map (including invalid PSBTs with missing globals), with
+**0** records of either type and **0** scan errors. The synthetic tests exercise
+both routes. To include transaction bytes in malformed PSBTs, the inventory
+explicitly uses their inspected published map layouts for `bip174Invalid[3]`,
+`[18]`, `bip370Invalid[14]` and `[15]`. For `[18]` the Lean check reads just its
+input vector to obtain the prevout; it never counts the invalid global value as
+a successful transaction parse.
+
+Compression tests derive all inputs at runtime from the pinned non-flake
+Wycheproof input: **108/108 keys**, **18 checks per key**, **1944/1944 checks**.
+Each checks 04-to-compressed, matching hybrid, mismatched hybrid, both strict
+hybrid rejections, compressed identity, 33-byte prefixes 04/06/07, 65-byte
+prefixes 02/03, lengths 0/32/34/64/66, and two synthetic off-curve shapes.
+No Wycheproof bytes or derived fixtures are stored in the repository.
+
+### Proof and axiom audit
+
+The gate's named list grows from **43 to 56**: nine of the eleven earlier
+deserialization theorems were not named individually, and all four remaining
+ones are now imported. It names all **15** from upstream's
+`DeserializationProofs.lean` L7–232. The current gate prints
+`Bitcoin axiom gate: 652 library theorems; 56 named; 0 offenders`.
+Its allowlist is still exactly `propext`, `Classical.choice`, `Quot.sound`;
+every theorem in every imported `Bitcoin` library module is scanned, including
+private and generated theorems. No theorem statement is weakened.
+
+The fifteen `#print axioms` results from `nix develop -c lake test` are:
+
+```text
+'Bitcoin.CompactSize.unsignedLE_length' depends on axioms: [propext]
+'Bitcoin.CompactSize.decodeLE_unsignedLE' depends on axioms: [propext, Classical.choice, Quot.sound]
+'Bitcoin.CompactSize.takeExact_append' depends on axioms: [propext]
+'Bitcoin.CompactSize.compactSize_ne_nil' depends on axioms: [propext]
+'Bitcoin.CompactSize.readCompactSize_compactSize' depends on axioms: [propext, Classical.choice, Quot.sound]
+'Bitcoin.CompactSize.serializeByteVector_data' depends on axioms: [propext, Quot.sound]
+'Bitcoin.CompactSize.readByteVector_encode' depends on axioms: [propext, Classical.choice, Quot.sound]
+'Bitcoin.CompactSize.decodeLE_lt' depends on axioms: [propext, Quot.sound]
+'Bitcoin.CompactSize.unsignedLE_decodeLE' depends on axioms: [propext, Quot.sound]
+'Bitcoin.CompactSize.takeExact_ok' depends on axioms: [propext, Quot.sound]
+'Bitcoin.CompactSize.readCompactSize_ok' depends on axioms: [propext, Quot.sound]
+'Bitcoin.readByteVector_ok' depends on axioms: [propext, Quot.sound]
+'Bitcoin.serializeWitness_foldl_data' depends on axioms: [propext, Quot.sound]
+'Bitcoin.readMany_readByteVector' depends on axioms: [propext, Classical.choice, Quot.sound]
+'Bitcoin.decodeAll_readWitnessStack' depends on axioms: [propext, Classical.choice, Quot.sound]
+```
+
+Only the `43 named; 0 offenders` literals in `check-bech32-mutations.py` and
+`check-address-mutations.py` change to **56**. No earlier library source or
+theorem-count assertion changes. The executable reports the actual scanned and
+named totals; it does not substitute a hard-coded total for the scan.
+
+### Transaction and PSBT red runs
+
+From `packages/bitcoin`, `nix develop -c python3 -I check-psbt-mutations.py`
+exited **0**, detecting **71/71** mutations; the final restored `lake test`
+exited **0**. The optional resume mode reuses a completed record only when the
+production sources, test sources, inventory, mutation and expected failure have
+an identical fingerprint. Every record in this full run was executed afresh.
+The default command without `--resume` always executes the complete suite.
+
+Each row below ran **`lake test -- --psbt "<selector>"`**, with the selector in
+column two, in the foreground and exited **1**. Each production change was
+restored in `finally`. Separate stdout/stderr remain under
+`.lake/psbt-mutation-checks`; exact command arrays, source paths, exits and
+observed failure lines are in [psbt-mutations.json](packages/bitcoin/test-data/psbt-mutations.json).
+Only the nine `count-` rows edit test data, deliberately removing one entry to
+exercise the count pin. All other rows mutate production behavior.
+
+| Mutation | Selector | Observed failure (exit 1) |
+|---|---|---|
+| `partial-compression` | `hybrid partial` | `assertion failed: hybrid partial rejected` |
+| `strict-inBip32Derivation` | `hybrid input` | `assertion failed: hybrid parse: Bitcoin.Psbt.PsbtError.invalidKey "input" 6 "invalid public key"` |
+| `compress-stored-inBip32Derivation` | `hybrid input` | `assertion failed: hybrid false raw decoded` |
+| `strict-outBip32Derivation` | `hybrid output` | `assertion failed: hybrid parse: Bitcoin.Psbt.PsbtError.invalidKey "output" 2 "invalid public key"` |
+| `compress-stored-outBip32Derivation` | `hybrid output` | `assertion failed: hybrid true raw decoded` |
+| `same-raw-comparison` | `same input collision` | `assertion failed: same point false/2` |
+| `same-ignore-output` | `same output collision` | `assertion failed: same point true/2` |
+| `same-pool-input` | `same input separate` | `assertion failed: same point separate false` |
+| `same-lone-input-hybrid` | `same input hybrid alone` | `assertion failed: same point false/1` |
+| `same-lone-input-compressed` | `same input compressed alone` | `assertion failed: same point false/1` |
+| `same-pool-output` | `same output separate` | `assertion failed: same point separate true` |
+| `same-lone-output-hybrid` | `same output hybrid alone` | `assertion failed: same point true/1` |
+| `same-lone-output-compressed` | `same output compressed alone` | `assertion failed: same point true/1` |
+| `same-accept-invalid` | `same invalid` | `assertion failed: same invalid` |
+| `same-skip-malformed` | `same malformed` | `assertion failed: same malformed` |
+| `skip-sha256` | `SHA256 preimage` | `assertion failed: preimage 11 mismatch` |
+| `skip-hash256` | `HASH256 preimage` | `assertion failed: preimage 13 mismatch` |
+| `skip-ripemd160` | `RIPEMD160 preimage` | `assertion failed: preimage 10 mismatch` |
+| `skip-hash160` | `HASH160 preimage` | `assertion failed: preimage 12 mismatch` |
+| `hash256-single` | `HASH256 preimage` | `assertion failed: preimage 13 accepted` |
+| `swap-ripemd160` | `RIPEMD160 preimage` | `assertion failed: preimage 10 accepted` |
+| `swap-hash160` | `HASH160 preimage` | `assertion failed: preimage 12 accepted` |
+| `txid-single` | `transactions` | `assertion failed: wire bip174Invalid[1] input txid` |
+| `vector-bip174-invalid` | `BIP174 invalid` | `assertion failed: BIP174 invalid hex 4` |
+| `vector-bip370-invalid` | `BIP370 invalid` | `assertion failed: BIP370 invalid hex 1` |
+| `vector-bip371-invalid` | `BIP371 invalid` | `assertion failed: BIP371 invalid hex 1` |
+| `vector-bip174-valid` | `BIP174 valid` | `assertion failed: BIP174 valid 0 serialize` |
+| `vector-bip174-signer` | `BIP174 signer failures` | `assertion failed: BIP174 signer failures 0 serialize` |
+| `vector-bip370-valid` | `BIP370 valid` | `assertion failed: BIP370 valid 0 serialize` |
+| `vector-bip371-valid` | `BIP371 valid` | `assertion failed: BIP371 valid 0 serialize` |
+| `vector-bip174-roles` | `BIP174 roles` | `assertion failed: BIP174 roles 0 serialize` |
+| `vector-locktimes` | `BIP370 locktimes` | `assertion failed: locktime determine 0` |
+| `unsigned-locktime` | `BIP370 locktimes` | `assertion failed: locktime transaction 0` |
+| `incompatible-locktime` | `BIP370 locktimes` | `assertion failed: locktime incompatible 9` |
+| `invalid-base64-bytes` | `invalid base64 bytes` | `assertion failed: invalid base64 bytes 0` |
+| `network-magic` | `network magic` | `assertion failed: network magic` |
+| `base64-error` | `base64 syntax` | `assertion failed: base64 syntax` |
+| `same-check-partial` | `same ignores partial` | `assertion failed: same ignores partial` |
+| `same-check-global` | `same ignores global` | `assertion failed: same ignores global` |
+| `rewrite-raw-input` | `hybrid input` | `assertion failed: hybrid false raw serialization` |
+| `rewrite-raw-output` | `hybrid output` | `assertion failed: hybrid true raw serialization` |
+| `exact-duplicate` | `exact duplicate` | `assertion failed: exact duplicate` |
+| `exact-unsigned` | `exact unsigned` | `assertion failed: exact unsigned` |
+| `exact-excluded` | `exact excluded` | `assertion failed: exact excluded` |
+| `exact-missing` | `exact missing` | `assertion failed: exact missing` |
+| `exact-signature` | `exact signature` | `assertion failed: exact signature` |
+| `exact-control` | `exact control` | `assertion failed: exact control` |
+| `sighash-extra` | `sighash extra` | `assertion failed: sighash extra` |
+| `sighash-valid` | `sighash valid` | `assertion failed: sighash valid` |
+| `map-noncanonical` | `map noncanonical` | `error: Bitcoin/CompactSize.lean:236:10: unsolved goals` |
+| `map-canonical` | `map canonical` | `assertion failed: map canonical` |
+| `key-source` | `key source` | `assertion failed: key source` |
+| `tap-key-source` | `tap key source` | `assertion failed: tap key source` |
+| `tap-tree` | `tap tree` | `assertion failed: tap tree` |
+| `trailing-data` | `trailing data` | `assertion failed: PSBT trailing data` |
+| `count-bip174Invalid` | `BIP174 invalid` | `assertion failed: BIP174 invalid count` |
+| `count-bip370Invalid` | `BIP370 invalid` | `assertion failed: BIP370 invalid count` |
+| `count-bip371Invalid` | `BIP371 invalid` | `assertion failed: BIP371 invalid count` |
+| `count-bip174Valid` | `BIP174 valid` | `assertion failed: BIP174 valid count` |
+| `count-bip174SignerFailures` | `BIP174 signer failures` | `assertion failed: BIP174 signer failures count` |
+| `count-bip370Valid` | `BIP370 valid` | `assertion failed: BIP370 valid count` |
+| `count-bip371Valid` | `BIP371 valid` | `assertion failed: BIP371 valid count` |
+| `count-bip174Roles` | `BIP174 roles` | `assertion failed: BIP174 roles count` |
+| `count-bip370Locktimes` | `BIP370 locktimes` | `assertion failed: BIP370 locktimes count` |
+
+Seven further production mutations cover the independent round-trip,
+malformed-transaction, Base64 and SHA256 acceptance assertions. Each command
+below runs from `packages/bitcoin`; each first failure line is recorded verbatim.
+
+| Property | Mutation | Command | Exit | First failure line |
+|---|---|---|---|---|
+| BIP144 witness serialization round trip | `witness-marker-flag`: marker/flag `[0, 1]` becomes `[0, 3]` | `lake test -- --psbt "transactions"` | 1 | `uncaught exception: assertion failed: wire bip174Invalid[1] input roundtrip` |
+| Legacy transaction serialization round trip | `legacy-version`: serialize version plus one | `lake test -- --psbt "transactions"` | 1 | `uncaught exception: assertion failed: wire bip174Invalid[0] network roundtrip` |
+| Published malformed transaction 18 gives `truncated` | `malformed-witness-marker`: treat zero inputs as a witness marker regardless of `allowWitness` | `lake test -- --psbt "malformed transaction 18"` | 1 | `uncaught exception: assertion failed: malformed transaction 18` |
+| Published malformed transaction 19 gives `trailingData` | `transaction-ignore-trailing`: `decodeAll` ignores unread bytes | `lake test -- --psbt "malformed transaction 19"` | 1 | `uncaught exception: assertion failed: malformed transaction 19` |
+| Valid-set Base64 encoding | `valid-base64-encode`: append `A` in `Base64.encode` | `lake test -- --psbt "BIP174 valid"` | 1 | `uncaught exception: assertion failed: BIP174 valid 0 base64 encode` |
+| Valid-set Base64 parsing | `valid-base64-decode`: append a decoded zero byte in `Base64.decode` | `lake test -- --psbt "BIP174 valid"` | 1 | `uncaught exception: assertion failed: BIP174 valid 0 base64 parse` |
+| SHA256 preimage acceptance | `sha256-double`: use SHA256d in the SHA256 branch | `lake test -- --psbt "SHA256 preimage"` | 1 | `uncaught exception: assertion failed: preimage 11 accepted` |
+
+The two malformed checks are also separately selectable. The ordinary
+`transactions` action still runs all 136 wire rows, the 60 txid checks and then
+both malformed checks in their original order. The full suite still reports
+`published malformed transactions: 2/2` and `PSBT checks: 46/46`.
+The runner requires the first assertion or build-error line to contain the
+specified assertion, so a later matching assertion cannot mask an earlier failure.
+
+The `map-noncanonical` production mutation fails in the unchanged theorem
+`Bitcoin.CompactSize.readCompactSize_ok`, which pins canonicality, before
+runtime. Every other row requires a passing 56-named axiom gate and then its
+specified runtime assertion. No expected test value is changed. The initial
+half-raw comparison experiment still detected the collision (exit 0) because
+the second key was already compressed; the recorded mutation compares both
+raw keys and fails the collision assertion as intended.
+
+The existing Bitcoin mutation suites were rerun in full, each with a restored
+`lake test` at exit **0**:
+
+| Command from `packages/bitcoin` | Exit | Detection |
+|---|---|---|
+| `nix develop -c python3 -I check-mutations.py` | 0 | 6/6 |
+| `nix develop -c python3 -I check-base58-mutations.py` | 0 | 6/6 |
+| `nix develop -c python3 -I check-bech32-mutations.py` | 0 | 18/18 |
+| `nix develop -c python3 -I check-address-mutations.py` | 0 | 20/20 |
+
+The Base58, bech32 and address JSON records are byte-identical to the base
+revision. In `test-data/mutations.json` only the temporary-axiom failure's
+`BitcoinTests/AxiomGate.lean:67:0` changes to `:74:0`: the newly named theorems
+insert seven lines before the gate invocation. No other recorded line number,
+assertion, command, exit or failure classification changes.
+
+For the red-run follow-up, `check-mutations.py` (6/6),
+`check-base58-mutations.py` (6/6), `check-bech32-mutations.py` (18/18),
+`check-address-mutations.py` (20/20) and
+`secp256k1/check-negative-mutations.py` (42/42 plus 18/18) were not rerun.
+Their scripts and production inputs have no retained changes; the PSBT driver
+only extracts the existing malformed checks into separately selectable actions.
+The counts above remain the earlier recorded results. Every temporary production
+mutation in the follow-up was restored, and all production files were compared
+against their pre-run bytes.
+
+### Curve and key-pattern red runs
+
+From `packages/secp256k1`, `nix develop -c python3 -I check-negative-mutations.py`
+exited **0**. The original **42/42** negative mutations still fail their named
+assertions (or the explicit recovery-id diagnostic), confirming that the new C
+function does not disturb the runner's `index("lck_secp_<name>(")` lookup.
+Its original records remain at `.lake/mutation-checks/records.json`.
+The same command then detected **18/18** compression mutations. For each row
+below, **`lake test -- --compression "<selector>"`** ran in the foreground and
+exited **1**, with stdout/stderr captured separately under
+`.lake/compression-mutation-checks` and compact records in its `records.json`.
+
+| Selector | Production mutation | Observed assertion |
+|---|---|---|
+| `uncompressed` | `uncompressed-result` | `assertion failed: compression uncompressed` |
+| `compressed identity` | `uncompressed-result` | `assertion failed: compression compressed identity` |
+| `matching hybrid` | `strict-prefix` | `assertion failed: compression matching hybrid` |
+| `mismatched hybrid` | `early-some` | `assertion failed: compression mismatched hybrid` |
+| `33 prefix 4` | `early-some` | `assertion failed: compression 33 prefix 4` |
+| `33 prefix 6` | `early-some` | `assertion failed: compression 33 prefix 6` |
+| `33 prefix 7` | `early-some` | `assertion failed: compression 33 prefix 7` |
+| `65 prefix 2` | `early-some` | `assertion failed: compression 65 prefix 2` |
+| `65 prefix 3` | `early-some` | `assertion failed: compression 65 prefix 3` |
+| `length 0` | `early-some` | `assertion failed: compression length 0` |
+| `length 32` | `early-some` | `assertion failed: compression length 32` |
+| `length 34` | `early-some` | `assertion failed: compression length 34` |
+| `length 64` | `early-some` | `assertion failed: compression length 64` |
+| `length 66` | `early-some` | `assertion failed: compression length 66` |
+| `off-curve compressed` | `early-some` | `assertion failed: compression off-curve compressed` |
+| `off-curve uncompressed` | `early-some` | `assertion failed: compression off-curve uncompressed` |
+| `strict matching hybrid` | `strict-accept` | `assertion failed: compression strict matching hybrid` |
+| `strict mismatched hybrid` | `strict-accept` | `assertion failed: compression strict mismatched hybrid` |
+
+`early-some` returns `some` before validation; `strict-prefix` adds the strict
+65-byte prefix restriction to compression; `uncompressed-result` selects
+`SECP256K1_EC_UNCOMPRESSED` with a 65-byte buffer so the assertion, rather than
+an unrelated buffer abort, catches the wrong output. `strict-accept` changes
+only the strict parser's result. Removing just the compression length guard
+was also measured with a full foreground `lake test`: exit **0**, all 108 keys
+and 1944 checks still ran. That surviving experiment is recorded separately,
+not counted among detected mutations. The source is restored in `finally`.
+
+The workflow and key-pattern checks ran from the repository root (exit **0**):
+
+```bash
+nix shell --impure --expr 'let pkgs = import (builtins.getFlake (toString ./.)).inputs.nixpkgs {}; in pkgs.python3.withPackages (p: [p.pyyaml])' -c python3 -I packages/bitcoin/check-key-material.py
+```
+
+PyYAML **6.0.3** parsed `.github/workflows/ci.yml` and asserted that the new
+step's `run` string equals exactly:
+
+```bash
+rc=0; grep -rEn --exclude-dir=.lake '[tx]prv[1-9A-HJ-NP-Za-km-z]{100,}' packages || rc=$?; test "$rc" -eq 1
+```
+
+The test executable runs the same grep with `..` as its root, requires exactly
+exit 1, and prints `key-shaped grep: 1/1`. A temporary copy of `packages/`
+(excluding `.lake/`) received one synthetic line, constructed as `tprv` followed
+by **110 `z` characters**, in `bitcoin/synthetic-key-shape.txt`. It was never
+planted in the repository. Both actual checks went red with the planted path:
+
+| Check in the temporary copy | Command | Exit | Observed failure |
+|---|---|---|---|
+| CI | `bash -e -c "$CI_COMMAND"`, where `CI_COMMAND` is the exact literal above | 1 | `packages/bitcoin/synthetic-key-shape.txt:1:` |
+| Test executable, from the copied `packages/bitcoin` | `"$REPO"/packages/bitcoin/.lake/build/bin/BitcoinTests` | 1 | `assertion failed: key-shaped grep: exit 0`, followed by `../bitcoin/synthetic-key-shape.txt:1:` |
+| Restored CI copy | Same CI command after unlinking the synthetic file | 0 | Nothing on either stream |
+| CI path-error check | Same CI command while `packages` is absent | 1 | `grep: packages: No such file or directory` |
+
+The last check proves grep errors are rejected, rather than treated as no-match.
+The helper removed exactly its freshly created copy and asserted its absence.
+Separate streams remain under `.lake/key-material-checks`; compact records are
+[key-material-mutations.json](packages/bitcoin/test-data/key-material-mutations.json).
+
+The follow-up reran the same `check-key-material.py` command because it copies
+the package tree and drives the rebuilt test executable: exit **0**, all four
+recorded checks reproduced, PyYAML **6.0.3**. Its compact records are byte-identical
+to the pre-run records, and it again removed its exact disposable copy.
+
+### Final validation and cleanup
+
+On 2026-10-22, all gates ran in the foreground with the repository's supervisor,
+separate stdout/stderr, and `TMPDIR` set to a fresh private directory,
+`$TMP_ROOT`. `REPO` denotes the checkout
+root; `TMP_ROOT` denotes the fresh private temporary directory used for the
+source checkout, three BIP fetches and shell temporary files. Lean reported
+**4.35.0**, commit `eb6cafb7290e8bd5f2937522d8d804f58f02bafc`, Release.
+New files were staged before the flake check. No flake, lockfile or other
+package's tracked source changed.
+
+| Command | Directory | Exit / observation |
+|---|---|---|
+| `nix develop -c lean --version` | root | 0; 4.35.0 |
+| `nix develop -c lake build` | `packages/bitcoin` | 0 |
+| `nix develop -c lake test` | `packages/bitcoin` | 0; all pinned sets, 46/46 PSBT checks, 1/1 key-shaped grep, 652/56/0 axiom gate |
+| `nix develop -c lake build` | `packages/secp256k1` | 0 |
+| `nix develop -c lake test` | `packages/secp256k1` | 0; original BOLT/Wycheproof counts plus 108 keys and 1944 compression checks |
+| `nix develop -c bash -c 'cc -fsyntax-only -I "$(lean --print-prefix)/include" -include .lake/build/ir/Secp256k1.c link_shim.c'` | `packages/secp256k1` | 0; all six generated declarations agree with the shim |
+| `python3 -I packages/bitcoin/check-tx-psbt-copy.py "$TMP_ROOT"/miniscript` | root | 0; 8/8 copied files, exactly the documented edits |
+| `cmp packages/bitcoin/Bitcoin/LICENSE-miniscript "$TMP_ROOT"/miniscript/LICENSE` | root | 0; notice reused byte-for-byte |
+| `python3 -I packages/bitcoin/audit-psbt-vectors.py` | root | 0; 113 vectors, 136 transactions, 60 txid checks, all recorded exceptions, no preimage records |
+| `nix flake check -L` | root | 0; all seven packages build and test in the sandbox |
+| `nix build` | root | 0 |
+| `./result/bin/cyberkrill` | root | 0; `cyberkrill 0.1.0` |
+| `rc=0; grep -rnw sorry --include='*.lean' --exclude-dir=.lake packages \|\| rc=$?; test "$rc" -eq 1` | root | 0; no matches |
+| `rc=0; grep -rnE 'native_decide\|bv_decide' --include='*.lean' packages/bitcoin/Bitcoin packages/bitcoin/Bitcoin.lean \|\| rc=$?; test "$rc" -eq 1` | root | 0; no matches |
+| `grep -rEn --exclude-dir=.lake '[tx]prv[1-9A-HJ-NP-Za-km-z]{100,}' packages` | root | 1; no matches |
+| CompactSize definition grep below | root | 0; exactly two lines, `CompactSize.lean:13` and `:50` |
+| `grep -F sorry packages/bitcoin/BitcoinTests/AxiomGate.lean` | root | 1; no substring |
+| `git diff --check e1a95626c185ac07a0a7e2c4d9f9368aca36a2d1` | root | 0; no upstream-data exceptions needed |
+
+The single-codec definition check was:
+
+```bash
+grep -rn 'def readCompactSize\|def compactSize' --include='*.lean' --exclude-dir=.lake packages/bitcoin
+```
+
+The sandbox log includes every new PSBT and compression count, the 652/56/0
+Bitcoin gate, SHA-256's unchanged 346/10/0 gate, `http-curl cases: 35/35`,
+`S12: PASS`, `S13: PASS`, `link spike, Lake/leanc green twins, forced-static red
+fixture: PASS`, and `http-curl wrapper executable: one nix OpenSSL, version and
+ldd: PASS`. Both existing link-check scripts remain unchanged. The app printed
+`cyberkrill 0.1.0`. Full command arrays, exits and separated streams remain
+under `packages/bitcoin/.lake/final-tx-psbt`.
+
+The required staged-diff key-material scan was run exactly, with `pipefail`:
+
+```bash
+git diff --cached -U0 | grep '^+' | grep -n -E '[xt]prv[1-9A-HJ-NP-Za-km-z]{100,}|\b[5KLc9][1-9A-HJ-NP-Za-km-z]{50,51}\b'
+```
+
+It printed **nothing on either stream**, exit **1** (no matches). No vector
+exception was needed. The added-text scan of `git diff --cached -U0` also found
+**0** local paths or process attributions, exit **0** for its assertion.
+The implementation and the tracker change were later committed separately.
+
+Cleanup used Python `shutil.rmtree` on exactly the fresh `TMP_ROOT`, followed
+by an absence assertion: exit **0**. This removed its `miniscript` checkout,
+`bip-0174.mediawiki`, `bip-0370.mediawiki`, `bip-0371.mediawiki`, shell temporary
+files, caches and private gate helpers. The separately created key-grep copy
+had already been removed by `check-key-material.py`, which asserted its
+absence before exiting **0**. No existing external directory was removed.
+Normal build outputs, separated validation/mutation logs and compact records
+remain under ignored `.lake/` paths. No test or helper process remains running.
+
+The red-run follow-up repeated the following gates under the same supervisor,
+with a fresh private `TMP_ROOT`. It retained changes only to this README,
+`check-psbt-mutations.py`, `test-data/psbt-mutations.json` and
+`BitcoinTests/Psbt.lean`; all other tracked file bytes, including the unstaged
+tracker change, matched their starting snapshot.
+
+| Command / check | Directory | Exit / observation |
+|---|---|---|
+| `nix develop -c python3 -I check-psbt-mutations.py` | `packages/bitcoin` | 0; 71/71 detected, restored `lake test` exits 0 |
+| `nix develop -c lake build` | `packages/bitcoin` | 0 |
+| `nix develop -c lake test` | `packages/bitcoin` | 0; all pinned sets unchanged, 46/46 PSBT actions, 652/56/0 axiom gate |
+| `check-key-material.py`, using the PyYAML command above | root | 0; all four recorded checks reproduced |
+| `nix flake check -L` | root | 0; one check ran, rebuilding and testing all seven packages |
+| `nix build --no-link --print-out-paths .#default` | root | 0 |
+| Built `bin/cyberkrill` | root | 0; `cyberkrill 0.1.0` |
+| `nix log` for the current default derivation | root | 0; all PSBT set counts, 136/136 wire rows, 60/60 txids, 2/2 malformed transactions, 46/46 actions and 652/56/0 gate present |
+| The three proof-placeholder, library decision-tactic and private-key-pattern checks above | root | 0 each; no matches |
+| `git diff --cached --check e1a95626c185ac07a0a7e2c4d9f9368aca36a2d1` | root | 0 |
+| Exact staged-diff key-material pipeline above | root | 1; nothing printed on either stream, no vector exceptions |
+| Public-text inspection of every added line against the same base | root | 0; no prohibited paths, names or process attributions |
+
+The complete mutation run used the required 8 GiB memory scope and one-hour
+timeout. Separated streams and command/exit records for this follow-up remain
+under `packages/bitcoin/.lake/psbt-round2`; per-mutation streams remain under
+`.lake/psbt-mutation-checks`. The fresh `TMP_ROOT` held only private gate helpers
+and shell temporary files. Cleanup removed exactly that directory and asserted
+its absence, exit **0**. The key-pattern helper had already removed its own
+disposable copy. No pre-existing external directory was removed, and no test or
+helper process remains running. The four changed files and the tracker change
+were later committed separately.
+
+### Review follow-up
+
+Two library changes to copied code answer review findings; both are listed in
+`docs/upstream-fixes.md` and in `check-tx-psbt-copy.py`'s documented edits.
+
+- `serializeWitnessTransaction` chooses the BIP144 form only from the stacks of
+  the transaction's inputs. Before, a non-empty stack beyond the inputs selected
+  the marker and flag while every written stack was empty, which
+  `parseTransaction` rejects as `superfluousWitness`. The new `surplus witness`
+  check serializes the BIP174 valid 0 unsigned transaction with one extra
+  non-empty stack and requires the legacy bytes. Production mutation
+  `surplus-witness-format` restores the old guard and fails it:
+  `assertion failed: surplus witness legacy`, exit **1**.
+- `Base64.encodeList` and `decodeList` are tail-recursive accumulator loops.
+  Results are unchanged: every Base64 vector and rejection check passes, and the
+  three Base64 production mutations fail exactly as recorded. A standalone probe
+  compiled `Bitcoin/Base64.lean` with `lean -c` and `leanc -O3` and a `main`
+  that encodes `n` bytes (`i * 7 mod 256`), decodes the text and compares,
+  under the default 8 MiB stack limit (`ulimit -s` prints `8192`) in a 12 GiB
+  memory scope:
+
+| Code | n | Result |
+|---|---|---|
+| Copied loops | 100,000; 1,000,000; 4,000,000; 16,000,000 | exit **0**, round trip equal |
+| Copied loops | 48,000,000 | exit **134**, stderr `Stack overflow detected. Aborting.` |
+| Accumulator loops | 1,000,000 | exit **0**, round trip equal |
+| Accumulator loops | 48,000,000 | exit **0**, round trip equal, 10.9 s, 2.4 GB peak RSS |
+| Accumulator loops | 96,000,000 | exit **0**, round trip equal, 22.2 s, 4.8 GB peak RSS |
+
+Two checking scripts changed: `check-key-material.py` uses the default temporary
+directory when `TMPDIR` is unset, and `check-tx-psbt-copy.py` refuses an
+upstream checkout with local changes.
+
+| Command | Result |
+|---|---|
+| `nix develop -c lake build`, `nix develop -c lake test` in `packages/bitcoin` | 0 / 0; `PSBT checks: 47/47`, 652/56/0 axiom gate |
+| `nix develop -c python3 -I check-psbt-mutations.py surplus-witness-format valid-base64-encode valid-base64-decode invalid-base64-bytes witness-marker-flag txid-single malformed-witness-marker` | 0; 7/7 detected, restored `lake test` exits 0; the six existing records are identical to the committed ones |
+| `python3 -I check-tx-psbt-copy.py "$TMP_ROOT/miniscript"` on a fresh clone at `cb9bc5f` | 0; 8/8 exact copies plus documented edits |
+| The same with one line appended to an upstream file | 1; `AssertionError: upstream checkout has local changes` |
+| The `check-key-material.py` command above, with `TMPDIR` unset | 0; both planted greps exit 1, restored scan exits 0 |
+| `nix flake check -L` | 0 |
+
+`test-data/psbt-mutations.json` now holds 72 records: the 71 from the full run
+and `surplus-witness-format` from the subset run above.
+
+### Deltas not taken
+
+These differences break exit parity with cyberkrill and are tracked for fixing
+before the Phase 7c goldens; the list is not a full parity audit. The copied
+field rules are intentionally unchanged outside the capability and preimage
+routing:
+
+| Copied field rule | rust-bitcoin 0.32.8 reference and difference |
+|---|---|
+| Global extended public keys: 78-byte length and origin path length equals depth | `src/psbt/map/global.rs:113-149`, `src/bip32.rs:789-815`: `Xpub::decode` validates version bytes and parses the embedded curve point; the Rust global decoder does not enforce that depth/path equality. |
+| Partial-signature values are retained without signature decoding | `src/psbt/serialize.rs:179-200`: decodes `ecdsa::Signature`, including DER encoding and a standard sighash byte. |
+| X-only keys are checked only for length | `src/psbt/serialize.rs:263-266,295-301`: parses `XOnlyPublicKey`, rejecting invalid curve points. |
+| Taproot signatures require only length 64 or 65 | `src/psbt/serialize.rs:273-282`, `src/crypto/taproot.rs:30-44`: additionally decodes the 65th sighash byte. |
+| Taproot input control blocks check only 33+32m shape and m ≤128; leaf values require one version byte | `src/psbt/serialize.rs:311-313,326-336`, `src/taproot/mod.rs:1102-1120`: decodes the internal curve point and leaf versions as well. |
+| Output Taproot trees check even leaf versions and complete depth-first structure | `src/psbt/serialize.rs:380-396`, `src/taproot/mod.rs:1230-1245`: `LeafVersion::from_consensus` also rejects the annex byte 0x50. |
+| Record key types and proprietary subtypes use canonical CompactSize | `src/psbt/raw.rs:25-30,79-107`: raw key types are one byte, and `ProprietaryType` at line 48 is `u8`. Multi-byte type handling therefore differs. |
+| Proprietary keys accept any key-data length after the subtype | `src/psbt/raw.rs:158-173,193-199`: reads at most 1,024 bytes after the subtype, and the whole-key decode rejects anything left over. |
+
+This change makes no parity fix; the fixes are separate tracker entries. PSBT roles,
+signing, new transaction/PSBT theorems, actual RIPEMD160/HASH160, and application
+wiring remain their later phases.
 
 ## Deltas taken
 

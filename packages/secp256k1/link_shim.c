@@ -30,6 +30,19 @@ LEAN_EXPORT uint8_t lck_secp_pubkey_parse(b_lean_obj_arg key) {
     return parse_key(key, &parsed);
 }
 
+LEAN_EXPORT lean_obj_res lck_secp_compress_pubkey(b_lean_obj_arg key) {
+    size_t input_len = lean_sarray_size(key);
+    if (input_len != 33 && input_len != 65) return lean_box(0);
+    secp256k1_pubkey parsed;
+    if (!secp256k1_ec_pubkey_parse(secp256k1_context_static, &parsed,
+                                  lean_sarray_cptr(key), input_len)) return lean_box(0);
+    unsigned char bytes[33];
+    size_t len = sizeof(bytes);
+    if (!secp256k1_ec_pubkey_serialize(secp256k1_context_static, bytes, &len, &parsed,
+                                     SECP256K1_EC_COMPRESSED)) return lean_box(0);
+    return some_bytes(bytes, len);
+}
+
 LEAN_EXPORT uint8_t lck_secp_verify(b_lean_obj_arg hash, b_lean_obj_arg signature,
                                     b_lean_obj_arg key) {
     if (lean_sarray_size(hash) != 32 || lean_sarray_size(signature) != 64) return 0;
