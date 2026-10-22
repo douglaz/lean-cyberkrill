@@ -1918,8 +1918,8 @@ the app smoke test.
 
 ### Base58 long-input conversion
 
-The executed conversion uses tail loops with proved `@[csimp]` substitutions
-(form (b)). The original definitions remain the specifications:
+The executed conversion uses tail loops with proved `@[csimp]` substitutions.
+The original definitions remain the specifications:
 
 | Specification | Executed definition | Equality theorem and invariant |
 |---|---|---|
@@ -1928,8 +1928,9 @@ The executed conversion uses tail loops with proved `@[csimp]` substitutions
 | `readChars` | `readCharsTR`: `readCharsAux` accumulates digits, then reverses | `readChars_eq_readCharsTR`; `readCharsAux_eq` proves equality to the original result with the reversed accumulator prefix |
 
 Each substitution precedes its first compiled caller. B1, B2, K1 and K2 keep
-their statements. No extra function was changed: the unchanged `zeroCount`
-completed both leading-zero paths at one million elements in the probe below.
+their statements. No extra function was changed: `zeroCount` keeps its non-tail
+definition and completed both leading-zero paths at one million elements in
+the probe below.
 No input-length guard or caller-side cap was added: B1 covers every byte array.
 
 Decode time stays quadratic, as in base58ck **0.1.0**, `decode`,
@@ -2253,8 +2254,7 @@ each production file in `finally`. Separate streams remain under
 
 The HRP boundary has two additional independent production mutations, outside
 the unchanged eighteen-mutation list. Each command below is from
-`packages/bitcoin`, with the repository supervisor and separate captured
-streams in `.lake/followup-work/hrp-red-84.*` and `hrp-red-82.*`:
+`packages/bitcoin`, with the repository supervisor and separate captured streams:
 
 | Production mutation | Command | Exit | Observed failure |
 |---|---|---|---|
@@ -2344,7 +2344,7 @@ test ! -e packages/bitcoin/.lake/bech32-work
 
 ### Deltas not taken
 
-No other stricter acceptance check is proposed here. Segwit address semantics,
+No stricter acceptance check is proposed here. Segwit address semantics,
 BOLT11, LNURL and invite semantics remain in their later phases.
 
 ## Phase 3a: addresses (4 of 4)
@@ -2673,8 +2673,10 @@ removes its private files and directory before reporting the final status.
 
 Base58 conversion uses proved tail loops without a length guard
 (`lck-base58-long-input-3qk`); decode time stays quadratic, as in base58ck 0.1.0
-and Bitcoin Core. The Base58 section records all five probes, including the
-million-character completion under an 8 GiB cap. A Base58 fallback after unknown
+and Bitcoin Core. The 300,000- and 1,000,000-character probes each exited **0**
+under their own 8 GiB scope, yielding **219,675 bytes in 24,310 ms** and
+**732,248 bytes in 266,130 ms**, respectively; the Base58 section records all five
+probes and the rerun recipe. A Base58 fallback after unknown
 HRP would make an unrestricted legacy round trip through `decode` possible, but would accept strings that
 rust-bitcoin and cyberkrill reject; that exit-parity change requires the owner.
 No additional stricter v1 check is proposed: generic v1–16 witness programs
@@ -2683,8 +2685,8 @@ retain rust-bitcoin's 2–40-byte rule.
 ## Phase 3a follow-up validation
 
 The 2026-10-22 Base58 and HRP checks use Lean **4.35.0**, the repository's
-supervisor, foreground commands, and separate stdout/stderr under
-`packages/bitcoin/.lake/followup-work`. The five probe records and both HRP
+supervisor, foreground commands, and separately captured stdout/stderr.
+The five probe records and both HRP
 boundary mutations are above. The final package build and test each exited
 **0**, with every existing set at its pinned count, plus
 `bech32 HRP maximum: 8/8`:
@@ -2694,12 +2696,14 @@ Bitcoin axiom gate: 502 library theorems; 42 named; 0 offenders
 ```
 
 All sixteen named axiom-output lines in the Base58, bech32 and address blocks
-were compared against the final output and `8a7b197`: **none changed**. The
+were compared against the final output and `63e561f`: **none changed**. The
 three blocks now show the final gate count. The named list remains at 42;
 the scan also includes the new private equality lemmas.
 
-From `packages/bitcoin`, each of these commands exited **0**, detected the
-listed count, and ended with a restored `lake test` at exit **0**:
+In the earlier check, from `packages/bitcoin`, each of these commands exited
+**0**, detected the listed count, and ended with a restored `lake test` at exit
+**0**. These results describe the unchanged sources; the mutation commands
+were not repeated for the documentation update:
 
 | Command | Detected |
 |---|---|
@@ -2709,7 +2713,7 @@ listed count, and ended with a restored `lake test` at exit **0**:
 | `nix develop -c python3 -I check-address-mutations.py` | 20/20 |
 
 The regenerated JSON was compared field by field against
-`8a7b19729e2259297be6e6a6021665b78ae12b15`. Command arrays, labels, exits,
+`63e561f36fcc1dd211dd560f9df05e0bea658286`. Command arrays, labels, exits,
 broken theorems, assertion text and gate classifications are unchanged.
 `test-data/mutations.json` is byte-identical. The differences in the other
 three records are exactly:
@@ -2735,32 +2739,30 @@ bound and now finishes each variant with `simp` followed by `omega`. Its
 only differences beyond line numbers. The named failure for both mutations
 remains S, including its application-type-mismatch diagnostic.
 
-Final commands and observed exits are below. There were no new source files to
-stage for the flake check. All source changes are in `packages/bitcoin`; the
-only other changed file is this README. The existing tracker modification was
-left untouched. No commit or push was made.
+Final commands and observed exits are below. The `nix build` and source-scan
+rows are from the earlier check of the unchanged sources; the other commands
+were rerun for this documentation update.
 
 | Command | Directory | Exit |
 |---|---|---|
 | `nix develop -c lean --version` | root | 0; 4.35.0, commit `eb6cafb7290e8bd5f2937522d8d804f58f02bafc`, Release |
 | `nix develop -c lake build` | `packages/bitcoin` | 0 |
 | `nix develop -c lake test` | `packages/bitcoin` | 0; all pinned sets and 502/42/0 gate |
-| `nix flake check -L` | root | 0; fresh sandbox build |
-| `nix build --no-link --print-out-paths` | root | 0 |
-| `nix log /nix/store/2dq1q14dvddssv3rkfi73h9qjh7782zj-cyberkrill-0.1.0.drv` | root | 0 |
-| `rc=0; grep -rnw sorry --include='*.lean' --exclude-dir=.lake packages \|\| rc=$?; test "$rc" -eq 1` | root | 0; no matches |
-| `grep -rn native_decide --include='*.lean' packages/bitcoin/Bitcoin packages/bitcoin/Bitcoin.lean` | root | 1; no matches |
-| `grep -rn bv_decide --include='*.lean' packages/bitcoin/Bitcoin packages/bitcoin/Bitcoin.lean` | root | 1; no matches |
-| `grep -nE '\]!\|get!\|head!\|tail!\|getLast!\|panic!\|unreachable!' packages/bitcoin/Bitcoin/Base58.lean packages/bitcoin/Bitcoin/Base58Check.lean packages/bitcoin/Bitcoin/Bech32Codec.lean packages/bitcoin/Bitcoin/Address.lean` | root | 1; no matches |
-| `git diff --check 8a7b19729e2259297be6e6a6021665b78ae12b15` | root | 0 |
-| `python3 -I packages/bitcoin/.lake/followup-work/statement-check.py` | root | 0; 16 unchanged headers, R gains exactly one hypothesis |
-| `python3 -I packages/bitcoin/.lake/followup-work/evidence-check.py` | root | 0; sixteen axiom lines unchanged, required probe source and recipe match, five complete probe records |
+| `nix flake check -L` | root | 0; existing derivation, `running 0 flake checks...`; build log retrieved below |
+| `nix build --no-link --print-out-paths` | root | 0; earlier check |
+| `nix log /nix/store/2dq1q14dvddssv3rkfi73h9qjh7782zj-cyberkrill-0.1.0.drv` | root | 0; includes HRP maximum 8/8 and 502/42/0 gate |
+| `rc=0; grep -rnw sorry --include='*.lean' --exclude-dir=.lake packages \|\| rc=$?; test "$rc" -eq 1` | root | 0; no matches, earlier check |
+| `grep -rn native_decide --include='*.lean' packages/bitcoin/Bitcoin packages/bitcoin/Bitcoin.lean` | root | 1; no matches, earlier check |
+| `grep -rn bv_decide --include='*.lean' packages/bitcoin/Bitcoin packages/bitcoin/Bitcoin.lean` | root | 1; no matches, earlier check |
+| `grep -nE '\]!\|get!\|head!\|tail!\|getLast!\|panic!\|unreachable!' packages/bitcoin/Bitcoin/Base58.lean packages/bitcoin/Bitcoin/Base58Check.lean packages/bitcoin/Bitcoin/Bech32Codec.lean packages/bitcoin/Bitcoin/Address.lean` | root | 1; no matches, earlier check |
+| `git diff --check 63e561f` | root | 0 |
 
 The statement check extracts each header from `theorem` through `:= by`,
-compares the worktree bytes to `git show 8a7b197:<path>`, and requires equality
+compares the worktree bytes to `git show 63e561f:<path>`, and requires equality
 for B1, B2, K1, K2, S, C, L, private `decode_witness_encode`, and the eight
 public address theorems. For R it requires equality after removing exactly
-`(maxHrp : hrp.length ≤ 83)` and its indentation/newline. The only caller
+`(maxHrp : hrp.length ≤ 83)` and its indentation/newline. This comparison was
+repeated for the documentation update and exited **0**. The only caller
 found by `rg -n decode_encode packages --glob '*.lean' --glob '!**/.lake/**'`
 (exit **0**), beyond declarations and axiom-print references, is the private
 address proof at `Bitcoin/Address.lean:276`.
@@ -2773,9 +2775,11 @@ the link spike, one-OpenSSL checks, and `cyberkrill 0.1.0`. The build output is
 `/nix/store/qv3krg94mqq9hclpgfl3lkfbdmrsv8rc-cyberkrill-0.1.0`; no result
 link was created.
 
-The final public-text scan of the diff from `8a7b197` printed **nothing**.
-The final scope check confirmed only the four Lean/test files, three mutation
-records and README changed, apart from the pre-existing tracker modification.
+The final public-text scan of added lines in
+`git diff 63e561f -- README.md packages` printed only the six probe command
+lines (five measurements and one loop form), with no other matches.
+`git diff --name-only 63e561f` lists the four Lean/test files, three mutation
+records, README and `.beads/issues.jsonl`.
 The Base58 source SHA-256 stayed
 `0e9c396955f0e144ca05c9f4fd115cf296a25a02c153b95c33f02a568664455e`
 after all five probes. Peak memory remains unmeasured; no extra conversion
@@ -2794,10 +2798,10 @@ test ! -e "$TMP_ROOT"
 test ! -e "$CORE_FETCH_DIR"
 ```
 
-Only those two external directories were created for this work. No reference
+The probe work created only those two external directories. No reference
 clone, private dependency cache or Nix result link was created. The gate
 supervisor removed each of its private files with `unlink` and its directory
-with `rmdir` before reporting the recorded status. Evidence and ordinary build
+with `rmdir` before reporting the recorded status. Ordinary build
 outputs remain in ignored `.lake/` directories. The probe directory's package
 links were removed as links; their repository targets were preserved.
 
