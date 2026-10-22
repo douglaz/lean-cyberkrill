@@ -2,21 +2,25 @@
 
 ## Verdict: stop
 
-The certified literal-column checker projects to **2,581–4,412 s single-core**
-for the finite check and measured file overhead, exceeding the **600 s added
-sandbox-build budget**. The remaining proof cost is unmeasured and excluded.
-Memory also forces chunking: a 1,500-unit file peaks at **5.1G** in the scope
-journal, while the larger-file capacity measurements below reach the 8 GiB cap.
-The proposed shape is **74 files, one declaration of at most 1,500 units per file**.
-These are repeated representative extrapolations, not a completed full check
-or a proven build-time bound. No full check was attempted because the estimate
-exceeds 600 s. Other algorithms and parallel module builds are unmeasured.
+The complete certified literal-column check took **1198.049 s** with at most
+four Lean processes, against the **600 s** finite-check wall-time limit.
+All **220 files** passed: 219 chunks of 500 units and a final chunk of 236,
+covering all **109,736** normalized tuples. Each file certifies its literal
+table against the real `polymodStep`, then checks one chunk by binary
+elimination over twenty columns with `decide +kernel`. No checker variants
+were compared. The 12 GiB scope peaked at **6.2G** and exited **0**, with
+no OOM message or timeout. Starting load was `19:46:50  up 388 days 22:53,  14 users,  load average: 18.37, 23.03, 15.72`.
 
-No weaker theorem is proposed. The full theorem remains unproved. Mathlib is
-not needed by this plan: structural list induction, bit extensionality and
-binary elimination suffice in Lean core. No `bitcoin-proofs` package, dependency
-or flake input is needed or added. No full finite checker or soundness proof is
-added to the library.
+This host stands in for the public Linux CI runner with four CPUs and 16 GB
+RAM; the CI runner's per-core speed is unmeasured. The verdict concerns the
+measured finite check on this host. The reduction, checker soundness, formal
+coverage and assembly proofs remain unmeasured and are excluded from that
+time, with no guessed allowance. The obstacle is the measured wall time above 600 s.
+
+The full theorem remains unproved. Mathlib is unnecessary: structural list
+induction, bit extensionality and binary elimination suffice in Lean core.
+No package, dependency, flake input, library checker or soundness proof is
+added. The exact target below is retained.
 
 ## The unchanged target
 
@@ -28,8 +32,8 @@ variant v's checksum verification rejects. Both sources are pinned to
 bitcoin/bips commit `130b8e0fa7f30fa45532f080b87b8db27a79e46e`.
 
 Data characters are **all characters after the separator, including the six
-checksum characters**. Substitutions use the bech32 charset, preserving HRP,
-separator position and case. With `Symbol := BitVec 5`, the intended Lean
+checksum characters**. Substitutions use the bech32 charset, preserving HRP
+and separator position. With `Symbol := BitVec 5`, the intended Lean
 statement over the existing definitions is:
 
 ```lean
@@ -47,7 +51,7 @@ theorem detect_four (v : Variant) (h : String) (d d' : List Symbol)
 The corollary is over the real `decode`: if `s` decodes with variant `v` and
 its data part has at most 89 characters (in particular any `s` accepted with
 address limit 90), and `t` differs in 1 to 4 data positions, each replaced by a
-charset character with the HRP, separator position and case unchanged, then
+charset character with the HRP and separator position unchanged, then
 `decode limit t` does not return variant `v`, using the same limit.
 Positions are counted by differences between the charset indices of
 `Char.toLower t[i]` and `Char.toLower s[i]`; all other positions agree.
@@ -81,7 +85,8 @@ def rendered (h : String) (d : List Symbol) : String :=
 1. **Decoder transport.** The proposed definitions below use the decoder's
    exact tail-first last-separator recursion and the real `lower` and `charOf`.
    The prefix is unchanged, including its case; only data charset indices
-   count as edits. `sameCaseEdit` permits a digit in either letter case.
+   count as edits. Wherever lowercase charset indices agree, the original
+   characters agree exactly. Substitutions need not preserve letter case.
 
    ```lean
    -- The same tail-first recursion as the decoder's private splitLast.
@@ -97,18 +102,13 @@ def rendered (h : String) (d : List Symbol) : String :=
      | none => 0
      | some (_, d) => d.length
 
-   def sameCaseEdit (c c' : Char) : Prop :=
-     c = c' ∨ ∃ x y : Symbol,
-       (c = charOf x ∧ c' = charOf y) ∨
-       (c = (charOf x).toUpper ∧ c' = (charOf y).toUpper)
-
    def DataEdits (s t : String) (k : Nat) : Prop :=
      ∃ h xs ys,
        dataParts s.toList = some (h, xs) ∧
        dataParts t.toList = some (h, ys) ∧
        xs.length = ys.length ∧
        (∀ c ∈ xs ++ ys, ∃ x : Symbol, c.toLower = charOf x) ∧
-       (∀ p ∈ xs.zip ys, sameCaseEdit p.1 p.2) ∧
+       (∀ p ∈ xs.zip ys, p.1.toLower = p.2.toLower → p.1 = p.2) ∧
        (List.zipWith (fun c c' => c != c')
          (lower (String.ofList xs)).toList
          (lower (String.ofList ys)).toList).count true = k
@@ -142,7 +142,11 @@ def rendered (h : String) (d : List Symbol) : String :=
 
    Here `dataLength` is the suffix length after the real decoder's last
    separator. A failed decode already satisfies the conclusion; no acceptance
-   assumption about `t` is added to the corollary.
+   assumption about `t` is added to the corollary. If `t` has mixed case,
+   `decode` rejects it before checksum verification. Otherwise its lowercase
+   decomposition supplies `ht` for `normalized_data_transport`; that obligation
+   uses the shared prefix and lowercase charset injectivity, without a case
+   preservation hypothesis.
 
 2. **Acceptance to residue equality.** The delivered lemma is:
 
@@ -158,7 +162,7 @@ def rendered (h : String) (d : List Symbol) : String :=
    constants, generator constants, charset or HRP expansion. It is in
    `Bitcoin.Bech32Detection`, imported by `Bitcoin`. Existing definitions,
    theorem statements and visibility are unchanged. Its measured kernel cost
-   is **0.312 ms** (the accepted earlier profile).
+   is **0.312 ms**, from the profile command recorded below.
 
 3. **Affine cancellation and error weight.** The obligations are:
 
@@ -272,11 +276,11 @@ def rendered (h : String) (d : List Symbol) : String :=
    itself, without `Lean.ofReduceBool`. Mathlib is unnecessary.
    The soundness proof remains unmeasured and undelivered.
 
-6. **Exhaustiveness and the final finite fact.** Use 74 files, with one chunk
-   theorem of at most 1,500 units per file, rather than one kernel reduction
+6. **Exhaustiveness and the final finite fact.** Use 220 files, with one chunk
+   theorem of at most 500 units per file, rather than one kernel reduction
    over the entire enumeration. Each file contains the same table certificate
-   and the same checker definitions as the measured files. There are 73 full
-   chunks and a last chunk of 236 units. The three nested structural ranges
+   and the same checker definitions as the measured files. There are 219 full
+   chunks and a last chunk of 236 units; no shared module is used. The three nested structural ranges
    enumerate exactly `0 < a < b < c < 89`. Required assembly and coverage
    statements are:
 
@@ -288,7 +292,7 @@ def rendered (h : String) (d : List Symbol) : String :=
            if 0 < a then some (a,b,c) else none
 
    def chunks : List (List (Nat × Nat × Nat)) :=
-     (List.range 74).map fun i => ((triples 89).drop (1500 * i)).take 1500
+     (List.range 220).map fun i => ((triples 89).drop (500 * i)).take 500
 
    checkSets_append (xs ys : List (Nat × Nat × Nat)) :
      checkSets (xs ++ ys) = (checkSets xs && checkSets ys)
@@ -301,7 +305,7 @@ def rendered (h : String) (d : List Symbol) : String :=
    and `checkSets_append`, not a single full-size `decide +kernel`.
    Each generated literal sample must also be certified equal to its specified
    `drop`/`take` chunk; that coverage proof is unmeasured and excluded from the
-   timing sum. Table and literal-list identity certificates must be carried
+   measured finite-check wall time. Table and literal-list identity certificates must be carried
    across module boundaries when assembling the chunks. The enumeration's
    completeness statement is:
 
@@ -325,166 +329,196 @@ def rendered (h : String) (d : List Symbol) : String :=
    requested `false`, and step 1 gives the decoder corollary.
 
 The remaining reduction, checker-soundness, exhaustiveness, table-index and
-chunk-assembly proofs are unmeasured. Their cost is excluded from the estimate;
-no numerical allowance is added. The finite check alone decides the stop verdict.
+chunk-assembly proofs are unmeasured. Their cost is excluded from the measured
+finite-check wall time, with no numerical allowance added.
 
-## Representative measurements
+## Measured split run
 
-The only checker variant measured here is binary elimination over a literal
-column table, kernel-certified equal to `columns 90` from the real
-`polymodStep`. Each table is generated once per file. Neither real-column
-construction nor table certification occurs per unit. The verdict rests on
-this variant; no further algorithms were explored.
+Measured on 2026-10-22. `lscpu` exited **0**: AMD Ryzen 7 7700 8-Core
+Processor, eight cores, two threads per core. `nproc` immediately before
+the full scope exited **0**, printing **16**. `systemd-run --version`
+exited **0**, reporting systemd **260 (260.5)**. The package environment
+uses Lean **4.35.0**; the final validation records its version command.
+No CPU affinity was set. Only the existing checker was measured here.
 
-One unit is a normalized tuple `(a,b,c)` with implicit distance zero. The
-structural enumeration `triples 89` has `88 * 87 * 86 / 6 = 109736` units.
-The generator below uses exactly that order. Start slices begin at offset 0,
-middle slices at 54,118, and end slices at 108,236; both sizes at a location
-share the same starting offset. The end 1,500 slice ends at offset 109,736.
-Every size and location was measured twice, sequentially on CPU 0. The scope
-contains the whole file, including imports, definitions, table certificate,
-literal sample elaboration and chunk theorem. Thus the peaks are per-file
-measurements of the proposed one-declaration-per-file build shape.
+The generator writes self-contained files, each importing `Bitcoin.Bech32`,
+with definitions, a literal table, the kernel certificate
+`table_real : table = columns 90`, a literal sample, one chunk theorem and
+`#print axioms checked`. There is no shared scratch module or shared-module
+compilation. Table certification is paid once per file inside the measurement.
 
-Measured on 2026-10-22. `lscpu` (exit 0) reported AMD Ryzen 7 7700 8-Core
-Processor, eight cores, sixteen logical CPUs and two threads per core.
-`systemd-run --version` (exit 0) reported systemd 260 (260.5).
-The final package validation records `nix develop -c lean --version` in README.
-The experiments use Lean 4.35.0 from the same development environment.
+### Coverage and its failure check
 
-`Chunk kernel` is the profiler's final `type checking took` line for the
-chunk theorem. `All kernel` is cumulative type checking, including the
-separate table certificate and definitions. Wall time is measured around the
-supervised invocation, including startup and cleanup. Profiler times are
-rounded as printed. Starting uptime is captured immediately before each
-invocation. Peaks are the journal's human-readable M/G values, without
-inventing extra precision. Each journal command exited 0. Both streams were
-captured separately before replay; no pipe determines any gate status.
-
-| Location, units, repeat | Chunk kernel s | All kernel s | Wall s | Scope peak | Exit | Starting uptime |
-|---|---:|---:|---:|---:|---:|---|
-| `start500-r1` | 4.39 | 5.63 | 7.176 | 1018.5M | 0 | 18:41:32  up 388 days 21:48,  15 users,  load average: 6.28, 8.23, 10.21 |
-| `start1500-r1` | 16.3 | 18 | 19.974 | 2.6G | 0 | 18:41:52  up 388 days 21:48,  15 users,  load average: 7.03, 8.27, 10.18 |
-| `start500-r2` | 4.29 | 5.48 | 6.988 | 1G | 0 | 18:42:12  up 388 days 21:48,  15 users,  load average: 6.32, 8.03, 10.06 |
-| `start1500-r2` | 15.8 | 17.4 | 19.354 | 2.6G | 0 | 18:42:19  up 388 days 21:48,  15 users,  load average: 6.38, 8.01, 10.04 |
-| `middle500-r1` | 12 | 13.1 | 14.623 | 1.9G | 0 | 18:42:38  up 388 days 21:49,  15 users,  load average: 5.43, 7.68, 9.89 |
-| `middle1500-r1` | 35.7 | 37.4 | 39.631 | 4.9G | 0 | 18:42:53  up 388 days 21:49,  15 users,  load average: 5.42, 7.57, 9.82 |
-| `middle500-r2` | 12.8 | 14.2 | 15.797 | 1.9G | 0 | 18:43:32  up 388 days 21:50,  15 users,  load average: 5.87, 7.39, 9.66 |
-| `middle1500-r2` | 33.2 | 35 | 37.193 | 4.9G | 0 | 18:43:48  up 388 days 21:50,  15 users,  load average: 5.91, 7.32, 9.60 |
-| `end500-r1` | 10.7 | 12 | 13.591 | 1.9G | 0 | 18:44:26  up 388 days 21:50,  15 users,  load average: 6.26, 7.25, 9.49 |
-| `end1500-r1` | 38.9 | 40.7 | 43.220 | 5.1G | 0 | 18:44:39  up 388 days 21:51,  15 users,  load average: 5.84, 7.11, 9.41 |
-| `end500-r2` | 23.4 | 25.7 | 29.078 | 2G | 0 | 18:45:22  up 388 days 21:51,  15 users,  load average: 8.61, 7.54, 9.44 |
-| `end1500-r2` | 49.8 | 52.7 | 57.410 | 5.1G | 0 | 18:45:52  up 388 days 21:52,  15 users,  load average: 15.19, 9.19, 9.93 |
-
-The fixed files contain all shared definitions and the table certificate,
-with `checkSets [] = true`; they measure imports and setup separately.
-The other diagnostic records are:
-
-| Purpose, repeat | All kernel s | Wall s | Scope peak | Exit | Starting uptime |
-|---|---:|---:|---:|---:|---|
-| `fixed-r1` | 0.85 | 2.255 | 492.1M | 0 | 18:41:25  up 388 days 21:47,  15 users,  load average: 6.52, 8.35, 10.27 |
-| `fixed-r2` | 0.819 | 2.192 | 491.8M | 0 | 18:41:50  up 388 days 21:48,  15 users,  load average: 6.77, 8.24, 10.18 |
-| `capacity6000-r1` | not completed | 59.835 | 8G | 137 | 18:46:55  up 388 days 21:53,  15 users,  load average: 17.29, 11.12, 10.56 |
-| `capacity6000-r2` | not completed | 57.290 | 8G | 137 | 18:47:55  up 388 days 21:54,  15 users,  load average: 9.98, 10.23, 10.29 |
-| `bad90-r1` | 1.1 | 3.108 | 495.5M | 1 | 18:46:49  up 388 days 21:53,  15 users,  load average: 16.27, 10.82, 10.46 |
-| `data-edits-r1` | 0.00077 | 1.205 | 255.3M | 0 | 18:48:52  up 388 days 21:55,  15 users,  load average: 7.43, 9.48, 10.03 |
-
-Successful slice theorems printed `[propext]`; `table_real` printed
-`[propext, Quot.sound]`. No unapproved evaluation axiom is involved.
-`data-edits-r1` checks the proposed definitions from step 1 as a complete
-file importing `Bitcoin.Bech32Codec`; it does not prove decoder transport.
-
-### Fixed and marginal split
-
-For each matched repeat, let `K500` and `K1500` be chunk kernel times.
-The measured marginal cost is `(K1500 - K500) / 1000`, excluding table
-certification from the per-unit term. For each pair the file-cost residual
-is `max(W500 - 500*m, W1500 - 1500*m)`. This includes imports, table setup,
-certification, elaboration and the measured kernel intercept. It is an
-empirical envelope, not a claim that all this residual is intrinsically
-constant. The baseline fixed-file walls are 2.255 and 2.192 s. All
-non-checking per-file costs are retained rather than added as an unmeasured
-allowance.
-
-| Location, repeat | Marginal kernel s/unit | File-cost residual s |
-|---|---:|---:|
-| start, 1 | (16.3 − 4.39) / 1000 = 0.01191 | 2.109 |
-| start, 2 | (15.8 − 4.29) / 1000 = 0.01151 | 2.089 |
-| middle, 1 | (35.7 − 12) / 1000 = 0.02370 | 4.081 |
-| middle, 2 | (33.2 − 12.8) / 1000 = 0.02040 | 6.593 |
-| end, 1 | (38.9 − 10.7) / 1000 = 0.02820 | 0.920 |
-| end, 2 | (49.8 − 23.4) / 1000 = 0.02640 | 17.810 |
-
-Use the maximum observed residual, **17.810 s/file**, including the
-fixed-file baseline in that maximum. With one declaration per file,
-`ceil(109736 / 1500) = 74` files (73 × 1500 + 236 = 109736):
+`python3 "$TMP_ROOT/generate.py"` exited **0**:
 
 ```text
-lower observed slope: 0.01151 × 109736 = 1263.06136 s
-worst location (end): 0.02820 × 109736 = 3094.55520 s
-measured file envelope: 17.810 × 74 = 1317.940 s
-lower projection: 1263.06136 + 1317.940 = 2581.00136 s
-upper projection: 3094.55520 + 1317.940 = 4412.49520 s
+generated 220 chunks; 109736 units; size 500; final 236
+manifest SHA-256: 961e781a7b867edac294803ce12f9d15e5a11b88179085513426ebb5200dac71
 ```
 
-This extrapolates representative slices; it is not a measured full sum or a
-proven upper bound. Even the lowest observed marginal finite term exceeds
-600 s. The algebraic, soundness, coverage and assembly proofs are unmeasured
-and excluded, with no numerical guess for them. No full chunked check is
-justified under the verdict rule. CI hardware is unmeasured.
-
-### Memory and check shape
-
-The measured 500-unit files peak at approximately 1.0–2.0G; the 1,500-unit
-files peak at 2.6–5.1G. This growth makes a single declaration over 109,736
-units an unsuitable plan. The separate 6,000-unit capacity files use the
-same checker, table certificate and one declaration over a middle slice.
-Their scopes record the capacity failures below. Those failures are not
-used as time samples for the extrapolation.
-
-The proposed build uses 1,500 units per declaration and one declaration per
-file: **74 files**, with a last 236-unit chunk. Its measured worst per-file
-peak is **5.1G**, leaving approximately **2.9G** below the 8 GiB limit. This
-margin is measured on the sampled files, not asserted for every possible
-chunk. Assembly and exact coverage obligations are in step 6. No single
-full-size kernel decision is proposed.
-
-Parallel module builds were not measured. N parallel jobs would consume
-about N times the per-file peak; neither that memory total nor a speedup is
-measured. No parallel build estimate enters the verdict.
-
-### Non-vacuity and capacity diagnostics
-
-On the verdict's certified-table checker, the length-90 test uses the
-normalized tuple `(14,79,89)`, hence distances {0,14,79,89}. Its command is
-the same scoped helper invocation below with label `bad90-r1` and source
-`bad90.lean`. It exits **1**, printing:
+`python3 "$TMP_ROOT/coverage.py" "$TMP_ROOT"`, with streams captured
+as `coverage.stdout` and `coverage.stderr`, exited **0**:
 
 ```text
-Tactic `decide` proved that the proposition
-  checkSets [(14, 79, 89)] = true
+PASS: 220 chunks; 109736 units; exact triples 89 order; no gaps, duplicates or extras
+```
+
+This reads the literal samples from the written files in index order.
+Independently of the generator's nested loops, it sorts three-element
+combinations by `(c,b,a)` and compares the whole sequence. Removing the
+first tuple from a copy of `chunk000.lean` gives
+`python3 "$TMP_ROOT/coverage.py" "$TMP_ROOT/coverage-red"`, exit **1**:
+
+```text
+FAIL: count=109735; duplicates=0; missing=1; extra=0
+first missing: (1, 2, 3)
+```
+
+Both stderr files are empty. The original chunk files were unchanged.
+The manifest `chunks.sha256` lists every chunk's SHA-256 using relative
+names; its SHA-256 is **`961e781a7b867edac294803ce12f9d15e5a11b88179085513426ebb5200dac71`**. The exact
+generator below reproduces that manifest and every chunk byte for byte.
+The post-measurement command
+`(cd "$TMP_ROOT" && sha256sum -c chunks.sha256)` exited **0** on all 220 files.
+
+### Sequential pilots and sizing
+
+Every row below ran separately in an 8 GiB foreground scope, with
+`MemorySwapMax=0`, `OOMPolicy=continue` and `timeout 3600`. Wall time includes
+the scope invocation and its supervision. Chunk kernel is the final
+`type checking took` line; cumulative kernel is the profiler's cumulative
+`type checking` line. Journal peaks retain the printed precision.
+
+| Label / file | Units | Chunk kernel s | Cumulative kernel s | Wall s | Peak | Exit | Starting uptime |
+|---|---:|---:|---:|---:|---|---:|---|
+| `pilot-start` / `chunk000.lean` | 500 | 6.84 | 8.82 | 12.124 | 1.2G | 0 | 19:44:46  up 388 days 22:51,  14 users,  load average: 40.02, 24.83, 15.05 |
+| `pilot-middle` / `chunk110.lean` | 500 | 16 | 17.7 | 20.374 | 1.7G | 0 | 19:45:05  up 388 days 22:51,  14 users,  load average: 38.31, 25.44, 15.46 |
+| `pilot-heavy` / `chunk218.lean` | 500 | 15.4 | 17.6 | 20.095 | 1.9G | 0 | 19:45:26  up 388 days 22:51,  14 users,  load average: 36.52, 25.85, 15.81 |
+| `pilot-last` / `chunk219.lean` | 236 | 6.99 | 8.34 | 10.112 | 1.1G | 0 | 19:45:46  up 388 days 22:52,  14 users,  load average: 32.62, 25.68, 15.97 |
+
+The heaviest end pilot is `chunk218.lean`, entirely at `c = 88`.
+The largest pilot peak is **1.9G**. Four times that reported peak is **7.6G**,
+below **9 GiB**, satisfying the sizing rule without raising a cap.
+Every pilot printed `'checked' depends on axioms: [propext]`.
+Each `journalctl` command exited **0**.
+
+### Length-90 failure and runner smoke check
+
+`bad90.lean` uses exactly the same definitions, table certificate and chunk
+theorem as the positive files, with `sample = [(14,79,89)]`, representing
+distances **{0,14,79,89}**. The scoped `red90` command below exited **1**:
+
+```text
+bad90.lean:43:48: error: Tactic `decide` proved that the proposition
+  checkSets sample = true
 is false
+'checked' depends on axioms: [propext, sorryAx]
 ```
 
-The certificate completed before that failure. The failure pins the same
-independence check used in the positive slices, rather than changing the
-expected value or the test setup. The two capacity invocations use labels
-`capacity6000-r1` and `capacity6000-r2` and source `capacity6000.lean`.
-Their observed scope messages, with owned paths omitted, are:
+The failed declaration's provisional axiom report is rejected by the runner.
+No successful chunk uses that axiom. The table certificate completed before
+the failing chunk theorem; the expected value and setup were unchanged.
+
+`red90`: wall **2.527 s**, peak **486.3M**, exit **1**; starting uptime `19:46:22  up 388 days 22:52,  14 users,  load average: 23.62, 24.29, 15.91`. Journal retrieval exited **0**.
+
+`smoke`: wall **4.707 s**, peak **1.5G**, exit **1**; starting uptime `19:46:30  up 388 days 22:52,  14 users,  load average: 22.93, 24.14, 15.91`. Journal retrieval exited **0**.
+
+The same runner used for the full measurement checked four one-unit files
+and the length-90 file, at most four at once, in its own 8 GiB scope:
 
 ```text
-bech32-capacity6000-r1-1843.scope: The kernel OOM killer killed some processes in this unit.
-bech32-capacity6000-r1-1843.scope: Consumed 59.374s CPU time over 59.682s wall clock time, 8G memory peak.
-bech32-capacity6000-r2-1843.scope: The kernel OOM killer killed some processes in this unit.
-bech32-capacity6000-r2-1843.scope: Consumed 56.925s CPU time over 57.161s wall clock time, 8G memory peak.
+smoke: completed 5/5; failed: ['bad90.lean']; workers=4; wall=4.095722s
+```
+
+The four positive files exited 0 and the length-90 file exited 1. Both the
+runner and scope returned 1, preserving the failure.
+
+`data-edits`: wall **1.162 s**, peak **252M**, exit **0**; starting uptime `19:46:34  up 388 days 22:53,  14 users,  load average: 22.14, 23.95, 15.89`. Journal retrieval exited **0**.
+
+`data-edits.lean` imports `Bitcoin.Bech32Codec` and contains exactly step 1's
+definitions, preceded by the licence header and `open Bitcoin.Bech32`.
+It produced no elaboration errors; the profiler printed cumulative
+`type checking 0.91ms`. This checks the corrected definitions, without
+proving decoder transport.
+
+### Complete four-way measurement
+
+Before the scope, `nix develop -c lake build` in `packages/bitcoin` exited
+**0** (`Build completed successfully (27 jobs).`, **1.533 s**).
+The complete measurement was performed exactly once. A single
+`nix develop -c lake env` starts the runner, which launches
+`lean -Dprofiler=true` directly, with four workers. All child stdout and
+stderr streams were saved separately in scratch files.
+
+The total wall time around the supervised scope command was **1198.049 s**.
+Starting uptime was `19:46:50  up 388 days 22:53,  14 users,  load average: 18.37, 23.03, 15.72`; `nproc` printed **16**.
+The scope command exited **0**, without timeout. Its journal command
+exited **0** and reported:
+
+```text
+bech32-full-1954.scope: Consumed 1h 13min 54.977s CPU time over 19min 57.908s wall clock time, 6.2G memory peak.
+```
+
+There was no OOM or killed-process message. This measured **6.2G** four-way
+peak replaces any parallel-memory estimate; the cap was **12 GiB**.
+All **220/220** chunks exited **0**, with accepted kernel theorems and
+`'checked' depends on axioms: [propext]`. The runner also checks that each
+successful file has the profiler records and an allowed axiom report.
+An event sweep over start/end timestamps found a maximum of **4**
+simultaneous Lean processes. No other heavy check was started alongside it.
+
+The [per-chunk TSV](bech32-4-error-chunks.tsv) contains each index, relative
+filename, unit count, first and last tuple, start and end seconds relative
+to runner startup, wall seconds, exit, chunk kernel seconds, cumulative
+kernel seconds, axiom report and acceptance result. Runner-relative times
+exclude environment startup; the total scope wall includes it.
+
+| Measured quantity | Seconds |
+|---|---:|
+| Sum of per-chunk walls | 4762.876375 |
+| Sum of chunk-theorem kernel times | 3838.900000 |
+| Sum of cumulative kernel times | 4317.850000 |
+| Total four-way scope wall | 1198.049 |
+| Fastest: `chunk000.lean` (500 units) | 8.119947 |
+| Slowest: `chunk180.lean` (500 units) | 33.434445 |
+
+Kernel sums use the profiler's printed, rounded values. The wall sum counts
+concurrent files separately and is not the total four-way wall. No projection
+from representative slices or assumed per-file overhead enters the verdict.
+The remaining proof costs are unmeasured and excluded.
+
+The aggregate table and concurrency count can be recomputed from the TSV
+with this command (exit **0**):
+
+```bash
+python3 - "$REPO/packages/bitcoin/docs/bech32-4-error-chunks.tsv" <<'PY'
+import csv, sys
+with open(sys.argv[1]) as stream:
+    rows = list(csv.DictReader(stream, delimiter='\t'))
+assert len(rows) == 220 and sum(int(r['units']) for r in rows) == 109736
+assert all(r['exit'] == '0' and r['valid'] == 'True' for r in rows)
+for field in ['wall_s', 'chunk_kernel_s', 'cumulative_kernel_s']:
+    print(f"{field}: {sum(float(r[field]) for r in rows):.6f}")
+for label, choose in [('fastest', min), ('slowest', max)]:
+    row = choose(rows, key=lambda r: float(r['wall_s']))
+    print(f"{label}: {row['file']} {row['wall_s']}s")
+events = sorted([(float(r['start_s']), 1) for r in rows] +
+                [(float(r['end_s']), -1) for r in rows])
+active = peak = 0
+for _, delta in events:
+    active += delta
+    peak = max(peak, active)
+assert active == 0 and peak <= 4
+print(f"maximum simultaneous Lean processes: {peak}")
+PY
 ```
 
 ## Rerunnable scratch sources and commands
 
-`REPO` is the repository root and `TMP_ROOT` a fresh owned scratch directory.
-Keep `TMPDIR` under the scratch parent specified by the experiment rules;
-inside the helper it is set to `TMP_ROOT`. Save the following sources there.
-No scratch Lean file is a library import or a separate repository file.
+`REPO` is the repository root; `TMP_ROOT` is a fresh owned scratch directory
+under the required experiment parent. Set `TMPDIR="$TMP_ROOT"`.
+Save each source below with its displayed filename and a final newline.
+No scratch Lean file belongs to the library or repository.
 
 ### `base-before-table.lean`
 
@@ -528,7 +562,7 @@ def columns : Nat → List (List Nat)
 ```python
 # Copyright (c) 2026 lean-cyberkrill developers. Released under the MIT License or the
 # Apache License 2.0, at your option; see LICENSE-MIT and LICENSE-APACHE.
-import pathlib
+import hashlib, pathlib
 root = pathlib.Path(__file__).parent
 rows = [1 << j for j in range(5)]
 table = []
@@ -550,41 +584,102 @@ def checkSets (sets : List (Nat × Nat × Nat)) : Bool :=
   sets.all fun (a,b,c) =>
     independent (table[0]! ++ table[a]! ++ table[b]! ++ table[c]!) []
 """
-(root/"common.lean").write_text(common)
+def source(sets):
+    return (common + "\ndef sample : List (Nat × Nat × Nat) := " + repr(sets) + "\n"
+            + "theorem checked : checkSets sample = true := by decide +kernel\n#print axioms checked\n")
 triples = [(a,b,c) for c in range(89) for b in range(c) for a in range(1,b)]
 assert len(triples) == 109736
-for location, start in [("start",0),("middle",54118),("end",108236)]:
-    for size in [500,1500]:
-        sets = triples[start:start+size]
-        source = common + "\ndef sample : List (Nat × Nat × Nat) := " + repr(sets) + "\n"
-        source += "theorem checked : checkSets sample = true := by decide +kernel\n#print axioms checked\n"
-        (root/(location+str(size)+".lean")).write_text(source)
-(root/"fixed.lean").write_text(common + "\ntheorem checked : checkSets [] = true := by decide +kernel\n#print axioms table_real\n")
-(root/"bad90.lean").write_text(common + "\ntheorem checked : checkSets [(14,79,89)] = true := by decide +kernel\n")
-
-sets = triples[54118:60118]
-source = common + "\ndef sample : List (Nat × Nat × Nat) := " + repr(sets) + "\n"
-source += "theorem checked : checkSets sample = true := by decide +kernel\n#print axioms checked\n"
-(root/"capacity6000.lean").write_text(source)
+manifest = []
+for i, offset in enumerate(range(0,len(triples),500)):
+    name = f"chunk{i:03d}.lean"
+    data = source(triples[offset:offset+500]).encode()
+    (root/name).write_bytes(data)
+    manifest.append(hashlib.sha256(data).hexdigest()+"  "+name+"\n")
+(root/"chunks.sha256").write_text("".join(manifest))
+(root/"bad90.lean").write_text(source([(14,79,89)]))
+for i in range(4):
+    (root/f"smoke{i}.lean").write_text(source(triples[i:i+1]))
+print(f"generated {len(manifest)} chunks; 109736 units; size 500; final 236")
+print("manifest SHA-256: "+hashlib.sha256((root/"chunks.sha256").read_bytes()).hexdigest())
 ```
 
-The generator writes the shared definitions, literal table and real-column
-certificate into each complete file. It generates exactly the literal lists
-used in the measurements; it does not certify list coverage or soundness.
-Save step 1's definitions as `data-edits.lean`, preceded by the licence
-header above, `import Bitcoin.Bech32Codec` and `open Bitcoin.Bech32`.
+### `coverage.py`
 
-### Timing and supervision helper
-
-Save the complete supervisor snippet from `AGENTS.md` as `supervise.bash`,
-replacing its single `<gate>` line with exactly:
-
-```bash
-"$SPIKE_GATE_BASH" --noprofile --norc -eo pipefail "$SPIKE_GATE_FILE"
+```python
+# Copyright (c) 2026 lean-cyberkrill developers. Released under the MIT License or the
+# Apache License 2.0, at your option; see LICENSE-MIT and LICENSE-APACHE.
+import ast, collections, itertools, pathlib, re, sys
+root = pathlib.Path(sys.argv[1])
+files = sorted(root.glob("chunk[0-9][0-9][0-9].lean"))
+actual = []
+for i, path in enumerate(files):
+    if path.name != f"chunk{i:03d}.lean":
+        raise SystemExit("gap in chunk indices: " + path.name)
+    match = re.search(r"^def sample : List .* := (.*)$", path.read_text(), re.M)
+    if match is None:
+        raise SystemExit("missing sample: " + path.name)
+    actual.extend(ast.literal_eval(match[1]))
+# Independent formulation: combinations, then colexicographic sorting.
+expected = sorted(itertools.combinations(range(1,89),3), key=lambda t:(t[2],t[1],t[0]))
+counts = collections.Counter(actual)
+duplicates = [t for t,n in counts.items() if n != 1]
+missing = set(expected) - set(actual)
+extra = set(actual) - set(expected)
+if duplicates or missing or extra or actual != expected:
+    print(f"FAIL: count={len(actual)}; duplicates={len(duplicates)}; missing={len(missing)}; extra={len(extra)}")
+    if missing:
+        print("first missing: " + repr(min(missing)))
+    raise SystemExit(1)
+assert len(actual) == 109736
+print(f"PASS: {len(files)} chunks; 109736 units; exact triples 89 order; no gaps, duplicates or extras")
 ```
 
-Save this measured helper as `invoke.py`. Bash is resolved from PATH; no
-host-specific executable path is assumed.
+### `runner.py`
+
+```python
+# Copyright (c) 2026 lean-cyberkrill developers. Released under the MIT License or the
+# Apache License 2.0, at your option; see LICENSE-MIT and LICENSE-APACHE.
+import ast, concurrent.futures, csv, json, pathlib, re, subprocess, sys, time
+root = pathlib.Path(__file__).parent
+mode = sys.argv[1]
+assert mode in ("smoke", "full")
+names = ([f"smoke{i}.lean" for i in range(4)] + ["bad90.lean"] if mode == "smoke"
+         else [f"chunk{i:03d}.lean" for i in range(220)])
+started = time.monotonic()
+def seconds(value, unit):
+    return float(value) / (1000 if unit == "ms" else 1)
+def check(item):
+    index, name = item
+    source = (root/name).read_text()
+    sample = ast.literal_eval(re.search(r"^def sample : List .* := (.*)$", source, re.M)[1])
+    begin = time.monotonic() - started
+    with (root/(mode+"-"+name+".stdout")).open("w") as out, (root/(mode+"-"+name+".stderr")).open("w") as err:
+        p = subprocess.run(["lean", "-Dprofiler=true", str(root/name)], stdout=out, stderr=err)
+    end = time.monotonic() - started
+    text = (root/(mode+"-"+name+".stdout")).read_text()+"\n"+(root/(mode+"-"+name+".stderr")).read_text()
+    kernels = re.findall(r"^type checking took ([0-9.]+)(ms|s)$", text, re.M)
+    totals = re.findall(r"^\ttype checking ([0-9.]+)(ms|s)$", text, re.M)
+    axioms = re.findall(r"^'checked' depends on axioms: \[(.*)\]$", text, re.M)
+    valid = (p.returncode == 0 and len(kernels) >= 1 and len(totals) == 1 and len(axioms) == 1
+             and set(filter(None, axioms[0].split(", "))) <= {"propext", "Classical.choice", "Quot.sound"})
+    return dict(index=index, file=name, units=len(sample), first=repr(sample[0]), last=repr(sample[-1]),
+                start_s=round(begin,6), end_s=round(end,6), wall_s=round(end-begin,6), exit=p.returncode,
+                chunk_kernel_s=seconds(*kernels[-1]) if kernels else "",
+                cumulative_kernel_s=seconds(*totals[0]) if totals else "",
+                axioms="'checked' depends on axioms: ["+axioms[0]+"]" if axioms else "", valid=valid)
+with concurrent.futures.ThreadPoolExecutor(max_workers=4) as pool:
+    records = list(pool.map(check, enumerate(names)))
+(root/(mode+"-records.json")).write_text(json.dumps(records,indent=2)+"\n")
+with (root/(mode+"-records.tsv")).open("w") as stream:
+    writer = csv.DictWriter(stream,fieldnames=list(records[0]),delimiter="\t",lineterminator="\n")
+    writer.writeheader()
+    writer.writerows(records)
+failed = [r["file"] for r in records if not r["valid"]]
+print(f"{mode}: completed {len(records)}/{len(names)}; failed: {failed}; workers=4; wall={time.monotonic()-started:.6f}s")
+raise SystemExit(1 if failed else 0)
+```
+
+### `invoke.py`
 
 ```python
 # Copyright (c) 2026 lean-cyberkrill developers. Released under the MIT License or the
@@ -618,40 +713,138 @@ print(json.dumps(record), flush=True)
 sys.exit(result.returncode)
 ```
 
-The source-generation command is `python3 "$TMP_ROOT/generate.py"` (exit 0).
-For each table label, the measured command has this exact shape; `source` is
-the label with its `-r1`/`-r2` suffix removed. The source for both fixed labels
-is `fixed.lean`, for both capacity labels `capacity6000.lean`, and for the
-other diagnostics `bad90.lean` and `data-edits.lean`. All unit names have the
-same `-1843` suffix shown here; use fresh names when repeating measurements.
+### `prepare-supervisor.py`
+
+```python
+# Copyright (c) 2026 lean-cyberkrill developers. Released under the MIT License or the
+# Apache License 2.0, at your option; see LICENSE-MIT and LICENSE-APACHE.
+import pathlib, sys
+root, repo = map(pathlib.Path, sys.argv[1:])
+a = (repo/"AGENTS.md").read_text()
+s = "POSIXLY_CORRECT=y\n" + a.split("```bash\nPOSIXLY_CORRECT=y\n",1)[1].split("\n```",1)[0]
+assert s.count("<gate>") == 1
+s = s.replace("<gate>", '\"$SPIKE_GATE_BASH\" --noprofile --norc -eo pipefail \"$SPIKE_GATE_FILE\"')
+start = s.index("try:\n    os.kill(watchdog_pid, signal.SIGTERM)")
+end = s.index("\nrc = 1", start)
+s = s[:start] + s[end:]
+start = s.index("_gate_owner_pid=$BASHPID")
+s = s[:start] + '''command exec "$_gate_python" -I "$_gate_runner" "$_gate_dir" "${BASH:-bash}" 0 "$_gate_pending"
+__AGENT_GATE_WRAPPER__
+'''
+(root/"supervise.bash").write_text(s)
+```
+
+The supervisor setup uses the repository's gate wrapper, omitting its
+bootstrap watchdog to keep shell commands in the foreground. Its process
+group supervision, status propagation, separate streams and exact-path
+cleanup remain enabled. The setup's byte comparison with the wrapper used
+for these measurements exited **0**. The runner's four foreground children
+are the required bounded concurrency.
+
+### Commands
+
+From the repository root, after saving the sources, prepare and generate:
 
 ```bash
-python3 "$TMP_ROOT/invoke.py" "$label" "$REPO/packages/bitcoin" \
-  systemd-run --user --scope --quiet --unit="bech32-$label-1843" \
+python3 "$TMP_ROOT/prepare-supervisor.py" "$TMP_ROOT" "$REPO"
+python3 "$TMP_ROOT/generate.py"
+python3 "$TMP_ROOT/coverage.py" "$TMP_ROOT" > "$TMP_ROOT/coverage.stdout" 2> "$TMP_ROOT/coverage.stderr"
+```
+
+All three exited **0**. Create the coverage-failure copy with this command
+(exit **0**); only the owned copy loses one tuple:
+
+```bash
+python3 - "$TMP_ROOT" <<'PY'
+from pathlib import Path
+import sys
+root = Path(sys.argv[1])
+red = root/'coverage-red'
+red.mkdir()
+for p in sorted(root.glob('chunk[0-9][0-9][0-9].lean')):
+    if p.name == 'chunk000.lean':
+        text = p.read_text()
+        assert '[(1, 2, 3), ' in text
+        (red/p.name).write_text(text.replace('[(1, 2, 3), ', '[', 1))
+    else:
+        (red/p.name).symlink_to(p)
+PY
+python3 "$TMP_ROOT/coverage.py" "$TMP_ROOT/coverage-red" > "$TMP_ROOT/coverage-red.stdout" 2> "$TMP_ROOT/coverage-red.stderr"
+```
+
+The final command exits **1**, with the missing-tuple diagnostic above.
+The package build before the full scope was invoked as follows (exit **0**):
+
+```bash
+python3 "$TMP_ROOT/invoke.py" prebuild "$REPO/packages/bitcoin" nix develop -c lake build
+```
+
+The pilot commands, in order, each exited **0**:
+
+```bash
+while read -r label source suffix; do
+  python3 "$TMP_ROOT/invoke.py" "$label" "$REPO/packages/bitcoin" \
+    systemd-run --user --scope --quiet --unit="bech32-$label-$suffix" \
+    -p MemoryMax=8G -p MemorySwapMax=0 -p OOMPolicy=continue \
+    timeout 3600 nix develop -c lake env lean -Dprofiler=true "$TMP_ROOT/$source"
+done <<'PILOTS'
+pilot-start chunk000.lean 1950
+pilot-middle chunk110.lean 1951
+pilot-heavy chunk218.lean 1951
+pilot-last chunk219.lean 1951
+PILOTS
+```
+
+The next commands exited **1**, **1**, and **0**, respectively. Save step 1's
+definitions as `data-edits.lean`, with the licence header, the import and
+namespace opening described above. No case-preservation definition is included.
+
+```bash
+python3 "$TMP_ROOT/invoke.py" red90 "$REPO/packages/bitcoin" \
+  systemd-run --user --scope --quiet --unit=bech32-red90-1952 \
   -p MemoryMax=8G -p MemorySwapMax=0 -p OOMPolicy=continue \
-  timeout 3600 nix develop -c lake env taskset -c 0 lean -Dprofiler=true \
-  "$TMP_ROOT/$source.lean"
+  timeout 3600 nix develop -c lake env lean -Dprofiler=true "$TMP_ROOT/bad90.lean"
+python3 "$TMP_ROOT/invoke.py" smoke "$REPO/packages/bitcoin" \
+  systemd-run --user --scope --quiet --unit=bech32-smoke-1953 \
+  -p MemoryMax=8G -p MemorySwapMax=0 -p OOMPolicy=continue \
+  timeout 3600 nix develop -c lake env python3 "$TMP_ROOT/runner.py" smoke
+python3 "$TMP_ROOT/invoke.py" data-edits "$REPO/packages/bitcoin" \
+  systemd-run --user --scope --quiet --unit=bech32-data-edits-1953 \
+  -p MemoryMax=8G -p MemorySwapMax=0 -p OOMPolicy=continue \
+  timeout 3600 nix develop -c lake env lean -Dprofiler=true "$TMP_ROOT/data-edits.lean"
 ```
 
-The helper retrieves peak memory with:
+The complete measurement command (exit **0**) was:
 
 ```bash
-journalctl --user -u "bech32-$label-1843.scope" --no-pager -o cat
+nproc > "$TMP_ROOT/full-nproc.stdout"
+python3 "$TMP_ROOT/invoke.py" full "$REPO/packages/bitcoin" \
+  systemd-run --user --scope --quiet --unit=bech32-full-1954 \
+  -p MemoryMax=12G -p MemorySwapMax=0 -p OOMPolicy=continue \
+  timeout 3600 nix develop -c lake env python3 "$TMP_ROOT/runner.py" full
 ```
 
-Each kernel file was checked sequentially in its own foreground scope,
-with no simultaneous experiment or flake check, zero swap and a 3600 s
-limit. No cap was raised. No timeout or recursion-limit error was observed.
-The capacity failures and expected false theorem retain their nonzero exits.
+The helper obtains each scope's journal with this command (each exited **0**):
 
-## Accepted library and mutation evidence
+```bash
+journalctl --user -u "$unit.scope" --no-pager -o cat
+```
 
-The following records are from the accepted earlier validation of the frozen
-library change; the mutation commands were not repeated for this measurement
-correction.
+Use fresh unit names for any single-file repetition. Every Lean experiment
+except the complete four-way measurement above had its own 8 GiB scope.
+The full check was not sent through the sandbox or repeated.
 
+## Library and mutation evidence
 
-The new named theorem has this output:
+The following records describe the checksum residue lemma and its mutation
+checks. The library files are unchanged, so these mutation commands were not
+repeated.
+
+The lemma's profile command, from `packages/bitcoin`, was
+`nix develop -c lake env lean -Dprofiler=true Bitcoin/Bech32Detection.lean`:
+exit **0**, cumulative kernel checking **0.312 ms**.
+
+The named theorem has this output:
 
 ```text
 'Bitcoin.Bech32.verifyChecksum_residue_eq' depends on axioms: [propext, Classical.choice, Quot.sound]
@@ -696,13 +889,12 @@ files are unchanged, including the three complete other files.
 
 ## Validation and cleanup
 
-README's Phase 3b section records the final package build/test, sandbox flake
-check, default build, final derivation log, frozen-file hashes, unchanged-tree
+README's Phase 3b section records the final package build/test, sandbox check,
+default build, final derivation log, six library hashes, unchanged-library
 comparison, hygiene checks and cleanup commands with their observed exits.
-The derivation is evaluated only after the last edit to this document because
-`packages/` belongs to the flake source set. README is outside that source set.
+The derivation is evaluated after the last edit to this document and the TSV,
+because `packages/` belongs to the flake source set. README is outside that set.
 
-Only the proof plan and README are corrected here. No reference clone,
-Mathlib source, package, flake input or additional library definition is added.
-Scratch sources survive in the fenced records above. Each gate supervisor
-removes its own private files by exact path before reporting its exit.
+No reference clone, Mathlib source, package or flake input was added.
+The scratch sources above preserve the experiment; chunk files are not
+committed. Gate wrappers remove their own private files by exact path.
