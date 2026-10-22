@@ -10,10 +10,10 @@ millisatoshi amounts with String round-trip proofs, plus proved Base58, Base58Ch
 bech32/bech32m codecs with strict and lax bit regrouping, and scriptPubKey/address
 conversion per network with round-trip proofs. Phase 3a is complete apart from
 the 4-error theorem, which belongs to Phase 3b. The Phase 3b (1 of 2)
-feasibility spike is delivered with a **stop** verdict: the certified literal-column
-checker projects to **2,581–4,412 s**, exceeding the ten-minute added build budget.
-Memory forces chunking: 1,500-unit files peak at **5.1G**, and 6,000-unit files
-hit the **8 GiB** cap. The full theorem remains unproved.
+feasibility spike is delivered with a **stop** verdict: the complete split finite
+check (220 chunk files, all passing) took **1,198 s** with four files checked at
+once, against the ten-minute (600 s) added build budget. The full theorem remains
+unproved; both Phase 3b beads are deferred until a new proof route is chosen.
 Other packages remain skeletons;
 `plan.md` is the plan for v1.
 
@@ -2822,7 +2822,7 @@ The [proof plan](packages/bitcoin/docs/bech32-4-error-plan.md) specifies every
 reduction from `decode_sound` through affine cancellation, distance columns,
 shift normalization, binary elimination and checker soundness to the precise
 finite fact. It includes the complete scratch sources, commands, version,
-host, timings, estimate arithmetic and length-90 failure. The experiment
+host, the measured split run and the length-90 failure. The experiment
 checker and its soundness proof are not library additions.
 
 `Bitcoin.Bech32Detection` adds
@@ -2848,32 +2848,33 @@ whole command). No profiler option is retained in the source.
 Bitcoin axiom gate: 503 library theorems; 43 named; 0 offenders
 ```
 
-The measured checker uses twenty binary columns for four normalized error
-positions, with a literal column table certified equal to the real
-`polymodStep` columns once per file. Its repeated CPU-0 samples cover the
-start, middle and end of `triples 89`, at 500 and 1,500 units each. The plan
-records all twelve kernel times, wall times, per-file scope peaks, exits and
-starting loads. Marginal kernel costs are **0.01151–0.02820 s/unit**; the
-worst location is the end. The full count is `C(88,3) = 109736`.
+The checker uses twenty binary columns for four normalized error positions,
+with a literal column table certified equal to the real `polymodStep` columns
+once per file. The full count is `C(88,3) = 109736`.
 
-The measured file-cost envelope is **17.810 s/file**, covering setup,
-imports, certification, elaboration and observed kernel intercepts. For
-**74 files**, one chunk declaration per file, at most **1,500 units** each:
+The budget is the wall time the theorem adds to `nix flake check` on the
+public Linux CI runner (4 CPUs, 16 GB RAM), with the finite check split into
+chunk files built at most four at a time. The complete split check was run,
+not extrapolated: 220 files (219 of 500 units and one of 236), each checked
+directly with `lean -Dprofiler=true`, four at once, in one 12 GiB memory-capped
+scope.
 
-```text
-0.01151 × 109736 + 17.810 × 74 = 2581.00136 s
-0.02820 × 109736 + 17.810 × 74 = 4412.49520 s
-```
+| Measure | Value |
+|---|---|
+| Files passing | **220/220**, each exit 0; every `checked` depends only on `propext` |
+| Coverage | exactly `triples 89`: 109,736 units, no gap, duplicate or extra; a red run with one unit removed fails |
+| Four-way wall time | **1,198.049 s** against **600 s** |
+| Scope memory peak | **6.2G**, exit 0, no OOM or timeout |
+| Scope CPU time | **4,435 s**, about 3.7 cores busy |
+| Per-file wall time | 8.1–33.4 s |
+| Starting load | 18.37 / 23.03 / 15.72 on 16 logical CPUs |
 
-These are sample projections, not a measured full sum or a proven bound.
-The remaining proof cost is unmeasured and excluded. The finite term alone
-exceeds **600 s**, so the full check was not attempted. Memory independently
-forces chunking: sampled 1,500-unit files peak at **2.6–5.1G**, leaving about
-**2.9G** under the cap at the worst sampled location; two 6,000-unit files
-each reached **8G** and exited **137**, with scope journal OOM messages.
-The last proposed chunk has 236 units; exact coverage and chunk assembly
-remain proof obligations in the plan. Parallel builds and CI hardware are
-unmeasured; N parallel jobs would use about N times the per-file peak.
+The run was measured under load from other work on the host, so its wall
+time is inflated, but CPU time divided by four is already about 1,109 s. The
+CI runner's per-core speed is unmeasured. The per-file records are in
+[bech32-4-error-chunks.tsv](packages/bitcoin/docs/bech32-4-error-chunks.tsv);
+the chunk files are not committed. The reduction, checker soundness, coverage
+and assembly proofs remain unmeasured and are excluded from that time.
 Mathlib is unnecessary, so no `bitcoin-proofs` package or flake input is added.
 
 The same checker on distances **{0,14,79,89}** exited **1** with:
@@ -2885,8 +2886,8 @@ is false
 ```
 
 The following accepted records describe the earlier validation of the frozen
-library change; the mutation commands were not repeated for the measurement
-correction. A separate temporary axiom replacing the new lemma's proof made
+library change; the mutation commands were not repeated for the split
+measurement, which left the library files unchanged. A separate temporary axiom replacing the new lemma's proof made
 `nix develop -c lake test` exit
 **1** at the allowlist check:
 
@@ -2917,9 +2918,8 @@ Only one regenerated diagnostic moved: `test-data/mutations.json`, record
 detection kind, exit or record field changed. The Base58, bech32 and address
 JSON files are byte-identical to `f072301`.
 
-Final validation used the repository supervisor with separate stdout and
-stderr capture. The package invocation, from `packages/bitcoin`, ran these
-commands sequentially; each exited **0** (2.129 s for the whole invocation):
+Final validation, after the split measurement. From `packages/bitcoin`, each
+of these exited **0**:
 
 ```bash
 nix develop -c lean --version
@@ -2930,41 +2930,33 @@ nix develop -c lake test
 The version output was Lean **4.35.0**, commit
 `eb6cafb7290e8bd5f2937522d8d804f58f02bafc`, Release. All pinned Bitcoin sets
 passed unchanged, including HRP maximum **8/8**, address network matrix
-**128/128**, and the **503/43/0** gate. `python3 --version`, `nix --version`
-and `bash --version` each exited **0**, reporting Python **3.13.15**, Nix
-**2.34.8** and Bash **5.3.9(1)-release**.
+**128/128**, and the **503/43/0** gate.
 
-After the last edit under `packages/`, root commands observed:
+From the repository root, after the last edit under `packages/`:
 
-| Command | Exit | Wall seconds / observation |
+| Command | Exit | Observation |
 |---|---:|---|
-| `nix eval --raw .#checks.x86_64-linux.default.drvPath` | 0 | 0.576; derivation below |
-| `nix flake check -L` | 0 | 113.580; one check, newly built derivation |
-| `nix config show sandbox` | 0 | 0.143; `true` |
-| `nix build --no-link` | 0 | 0.638; existing build, no result link |
-| `nix log /nix/store/s67x0yriiis7hy8affvxp9b0dwyysb7b-cyberkrill-0.1.0.drv` | 0 | 0.149; log retrieved from daemon |
+| `nix eval --raw .#checks.x86_64-linux.default.drvPath` | 0 | derivation below |
+| `nix flake check -L` | 0 | 135.356 s when first built; a repeat reused that build |
+| `nix config show sandbox` | 0 | `true` |
+| `nix build --no-link` | 0 | existing build, no result link |
+| `nix log /nix/store/gqfvx3cmvz291r1j1z3wwzkjx43sc0aj-cyberkrill-0.1.0.drv` | 0 | log retrieved |
 
-The evaluated derivation and the derivation actually built are both:
+The evaluated and built derivation is:
 
 ```text
-/nix/store/s67x0yriiis7hy8affvxp9b0dwyysb7b-cyberkrill-0.1.0.drv
+/nix/store/gqfvx3cmvz291r1j1z3wwzkjx43sc0aj-cyberkrill-0.1.0.drv
 ```
 
-The log contains:
+Its log contains:
 
 ```text
 info: BitcoinTests/AxiomGate.lean:67:0: Bitcoin axiom gate: 503 library theorems; 43 named; 0 offenders
 info: BitcoinTests/AxiomGate.lean:112:0: 'Bitcoin.Bech32.verifyChecksum_residue_eq' depends on axioms: [propext, Classical.choice, Quot.sound]
-Bitcoin axiom gate: 503 library theorems; 43 named; 0 offenders
 ```
 
-It also contains all seven package build/test steps, SHA-256 and Bitcoin
-pinned sets, `http-curl cases: 35/35`, `S12: PASS`, `S13: PASS`, the link
-spike, one-OpenSSL checks and `cyberkrill 0.1.0`. Comparing the final plan's
-bytes against the sandbox source copy exited **0**. README is outside the
-flake source set.
-
-`sha256sum -c` against the six frozen digests in the brief exited **0**:
+`sha256sum -c` against the six library digests recorded before the split
+measurement exited **0**:
 
 ```text
 packages/bitcoin/Bitcoin/Bech32Detection.lean: OK
@@ -2979,7 +2971,7 @@ The unchanged-tree check printed nothing and exited **0**:
 
 ```bash
 git diff --exit-code f0723015b70823a0f9d3edab854ec0e379819f31 -- packages/bitcoin \
-  ':(exclude)packages/bitcoin/docs/bech32-4-error-plan.md' \
+  ':(exclude)packages/bitcoin/docs' \
   ':(exclude)packages/bitcoin/Bitcoin/Bech32Detection.lean' \
   ':(exclude)packages/bitcoin/Bitcoin.lean' \
   ':(exclude)packages/bitcoin/BitcoinTests/AxiomGate.lean' \
@@ -2997,29 +2989,10 @@ rc=0; grep -rnE 'native_decide|bv_decide' --include='*.lean' packages/bitcoin/Bi
 git diff --check f0723015b70823a0f9d3edab854ec0e379819f31
 ```
 
-The public-text scan of added lines in the complete `git diff f072301`,
-including added files, printed **no matches** for local paths, prohibited
-process terms or attribution names and exited **0**. The scope check and
-byte comparison of the pre-existing tracker edit exited **0**. Status lists
-only the nine paths specified by the brief. The frozen files and accepted
-mutation records above remain unchanged.
-
-Cleanup removes the single owned scratch directory and its owned path-reference
-file, denoted by `TMP_ROOT` and `SCRATCH_POINTER`. Each exact-path command
-below exited **0** under the supervisor:
-
-```bash
-rm -r -- "$TMP_ROOT"
-test ! -e "$TMP_ROOT"
-unlink "$SCRATCH_POINTER"
-test ! -e "$SCRATCH_POINTER"
-```
-
-The cleanup supervisor uses the scratch parent for its own temporary files,
-so removing `TMP_ROOT` preserves its separately captured streams until they
-are replayed. It removes its own private files and directory before reporting
-the final exit. No reference clone or Mathlib source was created. The complete
-experiment sources remain fenced in the proof plan.
+The chunk files and the measurement's scratch directory, written here as
+`"$TMP_ROOT"`, were removed with `rm -r -- "$TMP_ROOT"`, and
+`test ! -e "$TMP_ROOT"` exited **0**. No reference clone or Mathlib source was
+created. The experiment sources remain fenced in the proof plan.
 
 ## Deltas taken
 
