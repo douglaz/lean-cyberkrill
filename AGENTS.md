@@ -66,11 +66,12 @@ definitions of done; the beads tracker (`br`) holds the executable work.
   co-author attribution trailers. Never commit machine-local instruction files.
 - **Public text.** Committed files, commit messages, bead text and PR text never name the agent or
   automation tooling behind the work, its roles or flags, models, usage quotas, or machine-local
-  paths (home directories, specific temp directories). Write a temp directory as `<tmpdir>` and
-  cite a reference source by upstream URL and commit, not by a local copy. The committed
-  `.beads/config.yaml` sets the neutral `actor` that `br` records as `created_by`; never pass
-  `--actor`. `br` always records the workspace's absolute path as `source_repo_path` on create, so
-  clear it right after every `br create`: `br update <id> --source-repo-path ""`.
+  paths (home directories, specific temp directories). Write a temp directory as a shell variable
+  (`"$TMP_ROOT"`; a bare `<tmpdir>` is a redirect in a copied command) and cite a reference
+  source by upstream URL and commit, not by a local copy. The committed `.beads/config.yaml` sets
+  the neutral `actor` that `br` records as `created_by`; never pass `--actor`. `br` always records
+  the workspace's absolute path as `source_repo_path` on create, so clear it right after every
+  `br create`: `br update <id> --source-repo-path ""`.
 
 <!-- agent-discipline-v1 -->
 
