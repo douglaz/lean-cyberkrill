@@ -36,7 +36,8 @@ def namedTheorems : List Name :=
    ``Bitcoin.Address.p2pkh_string_roundtrip,
    ``Bitcoin.Address.p2sh_string_roundtrip,
    ``Bitcoin.Address.decode_of_bech32_error,
-   ``Bitcoin.Address.fromScript_toScript]
+   ``Bitcoin.Address.fromScript_toScript,
+   ``Bitcoin.Bech32.verifyChecksum_residue_eq]
 
 private def allowedAxioms : List Name := [``propext, ``Classical.choice, ``Quot.sound]
 
@@ -108,5 +109,6 @@ elab "#bitcoin_axiom_gate" : command => do
 #print axioms Bitcoin.Address.p2sh_string_roundtrip
 #print axioms Bitcoin.Address.decode_of_bech32_error
 #print axioms Bitcoin.Address.fromScript_toScript
+#print axioms Bitcoin.Bech32.verifyChecksum_residue_eq
 
 end BitcoinTests

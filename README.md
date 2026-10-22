@@ -9,7 +9,11 @@ proved SHA-256 and SHA-256d with NIST vectors, and hex, canonical CompactSize an
 millisatoshi amounts with String round-trip proofs, plus proved Base58, Base58Check and
 bech32/bech32m codecs with strict and lax bit regrouping, and scriptPubKey/address
 conversion per network with round-trip proofs. Phase 3a is complete apart from
-the 4-error theorem, which belongs to Phase 3b.
+the 4-error theorem, which belongs to Phase 3b. The Phase 3b (1 of 2)
+feasibility spike is delivered with a **stop** verdict: the complete split finite
+check (220 chunk files, all passing) took **1,198 s** with four files checked at
+once, against the ten-minute (600 s) added build budget. The full theorem remains
+unproved; both Phase 3b beads are deferred until a new proof route is chosen.
 Other packages remain skeletons;
 `plan.md` is the plan for v1.
 
@@ -2116,7 +2120,8 @@ BOLT11 in Phase 5 passes **7089** and uses the strict conversions; LNURL in
 Phase 5 passes **1023** and uses `fesToBytesLax`; Phase 6 invites pass
 **1023** and reuse `fesToBytesLax_convertbits8to5`. Phase 3b imports
 `Bitcoin.Bech32` for the exact `polymod`, `hrpExpand` and `verifyChecksum`,
-and `Bitcoin.Bech32Codec` for `decode_sound`.
+and `Bitcoin.Bech32Codec` for `decode_sound`. The Phase 3b feasibility lemma
+is in `Bitcoin.Bech32Detection`.
 
 ### Vectors
 
@@ -2804,6 +2809,190 @@ supervisor removed each of its private files with `unlink` and its directory
 with `rmdir` before reporting the recorded status. Ordinary build
 outputs remain in ignored `.lake/` directories. The probe directory's package
 links were removed as links; their repository targets were preserved.
+
+## Phase 3b: four-data-error feasibility spike (1 of 2)
+
+**Verdict: stop.** The full per-variant theorem retains the data-length bound
+**6–89**, substitutions in **1–4** positions, and five-bit symbols, including
+checksum symbols. The decoder corollary counts differences in lowercase
+charset indices. The theorem is not proved by this spike, and no weaker
+statement is proposed.
+
+The [proof plan](packages/bitcoin/docs/bech32-4-error-plan.md) specifies every
+reduction from `decode_sound` through affine cancellation, distance columns,
+shift normalization, binary elimination and checker soundness to the precise
+finite fact. It includes the complete scratch sources, commands, version,
+host, the measured split run and the length-90 failure. The experiment
+checker and its soundness proof are not library additions.
+
+`Bitcoin.Bech32Detection` adds
+`Bitcoin.Bech32.verifyChecksum_residue_eq`, imported by `Bitcoin`. Its statement
+is:
+
+```lean
+theorem verifyChecksum_residue_eq (v : Variant) (hrp : String) (d d' : List Symbol)
+    (valid : verifyChecksum v hrp d = true) (valid' : verifyChecksum v hrp d' = true) :
+    polymod (hrpExpand hrp ++ d.map BitVec.toNat) =
+      polymod (hrpExpand hrp ++ d'.map BitVec.toNat)
+```
+
+This is the reduction from acceptance under the same variant to equal
+residues. Its proof uses the real `verifyChecksum` and `polymod`; existing
+definitions, theorem statements and private visibility are unchanged.
+`nix develop -c lake env lean -Dprofiler=true Bitcoin/Bech32Detection.lean`
+exited **0**, reporting **0.312 ms** cumulative type checking (**1.515 s**
+whole command). No profiler option is retained in the source.
+
+```text
+'Bitcoin.Bech32.verifyChecksum_residue_eq' depends on axioms: [propext, Classical.choice, Quot.sound]
+Bitcoin axiom gate: 503 library theorems; 43 named; 0 offenders
+```
+
+The checker uses twenty binary columns for four normalized error positions,
+with a literal column table certified equal to the real `polymodStep` columns
+once per file. The full count is `C(88,3) = 109736`.
+
+The budget is the wall time the theorem adds to `nix flake check` on the
+public Linux CI runner (4 CPUs, 16 GB RAM), with the finite check split into
+chunk files built at most four at a time. The complete split check was run,
+not extrapolated: 220 files (219 of 500 units and one of 236), each checked
+directly with `lean -Dprofiler=true`, four at once, in one 12 GiB memory-capped
+scope.
+
+| Measure | Value |
+|---|---|
+| Files passing | **220/220**, each exit 0; every `checked` depends only on `propext` |
+| Coverage | exactly `triples 89`: 109,736 units, no gap, duplicate or extra; a red run with one unit removed fails |
+| Four-way wall time | **1,198.049 s** against **600 s** |
+| Scope memory peak | **6.2G**, exit 0, no OOM or timeout |
+| Scope CPU time | **4,435 s**, about 3.7 cores busy |
+| Per-file wall time | 8.1–33.4 s |
+| Starting load | 18.37 / 23.03 / 15.72 on 16 logical CPUs |
+
+The run was measured under load from other work on the host, so its wall
+time is inflated, but CPU time divided by four is already about 1,109 s. The
+CI runner's per-core speed is unmeasured. The per-file records are in
+[bech32-4-error-chunks.tsv](packages/bitcoin/docs/bech32-4-error-chunks.tsv);
+the chunk files are not committed. The reduction, checker soundness, coverage
+and assembly proofs remain unmeasured and are excluded from that time.
+Mathlib is unnecessary, so no `bitcoin-proofs` package or flake input is added.
+
+The same checker on distances **{0,14,79,89}** exited **1** with:
+
+```text
+Tactic `decide` proved that the proposition
+  checkSets [(14, 79, 89)] = true
+is false
+```
+
+The following accepted records describe the earlier validation of the frozen
+library change; the mutation commands were not repeated for the split
+measurement, which left the library files unchanged. A separate temporary axiom replacing the new lemma's proof made
+`nix develop -c lake test` exit
+**1** at the allowlist check:
+
+```text
+BitcoinTests/AxiomGate.lean:67:0: Bitcoin axiom gate: Bitcoin.Bech32.verifyChecksum_residue_eq reaches disallowed axiom Bitcoin.Bech32.residue_eq_test
+```
+
+Removing the axiom and restoring the proof made the same command exit **0**.
+The lemma's name was unchanged during this test.
+
+All four foreground mutation commands from `packages/bitcoin` exited **0**:
+
+| Command | Detected | Restored `lake test` exit |
+|---|---:|---:|
+| `nix develop -c python3 -I check-mutations.py` | 6/6 | 0 |
+| `nix develop -c python3 -I check-base58-mutations.py` | 6/6 | 0 |
+| `nix develop -c python3 -I check-bech32-mutations.py` | 18/18 | 0 |
+| `nix develop -c python3 -I check-address-mutations.py` | 20/20 | 0 |
+
+The **only** edits to the runners are their two pinned-count literals:
+`42 named; 0 offenders` becomes `43 named; 0 offenders` in the bech32 and
+address runners. Every mutation target, replacement and expected theorem or
+assertion is unchanged. The new proof checks under the existing runtime
+mutations, including generator and variant-constant changes.
+
+Only one regenerated diagnostic moved: `test-data/mutations.json`, record
+`axiom`, `BitcoinTests/AxiomGate.lean:66:0` → **67:0**. No other diagnostic,
+detection kind, exit or record field changed. The Base58, bech32 and address
+JSON files are byte-identical to `f072301`.
+
+Final validation, after the split measurement. From `packages/bitcoin`, each
+of these exited **0**:
+
+```bash
+nix develop -c lean --version
+nix develop -c lake build
+nix develop -c lake test
+```
+
+The version output was Lean **4.35.0**, commit
+`eb6cafb7290e8bd5f2937522d8d804f58f02bafc`, Release. All pinned Bitcoin sets
+passed unchanged, including HRP maximum **8/8**, address network matrix
+**128/128**, and the **503/43/0** gate.
+
+From the repository root, after the last edit under `packages/`:
+
+| Command | Exit | Observation |
+|---|---:|---|
+| `nix eval --raw .#checks.x86_64-linux.default.drvPath` | 0 | derivation below |
+| `nix flake check -L` | 0 | 135.356 s when first built; a repeat reused that build |
+| `nix config show sandbox` | 0 | `true` |
+| `nix build --no-link` | 0 | existing build, no result link |
+| `nix log /nix/store/gqfvx3cmvz291r1j1z3wwzkjx43sc0aj-cyberkrill-0.1.0.drv` | 0 | log retrieved |
+
+The evaluated and built derivation is:
+
+```text
+/nix/store/gqfvx3cmvz291r1j1z3wwzkjx43sc0aj-cyberkrill-0.1.0.drv
+```
+
+Its log contains:
+
+```text
+info: BitcoinTests/AxiomGate.lean:67:0: Bitcoin axiom gate: 503 library theorems; 43 named; 0 offenders
+info: BitcoinTests/AxiomGate.lean:112:0: 'Bitcoin.Bech32.verifyChecksum_residue_eq' depends on axioms: [propext, Classical.choice, Quot.sound]
+```
+
+`sha256sum -c` against the six library digests recorded before the split
+measurement exited **0**:
+
+```text
+packages/bitcoin/Bitcoin/Bech32Detection.lean: OK
+packages/bitcoin/Bitcoin.lean: OK
+packages/bitcoin/BitcoinTests/AxiomGate.lean: OK
+packages/bitcoin/check-bech32-mutations.py: OK
+packages/bitcoin/check-address-mutations.py: OK
+packages/bitcoin/test-data/mutations.json: OK
+```
+
+The unchanged-tree check printed nothing and exited **0**:
+
+```bash
+git diff --exit-code f0723015b70823a0f9d3edab854ec0e379819f31 -- packages/bitcoin \
+  ':(exclude)packages/bitcoin/docs' \
+  ':(exclude)packages/bitcoin/Bitcoin/Bech32Detection.lean' \
+  ':(exclude)packages/bitcoin/Bitcoin.lean' \
+  ':(exclude)packages/bitcoin/BitcoinTests/AxiomGate.lean' \
+  ':(exclude)packages/bitcoin/check-bech32-mutations.py' \
+  ':(exclude)packages/bitcoin/check-address-mutations.py' \
+  ':(exclude)packages/bitcoin/test-data/mutations.json'
+```
+
+These policy gates each exited **0**; the searches printed nothing and
+returned **1**, as required:
+
+```bash
+rc=0; grep -rnw sorry --include='*.lean' --exclude-dir=.lake packages || rc=$?; test "$rc" -eq 1
+rc=0; grep -rnE 'native_decide|bv_decide' --include='*.lean' packages/bitcoin/Bitcoin packages/bitcoin/Bitcoin.lean || rc=$?; test "$rc" -eq 1
+git diff --check f0723015b70823a0f9d3edab854ec0e379819f31
+```
+
+The chunk files and the measurement's scratch directory, written here as
+`"$TMP_ROOT"`, were removed with `rm -r -- "$TMP_ROOT"`, and
+`test ! -e "$TMP_ROOT"` exited **0**. No reference clone or Mathlib source was
+created. The experiment sources remain fenced in the proof plan.
 
 ## Deltas taken
 

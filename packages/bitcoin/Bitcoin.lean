@@ -9,6 +9,7 @@ import Bitcoin.AmountText
 import Bitcoin.AmountCli
 import Bitcoin.Base58Check
 import Bitcoin.Bech32Codec
+import Bitcoin.Bech32Detection
 import Bitcoin.ConvertBits
 import Bitcoin.Address
 
