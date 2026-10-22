@@ -327,7 +327,15 @@ def run (only : Option String := none) : IO Unit := do
       check "same ignores global" (p.checkBip32SamePoint testCapability == .ok ())),
     ("trailing data", do
       let p ← base
-      check "PSBT trailing data" (parse (p.serialize.push 0) == .error .trailingData))]
+      check "PSBT trailing data" (parse (p.serialize.push 0) == .error .trailingData)),
+    ("surplus witness", do
+      let unsigned ← match KeyValueMap.lookup (← base).global (bytes [0]) with
+        | some value => getOk "surplus witness unsigned" (parseTransaction value false)
+        | none => throw <| IO.userError "assertion failed: surplus witness unsigned"
+      let tx := unsigned.transaction
+      let witnesses := tx.inputs.toList.map (fun _ => []) ++ [[bytes [1]]]
+      check "surplus witness legacy"
+        (serializeWitnessTransaction tx witnesses == serializeTransaction tx))]
   let selectable := actions ++ [
     ("malformed transaction 18", malformedTransaction 18 .truncated),
     ("malformed transaction 19", malformedTransaction 19 .trailingData)]

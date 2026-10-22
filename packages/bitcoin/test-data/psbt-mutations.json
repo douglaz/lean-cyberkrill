@@ -350,6 +350,20 @@
     "failure": "uncaught exception: assertion failed: wire bip174Invalid[1] input roundtrip"
   },
   {
+    "property": "surplus witness",
+    "mutation": "surplus-witness-format",
+    "source": "Bitcoin/Deserialization.lean",
+    "command": [
+      "lake",
+      "test",
+      "--",
+      "--psbt",
+      "surplus witness"
+    ],
+    "exit": 1,
+    "failure": "uncaught exception: assertion failed: surplus witness legacy"
+  },
+  {
     "property": "transactions",
     "mutation": "legacy-version",
     "source": "Bitcoin/Transaction.lean",

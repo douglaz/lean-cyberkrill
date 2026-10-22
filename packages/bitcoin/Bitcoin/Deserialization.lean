@@ -83,9 +83,9 @@ def Transaction.txid (tx : Transaction) : ByteArray :=
 
 /-- BIP144 serialization. The marker and flag are emitted only when some
 witness stack is nonempty, as in Core; otherwise this is the legacy form.
-Missing stacks are treated as empty. -/
+Missing stacks are treated as empty, and stacks beyond the inputs are ignored. -/
 def serializeWitnessTransaction (tx : Transaction) (witnesses : List (List ByteArray)) : ByteArray :=
-  if witnesses.all List.isEmpty then serializeTransaction tx
+  if (witnesses.take tx.inputs.size).all List.isEmpty then serializeTransaction tx
   else
     ⟨(unsignedLE 4 tx.version.toNat ++ [0, 1] ++ compactSize tx.inputs.size).toArray⟩ ++
       tx.inputs.foldl (fun bytes input => bytes ++ serializeTxInput input) ByteArray.empty ++

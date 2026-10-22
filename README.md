@@ -3461,8 +3461,7 @@ git diff --cached -U0 | grep '^+' | grep -n -E '[xt]prv[1-9A-HJ-NP-Za-km-z]{100,
 It printed **nothing on either stream**, exit **1** (no matches). No vector
 exception was needed. The added-text scan of `git diff --cached -U0` also found
 **0** local paths or process attributions, exit **0** for its assertion.
-The pre-existing tracker change remains unstaged and untouched. No commit,
-push, branch switch or pull request is part of this work session.
+The implementation and the tracker change were later committed separately.
 
 Cleanup used Python `shutil.rmtree` on exactly the fresh `TMP_ROOT`, followed
 by an absence assertion: exit **0**. This removed its `miniscript` checkout,
@@ -3501,13 +3500,60 @@ under `packages/bitcoin/.lake/psbt-round2`; per-mutation streams remain under
 and shell temporary files. Cleanup removed exactly that directory and asserted
 its absence, exit **0**. The key-pattern helper had already removed its own
 disposable copy. No pre-existing external directory was removed, and no test or
-helper process remains running. The four changed files are staged; the tracker
-change remains unstaged. No commit, push, branch switch or pull request was made.
+helper process remains running. The four changed files and the tracker change
+were later committed separately.
+
+### Review follow-up
+
+Two library changes to copied code answer review findings; both are listed in
+`docs/upstream-fixes.md` and in `check-tx-psbt-copy.py`'s documented edits.
+
+- `serializeWitnessTransaction` chooses the BIP144 form only from the stacks of
+  the transaction's inputs. Before, a non-empty stack beyond the inputs selected
+  the marker and flag while every written stack was empty, which
+  `parseTransaction` rejects as `superfluousWitness`. The new `surplus witness`
+  check serializes the BIP174 valid 0 unsigned transaction with one extra
+  non-empty stack and requires the legacy bytes. Production mutation
+  `surplus-witness-format` restores the old guard and fails it:
+  `assertion failed: surplus witness legacy`, exit **1**.
+- `Base64.encodeList` and `decodeList` are tail-recursive accumulator loops.
+  Results are unchanged: every Base64 vector and rejection check passes, and the
+  three Base64 production mutations fail exactly as recorded. A standalone probe
+  compiled `Bitcoin/Base64.lean` with `lean -c` and `leanc -O3` and a `main`
+  that encodes `n` bytes (`i * 7 mod 256`), decodes the text and compares,
+  under the default 8 MiB stack limit (`ulimit -s` prints `8192`) in a 12 GiB
+  memory scope:
+
+| Code | n | Result |
+|---|---|---|
+| Copied loops | 100,000; 1,000,000; 4,000,000; 16,000,000 | exit **0**, round trip equal |
+| Copied loops | 48,000,000 | exit **134**, stderr `Stack overflow detected. Aborting.` |
+| Accumulator loops | 1,000,000 | exit **0**, round trip equal |
+| Accumulator loops | 48,000,000 | exit **0**, round trip equal, 10.9 s, 2.4 GB peak RSS |
+| Accumulator loops | 96,000,000 | exit **0**, round trip equal, 22.2 s, 4.8 GB peak RSS |
+
+Two checking scripts changed: `check-key-material.py` uses the default temporary
+directory when `TMPDIR` is unset, and `check-tx-psbt-copy.py` refuses an
+upstream checkout with local changes.
+
+| Command | Result |
+|---|---|
+| `nix develop -c lake build`, `nix develop -c lake test` in `packages/bitcoin` | 0 / 0; `PSBT checks: 47/47`, 652/56/0 axiom gate |
+| `nix develop -c python3 -I check-psbt-mutations.py surplus-witness-format valid-base64-encode valid-base64-decode invalid-base64-bytes witness-marker-flag txid-single malformed-witness-marker` | 0; 7/7 detected, restored `lake test` exits 0; the six existing records are identical to the committed ones |
+| `python3 -I check-tx-psbt-copy.py "$TMP_ROOT/miniscript"` on a fresh clone at `cb9bc5f` | 0; 8/8 exact copies plus documented edits |
+| The same with one line appended to an upstream file | 1; `AssertionError: upstream checkout has local changes` |
+| The `check-key-material.py` command above, with `TMPDIR` unset | 0; both planted greps exit 1, restored scan exits 0 |
+| `nix flake check -L` | 0 |
+
+`test-data/psbt-mutations.json` now holds 72 records: the 71 from the full run
+and `surplus-witness-format` from the subset run above.
 
 ### Deltas not taken
 
-These are candidate owner decisions, not a full parity audit. The copied field
-rules are intentionally unchanged outside the capability and preimage routing:
+These differences break exit parity with cyberkrill and are tracked for fixing
+before the Phase 7c goldens; the list is not a full parity audit. The copied
+field rules are intentionally unchanged outside the capability and preimage
+routing:
 
 | Copied field rule | rust-bitcoin 0.32.8 reference and difference |
 |---|---|
@@ -3518,8 +3564,9 @@ rules are intentionally unchanged outside the capability and preimage routing:
 | Taproot input control blocks check only 33+32m shape and m ≤128; leaf values require one version byte | `src/psbt/serialize.rs:311-313,326-336`, `src/taproot/mod.rs:1102-1120`: decodes the internal curve point and leaf versions as well. |
 | Output Taproot trees check even leaf versions and complete depth-first structure | `src/psbt/serialize.rs:380-396`, `src/taproot/mod.rs:1230-1245`: `LeafVersion::from_consensus` also rejects the annex byte 0x50. |
 | Record key types and proprietary subtypes use canonical CompactSize | `src/psbt/raw.rs:25-30,79-107`: raw key types are one byte, and `ProprietaryType` at line 48 is `u8`. Multi-byte type handling therefore differs. |
+| Proprietary keys accept any key-data length after the subtype | `src/psbt/raw.rs:158-173,193-199`: reads at most 1,024 bytes after the subtype, and the whole-key decode rejects anything left over. |
 
-No parity fixes or tracker entries are added for these differences. PSBT roles,
+This change makes no parity fix; the fixes are separate tracker entries. PSBT roles,
 signing, new transaction/PSBT theorems, actual RIPEMD160/HASH160, and application
 wiring remain their later phases.
 

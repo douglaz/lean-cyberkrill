@@ -27,12 +27,17 @@ private def encodeGroup : List UInt8 → List Char
       [symbol (n / 262144), symbol (n / 4096), symbol (n / 64), symbol n]
   | [] => []
 
-private def encodeList : Nat → List UInt8 → List Char
-  | 0, _ => []
-  | fuel + 1, bytes =>
-      match bytes with
-      | [] => []
-      | _ => encodeGroup (bytes.take 3) ++ encodeList fuel (bytes.drop 3)
+/-- Groups go into an accumulator, so the traversal is tail recursive and
+large inputs do not grow the call stack. -/
+private def encodeList (fuel : Nat) (bytes : List UInt8) : List Char :=
+  go fuel bytes #[]
+where
+  go : Nat → List UInt8 → Array Char → List Char
+    | 0, _, acc => acc.toList
+    | fuel + 1, bytes, acc =>
+        match bytes with
+        | [] => acc.toList
+        | _ => go fuel (bytes.drop 3) (acc ++ encodeGroup (bytes.take 3))
 
 def encode (bytes : ByteArray) : String :=
   String.ofList (encodeList bytes.size bytes.data.toList)
@@ -61,15 +66,20 @@ private def decodeGroup (last : Bool) : List Char → Option (List UInt8)
       return [UInt8.ofNat (n / 65536), UInt8.ofNat (n / 256), UInt8.ofNat n]
   | _ => none
 
-private def decodeList : Nat → List Char → Option (List UInt8)
-  | 0, _ => none
-  | fuel + 1, chars =>
-      match chars with
-      | [] => some []
-      | _ => do
-          let rest := chars.drop 4
-          let group ← decodeGroup rest.isEmpty (chars.take 4)
-          return group ++ (← decodeList fuel rest)
+/-- Tail recursive, like `encodeList`. -/
+private def decodeList (fuel : Nat) (chars : List Char) : Option (List UInt8) :=
+  go fuel chars #[]
+where
+  go : Nat → List Char → Array UInt8 → Option (List UInt8)
+    | 0, _, _ => none
+    | fuel + 1, chars, acc =>
+        match chars with
+        | [] => some acc.toList
+        | _ =>
+            let rest := chars.drop 4
+            match decodeGroup rest.isEmpty (chars.take 4) with
+            | none => none
+            | some group => go fuel rest (acc ++ group)
 
 def decode (text : String) : Option ByteArray := do
   let chars := text.toList

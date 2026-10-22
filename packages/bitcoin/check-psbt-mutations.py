@@ -97,6 +97,8 @@ def mutations(originals):
         "Sha256.hash (serializeTransaction tx)", "transactions", "wire bip174Invalid[1] input txid")
     add("witness-marker-flag", deser, "++ [0, 1] ++", "++ [0, 3] ++",
         "transactions", "wire bip174Invalid[1] input roundtrip")
+    add("surplus-witness-format", deser, "if (witnesses.take tx.inputs.size).all List.isEmpty then",
+        "if witnesses.all List.isEmpty then", "surplus witness", "surplus witness legacy")
     add("legacy-version", transaction, "unsignedLE 4 tx.version.toNat",
         "unsignedLE 4 (tx.version.toNat + 1)",
         "transactions", "wire bip174Invalid[0] network roundtrip")

@@ -35,7 +35,7 @@ def main():
     print(f"PyYAML {yaml.__version__}: workflow parses; CI run string matches exactly")
     LOGS.mkdir(parents=True, exist_ok=True)
     records = []
-    root = Path(tempfile.mkdtemp(prefix="psbt-key-grep-", dir=os.environ["TMPDIR"]))
+    root = Path(tempfile.mkdtemp(prefix="psbt-key-grep-", dir=os.environ.get("TMPDIR")))
     try:
         shutil.copytree(REPO / "packages", root / "packages", ignore=shutil.ignore_patterns(".lake", "__pycache__"))
         planted = root / "packages/bitcoin/synthetic-key-shape.txt"

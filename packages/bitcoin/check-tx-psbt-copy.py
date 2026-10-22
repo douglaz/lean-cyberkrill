@@ -13,6 +13,53 @@ PACKAGE = Path(__file__).resolve().parent
 COMMIT = "cb9bc5f2f80987ad18b696a9c660f90f4bc1b6bd"
 
 
+# Tail-recursive Base64 traversals (docs/upstream-fixes.md).
+BASE64_ENCODE_UPSTREAM = """private def encodeList : Nat → List UInt8 → List Char
+  | 0, _ => []
+  | fuel + 1, bytes =>
+      match bytes with
+      | [] => []
+      | _ => encodeGroup (bytes.take 3) ++ encodeList fuel (bytes.drop 3)
+"""
+BASE64_ENCODE_PORT = """/-- Groups go into an accumulator, so the traversal is tail recursive and
+large inputs do not grow the call stack. -/
+private def encodeList (fuel : Nat) (bytes : List UInt8) : List Char :=
+  go fuel bytes #[]
+where
+  go : Nat → List UInt8 → Array Char → List Char
+    | 0, _, acc => acc.toList
+    | fuel + 1, bytes, acc =>
+        match bytes with
+        | [] => acc.toList
+        | _ => go fuel (bytes.drop 3) (acc ++ encodeGroup (bytes.take 3))
+"""
+BASE64_DECODE_UPSTREAM = """private def decodeList : Nat → List Char → Option (List UInt8)
+  | 0, _ => none
+  | fuel + 1, chars =>
+      match chars with
+      | [] => some []
+      | _ => do
+          let rest := chars.drop 4
+          let group ← decodeGroup rest.isEmpty (chars.take 4)
+          return group ++ (← decodeList fuel rest)
+"""
+BASE64_DECODE_PORT = """/-- Tail recursive, like `encodeList`. -/
+private def decodeList (fuel : Nat) (chars : List Char) : Option (List UInt8) :=
+  go fuel chars #[]
+where
+  go : Nat → List Char → Array UInt8 → Option (List UInt8)
+    | 0, _, _ => none
+    | fuel + 1, chars, acc =>
+        match chars with
+        | [] => some acc.toList
+        | _ =>
+            let rest := chars.drop 4
+            match decodeGroup rest.isEmpty (chars.take 4) with
+            | none => none
+            | some group => go fuel rest (acc ++ group)
+"""
+
+
 def replace(text, old, new, count=1):
     assert text.count(old) == count, (old, text.count(old), count)
     return text.replace(old, new)
@@ -49,6 +96,13 @@ def expected_files(source):
             text = "import Bitcoin.Transaction\nimport Sha256\n\nnamespace Bitcoin\n\nopen CompactSize\n\n" + text
             text = replace(text, "doubleSHA256 (serializeTransaction tx)",
                            "Sha256.sha256d (serializeTransaction tx)")
+            text = replace(text, "Missing stacks are treated as empty. -/",
+                           "Missing stacks are treated as empty, and stacks beyond the inputs are ignored. -/")
+            text = replace(text, "  if witnesses.all List.isEmpty then serializeTransaction tx",
+                           "  if (witnesses.take tx.inputs.size).all List.isEmpty then serializeTransaction tx")
+        elif target == "Base64.lean":
+            text = replace(text, BASE64_ENCODE_UPSTREAM, BASE64_ENCODE_PORT)
+            text = replace(text, BASE64_DECODE_UPSTREAM, BASE64_DECODE_PORT)
         elif target == "DeserializationProofs.lean":
             text = "import Bitcoin.Deserialization\n\nnamespace Bitcoin\n\nopen CompactSize\n\n" + text
         elif target == "Psbt/Codec.lean":
@@ -109,6 +163,8 @@ def expected_files(source):
 def main():
     source = Path(sys.argv[1])
     assert subprocess.check_output(["git", "-C", str(source), "rev-parse", "HEAD"], text=True).strip() == COMMIT
+    assert not subprocess.check_output(["git", "-C", str(source), "status", "--porcelain"], text=True), \
+        "upstream checkout has local changes"
     assert (PACKAGE / "Bitcoin/LICENSE-miniscript").read_bytes() == (source / "LICENSE").read_bytes()
     write = sys.argv[2:] == ["--write"]
     assert write or not sys.argv[2:]
