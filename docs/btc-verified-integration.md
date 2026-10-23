@@ -165,12 +165,13 @@ claim holds as written; anything else is a correction or an addition the plan re
 - **N1. Lean version: confirmed.** btc-verified's `lean-toolchain` is `leanprover/lean4:v4.30.0-rc2`,
    and its `lake-manifest.json` pins Mathlib `ee3a540` (also built for v4.30.0-rc2). This
    repository pins v4.35.0. Mathlib has a `v4.35.0` tag, so nothing on Mathlib's side blocks moving
-   btc-verified forward.
+   btc-verified forward. The owner has since chosen to do that move in our own copy
+   ([Owner decisions](#owner-decisions)).
 - **N2. Licence: confirmed Apache-2.0 only** (`LICENSE`, `license := "Apache-2.0"` in
    `lakefile.lean`, README "License"). `Kernel/COPYING.bitcoin` is Bitcoin Core's MIT notice for the
    pinned C header. The "contribution rules" the analysis cites are AGENTS.md "Licence" and plan
-   §5. Their text: Apache-2.0-only material is "kept out of the tree; use a pinned non-flake input
-   read at test time". They don't say whether a build-time Lake `require` of such a package is
+   §5. They keep Apache-2.0-only material out of the tree and say "Use a pinned non-flake input
+   read at test time, or replace it with vectors we generate ourselves." They don't say whether a build-time Lake `require` of such a package is
    allowed; plan §7 open question 2 asks the owner.
 - **N3. Addition: btc-verified requires Mathlib** (`require "leanprover-community" / "mathlib"`), so
    any package that imports it takes Mathlib with it. Mathlib is Apache-2.0 as well. Plan §2
@@ -199,7 +200,12 @@ claim holds as written; anything else is a correction or an addition the plan re
 - **N7. Round-trip and canonicality: confirmed.** `decodeTx_encodeTx` (`Tx.lean:394`):
    `decodeTx (encodeTx tx ++ rest) = some (tx, rest)`. `decodeTx_canonical` (`Tx.lean:493`):
    accepted bytes are `encodeTx tx ++ rest`. Both are stated over `List UInt8`, and `decodeTx`
-   returns an `Option`, with no error categories.
+   returns an `Option`, with no error categories. *Addition:* the round trip's proof uses
+   `CompactSize.decode_encode` and `CompactSize.encode_head` (`Tx.lean:408`), which close goals
+   with `bv_decide` (`BtcVerified/Serialize/CompactSize.lean:167,197`), the only two uses in the
+   library. btc-verified's axiom audit admits the native certificate axioms `bv_decide` leaves
+   (`Tests/AxiomAudit.lean:27-37`). This repository's proof-hygiene rule (AGENTS.md) admits only
+   `propext`, `Classical.choice` and `Quot.sound`.
 - **N8. TXID/WTXID binding: confirmed, with a qualifier.** `Tx.txid_binding` and `Tx.wtxid_binding`
    (`BtcVerified/Transaction/Txid.lean:65,74`) say that equal ids imply equal bodies (or equal
    transactions) **or** an explicit double-SHA-256 collision. That is not unconditional injectivity.
@@ -228,7 +234,7 @@ claim holds as written; anything else is a correction or an addition the plan re
     the width.
 - **N14. `WitnessTransaction.witnesses : List (List ByteArray)`: confirmed** (`Deserialization.lean:32-35`).
     The serializer's docstring and code at `5baad8b` read "Missing stacks are treated as empty, and
-    stacks beyond the inputs are ignored" (`:84-96`). PR #16 changed this: commit `6ebc355` made the
+    stacks beyond the inputs are ignored" (`:84-96`). PR #16 (`29afd5b`) changed this: its fix round made the
     marker decision look only at the inputs' stacks (`witnesses.take tx.inputs.size`), so a surplus
     non-empty stack no longer produces bytes the parser rejects. The analysis describes the code
     after that change.
@@ -246,6 +252,10 @@ claim holds as written; anything else is a correction or an addition the plan re
 - **N17. A mismatch already known.** Our non-witness reader (`parseTransaction … (allowWitness :=
     false)`, the PSBT unsigned-transaction path) accepts a zero-input transaction with outputs.
     btc-verified's `Tx` cannot represent one: `legacy` needs inputs, and `empty` needs zero outputs.
+    Its `TxBody` can, though: that is the legacy wire form, with an unconstrained input list
+    (`BtcVerified/Transaction/TxBody.lean:33-42`), and it has its own codec (`:55-56`), a packed one
+    (`:68`) and `TxBody.txid` (`Txid.lean:40`). So btc-verified's counterpart of our non-witness
+    reader is the `TxBody` codec, not `Tx`.
     One BIP174 test vector carries such a transaction: `bip174Valid[9]`, with 0 inputs and 2
     outputs. It is the only one of 136 embedded transactions that fails `Transaction.WellFormed`
     (README, Phase 4a (3 of 3)).
@@ -268,8 +278,8 @@ claim holds as written; anything else is a correction or an addition the plan re
     `2fdeb40`:
     - **What is compared.** A libFuzzer harness gives the same transaction bytes to two libraries:
       Bitcoin Core's `libbitcoinkernel` and btc-verified's Lean implementation of nine of its C API
-      entry points. Both are called through one C function table typed from the unmodified
-      `bitcoinkernel.h`, with Core pinned at `fc6923c`.
+      entry points. One C routine calls each library through its own function table, typed from
+      the unmodified `bitcoinkernel.h`, with Core pinned at `fc6923c`.
     - **What is observed.** Create acceptance, serialization status and canonical bytes, the
       context-free check verdict, and the validation mode and result.
     - **Inputs.** Eight small inputs and three large boundary inputs (999,999, 1,000,000 and
@@ -291,3 +301,12 @@ claim holds as written; anything else is a correction or an addition the plan re
     - An HTTP request body is limited to 32 MiB (`MAX_BODY_SIZE`, `src/httpserver.h:82`). Through
       RPC, then, Core never sees a transaction whose hex is larger than that, which includes any
       container just over `MAX_SIZE`.
+
+## Owner decisions
+
+Plan §7 holds the decisions and the questions still open. The decisions so far:
+
+- **2026-10-23, toolchain route (§7 question 1): keep our own upgraded copy.** We upgrade
+  btc-verified to Lean v4.35.0 and Mathlib `v4.35.0` ourselves, keep that copy pinned outside this
+  repository, and maintain it as btc-verified moves. Nothing is asked of btc-verified's
+  maintainers. Deliverable 11a (2 of 2) in plan §7 does the upgrade.
