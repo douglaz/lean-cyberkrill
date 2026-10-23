@@ -5,6 +5,7 @@ Apache License 2.0, at your option; see LICENSE-MIT and LICENSE-APACHE.
 import Bitcoin
 import Bitcoin.PsbtVectors
 import Lean.Data.Json
+import BitcoinTests.TransactionChecks
 
 namespace BitcoinTests.PsbtTests
 
@@ -78,6 +79,18 @@ private def roles : IO Unit := do
     if i == 7 then check "BIP174 roles network magic" (parse (hex raw) == .error .magic)
     else roundTrip s!"BIP174 roles {i}" raw encoded
   IO.println "BIP174 roles: 14/14"
+
+private def validDefinition (name : String) (count : Nat)
+    (vs : List (String × String × String)) : IO Unit := do
+  check (name ++ " valid count") (vs.length == count)
+  for i in [:vs.length] do
+    let raw := hex vs[i]!.2.1
+    let p ← getOk s!"{name} valid framing {i}" (decodePsbtWith globalCounts raw.data.toList)
+    check s!"{name} valid bytes {i}" (p.serialize == raw)
+    check s!"{name} valid WellFormed {i}" (decide p.WellFormed)
+    check s!"{name} valid decode {i}" (p.decode testCapability testHashes).isOk
+    check s!"{name} valid definition {i}" (decide (valid testCapability testHashes p))
+  IO.println s!"{name} valid: {vs.length}/{count}"
 
 private def locktimes : IO Unit := do
   check "BIP370 locktimes count" (bip370Locktimes.length == 10)
@@ -251,11 +264,63 @@ private def transactions : IO Unit := do
   malformedTransaction 19 .trailingData
   IO.println "published malformed transactions: 2/2"
 
+private def transactionWellFormed : IO Unit := do
+  let data ← getOk "formed inventory JSON" (Lean.Json.parse (← IO.FS.readFile "test-data/psbt-inventory.json"))
+  let rows ← getOk "formed inventory rows" (data.getObjValAs? (Array Lean.Json) "transactions")
+  check "formed inventory count" (rows.size == 136)
+  let mut accepted := 0
+  let mut exceptions : List String := []
+  let mut witnessError := ""
+  for row in rows do
+    let name ← jsonText row "vector"
+    let index ← jsonNat row "index"
+    let scope ← jsonText row "scope"
+    let label := s!"{name}[{index}] {scope}"
+    let raw := hex (vectorSet name)[index]!.2.1
+    let allowWitness ← getOk label (row.getObjValAs? Bool "allowWitness")
+    let value ← if scope == "network" then pure raw else do
+      let (global, rest) ← getOk label (rawMap (raw.size + 1) (raw.data.toList.drop 5))
+      let record ← jsonNat row "record"
+      if scope == "global" then pure global[record]!.value else do
+        let mapIndex ← jsonNat row "map"
+        let mut rest := rest
+        let mut input : KeyValueMap := []
+        for _ in [:mapIndex + 1] do
+          let (map, after) ← getOk label (rawMap (raw.size + 1) rest)
+          input := map
+          rest := after
+        pure input[record]!.value
+    let parsed ← getOk (label ++ " formed parse") (parseTransaction value allowWitness)
+    let checks := transactionChecks parsed.transaction parsed.witnesses
+    if checks.all id then accepted := accepted + 1 else exceptions := exceptions ++ [label]
+    if name == "bip174Valid" && index == 9 && scope == "global" then
+      let names := ["txidSize", "scriptSigSize", "scriptPubKeySize", "witnessItemSize",
+        "inputCount", "outputCount", "witnessCount", "witnessesLength", "unambiguous"]
+      check "formed exception conjunct count" (checks.length == 9)
+      for i in [:checks.length] do
+        check s!"formed exception {names[i]!}" (checks[i]! == (i != 8))
+      -- From packages/bitcoin: nix develop -c lake env lean measure-psbt-exception.lean
+      -- Printed: Except.ok (2, 0, 2, 0, Except.error (Bitcoin.CompactSize.DecodeError.truncated))
+      check "formed exception measured error"
+        (match parseTransaction (serializeWitnessTransaction parsed.transaction parsed.witnesses) with
+        | .error e => e == .truncated
+        | .ok _ => false)
+      witnessError := match parseTransaction (serializeWitnessTransaction parsed.transaction parsed.witnesses) with
+        | .error e => toString (repr e)
+        | .ok _ => "unexpected success"
+  check "formed count and exception" (accepted == 135 && exceptions == ["bip174Valid[9] global"])
+  IO.println s!"Transaction.WellFormed: {accepted}/{rows.size}; exception {String.intercalate ", " exceptions}; witness reader: {witnessError}"
+
 def run (only : Option String := none) : IO Unit := do
   let mut ran := 0
   let perform := fun name (action : IO Unit) => do
     if only.isNone || only == some name then action; pure true else pure false
   let actions : List (String × IO Unit) := [
+    ("BIP174 valid definition", validDefinition "BIP174 valid" 10 bip174Valid),
+    ("BIP174 signer valid definition", validDefinition "BIP174 signer" 4 bip174SignerFailures),
+    ("BIP370 valid definition", validDefinition "BIP370 valid" 14 bip370Valid),
+    ("BIP371 valid definition", validDefinition "BIP371 valid" 6 bip371Valid),
+    ("Transaction WellFormed", transactionWellFormed),
     ("BIP174 invalid", invalidSet "BIP174 invalid" 20 bip174Invalid),
     ("BIP370 invalid", invalidSet "BIP370 invalid" 24 bip370Invalid),
     ("BIP371 invalid", invalidSet "BIP371 invalid" 11 bip371Invalid),

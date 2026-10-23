@@ -12,7 +12,9 @@ conversion per network with round-trip proofs. Phase 3a is complete apart from
 the 4-error theorem, which belongs to Phase 3b. Phase 4a (1 of 3) adds transaction
 and PSBT codecs, supplied curve/hash operations, an optional BIP32 same-point
 check, and hybrid-aware public-key compression. Phase 4a (2 of 3) adds pure
-RIPEMD-160 and HASH160 with an exported PSBT preimage-hash value. The Phase 3b (1 of 2)
+RIPEMD-160 and HASH160 with an exported PSBT preimage-hash value. Phase 4a (3 of 3)
+adds PSBT validity, duplicate-key and trailing-data theorems, and the transaction
+wire round-trip under its nine explicit preconditions. The Phase 3b (1 of 2)
 feasibility spike is delivered with a **stop** verdict: the complete split finite
 check (220 chunk files, all passing) took **1,198 s** with four files checked at
 once, against the ten-minute (600 s) added build budget. The full theorem remains
@@ -3777,6 +3779,441 @@ helper was also deleted and its absence checked, exit **0**. No temporary clone,
 cache or helper process from this work session remains; normal `.lake` build
 outputs and logs remain. Changes are staged for inspection, with no commit,
 push, branch change or tracker operation in this work session.
+
+## Phase 4a: PSBT and transaction proofs (3 of 3)
+
+`import Bitcoin` includes the following theorems. The capability and preimage
+hashes remain arbitrary supplied functions; no curve implementation, FFI,
+Mathlib, dependency, or acceptance-rule change is needed.
+
+| Module | Full theorem name and statement |
+|---|---|
+| `Bitcoin.Psbt.Proofs` | `Bitcoin.Psbt.Psbt.roundtrip (cap) (hashes) (p) : valid cap hashes p → Psbt.parse cap hashes (Psbt.serialize p) = .ok p` |
+| `Bitcoin.Psbt.Proofs` | `Bitcoin.Psbt.Psbt.unique_of_parse : Psbt.parse cap hashes bytes = .ok p → p.global.Unique ∧ (∀ m ∈ p.inputs, m.Unique) ∧ ∀ m ∈ p.outputs, m.Unique` |
+| `Bitcoin.Psbt.Proofs` | `Bitcoin.Psbt.Psbt.no_trailing_data : Psbt.parse cap hashes bytes = .ok p → Psbt.parse cap hashes (bytes ++ extra) = .ok q → extra = ByteArray.empty` |
+| `Bitcoin.TransactionProofs` | `Bitcoin.parseTransaction_serializeWitnessTransaction (tx) (witnesses) : tx.WellFormed witnesses → parseTransaction (serializeWitnessTransaction tx witnesses) = .ok ⟨tx, if witnesses.all List.isEmpty then tx.inputs.toList.map (fun _ => []) else witnesses⟩` |
+
+The upstream references below were located by grep in a fresh
+[cb9bc5f source tree](https://github.com/febyeji/lean-miniscript/tree/cb9bc5f2f80987ad18b696a9c660f90f4bc1b6bd)
+and in the port. Port paths are relative to `packages/bitcoin/`.
+
+| Upstream at `cb9bc5f` | What | Port location |
+|---|---|---|
+| `LeanMiniscript/Psbt/ParseProofs.lean:31-34` | `Psbt.parse_serialize` | `Bitcoin/Psbt/ParseProofs.lean:34-36` (docstring at `:32`) |
+| `LeanMiniscript/Psbt/ParseProofs.lean:40` | `Psbt.serialize_parse` | `Bitcoin/Psbt/ParseProofs.lean:43-45` |
+| `LeanMiniscript/Psbt/Fields.lean:536-539` | `Psbt.parse` | `Bitcoin/Psbt/Fields.lean:534-537`; `Psbt.decode` at `:526-531` |
+| `LeanMiniscript/Psbt/Fields.lean:206-207` | `validPublicKey`, replaced by the capability | `Bitcoin/Psbt/Fields.lean:377` (`cap.isValidPubkey`), `:389` and `:485` (`cap.compressPubkey`) |
+| `LeanMiniscript/Psbt/Fields.lean:272-276` | `preimageHash` | `Bitcoin/Psbt/Fields.lean:270-274` |
+| `LeanMiniscript/Psbt/Codec.lean:68-69` | `KeyValueMap.WellFormed`, including `Unique` | `Bitcoin/Psbt/Codec.lean:70-71`; `KeyValueMap.Unique` at `:62-63` |
+| `LeanMiniscript/Psbt/Codec.lean:127` | `throw .trailingData` | `Bitcoin/Psbt/Codec.lean:129` |
+| `LeanMiniscript/Bitcoin/Deserialization.lean:115-170` | `readTransaction` to `serializeWitnessTransaction` | `Bitcoin/Deserialization.lean:43-96`: reader `:43-73`, serializer `:87-96` |
+| `LeanMiniscript/Bitcoin/Deserialization.lean:120-123` | Zero-flag path | `Bitcoin/Deserialization.lean:48-51`; the branch's result is at `:52` (upstream `:124`) |
+| `LeanMiniscript/Bitcoin/DeserializationProofs.lean:31` | `readCompactSize_compactSize` | `Bitcoin/CompactSize.lean:121` |
+
+`Bitcoin.Psbt.valid cap hashes p` is exactly
+`p.WellFormed ∧ ∃ d, p.decode cap hashes = .ok d`. It uses neither parsing nor
+serialization. Framing invariants alone do not suffice: a supplied capability
+can reject a field's key. The round-trip uses both hypotheses of the copied
+`Psbt.parse_serialize`; uniqueness follows from `Psbt.serialize_parse` and each
+map's `WellFormed`. The trailing-data proof reads the known serialized maps
+with the extra suffix left unread, then applies the complete-frame check.
+Raw BIP32 keys remain byte-exact; `checkBip32SamePoint` is still separate.
+
+`Bitcoin.Transaction.WellFormed tx witnesses` has exactly these nine fields:
+
+| Field | Hypothesis | Wire-format reason |
+|---|---|---|
+| `txidSize` | Every input txid has size 32 | `Bitcoin/Deserialization.lean:10` reads exactly 32 bytes; the serializer writes the supplied bytes raw. |
+| `scriptSigSize` | Every input script size is less than `2^64` | Its byte-vector prefix is CompactSize. |
+| `scriptPubKeySize` | Every output script size is less than `2^64` | The same CompactSize bound applies. |
+| `witnessItemSize` | Every item in every witness stack has size less than `2^64` | Each item uses a CompactSize byte-vector prefix. |
+| `inputCount` | Input count is less than `2^64` | CompactSize represents at most `2^64 - 1`. |
+| `outputCount` | Output count is less than `2^64` | The same bound applies. |
+| `witnessCount` | Every stack length is less than `2^64` | Each stack starts with its CompactSize item count. |
+| `witnessesLength` | Witness count equals input count | `Bitcoin/Deserialization.lean:88-96` ignores surplus stacks and supplies empty missing stacks; the reader reads one stack per input. |
+| `unambiguous` | Inputs are nonempty or outputs are empty | `Bitcoin/Deserialization.lean:47-52` treats an empty input vector as the witness marker; flag zero denotes empty inputs and outputs. |
+
+The shared bound is the hypothesis of
+`Bitcoin.CompactSize.readCompactSize_compactSize` at `Bitcoin/CompactSize.lean:121`.
+The library definitions and their signatures are unchanged. The transaction
+proof first establishes field readers with arbitrary suffixes, then vector and
+witness-stack readers, and finally the legacy and BIP144 branches.
+
+### Copied proof files
+
+Source: [febyeji/lean-miniscript at cb9bc5f](https://github.com/febyeji/lean-miniscript/tree/cb9bc5f2f80987ad18b696a9c660f90f4bc1b6bd).
+The fresh clone's `git rev-parse HEAD` printed
+`cb9bc5f2f80987ad18b696a9c660f90f4bc1b6bd`, exit **0**, before copying.
+
+| Source range under `LeanMiniscript/` | Destination under `packages/bitcoin/` | All port edits |
+|---|---|---|
+| `Psbt/CodecProofs.lean` L1–280 | `Bitcoin/Psbt/CodecProofs.lean` | Imports/namespaces mapped to `Bitcoin.Psbt` and `Bitcoin`; open `Bitcoin.CompactSize`; three `if_false` references become `ite_false`, one `if_true` becomes `ite_true`; first-line MIT provenance. |
+| `Psbt/ParseProofs.lean` L1–65 | `Bitcoin/Psbt/ParseProofs.lean` | Imports/namespace mapped to `Bitcoin.Psbt`; implicit capability/hash binders and arguments threaded through `decode` and `parse`; first-line MIT provenance. |
+
+The original theorem statements and proof strategies are preserved, apart
+from the required supplied-operation parameters. The deprecated-lemma warnings
+were observed in the first compiler check before replacement. No other Lean
+4.35 proof fix was needed. The existing `Bitcoin/LICENSE-miniscript` is reused
+unchanged, byte-identical to upstream's `LICENSE`. No roles, examples, or new
+fixture slices are copied. All edits are registered in
+[upstream fixes](docs/upstream-fixes.md#transaction-and-psbt-proofs-phase-4a-3-of-3)
+and reconstructed by `check-tx-psbt-copy.py`.
+
+### Executable definitions and the published exception
+
+The four new selectable `valid definition` actions pin and print **10/10**, **4/4**,
+**14/14**, and **6/6**, respectively: **34/34** total. Each obtains raw maps without
+the field decoder, requires byte-exact serialization, and separately asserts
+the library `WellFormed` and successful decode before evaluating `valid` itself
+through its computational `Decidable` instance. This lets a stricter field
+decoder fail specifically at the decode assertion.
+
+`--psbt 'Transaction WellFormed'` reads all **136** inventory rows with each
+row's `allowWitness`. Its checks are generated from the actual nine proposition
+types in `Transaction.WellFormed.mk`, with `transactionChecks_iff` proving that
+their conjunction is precisely the library definition. No parallel hand-written
+predicate supplies the test result. Each exception conjunct has its own assertion.
+The earlier vector, transaction and txid counts are unchanged; PSBT actions are
+now **52/52**, up from 47 with these five actions.
+
+**Finding:** exactly **135/136** transactions satisfy the definition. The sole
+exception is `bip174Valid[9]`, global record 0, “PSBT with 0 inputs”: version 2,
+zero inputs, two outputs, and no witnesses. It satisfies the first eight fields
+and fails only `unambiguous`. With witnesses allowed, its serialization returns
+exactly `Bitcoin.CompactSize.DecodeError.truncated`.
+The measurement command, from `packages/bitcoin`, was
+`nix develop -c lake env lean measure-psbt-exception.lean`, exit **0**:
+
+```text
+Except.ok (2, 0, 2, 0, Except.error (Bitcoin.CompactSize.DecodeError.truncated))
+```
+
+The probe loads the published vector, reads its global map, parses the unsigned
+transaction with `allowWitness := false`, then calls the default reader on
+`serializeWitnessTransaction`. The permanent selectable test pins this measured
+constructor. This published transaction demonstrates why the ninth hypothesis
+is necessary; no expectation or acceptance rule is adjusted.
+
+### Axiom gate and copy check
+
+The gate reports **764 library theorems; 60 named; 0 offenders**. The four
+required theorems add four names to the earlier 56. The total rises from 652
+by 112 through the imports of `Bitcoin.Psbt.CodecProofs`,
+`Bitcoin.Psbt.ParseProofs`, `Bitcoin.Psbt.Proofs`, and
+`Bitcoin.TransactionProofs`, including generated auxiliary theorems and
+decision-instance obligations. `nix develop -c lake test` reproduces the named
+and library counts. Test-support theorems are outside the library scan.
+The allowlist is unchanged.
+
+Each required `#print axioms` output is:
+
+```text
+'Bitcoin.Psbt.Psbt.roundtrip' depends on axioms: [propext, Classical.choice, Quot.sound]
+'Bitcoin.Psbt.Psbt.unique_of_parse' depends on axioms: [propext, Quot.sound]
+'Bitcoin.Psbt.Psbt.no_trailing_data' depends on axioms: [propext, Classical.choice, Quot.sound]
+'Bitcoin.parseTransaction_serializeWitnessTransaction' depends on axioms: [propext, Classical.choice, Quot.sound]
+```
+
+From the repository root,
+`python3 -I packages/bitcoin/check-tx-psbt-copy.py "$TMP_ROOT/miniscript"`
+exited **0**, printing ten exact-copy rows and:
+
+```text
+transaction/PSBT copy: 10/10; MIT notice reused; forbidden fixture slice excluded
+```
+
+### Mutation evidence
+
+Every mutation changes production code or a production-loaded vector/inventory
+list, never the test's expected value. Each source replacement asserts its exact
+match count; `finally` restores and rechecks the original bytes. Stdout and
+stderr are separate under `.lake/psbt-mutation-checks`. The compact, reproducible
+records are in `test-data/psbt-mutations.json`, apart from the executable script.
+
+The theorem mode now requires a diagnostic in a named theorem in a named file.
+It computes that declaration's range from the unmutated file; this also retains
+the same-file `readCompactSize_ok` check. The resume fingerprint covers all
+library/test Lean modules, root modules, the lakefile, mutation targets, the
+transaction inventory, the measurement helper and the runner itself. Checkpoint
+writes use an atomic rename, and discovery checks cannot certify checkpoints.
+The four mutation scripts with named-count pins now require 60.
+
+The first eight transaction fields are independently strengthened to
+`False ∧ (original field)` for their per-conjunct red checks. Each strengthened
+round-trip implication remains true. The proofs derive their original wire
+requirements from these hypotheses without depending on a particular conjunction
+shape, allowing the field assertions to fail at runtime. Replacing the ninth
+field by `True` makes the transaction round-trip false for the published
+zero-input/two-output transaction, so its red check is proof-caught. The separate
+count/exception check drops the empty-output disjunct, causing the published
+zero-input/zero-output transaction at `bip174Valid[8]` to fail the definition too.
+
+The `valid` action's final conjunction check follows from its two separately
+asserted halves; those halves evaluate the library predicates themselves. Its
+byte-equality check is guaranteed by successful framing and the copied framing
+proofs. A changed separator makes `decodeMapFuel_encode` false. Likewise, no
+runtime-only mutation can make an accepted frame's `WellFormed` half false while
+the framing theorems stay true: the strengthened key-length mutation is caught
+inside `decodeMapFuel_ok`.
+
+The mutation selecting an index-read error left the measured result unchanged
+(`lake test` exit **0**), so it was not retained. Changing the txid reader's
+truncation error instead reaches the measured-error assertion while successful
+reads, and thus the round-trip statement, stay unchanged. A two-second TERM
+check of `partial-compression` printed `mutation applied` before interruption,
+exited **143**, and `git diff --exit-code -- Bitcoin/Psbt/Fields.lean` then
+exited **0**. The command was
+`nix develop -c timeout --preserve-status --signal=TERM 2 python3 -I check-psbt-mutations.py partial-compression`.
+The subsequent package build and full test both exited **0**.
+
+All heavy commands use one foreground scope at a time:
+
+```bash
+systemd-run --user --scope --quiet -p MemoryMax=8G -p MemorySwapMax=0 -p OOMPolicy=continue -p TasksMax=4096 timeout 3600 nix develop -c lake test
+```
+
+Other heavy commands use the same limits with their own command arguments.
+The required gate supervisor captures streams separately and propagates the
+actual command status. No gate is piped through an output filter. Full-suite
+reruns follow all Lean, test and fixture edits.
+
+### Red runs for the new tests
+
+The new properties have the following red records. Each selector is passed as
+`lake test -- --psbt 'selector'`; the reproducible outer command is
+`nix develop -c python3 -I check-psbt-mutations.py LABEL` from `packages/bitcoin`.
+The exit column is the mutated `lake test` status. Each completed runner then
+restores the source and requires a full `lake test` at exit **0**.
+
+| Property | Mutation label | Selector | Exit | Observed first failure line |
+|---|---|---|---|---|
+| BIP174 valid count | `valid-count-bip174Valid` | `BIP174 valid definition` | 1 | `uncaught exception: assertion failed: BIP174 valid valid count` |
+| BIP174 signer count | `valid-count-bip174SignerFailures` | `BIP174 signer valid definition` | 1 | `uncaught exception: assertion failed: BIP174 signer valid count` |
+| BIP370 valid count | `valid-count-bip370Valid` | `BIP370 valid definition` | 1 | `uncaught exception: assertion failed: BIP370 valid valid count` |
+| BIP371 valid count | `valid-count-bip371Valid` | `BIP371 valid definition` | 1 | `uncaught exception: assertion failed: BIP371 valid valid count` |
+| BIP174 decode half | `valid-decode-bip174Valid` | `BIP174 valid definition` | 1 | `uncaught exception: assertion failed: BIP174 valid valid decode 0` |
+| BIP174 signer decode half | `valid-decode-bip174SignerFailures` | `BIP174 signer valid definition` | 1 | `uncaught exception: assertion failed: BIP174 signer valid decode 0` |
+| BIP370 decode half | `valid-decode-bip370Valid` | `BIP370 valid definition` | 1 | `uncaught exception: assertion failed: BIP370 valid valid decode 0` |
+| BIP371 decode half | `valid-decode-bip371Valid` | `BIP371 valid definition` | 1 | `uncaught exception: assertion failed: BIP371 valid valid decode 0` |
+| `valid` well-formed half | `valid-formed` | `BIP174 valid definition` | 1 | `error: Bitcoin/Psbt/CodecProofs.lean:189:46: omega could not prove the goal:` |
+| Vector bytes equal serialization | `valid-bytes` | `BIP174 valid definition` | 1 | `error: Bitcoin/Psbt/CodecProofs.lean:45:16: unsolved goals` |
+| 135/136 and sole exception identity | `formed-count-exception` | `Transaction WellFormed` | 1 | `uncaught exception: assertion failed: formed count and exception` |
+| Exception txid size | `formed-conjunct-txidSize` | `Transaction WellFormed` | 1 | `uncaught exception: assertion failed: formed exception txidSize` |
+| Exception input script bound | `formed-conjunct-scriptSigSize` | `Transaction WellFormed` | 1 | `uncaught exception: assertion failed: formed exception scriptSigSize` |
+| Exception output script bound | `formed-conjunct-scriptPubKeySize` | `Transaction WellFormed` | 1 | `uncaught exception: assertion failed: formed exception scriptPubKeySize` |
+| Exception witness item bound | `formed-conjunct-witnessItemSize` | `Transaction WellFormed` | 1 | `uncaught exception: assertion failed: formed exception witnessItemSize` |
+| Exception input count bound | `formed-conjunct-inputCount` | `Transaction WellFormed` | 1 | `uncaught exception: assertion failed: formed exception inputCount` |
+| Exception output count bound | `formed-conjunct-outputCount` | `Transaction WellFormed` | 1 | `uncaught exception: assertion failed: formed exception outputCount` |
+| Exception witness stack bound | `formed-conjunct-witnessCount` | `Transaction WellFormed` | 1 | `uncaught exception: assertion failed: formed exception witnessCount` |
+| Exception witness/input length equality | `formed-conjunct-witnessesLength` | `Transaction WellFormed` | 1 | `uncaught exception: assertion failed: formed exception witnessesLength` |
+| Exception marker condition | `formed-conjunct-unambiguous` | `Transaction WellFormed` | 1 | `error: Bitcoin/TransactionProofs.lean:150:91: omega could not prove the goal:` |
+| Measured witness-reader error | `formed-error` | `Transaction WellFormed` | 1 | `uncaught exception: assertion failed: formed exception measured error` |
+| Loaded inventory count | `formed-inventory-count` | `Transaction WellFormed` | 1 | `uncaught exception: assertion failed: formed inventory count` |
+| Exactly nine reflected fields | `formed-conjunct-count` | `Transaction WellFormed` | 1 | `uncaught exception: assertion failed: formed exception conjunct count` |
+
+### Reclassified PSBT records
+
+These fourteen existing records move from their earlier runtime assertions to
+proof detection. The old assertion column omits the common
+`uncaught exception: assertion failed:` prefix. File paths below are relative
+to `packages/bitcoin`; each diagnostic is inside the named theorem's range.
+
+| Record | Old assertion | New theorem and diagnostic | Why the statement becomes false |
+|---|---|---|---|
+| `trailing-data` | `PSBT trailing data` | `decodePsbtWith_ok`, `Bitcoin/Psbt/CodecProofs.lean:277:32`, invalid rewrite argument | Accepted input can include an unread suffix, so it is not the returned PSBT's exact encoding. |
+| `vector-bip174-valid` | `BIP174 valid 0 serialize` | `decodeMapFuel_encode`, `Bitcoin/Psbt/CodecProofs.lean:45:16`, unsolved goals | A separator of 1 is read as a key length instead of a separator. |
+| `vector-bip174-signer` | `BIP174 signer failures 0 serialize` | `decodeMapFuel_encode`, `Bitcoin/Psbt/CodecProofs.lean:45:16`, unsolved goals | The same separator edit breaks exact map re-reading. |
+| `vector-bip370-valid` | `BIP370 valid 0 serialize` | `decodeMapFuel_encode`, `Bitcoin/Psbt/CodecProofs.lean:45:16`, unsolved goals | The same separator edit breaks exact map re-reading. |
+| `vector-bip371-valid` | `BIP371 valid 0 serialize` | `decodeMapFuel_encode`, `Bitcoin/Psbt/CodecProofs.lean:45:16`, unsolved goals | The same separator edit breaks exact map re-reading. |
+| `vector-bip174-roles` | `BIP174 roles 0 serialize` | `decodeMapFuel_encode`, `Bitcoin/Psbt/CodecProofs.lean:45:16`, unsolved goals | The same separator edit breaks exact map re-reading. |
+| `map-canonical` | `map canonical` | `decodeMapFuel_encode`, `Bitcoin/Psbt/CodecProofs.lean:45:16`, unsolved goals | The reader returns a separator as unread data instead of the specified suffix. |
+| `exact-duplicate` | `exact duplicate` | `decodeMapFuel_ok`, `Bitcoin/Psbt/CodecProofs.lean:198:18`, `simp` made no progress | Disabling the duplicate check accepts maps whose keys are not unique. |
+| `vector-bip174-invalid` | `BIP174 invalid hex 4` | `decodeMapFuel_ok`, `Bitcoin/Psbt/CodecProofs.lean:198:18`, `simp` made no progress | The same duplicate-check edit contradicts accepted-map well-formedness. |
+| `rewrite-raw-input` | `hybrid false raw serialization` | `Psbt.parse_serialize`, `Bitcoin/Psbt/ParseProofs.lean:36:55`, unsolved goals | Rewriting an accepted raw input key changes the returned PSBT. |
+| `rewrite-raw-output` | `hybrid true raw serialization` | `Psbt.parse_serialize`, `Bitcoin/Psbt/ParseProofs.lean:36:55`, unsolved goals | Rewriting an accepted raw output key changes the returned PSBT. |
+| `network-magic` | `network magic` | `decodePsbtWith_ok`, `Bitcoin/Psbt/CodecProofs.lean:245:4`, `simp` made no progress | Bytes with an arbitrary five-byte prefix can be accepted, but serialization restores PSBT magic. |
+| `witness-marker-flag` | `wire bip174Invalid[1] input roundtrip` | `readTransaction_witness`, `Bitcoin/TransactionProofs.lean:169:37`, unsolved goals | Flag 3 sets an unsupported bit and the reader rejects the serialized transaction. |
+| `legacy-version` | `wire bip174Invalid[0] network roundtrip` | `serializeTransaction_data`, `Bitcoin/TransactionProofs.lean:115:44`, unsolved goals | Serialization writes version plus one instead of the original version. |
+
+For `network-magic`, the earlier unused-simp diagnostic in
+`decodePsbtWith_encode` is not the selected evidence: that theorem's statement
+stays true. The record instead selects the diagnostic inside
+`decodePsbtWith_ok`, whose statement becomes false. `surplus-witness-format`,
+`malformed-witness-marker`, and `transaction-ignore-trailing` retain their
+original runtime detection. No retained record is classified solely because
+the proof of an unchanged statement broke.
+
+### Full mutation reruns
+
+All six commands ran sequentially from `packages/bitcoin`, with the scope limits
+above and separated command streams under `.lake/psbt-proof-validation`.
+Each PSBT mutation also retains its separate streams and checkpoint under
+`.lake/psbt-mutation-checks`. No one-hour continuation was needed.
+
+| Command | Exit | Detections | Restored full `lake test` |
+|---|---|---|---|
+| `nix develop -c python3 -I check-mutations.py` | 0 | 6/6 | 0 |
+| `nix develop -c python3 -I check-base58-mutations.py` | 0 | 6/6 | 0 |
+| `nix develop -c python3 -I check-bech32-mutations.py` | 0 | 18/18 | 0 |
+| `nix develop -c python3 -I check-address-mutations.py` | 0 | 20/20 | 0 |
+| `nix develop -c python3 -I check-psbt-mutations.py` | 0 | 95/95 | 0 |
+| `nix develop -c python3 -I check-ripemd160-mutations.py` | 0 | 8/8 | 0 |
+
+Total: **153/153** detections. In `mutations.json`, only the `axiom` record's
+`AxiomGate.lean` diagnostic moves from line 74 to line 77, because the named list
+grew. `base58-mutations.json`, `bech32-mutations.json`, `address-mutations.json`
+and `ripemd160-mutations.json` are byte-identical to their prior records:
+`git diff --exit-code --` on those four paths exits **0**. No non-PSBT
+classification changes.
+
+`psbt-mutations.json` grows from 72 to 95 records: fourteen reclassifications
+above, explicit same-file theorem metadata on the already proof-caught
+`map-noncanonical`, and 23 new properties. All **57** previously runtime-caught
+records that remain runtime-caught are unchanged, including their exact first
+failures. There are now **18 proof-caught** and **77 runtime-caught** records.
+Each new first failure matches the corresponding README row exactly.
+
+A fresh capped invocation of
+`nix develop -c python3 -I check-psbt-mutations.py --resume` exited **0**,
+reused all **95** unchanged source/test fingerprints, and finished with restored
+`lake test` at exit **0**. It applied no mutation again.
+
+### Final validation and cleanup
+
+| Command | Directory | Exit | Observation |
+|---|---|---|---|
+| `nix develop -c lake build` | `packages/bitcoin` | 0 | Library and all four proof modules build. |
+| `nix develop -c lake test` | `packages/bitcoin` | 0 | Valid sets 10/10, 4/4, 14/14, 6/6; transaction hypotheses 135/136 with `truncated`; prior counts unchanged; 52/52 PSBT actions; 764/60/0 axiom gate. |
+| The six full mutation commands above | `packages/bitcoin` | 0 each | 153/153 detected; every restored full test exits 0. |
+| `nix develop -c python3 -I check-psbt-mutations.py --resume` | `packages/bitcoin` | 0 | 95 checkpoints reused; no mutation reapplied; restored full test exits 0. |
+| `nix develop -c lake env lean measure-psbt-exception.lean` | `packages/bitcoin` | 0 | The measured tuple and `truncated` error printed above. |
+| `python3 -I packages/bitcoin/check-tx-psbt-copy.py "$TMP_ROOT/miniscript"` | root | 0 | 10/10 again after all mutations; MIT notice unchanged. |
+| `nix flake check -L`, with all new files staged | root | 0 | All seven packages build and test in the sandbox; new vector, action and axiom counts printed. |
+| `nix build` | root | 0 | Default executable built. |
+| `./result/bin/cyberkrill` | root | 0 | `cyberkrill 0.1.0`. |
+| The proof-placeholder check below | root | 0 | No matching Lean source; its grep exits 1. |
+| The library decision-tactic grep below | root | 1 | Both streams empty. |
+| The axiom-gate substring grep below | root | 1 | Both streams empty. |
+| `git diff --check 156c518b8c23fad785f8fa5fe534e122e4ffae31` | root | 0 | Both streams empty. |
+| `git diff --exit-code 156c518 --` on the original copied codecs, vector module and transaction inventory | root | 0 | Byte-identical production code and inventory; no acceptance-rule edits. |
+| Exact staged-diff key-material scan below | root | 1 | Both streams empty; no match. |
+| Added-line public-text scan and staged-content checks | root | 0 | No forbidden names, local paths or attribution trailers; 20 intended files; staged bytes match the files. |
+| Exact-created-path cleanup with absence assertions | root | 0 | Fresh clone, temporary shell/cache files and three temporary local helpers removed. |
+
+The hygiene commands were:
+
+```bash
+rc=0; grep -rnw sorry --include='*.lean' --exclude-dir=.lake packages || rc=$?; test "$rc" -eq 1
+grep -rnE 'native_decide|bv_decide' --include='*.lean' packages/bitcoin/Bitcoin packages/bitcoin/Bitcoin.lean
+grep -F sorry packages/bitcoin/BitcoinTests/AxiomGate.lean
+git diff --cached -U0 | grep '^+' | grep -n -E '[xt]prv[1-9A-HJ-NP-Za-km-z]{100,}|\b[5KLc9][1-9A-HJ-NP-Za-km-z]{50,51}\b'
+```
+
+The final scan's stdout and stderr are both **empty**, exit **1**. Source,
+evidence, validation and cleanup streams remain separated under
+`packages/bitcoin/.lake/psbt-proof-validation`, with the individual mutation
+streams in their existing directories. All foreground commands finished.
+
+Cleanup removed exactly the fresh `TMP_ROOT` with `shutil.rmtree` and asserted
+its absence. It separately unlinked and checked the absence of the temporary
+`Measure.lean`, `Counts.lean`, and `gate-wrapper.bash` helpers under
+`.lake/psbt-proof-validation`. The permanent measurement helper remains in the
+package. Each private gate directory was removed by its supervisor before the
+final status was reported. Initial private gate scratch directories inherited
+the default temporary location; they were removed on exit. Later invocations
+exported `TMPDIR` before bootstrap as well as inside the gate commands.
+No temporary clone, cache, test or helper process from this work session remains.
+Normal build outputs and logs remain.
+
+All changes are staged on the existing feature branch. There was no commit,
+push, branch change, PR or tracker operation in this work session.
+
+### Second-round checks
+
+- The exception assertion now has the measurement directory, command and output
+  directly above it; the action prints its collected exception and returned error.
+- The upstream-to-port table above locates all ten references by grep in both
+  trees; every supplied upstream range contains the named definition or branch,
+  except that the zero-flag range `:120-123` ends one line before that branch's
+  result at upstream `:124`.
+- The new-test red records now have their own heading, before the reclassified
+  records; both tables retain their original rows.
+
+From `packages/bitcoin`,
+`nix develop -c lake env lean measure-psbt-exception.lean` exited **0** and printed:
+
+```text
+Except.ok (2, 0, 2, 0, Except.error (Bitcoin.CompactSize.DecodeError.truncated))
+```
+
+The full test and the isolated transaction action printed the computed line:
+
+```text
+Transaction.WellFormed: 135/136; exception bip174Valid[9] global; witness reader: Bitcoin.CompactSize.DecodeError.truncated
+```
+
+Every heavy command below used its own foreground scope with `MemoryMax=8G`,
+`MemorySwapMax=0`, `OOMPolicy=continue`, `TasksMax=4096` and `timeout 3600`,
+through the gate supervisor described above. Commands ran sequentially with
+separate stdout and stderr under the repository root's
+`.lake/psbt-proof-second-round`. The PSBT
+check started without `--resume`, produced 95 fresh checkpoints, and needed no
+continuation. The four required axiom lines match those printed above.
+
+`$FIRST_ROUND` names the first round's development commit. The squash merge
+keeps only the final tree, so the two rows that compare against it record a
+check made before merging and cannot be rerun from the merged history.
+
+| Command | Directory | Exit | Observation |
+|---|---|---|---|
+| `nix develop -c lake build` | `packages/bitcoin` | 0 | Package builds. |
+| `nix develop -c lake test` | `packages/bitcoin` | 0 | Valid sets 10/10, 4/4, 14/14, 6/6; computed transaction line above; earlier counts unchanged; PSBT 52/52; axiom gate 764/60/0. |
+| `nix develop -c lake test -- --psbt 'Transaction WellFormed'` | `packages/bitcoin` | 0 | Computed transaction line above; PSBT 1/1. |
+| `nix develop -c lake test -- --psbt 'BIP174 valid definition'` | `packages/bitcoin` | 0 | 10/10; PSBT 1/1. |
+| `nix develop -c lake test -- --psbt 'BIP174 signer valid definition'` | `packages/bitcoin` | 0 | 4/4; PSBT 1/1. |
+| `nix develop -c lake test -- --psbt 'BIP370 valid definition'` | `packages/bitcoin` | 0 | 14/14; PSBT 1/1. |
+| `nix develop -c lake test -- --psbt 'BIP371 valid definition'` | `packages/bitcoin` | 0 | 6/6; PSBT 1/1. |
+| `nix develop -c python3 -I check-mutations.py` | `packages/bitcoin` | 0 | 6/6 detected; restored full test exits 0. |
+| `nix develop -c python3 -I check-base58-mutations.py` | `packages/bitcoin` | 0 | 6/6 detected; restored full test exits 0. |
+| `nix develop -c python3 -I check-bech32-mutations.py` | `packages/bitcoin` | 0 | 18/18 detected; restored full test exits 0. |
+| `nix develop -c python3 -I check-address-mutations.py` | `packages/bitcoin` | 0 | 20/20 detected; restored full test exits 0. |
+| `nix develop -c python3 -I check-psbt-mutations.py` | `packages/bitcoin` | 0 | 95/95 detected; restored full test exits 0. |
+| `nix develop -c python3 -I check-ripemd160-mutations.py` | `packages/bitcoin` | 0 | 8/8 detected; restored full test exits 0. |
+| `git diff --exit-code "$FIRST_ROUND" -- 'packages/bitcoin/test-data/*.json'` | root | 0 | No output; all six evidence JSON files and the other JSON fixtures are byte-identical to the first round. |
+| `git -C "$TMP_ROOT/miniscript" rev-parse HEAD` | root | 0 | Fresh clone prints `cb9bc5f2f80987ad18b696a9c660f90f4bc1b6bd`. |
+| `python3 -I packages/bitcoin/check-tx-psbt-copy.py "$TMP_ROOT/miniscript"` | root | 0 | 10/10; MIT notice reused; forbidden fixture slice excluded. |
+| `nix flake check -L`, with the two edited paths staged | root | 0 | All seven packages build and test; expected PSBT and axiom counts printed. |
+| `nix build` | root | 0 | Default executable built. |
+| `./result/bin/cyberkrill` | root | 0 | `cyberkrill 0.1.0`. |
+| Proof-placeholder command below | root | 0 | Its grep exits 1; no matches. |
+| Library decision-tactic grep below | root | 1 | No output. |
+| Axiom-gate substring grep below | root | 1 | No output. |
+| `git diff --check 156c518b8c23fad785f8fa5fe534e122e4ffae31` | root | 0 | No output. |
+| `git diff --exit-code "$FIRST_ROUND" -- packages/bitcoin/Bitcoin packages/bitcoin/Bitcoin.lean packages/bitcoin/lakefile.lean flake.nix flake.lock` | root | 0 | No output; production, proof and build definitions unchanged. |
+| Staged key-material scan below | root | 1 | Stdout and stderr empty. |
+| Whole-change key-material scan below | root | 1 | Stdout and stderr empty. |
+| Added-line public-text and staged-content checks | root | 0 | No forbidden names, local paths or attribution trailers; staged bytes equal the two edited files. |
+| `git status --short` | root | 0 | Only staged `README.md` and `packages/bitcoin/BitcoinTests/Psbt.lean`; no untracked files. |
+| Exact-created-path cleanup and absence assertions | root | 0 | Fresh clone, temporary helpers, scratch files and caches removed. |
+
+The hygiene and key-material commands were:
+
+```bash
+rc=0; grep -rnw sorry --include='*.lean' --exclude-dir=.lake packages || rc=$?; test "$rc" -eq 1
+grep -rnE 'native_decide|bv_decide' --include='*.lean' packages/bitcoin/Bitcoin packages/bitcoin/Bitcoin.lean
+grep -F sorry packages/bitcoin/BitcoinTests/AxiomGate.lean
+git diff --cached -U0 | grep '^+' | grep -n -E '[xt]prv[1-9A-HJ-NP-Za-km-z]{100,}|\b[5KLc9][1-9A-HJ-NP-Za-km-z]{50,51}\b'
+git diff 156c518 -U0 | grep '^+' | grep -n -E '[xt]prv[1-9A-HJ-NP-Za-km-z]{100,}|\b[5KLc9][1-9A-HJ-NP-Za-km-z]{50,51}\b'
+```
+
+Both key-material scans printed nothing on either stream and exited **1**.
+The final added lines were also checked for the public-text restrictions.
+Cleanup removed exactly the newly created `TMP_ROOT` using `shutil.rmtree`
+and asserted its absence. `TMPDIR` was beneath that root before every gate
+bootstrap. Each private gate directory was removed before its final status.
+No temporary clone, cache, helper or process from this work session remains;
+normal build outputs and logs remain. The two edited paths are staged on the
+existing feature branch, with no commit, push, PR, branch or tracker operation.
 
 ## Deltas taken
 

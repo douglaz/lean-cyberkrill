@@ -74,3 +74,21 @@ is `Bitcoin/LICENSE-psbt-bips`. The secret-bearing intermediate fixture slice is
 excluded. `check-tx-psbt-copy.py` reconstructs all eight files from a separately
 fetched checkout and asserts exact equality after precisely these edits. It
 refuses a checkout with local changes.
+
+### Transaction and PSBT proofs (Phase 4a, 3 of 3)
+
+The same pinned revision supplies two complete proof files. Their statements and
+proof strategies are preserved, with the capability and hash arguments added to
+the statements that use validated parsing. No copied codec or field rule changes.
+
+| File / exact slice | Problem | Fix used in this port |
+|---|---|---|
+| `LeanMiniscript/Psbt/CodecProofs.lean` L1–280 | Imports and namespaces refer to the upstream package. | Map them to `Bitcoin.Psbt` and `Bitcoin`, and open `Bitcoin.CompactSize`. Add the first-line MIT provenance comment and reuse `Bitcoin/LICENSE-miniscript` unchanged. |
+| `LeanMiniscript/Psbt/CodecProofs.lean` L73, L116, L147, L153 | Lean 4.35 reports deprecated `if_false` / `if_true`. | Replace the three `if_false` references by `ite_false` and the one `if_true` by `ite_true`. To send upstream. |
+| `LeanMiniscript/Psbt/ParseProofs.lean` L1–65 | The port's field decoder and validated parser take supplied operations. | Map imports and namespace to `Bitcoin.Psbt`; add implicit `cap : PubkeyCapability` and `hashes : PreimageHashes`, and thread them through each `decode` and `parse` call. Add the first-line MIT provenance comment. |
+
+`check-tx-psbt-copy.py` now reconstructs ten files, including both proof files,
+from a fresh checkout at `cb9bc5f2f80987ad18b696a9c660f90f4bc1b6bd`.
+Its `--write` mode creates absent destinations and checks existing ones.
+There are no additional Base64, error-constructor, or qualified SHA256 edits in
+these two proofs: they do not refer to those operations or match those errors.
