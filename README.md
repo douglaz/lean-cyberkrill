@@ -14,7 +14,9 @@ and PSBT codecs, supplied curve/hash operations, an optional BIP32 same-point
 check, and hybrid-aware public-key compression. Phase 4a (2 of 3) adds pure
 RIPEMD-160 and HASH160 with an exported PSBT preimage-hash value. Phase 4a (3 of 3)
 adds PSBT validity, duplicate-key and trailing-data theorems, and the transaction
-wire round-trip under its nine explicit preconditions. The Phase 3b (1 of 2)
+wire round-trip under its nine explicit preconditions. The PSBT field-parity
+follow-up matches rust-bitcoin 0.32.8 on five non-curve field rules; the three
+kept BIP rules are captured, tested and listed as a documented delta. The Phase 3b (1 of 2)
 feasibility spike is delivered with a **stop** verdict: the complete split finite
 check (220 chunk files, all passing) took **1,198 s** with four files checked at
 once, against the ten-minute (600 s) added build budget. The full theorem remains
@@ -3067,8 +3069,10 @@ Lake's test-support roots now include `BitcoinTests.Psbt` as well as the gate.
 
 Besides the namespace/import changes, transaction hashing uses `Sha256.sha256d`,
 the framing error type gains `duplicateBip32Point`, and typed field decoding takes
-the capability and hash parameter as described above. Every other copied field
-rule and raw-key storage is unchanged. The four new proof slices needed no port
+the capability and hash parameter as described above. When Phase 4a (1 of 3)
+landed, every other copied field rule and raw-key storage was unchanged; see
+[Phase 4a: PSBT field parity follow-up](#phase-4a-psbt-field-parity-follow-up)
+for the later decoding changes. The four new proof slices needed no port
 fix; no theorem statement or proof was changed. All edits are enumerated in
 [upstream fixes](docs/upstream-fixes.md#transaction-and-psbt-subset-phase-4a-1-of-3)
 and reconstructed by `check-tx-psbt-copy.py`. The capability and point checker are
@@ -4253,8 +4257,8 @@ Temporary workspaces are deleted even on failure. See
 Regenerate or check from the repository root, with `TMPDIR` set:
 
 ```bash
-python3 -I packages/bitcoin/capture-cyberkrill-psbt.py
-python3 -I packages/bitcoin/capture-cyberkrill-psbt.py --check
+TMPDIR="${TMP_ROOT:?}" python3 -I packages/bitcoin/capture-cyberkrill-psbt.py
+TMPDIR="${TMP_ROOT:?}" python3 -I packages/bitcoin/capture-cyberkrill-psbt.py --check
 ```
 
 The record is `test-data/cyberkrill-psbt-capture.json` under `packages/bitcoin`.
@@ -4263,11 +4267,13 @@ The Lean actions read those exact bytes, pin 39 rows and counts **10/13/16**,
 and select each unique name with `lake test -- --psbt 'parity NAME'`.
 The original 24 BIP370 invalid inputs remain pinned, including indices 1–12.
 
-All ten expected rejection diagnostics were confirmed (reading (a)). All five
-bases and all eight edited acceptance boundaries succeeded, so readings (b)
-and (c) require neither hand-derived expectations nor an open exit-parity
-finding. All sixteen port-stricter inputs succeeded upstream (reading (d))
-and reject in the port. The four measured errors match the brief (reading (e)):
+cyberkrill exits **1** on all ten must-reject inputs, and each stderr names the
+rust-bitcoin 0.32.8 error's Display text; the tracker item's table gives its
+Debug form. All five bases and all eight edited acceptance boundaries exit
+**0**, so no expectation is hand-derived and there is no open exit-parity
+finding. All sixteen port-stricter inputs exit **0** upstream and are rejected
+by the port. The four new port-stricter tests return exactly the reasons the
+tracker item names:
 `decode truncated`, `decode nonCanonicalCompactSize`,
 `invalidKey "input" 252 "malformed proprietary key"`, and
 `invalidValue "global" 1 "path length must match the extended key depth"`.
@@ -4380,20 +4386,27 @@ No library theorem count, statement, proof module or axiom allowlist changes.
 
 ### Field-parity validation and changed files
 
+The following results were re-recorded on 2026-10-23 after the documentation
+corrections. Every command used `TMPDIR="${TMP_ROOT:?}"`; the six full mutation
+commands and their results are recorded above.
+
 | Command | Directory | Exit | Observation |
 |---|---|---|---|
 | `nix develop -c lake build` | `packages/bitcoin` | 0 | Package builds. |
 | `nix develop -c lake test` | `packages/bitcoin` | 0 | All existing vectors and exact errors retained; 91/91 PSBT actions; 764/60/0 axiom gate. |
-| `nix flake check -L`, with every new file staged | root | 0 | All seven packages build and test; sandbox prints 91/91 and 764/60/0. |
-| `nix build` | root | 0 | Default executable built. |
+| `nix flake check -L` | root | 0 | Cached seven-package check reused; `running 0 flake checks...`, `all checks passed!`. |
+| `nix build` | root | 0 | Existing default executable reused. |
 | `./result/bin/cyberkrill` | root | 0 | `cyberkrill 0.1.0`. |
-| `python3 -I packages/bitcoin/capture-cyberkrill-psbt.py --check` | root | 0 | All 39 derived inputs and captured streams reproduce exactly; private capture workspace removed. |
+| `nix build --dry-run --no-link github:douglaz/cyberkrill/27cad1faba86260b06665a89f0af5134d23525c2` | root | 0 | Nothing to build. |
+| `TMPDIR="${TMP_ROOT:?}" python3 -I packages/bitcoin/capture-cyberkrill-psbt.py --check` | root | 0 | All 39 derived inputs and captured streams reproduce exactly; private capture workspace removed. |
 | `python3 -I packages/bitcoin/check-tx-psbt-copy.py "$TMP_ROOT/miniscript"` | root | 0 | `transaction/PSBT copy: 10/10; MIT notice reused; forbidden fixture slice excluded`. |
 | Proof-placeholder command in the preceding validation section | root | 0 | Its grep exits 1; both streams empty. |
 | Library decision-tactic grep in the preceding validation section | root | 1 | Both streams empty. |
 | Axiom-gate substring grep in the preceding validation section | root | 1 | Both streams empty. |
 | `git diff --check 5baad8bf0e283a948828ee5bb749fae5b2491469` | root | 0 | Both streams empty. |
 | Exact staged key-material scan below | root | 1 | stdout empty; stderr empty; no matches or vector exceptions. |
+| Same key-material scan over `git diff -U0 5baad8bf0e283a948828ee5bb749fae5b2491469` | root | 1 | stdout empty; stderr empty; no matches or vector exceptions. |
+| `git diff --exit-code -- packages/bitcoin/test-data/` | root | 0 | All capture and mutation records unchanged by verification. |
 
 The exact key-material scan was:
 
@@ -4405,12 +4418,12 @@ Validation streams remain separate under
 `packages/bitcoin/.lake/psbt-field-parity-validation`; mutation streams remain
 in each runner's existing directory. All heavy commands used their own capped
 foreground scope. The capture command removes its own private workspace.
-The final cleanup removes exactly the newly created `TMP_ROOT`, including the
-fresh source clone, checksum-verified secp256k1 source excerpt, temporary
-shell files and caches, then asserts that the root and clone no longer exist.
-No pre-existing external path is removed.
+Cleanup removed exactly the newly created `TMP_ROOT`, including the fresh
+lean-miniscript clone and temporary caches, and asserted that the root, clone
+and `packages/bitcoin/__pycache__` were absent. No pre-existing external path
+was removed. Normal build outputs and validation logs remain.
 
-The eleven changed or added paths are:
+The twelve changed or added paths relative to the base revision are:
 
 - `packages/bitcoin/Bitcoin/Psbt/Fields.lean`: five decoding rules and seven named reasons.
 - `packages/bitcoin/BitcoinTests/Psbt.lean`: 39 actions reading the captured bytes.
@@ -4423,9 +4436,7 @@ The eleven changed or added paths are:
 - `docs/upstream-fixes.md`: each change to copied decoding code.
 - `README.md`: rule, capture, mutation, delta and validation records; three moved source locations.
 - `plan.md`: only the provisional §3 clause, replaced with the measured 16-input result.
-
-Changes remain staged for review. No commit, push, branch change, PR or tracker
-operation is part of this work session.
+- `.beads/issues.jsonl`: the tracker item's status.
 
 ## Deltas taken
 
