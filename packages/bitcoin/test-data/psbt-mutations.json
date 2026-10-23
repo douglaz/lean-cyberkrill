@@ -1364,5 +1364,313 @@
     "failure": "error: Bitcoin/Psbt/CodecProofs.lean:45:16: unsolved goals",
     "theorem": "decodeMapFuel_encode",
     "theorem_file": "Bitcoin/Psbt/CodecProofs.lean"
+  },
+  {
+    "property": "parity xpub-version",
+    "mutation": "parity-xpub-version",
+    "source": "Bitcoin/Psbt/Fields.lean",
+    "command": [
+      "lake",
+      "test",
+      "--",
+      "--psbt",
+      "parity xpub-version"
+    ],
+    "exit": 1,
+    "failure": "uncaught exception: assertion failed: parity xpub-version: expected Bitcoin.Psbt.PsbtError.invalidKey \"global\" 1 \"invalid extended key version\", got accepted"
+  },
+  {
+    "property": "parity partial-sig-empty",
+    "mutation": "parity-partial-sig-empty",
+    "source": "Bitcoin/Psbt/Fields.lean",
+    "command": [
+      "lake",
+      "test",
+      "--",
+      "--psbt",
+      "parity partial-sig-empty"
+    ],
+    "exit": 1,
+    "failure": "uncaught exception: assertion failed: parity partial-sig-empty: expected Bitcoin.Psbt.PsbtError.invalidValue \"input\" 2 \"empty ECDSA signature\", got Bitcoin.Psbt.PsbtError.invalidValue \"input\" 2 \"non-standard ECDSA sighash type\""
+  },
+  {
+    "property": "parity partial-sig-sighash",
+    "mutation": "parity-partial-sig-sighash",
+    "source": "Bitcoin/Psbt/Fields.lean",
+    "command": [
+      "lake",
+      "test",
+      "--",
+      "--psbt",
+      "parity partial-sig-sighash"
+    ],
+    "exit": 1,
+    "failure": "uncaught exception: assertion failed: parity partial-sig-sighash: expected Bitcoin.Psbt.PsbtError.invalidValue \"input\" 2 \"non-standard ECDSA sighash type\", got accepted"
+  },
+  {
+    "property": "parity tap-key-sig-sighash",
+    "mutation": "parity-tap-key-sig-sighash",
+    "source": "Bitcoin/Psbt/Fields.lean",
+    "command": [
+      "lake",
+      "test",
+      "--",
+      "--psbt",
+      "parity tap-key-sig-sighash"
+    ],
+    "exit": 1,
+    "failure": "uncaught exception: assertion failed: parity tap-key-sig-sighash: expected Bitcoin.Psbt.PsbtError.invalidValue \"input\" 19 \"non-standard Taproot sighash type\", got accepted"
+  },
+  {
+    "property": "parity tap-script-sig-sighash",
+    "mutation": "parity-tap-script-sig-sighash",
+    "source": "Bitcoin/Psbt/Fields.lean",
+    "command": [
+      "lake",
+      "test",
+      "--",
+      "--psbt",
+      "parity tap-script-sig-sighash"
+    ],
+    "exit": 1,
+    "failure": "uncaught exception: assertion failed: parity tap-script-sig-sighash: expected Bitcoin.Psbt.PsbtError.invalidValue \"input\" 20 \"non-standard Taproot sighash type\", got accepted"
+  },
+  {
+    "property": "parity leaf-script-odd",
+    "mutation": "parity-leaf-script-odd",
+    "source": "Bitcoin/Psbt/Fields.lean",
+    "command": [
+      "lake",
+      "test",
+      "--",
+      "--psbt",
+      "parity leaf-script-odd"
+    ],
+    "exit": 1,
+    "failure": "uncaught exception: assertion failed: parity leaf-script-odd: expected Bitcoin.Psbt.PsbtError.invalidValue \"input\" 21 \"invalid leaf version\", got accepted"
+  },
+  {
+    "property": "parity leaf-script-annex",
+    "mutation": "parity-leaf-script-annex",
+    "source": "Bitcoin/Psbt/Fields.lean",
+    "command": [
+      "lake",
+      "test",
+      "--",
+      "--psbt",
+      "parity leaf-script-annex"
+    ],
+    "exit": 1,
+    "failure": "uncaught exception: assertion failed: parity leaf-script-annex: expected Bitcoin.Psbt.PsbtError.invalidValue \"input\" 21 \"invalid leaf version\", got accepted"
+  },
+  {
+    "property": "parity control-block-annex",
+    "mutation": "parity-control-block-annex",
+    "source": "Bitcoin/Psbt/Fields.lean",
+    "command": [
+      "lake",
+      "test",
+      "--",
+      "--psbt",
+      "parity control-block-annex"
+    ],
+    "exit": 1,
+    "failure": "uncaught exception: assertion failed: parity control-block-annex: expected Bitcoin.Psbt.PsbtError.invalidKey \"input\" 21 \"invalid control block leaf version\", got accepted"
+  },
+  {
+    "property": "parity out-tap-tree-annex",
+    "mutation": "parity-out-tap-tree-annex",
+    "source": "Bitcoin/Psbt/Fields.lean",
+    "command": [
+      "lake",
+      "test",
+      "--",
+      "--psbt",
+      "parity out-tap-tree-annex"
+    ],
+    "exit": 1,
+    "failure": "uncaught exception: assertion failed: parity out-tap-tree-annex: expected Bitcoin.Psbt.PsbtError.invalidValue \"output\" 6 \"invalid leaf version\", got accepted"
+  },
+  {
+    "property": "parity proprietary-1025",
+    "mutation": "parity-proprietary-1025",
+    "source": "Bitcoin/Psbt/Fields.lean",
+    "command": [
+      "lake",
+      "test",
+      "--",
+      "--psbt",
+      "parity proprietary-1025"
+    ],
+    "exit": 1,
+    "failure": "uncaught exception: assertion failed: parity proprietary-1025: expected Bitcoin.Psbt.PsbtError.invalidKey \"input\" 252 \"proprietary key data exceeds 1024 bytes\", got accepted"
+  },
+  {
+    "property": "parity partial-sig-83",
+    "mutation": "parity-partial-sig-83",
+    "source": "Bitcoin/Psbt/Fields.lean",
+    "command": [
+      "lake",
+      "test",
+      "--",
+      "--psbt",
+      "parity partial-sig-83"
+    ],
+    "exit": 1,
+    "failure": "uncaught exception: assertion failed: parity partial-sig-83 accepted: Bitcoin.Psbt.PsbtError.invalidValue \"input\" 2 \"non-standard ECDSA sighash type\""
+  },
+  {
+    "property": "parity tap-key-sig-00",
+    "mutation": "parity-tap-key-sig-00",
+    "source": "Bitcoin/Psbt/Fields.lean",
+    "command": [
+      "lake",
+      "test",
+      "--",
+      "--psbt",
+      "parity tap-key-sig-00"
+    ],
+    "exit": 1,
+    "failure": "uncaught exception: assertion failed: parity tap-key-sig-00 accepted: Bitcoin.Psbt.PsbtError.invalidValue \"input\" 19 \"non-standard Taproot sighash type\""
+  },
+  {
+    "property": "parity tap-key-sig-83",
+    "mutation": "parity-tap-key-sig-83",
+    "source": "Bitcoin/Psbt/Fields.lean",
+    "command": [
+      "lake",
+      "test",
+      "--",
+      "--psbt",
+      "parity tap-key-sig-83"
+    ],
+    "exit": 1,
+    "failure": "uncaught exception: assertion failed: parity tap-key-sig-83 accepted: Bitcoin.Psbt.PsbtError.invalidValue \"input\" 19 \"non-standard Taproot sighash type\""
+  },
+  {
+    "property": "parity leaf-script-c2",
+    "mutation": "parity-leaf-script-c2",
+    "source": "Bitcoin/Psbt/Fields.lean",
+    "command": [
+      "lake",
+      "test",
+      "--",
+      "--psbt",
+      "parity leaf-script-c2"
+    ],
+    "exit": 1,
+    "failure": "uncaught exception: assertion failed: parity leaf-script-c2 accepted: Bitcoin.Psbt.PsbtError.invalidValue \"input\" 21 \"invalid leaf version\""
+  },
+  {
+    "property": "parity out-tap-tree-c2",
+    "mutation": "parity-out-tap-tree-c2",
+    "source": "Bitcoin/Psbt/Fields.lean",
+    "command": [
+      "lake",
+      "test",
+      "--",
+      "--psbt",
+      "parity out-tap-tree-c2"
+    ],
+    "exit": 1,
+    "failure": "uncaught exception: assertion failed: parity out-tap-tree-c2 accepted: Bitcoin.Psbt.PsbtError.invalidValue \"output\" 6 \"invalid leaf version\""
+  },
+  {
+    "property": "parity control-block-c2",
+    "mutation": "parity-control-block-c2",
+    "source": "Bitcoin/Psbt/Fields.lean",
+    "command": [
+      "lake",
+      "test",
+      "--",
+      "--psbt",
+      "parity control-block-c2"
+    ],
+    "exit": 1,
+    "failure": "uncaught exception: assertion failed: parity control-block-c2 accepted: Bitcoin.Psbt.PsbtError.invalidKey \"input\" 21 \"invalid control block leaf version\""
+  },
+  {
+    "property": "parity tpub",
+    "mutation": "parity-tpub",
+    "source": "Bitcoin/Psbt/Fields.lean",
+    "command": [
+      "lake",
+      "test",
+      "--",
+      "--psbt",
+      "parity tpub"
+    ],
+    "exit": 1,
+    "failure": "uncaught exception: assertion failed: parity tpub accepted: Bitcoin.Psbt.PsbtError.invalidKey \"global\" 1 \"invalid extended key version\""
+  },
+  {
+    "property": "parity proprietary-1024",
+    "mutation": "parity-proprietary-1024",
+    "source": "Bitcoin/Psbt/Fields.lean",
+    "command": [
+      "lake",
+      "test",
+      "--",
+      "--psbt",
+      "parity proprietary-1024"
+    ],
+    "exit": 1,
+    "failure": "uncaught exception: assertion failed: parity proprietary-1024 accepted: Bitcoin.Psbt.PsbtError.invalidKey \"input\" 252 \"proprietary key data exceeds 1024 bytes\""
+  },
+  {
+    "property": "parity key-type-fd01",
+    "mutation": "parity-key-type-fd01",
+    "source": "Bitcoin/Psbt/Codec.lean",
+    "command": [
+      "lake",
+      "test",
+      "--",
+      "--psbt",
+      "parity key-type-fd01"
+    ],
+    "exit": 1,
+    "failure": "uncaught exception: assertion failed: parity key-type-fd01: expected Bitcoin.Psbt.PsbtError.decode (Bitcoin.CompactSize.DecodeError.truncated), got accepted"
+  },
+  {
+    "property": "parity key-type-fd0500",
+    "mutation": "parity-key-type-fd0500",
+    "source": "Bitcoin/Psbt/Codec.lean",
+    "command": [
+      "lake",
+      "test",
+      "--",
+      "--psbt",
+      "parity key-type-fd0500"
+    ],
+    "exit": 1,
+    "failure": "uncaught exception: assertion failed: parity key-type-fd0500: expected Bitcoin.Psbt.PsbtError.decode (Bitcoin.CompactSize.DecodeError.nonCanonicalCompactSize), got accepted"
+  },
+  {
+    "property": "parity proprietary-subtype-fd01",
+    "mutation": "parity-proprietary-subtype-fd01",
+    "source": "Bitcoin/Psbt/Fields.lean",
+    "command": [
+      "lake",
+      "test",
+      "--",
+      "--psbt",
+      "parity proprietary-subtype-fd01"
+    ],
+    "exit": 1,
+    "failure": "uncaught exception: assertion failed: parity proprietary-subtype-fd01: expected Bitcoin.Psbt.PsbtError.invalidKey \"input\" 252 \"malformed proprietary key\", got accepted"
+  },
+  {
+    "property": "parity xpub-depth",
+    "mutation": "parity-xpub-depth",
+    "source": "Bitcoin/Psbt/Fields.lean",
+    "command": [
+      "lake",
+      "test",
+      "--",
+      "--psbt",
+      "parity xpub-depth"
+    ],
+    "exit": 1,
+    "failure": "uncaught exception: assertion failed: parity xpub-depth: expected Bitcoin.Psbt.PsbtError.invalidValue \"global\" 1 \"path length must match the extended key depth\", got accepted"
   }
 ]

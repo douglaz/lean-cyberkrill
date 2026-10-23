@@ -92,3 +92,26 @@ from a fresh checkout at `cb9bc5f2f80987ad18b696a9c660f90f4bc1b6bd`.
 Its `--write` mode creates absent destinations and checks existing ones.
 There are no additional Base64, error-constructor, or qualified SHA256 edits in
 these two proofs: they do not refer to those operations or match those errors.
+
+### PSBT field parity follow-up
+
+The source remains `febyeji/lean-miniscript` at
+`cb9bc5f2f80987ad18b696a9c660f90f4bc1b6bd`, `LeanMiniscript/Psbt/Fields.lean`
+L1–582, MIT. Only typed decoding changes. A pinned offline cyberkrill
+`onchain-decode-psbt` capture confirms each rejection on one-record edits of
+published BIP174/370/371 vectors. `check-tx-psbt-copy.py` reconstructs all edits
+as exact-count replacements, in addition to the earlier capability/hash edits.
+
+| Site | Problem | Fix and rust-bitcoin 0.32.8 reference |
+|---|---|---|
+| `globalStep`, global xpub | Any four version bytes were accepted. | Require mainnet xpub or testnet tpub after the existing length check; `src/bip32.rs:789-801`, `src/psbt/map/global.rs:113-118`. |
+| `inputStep`, partial signatures | Empty and non-standard sighash values were accepted. | Check emptiness separately before requiring a standard ECDSA sighash; retain key-check precedence and defer DER; `src/crypto/ecdsa.rs:38-43`, `src/crypto/sighash.rs:447-460`, `src/psbt/serialize.rs:179-200`. |
+| `inputStep`, both Taproot signatures | A 65th byte could be any sighash. | After the unchanged length checks, require default or standard sighash in each field; `src/crypto/taproot.rs:30-44`, `src/crypto/sighash.rs:500-512`. |
+| `inputStep`, leaf-script value | Leaf versions were unchecked. | Require even versions other than annex 0x50; `src/psbt/serialize.rs:326-336`, `src/taproot/mod.rs:1236-1243`. |
+| `inputStep`, leaf-script control block | Masked control-block versions were unchecked. | Apply the same rule to byte 0 masked with 0xfe, after existing size checks; `src/taproot/mod.rs:1105-1116`, `src/psbt/serialize.rs:310-313`. |
+| `decodeTapTree` | Even annex 0x50 was accepted. | Apply the shared leaf-version rule to every leaf, preserving completeness checking; `src/psbt/serialize.rs:380-396`. |
+| `keepUnknown`, all three scopes | Proprietary key tails were unbounded. | Keep canonical CompactSize validation unchanged; additionally allow at most 1,025 bytes after the identifier, counting rust-bitcoin's one-byte subtype, including when our subtype is multi-byte; `src/psbt/raw.rs:48,158-173,193-199`. |
+
+The helper additions and their uses are decode-only. Framing, serializers,
+theorem statements, raw storage and the three kept BIP rules are unchanged.
+The changes above are candidates to send upstream.

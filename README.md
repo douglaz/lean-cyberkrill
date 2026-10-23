@@ -14,7 +14,9 @@ and PSBT codecs, supplied curve/hash operations, an optional BIP32 same-point
 check, and hybrid-aware public-key compression. Phase 4a (2 of 3) adds pure
 RIPEMD-160 and HASH160 with an exported PSBT preimage-hash value. Phase 4a (3 of 3)
 adds PSBT validity, duplicate-key and trailing-data theorems, and the transaction
-wire round-trip under its nine explicit preconditions. The Phase 3b (1 of 2)
+wire round-trip under its nine explicit preconditions. The PSBT field-parity
+follow-up matches rust-bitcoin 0.32.8 on five non-curve field rules; the three
+kept BIP rules are captured, tested and listed as a documented delta. The Phase 3b (1 of 2)
 feasibility spike is delivered with a **stop** verdict: the complete split finite
 check (220 chunk files, all passing) took **1,198 s** with four files checked at
 once, against the ten-minute (600 s) added build budget. The full theorem remains
@@ -3067,8 +3069,10 @@ Lake's test-support roots now include `BitcoinTests.Psbt` as well as the gate.
 
 Besides the namespace/import changes, transaction hashing uses `Sha256.sha256d`,
 the framing error type gains `duplicateBip32Point`, and typed field decoding takes
-the capability and hash parameter as described above. Every other copied field
-rule and raw-key storage is unchanged. The four new proof slices needed no port
+the capability and hash parameter as described above. When Phase 4a (1 of 3)
+landed, every other copied field rule and raw-key storage was unchanged; see
+[Phase 4a: PSBT field parity follow-up](#phase-4a-psbt-field-parity-follow-up)
+for the later decoding changes. The four new proof slices needed no port
 fix; no theorem statement or proof was changed. All edits are enumerated in
 [upstream fixes](docs/upstream-fixes.md#transaction-and-psbt-subset-phase-4a-1-of-3)
 and reconstructed by `check-tx-psbt-copy.py`. The capability and point checker are
@@ -3553,25 +3557,21 @@ and `surplus-witness-format` from the subset run above.
 
 ### Deltas not taken
 
-These differences break exit parity with cyberkrill and are tracked for fixing
-before the Phase 7c goldens; the list is not a full parity audit. The copied
-field rules are intentionally unchanged outside the capability and preimage
-routing:
+These remaining differences need curve checks and are tracked for fixing before
+the Phase 7c goldens; the list is not a full parity audit. The field-parity
+follow-up below fixes the non-curve differences and records the three kept BIP
+rules under "Deltas taken".
 
 | Copied field rule | rust-bitcoin 0.32.8 reference and difference |
 |---|---|
-| Global extended public keys: 78-byte length and origin path length equals depth | `src/psbt/map/global.rs:113-149`, `src/bip32.rs:789-815`: `Xpub::decode` validates version bytes and parses the embedded curve point; the Rust global decoder does not enforce that depth/path equality. |
-| Partial-signature values are retained without signature decoding | `src/psbt/serialize.rs:179-200`: decodes `ecdsa::Signature`, including DER encoding and a standard sighash byte. |
+| Global extended public keys: embedded curve point is unchecked | `src/psbt/map/global.rs:113-149`, `src/bip32.rs:789-815`: `Xpub::decode` parses the embedded curve point. Version bytes are now checked; depth/path equality is a kept BIP rule under "Deltas taken". |
+| Partial-signature DER is unchecked | `src/psbt/serialize.rs:179-200`: decodes `ecdsa::Signature`, including DER encoding. Empty values and non-standard sighash bytes are now rejected. |
 | X-only keys are checked only for length | `src/psbt/serialize.rs:263-266,295-301`: parses `XOnlyPublicKey`, rejecting invalid curve points. |
-| Taproot signatures require only length 64 or 65 | `src/psbt/serialize.rs:273-282`, `src/crypto/taproot.rs:30-44`: additionally decodes the 65th sighash byte. |
-| Taproot input control blocks check only 33+32m shape and m ≤128; leaf values require one version byte | `src/psbt/serialize.rs:311-313,326-336`, `src/taproot/mod.rs:1102-1120`: decodes the internal curve point and leaf versions as well. |
-| Output Taproot trees check even leaf versions and complete depth-first structure | `src/psbt/serialize.rs:380-396`, `src/taproot/mod.rs:1230-1245`: `LeafVersion::from_consensus` also rejects the annex byte 0x50. |
-| Record key types and proprietary subtypes use canonical CompactSize | `src/psbt/raw.rs:25-30,79-107`: raw key types are one byte, and `ProprietaryType` at line 48 is `u8`. Multi-byte type handling therefore differs. |
-| Proprietary keys accept any key-data length after the subtype | `src/psbt/raw.rs:158-173,193-199`: reads at most 1,024 bytes after the subtype, and the whole-key decode rejects anything left over. |
+| Taproot input control blocks: internal curve point is unchecked | `src/psbt/serialize.rs:311-313`, `src/taproot/mod.rs:1102-1120`: decodes the internal curve point. Shape and leaf versions are now checked. |
 
-This change makes no parity fix; the fixes are separate tracker entries. PSBT roles,
-signing, new transaction/PSBT theorems, actual RIPEMD160/HASH160, and application
-wiring remain their later phases.
+The table reflects the field-parity follow-up below. PSBT roles, signing and
+application wiring remain later work; the hash and proof phases below supply
+the real RIPEMD160/HASH160 and transaction/PSBT theorems.
 
 ## Phase 4a: RIPEMD-160 and HASH160 (2 of 3)
 
@@ -3801,9 +3801,9 @@ and in the port. Port paths are relative to `packages/bitcoin/`.
 |---|---|---|
 | `LeanMiniscript/Psbt/ParseProofs.lean:31-34` | `Psbt.parse_serialize` | `Bitcoin/Psbt/ParseProofs.lean:34-36` (docstring at `:32`) |
 | `LeanMiniscript/Psbt/ParseProofs.lean:40` | `Psbt.serialize_parse` | `Bitcoin/Psbt/ParseProofs.lean:43-45` |
-| `LeanMiniscript/Psbt/Fields.lean:536-539` | `Psbt.parse` | `Bitcoin/Psbt/Fields.lean:534-537`; `Psbt.decode` at `:526-531` |
-| `LeanMiniscript/Psbt/Fields.lean:206-207` | `validPublicKey`, replaced by the capability | `Bitcoin/Psbt/Fields.lean:377` (`cap.isValidPubkey`), `:389` and `:485` (`cap.compressPubkey`) |
-| `LeanMiniscript/Psbt/Fields.lean:272-276` | `preimageHash` | `Bitcoin/Psbt/Fields.lean:270-274` |
+| `LeanMiniscript/Psbt/Fields.lean:536-539` | `Psbt.parse` | `Bitcoin/Psbt/Fields.lean:560-563`; `Psbt.decode` at `:552-557` |
+| `LeanMiniscript/Psbt/Fields.lean:206-207` | `validPublicKey`, replaced by the capability | `Bitcoin/Psbt/Fields.lean:397` (`cap.isValidPubkey`), `:411` and `:511` (`cap.compressPubkey`) |
+| `LeanMiniscript/Psbt/Fields.lean:272-276` | `preimageHash` | `Bitcoin/Psbt/Fields.lean:286-290` |
 | `LeanMiniscript/Psbt/Codec.lean:68-69` | `KeyValueMap.WellFormed`, including `Unique` | `Bitcoin/Psbt/Codec.lean:70-71`; `KeyValueMap.Unique` at `:62-63` |
 | `LeanMiniscript/Psbt/Codec.lean:127` | `throw .trailingData` | `Bitcoin/Psbt/Codec.lean:129` |
 | `LeanMiniscript/Bitcoin/Deserialization.lean:115-170` | `readTransaction` to `serializeWitnessTransaction` | `Bitcoin/Deserialization.lean:43-96`: reader `:43-73`, serializer `:87-96` |
@@ -4215,10 +4215,233 @@ No temporary clone, cache, helper or process from this work session remains;
 normal build outputs and logs remain. The two edited paths are staged on the
 existing feature branch, with no commit, push, PR, branch or tracker operation.
 
+## Phase 4a: PSBT field parity follow-up
+
+Five decode rules now match rust-bitcoin 0.32.8 without a curve operation.
+Framing, raw storage, serializers, supplied-operation call shapes and theorem
+statements are unchanged. The earlier length/key checks precede new checks,
+retaining the exact signature-length, control-size and hybrid-key errors.
+
+| Rule | rust-bitcoin 0.32.8 source | Must-reject inputs and exact port reasons |
+|---|---|---|
+| Global xpub version is 0488b21e or 043587cf | `src/bip32.rs:789-801`, called at `src/psbt/map/global.rs:113-118` | `xpub-version`: `invalidKey "global" 1 "invalid extended key version"` |
+| Partial signature is nonempty and ends in 01/02/03/81/82/83 | `src/crypto/ecdsa.rs:38-43`, `src/crypto/sighash.rs:447-460`, `src/psbt/serialize.rs:179-200` | `partial-sig-empty`: `invalidValue "input" 2 "empty ECDSA signature"`; `partial-sig-sighash`: `invalidValue "input" 2 "non-standard ECDSA sighash type"` |
+| Both 65-byte Taproot signature fields end in 00/01/02/03/81/82/83 | `src/crypto/taproot.rs:30-44`, `src/crypto/sighash.rs:500-512`, `src/psbt/serialize.rs:273-283` | `tap-key-sig-sighash`, `tap-script-sig-sighash`: `invalidValue "input" 19/20 "non-standard Taproot sighash type"` respectively |
+| Leaf versions are even and not annex 50 | `src/taproot/mod.rs:1105-1116,1187-1196,1236-1243`, `src/psbt/serialize.rs:310-313,326-336,380-396` | `leaf-script-odd`, `leaf-script-annex`: `invalidValue "input" 21 "invalid leaf version"`; `control-block-annex`: `invalidKey "input" 21 "invalid control block leaf version"`; `out-tap-tree-annex`: `invalidValue "output" 6 "invalid leaf version"` |
+| Proprietary key has at most 1,024 bytes after the one-byte subtype | `src/psbt/raw.rs:48,158-173,193-199`, `src/consensus/encode.rs:159-168` | `proprietary-1025`: `invalidKey "input" 252 "proprietary key data exceeds 1024 bytes"` |
+
+The proprietary limit counts at most 1,025 bytes after the identifier, including
+the first subtype byte, in every scope. It does not start at the end of our
+canonical CompactSize subtype. DER, xpub/x-only/internal curve points remain
+in the separate curve follow-up. Taproot signature bytes need only their
+length check: secp256k1 0.29.1 `src/schnorr.rs:78-87` checks no other property.
+The three kept port-stricter BIP rules are unchanged and listed below.
+
+### Pinned offline CLI capture
+
+The reference dry run listed nothing to build, exit **0**:
+
+```bash
+nix build --dry-run --no-link github:douglaz/cyberkrill/27cad1faba86260b06665a89f0af5134d23525c2
+```
+
+`nix build --no-link --print-out-paths` of that reference also exited **0**.
+`capture-cyberkrill-psbt.py` derives inputs by published name from the pinned
+BIP174/370/371 vectors, asserts one-record edits, and captures all 39 invocations
+of `onchain-decode-psbt`. Each receives Base64 on stdin in a fresh HOME and
+working directory under `unshare -rn`, with loopback enabled and an explicit
+minimal environment. Binary resolution happens first with the caller's HOME.
+Temporary workspaces are deleted even on failure. See
+[test-data provenance](packages/bitcoin/test-data/README.md#psbt-field-parity-capture).
+
+Regenerate or check from the repository root, with `TMPDIR` set:
+
+```bash
+TMPDIR="${TMP_ROOT:?}" python3 -I packages/bitcoin/capture-cyberkrill-psbt.py
+TMPDIR="${TMP_ROOT:?}" python3 -I packages/bitcoin/capture-cyberkrill-psbt.py --check
+```
+
+The record is `test-data/cyberkrill-psbt-capture.json` under `packages/bitcoin`.
+It holds the reference/revision, base names, edits, Base64 and separate streams.
+The Lean actions read those exact bytes, pin 39 rows and counts **10/13/16**,
+and select each unique name with `lake test -- --psbt 'parity NAME'`.
+The original 24 BIP370 invalid inputs remain pinned, including indices 1–12.
+
+cyberkrill exits **1** on all ten must-reject inputs, and each stderr names the
+rust-bitcoin 0.32.8 error's Display text; the tracker item's table gives its
+Debug form. All five bases and all eight edited acceptance boundaries exit
+**0**, so no expectation is hand-derived and there is no open exit-parity
+finding. All sixteen port-stricter inputs exit **0** upstream and are rejected
+by the port. The four new port-stricter tests return exactly the reasons the
+tracker item names:
+`decode truncated`, `decode nonCanonicalCompactSize`,
+`invalidKey "input" 252 "malformed proprietary key"`, and
+`invalidValue "global" 1 "path length must match the extended key depth"`.
+Every one of the five rules was therefore implemented.
+
+| Input | Class | cyberkrill exit | stderr summary | Port decoder |
+|---|---|---|---|---|
+| `xpub-version` | must-reject | 1 | xpub key error -  Can't deserialize ExtendedPublicKey from global XPUB key data | reject |
+| `partial-sig-sighash` | must-reject | 1 | non-standard sighash type: 4 | reject |
+| `partial-sig-empty` | must-reject | 1 | invalid ECDSA signature | reject |
+| `tap-key-sig-sighash` | must-reject | 1 | non-standard sighash type: 4 | reject |
+| `tap-script-sig-sighash` | must-reject | 1 | non-standard sighash type: 4 | reject |
+| `leaf-script-odd` | must-reject | 1 | invalid leaf version | reject |
+| `leaf-script-annex` | must-reject | 1 | invalid leaf version | reject |
+| `control-block-annex` | must-reject | 1 | invalid control block | reject |
+| `out-tap-tree-annex` | must-reject | 1 | invalid leaf version | reject |
+| `proprietary-1025` | must-reject | 1 | 1: parse failed: data not consumed entirely when explicitly deserializing | reject |
+| `base-xpub` | must-accept | 0 | empty | accept |
+| `base-partial` | must-accept | 0 | empty | accept |
+| `base-key` | must-accept | 0 | empty | accept |
+| `base-script` | must-accept | 0 | empty | accept |
+| `base-tree` | must-accept | 0 | empty | accept |
+| `partial-sig-83` | must-accept | 0 | empty | accept |
+| `tap-key-sig-00` | must-accept | 0 | empty | accept |
+| `tap-key-sig-83` | must-accept | 0 | empty | accept |
+| `leaf-script-c2` | must-accept | 0 | empty | accept |
+| `out-tap-tree-c2` | must-accept | 0 | empty | accept |
+| `control-block-c2` | must-accept | 0 | empty | accept |
+| `tpub` | must-accept | 0 | empty | accept |
+| `proprietary-1024` | must-accept | 0 | empty | accept |
+| `key-type-fd01` | port-stricter | 0 | empty | reject |
+| `key-type-fd0500` | port-stricter | 0 | empty | reject |
+| `proprietary-subtype-fd01` | port-stricter | 0 | empty | reject |
+| `xpub-depth` | port-stricter | 0 | empty | reject |
+| `bip370-invalid-1` | port-stricter | 0 | empty | reject |
+| `bip370-invalid-2` | port-stricter | 0 | empty | reject |
+| `bip370-invalid-3` | port-stricter | 0 | empty | reject |
+| `bip370-invalid-4` | port-stricter | 0 | empty | reject |
+| `bip370-invalid-5` | port-stricter | 0 | empty | reject |
+| `bip370-invalid-6` | port-stricter | 0 | empty | reject |
+| `bip370-invalid-7` | port-stricter | 0 | empty | reject |
+| `bip370-invalid-8` | port-stricter | 0 | empty | reject |
+| `bip370-invalid-9` | port-stricter | 0 | empty | reject |
+| `bip370-invalid-10` | port-stricter | 0 | empty | reject |
+| `bip370-invalid-11` | port-stricter | 0 | empty | reject |
+| `bip370-invalid-12` | port-stricter | 0 | empty | reject |
+
+### Field-parity mutation evidence
+
+All six full commands below completed sequentially, each in its own foreground
+scope with `MemoryMax=8G`, `MemorySwapMax=0`, `OOMPolicy=continue`,
+`TasksMax=4096` and `timeout 3600`. No capped continuation was needed.
+Each runner requires a full restored `lake test` at exit **0**.
+
+| Command from `packages/bitcoin` | Exit | Detected |
+|---|---|---|
+| `nix develop -c python3 -I check-mutations.py` | 0 | 6/6 |
+| `nix develop -c python3 -I check-base58-mutations.py` | 0 | 6/6 |
+| `nix develop -c python3 -I check-bech32-mutations.py` | 0 | 18/18 |
+| `nix develop -c python3 -I check-address-mutations.py` | 0 | 20/20 |
+| `nix develop -c python3 -I check-psbt-mutations.py` | 0 | 117/117 |
+| `nix develop -c python3 -I check-ripemd160-mutations.py` | 0 | 8/8 |
+
+Total: **175/175**. All 95 earlier PSBT records are unchanged, and the other
+five mutation JSON files are byte-identical to the base revision. The 22 added
+records below cover ten rejections, eight edited acceptance boundaries and four
+kept stricter rules. Each changes production behavior, restores it in `finally`,
+and records separate streams under `.lake/psbt-mutation-checks`.
+The table gives each exact first failure. Selectors are passed to
+`lake test -- --psbt 'SELECTOR'`; every mutated command exits **1**.
+
+| Mutation label | Selector | Exit | First failure line |
+|---|---|---|---|
+| `parity-xpub-version` | `parity xpub-version` | 1 | `uncaught exception: assertion failed: parity xpub-version: expected Bitcoin.Psbt.PsbtError.invalidKey "global" 1 "invalid extended key version", got accepted` |
+| `parity-partial-sig-empty` | `parity partial-sig-empty` | 1 | `uncaught exception: assertion failed: parity partial-sig-empty: expected Bitcoin.Psbt.PsbtError.invalidValue "input" 2 "empty ECDSA signature", got Bitcoin.Psbt.PsbtError.invalidValue "input" 2 "non-standard ECDSA sighash type"` |
+| `parity-partial-sig-sighash` | `parity partial-sig-sighash` | 1 | `uncaught exception: assertion failed: parity partial-sig-sighash: expected Bitcoin.Psbt.PsbtError.invalidValue "input" 2 "non-standard ECDSA sighash type", got accepted` |
+| `parity-tap-key-sig-sighash` | `parity tap-key-sig-sighash` | 1 | `uncaught exception: assertion failed: parity tap-key-sig-sighash: expected Bitcoin.Psbt.PsbtError.invalidValue "input" 19 "non-standard Taproot sighash type", got accepted` |
+| `parity-tap-script-sig-sighash` | `parity tap-script-sig-sighash` | 1 | `uncaught exception: assertion failed: parity tap-script-sig-sighash: expected Bitcoin.Psbt.PsbtError.invalidValue "input" 20 "non-standard Taproot sighash type", got accepted` |
+| `parity-leaf-script-odd` | `parity leaf-script-odd` | 1 | `uncaught exception: assertion failed: parity leaf-script-odd: expected Bitcoin.Psbt.PsbtError.invalidValue "input" 21 "invalid leaf version", got accepted` |
+| `parity-leaf-script-annex` | `parity leaf-script-annex` | 1 | `uncaught exception: assertion failed: parity leaf-script-annex: expected Bitcoin.Psbt.PsbtError.invalidValue "input" 21 "invalid leaf version", got accepted` |
+| `parity-control-block-annex` | `parity control-block-annex` | 1 | `uncaught exception: assertion failed: parity control-block-annex: expected Bitcoin.Psbt.PsbtError.invalidKey "input" 21 "invalid control block leaf version", got accepted` |
+| `parity-out-tap-tree-annex` | `parity out-tap-tree-annex` | 1 | `uncaught exception: assertion failed: parity out-tap-tree-annex: expected Bitcoin.Psbt.PsbtError.invalidValue "output" 6 "invalid leaf version", got accepted` |
+| `parity-proprietary-1025` | `parity proprietary-1025` | 1 | `uncaught exception: assertion failed: parity proprietary-1025: expected Bitcoin.Psbt.PsbtError.invalidKey "input" 252 "proprietary key data exceeds 1024 bytes", got accepted` |
+| `parity-partial-sig-83` | `parity partial-sig-83` | 1 | `uncaught exception: assertion failed: parity partial-sig-83 accepted: Bitcoin.Psbt.PsbtError.invalidValue "input" 2 "non-standard ECDSA sighash type"` |
+| `parity-tap-key-sig-00` | `parity tap-key-sig-00` | 1 | `uncaught exception: assertion failed: parity tap-key-sig-00 accepted: Bitcoin.Psbt.PsbtError.invalidValue "input" 19 "non-standard Taproot sighash type"` |
+| `parity-tap-key-sig-83` | `parity tap-key-sig-83` | 1 | `uncaught exception: assertion failed: parity tap-key-sig-83 accepted: Bitcoin.Psbt.PsbtError.invalidValue "input" 19 "non-standard Taproot sighash type"` |
+| `parity-leaf-script-c2` | `parity leaf-script-c2` | 1 | `uncaught exception: assertion failed: parity leaf-script-c2 accepted: Bitcoin.Psbt.PsbtError.invalidValue "input" 21 "invalid leaf version"` |
+| `parity-out-tap-tree-c2` | `parity out-tap-tree-c2` | 1 | `uncaught exception: assertion failed: parity out-tap-tree-c2 accepted: Bitcoin.Psbt.PsbtError.invalidValue "output" 6 "invalid leaf version"` |
+| `parity-control-block-c2` | `parity control-block-c2` | 1 | `uncaught exception: assertion failed: parity control-block-c2 accepted: Bitcoin.Psbt.PsbtError.invalidKey "input" 21 "invalid control block leaf version"` |
+| `parity-tpub` | `parity tpub` | 1 | `uncaught exception: assertion failed: parity tpub accepted: Bitcoin.Psbt.PsbtError.invalidKey "global" 1 "invalid extended key version"` |
+| `parity-proprietary-1024` | `parity proprietary-1024` | 1 | `uncaught exception: assertion failed: parity proprietary-1024 accepted: Bitcoin.Psbt.PsbtError.invalidKey "input" 252 "proprietary key data exceeds 1024 bytes"` |
+| `parity-key-type-fd01` | `parity key-type-fd01` | 1 | `uncaught exception: assertion failed: parity key-type-fd01: expected Bitcoin.Psbt.PsbtError.decode (Bitcoin.CompactSize.DecodeError.truncated), got accepted` |
+| `parity-key-type-fd0500` | `parity key-type-fd0500` | 1 | `uncaught exception: assertion failed: parity key-type-fd0500: expected Bitcoin.Psbt.PsbtError.decode (Bitcoin.CompactSize.DecodeError.nonCanonicalCompactSize), got accepted` |
+| `parity-proprietary-subtype-fd01` | `parity proprietary-subtype-fd01` | 1 | `uncaught exception: assertion failed: parity proprietary-subtype-fd01: expected Bitcoin.Psbt.PsbtError.invalidKey "input" 252 "malformed proprietary key", got accepted` |
+| `parity-xpub-depth` | `parity xpub-depth` | 1 | `uncaught exception: assertion failed: parity xpub-depth: expected Bitcoin.Psbt.PsbtError.invalidValue "global" 1 "path length must match the extended key depth", got accepted` |
+
+No existing mutation anchor or pinned published-vector count changed. The new
+capture JSON is added to the resume fingerprint inputs. Nine exact replacement
+steps register the field edits in `check-tx-psbt-copy.py`; the fresh upstream
+checkout at `cb9bc5f2f80987ad18b696a9c660f90f4bc1b6bd` reconstructs all ten files.
+The three current port-location rows in the preceding proof-source table move
+only because `Fields.lean` gained decoding checks: parse/decode to 560/552,
+capability calls to 397/411/511, and preimage hashing to 286–290.
+Historical phase counts and earlier command records remain historical.
+
+The current PSBT action count is **91/91**, up from **52/52**: one selectable
+action for each capture row. The gate remains **764 library theorems; 60 named;
+0 offenders**, with only `propext`, `Classical.choice` and `Quot.sound` allowed.
+No library theorem count, statement, proof module or axiom allowlist changes.
+
+### Field-parity validation and changed files
+
+The following results were re-recorded on 2026-10-23 after the documentation
+corrections. Every command used `TMPDIR="${TMP_ROOT:?}"`; the six full mutation
+commands and their results are recorded above.
+
+| Command | Directory | Exit | Observation |
+|---|---|---|---|
+| `nix develop -c lake build` | `packages/bitcoin` | 0 | Package builds. |
+| `nix develop -c lake test` | `packages/bitcoin` | 0 | All existing vectors and exact errors retained; 91/91 PSBT actions; 764/60/0 axiom gate. |
+| `nix flake check -L` | root | 0 | Cached seven-package check reused; `running 0 flake checks...`, `all checks passed!`. |
+| `nix build` | root | 0 | Existing default executable reused. |
+| `./result/bin/cyberkrill` | root | 0 | `cyberkrill 0.1.0`. |
+| `nix build --dry-run --no-link github:douglaz/cyberkrill/27cad1faba86260b06665a89f0af5134d23525c2` | root | 0 | Nothing to build. |
+| `TMPDIR="${TMP_ROOT:?}" python3 -I packages/bitcoin/capture-cyberkrill-psbt.py --check` | root | 0 | All 39 derived inputs and captured streams reproduce exactly; private capture workspace removed. |
+| `python3 -I packages/bitcoin/check-tx-psbt-copy.py "$TMP_ROOT/miniscript"` | root | 0 | `transaction/PSBT copy: 10/10; MIT notice reused; forbidden fixture slice excluded`. |
+| Proof-placeholder command in the preceding validation section | root | 0 | Its grep exits 1; both streams empty. |
+| Library decision-tactic grep in the preceding validation section | root | 1 | Both streams empty. |
+| Axiom-gate substring grep in the preceding validation section | root | 1 | Both streams empty. |
+| `git diff --check 5baad8bf0e283a948828ee5bb749fae5b2491469` | root | 0 | Both streams empty. |
+| Exact staged key-material scan below | root | 1 | stdout empty; stderr empty; no matches or vector exceptions. |
+| Same key-material scan over `git diff -U0 5baad8bf0e283a948828ee5bb749fae5b2491469` | root | 1 | stdout empty; stderr empty; no matches or vector exceptions. |
+| `git diff --exit-code -- packages/bitcoin/test-data/` | root | 0 | All capture and mutation records unchanged by verification. |
+
+The exact key-material scan was:
+
+```bash
+git diff --cached -U0 | grep '^+' | grep -n -E '[xt]prv[1-9A-HJ-NP-Za-km-z]{100,}|\b[5KLc9][1-9A-HJ-NP-Za-km-z]{50,51}\b'
+```
+
+Validation streams remain separate under
+`packages/bitcoin/.lake/psbt-field-parity-validation`; mutation streams remain
+in each runner's existing directory. All heavy commands used their own capped
+foreground scope. The capture command removes its own private workspace.
+Cleanup removed exactly the newly created `TMP_ROOT`, including the fresh
+lean-miniscript clone and temporary caches, and asserted that the root, clone
+and `packages/bitcoin/__pycache__` were absent. No pre-existing external path
+was removed. Normal build outputs and validation logs remain.
+
+The twelve changed or added paths relative to the base revision are:
+
+- `packages/bitcoin/Bitcoin/Psbt/Fields.lean`: five decoding rules and seven named reasons.
+- `packages/bitcoin/BitcoinTests/Psbt.lean`: 39 actions reading the captured bytes.
+- `packages/bitcoin/capture-cyberkrill-psbt.py`: derivation and offline capture, plus `--check`.
+- `packages/bitcoin/test-data/cyberkrill-psbt-capture.json`: the 39 captured rows.
+- `packages/bitcoin/check-psbt-mutations.py`: 22 mutations and capture fingerprinting.
+- `packages/bitcoin/test-data/psbt-mutations.json`: 117 records, with the earlier 95 unchanged.
+- `packages/bitcoin/check-tx-psbt-copy.py`: nine exact replacement steps.
+- `packages/bitcoin/test-data/README.md`: capture provenance and regeneration.
+- `docs/upstream-fixes.md`: each change to copied decoding code.
+- `README.md`: rule, capture, mutation, delta and validation records; three moved source locations.
+- `plan.md`: only the provisional §3 clause, replaced with the measured 16-input result.
+- `.beads/issues.jsonl`: the tracker item's status.
+
 ## Deltas taken
 
 The following input classes are rejected although cyberkrill accepts them.
-All reference behavior here comes from the pinned offline capture above.
+Reference behavior comes from the pinned offline amount and PSBT captures above.
 
 | Class | Captured cyberkrill behavior | Port test names |
 |---|---|---|
@@ -4227,8 +4450,33 @@ All reference behavior here comes from the pinned offline capture above.
 | Nonfinite `inf` / `nan` spellings, including leading `+`, signed NaN and case variants | `inf` / `+inf` saturate to 18446744073709551615; `nan`, `+nan`, `-nan` become 0. Tested bare and with BTC/sat suffixes. Negative infinity is already rejected by cyberkrill. | `nonfinite-inf`, `nonfinite-+inf`, `nonfinite-nan`, `nonfinite-+nan`, `nonfinite--nan` and their suffix variants |
 | Named `infinity` form, including leading `+` and case variants | `infinity` / `+infinity` saturate to 18446744073709551615, bare and with BTC/sat suffixes. The port rejects every spelling; negative infinity already fails upstream. | `nonfinite-infinity`, `nonfinite-+infinity` and their suffix variants |
 
-There are no other intentional rejection classes in this phase. Every input the
-reference rejects in the 124-case capture is rejected by the port.
+The amount rejection classes above are unchanged. Every input the reference
+rejects in the 124-case amount capture is rejected by the port. The PSBT decoder
+also keeps three BIP rules (owner decision, 2026-10-23): canonical CompactSize
+key types and proprietary subtypes (BIP174), global xpub origin path length
+equal to depth (BIP174), and no v2-only fields in v0 (BIP370). Their code is
+unchanged. The following sixteen inputs all have captured cyberkrill exit **0**
+and port decoder rejection; these are the fourth golden-parity exception in
+plan §3. Select each with `lake test -- --psbt 'parity NAME'`.
+
+| Rule | Input | Captured cyberkrill exit |
+|---|---|---|
+| Canonical CompactSize key types | `key-type-fd01` | 0 |
+| Canonical CompactSize key types | `key-type-fd0500` | 0 |
+| Canonical CompactSize proprietary subtype | `proprietary-subtype-fd01` | 0 |
+| Global xpub depth/path equality | `xpub-depth` | 0 |
+| No v2-only fields in v0 | `bip370-invalid-1` (`PSBT_GLOBAL_TX_VERSION`) | 0 |
+| No v2-only fields in v0 | `bip370-invalid-2` (`PSBT_GLOBAL_FALLBACK_LOCKTIME`) | 0 |
+| No v2-only fields in v0 | `bip370-invalid-3` (`PSBT_GLOBAL_INPUT_COUNT`) | 0 |
+| No v2-only fields in v0 | `bip370-invalid-4` (`PSBT_GLOBAL_OUTPUT_COUNT`) | 0 |
+| No v2-only fields in v0 | `bip370-invalid-5` (`PSBT_GLOBAL_TX_MODIFIABLE`) | 0 |
+| No v2-only fields in v0 | `bip370-invalid-6` (`PSBT_IN_PREVIOUS_TXID`) | 0 |
+| No v2-only fields in v0 | `bip370-invalid-7` (`PSBT_IN_OUTPUT_INDEX`) | 0 |
+| No v2-only fields in v0 | `bip370-invalid-8` (`PSBT_IN_SEQUENCE`) | 0 |
+| No v2-only fields in v0 | `bip370-invalid-9` (`PSBT_IN_REQUIRED_TIME_LOCKTIME`) | 0 |
+| No v2-only fields in v0 | `bip370-invalid-10` (`PSBT_IN_REQUIRED_HEIGHT_LOCKTIME`) | 0 |
+| No v2-only fields in v0 | `bip370-invalid-11` (`PSBT_OUT_AMOUNT`) | 0 |
+| No v2-only fields in v0 | `bip370-invalid-12` (`PSBT_OUT_SCRIPT`) | 0 |
 
 ## Licence
 

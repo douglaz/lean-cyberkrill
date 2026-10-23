@@ -203,6 +203,74 @@ private def jsonNat (row : Lean.Json) (field : String) : IO Nat :=
 private def jsonText (row : Lean.Json) (field : String) : IO String :=
   getOk ("inventory " ++ field) (row.getObjValAs? String field)
 
+private def parityRejects : List (String × PsbtError) := [
+  ("xpub-version", .invalidKey "global" 1 "invalid extended key version"),
+  ("partial-sig-sighash", .invalidValue "input" 2 "non-standard ECDSA sighash type"),
+  ("partial-sig-empty", .invalidValue "input" 2 "empty ECDSA signature"),
+  ("tap-key-sig-sighash", .invalidValue "input" 19 "non-standard Taproot sighash type"),
+  ("tap-script-sig-sighash", .invalidValue "input" 20 "non-standard Taproot sighash type"),
+  ("leaf-script-odd", .invalidValue "input" 21 "invalid leaf version"),
+  ("leaf-script-annex", .invalidValue "input" 21 "invalid leaf version"),
+  ("control-block-annex", .invalidKey "input" 21 "invalid control block leaf version"),
+  ("out-tap-tree-annex", .invalidValue "output" 6 "invalid leaf version"),
+  ("proprietary-1025", .invalidKey "input" 252 "proprietary key data exceeds 1024 bytes")]
+
+private def parityAccepts : List String := [
+  "base-xpub", "base-partial", "base-key", "base-script", "base-tree", "partial-sig-83",
+  "tap-key-sig-00", "tap-key-sig-83", "leaf-script-c2", "out-tap-tree-c2",
+  "control-block-c2", "tpub", "proprietary-1024"]
+
+private def parityStricter : List (String × PsbtError) := [
+  ("key-type-fd01", .decode .truncated),
+  ("key-type-fd0500", .decode .nonCanonicalCompactSize),
+  ("proprietary-subtype-fd01", .invalidKey "input" 252 "malformed proprietary key"),
+  ("xpub-depth", .invalidValue "global" 1 "path length must match the extended key depth")] ++
+  (List.range 12).map (fun i =>
+    let (scope, kind) := if i < 5 then ("global", i + 2)
+      else if i < 10 then ("input", i + 9) else ("output", i - 7)
+    (s!"bip370-invalid-{i + 1}", .excludedField scope kind))
+
+/-- Read the exact Base64 submitted to the reference CLI; edits live only in
+the capture script, whose --check mode checks derivation and recorded streams. -/
+private def parityCase (name : String) : IO Unit := do
+  let data ← getOk "parity JSON" (Lean.Json.parse
+    (← IO.FS.readFile "test-data/cyberkrill-psbt-capture.json"))
+  let rows ← getOk "parity rows" (data.getObjValAs? (Array Lean.Json) "rows")
+  check "parity row count" (rows.size == 39)
+  for (cls, count) in [("must-reject", 10), ("must-accept", 13), ("port-stricter", 16)] do
+    let selected ← rows.toList.filterM fun row => return (← jsonText row "class") == cls
+    check ("parity " ++ cls ++ " count") (selected.length == count)
+  let selected ← rows.toList.filterM fun row => return (← jsonText row "name") == name
+  check ("parity unique " ++ name) (selected.length == 1)
+  let row := selected[0]!
+  let cls ← jsonText row "class"
+  let encoded ← jsonText row "input_base64"
+  let raw ← match Base64.decode encoded with
+    | some raw => pure raw
+    | none => throw <| IO.userError s!"assertion failed: parity {name} base64"
+  check ("parity " ++ name ++ " encoding") (Base64.encode raw == encoded)
+  if (← jsonText row "edit") == "unchanged" then
+    let bases := (vectorSet (← jsonText row "vector_set")).filter
+      (fun vector => vector.1 == (row.getObjValAs? String "base").toOption.getD "")
+    check ("parity " ++ name ++ " published bytes")
+      (bases.length == 1 && hex bases[0]!.2.1 == raw)
+  let expected := (parityRejects ++ parityStricter).lookup name
+  match expected with
+  | some error =>
+    check ("parity " ++ name ++ " class")
+      (cls == if (parityRejects.lookup name).isSome then "must-reject" else "port-stricter")
+    let result := parse raw
+    let observed := match result with
+      | .ok _ => "accepted"
+      | .error e => toString (repr e)
+    check s!"parity {name}: expected {repr error}, got {observed}" (result == .error error)
+  | none =>
+    check ("parity " ++ name ++ " accepted class") (cls == "must-accept" && parityAccepts.contains name)
+    let _ ← getOk ("parity " ++ name ++ " accepted") (parse raw)
+  let referenceExit ← jsonNat row "exit"
+  check ("parity " ++ name ++ " reference exit") (referenceExit == if cls == "must-reject" then 1 else 0)
+  IO.println s!"parity {name}: {cls}; reference EXIT={referenceExit}"
+
 private def malformedTransaction (index : Nat) (error : DecodeError) : IO Unit := do
   let raw := hex bip174Invalid[index]!.2.1
   let (global, _) ← getOk "malformed global map" (rawMap (raw.size + 1) (raw.data.toList.drop 5))
@@ -404,7 +472,9 @@ def run (only : Option String := none) : IO Unit := do
       let tx := unsigned.transaction
       let witnesses := tx.inputs.toList.map (fun _ => []) ++ [[bytes [1]]]
       check "surplus witness legacy"
-        (serializeWitnessTransaction tx witnesses == serializeTransaction tx))]
+        (serializeWitnessTransaction tx witnesses == serializeTransaction tx))] ++
+    ((parityRejects.map (·.1) ++ parityAccepts ++ parityStricter.map (·.1)).map
+      (fun name => ("parity " ++ name, parityCase name)))
   let selectable := actions ++ [
     ("malformed transaction 18", malformedTransaction 18 .truncated),
     ("malformed transaction 19", malformedTransaction 19 .trailingData)]

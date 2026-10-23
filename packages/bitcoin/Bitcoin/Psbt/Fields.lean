@@ -207,6 +207,15 @@ def encodeTapKeySource (source : TapKeySource) : ByteArray :=
 private def validSchnorrSignature (signature : ByteArray) : Bool :=
   signature.size == 64 || signature.size == 65
 
+private def standardEcdsaSighash (sighash : UInt8) : Bool :=
+  [1, 2, 3, 129, 130, 131].contains sighash
+
+private def validTapSighash (signature : ByteArray) : Bool :=
+  signature.size != 65 || signature[64]! == 0 || standardEcdsaSighash signature[64]!
+
+private def validLeafVersion (version : UInt8) : Bool :=
+  version.toNat % 2 == 0 && version != 0x50
+
 /-- Control-block shape from BIP341: 33 + 32m bytes with m ≤ 128. -/
 def validControlBlockSize (size : Nat) : Bool :=
   size ≥ 33 && (size - 33) % 32 == 0 && (size - 33) / 32 ≤ 128
@@ -249,7 +258,7 @@ def decodeTapTree (value : ByteArray) : Except PsbtError (List TapTreeLeaf) := d
   let keyType := KeyType.outTapTree
   let leaves ← exactValue scope keyType (readTapTreeLeaves value.size) value
   checkValue scope keyType (!leaves.isEmpty) "empty Taproot tree"
-  checkValue scope keyType (leaves.all (fun leaf => leaf.leafVersion.toNat % 2 == 0))
+  checkValue scope keyType (leaves.all (fun leaf => validLeafVersion leaf.leafVersion))
     "invalid leaf version"
   checkValue scope keyType (tapTreeComplete (leaves.map (·.depth))) "malformed Taproot tree"
   return leaves
@@ -267,6 +276,13 @@ private def validProprietaryKey (keyData : ByteArray) : Bool :=
     | .error _ => false
     | .ok _ => true
 
+/-- rust-bitcoin counts from its one-byte subtype, even when our canonical
+CompactSize subtype occupies more than one byte. -/
+private def proprietaryKeyLength (keyData : ByteArray) : Bool :=
+  match readByteVector keyData.data.toList with
+  | .error _ => false
+  | .ok (_, rest) => rest.length ≤ 1025
+
 private def preimageHash (hashes : PreimageHashes) (keyType : Nat) (preimage : ByteArray) : ByteArray :=
   if keyType == KeyType.inRipemd160 then hashes.ripemd160 preimage
   else if keyType == KeyType.inSha256 then Sha256.hash preimage
@@ -278,6 +294,7 @@ private def keepUnknown (scope : String) (keyType : Nat) (record : Record) (unkn
   if keyType == KeyType.proprietary then
     let (_, keyData) ← splitKey record.key
     checkKeyData scope keyType (validProprietaryKey keyData) "malformed proprietary key"
+    checkKeyData scope keyType (proprietaryKeyLength keyData) "proprietary key data exceeds 1024 bytes"
   return unknown ++ [record]
 
 /-! ## Map decoders -/
@@ -294,6 +311,9 @@ private def globalStep (fields : GlobalFields) (record : Record) : Except PsbtEr
     return { fields with unsignedTx := some tx }
   else if keyType == KeyType.globalXpub then
     checkKeyData scope keyType (keyData.size == 78) "extended key must be 78 bytes"
+    checkKeyData scope keyType
+      (keyData.extract 0 4 == ⟨#[0x04, 0x88, 0xb2, 0x1e]⟩ ||
+       keyData.extract 0 4 == ⟨#[0x04, 0x35, 0x87, 0xcf]⟩) "invalid extended key version"
     let source ← decodeKeySource scope keyType value
     checkValue scope keyType (source.path.length == keyData[4]!.toNat)
       "path length must match the extended key depth"
@@ -375,6 +395,8 @@ def inputStep (cap : PubkeyCapability) (hashes : PreimageHashes) (version : Nat)
     return { fields with witnessUtxo := some (← exactValue scope keyType readTxOutput value) }
   else if keyType == KeyType.inPartialSig then
     checkKeyData scope keyType (cap.isValidPubkey keyData) "invalid public key"
+    checkValue scope keyType (!value.isEmpty) "empty ECDSA signature"
+    checkValue scope keyType (standardEcdsaSighash value[value.size - 1]!) "non-standard ECDSA sighash type"
     return { fields with partialSigs := fields.partialSigs ++ [(keyData, value)] }
   else if keyType == KeyType.inSighashType then
     noKeyData scope keyType keyData
@@ -437,15 +459,19 @@ def inputStep (cap : PubkeyCapability) (hashes : PreimageHashes) (version : Nat)
   else if keyType == KeyType.inTapKeySig then
     noKeyData scope keyType keyData
     checkValue scope keyType (validSchnorrSignature value) "signature must be 64 or 65 bytes"
+    checkValue scope keyType (validTapSighash value) "non-standard Taproot sighash type"
     return { fields with tapKeySig := some value }
   else if keyType == KeyType.inTapScriptSig then
     checkKeyData scope keyType (keyData.size == 64) "key must be x-only key and leaf hash"
     checkValue scope keyType (validSchnorrSignature value) "signature must be 64 or 65 bytes"
+    checkValue scope keyType (validTapSighash value) "non-standard Taproot sighash type"
     return { fields with tapScriptSigs := fields.tapScriptSigs ++
       [((keyData.extract 0 32, keyData.extract 32 64), value)] }
   else if keyType == KeyType.inTapLeafScript then
     checkKeyData scope keyType (validControlBlockSize keyData.size) "invalid control block size"
     checkValue scope keyType (value.size ≥ 1) "missing leaf version"
+    checkKeyData scope keyType (validLeafVersion (keyData[0]! &&& 0xfe)) "invalid control block leaf version"
+    checkValue scope keyType (validLeafVersion value[value.size - 1]!) "invalid leaf version"
     return { fields with tapLeafScripts := fields.tapLeafScripts ++
       [{ controlBlock := keyData, script := value.extract 0 (value.size - 1),
          leafVersion := value[value.size - 1]! }] }

@@ -70,3 +70,34 @@ checkpoints. It restores the exact original source in `finally`, including when
 a handled termination signal unwinds a capped invocation. Checkpoints are
 written separately from the script, through an atomic rename. `--discover`
 keeps diagnostic logs without certifying or caching a detection.
+
+## PSBT field parity capture
+
+`cyberkrill-psbt-capture.json` records output from
+[cyberkrill at 27cad1faba86260b06665a89f0af5134d23525c2](https://github.com/douglaz/cyberkrill/tree/27cad1faba86260b06665a89f0af5134d23525c2),
+`onchain-decode-psbt`. Upstream is MIT OR Apache-2.0, taken under MIT;
+output only and no source copied.
+
+Inputs are derived from the published BIP174/370/371 vectors at
+[bitcoin/bips 927b6de9915c9262615a6399de51b200f81e5aa4](https://github.com/bitcoin/bips/tree/927b6de9915c9262615a6399de51b200f81e5aa4),
+BSD-2-Clause, see `Bitcoin/LICENSE-psbt-bips`. Changes: one-record edits derived
+by script. Five bases and twelve BIP370 vectors are unchanged. Base vectors
+are selected by published name; every edit asserts exactly one changed or
+added record and preserves the other maps and records.
+
+Regenerate from the repository root, with `TMPDIR` set to a private workspace:
+
+```bash
+python3 -I packages/bitcoin/capture-cyberkrill-psbt.py
+python3 -I packages/bitcoin/capture-cyberkrill-psbt.py --check
+```
+
+The script resolves the pinned binary with the caller's HOME before network
+isolation. Each invocation reads Base64 on stdin inside `unshare -rn`, with
+loopback enabled, a fresh HOME/working directory and a minimal environment.
+Its temporary workspace is removed on success and failure. Records retain
+separate stdout and stderr and no temporary or binary-store paths. The 39 rows
+comprise ten must-reject, thirteen must-accept and sixteen port-stricter inputs.
+Lean tests read these exact Base64 bytes; `--check` independently checks them
+against the published bases, edits and a fresh capture. The PSBT mutation
+fingerprint includes this record, so changed bytes invalidate checkpoints.
