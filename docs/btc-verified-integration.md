@@ -294,7 +294,7 @@ claim holds as written; anything else is a correction or an addition the plan re
     - **CI.** CI fails on any observed disagreement.
 
     That harness is C. This repository allows C only in `secp256k1` and `http-curl` (plan §1), so
-    Phase 11 keeps the method but by default uses a C-free Core oracle (plan §7).
+    Phase 11 keeps the method but uses a C-free, recorded Core oracle (plan §7 question 4).
 - **N21. Core oracle facts** (from Core @ `fc6923c`), used by plan §7:
     - `decoderawtransaction <hex> true` tries only the witness-aware deserializer, and `false` only
       the non-witness one. Each must consume the whole input. With the argument omitted, a heuristic
@@ -305,10 +305,21 @@ claim holds as written; anything else is a correction or an addition the plan re
     - An HTTP request body is limited to 32 MiB (`MAX_BODY_SIZE`, `src/httpserver.h:82`). Through
       RPC, then, Core never sees a transaction whose hex is larger than that, which includes any
       container just over `MAX_SIZE`.
+    - `bitcoin-tx -` reads the hex from stdin with no size limit (`src/bitcoin-tx.cpp:777-789`,
+      `:817-820` at v31.1) and decodes it with that heuristic. The heuristic doesn't matter for a
+      container over `MAX_SIZE`, because both deserializers reject it at the range check
+      (`src/serialize.h:356` at v31.1, `:359` at `fc6923c`). nixpkgs' package builds `bitcoin-tx`
+      along with `bitcoind`.
+    - The transaction deserializer (`UnserializeTransaction`, `src/primitives/transaction.h`) and
+      `DecodeTx` (`src/core_io.cpp`) are identical at v31.1, the version in this repository's
+      pinned nixpkgs, and at `fc6923c`.
+    - The kernel library's `btck_transaction_create` (`src/kernel/bitcoinkernel.cpp:513-522`)
+      deserializes with `TX_WITH_WITNESS` only and doesn't check that the input is fully consumed.
+      So it has no non-witness path, and it accepts a valid transaction followed by trailing bytes.
 
 ## Owner decisions
 
-Plan §7 holds the decisions and the questions still open. The decisions so far:
+Plan §7 holds the decisions. The owner answered all four of its questions on 2026-10-23:
 
 - **2026-10-23, toolchain route (§7 question 1): keep our own upgraded copy.** We upgrade
   btc-verified to Lean v4.35.0 and Mathlib `v4.35.0` ourselves, keep that copy pinned outside this
@@ -323,3 +334,10 @@ Plan §7 holds the decisions and the questions still open. The decisions so far:
   oracle, with the no-`sorry` check, the axiom gate and the 11b suite. Every other package stays in
   `nix flake check`, AGENTS.md names the exception, and "CI green" means both jobs pass. The job
   lands with the Phase 11 work.
+- **2026-10-23, Core oracle (§7 question 4): recorded answers.** Two independent technical reviews
+  came first, and both picked this option. A committed script runs a throwaway regtest node,
+  using the §6 #4 machinery, and records Core's `decoderawtransaction` answers on both paths for
+  the regression set and a fixed, bounded campaign. CI replays them, with no live node, no C and
+  no Core build. Core 31.1 from nixpkgs is the baseline (N21), the case over `MAX_SIZE` goes
+  through `bitcoin-tx` on stdin, the recording stays within a few MB, and a digest check forces a
+  re-record.
