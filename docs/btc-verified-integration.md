@@ -180,7 +180,8 @@ claim holds as written; anything else is a correction or an addition the plan re
    any package that imports it takes Mathlib with it. Mathlib is Apache-2.0 as well. Plan §2
    confines Mathlib to a separate `<pkg>-proofs` package. §6 #2 allowed Mathlib as a pinned input
    of `bitcoin-proofs` only if the 4-error theorem needed it, and counted Mathlib's build time
-   inside `nix flake check`.
+   inside `nix flake check`. For Phase 11 the owner has since put the Mathlib-dependent packages in
+   a separate CI job instead (plan §7 question 3; [Owner decisions](#owner-decisions)).
 
 ### btc-verified's model
 
@@ -317,3 +318,8 @@ Plan §7 holds the decisions and the questions still open. The decisions so far:
   and the 11b btc-verified oracle are "MIT OR Apache-2.0" like every other package. Our upgraded
   btc-verified copy and Mathlib, both Apache-2.0 only (N2, N3), are pinned build-time dependencies
   and are never copied into the tree.
+- **2026-10-23, Mathlib and CI placement (§7 question 3): separate CI job.** A second CI job on
+  every PR fetches Mathlib's prebuilt files, then builds and tests only the bridge and the 11b
+  oracle, with the no-`sorry` check, the axiom gate and the 11b suite. Every other package stays in
+  `nix flake check`, AGENTS.md names the exception, and "CI green" means both jobs pass. The job
+  lands with the Phase 11 work.
