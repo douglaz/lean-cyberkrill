@@ -172,8 +172,10 @@ claim holds as written; anything else is a correction or an addition the plan re
    `lakefile.lean`, README "License"). `Kernel/COPYING.bitcoin` is Bitcoin Core's MIT notice for the
    pinned C header. The "contribution rules" the analysis cites are AGENTS.md "Licence" and plan
    §5. They keep Apache-2.0-only material out of the tree and say "Use a pinned non-flake input
-   read at test time, or replace it with vectors we generate ourselves." They don't say whether a build-time Lake `require` of such a package is
-   allowed; plan §7 open question 2 asks the owner.
+   read at test time, or replace it with vectors we generate ourselves." They don't say whether a
+   build-time Lake `require` of such a package is allowed. For Phase 11 the owner has since allowed
+   it, as pinned dependencies that are never copied (plan §7 question 2;
+   [Owner decisions](#owner-decisions)).
 - **N3. Addition: btc-verified requires Mathlib** (`require "leanprover-community" / "mathlib"`), so
    any package that imports it takes Mathlib with it. Mathlib is Apache-2.0 as well. Plan §2
    confines Mathlib to a separate `<pkg>-proofs` package. §6 #2 allowed Mathlib as a pinned input
@@ -311,3 +313,7 @@ Plan §7 holds the decisions and the questions still open. The decisions so far:
   btc-verified to Lean v4.35.0 and Mathlib `v4.35.0` ourselves, keep that copy pinned outside this
   repository, and maintain it as btc-verified moves. Nothing is asked of btc-verified's
   maintainers. Deliverable 11a (2 of 2) in plan §7 does the upgrade.
+- **2026-10-23, licence footing (§7 question 2): dual, depend don't copy.** The 11c bridge package
+  and the 11b btc-verified oracle are "MIT OR Apache-2.0" like every other package. Our upgraded
+  btc-verified copy and Mathlib, both Apache-2.0 only (N2, N3), are pinned build-time dependencies
+  and are never copied into the tree.
