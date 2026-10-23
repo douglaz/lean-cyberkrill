@@ -4160,6 +4160,10 @@ separate stdout and stderr under the repository root's
 check started without `--resume`, produced 95 fresh checkpoints, and needed no
 continuation. The four required axiom lines match those printed above.
 
+`$FIRST_ROUND` names the first round's development commit. The squash merge
+keeps only the final tree, so the two rows that compare against it record a
+check made before merging and cannot be rerun from the merged history.
+
 | Command | Directory | Exit | Observation |
 |---|---|---|---|
 | `nix develop -c lake build` | `packages/bitcoin` | 0 | Package builds. |
@@ -4175,7 +4179,7 @@ continuation. The four required axiom lines match those printed above.
 | `nix develop -c python3 -I check-address-mutations.py` | `packages/bitcoin` | 0 | 20/20 detected; restored full test exits 0. |
 | `nix develop -c python3 -I check-psbt-mutations.py` | `packages/bitcoin` | 0 | 95/95 detected; restored full test exits 0. |
 | `nix develop -c python3 -I check-ripemd160-mutations.py` | `packages/bitcoin` | 0 | 8/8 detected; restored full test exits 0. |
-| `git diff --exit-code 8309feb -- 'packages/bitcoin/test-data/*.json'` | root | 0 | No output; all six evidence JSON files and the other JSON fixtures are byte-identical to the first round. |
+| `git diff --exit-code "$FIRST_ROUND" -- 'packages/bitcoin/test-data/*.json'` | root | 0 | No output; all six evidence JSON files and the other JSON fixtures are byte-identical to the first round. |
 | `git -C "$TMP_ROOT/miniscript" rev-parse HEAD` | root | 0 | Fresh clone prints `cb9bc5f2f80987ad18b696a9c660f90f4bc1b6bd`. |
 | `python3 -I packages/bitcoin/check-tx-psbt-copy.py "$TMP_ROOT/miniscript"` | root | 0 | 10/10; MIT notice reused; forbidden fixture slice excluded. |
 | `nix flake check -L`, with the two edited paths staged | root | 0 | All seven packages build and test; expected PSBT and axiom counts printed. |
@@ -4185,7 +4189,7 @@ continuation. The four required axiom lines match those printed above.
 | Library decision-tactic grep below | root | 1 | No output. |
 | Axiom-gate substring grep below | root | 1 | No output. |
 | `git diff --check 156c518b8c23fad785f8fa5fe534e122e4ffae31` | root | 0 | No output. |
-| `git diff --exit-code 8309feb -- packages/bitcoin/Bitcoin packages/bitcoin/Bitcoin.lean packages/bitcoin/lakefile.lean flake.nix flake.lock` | root | 0 | No output; production, proof and build definitions unchanged. |
+| `git diff --exit-code "$FIRST_ROUND" -- packages/bitcoin/Bitcoin packages/bitcoin/Bitcoin.lean packages/bitcoin/lakefile.lean flake.nix flake.lock` | root | 0 | No output; production, proof and build definitions unchanged. |
 | Staged key-material scan below | root | 1 | Stdout and stderr empty. |
 | Whole-change key-material scan below | root | 1 | Stdout and stderr empty. |
 | Added-line public-text and staged-content checks | root | 0 | No forbidden names, local paths or attribution trailers; staged bytes equal the two edited files. |
