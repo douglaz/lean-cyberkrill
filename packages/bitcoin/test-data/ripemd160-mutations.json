@@ -1,0 +1,114 @@
+[
+  {
+    "property": "RIPEMD-160 vectors 0 digest",
+    "mutation": "round-constant",
+    "source": "Bitcoin/Ripemd160.lean",
+    "command": [
+      "lake",
+      "test",
+      "--",
+      "--hash",
+      "vectors"
+    ],
+    "exit": 1,
+    "failure": "uncaught exception: assertion failed: RIPEMD-160 vectors 0 digest"
+  },
+  {
+    "property": "RIPEMD-160 vectors count",
+    "mutation": "count-vectors",
+    "source": "test-data/ripemd160.json",
+    "command": [
+      "lake",
+      "test",
+      "--",
+      "--hash",
+      "vectors"
+    ],
+    "exit": 1,
+    "failure": "uncaught exception: assertion failed: RIPEMD-160 vectors count"
+  },
+  {
+    "property": "HASH160 BIP173 count",
+    "mutation": "count-bip173",
+    "source": "BitcoinTests/Ripemd160.lean",
+    "command": [
+      "lake",
+      "test",
+      "--",
+      "--hash",
+      "bip173"
+    ],
+    "exit": 1,
+    "failure": "uncaught exception: assertion failed: HASH160 BIP173 count"
+  },
+  {
+    "property": "preimage 10 count",
+    "mutation": "count-psbt-ripemd160",
+    "source": "BitcoinTests/Psbt.lean",
+    "command": [
+      "lake",
+      "test",
+      "--",
+      "--psbt",
+      "RIPEMD160 preimage"
+    ],
+    "exit": 1,
+    "failure": "uncaught exception: assertion failed: preimage 10 count"
+  },
+  {
+    "property": "preimage 12 count",
+    "mutation": "count-psbt-hash160",
+    "source": "BitcoinTests/Psbt.lean",
+    "command": [
+      "lake",
+      "test",
+      "--",
+      "--psbt",
+      "HASH160 preimage"
+    ],
+    "exit": 1,
+    "failure": "uncaught exception: assertion failed: preimage 12 count"
+  },
+  {
+    "property": "HASH160 BIP173 digest",
+    "mutation": "hash160-composition",
+    "source": "Bitcoin/Ripemd160.lean",
+    "command": [
+      "lake",
+      "test",
+      "--",
+      "--hash",
+      "bip173"
+    ],
+    "exit": 1,
+    "failure": "uncaught exception: assertion failed: HASH160 BIP173 digest"
+  },
+  {
+    "property": "preimage 10 accepted",
+    "mutation": "miswired-hashes",
+    "source": "Bitcoin/Psbt/Hashes.lean",
+    "command": [
+      "lake",
+      "test",
+      "--",
+      "--psbt",
+      "RIPEMD160 preimage"
+    ],
+    "exit": 1,
+    "failure": "uncaught exception: assertion failed: preimage 10 accepted"
+  },
+  {
+    "property": "RIPEMD-160 vectors 7 digest",
+    "mutation": "length-padding",
+    "source": "Bitcoin/Ripemd160.lean",
+    "command": [
+      "lake",
+      "test",
+      "--",
+      "--hash",
+      "vectors"
+    ],
+    "exit": 1,
+    "failure": "uncaught exception: assertion failed: RIPEMD-160 vectors 7 digest"
+  }
+]

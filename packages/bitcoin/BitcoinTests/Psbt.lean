@@ -114,17 +114,21 @@ private def withKeys (p : Psbt) (output : Bool) (keys : List ByteArray) : Psbt :
   if output then { p with inputs := [[]], outputs := [keys.map (bip32 true), []] }
   else { p with inputs := [keys.map (bip32 false)] }
 
-private def preimage (kind : Nat) (hash : ByteArray → ByteArray) : IO Unit := do
+private def preimage (kind : Nat) (hash : ByteArray → ByteArray)
+    (hashes : PreimageHashes := testHashes) (cases : List Bool := [true, false]) : IO Unit := do
+  check s!"preimage {kind} count" (cases.length == 2)
   let p ← base
   let value := bytes [0, 1, 2, 3]
   let digest := hash value
   let key := recordKey kind digest
-  let good := withInput p [{ key, value }]
-  check s!"preimage {kind} accepted" ((parse good.serialize).isOk)
-  let bad := withInput p [{ key, value := value.set! 0 1 }]
-  check s!"preimage {kind} mismatch"
-    (parse bad.serialize == .error (.invalidValue "input" kind "preimage does not match hash"))
-  IO.println s!"preimage {kind}: 2/2"
+  for good in cases do
+    let record := withInput p [{ key, value := if good then value else value.set! 0 1 }]
+    let result := Psbt.parse testCapability hashes record.serialize
+    if good then check s!"preimage {kind} accepted" result.isOk
+    else
+      check s!"preimage {kind} mismatch"
+        (result == .error (.invalidValue "input" kind "preimage does not match hash"))
+  IO.println s!"preimage {kind}: {cases.length}/2"
 
 private def hybrid (output : Bool) : IO Unit := do
   let p := withKeys (← base) output [hybridKey]
@@ -298,8 +302,8 @@ def run (only : Option String := none) : IO Unit := do
       check "tap tree" (decodeTapTree (encodeTapTree tree) == .ok tree)),
     ("SHA256 preimage", preimage 11 Sha256.hash),
     ("HASH256 preimage", preimage 13 Sha256.sha256d),
-    ("RIPEMD160 preimage", preimage 10 testHashes.ripemd160),
-    ("HASH160 preimage", preimage 12 testHashes.hash160),
+    ("RIPEMD160 preimage", preimage 10 Bitcoin.ripemd160 preimageHashes [true, false]),
+    ("HASH160 preimage", preimage 12 Bitcoin.hash160 preimageHashes [true, false]),
     ("hybrid input", hybrid false), ("hybrid output", hybrid true),
     ("hybrid partial", do
       let p := withInput (← base) [{ key := recordKey 2 hybridKey, value := bytes [48] }]

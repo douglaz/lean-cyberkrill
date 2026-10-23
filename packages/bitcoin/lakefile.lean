@@ -19,7 +19,7 @@ require sha256 from ".." / "sha256"
 lean_lib Bitcoin
 
 lean_lib BitcoinTestSupport where
-  roots := #[`BitcoinTests.AxiomGate, `BitcoinTests.Psbt]
+  roots := #[`BitcoinTests.AxiomGate, `BitcoinTests.Psbt, `BitcoinTests.Ripemd160]
 
 @[test_driver]
 lean_exe BitcoinTests

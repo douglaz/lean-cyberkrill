@@ -8,6 +8,7 @@ import Bitcoin.Bech32Vectors
 import Bitcoin.AddressVectors
 import Bitcoin.CoreAddressVectors
 import BitcoinTests.Psbt
+import BitcoinTests.Ripemd160
 
 open Bitcoin
 open Bitcoin.Amount
@@ -366,8 +367,9 @@ def main (args : List String) : IO Unit := do
   IO.println s!"Bitcoin axiom gate: {BitcoinTests.auditedTheoremCount} library theorems; {BitcoinTests.namedTheorems.length} named; 0 offenders"
   match args with
   | ["--psbt", name] => BitcoinTests.PsbtTests.run (some name); return
+  | ["--hash", name] => BitcoinTests.Ripemd160Tests.run (some name); return
   | [] => pure ()
-  | _ => throw <| IO.userError "usage: BitcoinTests [--psbt NAME]"
+  | _ => throw <| IO.userError "usage: BitcoinTests [--psbt NAME | --hash NAME]"
   BitcoinTests.hexTests
   BitcoinTests.compactTests
   BitcoinTests.amountTests
@@ -375,6 +377,7 @@ def main (args : List String) : IO Unit := do
   BitcoinTests.base58Tests
   BitcoinTests.bech32Tests
   BitcoinTests.addressTests
+  BitcoinTests.Ripemd160Tests.run
   BitcoinTests.PsbtTests.run
   let scan ← IO.Process.output { cmd := "grep", args := #["-rEn", "--exclude-dir=.lake",
     "[tx]prv[1-9A-HJ-NP-Za-km-z]{100,}", ".."] }

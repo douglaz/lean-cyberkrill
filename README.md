@@ -11,7 +11,8 @@ bech32/bech32m codecs with strict and lax bit regrouping, and scriptPubKey/addre
 conversion per network with round-trip proofs. Phase 3a is complete apart from
 the 4-error theorem, which belongs to Phase 3b. Phase 4a (1 of 3) adds transaction
 and PSBT codecs, supplied curve/hash operations, an optional BIP32 same-point
-check, and hybrid-aware public-key compression. The Phase 3b (1 of 2)
+check, and hybrid-aware public-key compression. Phase 4a (2 of 3) adds pure
+RIPEMD-160 and HASH160 with an exported PSBT preimage-hash value. The Phase 3b (1 of 2)
 feasibility spike is delivered with a **stop** verdict: the complete split finite
 check (220 chunk files, all passing) took **1,198 s** with four files checked at
 once, against the ten-minute (600 s) added build budget. The full theorem remains
@@ -3569,6 +3570,213 @@ routing:
 This change makes no parity fix; the fixes are separate tracker entries. PSBT roles,
 signing, new transaction/PSBT theorems, actual RIPEMD160/HASH160, and application
 wiring remain their later phases.
+
+## Phase 4a: RIPEMD-160 and HASH160 (2 of 3)
+
+`import Bitcoin` exposes the following pure functions and the value used to
+validate RIPEMD160/HASH160 PSBT preimages. There is no new dependency or FFI.
+
+| Module | Public API |
+|---|---|
+| `Bitcoin.Ripemd160` | `Bitcoin.ripemd160 : ByteArray → ByteArray`, always 20 bytes; `Bitcoin.Ripemd160.hash` is the implementation |
+| `Bitcoin.Ripemd160` | `Bitcoin.hash160 b = Bitcoin.ripemd160 (Sha256.hash b)` |
+| `Bitcoin.Psbt.Hashes` | `Bitcoin.Psbt.preimageHashes : PreimageHashes`, filled with the two functions above |
+
+Call `Psbt.parse cap preimageHashes bytes`, `p.decode cap preimageHashes`, or
+`Psbt.parseBase64 cap preimageHashes text`. These signatures are unchanged.
+SHA256 and HASH256 still call `Sha256.hash` and `Sha256.sha256d` directly.
+The earlier phase's statements deferring the real hashes are historical;
+application wiring and the transaction/PSBT proof obligations remain later work.
+
+### Sources, generated expectations and test sets
+
+The implementation was written from the algorithm description linked at
+https://homes.esat.kuleuven.be/~bosselae/ripemd160.html. Only the page and its
+pseudocode were read; no implementation was opened or copied. The page is cited
+by URL only. Its code, prose and digest table are not included in the tree.
+
+`packages/bitcoin/generate-ripemd160-vectors.py` sends each ASCII message as exact
+bytes on stdin to `openssl dgst -ripemd160 -binary`, without a newline. It writes
+only `test-data/ripemd160.json`, recording
+`OpenSSL 3.5.8 25 Aug 2026 (Library: OpenSSL 3.5.8 25 Aug 2026)`.
+The fixture stores repeated messages as base strings plus repeat counts.
+From the repository root:
+
+```bash
+nix develop -c python3 -I packages/bitcoin/generate-ripemd160-vectors.py
+git diff --exit-code -- packages/bitcoin/test-data/ripemd160.json
+```
+
+The nine generated digests were compared with the RIPEMD-160 column on the
+authors' page: **9/9 equal**. The comparison loaded the page into memory and
+searched for each generated 40-character digest with word boundaries; it
+asserted all nine matches and exited **0**. No downloaded page was saved.
+The exact comparison command below used Python **3.13.15**:
+
+```bash
+python3 - <<'PY'
+import json, re, urllib.request
+from pathlib import Path
+page = urllib.request.urlopen('https://homes.esat.kuleuven.be/~bosselae/ripemd160.html').read().decode()
+rows = json.loads(Path('packages/bitcoin/test-data/ripemd160.json').read_text())['vectors']
+for row in rows:
+    assert re.search(r'\b' + row['digest'] + r'\b', page), row['message']
+print('Generated OpenSSL digests compared with authors’ RIPEMD-160 column: 9/9 equal')
+PY
+```
+
+| Counted set in `lake test` | Pinned count and expectations |
+|---|---|
+| RIPEMD-160 vectors | 9/9; empty, `a`, `abc`, `message digest`, alphabet, 56-byte message, alphanumeric, 8 × `1234567890`, one million `a`; generated digests and 20-byte output length |
+| HASH160 BIP173 | 1/1; compressed public generator from bitcoin/bips @ `130b8e0fa7f30fa45532f080b87b8db27a79e46e`, `bip-0173.mediawiki:60-61`, address at line 64; expected program is extracted from existing `AddressVectors.bip350Valid[0]` |
+| RIPEMD160 PSBT | 2/2; synthetic matching record accepted, one-byte preimage change rejected with the exact error |
+| HASH160 PSBT | 2/2; the same acceptance and exact-error checks |
+
+Every set asserts its list/array length before checking its cases and prints
+the checked length. The two PSBT pairs reuse the existing action names
+`RIPEMD160 preimage` and `HASH160 preimage`. Each key digest comes directly from
+`Bitcoin.ripemd160` or `Bitcoin.hash160`, independently of the exported value
+passed to `Psbt.parse`. The shape-only curve capability and stand-in hashes
+remain available for the other tests.
+
+`python3 -I packages/bitcoin/audit-psbt-vectors.py` exited **0**: the published
+113 vectors still contain **0 input type-10 and 0 input type-12 records**
+(also zero in the all-map audit). The earlier waiting list is empty. These new
+preimage records are synthetic, rather than claimed published vectors.
+The parity reference is rust-bitcoin 0.32.8,
+`src/psbt/map/input.rs:294-325,500-528`: all four preimage kinds compare the hash
+before insertion and return `InvalidPreimageHashPair` on mismatch.
+
+### Structured mismatch error and stack use
+
+Option A retains `.invalidValue "input" keyType "preimage does not match hash"`;
+`Bitcoin/Psbt/Codec.lean` and `Fields.lean` are unchanged. In `Fields.lean`,
+`inputStep` sets scope to `"input"` at line 364. Its single branch for types
+0x0a–0x0d is lines 398–410. That branch has exactly one value check, the
+preimage comparison at line 402; no other path for these key types yields
+`invalidValue "input" keyType _`. The length check at line 401 calls
+`checkKeyData` (lines 155–157), which returns `invalidKey`. Duplicate raw keys
+fail in framing with `duplicateKey` (`Codec.lean:106-107`), before typed decoding.
+`decodeInput` at lines 466–472 adds only version-2 missing-field checks.
+A caller therefore identifies a preimage mismatch by **constructor, scope and
+key type**, never by the diagnostic reason string. Tests additionally pin the
+complete error value for types 0x0a and 0x0c.
+
+Padding uses bounded loops to append the marker, zeros and the low 64 bits of
+the bit length. Word conversion uses fixed 16 × 4 loops per block; the outer
+block loop carries five `UInt32` chaining words and runs 80 steps per block.
+Output conversion is fixed at 5 × 4 bytes. No recursive call depth grows with
+the input. This is a structural observation about the loops, independent of
+the million-byte vector. There is no new named theorem or proof obligation.
+The axiom gate remains **652 library theorems; 56 named; 0 offenders**.
+
+### Mutation and final validation records
+
+The new mutation command, from `packages/bitcoin`, is
+`nix develop -c python3 -I check-ripemd160-mutations.py`. It exited **0**,
+detecting **8/8**, then ran restored `lake test` with exit **0**. It asserts
+exact replacement counts, restores and rechecks file bytes in `finally`, and
+records separate streams under `.lake/ripemd160-mutation-checks`. Compact
+records are in `test-data/ripemd160-mutations.json`. Count mutations deliberately
+remove test cases; the other mutations change production behavior.
+Each table selector is passed after `lake test --`:
+
+| Mutation | Selector | Exit | Observed first failure line |
+|---|---|---|---|
+| Round constant `0x5a827999` → `0x5a827998` | `--hash vectors` | 1 | `uncaught exception: assertion failed: RIPEMD-160 vectors 0 digest` |
+| Remove one JSON vector | `--hash vectors` | 1 | `uncaught exception: assertion failed: RIPEMD-160 vectors count` |
+| Remove BIP173 case | `--hash bip173` | 1 | `uncaught exception: assertion failed: HASH160 BIP173 count` |
+| Remove RIPEMD160 PSBT mismatch case | `--psbt "RIPEMD160 preimage"` | 1 | `uncaught exception: assertion failed: preimage 10 count` |
+| Remove HASH160 PSBT mismatch case | `--psbt "HASH160 preimage"` | 1 | `uncaught exception: assertion failed: preimage 12 count` |
+| HASH160 omits SHA-256 | `--hash bip173` | 1 | `uncaught exception: assertion failed: HASH160 BIP173 digest` |
+| Exported hash fields swapped | `--psbt "RIPEMD160 preimage"` | 1 | `uncaught exception: assertion failed: preimage 10 accepted` |
+| Length field reduced modulo one block | `--hash vectors` | 1 | `uncaught exception: assertion failed: RIPEMD-160 vectors 7 digest` |
+
+The last mutation first fails on the 80-byte message. The real-hash PSBT
+actions also retain the existing skip/swap coverage in
+`check-psbt-mutations.py`; the full rerun and its four observations are recorded
+below.
+
+| Existing mutation against the real hashes | Selector after `lake test --` | Exit | Observed first failure line |
+|---|---|---|---|
+| `skip-ripemd160` | `--psbt "RIPEMD160 preimage"` | 1 | `uncaught exception: assertion failed: preimage 10 mismatch` |
+| `skip-hash160` | `--psbt "HASH160 preimage"` | 1 | `uncaught exception: assertion failed: preimage 12 mismatch` |
+| `swap-ripemd160` | `--psbt "RIPEMD160 preimage"` | 1 | `uncaught exception: assertion failed: preimage 10 accepted` |
+| `swap-hash160` | `--psbt "HASH160 preimage"` | 1 | `uncaught exception: assertion failed: preimage 12 accepted` |
+
+All five existing commands were rerun in full, sequentially, from
+`packages/bitcoin`, with prefix `nix develop -c python3 -I`:
+
+| Script | Exit | Detections | Restored full `lake test` exit |
+|---|---|---|---|
+| `check-mutations.py` | 0 | 6/6 | 0 |
+| `check-base58-mutations.py` | 0 | 6/6 | 0 |
+| `check-bech32-mutations.py` | 0 | 18/18 | 0 |
+| `check-address-mutations.py` | 0 | 20/20 | 0 |
+| `check-psbt-mutations.py` | 0 | 72/72 | 0 |
+
+The five existing JSON evidence files are byte-unchanged (`git diff --exit-code`
+on those paths exited **0**). No recorded line number, pinned count or mutation
+target changed; `AxiomGate.lean:74:0` is still the diagnostic location. No scope
+timed out, and no checkpoint resume was needed. All six mutation commands and
+the build commands used the repository's foreground gate supervisor and their
+own capped scope:
+
+```bash
+systemd-run --user --scope --quiet -p MemoryMax=8G -p MemorySwapMax=0 -p OOMPolicy=continue -p TasksMax=4096 timeout 3600 nix develop -c lake test
+```
+
+The example checks `lake test`; substitute each command from the tables.
+`TMPDIR` was set to the external temporary
+area for each invocation. The scope limits were never raised.
+
+### Final validation
+
+On 2026-10-23 the development shell reported Lean **4.35.0** (commit
+`eb6cafb7290e8bd5f2937522d8d804f58f02bafc`, Release), Lake
+**5.0.0-src+eb6cafb**, Python **3.14.7**, and OpenSSL **3.5.8**.
+The version command was `nix develop -c bash -c 'set -e; lean --version;
+lake --version; python3 --version; openssl version'`, exit **0**.
+The page-comparison command above used the host Python version recorded there.
+
+| Command | Directory | Exit | Observation |
+|---|---|---|---|
+| `nix develop -c lake build` | `packages/bitcoin` | 0 | 38 jobs completed |
+| `nix develop -c lake test` | `packages/bitcoin` | 0 | RIPEMD-160 9/9; BIP173 HASH160 1/1; preimages 10 and 12 each 2/2; all earlier counts unchanged; PSBT actions 47/47; axiom gate 652/56/0 |
+| The six mutation commands above | `packages/bitcoin` | 0 each | 130/130 mutations detected in total; each restored full test exits 0 |
+| `nix develop -c python3 -I packages/bitcoin/generate-ripemd160-vectors.py` | root | 0 | 9/9 generated using the recorded OpenSSL version |
+| `git diff --exit-code -- packages/bitcoin/test-data/ripemd160.json` after regeneration | root | 0 | Staged fixture reproduced byte for byte |
+| `python3 -I packages/bitcoin/check-tx-psbt-copy.py "$TMP_ROOT/miniscript"` | root | 0 | Fresh clone of `https://github.com/febyeji/lean-miniscript`, checked out at `cb9bc5f2f80987ad18b696a9c660f90f4bc1b6bd`; 8/8 exact copies plus documented edits |
+| `python3 -I packages/bitcoin/audit-psbt-vectors.py` | root | 0 | 113 vectors; 0 type-10 and 0 type-12 records |
+| `nix flake check -L`, with new files staged | root | 0 | All seven packages built and tested in the sandbox; new counts and 652/56/0 gate printed |
+| `nix build` | root | 0 | Default executable built |
+| `./result/bin/cyberkrill` | root | 0 | `cyberkrill 0.1.0` |
+| `rc=0; grep -rnw sorry --include='*.lean' --exclude-dir=.lake packages \|\| rc=$?; test "$rc" -eq 1` | root | 0 | No matches; both streams empty |
+| `grep -rnE 'native_decide\|bv_decide' --include='*.lean' packages/bitcoin/Bitcoin packages/bitcoin/Bitcoin.lean` | root | 1 | Both streams empty |
+| `grep -F sorry packages/bitcoin/BitcoinTests/AxiomGate.lean` | root | 1 | Both streams empty |
+| `git diff --check 0af9d6590e1c5d54ae0ef5f7d5f9799238816a00` | root | 0 | Both streams empty |
+| Staged-diff key-material pipeline below | root | 1 | Both streams empty; no match |
+| Added-line public-text scan and staged-path inspection | root | 0 | No prohibited names, local paths or attribution; 13 intended files; tracker excluded |
+
+The exact staged-diff key-material scan was:
+
+```bash
+git diff --cached -U0 | grep '^+' | grep -n -E '[xt]prv[1-9A-HJ-NP-Za-km-z]{100,}|\b[5KLc9][1-9A-HJ-NP-Za-km-z]{50,51}\b'
+```
+
+Its recorded stdout and stderr are empty, exit **1**. Build, test, sandbox and
+static-check streams are captured separately under
+`packages/bitcoin/.lake/phase4a-validation`; mutation streams remain in their
+respective `.lake/*-mutation-checks` directories. Gates were never piped through
+an output filter.
+
+The fresh `TMP_ROOT` clone and directory were deleted by their exact created
+path, with absence asserted, exit **0**. Each private gate directory was
+removed before the supervisor reported its final status. The temporary gate
+helper was also deleted and its absence checked, exit **0**. No temporary clone,
+cache or helper process from this work session remains; normal `.lake` build
+outputs and logs remain. Changes are staged for inspection, with no commit,
+push, branch change or tracker operation in this work session.
 
 ## Deltas taken
 
