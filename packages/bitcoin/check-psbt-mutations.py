@@ -255,6 +255,55 @@ def mutations(originals):
     add("valid-bytes", codec, "map.flatMap Record.encode ++ [0]",
         "map.flatMap Record.encode ++ [1]", "BIP174 valid definition",
         "theorem:Bitcoin/Psbt/CodecProofs.lean:decodeMapFuel_encode")
+    # Each capture rejection and edited acceptance boundary has its own selector.
+    xpub = ('    checkKeyData scope keyType\n'
+            '      (keyData.extract 0 4 == ⟨#[0x04, 0x88, 0xb2, 0x1e]⟩ ||\n'
+            '       keyData.extract 0 4 == ⟨#[0x04, 0x35, 0x87, 0xcf]⟩) "invalid extended key version"\n')
+    def parity(label, old, new, name=None, path=fields):
+        name = name or label
+        add("parity-" + label, path, old, new, "parity " + name, "parity " + name)
+
+    parity("xpub-version", xpub, "")
+    parity("partial-sig-empty", '    checkValue scope keyType (!value.isEmpty) "empty ECDSA signature"\n', "")
+    parity("partial-sig-sighash",
+           '(standardEcdsaSighash value[value.size - 1]!)', '(true)')
+    for kind, name in [("inTapKeySig", "tap-key-sig-sighash"),
+                       ("inTapScriptSig", "tap-script-sig-sighash")]:
+        start = originals[fields].index(f"  else if keyType == KeyType.{kind} then")
+        end = originals[fields].index("  else if ", start + 3)
+        old = originals[fields][start:end]
+        new = replace(old, '    checkValue scope keyType (validTapSighash value) "non-standard Taproot sighash type"\n', '')
+        parity(name, old, new)
+    parity("leaf-script-odd", 'version.toNat % 2 == 0 && version != 0x50',
+           'version != 0x50')
+    parity("leaf-script-annex", 'version.toNat % 2 == 0 && version != 0x50',
+           'version.toNat % 2 == 0')
+    parity("control-block-annex",
+           '    checkKeyData scope keyType (validLeafVersion (keyData[0]! &&& 0xfe)) "invalid control block leaf version"\n', '')
+    parity("out-tap-tree-annex", '(leaves.all (fun leaf => validLeafVersion leaf.leafVersion))',
+           '(leaves.all (fun leaf => leaf.leafVersion.toNat % 2 == 0))')
+    parity("proprietary-1025", 'rest.length ≤ 1025', 'rest.length ≤ 1026')
+    parity("partial-sig-83", '[1, 2, 3, 129, 130, 131].contains sighash',
+           '[1, 2, 3, 129, 130].contains sighash')
+    parity("tap-key-sig-00", 'signature[64]! == 0 ||', 'signature[64]! == 1 ||')
+    parity("tap-key-sig-83", 'standardEcdsaSighash signature[64]!',
+           '(standardEcdsaSighash signature[64]! && signature[64]! != 131)')
+    parity("leaf-script-c2", '(validLeafVersion value[value.size - 1]!)',
+           '(validLeafVersion value[value.size - 1]! && value[value.size - 1]! != 0xc2)')
+    parity("out-tap-tree-c2", '(leaves.all (fun leaf => validLeafVersion leaf.leafVersion))',
+           '(leaves.all (fun leaf => validLeafVersion leaf.leafVersion && leaf.leafVersion != 0xc2))')
+    parity("control-block-c2", '(validLeafVersion (keyData[0]! &&& 0xfe))',
+           '(validLeafVersion (keyData[0]! &&& 0xfe) && (keyData[0]! &&& 0xfe) != 0xc2)')
+    parity("tpub", xpub, replace(xpub,
+           'keyData.extract 0 4 == ⟨#[0x04, 0x35, 0x87, 0xcf]⟩', 'false'))
+    parity("proprietary-1024", 'rest.length ≤ 1025', 'rest.length ≤ 1024')
+    for name, raw in [("key-type-fd01", "[0xfd, 1]"), ("key-type-fd0500", "[0xfd, 5, 0]")]:
+        parity(name, '  let (keyType, rest) ← liftDecode (readCompactSize key.data.toList)',
+               f'  let (keyType, rest) ← if key.data.toList == {raw} then pure (253, [])\n'
+               '    else liftDecode (readCompactSize key.data.toList)', path=codec)
+    parity("proprietary-subtype-fd01", '    | .error _ => false\n    | .ok _ => true',
+           '    | .error _ => true\n    | .ok _ => true')
+    parity("xpub-depth", '(source.path.length == keyData[4]!.toNat)', '(true)')
     # These classifications follow diagnostics from the isolated discovery checks.
     proof_caught = {
         "trailing-data": ("Bitcoin/Psbt/CodecProofs.lean", "decodePsbtWith_ok"),
@@ -293,6 +342,7 @@ def main():
              "Bitcoin/TransactionProofs.lean", "Bitcoin/Psbt/CodecProofs.lean",
              "Bitcoin/Psbt/ParseProofs.lean", "Bitcoin/Psbt/Proofs.lean",
              "BitcoinTests/TransactionChecks.lean", "test-data/psbt-inventory.json",
+             "test-data/cyberkrill-psbt-capture.json",
              "measure-psbt-exception.lean"]
     originals = {name: (PACKAGE / name).read_text() for name in names}
     cases = mutations(originals)
