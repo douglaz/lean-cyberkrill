@@ -81,9 +81,15 @@ v1 commands (from the `Commands` enum in `cyberkrill/src/main.rs`): `ln-decode-i
   JSON values, not bytes, and any edge-case difference from cyberkrill is listed in the README.
 - **BIP370 v2 PSBTs.** cyberkrill's rust-bitcoin 0.32.8 rejects PSBT version > 0, but the port's
   `onchain-decode-psbt` decodes v2 (owner decision, 2026-10-19). This and the `move-utxos` output above
-  are documented, tested exceptions to golden parity, and the BOLT11 signing hash below is a third;
-  otherwise the port exits non-zero wherever cyberkrill does. Goldens cover v0; v2 gets its own tests
-  from the BIP370 vectors; the README lists each delta.
+  are documented, tested exceptions to golden parity, the BOLT11 signing hash below is a third, and
+  three BIP rules the PSBT decoder keeps where rust-bitcoin 0.32.8 is laxer are a fourth (owner
+  decision, 2026-10-23: canonical CompactSize key types, the global xpub path length matching its
+  depth, and no v2-only fields in a v0 PSBT; on 16 such inputs cyberkrill is expected to exit 0
+  and the port non-zero, which so far rests on rust-bitcoin 0.32.8's `Psbt::deserialize` and the
+  port's `Psbt.parse`, not on either CLI; the CLI capture, the tests and this section's entry for
+  it land with Phase 4a's PSBT field-parity follow-up); otherwise the port exits non-zero wherever
+  cyberkrill does.
+  Goldens cover v0; v2 gets its own tests from the BIP370 vectors; the README lists each delta.
 - **BOLT11 signing hash.** The port hashes the invoice's own lower-cased hrp and its data part as
   written (BOLT #11 L117-119; owner decision, 2026-10-21), as LND and Core Lightning do.
   cyberkrill's lightning-invoice 0.34.0 hashes a re-encoding of the parsed fields (`de.rs:395`,
