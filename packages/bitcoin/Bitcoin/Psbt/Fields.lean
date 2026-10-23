@@ -19,7 +19,8 @@ transaction fields. Versions other than 0 and 2 are rejected.
 
 Beyond Core's framing checks, hash preimage records must hash to their key,
 as BIP174 requires. Public keys in `PARTIAL_SIG` and `BIP32_DERIVATION` keys
-must parse as secp256k1 points. X-only keys are checked only for length.
+must parse as secp256k1 points. The supplied capability also checks global xpub
+points, partial-signature DER, x-only keys and control-block internal keys.
 
 The typed value encoders are covered by executable round-trip examples for
 key origins, Taproot key origins, and complete Taproot trees.
@@ -397,6 +398,7 @@ def inputStep (cap : PubkeyCapability) (hashes : PreimageHashes) (version : Nat)
     checkKeyData scope keyType (cap.isValidPubkey keyData) "invalid public key"
     checkValue scope keyType (!value.isEmpty) "empty ECDSA signature"
     checkValue scope keyType (standardEcdsaSighash value[value.size - 1]!) "non-standard ECDSA sighash type"
+    checkValue scope keyType (cap.isValidDerSignature (value.extract 0 (value.size - 1))) "invalid DER signature"
     return { fields with partialSigs := fields.partialSigs ++ [(keyData, value)] }
   else if keyType == KeyType.inSighashType then
     noKeyData scope keyType keyData
@@ -463,6 +465,7 @@ def inputStep (cap : PubkeyCapability) (hashes : PreimageHashes) (version : Nat)
     return { fields with tapKeySig := some value }
   else if keyType == KeyType.inTapScriptSig then
     checkKeyData scope keyType (keyData.size == 64) "key must be x-only key and leaf hash"
+    checkKeyData scope keyType (cap.isValidXOnlyPubkey (keyData.extract 0 32)) "invalid x-only public key"
     checkValue scope keyType (validSchnorrSignature value) "signature must be 64 or 65 bytes"
     checkValue scope keyType (validTapSighash value) "non-standard Taproot sighash type"
     return { fields with tapScriptSigs := fields.tapScriptSigs ++
@@ -472,16 +475,19 @@ def inputStep (cap : PubkeyCapability) (hashes : PreimageHashes) (version : Nat)
     checkValue scope keyType (value.size ≥ 1) "missing leaf version"
     checkKeyData scope keyType (validLeafVersion (keyData[0]! &&& 0xfe)) "invalid control block leaf version"
     checkValue scope keyType (validLeafVersion value[value.size - 1]!) "invalid leaf version"
+    checkKeyData scope keyType (cap.isValidXOnlyPubkey (keyData.extract 1 33)) "invalid control block internal key"
     return { fields with tapLeafScripts := fields.tapLeafScripts ++
       [{ controlBlock := keyData, script := value.extract 0 (value.size - 1),
          leafVersion := value[value.size - 1]! }] }
   else if keyType == KeyType.inTapBip32Derivation then
     checkKeyData scope keyType (keyData.size == 32) "key must be x-only"
+    checkKeyData scope keyType (cap.isValidXOnlyPubkey keyData) "invalid x-only public key"
     let source ← decodeTapKeySource scope keyType value
     return { fields with tapBip32Derivation := fields.tapBip32Derivation ++ [(keyData, source)] }
   else if keyType == KeyType.inTapInternalKey then
     noKeyData scope keyType keyData
     checkValue scope keyType (value.size == 32) "internal key must be x-only"
+    checkValue scope keyType (cap.isValidXOnlyPubkey value) "invalid x-only public key"
     return { fields with tapInternalKey := some value }
   else if keyType == KeyType.inTapMerkleRoot then
     noKeyData scope keyType keyData
@@ -522,12 +528,14 @@ private def outputStep (cap : PubkeyCapability) (version : Nat) (fields : Output
   else if keyType == KeyType.outTapInternalKey then
     noKeyData scope keyType keyData
     checkValue scope keyType (value.size == 32) "internal key must be x-only"
+    checkValue scope keyType (cap.isValidXOnlyPubkey value) "invalid x-only public key"
     return { fields with tapInternalKey := some value }
   else if keyType == KeyType.outTapTree then
     noKeyData scope keyType keyData
     return { fields with tapTree := some (← decodeTapTree value) }
   else if keyType == KeyType.outTapBip32Derivation then
     checkKeyData scope keyType (keyData.size == 32) "key must be x-only"
+    checkKeyData scope keyType (cap.isValidXOnlyPubkey keyData) "invalid x-only public key"
     let source ← decodeTapKeySource scope keyType value
     return { fields with tapBip32Derivation := fields.tapBip32Derivation ++ [(keyData, source)] }
   else return { fields with unknown := ← keepUnknown scope keyType record fields.unknown }
@@ -552,6 +560,8 @@ fields. -/
 def Psbt.decode (cap : PubkeyCapability) (hashes : PreimageHashes) (psbt : Psbt) : Except PsbtError DecodedPsbt := do
   let global ← decodeGlobal psbt.global
   if global.counts ≠ (psbt.inputs.length, psbt.outputs.length) then throw .mapCount
+  for (xpub, _) in global.xpubs do
+    checkKeyData "global" KeyType.globalXpub (cap.isValidPubkey (xpub.extract 45 78)) "invalid extended key point"
   let inputs ← psbt.inputs.mapM (decodeInput cap hashes global.psbtVersion)
   let outputs ← psbt.outputs.mapM (decodeOutput cap global.psbtVersion)
   return { global, inputs, outputs }

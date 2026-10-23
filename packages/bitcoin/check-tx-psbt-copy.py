@@ -168,6 +168,42 @@ def expected_files(source):
                            '    checkValue scope keyType (validSchnorrSignature value) "signature must be 64 or 65 bytes"\n    checkValue scope keyType (validTapSighash value) "non-standard Taproot sighash type"\n    return { fields with tapScriptSigs := fields.tapScriptSigs ++\n')
             text = replace(text, '    checkValue scope keyType (value.size ≥ 1) "missing leaf version"\n    return { fields with tapLeafScripts := fields.tapLeafScripts ++\n',
                            '    checkValue scope keyType (value.size ≥ 1) "missing leaf version"\n    checkKeyData scope keyType (validLeafVersion (keyData[0]! &&& 0xfe)) "invalid control block leaf version"\n    checkValue scope keyType (validLeafVersion value[value.size - 1]!) "invalid leaf version"\n    return { fields with tapLeafScripts := fields.tapLeafScripts ++\n')
+            # Curve-capability parity with rust-bitcoin 0.32.8 / secp256k1 0.29.1.
+            text = replace(text,
+                           'must parse as secp256k1 points. X-only keys are checked only for length.',
+                           'must parse as secp256k1 points. The supplied capability also checks global xpub\n'
+                           'points, partial-signature DER, x-only keys and control-block internal keys.')
+            old = '    checkValue scope keyType (standardEcdsaSighash value[value.size - 1]!) "non-standard ECDSA sighash type"\n'
+            text = replace(text, old, old +
+                           '    checkValue scope keyType (cap.isValidDerSignature (value.extract 0 (value.size - 1))) "invalid DER signature"\n')
+            for kind, old, new in [
+                ("inTapScriptSig",
+                 '    checkKeyData scope keyType (keyData.size == 64) "key must be x-only key and leaf hash"\n',
+                 '    checkKeyData scope keyType (cap.isValidXOnlyPubkey (keyData.extract 0 32)) "invalid x-only public key"\n'),
+                ("inTapLeafScript",
+                 '    checkValue scope keyType (validLeafVersion value[value.size - 1]!) "invalid leaf version"\n',
+                 '    checkKeyData scope keyType (cap.isValidXOnlyPubkey (keyData.extract 1 33)) "invalid control block internal key"\n'),
+                ("inTapBip32Derivation",
+                 '    checkKeyData scope keyType (keyData.size == 32) "key must be x-only"\n',
+                 '    checkKeyData scope keyType (cap.isValidXOnlyPubkey keyData) "invalid x-only public key"\n'),
+                ("inTapInternalKey",
+                 '    checkValue scope keyType (value.size == 32) "internal key must be x-only"\n',
+                 '    checkValue scope keyType (cap.isValidXOnlyPubkey value) "invalid x-only public key"\n'),
+                ("outTapInternalKey",
+                 '    checkValue scope keyType (value.size == 32) "internal key must be x-only"\n',
+                 '    checkValue scope keyType (cap.isValidXOnlyPubkey value) "invalid x-only public key"\n'),
+                ("outTapBip32Derivation",
+                 '    checkKeyData scope keyType (keyData.size == 32) "key must be x-only"\n',
+                 '    checkKeyData scope keyType (cap.isValidXOnlyPubkey keyData) "invalid x-only public key"\n')]:
+                start = text.index(f"  else if keyType == KeyType.{kind} then")
+                end = text.index("  else ", start + 3)
+                body = text[start:end]
+                changed = replace(body, old, old + new)
+                text = replace(text, body, changed)
+            old = '  if global.counts ≠ (psbt.inputs.length, psbt.outputs.length) then throw .mapCount\n'
+            text = replace(text, old, old +
+                           '  for (xpub, _) in global.xpubs do\n'
+                           '    checkKeyData "global" KeyType.globalXpub (cap.isValidPubkey (xpub.extract 45 78)) "invalid extended key point"\n')
         elif target == "Psbt/CodecProofs.lean":
             text = replace(text, "open Bitcoin\n", "open Bitcoin Bitcoin.CompactSize\n")
             text = replace(text, "if_false", "ite_false", 3)

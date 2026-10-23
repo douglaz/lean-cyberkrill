@@ -1,0 +1,97 @@
+[
+  {
+    "index": 0,
+    "public_key": "f9308a019258c31049344f85f89d5229b531c845836f99b08601f113bce036f9",
+    "comment": ""
+  },
+  {
+    "index": 1,
+    "public_key": "dff1d77f2a671c5f36183726db2341be58feae1da2deced843240f7b502ba659",
+    "comment": ""
+  },
+  {
+    "index": 2,
+    "public_key": "dd308afec5777e13121fa72b9cc1b7cc0139715309b086c960e18fd969774eb8",
+    "comment": ""
+  },
+  {
+    "index": 3,
+    "public_key": "25d1dff95105f5253c4022f628a996ad3a0d95fbf21d468a1b33f8c160d8f517",
+    "comment": "test fails if msg is reduced modulo p or n"
+  },
+  {
+    "index": 4,
+    "public_key": "d69c3509bb99e412e68b0fe8544e72837dfa30746d8be2aa65975f29d22dc7b9",
+    "comment": ""
+  },
+  {
+    "index": 5,
+    "public_key": "eefdea4cdb677750a420fee807eacf21eb9898ae79b9768766e4faa04a2d4a34",
+    "comment": "public key not on the curve"
+  },
+  {
+    "index": 6,
+    "public_key": "dff1d77f2a671c5f36183726db2341be58feae1da2deced843240f7b502ba659",
+    "comment": "has_even_y(R) is false"
+  },
+  {
+    "index": 7,
+    "public_key": "dff1d77f2a671c5f36183726db2341be58feae1da2deced843240f7b502ba659",
+    "comment": "negated message"
+  },
+  {
+    "index": 8,
+    "public_key": "dff1d77f2a671c5f36183726db2341be58feae1da2deced843240f7b502ba659",
+    "comment": "negated s value"
+  },
+  {
+    "index": 9,
+    "public_key": "dff1d77f2a671c5f36183726db2341be58feae1da2deced843240f7b502ba659",
+    "comment": "sG - eP is infinite. Test fails in single verification if has_even_y(inf) is defined as true and x(inf) as 0"
+  },
+  {
+    "index": 10,
+    "public_key": "dff1d77f2a671c5f36183726db2341be58feae1da2deced843240f7b502ba659",
+    "comment": "sG - eP is infinite. Test fails in single verification if has_even_y(inf) is defined as true and x(inf) as 1"
+  },
+  {
+    "index": 11,
+    "public_key": "dff1d77f2a671c5f36183726db2341be58feae1da2deced843240f7b502ba659",
+    "comment": "sig[0:32] is not an X coordinate on the curve"
+  },
+  {
+    "index": 12,
+    "public_key": "dff1d77f2a671c5f36183726db2341be58feae1da2deced843240f7b502ba659",
+    "comment": "sig[0:32] is equal to field size"
+  },
+  {
+    "index": 13,
+    "public_key": "dff1d77f2a671c5f36183726db2341be58feae1da2deced843240f7b502ba659",
+    "comment": "sig[32:64] is equal to curve order"
+  },
+  {
+    "index": 14,
+    "public_key": "fffffffffffffffffffffffffffffffffffffffffffffffffffffffefffffc30",
+    "comment": "public key is not a valid X coordinate because it exceeds the field size"
+  },
+  {
+    "index": 15,
+    "public_key": "778caa53b4393ac467774d09497a87224bf9fab6f6e68b23086497324d6fd117",
+    "comment": "message of size 0 (added 2022-12)"
+  },
+  {
+    "index": 16,
+    "public_key": "778caa53b4393ac467774d09497a87224bf9fab6f6e68b23086497324d6fd117",
+    "comment": "message of size 1 (added 2022-12)"
+  },
+  {
+    "index": 17,
+    "public_key": "778caa53b4393ac467774d09497a87224bf9fab6f6e68b23086497324d6fd117",
+    "comment": "message of size 17 (added 2022-12)"
+  },
+  {
+    "index": 18,
+    "public_key": "778caa53b4393ac467774d09497a87224bf9fab6f6e68b23086497324d6fd117",
+    "comment": "message of size 100 (added 2022-12)"
+  }
+]

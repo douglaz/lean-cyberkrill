@@ -19,11 +19,14 @@ def bytes (xs : List Nat) : ByteArray := ⟨(xs.map UInt8.ofNat).toArray⟩
 def compressedKey : ByteArray := bytes (2 :: List.replicate 32 17)
 def hybridKey : ByteArray := bytes (6 :: (List.replicate 32 17 ++ List.replicate 32 18))
 
-/-- Shape-only stand-in: strict SEC1 lengths/prefixes; compression additionally
-accepts parity-matching hybrids and retains x. It makes no on-curve claim. -/
+/-- Shape-only stand-in: strict SEC1 lengths/prefixes, rejecting compressed
+x = 5; x-only keys reject wrong lengths and x = 5; DER rejects empty and
+31-prefixed bytes. Compression accepts matching hybrids and retains x.
+It makes no on-curve claim and accepts every pinned published valid vector. -/
 def testCapability : PubkeyCapability where
   isValidPubkey key :=
-    (key.size == 33 && (key[0]! == 2 || key[0]! == 3)) ||
+    (key.size == 33 && (key[0]! == 2 || key[0]! == 3) &&
+      key.extract 1 33 != bytes (List.replicate 31 0 ++ [5])) ||
     (key.size == 65 && key[0]! == 4)
   compressPubkey key :=
     if key.size == 33 && (key[0]! == 2 || key[0]! == 3) then some key
@@ -31,6 +34,8 @@ def testCapability : PubkeyCapability where
         (key[0]! == 4 || key[0]!.toNat == 6 + key[64]!.toNat % 2) then
       some ((bytes [2 + key[64]!.toNat % 2]) ++ key.extract 1 33)
     else none
+  isValidXOnlyPubkey key := key.size == 32 && key != bytes (List.replicate 31 0 ++ [5])
+  isValidDerSignature sig := !sig.isEmpty && sig[0]! != 0x31
 
 /-- Distinct, input-sensitive 20-byte stand-ins, available to later tests. -/
 def testHashes : PreimageHashes where
@@ -213,12 +218,21 @@ private def parityRejects : List (String × PsbtError) := [
   ("leaf-script-annex", .invalidValue "input" 21 "invalid leaf version"),
   ("control-block-annex", .invalidKey "input" 21 "invalid control block leaf version"),
   ("out-tap-tree-annex", .invalidValue "output" 6 "invalid leaf version"),
-  ("proprietary-1025", .invalidKey "input" 252 "proprietary key data exceeds 1024 bytes")]
+  ("proprietary-1025", .invalidKey "input" 252 "proprietary key data exceeds 1024 bytes"),
+  ("xpub-point", .invalidKey "global" 1 "invalid extended key point"),
+  ("partial-sig-der", .invalidValue "input" 2 "invalid DER signature"),
+  ("partial-sig-no-der", .invalidValue "input" 2 "invalid DER signature"),
+  ("xonly-in-internal", .invalidValue "input" 23 "invalid x-only public key"),
+  ("xonly-in-tap-bip32", .invalidKey "input" 22 "invalid x-only public key"),
+  ("xonly-in-tap-script-sig", .invalidKey "input" 20 "invalid x-only public key"),
+  ("xonly-out-internal", .invalidValue "output" 5 "invalid x-only public key"),
+  ("xonly-out-tap-bip32", .invalidKey "output" 7 "invalid x-only public key"),
+  ("control-block-internal", .invalidKey "input" 21 "invalid control block internal key")]
 
 private def parityAccepts : List String := [
   "base-xpub", "base-partial", "base-key", "base-script", "base-tree", "partial-sig-83",
   "tap-key-sig-00", "tap-key-sig-83", "leaf-script-c2", "out-tap-tree-c2",
-  "control-block-c2", "tpub", "proprietary-1024"]
+  "control-block-c2", "tpub", "proprietary-1024", "base-key-output"]
 
 private def parityStricter : List (String × PsbtError) := [
   ("key-type-fd01", .decode .truncated),
@@ -236,8 +250,8 @@ private def parityCase (name : String) : IO Unit := do
   let data ← getOk "parity JSON" (Lean.Json.parse
     (← IO.FS.readFile "test-data/cyberkrill-psbt-capture.json"))
   let rows ← getOk "parity rows" (data.getObjValAs? (Array Lean.Json) "rows")
-  check "parity row count" (rows.size == 39)
-  for (cls, count) in [("must-reject", 10), ("must-accept", 13), ("port-stricter", 16)] do
+  check "parity row count" (rows.size == 49)
+  for (cls, count) in [("must-reject", 19), ("must-accept", 14), ("port-stricter", 16)] do
     let selected ← rows.toList.filterM fun row => return (← jsonText row "class") == cls
     check ("parity " ++ cls ++ " count") (selected.length == count)
   let selected ← rows.toList.filterM fun row => return (← jsonText row "name") == name

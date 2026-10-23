@@ -18,6 +18,17 @@ encodings, invalid prefixes, or points outside the curve. -/
 @[extern "lck_secp_pubkey_parse"]
 opaque isValidPubkey (key : @& ByteArray) : Bool
 
+/-- Parse a 32-byte BIP340 x-only public key. Returns false for every other
+length, coordinates outside the field, or points outside the curve. -/
+@[extern "lck_secp_xonly_pubkey_parse"]
+opaque isValidXOnlyPubkey (key : @& ByteArray) : Bool
+
+/-- Parse a nonempty strict DER ECDSA signature, without its sighash byte.
+This checks encoding only: no verification, low-S check or normalisation.
+Well-encoded out-of-range integers follow libsecp256k1's parse rule. -/
+@[extern "lck_secp_der_signature_parse"]
+opaque isValidDerSignature (sig : @& ByteArray) : Bool
+
 /-- Parse a 33-byte 02/03 or 65-byte 04 SEC1 key, also accepting a 65-byte
 06/07 hybrid key whose tag matches y's parity. Return its canonical 33-byte
 compressed encoding, or none for malformed lengths, prefixes or curve points.

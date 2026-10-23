@@ -1672,5 +1672,117 @@
     ],
     "exit": 1,
     "failure": "uncaught exception: assertion failed: parity xpub-depth: expected Bitcoin.Psbt.PsbtError.invalidValue \"global\" 1 \"path length must match the extended key depth\", got accepted"
+  },
+  {
+    "property": "parity xpub-point",
+    "mutation": "parity-xpub-point",
+    "source": "Bitcoin/Psbt/Fields.lean",
+    "command": [
+      "lake",
+      "test",
+      "--",
+      "--psbt",
+      "parity xpub-point"
+    ],
+    "exit": 1,
+    "failure": "uncaught exception: assertion failed: parity xpub-point: expected Bitcoin.Psbt.PsbtError.invalidKey \"global\" 1 \"invalid extended key point\", got accepted"
+  },
+  {
+    "property": "parity partial-sig-der",
+    "mutation": "parity-partial-sig-der",
+    "source": "Bitcoin/Psbt/Fields.lean",
+    "command": [
+      "lake",
+      "test",
+      "--",
+      "--psbt",
+      "parity partial-sig-der"
+    ],
+    "exit": 1,
+    "failure": "uncaught exception: assertion failed: parity partial-sig-der: expected Bitcoin.Psbt.PsbtError.invalidValue \"input\" 2 \"invalid DER signature\", got accepted"
+  },
+  {
+    "property": "parity xonly-in-internal",
+    "mutation": "parity-xonly-in-internal",
+    "source": "Bitcoin/Psbt/Fields.lean",
+    "command": [
+      "lake",
+      "test",
+      "--",
+      "--psbt",
+      "parity xonly-in-internal"
+    ],
+    "exit": 1,
+    "failure": "uncaught exception: assertion failed: parity xonly-in-internal: expected Bitcoin.Psbt.PsbtError.invalidValue \"input\" 23 \"invalid x-only public key\", got accepted"
+  },
+  {
+    "property": "parity xonly-out-internal",
+    "mutation": "parity-xonly-out-internal",
+    "source": "Bitcoin/Psbt/Fields.lean",
+    "command": [
+      "lake",
+      "test",
+      "--",
+      "--psbt",
+      "parity xonly-out-internal"
+    ],
+    "exit": 1,
+    "failure": "uncaught exception: assertion failed: parity xonly-out-internal: expected Bitcoin.Psbt.PsbtError.invalidValue \"output\" 5 \"invalid x-only public key\", got accepted"
+  },
+  {
+    "property": "parity xonly-in-tap-bip32",
+    "mutation": "parity-xonly-in-tap-bip32",
+    "source": "Bitcoin/Psbt/Fields.lean",
+    "command": [
+      "lake",
+      "test",
+      "--",
+      "--psbt",
+      "parity xonly-in-tap-bip32"
+    ],
+    "exit": 1,
+    "failure": "uncaught exception: assertion failed: parity xonly-in-tap-bip32: expected Bitcoin.Psbt.PsbtError.invalidKey \"input\" 22 \"invalid x-only public key\", got accepted"
+  },
+  {
+    "property": "parity xonly-out-tap-bip32",
+    "mutation": "parity-xonly-out-tap-bip32",
+    "source": "Bitcoin/Psbt/Fields.lean",
+    "command": [
+      "lake",
+      "test",
+      "--",
+      "--psbt",
+      "parity xonly-out-tap-bip32"
+    ],
+    "exit": 1,
+    "failure": "uncaught exception: assertion failed: parity xonly-out-tap-bip32: expected Bitcoin.Psbt.PsbtError.invalidKey \"output\" 7 \"invalid x-only public key\", got accepted"
+  },
+  {
+    "property": "parity xonly-in-tap-script-sig",
+    "mutation": "parity-xonly-in-tap-script-sig",
+    "source": "Bitcoin/Psbt/Fields.lean",
+    "command": [
+      "lake",
+      "test",
+      "--",
+      "--psbt",
+      "parity xonly-in-tap-script-sig"
+    ],
+    "exit": 1,
+    "failure": "uncaught exception: assertion failed: parity xonly-in-tap-script-sig: expected Bitcoin.Psbt.PsbtError.invalidKey \"input\" 20 \"invalid x-only public key\", got accepted"
+  },
+  {
+    "property": "parity control-block-internal",
+    "mutation": "parity-control-block-internal",
+    "source": "Bitcoin/Psbt/Fields.lean",
+    "command": [
+      "lake",
+      "test",
+      "--",
+      "--psbt",
+      "parity control-block-internal"
+    ],
+    "exit": 1,
+    "failure": "uncaught exception: assertion failed: parity control-block-internal: expected Bitcoin.Psbt.PsbtError.invalidKey \"input\" 21 \"invalid control block internal key\", got accepted"
   }
 ]

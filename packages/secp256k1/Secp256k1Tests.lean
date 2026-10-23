@@ -109,6 +109,8 @@ private def negativeTests (vector : Json) (only : Option String) : IO Unit := do
     test s!"sign secret {name}" fun _ => (Secp256k1.sign hash (scalarBytes scalar)).isNone
   test "invalid prefix parse" fun _ => !Secp256k1.isValidPubkey (key.set! 0 4)
   test "invalid prefix verify" fun _ => !Secp256k1.verify hash sig (key.set! 0 4)
+  test "x-only off-curve" fun _ => !Secp256k1.isValidXOnlyPubkey (scalarBytes 5)
+  test "DER empty" fun _ => !Secp256k1.isValidDerSignature ByteArray.empty
   check "negative selection exists" ((← ran.get) > 0)
 
 private def boltTests (vectors : Array Json) : IO Unit := do
@@ -145,6 +147,77 @@ private def boltTests (vectors : Array Json) : IO Unit := do
 private def requiredEnv (name : String) : IO String := do
   let some value ← IO.getEnv name | throw <| IO.userError s!"missing required environment variable: {name}"
   return value
+
+private def xonlyTests : IO Unit := do
+  let rows ← fromExcept <| (← fromExcept <| Json.parse
+    (← IO.FS.readFile "bip340-public-keys.json")).getArr?
+  check "BIP340 row count" (rows.size == 19)
+  let mut accepted := 0
+  let mut rejected : Array Nat := #[]
+  for i in [:rows.size] do
+    let row := rows[i]!
+    let index ← nat row "index"
+    check "BIP340 row index" (index == i)
+    let comment ← str row "comment"
+    let bad := comment == "public key not on the curve" ||
+      comment == "public key is not a valid X coordinate because it exceeds the field size"
+    let key ← bytes row "public_key"
+    check s!"BIP340 key length {index}" (key.size == 32)
+    let actual := Secp256k1.isValidXOnlyPubkey key
+    check s!"BIP340 x-only {index}" (actual == !bad)
+    if actual then accepted := accepted + 1 else rejected := rejected.push index
+  check "BIP340 counts" (accepted == 17 && rejected == #[5, 14])
+  for length in [0, 31, 33] do
+    let key := if length == 33 then (scalarBytes 5).push 0 else (scalarBytes 5).extract 0 length
+    check s!"x-only length {length}" (!Secp256k1.isValidXOnlyPubkey key)
+  check "x-only x=5" (!Secp256k1.isValidXOnlyPubkey (scalarBytes 5))
+  IO.println "BIP340 x-only: 19 rows / 17 parsed / rejected indices 5,14; lengths 0,31,33 and x=5 rejected"
+
+private def derTests : IO Unit := do
+  let path ← requiredEnv "WYCHEPROOF_DER_JSON"
+  let json ← fromExcept <| Json.parse (← IO.FS.readFile path)
+  check "Wycheproof DER numberOfTests" ((← nat json "numberOfTests") == 476)
+  let groups ← fromExcept <| (← field json "testGroups").getArr?
+  check "Wycheproof DER groups" (groups.size == 109)
+  let mut ids : Array Nat := #[]
+  let mut validParsed := 0
+  let mut encodingRejected := 0
+  let mut modifiedParsed := 0
+  let mut modifiedRejected := 0
+  let mut parsed := 0
+  for group in groups do
+    check "Wycheproof DER group type" ((← str group "type") == "EcdsaVerify")
+    let tests ← fromExcept <| (← field group "tests").getArr?
+    for test in tests do
+      let id ← nat test "tcId"
+      check s!"Wycheproof DER unique {id}" (!ids.contains id)
+      ids := ids.push id
+      let result ← str test "result"
+      check s!"Wycheproof DER result {id}" (result == "valid" || result == "invalid")
+      let flags ← fromExcept <| fromJson? (← field test "flags") (α := Array String)
+      let actual := Secp256k1.isValidDerSignature (← bytes test "sig")
+      if actual then parsed := parsed + 1
+      if result == "valid" then
+        check s!"Wycheproof DER valid {id}" actual
+        validParsed := validParsed + 1
+      if flags.any (["BerEncodedSignature", "InvalidEncoding", "InvalidTypesInSignature"].contains ·) then
+        check s!"Wycheproof DER encoding {id}" (!actual)
+        encodingRejected := encodingRejected + 1
+      if flags.contains "ModifiedSignature" then
+        if actual then modifiedParsed := modifiedParsed + 1
+        else modifiedRejected := modifiedRejected + 1
+  -- Aggregate regression measurements, distinct from the per-case parse oracle.
+  IO.println s!"Wycheproof DER measured: {ids.size} cases / {groups.size} groups; valid parsed {validParsed}; encoding rejected {encodingRejected}; ModifiedSignature rejected {modifiedRejected} / parsed {modifiedParsed}; overall parsed {parsed} / rejected {ids.size - parsed}"
+  check "Wycheproof DER measured totals" (ids.size == 476 && validParsed == 168 &&
+    encodingRejected == 162 && modifiedRejected == 31 && modifiedParsed == 17 && parsed == 283)
+  check "DER empty input" (!Secp256k1.isValidDerSignature ByteArray.empty)
+  -- Published BIP174 one-signature DER part (sighash removed), BSD-2-Clause.
+  -- Source: https://github.com/bitcoin/bips @ 927b6de9915c9262615a6399de51b200f81e5aa4,
+  -- bip-0174.mediawiki; extracted and reformatted; see ../bitcoin/Bitcoin/LICENSE-psbt-bips.
+  let signature ← hex "304302200424b58effaaa694e1559ea5c93bbfd4a89064224055cdf070b6771469442d07021f5c8eb0fea6516d60b8acb33ad64ede60e8785bfb3aa94b99bdf86151db9a9a"
+  check "BIP174 DER unchanged" (Secp256k1.isValidDerSignature signature)
+  check "BIP174 DER 31 edit" (!Secp256k1.isValidDerSignature (signature.set! 0 0x31))
+  IO.println "BIP174 DER: unchanged parsed / 31 edit and empty rejected"
 
 private def compressionChecks (key : ByteArray) (only : Option String := none) : IO Nat := do
   let parity := key[64]! % 2
@@ -271,4 +344,6 @@ def main (args : List String) : IO Unit := do
   negativeTests first none
   boltTests vectors
   wycheproofTests
+  xonlyTests
+  derTests
   IO.println "negative tests: PASS"

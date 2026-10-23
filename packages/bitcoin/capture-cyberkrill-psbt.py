@@ -1,6 +1,6 @@
 # Copyright (c) 2026 lean-cyberkrill developers. Released under the MIT License or the
 # Apache License 2.0, at your option; see LICENSE-MIT and LICENSE-APACHE.
-"""Derive 39 published PSBT inputs and capture the pinned CLI offline.
+"""Derive 49 published PSBT inputs and capture the pinned CLI offline.
 
 python3 -I packages/bitcoin/capture-cyberkrill-psbt.py [--check]
 --check checks the committed record against freshly derived bytes and captures.
@@ -168,8 +168,60 @@ def derive():
         assert title.startswith("PSBTv0 but with PSBT_")
         labels["v2-field"] = ("bip370Invalid", title)
         add(f"bip370-invalid-{index}", stricter, "v2-field")
-    assert len(rows) == 39 and len({r["name"] for r in rows}) == 39
-    assert [sum(r["class"] == c for r in rows) for c in [reject, accept, stricter]] == [10, 13, 16]
+    assert len(rows) == 39
+    # Append new rows after the unchanged field-parity inventory.
+    labels["key-output"] = ("bip371Valid", "PSBT with one P2TR key only output with internal key and its derivation path")
+    off_curve = bytes(31) + b"\x05"
+
+    def point(k, v):
+        assert len(k) == 79 and k[46] in [2, 3] and k[47:79] != off_curve
+        changed = k[:47] + off_curve
+        assert changed[46] == k[46] and changed[47:79] == off_curve and len(changed) == len(k)
+        return changed, v
+
+    def der(k, v):
+        assert len(v) == 70 and v[0] == 0x30
+        changed = b"\x31" + v[1:]
+        assert changed[0] == 0x31 and changed[1:] == v[1:]
+        return k, changed
+
+    def no_der(k, v):
+        assert len(v) == 70 and v[0] == 0x30 and v[-1] == 1
+        changed = b"\x01"
+        assert changed[:-1] == b"" and changed[-1] == v[-1]
+        return k, changed
+
+    def xonly_value(k, v):
+        assert len(v) == 32 and v != off_curve
+        changed = off_curve
+        assert len(changed) == len(v) and changed == off_curve
+        return k, changed
+
+    def xonly_key(k, v):
+        assert len(k) == (65 if k[0] == 20 else 33) and k[1:33] != off_curve
+        changed = k[:1] + off_curve + k[33:]
+        assert changed[1:33] == off_curve and changed[33:] == k[33:] and len(changed) == len(k)
+        return changed, v
+
+    def control_key(k, v):
+        assert len(k) >= 34 and (len(k) - 34) % 32 == 0 and k[2:34] != off_curve
+        changed = k[:2] + off_curve + k[34:]
+        assert changed[1] == k[1] and changed[2:34] == off_curve
+        assert changed[34:] == k[34:] and len(changed) == len(k)
+        return changed, v
+
+    add("xpub-point", reject, "xpub", "global xpub x bytes -> 00…05, prefix preserved", 0, 1, point)
+    add("partial-sig-der", reject, "partial", "input 0 partial signature byte 0: 30 -> 31", 1, 2, der)
+    add("partial-sig-no-der", reject, "partial", "input 0 partial signature -> single byte 01", 1, 2, no_der)
+    add("xonly-in-internal", reject, "key", "input 0 internal key -> 00…05", 1, 23, xonly_value)
+    add("xonly-in-tap-bip32", reject, "key", "input 0 tap BIP32 x-only key -> 00…05", 1, 22, xonly_key)
+    add("xonly-in-tap-script-sig", reject, "script", "input 0 first script signature x-only key -> 00…05, leaf hash preserved", 1, 20, xonly_key)
+    add("xonly-out-internal", reject, "key-output", "output 0 internal key -> 00…05", 2, 5, xonly_value)
+    add("xonly-out-tap-bip32", reject, "key-output", "output 0 tap BIP32 x-only key -> 00…05", 2, 7, xonly_key)
+    add("control-block-internal", reject, "script", "input 0 first control-block internal key -> 00…05, control byte preserved", 1, 21, control_key)
+    add("base-key-output", accept, "key-output")
+    assert len(rows) == 49 and len({r["name"] for r in rows}) == 49
+    assert [sum(r["class"] == c for r in rows) for c in [reject, accept, stricter]] == [19, 14, 16]
     return rows
 
 
@@ -198,11 +250,24 @@ def main():
             print(f'{row["name"]}: {row["class"]}; EXIT={result.returncode}', flush=True)
     assert not Path(workspace).exists()
     record = dict(reference=REF, revision=REV, rows=rows)
+    previous = json.loads(DEST.read_text())
+    assert previous["reference"] == REF and previous["revision"] == REV
+    assert rows[:39] == previous["rows"][:39], "existing capture rows changed; refusing to write"
+    expected_errors = {
+        "xpub-point": "xpub key error -  Can't deserialize ExtendedPublicKey from global XPUB key data",
+        "partial-sig-der": "invalid ECDSA signature",
+        "partial-sig-no-der": "invalid ECDSA signature",
+        "control-block-internal": "invalid control block",
+    }
+    for row in rows[39:48]:
+        expected = expected_errors.get(row["name"], "invalid xonly public key")
+        assert row["exit"] != 0 and expected in row["stderr"], (row["name"], row["exit"], row["stderr"])
+    assert rows[48]["exit"] == 0, rows[48]
     if args.check:
         assert json.loads(DEST.read_text()) == record, "capture differs"
     else:
         DEST.write_text(json.dumps(record, indent=2) + "\n")
-    print("PSBT capture: 39/39; temporary workspace removed")
+    print("PSBT capture: 49/49; existing 39 rows unchanged; 9 curve errors confirmed; temporary workspace removed")
 
 
 if __name__ == "__main__":

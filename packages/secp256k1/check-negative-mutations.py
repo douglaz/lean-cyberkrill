@@ -34,6 +34,8 @@ def cases():
         yield f"sign secret {scalar}", "sign"
     for operation in ["parse", "verify"]:
         yield f"invalid prefix {operation}", operation
+    yield "x-only off-curve", "xonly_pubkey_parse"
+    yield "DER empty", "der_signature_parse"
 
 
 def mutate(original, operation):
@@ -46,7 +48,7 @@ def mutate(original, operation):
     position = original.index("{", start) + 1
     # Deliberately accept bad input in this operation only. The test and its
     # expected value are untouched; selecting one test isolates the property.
-    broken = "\n    return 1;" if operation in ["parse", "verify"] else (
+    broken = "\n    return 1;" if operation in ["parse", "verify", "xonly_pubkey_parse", "der_signature_parse"] else (
         "\n    return some_bytes((const unsigned char *)\"\", 0);")
     return original[:position] + broken + original[position:]
 
