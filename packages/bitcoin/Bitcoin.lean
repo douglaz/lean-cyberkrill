@@ -16,10 +16,13 @@ import Bitcoin.DeserializationProofs
 import Bitcoin.Base64
 import Bitcoin.Psbt.SamePoint
 import Bitcoin.Psbt.Hashes
+import Bitcoin.Psbt.Proofs
+import Bitcoin.TransactionProofs
 
 /-! # Bitcoin
 
 Hex, canonical CompactSize, Base58 and Base58Check, bech32/bech32m with strict
 and lax bit regrouping, scriptPubKey/address conversion per network, and exact
 millisatoshi amounts including the CLI grammar. Transaction and PSBT codecs,
-supplied curve operations, and pure RIPEMD-160/HASH160 preimage hashes. -/
+supplied curve operations, and pure RIPEMD-160/HASH160 preimage hashes.
+PSBT framing, validated parsing, and transaction serialization round-trip proofs. -/

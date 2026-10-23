@@ -44,7 +44,10 @@ def namedTheorems : List Name :=
    ``Bitcoin.Address.p2sh_string_roundtrip,
    ``Bitcoin.Address.decode_of_bech32_error,
    ``Bitcoin.Address.fromScript_toScript,
-   ``Bitcoin.Bech32.verifyChecksum_residue_eq]
+   ``Bitcoin.Bech32.verifyChecksum_residue_eq,
+   ``Bitcoin.Psbt.Psbt.roundtrip, ``Bitcoin.Psbt.Psbt.unique_of_parse,
+   ``Bitcoin.Psbt.Psbt.no_trailing_data,
+   ``Bitcoin.parseTransaction_serializeWitnessTransaction]
 
 private def allowedAxioms : List Name := [``propext, ``Classical.choice, ``Quot.sound]
 
@@ -74,6 +77,10 @@ elab "#bitcoin_axiom_gate" : command => do
 #bitcoin_axiom_gate
 
 #print axioms Bitcoin.Hex.decode_encode
+#print axioms Bitcoin.Psbt.Psbt.roundtrip
+#print axioms Bitcoin.Psbt.Psbt.unique_of_parse
+#print axioms Bitcoin.Psbt.Psbt.no_trailing_data
+#print axioms Bitcoin.parseTransaction_serializeWitnessTransaction
 #print axioms Bitcoin.CompactSize.readCompactSize_compactSize
 #print axioms Bitcoin.CompactSize.readCompactSize_ok
 #print axioms Bitcoin.CompactSize.unsignedLE_length

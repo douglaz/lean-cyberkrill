@@ -347,7 +347,9 @@
       "transactions"
     ],
     "exit": 1,
-    "failure": "uncaught exception: assertion failed: wire bip174Invalid[1] input roundtrip"
+    "failure": "error: Bitcoin/TransactionProofs.lean:169:37: unsolved goals",
+    "theorem": "readTransaction_witness",
+    "theorem_file": "Bitcoin/TransactionProofs.lean"
   },
   {
     "property": "surplus witness",
@@ -375,7 +377,9 @@
       "transactions"
     ],
     "exit": 1,
-    "failure": "uncaught exception: assertion failed: wire bip174Invalid[0] network roundtrip"
+    "failure": "error: Bitcoin/TransactionProofs.lean:115:44: unsolved goals",
+    "theorem": "serializeTransaction_data",
+    "theorem_file": "Bitcoin/TransactionProofs.lean"
   },
   {
     "property": "malformed transaction 18",
@@ -445,7 +449,9 @@
       "BIP174 invalid"
     ],
     "exit": 1,
-    "failure": "uncaught exception: assertion failed: BIP174 invalid hex 4"
+    "failure": "error: Bitcoin/Psbt/CodecProofs.lean:198:18: `simp` made no progress",
+    "theorem": "decodeMapFuel_ok",
+    "theorem_file": "Bitcoin/Psbt/CodecProofs.lean"
   },
   {
     "property": "BIP370 invalid",
@@ -487,7 +493,9 @@
       "BIP174 valid"
     ],
     "exit": 1,
-    "failure": "uncaught exception: assertion failed: BIP174 valid 0 serialize"
+    "failure": "error: Bitcoin/Psbt/CodecProofs.lean:45:16: unsolved goals",
+    "theorem": "decodeMapFuel_encode",
+    "theorem_file": "Bitcoin/Psbt/CodecProofs.lean"
   },
   {
     "property": "BIP174 signer failures",
@@ -501,7 +509,9 @@
       "BIP174 signer failures"
     ],
     "exit": 1,
-    "failure": "uncaught exception: assertion failed: BIP174 signer failures 0 serialize"
+    "failure": "error: Bitcoin/Psbt/CodecProofs.lean:45:16: unsolved goals",
+    "theorem": "decodeMapFuel_encode",
+    "theorem_file": "Bitcoin/Psbt/CodecProofs.lean"
   },
   {
     "property": "BIP370 valid",
@@ -515,7 +525,9 @@
       "BIP370 valid"
     ],
     "exit": 1,
-    "failure": "uncaught exception: assertion failed: BIP370 valid 0 serialize"
+    "failure": "error: Bitcoin/Psbt/CodecProofs.lean:45:16: unsolved goals",
+    "theorem": "decodeMapFuel_encode",
+    "theorem_file": "Bitcoin/Psbt/CodecProofs.lean"
   },
   {
     "property": "BIP371 valid",
@@ -529,7 +541,9 @@
       "BIP371 valid"
     ],
     "exit": 1,
-    "failure": "uncaught exception: assertion failed: BIP371 valid 0 serialize"
+    "failure": "error: Bitcoin/Psbt/CodecProofs.lean:45:16: unsolved goals",
+    "theorem": "decodeMapFuel_encode",
+    "theorem_file": "Bitcoin/Psbt/CodecProofs.lean"
   },
   {
     "property": "BIP174 roles",
@@ -543,7 +557,9 @@
       "BIP174 roles"
     ],
     "exit": 1,
-    "failure": "uncaught exception: assertion failed: BIP174 roles 0 serialize"
+    "failure": "error: Bitcoin/Psbt/CodecProofs.lean:45:16: unsolved goals",
+    "theorem": "decodeMapFuel_encode",
+    "theorem_file": "Bitcoin/Psbt/CodecProofs.lean"
   },
   {
     "property": "BIP370 locktimes",
@@ -613,7 +629,9 @@
       "network magic"
     ],
     "exit": 1,
-    "failure": "uncaught exception: assertion failed: network magic"
+    "failure": "error: Bitcoin/Psbt/CodecProofs.lean:245:4: `simp` made no progress",
+    "theorem": "decodePsbtWith_ok",
+    "theorem_file": "Bitcoin/Psbt/CodecProofs.lean"
   },
   {
     "property": "base64 syntax",
@@ -669,7 +687,9 @@
       "hybrid input"
     ],
     "exit": 1,
-    "failure": "uncaught exception: assertion failed: hybrid false raw serialization"
+    "failure": "error: Bitcoin/Psbt/ParseProofs.lean:36:55: unsolved goals",
+    "theorem": "Psbt.parse_serialize",
+    "theorem_file": "Bitcoin/Psbt/ParseProofs.lean"
   },
   {
     "property": "hybrid output",
@@ -683,7 +703,9 @@
       "hybrid output"
     ],
     "exit": 1,
-    "failure": "uncaught exception: assertion failed: hybrid true raw serialization"
+    "failure": "error: Bitcoin/Psbt/ParseProofs.lean:36:55: unsolved goals",
+    "theorem": "Psbt.parse_serialize",
+    "theorem_file": "Bitcoin/Psbt/ParseProofs.lean"
   },
   {
     "property": "exact duplicate",
@@ -697,7 +719,9 @@
       "exact duplicate"
     ],
     "exit": 1,
-    "failure": "uncaught exception: assertion failed: exact duplicate"
+    "failure": "error: Bitcoin/Psbt/CodecProofs.lean:198:18: `simp` made no progress",
+    "theorem": "decodeMapFuel_ok",
+    "theorem_file": "Bitcoin/Psbt/CodecProofs.lean"
   },
   {
     "property": "exact unsigned",
@@ -809,7 +833,9 @@
       "map noncanonical"
     ],
     "exit": 1,
-    "failure": "error: Bitcoin/CompactSize.lean:236:10: unsolved goals"
+    "failure": "error: Bitcoin/CompactSize.lean:236:10: unsolved goals",
+    "theorem": "readCompactSize_ok",
+    "theorem_file": "Bitcoin/CompactSize.lean"
   },
   {
     "property": "map canonical",
@@ -823,7 +849,9 @@
       "map canonical"
     ],
     "exit": 1,
-    "failure": "uncaught exception: assertion failed: map canonical"
+    "failure": "error: Bitcoin/Psbt/CodecProofs.lean:45:16: unsolved goals",
+    "theorem": "decodeMapFuel_encode",
+    "theorem_file": "Bitcoin/Psbt/CodecProofs.lean"
   },
   {
     "property": "key source",
@@ -879,7 +907,9 @@
       "trailing data"
     ],
     "exit": 1,
-    "failure": "uncaught exception: assertion failed: PSBT trailing data"
+    "failure": "error: Bitcoin/Psbt/CodecProofs.lean:277:32: Invalid rewrite argument: Expected an equality or iff proof or definition name, but `finished ?a\u271d` is a proof of",
+    "theorem": "decodePsbtWith_ok",
+    "theorem_file": "Bitcoin/Psbt/CodecProofs.lean"
   },
   {
     "property": "BIP174 invalid",
@@ -1006,5 +1036,333 @@
     ],
     "exit": 1,
     "failure": "uncaught exception: assertion failed: BIP370 locktimes count"
+  },
+  {
+    "property": "BIP174 valid definition",
+    "mutation": "valid-count-bip174Valid",
+    "source": "Bitcoin/PsbtVectors.lean",
+    "command": [
+      "lake",
+      "test",
+      "--",
+      "--psbt",
+      "BIP174 valid definition"
+    ],
+    "exit": 1,
+    "failure": "uncaught exception: assertion failed: BIP174 valid valid count"
+  },
+  {
+    "property": "BIP174 valid definition",
+    "mutation": "valid-decode-bip174Valid",
+    "source": "Bitcoin/Psbt/Fields.lean",
+    "command": [
+      "lake",
+      "test",
+      "--",
+      "--psbt",
+      "BIP174 valid definition"
+    ],
+    "exit": 1,
+    "failure": "uncaught exception: assertion failed: BIP174 valid valid decode 0"
+  },
+  {
+    "property": "BIP174 signer valid definition",
+    "mutation": "valid-count-bip174SignerFailures",
+    "source": "Bitcoin/PsbtVectors.lean",
+    "command": [
+      "lake",
+      "test",
+      "--",
+      "--psbt",
+      "BIP174 signer valid definition"
+    ],
+    "exit": 1,
+    "failure": "uncaught exception: assertion failed: BIP174 signer valid count"
+  },
+  {
+    "property": "BIP174 signer valid definition",
+    "mutation": "valid-decode-bip174SignerFailures",
+    "source": "Bitcoin/Psbt/Fields.lean",
+    "command": [
+      "lake",
+      "test",
+      "--",
+      "--psbt",
+      "BIP174 signer valid definition"
+    ],
+    "exit": 1,
+    "failure": "uncaught exception: assertion failed: BIP174 signer valid decode 0"
+  },
+  {
+    "property": "BIP370 valid definition",
+    "mutation": "valid-count-bip370Valid",
+    "source": "Bitcoin/PsbtVectors.lean",
+    "command": [
+      "lake",
+      "test",
+      "--",
+      "--psbt",
+      "BIP370 valid definition"
+    ],
+    "exit": 1,
+    "failure": "uncaught exception: assertion failed: BIP370 valid valid count"
+  },
+  {
+    "property": "BIP370 valid definition",
+    "mutation": "valid-decode-bip370Valid",
+    "source": "Bitcoin/Psbt/Fields.lean",
+    "command": [
+      "lake",
+      "test",
+      "--",
+      "--psbt",
+      "BIP370 valid definition"
+    ],
+    "exit": 1,
+    "failure": "uncaught exception: assertion failed: BIP370 valid valid decode 0"
+  },
+  {
+    "property": "BIP371 valid definition",
+    "mutation": "valid-count-bip371Valid",
+    "source": "Bitcoin/PsbtVectors.lean",
+    "command": [
+      "lake",
+      "test",
+      "--",
+      "--psbt",
+      "BIP371 valid definition"
+    ],
+    "exit": 1,
+    "failure": "uncaught exception: assertion failed: BIP371 valid valid count"
+  },
+  {
+    "property": "BIP371 valid definition",
+    "mutation": "valid-decode-bip371Valid",
+    "source": "Bitcoin/Psbt/Fields.lean",
+    "command": [
+      "lake",
+      "test",
+      "--",
+      "--psbt",
+      "BIP371 valid definition"
+    ],
+    "exit": 1,
+    "failure": "uncaught exception: assertion failed: BIP371 valid valid decode 0"
+  },
+  {
+    "property": "BIP174 valid definition",
+    "mutation": "valid-formed",
+    "source": "Bitcoin/Psbt/Codec.lean",
+    "command": [
+      "lake",
+      "test",
+      "--",
+      "--psbt",
+      "BIP174 valid definition"
+    ],
+    "exit": 1,
+    "failure": "error: Bitcoin/Psbt/CodecProofs.lean:189:46: omega could not prove the goal:",
+    "theorem": "decodeMapFuel_ok",
+    "theorem_file": "Bitcoin/Psbt/CodecProofs.lean"
+  },
+  {
+    "property": "Transaction WellFormed",
+    "mutation": "formed-count-exception",
+    "source": "Bitcoin/TransactionProofs.lean",
+    "command": [
+      "lake",
+      "test",
+      "--",
+      "--psbt",
+      "Transaction WellFormed"
+    ],
+    "exit": 1,
+    "failure": "uncaught exception: assertion failed: formed count and exception"
+  },
+  {
+    "property": "Transaction WellFormed",
+    "mutation": "formed-conjunct-txidSize",
+    "source": "Bitcoin/TransactionProofs.lean",
+    "command": [
+      "lake",
+      "test",
+      "--",
+      "--psbt",
+      "Transaction WellFormed"
+    ],
+    "exit": 1,
+    "failure": "uncaught exception: assertion failed: formed exception txidSize"
+  },
+  {
+    "property": "Transaction WellFormed",
+    "mutation": "formed-conjunct-scriptSigSize",
+    "source": "Bitcoin/TransactionProofs.lean",
+    "command": [
+      "lake",
+      "test",
+      "--",
+      "--psbt",
+      "Transaction WellFormed"
+    ],
+    "exit": 1,
+    "failure": "uncaught exception: assertion failed: formed exception scriptSigSize"
+  },
+  {
+    "property": "Transaction WellFormed",
+    "mutation": "formed-conjunct-scriptPubKeySize",
+    "source": "Bitcoin/TransactionProofs.lean",
+    "command": [
+      "lake",
+      "test",
+      "--",
+      "--psbt",
+      "Transaction WellFormed"
+    ],
+    "exit": 1,
+    "failure": "uncaught exception: assertion failed: formed exception scriptPubKeySize"
+  },
+  {
+    "property": "Transaction WellFormed",
+    "mutation": "formed-conjunct-witnessItemSize",
+    "source": "Bitcoin/TransactionProofs.lean",
+    "command": [
+      "lake",
+      "test",
+      "--",
+      "--psbt",
+      "Transaction WellFormed"
+    ],
+    "exit": 1,
+    "failure": "uncaught exception: assertion failed: formed exception witnessItemSize"
+  },
+  {
+    "property": "Transaction WellFormed",
+    "mutation": "formed-conjunct-inputCount",
+    "source": "Bitcoin/TransactionProofs.lean",
+    "command": [
+      "lake",
+      "test",
+      "--",
+      "--psbt",
+      "Transaction WellFormed"
+    ],
+    "exit": 1,
+    "failure": "uncaught exception: assertion failed: formed exception inputCount"
+  },
+  {
+    "property": "Transaction WellFormed",
+    "mutation": "formed-conjunct-outputCount",
+    "source": "Bitcoin/TransactionProofs.lean",
+    "command": [
+      "lake",
+      "test",
+      "--",
+      "--psbt",
+      "Transaction WellFormed"
+    ],
+    "exit": 1,
+    "failure": "uncaught exception: assertion failed: formed exception outputCount"
+  },
+  {
+    "property": "Transaction WellFormed",
+    "mutation": "formed-conjunct-witnessCount",
+    "source": "Bitcoin/TransactionProofs.lean",
+    "command": [
+      "lake",
+      "test",
+      "--",
+      "--psbt",
+      "Transaction WellFormed"
+    ],
+    "exit": 1,
+    "failure": "uncaught exception: assertion failed: formed exception witnessCount"
+  },
+  {
+    "property": "Transaction WellFormed",
+    "mutation": "formed-conjunct-witnessesLength",
+    "source": "Bitcoin/TransactionProofs.lean",
+    "command": [
+      "lake",
+      "test",
+      "--",
+      "--psbt",
+      "Transaction WellFormed"
+    ],
+    "exit": 1,
+    "failure": "uncaught exception: assertion failed: formed exception witnessesLength"
+  },
+  {
+    "property": "Transaction WellFormed",
+    "mutation": "formed-conjunct-unambiguous",
+    "source": "Bitcoin/TransactionProofs.lean",
+    "command": [
+      "lake",
+      "test",
+      "--",
+      "--psbt",
+      "Transaction WellFormed"
+    ],
+    "exit": 1,
+    "failure": "error: Bitcoin/TransactionProofs.lean:150:91: omega could not prove the goal:",
+    "theorem": "readTransaction_legacy",
+    "theorem_file": "Bitcoin/TransactionProofs.lean"
+  },
+  {
+    "property": "Transaction WellFormed",
+    "mutation": "formed-error",
+    "source": "Bitcoin/Deserialization.lean",
+    "command": [
+      "lake",
+      "test",
+      "--",
+      "--psbt",
+      "Transaction WellFormed"
+    ],
+    "exit": 1,
+    "failure": "uncaught exception: assertion failed: formed exception measured error"
+  },
+  {
+    "property": "Transaction WellFormed",
+    "mutation": "formed-inventory-count",
+    "source": "test-data/psbt-inventory.json",
+    "command": [
+      "lake",
+      "test",
+      "--",
+      "--psbt",
+      "Transaction WellFormed"
+    ],
+    "exit": 1,
+    "failure": "uncaught exception: assertion failed: formed inventory count"
+  },
+  {
+    "property": "Transaction WellFormed",
+    "mutation": "formed-conjunct-count",
+    "source": "Bitcoin/TransactionProofs.lean",
+    "command": [
+      "lake",
+      "test",
+      "--",
+      "--psbt",
+      "Transaction WellFormed"
+    ],
+    "exit": 1,
+    "failure": "uncaught exception: assertion failed: formed exception conjunct count"
+  },
+  {
+    "property": "BIP174 valid definition",
+    "mutation": "valid-bytes",
+    "source": "Bitcoin/Psbt/Codec.lean",
+    "command": [
+      "lake",
+      "test",
+      "--",
+      "--psbt",
+      "BIP174 valid definition"
+    ],
+    "exit": 1,
+    "failure": "error: Bitcoin/Psbt/CodecProofs.lean:45:16: unsolved goals",
+    "theorem": "decodeMapFuel_encode",
+    "theorem_file": "Bitcoin/Psbt/CodecProofs.lean"
   }
 ]

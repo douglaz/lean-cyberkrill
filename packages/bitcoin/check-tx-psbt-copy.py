@@ -84,6 +84,8 @@ def expected_files(source):
         ("Bitcoin/Base64.lean", "Base64.lean", [(1, 79)]),
         ("Psbt/Codec.lean", "Psbt/Codec.lean", [(1, 157)]),
         ("Psbt/Fields.lean", "Psbt/Fields.lean", [(1, 582)]),
+        ("Psbt/CodecProofs.lean", "Psbt/CodecProofs.lean", [(1, 280)]),
+        ("Psbt/ParseProofs.lean", "Psbt/ParseProofs.lean", [(1, 65)]),
     ]:
         text = read(path, ranges)
         text = text.replace("LeanMiniscript.Psbt", "Bitcoin.Psbt")
@@ -147,6 +149,16 @@ def expected_files(source):
             text = replace(text, "def Psbt.parseBase64 (text : String)",
                            "def Psbt.parseBase64 (cap : PubkeyCapability) (hashes : PreimageHashes) (text : String)")
             text = replace(text, "| some bytes => Psbt.parse bytes", "| some bytes => Psbt.parse cap hashes bytes")
+        elif target == "Psbt/CodecProofs.lean":
+            text = replace(text, "open Bitcoin\n", "open Bitcoin Bitcoin.CompactSize\n")
+            text = replace(text, "if_false", "ite_false", 3)
+            text = replace(text, "if_true", "ite_true")
+        elif target == "Psbt/ParseProofs.lean":
+            text = replace(text, "namespace Bitcoin.Psbt\n", "namespace Bitcoin.Psbt\n\nvariable {cap : PubkeyCapability} {hashes : PreimageHashes}\n")
+            text = replace(text, "psbt.decode", "psbt.decode cap hashes", 3)
+            text = replace(text, "raw.decode", "raw.decode cap hashes")
+            text = replace(text, "Psbt.parse psbt.serialize", "Psbt.parse cap hashes psbt.serialize", 2)
+            text = replace(text, "Psbt.parse bytes", "Psbt.parse cap hashes bytes", 2)
         notice = "../LICENSE-miniscript" if target.startswith("Psbt/") else "LICENSE-miniscript"
         files["Bitcoin/" + target] = provenance(path, ranges, notice) + text
 
@@ -171,12 +183,12 @@ def main():
     for target, expected in expected_files(source).items():
         path = PACKAGE / target
         if write:
-            assert not path.exists(), target
-            path.parent.mkdir(parents=True, exist_ok=True)
-            path.write_text(expected)
+            if not path.exists():
+                path.parent.mkdir(parents=True, exist_ok=True)
+                path.write_text(expected)
         assert path.read_text() == expected, f"undocumented copy delta: {target}"
         print(f"exact copy plus documented edits: {target}")
-    print("transaction/PSBT copy: 8/8; MIT notice reused; forbidden fixture slice excluded")
+    print("transaction/PSBT copy: 10/10; MIT notice reused; forbidden fixture slice excluded")
 
 
 if __name__ == "__main__":

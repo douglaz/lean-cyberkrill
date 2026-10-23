@@ -46,3 +46,27 @@ separate stdout/stderr under `.lake/ripemd160-mutation-checks`, restores source
 bytes in `finally`, and finishes with a successful full `lake test`.
 The existing `psbt-mutations.json` skip/swap cases for types 10 and 12 now test
 the exported real hashes with independently constructed record digests.
+
+## PSBT proof and definition checks
+
+`psbt-inventory.json` is unchanged. Its 136 transaction occurrences also drive
+the `Transaction WellFormed` action: 135 meet the nine library hypotheses, and
+`bip174Valid[9]` global record 0 fails only the input/output marker condition.
+`measure-psbt-exception.lean` reproduces the witness reader's `truncated` error
+on that published zero-input transaction.
+
+`psbt-mutations.json` includes definition-count, decode-half, framing, transaction
+hypothesis, inventory-count and measured-error checks. A proof-caught record
+now names `theorem_file` and `theorem`; its failure is an actual diagnostic
+within that declaration's range in the unmutated file. Runtime-caught records
+keep their earlier meaning and format. The proof obligations move fourteen
+existing PSBT checks from runtime detection to proof detection; the root README
+lists their old assertions, new diagnostics and reasons. `map-noncanonical`
+retains its existing proof classification, with explicit theorem metadata.
+
+The runner hashes the proof modules, test modules, mutation targets, inventory,
+root modules, lakefile and its own source before accepting `--resume`
+checkpoints. It restores the exact original source in `finally`, including when
+a handled termination signal unwinds a capped invocation. Checkpoints are
+written separately from the script, through an atomic rename. `--discover`
+keeps diagnostic logs without certifying or caching a detection.

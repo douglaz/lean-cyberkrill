@@ -11,11 +11,17 @@ import json
 import hashlib
 from pathlib import Path
 import re
+import signal
 import subprocess
 import sys
 
 PACKAGE = Path(__file__).resolve().parent
 LOGS = PACKAGE / ".lake/psbt-mutation-checks"
+
+
+def cancelled(signum, _frame):
+    # A timeout must unwind the active mutation's finally block too.
+    raise SystemExit(128 + signum)
 
 
 def replace(text, old, new, count=1):
@@ -199,6 +205,73 @@ def mutations(originals):
         match = re.search(r"^def " + name + r"[^\n]*\n(  [^\n]+\n)", originals[path], re.M)
         assert match, name
         add("count-" + name, path, match[1], "", selection, selection + " count")
+    for name, display, selector in [
+        ("bip174Valid", "BIP174 valid", "BIP174 valid definition"),
+        ("bip174SignerFailures", "BIP174 signer", "BIP174 signer valid definition"),
+        ("bip370Valid", "BIP370 valid", "BIP370 valid definition"),
+        ("bip371Valid", "BIP371 valid", "BIP371 valid definition")]:
+        path = "Bitcoin/PsbtVectors.lean"
+        first = re.search(r"^def " + name + r"[^\n]*\n(  [^\n]+\n)", originals[path], re.M)
+        assert first, name
+        add("valid-count-" + name, path, first[1], "", selector, display + " valid count")
+        add("valid-decode-" + name, fields,
+            '  let scope := "input"\n  let (keyType, keyData) ← splitKey record.key',
+            '  let scope := "input"\n  checkValue scope 0 false "rejected input field"\n'
+            '  let (keyType, keyData) ← splitKey record.key',
+            selector, display + " valid decode 0")
+    add("valid-formed", codec,
+        "0 < record.key.size ∧ record.key.size < 2 ^ 64 ∧ record.value.size < 2 ^ 64",
+        "1 < record.key.size ∧ record.key.size < 2 ^ 64 ∧ record.value.size < 2 ^ 64",
+        "BIP174 valid definition", "theorem:Bitcoin/Psbt/CodecProofs.lean:decodeMapFuel_ok")
+    proof = "Bitcoin/TransactionProofs.lean"
+    add("formed-count-exception", proof,
+        "  unambiguous : tx.inputs.size > 0 ∨ tx.outputs.size = 0",
+        "  unambiguous : tx.inputs.size > 0", "Transaction WellFormed", "formed count and exception")
+    for field in ["txidSize", "scriptSigSize", "scriptPubKeySize", "witnessItemSize",
+                  "inputCount", "outputCount", "witnessCount", "witnessesLength"]:
+        line = re.search(r"^  " + field + r" : (.+)$", originals[proof], re.M)
+        assert line, field
+        add("formed-conjunct-" + field, proof, line[0],
+            f"  {field} : False ∧ ({line[1]})", "Transaction WellFormed", "formed exception " + field)
+    add("formed-conjunct-unambiguous", proof,
+        "  unambiguous : tx.inputs.size > 0 ∨ tx.outputs.size = 0",
+        "  unambiguous : True", "Transaction WellFormed",
+        "theorem:Bitcoin/TransactionProofs.lean:readTransaction_legacy")
+    add("formed-error", deser,
+        "  let (txid, rest) ← takeExact 32 bytes",
+        "  let (txid, rest) ← match takeExact 32 bytes with\n"
+        "    | .ok pair => pure pair\n"
+        "    | .error _ => throw .unknownTransactionFlags",
+        "Transaction WellFormed", "formed exception measured error")
+    inventory = "test-data/psbt-inventory.json"
+    first = re.search(r'    \{\n[^{}]+\n    \},\n',
+                      originals[inventory][originals[inventory].index('"transactions": ['):])
+    assert first
+    add("formed-inventory-count", inventory, first[0], "", "Transaction WellFormed", "formed inventory count")
+    add("formed-conjunct-count", proof,
+        "  unambiguous : tx.inputs.size > 0 ∨ tx.outputs.size = 0",
+        "  unambiguous : tx.inputs.size > 0 ∨ tx.outputs.size = 0\n  extra : True",
+        "Transaction WellFormed", "formed exception conjunct count")
+    add("valid-bytes", codec, "map.flatMap Record.encode ++ [0]",
+        "map.flatMap Record.encode ++ [1]", "BIP174 valid definition",
+        "theorem:Bitcoin/Psbt/CodecProofs.lean:decodeMapFuel_encode")
+    # These classifications follow diagnostics from the isolated discovery checks.
+    proof_caught = {
+        "trailing-data": ("Bitcoin/Psbt/CodecProofs.lean", "decodePsbtWith_ok"),
+        "network-magic": ("Bitcoin/Psbt/CodecProofs.lean", "decodePsbtWith_ok"),
+        "map-canonical": ("Bitcoin/Psbt/CodecProofs.lean", "decodeMapFuel_encode"),
+        "exact-duplicate": ("Bitcoin/Psbt/CodecProofs.lean", "decodeMapFuel_ok"),
+        "vector-bip174-invalid": ("Bitcoin/Psbt/CodecProofs.lean", "decodeMapFuel_ok"),
+        "witness-marker-flag": ("Bitcoin/TransactionProofs.lean", "readTransaction_witness"),
+        "legacy-version": ("Bitcoin/TransactionProofs.lean", "serializeTransaction_data"),
+    }
+    for label in ["bip174-valid", "bip174-signer", "bip370-valid", "bip371-valid", "bip174-roles"]:
+        proof_caught["vector-" + label] = ("Bitcoin/Psbt/CodecProofs.lean", "decodeMapFuel_encode")
+    for label in ["rewrite-raw-input", "rewrite-raw-output"]:
+        proof_caught[label] = ("Bitcoin/Psbt/ParseProofs.lean", "Psbt.parse_serialize")
+    result = [(label, path, changed, selection,
+               "theorem:" + ":".join(proof_caught[label]) if label in proof_caught else expected)
+              for label, path, changed, selection, expected in result]
     return result
 
 
@@ -211,19 +284,30 @@ def run(label, selection):
 
 
 def main():
+    for signum in [signal.SIGHUP, signal.SIGINT, signal.SIGQUIT, signal.SIGTERM]:
+        signal.signal(signum, cancelled)
     LOGS.mkdir(parents=True, exist_ok=True)
     names = ["Bitcoin/Psbt/Fields.lean", "Bitcoin/Psbt/Codec.lean", "Bitcoin/Psbt/SamePoint.lean",
              "Bitcoin/Deserialization.lean", "Bitcoin/Base64.lean", "Bitcoin/CompactSize.lean",
-             "Bitcoin/PsbtVectors.lean", "Bitcoin/Transaction.lean"]
+             "Bitcoin/PsbtVectors.lean", "Bitcoin/Transaction.lean",
+             "Bitcoin/TransactionProofs.lean", "Bitcoin/Psbt/CodecProofs.lean",
+             "Bitcoin/Psbt/ParseProofs.lean", "Bitcoin/Psbt/Proofs.lean",
+             "BitcoinTests/TransactionChecks.lean", "test-data/psbt-inventory.json",
+             "measure-psbt-exception.lean"]
     originals = {name: (PACKAGE / name).read_text() for name in names}
     cases = mutations(originals)
     selected = sys.argv[1:]
+    discover = "--discover" in selected
+    if discover:
+        selected.remove("--discover")
     resume = selected == ["--resume"]
     if resume:
         selected = []
     assert not selected or all(label in [c[0] for c in cases] for label in selected)
-    context = "".join(originals.values()) + "".join((PACKAGE / name).read_text() for name in
-        ["BitcoinTests.lean", "BitcoinTests/Psbt.lean", "BitcoinTests/AxiomGate.lean", "test-data/psbt-inventory.json"])
+    context_paths = [PACKAGE / "Bitcoin.lean", PACKAGE / "BitcoinTests.lean", PACKAGE / "lakefile.lean"]
+    for directory in ["Bitcoin", "BitcoinTests"]:
+        context_paths.extend(sorted((PACKAGE / directory).rglob("*.lean")))
+    context = Path(__file__).read_text() + "".join(originals.values()) + "".join(p.read_text() for p in context_paths)
     context_hash = hashlib.sha256(context.encode()).hexdigest()
     records = []
     for label, name, changed, selection, expected in cases:
@@ -242,35 +326,52 @@ def main():
         try:
             path.write_text(changed)
             assert path.read_text() == changed
+            print(f"{label}: mutation applied", flush=True)
             status, command, output = run(label, selection)
             assert status == 1, (label, status, output)
-            if expected.startswith("theorem:"):
-                theorem = expected.split(":", 1)[1]
-                start = changed[:changed.index("theorem " + theorem)].count("\n") + 1
-                end = changed.find("\ntheorem ", changed.index("theorem " + theorem) + 1)
-                end = changed[:end].count("\n") + 1 if end >= 0 else len(changed.splitlines())
-                failures = [line for line in output.splitlines() if re.search(
-                    r"error: Bitcoin/[^:]+:(\d+):", line) and
-                    start <= int(re.search(r"error: Bitcoin/[^:]+:(\d+):", line)[1]) < end]
+            if discover:
+                failures = [line for line in output.splitlines()
+                            if "assertion failed:" in line or line.startswith("error:")]
+                assert failures, (label, output)
+                failure = failures[0]
+            elif expected.startswith("theorem:"):
+                target = expected.split(":", 1)[1]
+                theorem_file, theorem = target.split(":") if ":" in target else (name, target)
+                unmutated = originals[theorem_file]
+                declaration = re.search(r"^(?:private )?theorem " + re.escape(theorem) + r"\b", unmutated, re.M)
+                assert declaration, (theorem_file, theorem)
+                start = unmutated[:declaration.start()].count("\n") + 1
+                following = re.search(r"\n(?:private )?(?:theorem |def |end )", unmutated[declaration.end():])
+                end_offset = declaration.end() + following.start() if following else len(unmutated)
+                end = unmutated[:end_offset].count("\n") + 1
+                diagnostic = re.compile(r"^error: " + re.escape(theorem_file) + r":(\d+):")
+                failures = [line for line in output.splitlines() if diagnostic.search(line) and
+                    start <= int(diagnostic.search(line)[1]) <= end]
                 assert failures, (label, output)
                 failure = failures[0]
             else:
-                assert re.search(r"Bitcoin axiom gate: \d+ library theorems; 56 named; 0 offenders", output), output
+                assert re.search(r"Bitcoin axiom gate: \d+ library theorems; 60 named; 0 offenders", output), output
                 failures = [line for line in output.splitlines()
                             if "assertion failed:" in line or line.startswith("error:")]
                 assert failures and "assertion failed: " + expected in failures[0], (label, output)
                 failure = failures[0]
             record = dict(property=selection, mutation=label, source=name, command=command,
                           exit=status, failure=failure)
+            if not discover and expected.startswith("theorem:"):
+                record.update(theorem=theorem, theorem_file=theorem_file)
             records.append(record)
-            checkpoint.write_text(json.dumps(dict(fingerprint=fingerprint, record=record), indent=2) + "\n")
+            if not discover:
+                pending = checkpoint.with_suffix(".pending")
+                pending.write_text(json.dumps(dict(fingerprint=fingerprint, record=record), indent=2) + "\n")
+                pending.replace(checkpoint)
             print(f"{label}: EXIT={status}; {failure}", flush=True)
         finally:
             path.write_text(originals[name])
             assert path.read_text() == originals[name]
     status, command, output = run("restored-tests", None)
     assert status == 0, output
-    destination = LOGS / "selected-records.json" if selected else PACKAGE / "test-data/psbt-mutations.json"
+    destination = LOGS / "discovery-records.json" if discover else (
+        LOGS / "selected-records.json" if selected else PACKAGE / "test-data/psbt-mutations.json")
     destination.write_text(json.dumps(records, indent=2) + "\n")
     print(f"PSBT mutations: {len(records)}/{len(selected) if selected else len(cases)} detected; restored lake test: EXIT=0")
 
