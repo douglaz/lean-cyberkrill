@@ -328,9 +328,10 @@ amount modules. Nothing from btc-verified is copied into the tree.
   budget. The case over `MAX_SIZE` goes through `bitcoin-tx -` on stdin instead, and its rejection
   is recorded.
 - The recording is committed and kept to a few MB. CI replays it, so neither CI job runs a node,
-  builds Core or adds C. A digest over the inputs, the mutator version and Core's version binds the
-  recording. A mismatch fails the suite and forces a re-record, and so does an input with no
-  recorded answer; replay never invents a rejection.
+  builds Core or adds C. A digest over the inputs, every recorded answer, the mutator version and
+  Core's version binds the recording, so an edited answer fails like a stale input. A mismatch
+  fails the suite and forces a re-record, and so does an input with no recorded answer; replay
+  never invents a rejection.
 - This gives up a fresh campaign on every run and coverage guidance. Core's transaction-check
   verdicts stay out of scope, as an 11b non-goal.
 
