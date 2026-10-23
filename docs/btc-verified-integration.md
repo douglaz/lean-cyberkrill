@@ -4,9 +4,10 @@ This file records an external analysis of whether
 [`ProofOfKeags/btc-verified`](https://github.com/ProofOfKeags/btc-verified), a Lean 4 formal model
 of Bitcoin's consensus-critical structures, could help this repository. The analysis is reproduced
 as received, minus its one-word conversational opening. It was not written against pinned commits,
-so the [verification notes](#verification-notes) below (N1–N21) check each factual claim against
+so the [verification notes](#verification-notes) below (N1–N21) check its factual claims against
 btc-verified @ [`2fdeb40`](https://github.com/ProofOfKeags/btc-verified/tree/2fdeb40ca2b3f289896ed14a3340ad231cd16538)
-(2026-10-21) and this repository @ `5baad8b`, and record every correction. The plan's response is
+(2026-10-21) and this repository @ `5baad8b`, and record every correction. N19 names the claims
+about this repository's other proofs, which were not re-audited. The plan's response is
 the post-v1 Phase 11 in [`plan.md` §7](../plan.md#7-post-v1-transaction-equivalence-with-btc-verified-phase-11).
 
 ## The analysis
