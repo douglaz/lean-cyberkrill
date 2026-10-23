@@ -329,9 +329,11 @@ amount modules. Nothing from btc-verified is copied into the tree.
   is recorded.
 - The recording is committed and kept to a few MB. CI replays it, so neither CI job runs a node,
   builds Core or adds C. A digest over the inputs, every recorded answer, the mutator version and
-  Core's version binds the recording, so an edited answer fails like a stale input. A mismatch
-  fails the suite and forces a re-record, and so does an input with no recorded answer; replay
-  never invents a rejection.
+  Core's version binds the recording. The recording script writes it to a separate committed
+  manifest, never into the recording itself, and replay compares the recording's computed digest
+  with it. So an answer edited by hand fails like a stale input, and a real re-record changes both
+  files in review. A mismatch fails the suite and forces a re-record, and so does an input with no
+  recorded answer; replay never invents a rejection.
 - This gives up a fresh campaign on every run and coverage guidance. Core's transaction-check
   verdicts stay out of scope, as an 11b non-goal.
 
