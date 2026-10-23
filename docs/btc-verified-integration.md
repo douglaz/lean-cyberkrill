@@ -288,3 +288,6 @@ claim holds as written; anything else is a correction or an addition the plan re
     - `bitcoin-tx` always uses that heuristic (`src/bitcoin-tx.cpp:820`).
     - `decoderawtransaction` returns `txid`, `hash` (the wtxid) and `size`, but not the
       re-serialized bytes (`include_hex=false`).
+    - An HTTP request body is limited to 32 MiB (`MAX_BODY_SIZE`, `src/httpserver.h:82`). Through
+      RPC, then, Core never sees a transaction whose hex is larger than that, which includes any
+      container just over `MAX_SIZE`.

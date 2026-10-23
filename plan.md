@@ -288,6 +288,11 @@ amount modules. Nothing from btc-verified is copied into the tree.
   the 4-error theorem needed it, and counted Mathlib's sandbox build time inside `nix flake check`.
 - **C code.** Section 1 allows C only in `secp256k1` and `http-curl`. btc-verified's own harness is
   C (N20).
+- **Whole-repo check.** AGENTS.md requires every package to be in `lakePackages`, so that
+  `nix flake check` covers it.
+- **Core's RPC body limit.** Core takes at most 32 MiB per HTTP request body (N21). So
+  `decoderawtransaction` cannot see a container just over `MAX_SIZE` (N12); its hex alone is over
+  64 MiB.
 
 **Defaults pending the open questions.** These are proposals, not decisions:
 - **Licence footing** (question 2): the bridge stays dual-licensed and pins btc-verified as a
@@ -297,16 +302,18 @@ amount modules. Nothing from btc-verified is copied into the tree.
     That keeps its Mathlib pin independent of the bech32 route's.
   - The bridge and the btc-verified oracle stay out of `lakePackages` and `nix flake check`, and
     build in a separate CI job that may fetch the Mathlib cache. Building Mathlib from source in
-    the sandbox would blow the CI budget. This departs from §6 #2's in-check accounting.
+    the sandbox would blow the CI budget. This departs from §6 #2's in-check accounting, and from
+    AGENTS.md's whole-repo rule. If the owner picks it, the same change amends that rule.
+    Until then, this default is not part of any bead's contract.
 - **Core oracle** (question 4): `decoderawtransaction`, which needs no C.
 
 **Deliverables, in order.** The common definition of done in section 4 applies to every package
-a deliverable touches. The separate CI job must also be green.
+a deliverable touches. The CI job that builds the bridge and the oracle (question 3) must also be green.
 
 | # | Deliverable | Depends on | Definition of done |
 |---|---|---|---|
 | 11a | **Mismatch inventory**, `docs/btc-verified-mismatches.md`: every difference between our transaction types and codec and btc-verified's at the pinned commits (field types and names, accepted domain, error model, hash representation, byte and container types). It starts from N5–N17. Each row gives source lines on both sides and a predicted differential outcome. | Phase 10b | Every field of `OutPoint`, `TxInput`, `TxOutput`, `Transaction` and `WitnessTransaction`, and of btc-verified's `OutPoint`, `TxIn`, `TxOut`, `TxBody`, `SegwitInput` and `Tx`, is mapped or marked as having no counterpart. Every row predicts one of: agree, ours-only accept, btc-verified-only accept, Core-only reject, unrepresentable. |
-| 11b | **Three-way differential suite**, following the method of btc-verified's October update ([Delving Bitcoin, 2026-10-19](https://delvingbitcoin.org/t/btc-verified-october-update-connecting-map-to-territory/2964); N20): give the same bytes to each implementation and compare what each observably does. The three implementations are: ours (`parseTransaction` on both paths, `serializeWitnessTransaction`, `txid`, and a new `Transaction.wtxid`); btc-verified (packed `decodeTx`/`encodeTx`, `Tx.txid`, `Tx.wtxid`), as a small test-only oracle built from the pinned checkout on its own toolchain; and Core, through `decoderawtransaction` on a throwaway regtest node (the §6 #4 machinery), with `iswitness` true and false. That pins Core to one deserializer per call with no heuristic (N21). Observations: acceptance on each path, re-serialized bytes (ours and btc-verified), Core's `size` and `hash`, txid and wtxid. Inputs: a committed regression set replayed on every run, plus a mutation campaign whose seed and budget are recorded. The regression set covers published legacy and SegWit transactions, the `00 00` empty object, zero-input bodies on the non-witness path, a superfluous witness flag, unknown flags, truncation at every field, CompactSize boundaries and non-canonical forms, and the `MAX_SIZE` boundary (N12). Each disagreement is matched to an inventory row, or else becomes a fix bead (ours) or an upstream report (btc-verified or Core; outward-facing, so it needs the owner's go-ahead). | 11a; open questions 1, 3, 4 | The regression set and the campaign finish with zero unexplained disagreements. An injected disagreement makes the run fail, naming the input and both observations. Tests never reach the internet. `wtxid` has vectors. |
+| 11b | **Three-way differential suite**, following the method of btc-verified's October update ([Delving Bitcoin, 2026-10-19](https://delvingbitcoin.org/t/btc-verified-october-update-connecting-map-to-territory/2964); N20): give the same bytes to each implementation and compare what each observably does. The three implementations are: ours (`parseTransaction` on both paths, `serializeWitnessTransaction`, `txid`, and a new `Transaction.wtxid`); btc-verified (packed `decodeTx`/`encodeTx`, `Tx.txid`, `Tx.wtxid`), as a small test-only oracle built from the pinned checkout on its own toolchain; and Core, through `decoderawtransaction` on a throwaway regtest node (the §6 #4 machinery), with `iswitness` true and false. That pins Core to one deserializer per call with no heuristic (N21). Observations: acceptance on each path, re-serialized bytes (ours and btc-verified), Core's `size` and `hash`, txid and wtxid. Inputs: a committed regression set replayed on every run, plus a mutation campaign whose seed and budget are recorded. The regression set covers published legacy and SegWit transactions, the `00 00` empty object, zero-input bodies on the non-witness path, a superfluous witness flag, unknown flags, truncation at every field, CompactSize boundaries and non-canonical forms, and a container just over `MAX_SIZE` (N12). That last case is compared between ours and btc-verified only. Core's rejection of it is taken from its source (`ReadCompactSize`'s range check), because the case cannot pass the RPC body limit; the 4(b) oracle could take it directly. Each disagreement is matched to an inventory row, or else becomes a fix bead (ours) or an upstream report (btc-verified or Core; outward-facing, so it needs the owner's go-ahead). | 11a; open questions 1, 3, 4 | The regression set and the campaign finish with zero unexplained disagreements. An injected disagreement makes the run fail, naming the input and both observations. Tests never reach the internet. `wtxid` has vectors. |
 | 11c (1 of 3) | **Bridge package and encoding equivalence.** `toVerified tx w (h : tx.WellFormed w) : Tx` picks `legacy`, `empty` or `segwit` by the rule our serializer uses (N6, N15). It proves `(serializeWitnessTransaction tx w).data.toList = encodeTx (toVerified tx w h)`, built up in order: outpoint and fixed-width fields, then per-input witness bundling, then the whole transaction. | 11b; Phase 4a (3 of 3); open questions 1–3 | The theorem is proven with no extra hypotheses beyond `WellFormed`. If it needs more, the work session stops and reports. |
 | 11c (2 of 3) | **Parser equivalence** on the witness path: `parseTransaction bytes` accepts exactly when `decodeTx bytes.toList = some (t, [])`, and then `toVerified` of our value is `t`. This needs a new canonicality lemma on our side (accepted bytes are the serialization of a `WellFormed` value). Error names are not compared. Every acceptance difference the inventory lists is either excluded by name in the statement, and listed in README, or the work session stops and reports. The non-witness path has no btc-verified counterpart (N17) and is recorded as such. | 11c (1 of 3) | Both directions are proven. Every exclusion matches an inventory row and a differential observation. |
 | 11c (3 of 3) | **TXID and WTXID.** First a SHA-256 bridge: btc-verified's `sha256` equals lean4-hash's `Spec.sha256_bytes`, the specification `sha256_spec` targets (N18). Then our `txid` and `wtxid` equal btc-verified's on `toVerified`. Finally `Tx.txid_binding` and `Tx.wtxid_binding` carry over to our ids: equal ids mean equal bodies, or an explicit collision (N8). | 11c (1 of 3) | All three steps are proven, and the carried-over binding statements are listed in README. |
@@ -316,7 +323,7 @@ a deliverable touches. The separate CI job must also be green.
 each):
 1. **Toolchain route** (gates 11c; also decides whether 11b's oracle carries a second, test-only
    toolchain):
-   - (a) The 11b oracle runs on btc-verified's own toolchain in the separate job. For 11c, offer
+   - (a) The 11b oracle runs on btc-verified's own toolchain in its CI job. For 11c, offer
      btc-verified an upstream bump to v4.35.0, then pin the bumped commit. Mathlib has a
      `v4.35.0` tag, but the bump means migrating btc-verified and its Mathlib use across five
      Lean minor versions in someone else's repo. It is outward-facing, so it needs the owner's
@@ -332,8 +339,11 @@ each):
    - (b) The bridge package is Apache-2.0 only, with its own licence files.
    - (c) No bridge.
 3. **Mathlib and CI placement:**
-   - (a) A separate bridge package, built in a separate CI job.
-   - (b) Share `bitcoin-proofs` and a single Mathlib pin with the bech32 route.
+   - (a) A separate bridge package, built in a separate CI job. This amends AGENTS.md's rule that
+     every package is in `lakePackages`.
+   - (b) A separate bridge package in `lakePackages`, paying Mathlib's sandbox build inside
+     `nix flake check`, as §6 #2 assumed.
+   - (c) Share `bitcoin-proofs` and a single Mathlib pin with the bech32 route.
 4. **Core oracle** (technical: an independent technical review comes before the owner decides):
    - (a) `decoderawtransaction` on regtest, with no new C.
    - (b) libbitcoinkernel through libFuzzer, as the October update does. This gives
