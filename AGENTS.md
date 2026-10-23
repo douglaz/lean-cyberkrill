@@ -11,6 +11,12 @@ definitions of done; the beads tracker (`br`) holds the executable work.
 - Per package: `cd packages/<pkg> && nix develop -c lake build && nix develop -c lake test`.
 - Whole repo: `nix flake check` builds and tests every package in the nix sandbox, then runs the
   app. A new package must be added to `lakePackages` in `flake.nix`, or the check skips it.
+  - One exception (owner decision, 2026-10-23; `plan.md` §7 question 3): the two Phase 11 packages
+    that depend on Mathlib, the btc-verified bridge and the 11b btc-verified oracle, stay out of
+    `lakePackages`. A second CI job on every PR fetches Mathlib's prebuilt files
+    (`lake exe cache get`), then builds and tests only those two, with the no-`sorry` check, the
+    axiom gate and the 11b suite. "CI green" means both jobs pass. The job lands with Phase 11;
+    no other package may leave `lakePackages`.
 - Packages depend on each other by path (`require bitcoin from ".." / "bitcoin"`). Commit each
   package's `lake-manifest.json`.
 

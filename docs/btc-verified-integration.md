@@ -172,13 +172,16 @@ claim holds as written; anything else is a correction or an addition the plan re
    `lakefile.lean`, README "License"). `Kernel/COPYING.bitcoin` is Bitcoin Core's MIT notice for the
    pinned C header. The "contribution rules" the analysis cites are AGENTS.md "Licence" and plan
    §5. They keep Apache-2.0-only material out of the tree and say "Use a pinned non-flake input
-   read at test time, or replace it with vectors we generate ourselves." They don't say whether a build-time Lake `require` of such a package is
-   allowed; plan §7 open question 2 asks the owner.
+   read at test time, or replace it with vectors we generate ourselves." They don't say whether a
+   build-time Lake `require` of such a package is allowed. For Phase 11 the owner has since allowed
+   it, as pinned dependencies that are never copied (plan §7 question 2;
+   [Owner decisions](#owner-decisions)).
 - **N3. Addition: btc-verified requires Mathlib** (`require "leanprover-community" / "mathlib"`), so
    any package that imports it takes Mathlib with it. Mathlib is Apache-2.0 as well. Plan §2
    confines Mathlib to a separate `<pkg>-proofs` package. §6 #2 allowed Mathlib as a pinned input
    of `bitcoin-proofs` only if the 4-error theorem needed it, and counted Mathlib's build time
-   inside `nix flake check`.
+   inside `nix flake check`. For Phase 11 the owner has since put the Mathlib-dependent packages in
+   a separate CI job instead (plan §7 question 3; [Owner decisions](#owner-decisions)).
 
 ### btc-verified's model
 
@@ -291,7 +294,7 @@ claim holds as written; anything else is a correction or an addition the plan re
     - **CI.** CI fails on any observed disagreement.
 
     That harness is C. This repository allows C only in `secp256k1` and `http-curl` (plan §1), so
-    Phase 11 keeps the method but by default uses a C-free Core oracle (plan §7).
+    Phase 11 keeps the method but uses a C-free, recorded Core oracle (plan §7 question 4).
 - **N21. Core oracle facts** (from Core @ `fc6923c`), used by plan §7:
     - `decoderawtransaction <hex> true` tries only the witness-aware deserializer, and `false` only
       the non-witness one. Each must consume the whole input. With the argument omitted, a heuristic
@@ -302,12 +305,39 @@ claim holds as written; anything else is a correction or an addition the plan re
     - An HTTP request body is limited to 32 MiB (`MAX_BODY_SIZE`, `src/httpserver.h:82`). Through
       RPC, then, Core never sees a transaction whose hex is larger than that, which includes any
       container just over `MAX_SIZE`.
+    - `bitcoin-tx -` reads the hex from stdin with no size limit (`src/bitcoin-tx.cpp:777-789`,
+      `:817-820` at v31.1) and decodes it with that heuristic. The heuristic doesn't matter for a
+      container over `MAX_SIZE`, because both deserializers reject it at the range check
+      (`src/serialize.h:356` at v31.1, `:359` at `fc6923c`). nixpkgs' package builds `bitcoin-tx`
+      along with `bitcoind`.
+    - The transaction deserializer (`UnserializeTransaction`, `src/primitives/transaction.h`) and
+      `DecodeTx` (`src/core_io.cpp`) are identical at v31.1, the version in this repository's
+      pinned nixpkgs, and at `fc6923c`.
+    - The kernel library's `btck_transaction_create` (`src/kernel/bitcoinkernel.cpp:513-522`)
+      deserializes with `TX_WITH_WITNESS` only and doesn't check that the input is fully consumed.
+      So it has no non-witness path, and it accepts a valid transaction followed by trailing bytes.
 
 ## Owner decisions
 
-Plan §7 holds the decisions and the questions still open. The decisions so far:
+Plan §7 holds the decisions. The owner answered all four of its questions on 2026-10-23:
 
 - **2026-10-23, toolchain route (§7 question 1): keep our own upgraded copy.** We upgrade
   btc-verified to Lean v4.35.0 and Mathlib `v4.35.0` ourselves, keep that copy pinned outside this
   repository, and maintain it as btc-verified moves. Nothing is asked of btc-verified's
   maintainers. Deliverable 11a (2 of 2) in plan §7 does the upgrade.
+- **2026-10-23, licence footing (§7 question 2): dual, depend don't copy.** The 11c bridge package
+  and the 11b btc-verified oracle are "MIT OR Apache-2.0" like every other package. Our upgraded
+  btc-verified copy and Mathlib, both Apache-2.0 only (N2, N3), are pinned build-time dependencies
+  and are never copied into the tree.
+- **2026-10-23, Mathlib and CI placement (§7 question 3): separate CI job.** A second CI job on
+  every PR fetches Mathlib's prebuilt files, then builds and tests only the bridge and the 11b
+  oracle, with the no-`sorry` check, the axiom gate and the 11b suite. Every other package stays in
+  `nix flake check`, AGENTS.md names the exception, and "CI green" means both jobs pass. The job
+  lands with the Phase 11 work.
+- **2026-10-23, Core oracle (§7 question 4): recorded answers.** Two independent technical reviews
+  came first, and both picked this option. A committed script runs a throwaway regtest node,
+  using the §6 #4 machinery, and records Core's `decoderawtransaction` answers on both paths for
+  the regression set and a fixed, bounded campaign. CI replays them, with no live node, no C and
+  no Core build. Core 31.1 from nixpkgs is the baseline (N21), the case over `MAX_SIZE` goes
+  through `bitcoin-tx` on stdin, the recording stays within a few MB, and a digest check forces a
+  re-record.
