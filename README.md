@@ -3793,6 +3793,23 @@ Mathlib, dependency, or acceptance-rule change is needed.
 | `Bitcoin.Psbt.Proofs` | `Bitcoin.Psbt.Psbt.no_trailing_data : Psbt.parse cap hashes bytes = .ok p → Psbt.parse cap hashes (bytes ++ extra) = .ok q → extra = ByteArray.empty` |
 | `Bitcoin.TransactionProofs` | `Bitcoin.parseTransaction_serializeWitnessTransaction (tx) (witnesses) : tx.WellFormed witnesses → parseTransaction (serializeWitnessTransaction tx witnesses) = .ok ⟨tx, if witnesses.all List.isEmpty then tx.inputs.toList.map (fun _ => []) else witnesses⟩` |
 
+The upstream references below were located by grep in a fresh
+[cb9bc5f source tree](https://github.com/febyeji/lean-miniscript/tree/cb9bc5f2f80987ad18b696a9c660f90f4bc1b6bd)
+and in the port. Port paths are relative to `packages/bitcoin/`.
+
+| Upstream at `cb9bc5f` | What | Port location |
+|---|---|---|
+| `LeanMiniscript/Psbt/ParseProofs.lean:31-34` | `Psbt.parse_serialize` | `Bitcoin/Psbt/ParseProofs.lean:34-36` (docstring at `:32`) |
+| `LeanMiniscript/Psbt/ParseProofs.lean:40` | `Psbt.serialize_parse` | `Bitcoin/Psbt/ParseProofs.lean:43-45` |
+| `LeanMiniscript/Psbt/Fields.lean:536-539` | `Psbt.parse` | `Bitcoin/Psbt/Fields.lean:534-537`; `Psbt.decode` at `:526-531` |
+| `LeanMiniscript/Psbt/Fields.lean:206-207` | `validPublicKey`, replaced by the capability | `Bitcoin/Psbt/Fields.lean:377` (`cap.isValidPubkey`), `:389` and `:485` (`cap.compressPubkey`) |
+| `LeanMiniscript/Psbt/Fields.lean:272-276` | `preimageHash` | `Bitcoin/Psbt/Fields.lean:270-274` |
+| `LeanMiniscript/Psbt/Codec.lean:68-69` | `KeyValueMap.WellFormed`, including `Unique` | `Bitcoin/Psbt/Codec.lean:70-71`; `KeyValueMap.Unique` at `:62-63` |
+| `LeanMiniscript/Psbt/Codec.lean:127` | `throw .trailingData` | `Bitcoin/Psbt/Codec.lean:129` |
+| `LeanMiniscript/Bitcoin/Deserialization.lean:115-170` | `readTransaction` to `serializeWitnessTransaction` | `Bitcoin/Deserialization.lean:43-96`: reader `:43-73`, serializer `:87-96` |
+| `LeanMiniscript/Bitcoin/Deserialization.lean:120-123` | Zero-flag path | `Bitcoin/Deserialization.lean:48-51`; the branch's result is at `:52` (upstream `:124`) |
+| `LeanMiniscript/Bitcoin/DeserializationProofs.lean:31` | `readCompactSize_compactSize` | `Bitcoin/CompactSize.lean:121` |
+
 `Bitcoin.Psbt.valid cap hashes p` is exactly
 `p.WellFormed ∧ ∃ d, p.decode cap hashes = .ok d`. It uses neither parsing nor
 serialization. Framing invariants alone do not suffice: a supplied capability
@@ -3960,7 +3977,7 @@ The required gate supervisor captures streams separately and propagates the
 actual command status. No gate is piped through an output filter. Full-suite
 reruns follow all Lean, test and fixture edits.
 
-### Reclassified PSBT records
+### Red runs for the new tests
 
 The new properties have the following red records. Each selector is passed as
 `lake test -- --psbt 'selector'`; the reproducible outer command is
@@ -3993,6 +4010,8 @@ restores the source and requires a full `lake test` at exit **0**.
 | Measured witness-reader error | `formed-error` | `Transaction WellFormed` | 1 | `uncaught exception: assertion failed: formed exception measured error` |
 | Loaded inventory count | `formed-inventory-count` | `Transaction WellFormed` | 1 | `uncaught exception: assertion failed: formed inventory count` |
 | Exactly nine reflected fields | `formed-conjunct-count` | `Transaction WellFormed` | 1 | `uncaught exception: assertion failed: formed exception conjunct count` |
+
+### Reclassified PSBT records
 
 These fourteen existing records move from their earlier runtime assertions to
 proof detection. The old assertion column omits the common
@@ -4108,6 +4127,89 @@ Normal build outputs and logs remain.
 
 All changes are staged on the existing feature branch. There was no commit,
 push, branch change, PR or tracker operation in this work session.
+
+### Second-round checks
+
+- The exception assertion now has the measurement directory, command and output
+  directly above it; the action prints its collected exception and returned error.
+- The upstream-to-port table above locates all ten references by grep in both
+  trees; every supplied upstream range contains the named definition or branch,
+  except that the zero-flag range `:120-123` ends one line before that branch's
+  result at upstream `:124`.
+- The new-test red records now have their own heading, before the reclassified
+  records; both tables retain their original rows.
+
+From `packages/bitcoin`,
+`nix develop -c lake env lean measure-psbt-exception.lean` exited **0** and printed:
+
+```text
+Except.ok (2, 0, 2, 0, Except.error (Bitcoin.CompactSize.DecodeError.truncated))
+```
+
+The full test and the isolated transaction action printed the computed line:
+
+```text
+Transaction.WellFormed: 135/136; exception bip174Valid[9] global; witness reader: Bitcoin.CompactSize.DecodeError.truncated
+```
+
+Every heavy command below used its own foreground scope with `MemoryMax=8G`,
+`MemorySwapMax=0`, `OOMPolicy=continue`, `TasksMax=4096` and `timeout 3600`,
+through the gate supervisor described above. Commands ran sequentially with
+separate stdout and stderr under the repository root's
+`.lake/psbt-proof-second-round`. The PSBT
+check started without `--resume`, produced 95 fresh checkpoints, and needed no
+continuation. The four required axiom lines match those printed above.
+
+| Command | Directory | Exit | Observation |
+|---|---|---|---|
+| `nix develop -c lake build` | `packages/bitcoin` | 0 | Package builds. |
+| `nix develop -c lake test` | `packages/bitcoin` | 0 | Valid sets 10/10, 4/4, 14/14, 6/6; computed transaction line above; earlier counts unchanged; PSBT 52/52; axiom gate 764/60/0. |
+| `nix develop -c lake test -- --psbt 'Transaction WellFormed'` | `packages/bitcoin` | 0 | Computed transaction line above; PSBT 1/1. |
+| `nix develop -c lake test -- --psbt 'BIP174 valid definition'` | `packages/bitcoin` | 0 | 10/10; PSBT 1/1. |
+| `nix develop -c lake test -- --psbt 'BIP174 signer valid definition'` | `packages/bitcoin` | 0 | 4/4; PSBT 1/1. |
+| `nix develop -c lake test -- --psbt 'BIP370 valid definition'` | `packages/bitcoin` | 0 | 14/14; PSBT 1/1. |
+| `nix develop -c lake test -- --psbt 'BIP371 valid definition'` | `packages/bitcoin` | 0 | 6/6; PSBT 1/1. |
+| `nix develop -c python3 -I check-mutations.py` | `packages/bitcoin` | 0 | 6/6 detected; restored full test exits 0. |
+| `nix develop -c python3 -I check-base58-mutations.py` | `packages/bitcoin` | 0 | 6/6 detected; restored full test exits 0. |
+| `nix develop -c python3 -I check-bech32-mutations.py` | `packages/bitcoin` | 0 | 18/18 detected; restored full test exits 0. |
+| `nix develop -c python3 -I check-address-mutations.py` | `packages/bitcoin` | 0 | 20/20 detected; restored full test exits 0. |
+| `nix develop -c python3 -I check-psbt-mutations.py` | `packages/bitcoin` | 0 | 95/95 detected; restored full test exits 0. |
+| `nix develop -c python3 -I check-ripemd160-mutations.py` | `packages/bitcoin` | 0 | 8/8 detected; restored full test exits 0. |
+| `git diff --exit-code 8309feb -- 'packages/bitcoin/test-data/*.json'` | root | 0 | No output; all six evidence JSON files and the other JSON fixtures are byte-identical to the first round. |
+| `git -C "$TMP_ROOT/miniscript" rev-parse HEAD` | root | 0 | Fresh clone prints `cb9bc5f2f80987ad18b696a9c660f90f4bc1b6bd`. |
+| `python3 -I packages/bitcoin/check-tx-psbt-copy.py "$TMP_ROOT/miniscript"` | root | 0 | 10/10; MIT notice reused; forbidden fixture slice excluded. |
+| `nix flake check -L`, with the two edited paths staged | root | 0 | All seven packages build and test; expected PSBT and axiom counts printed. |
+| `nix build` | root | 0 | Default executable built. |
+| `./result/bin/cyberkrill` | root | 0 | `cyberkrill 0.1.0`. |
+| Proof-placeholder command below | root | 0 | Its grep exits 1; no matches. |
+| Library decision-tactic grep below | root | 1 | No output. |
+| Axiom-gate substring grep below | root | 1 | No output. |
+| `git diff --check 156c518b8c23fad785f8fa5fe534e122e4ffae31` | root | 0 | No output. |
+| `git diff --exit-code 8309feb -- packages/bitcoin/Bitcoin packages/bitcoin/Bitcoin.lean packages/bitcoin/lakefile.lean flake.nix flake.lock` | root | 0 | No output; production, proof and build definitions unchanged. |
+| Staged key-material scan below | root | 1 | Stdout and stderr empty. |
+| Whole-change key-material scan below | root | 1 | Stdout and stderr empty. |
+| Added-line public-text and staged-content checks | root | 0 | No forbidden names, local paths or attribution trailers; staged bytes equal the two edited files. |
+| `git status --short` | root | 0 | Only staged `README.md` and `packages/bitcoin/BitcoinTests/Psbt.lean`; no untracked files. |
+| Exact-created-path cleanup and absence assertions | root | 0 | Fresh clone, temporary helpers, scratch files and caches removed. |
+
+The hygiene and key-material commands were:
+
+```bash
+rc=0; grep -rnw sorry --include='*.lean' --exclude-dir=.lake packages || rc=$?; test "$rc" -eq 1
+grep -rnE 'native_decide|bv_decide' --include='*.lean' packages/bitcoin/Bitcoin packages/bitcoin/Bitcoin.lean
+grep -F sorry packages/bitcoin/BitcoinTests/AxiomGate.lean
+git diff --cached -U0 | grep '^+' | grep -n -E '[xt]prv[1-9A-HJ-NP-Za-km-z]{100,}|\b[5KLc9][1-9A-HJ-NP-Za-km-z]{50,51}\b'
+git diff 156c518 -U0 | grep '^+' | grep -n -E '[xt]prv[1-9A-HJ-NP-Za-km-z]{100,}|\b[5KLc9][1-9A-HJ-NP-Za-km-z]{50,51}\b'
+```
+
+Both key-material scans printed nothing on either stream and exited **1**.
+The final added lines were also checked for the public-text restrictions.
+Cleanup removed exactly the newly created `TMP_ROOT` using `shutil.rmtree`
+and asserted its absence. `TMPDIR` was beneath that root before every gate
+bootstrap. Each private gate directory was removed before its final status.
+No temporary clone, cache, helper or process from this work session remains;
+normal build outputs and logs remain. The two edited paths are staged on the
+existing feature branch, with no commit, push, PR, branch or tracker operation.
 
 ## Deltas taken
 

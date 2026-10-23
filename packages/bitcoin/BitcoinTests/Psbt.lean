@@ -270,6 +270,7 @@ private def transactionWellFormed : IO Unit := do
   check "formed inventory count" (rows.size == 136)
   let mut accepted := 0
   let mut exceptions : List String := []
+  let mut witnessError := ""
   for row in rows do
     let name ← jsonText row "vector"
     let index ← jsonNat row "index"
@@ -298,12 +299,17 @@ private def transactionWellFormed : IO Unit := do
       check "formed exception conjunct count" (checks.length == 9)
       for i in [:checks.length] do
         check s!"formed exception {names[i]!}" (checks[i]! == (i != 8))
+      -- From packages/bitcoin: nix develop -c lake env lean measure-psbt-exception.lean
+      -- Printed: Except.ok (2, 0, 2, 0, Except.error (Bitcoin.CompactSize.DecodeError.truncated))
       check "formed exception measured error"
         (match parseTransaction (serializeWitnessTransaction parsed.transaction parsed.witnesses) with
         | .error e => e == .truncated
         | .ok _ => false)
+      witnessError := match parseTransaction (serializeWitnessTransaction parsed.transaction parsed.witnesses) with
+        | .error e => toString (repr e)
+        | .ok _ => "unexpected success"
   check "formed count and exception" (accepted == 135 && exceptions == ["bip174Valid[9] global"])
-  IO.println s!"Transaction.WellFormed: {accepted}/{rows.size}; exception bip174Valid[9] global record 0; witness reader: truncated"
+  IO.println s!"Transaction.WellFormed: {accepted}/{rows.size}; exception {String.intercalate ", " exceptions}; witness reader: {witnessError}"
 
 def run (only : Option String := none) : IO Unit := do
   let mut ran := 0
