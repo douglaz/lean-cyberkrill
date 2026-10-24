@@ -4481,17 +4481,25 @@ The test capability remains a shape-only stand-in: it rejects compressed
 `generate-bip340.py` fetches only during generation and retains index, public
 key and comment, lowercasing the hex. It asserts that no secret-key column or
 nonempty secret-key value remains, comparing without case sensitivity.
-`bip340-public-keys.json.provenance` records the BSD-2-Clause source and dropped
-columns. `LICENSE-bip340` carries the authors and BSD notice/disclaimer,
-following the repository's existing BIP licence-file convention.
+`bip340-public-keys.json.provenance` records the dropped columns and the CSV's
+BSD-2-Clause OR MIT OR CC0-1.0 offer under `bip-0340/LICENSE` at the pinned
+commit, taken under MIT. The corrected `LICENSE-bip340` reproduces that offer,
+names the authors and carries the MIT permission notice and disclaimer.
 The comment column supplies the oracle: **19 rows, 17 parsed, indices 5 and
-14 rejected**. Lengths 0/31/33 and x = 5 are also rejected. The committed
-Euler check proves 5³ + 7 = 132 is a quadratic non-residue modulo
+14 rejected**. Lengths 0/31 and x = 5 are also rejected. The valid published
+32-byte key from row 0 parses; that same key plus one byte (33 bytes) is rejected.
+The fresh test printed:
+
+```text
+BIP340 x-only: 19 rows / 17 parsed / rejected indices 5,14; lengths 0,31 and x=5 rejected; published valid key parsed / key plus one byte (33) rejected
+```
+
+The committed Euler check proves 5³ + 7 = 132 is a quadratic non-residue modulo
 p = 2²⁵⁶ − 2³² − 977 independently of the curve binding.
 
 From the root, the generation command exited **0** and its subsequent
 `git diff --exit-code -- packages/secp256k1/bip340-public-keys.json` exited
-**0**, reproducing the staged file:
+**0**, reproducing the committed file:
 
 ```bash
 TMPDIR="${TMP_ROOT:?}" python3 -I packages/secp256k1/generate-bip340.py
@@ -4547,7 +4555,7 @@ hash. All six distinct bases parse in the port and exit 0 in the reference.
 
 Each expected error is mechanically confirmed from stderr. No contingency
 or hand-derived expectation was needed. The dry run of the pinned reference
-exited 0 with nothing to build. Generation and `--check` each exited 0 with
+exited 0 with nothing to build. The fresh `--check` invocation exited 0 with
 `PSBT capture: 49/49; existing 39 rows unchanged; 9 curve errors confirmed;
 temporary workspace removed`. The method remains stdin to the offline CLI
 in a fresh empty HOME/working directory, with temporary workspaces removed.
@@ -4572,22 +4580,14 @@ exited **1**, and reached its runtime assertion after the 764/60/0 axiom gate.
 | `parity-xonly-in-tap-script-sig` | `parity xonly-in-tap-script-sig` | 1 | `uncaught exception: assertion failed: parity xonly-in-tap-script-sig: expected Bitcoin.Psbt.PsbtError.invalidKey "input" 20 "invalid x-only public key", got accepted` |
 | `parity-control-block-internal` | `parity control-block-internal` | 1 | `uncaught exception: assertion failed: parity control-block-internal: expected Bitcoin.Psbt.PsbtError.invalidKey "input" 21 "invalid control block internal key", got accepted` |
 
-The first full invocation of `nix develop -c python3 -I check-psbt-mutations.py`
-exited **1** at the new xpub mutation: replacing its call with a literal `true`
-made the loop variable unused, yielding
-`error: Bitcoin/Psbt/Fields.lean:563:7: Variable name` followed by
-`` `xpub` is not explicitly referenced. `` This compile-time failure did not
-count as a runtime red run. After retaining the call as described above, the
-eight-label invocation exited **0**, reporting `8/8 detected; restored lake
-test: EXIT=0`, with exactly the eight runtime failures above. The production
-source was restored after both invocations.
-
-The subsequent fresh full invocation exited **0**:
+The fresh full invocation of `nix develop -c python3 -I check-psbt-mutations.py`
+on 2026-10-24 exited **0** after **2160.69 seconds**:
 `PSBT mutations: 125/125 detected; restored lake test: EXIT=0`.
 All **117** existing record objects are identical to the base revision;
 the eight runtime rows above are appended in `test-data/psbt-mutations.json`.
 No existing diagnostic line number or pinned theorem count changed.
-No timeout continuation or `--resume` was needed.
+The generated record is byte-identical to the committed file. No timeout
+continuation or `--resume` was needed.
 
 The binding runner, `nix develop -c python3 -I check-negative-mutations.py`
 from `packages/secp256k1`, exited **0** with **44/44** negative mutations
@@ -4607,15 +4607,19 @@ restored in `finally`.
 
 ### Final curve-parity validation
 
-On 2026-10-23, every command below ran in the foreground with separate stdout
-and stderr under `packages/bitcoin/.lake/psbt-curve-parity-validation`.
+On 2026-10-24, commands ran in the foreground with separate stdout and stderr
+under `packages/bitcoin/.lake/curve-parity-recheck-20261024`.
 Every heavy command used its own scope with `MemoryMax=8G`, `MemorySwapMax=0`,
 `OOMPolicy=continue`, `TasksMax=4096` and `timeout 3600`, one at a time.
 `TMPDIR` was set to the private `TMP_ROOT`. No timeout continuation was needed.
 `nix develop -c bash -c 'lean --version && python3 --version && git --version && nix --version'`
 exited **0**: Lean **4.35.0** Release, Python **3.14.7**, Git **2.54.0**,
 Nix **2.34.8**. The configured library directory identifies the pinned
-libsecp256k1 **0.8.0** package, checked with an exit-0 assertion.
+libsecp256k1 **0.8.0** package, checked in the same invocation by
+`test "${SECP256K1_LIB_DIR#*-secp256k1-0.8.0/}" != "$SECP256K1_LIB_DIR"`
+and printing `libsecp256k1: 0.8.0`. Outside the development shell,
+`python3 --version` exited **0** and printed **Python 3.13.15**; this is the
+interpreter used for the capture, copy check and BIP340 generation.
 
 All seven full mutation commands completed with these results:
 
@@ -4636,39 +4640,56 @@ counts are PSBT actions **91 → 101**, capture rows **39 → 49** with classes
 **10/13/16 → 19/14/16**, PSBT mutations **117 → 125**, and binding negative
 mutations **42 → 44**. Published PSBT set counts and theorem counts are unchanged.
 
-The final restored source passed the package and repository gates:
+The fresh commands and observations are:
 
 | Directory | Command | Exit | Observation |
 |---|---|---|---|
 | `packages/secp256k1` | `nix develop -c lake build` | 0 | Package builds. |
-| `packages/secp256k1` | `nix develop -c lake test` | 0 | BOLT 16/16 recovery/signing; P1363 252 cases; 1944 compression checks; BIP340 and measured DER counts above. |
+| `packages/secp256k1` | `nix develop -c lake test` | 0 | BOLT 16/16 recovery/signing; P1363 252 loaded / 95 accepted / 157 rejected; 108 compression keys / 1944 checks; BIP340 and measured DER counts above; `negative tests: PASS`. |
 | `packages/bitcoin` | `nix develop -c lake build` | 0 | Package builds. |
 | `packages/bitcoin` | `nix develop -c lake test` | 0 | All pinned valid/invalid sets retained; 101/101 PSBT actions; 764/60/0 axiom gate. |
 | `packages/secp256k1` | `nix develop -c bash -c 'cc -fsyntax-only -I "$(lean --print-prefix)/include" -include .lake/build/ir/Secp256k1.c link_shim.c'` | 0 | Generated declarations and shim definitions compile together. |
-| root | `nix flake check -L --max-jobs 1 --cores 4` | 0 | Actual rebuild: `running 1 flake checks...`, then `all checks passed!`; all seven packages and the one-OpenSSL checks pass. |
-| root | `nix build --max-jobs 1 --cores 4` | 0 | Reuses the checked default executable. |
-| root | `./result/bin/cyberkrill` | 0 | `cyberkrill 0.1.0`. |
+| root | `nix flake check -L --max-jobs 1 --cores 4` | 0 | Actual rebuild in 110.55 seconds; all seven package builds/tests and the one-OpenSSL checks; `all checks passed!`. |
+| root | `nix build --max-jobs 1 --cores 4` | 0 | Reuses the checked default executable; empty stdout, dirty-tree warning on stderr. |
+| root | `./result/bin/cyberkrill` | 0 | `cyberkrill 0.1.0`; empty stderr. |
 | root | `nix build --dry-run --no-link github:douglaz/cyberkrill/27cad1faba86260b06665a89f0af5134d23525c2` | 0 | Nothing to build; empty stdout/stderr. |
-| root | `nix build --no-link --print-out-paths --max-jobs 2 --cores 4 github:douglaz/cyberkrill/27cad1faba86260b06665a89f0af5134d23525c2` | 0 | Pinned reference resolves without building. |
-| root | `TMPDIR="${TMP_ROOT:?}" python3 -I packages/bitcoin/capture-cyberkrill-psbt.py` | 0 | 49/49; original 39 rows unchanged; nine expected curve errors confirmed. |
 | root | `TMPDIR="${TMP_ROOT:?}" python3 -I packages/bitcoin/capture-cyberkrill-psbt.py --check` | 0 | 49/49 reproduced; temporary capture workspace removed. |
+| root | `git diff --exit-code -- packages/bitcoin/test-data/cyberkrill-psbt-capture.json` | 0 | Both streams empty; capture file unchanged. |
+| root | `git clone --no-checkout https://github.com/febyeji/lean-miniscript "$TMP_ROOT/miniscript"` | 0 | Fresh clone; copied nothing into the tree. |
+| root | `git -C "$TMP_ROOT/miniscript" checkout cb9bc5f` | 0 | Pinned checkout. |
+| root | `git -C "$TMP_ROOT/miniscript" rev-parse HEAD` | 0 | Asserted exact revision `cb9bc5f2f80987ad18b696a9c660f90f4bc1b6bd`. |
 | root | `python3 -I packages/bitcoin/check-tx-psbt-copy.py "$TMP_ROOT/miniscript"` | 0 | Fresh pinned checkout; `transaction/PSBT copy: 10/10; MIT notice reused; forbidden fixture slice excluded`. |
 | root | `TMPDIR="${TMP_ROOT:?}" python3 -I packages/secp256k1/generate-bip340.py` | 0 | 19 public-key rows; no secret-key values; `Euler x=5: True`. |
-| root | `git diff --exit-code -- packages/secp256k1/bip340-public-keys.json` | 0 | Regeneration reproduces the staged file. |
-| root | `rc=0; grep -rnw sorry --include='*.lean' --exclude-dir=.lake packages \|\| rc=$?; test "$rc" -eq 1` | 0 | Grep exits 1; both streams empty. |
+| root | `git diff --exit-code -- packages/secp256k1/bip340-public-keys.json` | 0 | Regeneration reproduces the committed file. |
+| root | `grep -rnw sorry --include='*.lean' --exclude-dir=.lake packages` | 1 | Both streams empty. |
 | root | `grep -rnE 'native_decide\|bv_decide' --include='*.lean' packages/bitcoin/Bitcoin packages/bitcoin/Bitcoin.lean packages/secp256k1/Secp256k1.lean` | 1 | Both streams empty. |
 | root | `git diff --check 86f429e4fae17c88ab3ee894573c498cab75d1dd` | 0 | Both streams empty. |
 | root | `git diff --stat 86f429e4fae17c88ab3ee894573c498cab75d1dd -- flake.lock plan.md AGENTS.md packages/cyberkrill packages/lightning packages/fedimint-invite packages/http-curl packages/sha256` | 0 | Empty; an additional assertion confirms those paths and all proof modules are unchanged. |
+| root | `git diff --stat 86f429e4fae17c88ab3ee894573c498cab75d1dd -- ':(glob)packages/bitcoin/Bitcoin/**/*Proofs*.lean' packages/bitcoin/BitcoinTests/AxiomGate.lean` | 0 | Both streams empty. |
+| root | `find packages -name __pycache__ -not -path '*/.lake/*'` | 0 | Both streams empty. |
 
-The prescribed public-text scan over the full diff excluding the tracker
-found **no hits**, exit **1**, with empty stdout and stderr. Both exact
-key-material scans below also printed **nothing on either stream**, exit
-**1** each. No vector exception was needed.
+The public-text scan over the full diff excluding the tracker
+is recorded separately from the key-material scan. Both operate on saved added
+lines, so each command runs unpiped and retains its own exit code and separate
+streams. The scan commands below use `BASE=86f429e4fae17c88ab3ee894573c498cab75d1dd`
+and `LOGS=packages/bitcoin/.lake/curve-parity-recheck-20261024`.
 
 ```bash
-git diff --cached -U0 | grep '^+' | grep -n -E '[xt]prv[1-9A-HJ-NP-Za-km-z]{100,}|\b[5KLc9][1-9A-HJ-NP-Za-km-z]{50,51}\b'
-git diff -U0 86f429e4fae17c88ab3ee894573c498cab75d1dd | grep '^+' | grep -n -E '[xt]prv[1-9A-HJ-NP-Za-km-z]{100,}|\b[5KLc9][1-9A-HJ-NP-Za-km-z]{50,51}\b'
+git diff -U0 "$BASE" > "$LOGS/21-key-diff.stdout" 2> "$LOGS/21-key-diff.stderr"
+grep '^+' "$LOGS/21-key-diff.stdout" > "$LOGS/21-key-added.stdout" 2> "$LOGS/21-key-added.stderr"
+grep -nE '[xt]prv[1-9A-HJ-NP-Za-km-z]{100,}|\b[5KLc9][1-9A-HJ-NP-Za-km-z]{50,51}\b' "$LOGS/21-key-added.stdout"
+git diff -U0 "$BASE" -- . ':(exclude).beads/**' > "$LOGS/22-public-diff.stdout" 2> "$LOGS/22-public-diff.stderr"
+grep '^+' "$LOGS/22-public-diff.stdout" > "$LOGS/22-public-added.stdout" 2> "$LOGS/22-public-added.stderr"
 ```
+
+The public-text scan then ran a case-insensitive `grep -niP` over
+`22-public-added.stdout` for every category AGENTS.md's "Public text" rule
+forbids. The expression is not reproduced here because it consists of the
+forbidden words themselves.
+The key-material and public-text scans each exited **1**, with **empty stdout
+and stderr**. The public-text expression permits the literal instruction
+filename `AGENTS.md`; the broader initial expression matched that filename in
+the boundary-check command above. No key-material exception was needed.
 
 The changed paths are:
 
@@ -4682,7 +4703,7 @@ The changed paths are:
 - Under `packages/secp256k1`, `Secp256k1.lean`, `link_shim.c`,
   `Secp256k1Tests.lean`, `check-negative-mutations.py`, `generate-bip340.py`,
   `bip340-public-keys.json`, `bip340-public-keys.json.provenance` and
-  `LICENSE-bip340`: bindings, vector tests, red runs and BSD attribution.
+  `LICENSE-bip340`: bindings, vector tests, red runs and the corrected MIT licence record.
 - `flake.nix`: only the additional DER-vector environment variable.
   `README.md`, `docs/upstream-fixes.md` and `.beads/issues.jsonl`: documentation
   and task status.

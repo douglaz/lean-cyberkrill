@@ -81,7 +81,7 @@ output only and no source copied.
 Inputs are derived from the published BIP174/370/371 vectors at
 [bitcoin/bips 927b6de9915c9262615a6399de51b200f81e5aa4](https://github.com/bitcoin/bips/tree/927b6de9915c9262615a6399de51b200f81e5aa4),
 BSD-2-Clause, see `Bitcoin/LICENSE-psbt-bips`. Changes: one-record edits derived
-by script. Five bases and twelve BIP370 vectors are unchanged. Base vectors
+by script. Six bases and twelve BIP370 vectors are unchanged (18 rows in all). Base vectors
 are selected by published name; every edit asserts exactly one changed or
 added record and preserves the other maps and records.
 

@@ -167,11 +167,14 @@ private def xonlyTests : IO Unit := do
     check s!"BIP340 x-only {index}" (actual == !bad)
     if actual then accepted := accepted + 1 else rejected := rejected.push index
   check "BIP340 counts" (accepted == 17 && rejected == #[5, 14])
-  for length in [0, 31, 33] do
-    let key := if length == 33 then (scalarBytes 5).push 0 else (scalarBytes 5).extract 0 length
+  for length in [0, 31] do
+    let key := (scalarBytes 5).extract 0 length
     check s!"x-only length {length}" (!Secp256k1.isValidXOnlyPubkey key)
+  let validKey ← bytes rows[0]! "public_key"
+  check "x-only published length control" (Secp256k1.isValidXOnlyPubkey validKey)
+  check "x-only length 33" (!Secp256k1.isValidXOnlyPubkey (validKey.push 0))
   check "x-only x=5" (!Secp256k1.isValidXOnlyPubkey (scalarBytes 5))
-  IO.println "BIP340 x-only: 19 rows / 17 parsed / rejected indices 5,14; lengths 0,31,33 and x=5 rejected"
+  IO.println "BIP340 x-only: 19 rows / 17 parsed / rejected indices 5,14; lengths 0,31 and x=5 rejected; published valid key parsed / key plus one byte (33) rejected"
 
 private def derTests : IO Unit := do
   let path ← requiredEnv "WYCHEPROOF_DER_JSON"
