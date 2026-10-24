@@ -10,11 +10,16 @@ package lightning where
   description := "BOLT11 invoices and LNURL"
   license := "MIT OR Apache-2.0"
   licenseFiles := #["../../LICENSE-MIT", "../../LICENSE-APACHE"]
+  leanOptions := #[⟨`autoImplicit, false⟩, ⟨`relaxedAutoImplicit, false⟩,
+    ⟨`warningAsError, true⟩]
 
 require bitcoin from ".." / "bitcoin"
 
 @[default_target]
 lean_lib Lightning
 
+lean_lib LightningTestSupport where
+  roots := #[`LightningTests.Bolt11]
+
 @[test_driver]
-lean_lib LightningTests
+lean_exe LightningTests

@@ -1,0 +1,240 @@
+[
+  {
+    "mutation": "hrp-case",
+    "source": "Lightning/Bolt11/Codec.lean",
+    "command": [
+      "lake",
+      "test",
+      "--",
+      "--case",
+      "valid:L704"
+    ],
+    "exit": 1,
+    "property": "valid L704",
+    "failure": "uncaught exception: assertion failed: valid L704"
+  },
+  {
+    "mutation": "hash-padding",
+    "source": "Lightning/Bolt11/Codec.lean",
+    "command": [
+      "lake",
+      "test",
+      "--",
+      "--case",
+      "valid:L382"
+    ],
+    "exit": 1,
+    "property": "valid L382",
+    "failure": "uncaught exception: assertion failed: valid L382"
+  },
+  {
+    "mutation": "signature-boundary",
+    "source": "Lightning/Bolt11/Codec.lean",
+    "command": [
+      "lake",
+      "test",
+      "--",
+      "--case",
+      "valid:L382"
+    ],
+    "exit": 1,
+    "property": "valid L382",
+    "failure": "uncaught exception: assertion failed: valid L382"
+  },
+  {
+    "mutation": "lax-byte-fields",
+    "source": "Lightning/Bolt11/Fields.lean",
+    "command": [
+      "lake",
+      "test",
+      "--",
+      "--case",
+      "negative:payment-hash-padding"
+    ],
+    "exit": 1,
+    "property": "negative payment-hash-padding",
+    "failure": "uncaught exception: assertion failed: negative payment-hash-padding"
+  },
+  {
+    "mutation": "expiry-leading-zero",
+    "source": "Lightning/Bolt11/Fields.lean",
+    "command": [
+      "lake",
+      "test",
+      "--",
+      "--case",
+      "negative:expiry-leading-zero"
+    ],
+    "exit": 1,
+    "property": "negative expiry-leading-zero",
+    "failure": "uncaught exception: assertion failed: negative expiry-leading-zero"
+  },
+  {
+    "mutation": "cltv-leading-zero",
+    "source": "Lightning/Bolt11/Fields.lean",
+    "command": [
+      "lake",
+      "test",
+      "--",
+      "--case",
+      "negative:cltv-leading-zero"
+    ],
+    "exit": 1,
+    "property": "negative cltv-leading-zero",
+    "failure": "uncaught exception: assertion failed: negative cltv-leading-zero"
+  },
+  {
+    "mutation": "features-leading-zero",
+    "source": "Lightning/Bolt11/Fields.lean",
+    "command": [
+      "lake",
+      "test",
+      "--",
+      "--case",
+      "negative:features-leading-zero"
+    ],
+    "exit": 1,
+    "property": "negative features-leading-zero",
+    "failure": "uncaught exception: assertion failed: negative features-leading-zero"
+  },
+  {
+    "mutation": "hrp-leading-zero",
+    "source": "Lightning/Bolt11/Codec.lean",
+    "command": [
+      "lake",
+      "test",
+      "--",
+      "--case",
+      "positive:amount-leading-zero"
+    ],
+    "exit": 1,
+    "property": "positive amount-leading-zero",
+    "failure": "uncaught exception: assertion failed: positive amount-leading-zero"
+  },
+  {
+    "mutation": "recover-instead-of-verify",
+    "source": "Lightning/Bolt11/Codec.lean",
+    "command": [
+      "lake",
+      "test",
+      "--",
+      "--case",
+      "nfields:n-high"
+    ],
+    "exit": 1,
+    "property": "nfields n-high",
+    "failure": "uncaught exception: assertion failed: nfields n-high"
+  },
+  {
+    "mutation": "recovery-byte-range",
+    "source": "Lightning/Bolt11/Codec.lean",
+    "command": [
+      "lake",
+      "test",
+      "--",
+      "--case",
+      "negative:recovery-byte"
+    ],
+    "exit": 1,
+    "property": "negative recovery-byte",
+    "failure": "uncaught exception: assertion failed: negative recovery-byte"
+  },
+  {
+    "mutation": "signature-before-counts",
+    "source": "Lightning/Bolt11/Codec.lean",
+    "command": [
+      "lake",
+      "test",
+      "--",
+      "--case",
+      "invalid:L821"
+    ],
+    "exit": 1,
+    "property": "invalid L821",
+    "failure": "uncaught exception: assertion failed: invalid L821"
+  },
+  {
+    "mutation": "pico-precision",
+    "source": "Lightning/Bolt11/Codec.lean",
+    "command": [
+      "lake",
+      "test",
+      "--",
+      "--case",
+      "invalid:L851"
+    ],
+    "exit": 1,
+    "property": "invalid L851",
+    "failure": "uncaught exception: assertion failed: invalid L851"
+  },
+  {
+    "mutation": "bech32m",
+    "source": "Lightning/Bolt11/Codec.lean",
+    "command": [
+      "lake",
+      "test",
+      "--",
+      "--case",
+      "negative:bech32m"
+    ],
+    "exit": 1,
+    "property": "negative bech32m",
+    "failure": "uncaught exception: assertion failed: negative bech32m"
+  },
+  {
+    "mutation": "length-7090",
+    "source": "Lightning/Bolt11/Codec.lean",
+    "command": [
+      "lake",
+      "test",
+      "--",
+      "--case",
+      "outside:length-7090"
+    ],
+    "exit": 1,
+    "property": "outside length-7090",
+    "failure": "uncaught exception: assertion failed: outside length-7090"
+  },
+  {
+    "mutation": "wrong-fixed-length",
+    "source": "Lightning/Bolt11/Fields.lean",
+    "command": [
+      "lake",
+      "test",
+      "--",
+      "--case",
+      "invalid:L814"
+    ],
+    "exit": 1,
+    "property": "invalid L814 accepted for parity",
+    "failure": "uncaught exception: assertion failed: invalid L814 accepted for parity"
+  },
+  {
+    "mutation": "unknown-even-feature",
+    "source": "Lightning/Bolt11/Codec.lean",
+    "command": [
+      "lake",
+      "test",
+      "--",
+      "--case",
+      "invalid:L792"
+    ],
+    "exit": 1,
+    "property": "invalid L792",
+    "failure": "uncaught exception: assertion failed: invalid L792"
+  },
+  {
+    "mutation": "unknown-fallback",
+    "source": "Lightning/Bolt11/Fields.lean",
+    "command": [
+      "lake",
+      "test",
+      "--",
+      "--case",
+      "valid:L707"
+    ],
+    "exit": 1,
+    "property": "valid L707",
+    "failure": "uncaught exception: assertion failed: valid L707"
+  }
+]
