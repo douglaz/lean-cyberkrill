@@ -1,0 +1,8 @@
+Source: https://github.com/bitcoin/bips/blob/927b6de9915c9262615a6399de51b200f81e5aa4/bip-0340/test-vectors.csv
+Commit: 927b6de9915c9262615a6399de51b200f81e5aa4
+Path: bip-0340/test-vectors.csv
+Licence: BSD-2-Clause OR MIT OR CC0-1.0 per bip-0340/LICENSE at the pinned commit; taken under MIT, see LICENSE-bip340
+Attribution: the BIP340 authors and bitcoin/bips contributors.
+Changes: extracted and reformatted by generate-bip340.py; retained index, public key
+and comment, lowercased public-key hex; dropped secret key, aux_rand, message,
+signature and verification result columns. No secret-key values retained.

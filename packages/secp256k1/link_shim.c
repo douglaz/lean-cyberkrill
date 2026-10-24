@@ -4,6 +4,7 @@ Apache License 2.0, at your option; see LICENSE-MIT and LICENSE-APACHE.
 */
 #include <lean/lean.h>
 #include <secp256k1.h>
+#include <secp256k1_extrakeys.h>
 #include <secp256k1_recovery.h>
 #include <string.h>
 
@@ -28,6 +29,21 @@ static int parse_key(b_lean_obj_arg key, secp256k1_pubkey *parsed) {
 LEAN_EXPORT uint8_t lck_secp_pubkey_parse(b_lean_obj_arg key) {
     secp256k1_pubkey parsed;
     return parse_key(key, &parsed);
+}
+
+LEAN_EXPORT uint8_t lck_secp_xonly_pubkey_parse(b_lean_obj_arg key) {
+    if (lean_sarray_size(key) != 32) return 0;
+    secp256k1_xonly_pubkey parsed;
+    return secp256k1_xonly_pubkey_parse(secp256k1_context_static, &parsed,
+                                      lean_sarray_cptr(key));
+}
+
+LEAN_EXPORT uint8_t lck_secp_der_signature_parse(b_lean_obj_arg sig) {
+    size_t len = lean_sarray_size(sig);
+    if (len == 0) return 0;
+    secp256k1_ecdsa_signature parsed;
+    return secp256k1_ecdsa_signature_parse_der(secp256k1_context_static, &parsed,
+                                              lean_sarray_cptr(sig), len);
 }
 
 LEAN_EXPORT lean_obj_res lck_secp_compress_pubkey(b_lean_obj_arg key) {

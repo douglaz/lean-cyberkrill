@@ -115,3 +115,25 @@ as exact-count replacements, in addition to the earlier capability/hash edits.
 The helper additions and their uses are decode-only. Framing, serializers,
 theorem statements, raw storage and the three kept BIP rules are unchanged.
 The changes above are candidates to send upstream.
+
+### PSBT curve parity follow-up
+
+The same MIT `LeanMiniscript/Psbt/Fields.lean` slice now uses two additional
+supplied operations: x-only key parsing and strict DER signature parsing.
+The earlier field-parity row's deferred DER check is resolved here.
+`check-tx-psbt-copy.py` registers each change as an exact-count replacement,
+including the module comment's updated description of curve validation.
+
+| Site | Problem | Fix and source |
+|---|---|---|
+| `Psbt.decode`, global xpubs | Embedded points were unchecked. | After global shape/version/path and map-count checks, require `isValidPubkey` on bytes 45–77; rust-bitcoin 0.32.8 `src/bip32.rs:789-815`, `src/psbt/map/global.rs:113-118`; secp256k1 0.29.1 `src/key.rs:444-462`. Keeping this in whole-PSBT decoding preserves `globalCounts` and all theorem statements. |
+| `inputStep`, partial signatures | DER was unchecked. | After strict key, nonempty value and standard sighash checks, validate the value minus its final byte; rust-bitcoin 0.32.8 `src/crypto/ecdsa.rs:38-43`, `src/psbt/serialize.rs:179-200`; secp256k1 0.29.1 `src/ecdsa/mod.rs:52-71`. No low-S or normalization. |
+| `inputStep` / `outputStep`, internal keys | Only lengths were checked. | After existing 32-byte checks, require x-only parsing; rust-bitcoin 0.32.8 `src/psbt/serialize.rs:263-266`, `src/psbt/map/input.rs:346`, `src/psbt/map/output.rs:85`; secp256k1 0.29.1 `src/key.rs:1162-1180`. |
+| `inputStep` / `outputStep`, Taproot BIP32 keys | Only lengths were checked. | Validate key data after its 32-byte check and before decoding the origin; rust-bitcoin 0.32.8 `src/psbt/serialize.rs:263-266`, `src/psbt/map/input.rs:341`, `src/psbt/map/output.rs:95`; secp256k1 0.29.1 `src/key.rs:1162-1180`. |
+| `inputStep`, Taproot script-signature keys | Only length was checked. | Validate the first 32 bytes after the 64-byte check, before signature-value checks; rust-bitcoin 0.32.8 `src/psbt/serialize.rs:295-301`, `src/psbt/map/input.rs:331`; secp256k1 0.29.1 `src/key.rs:1162-1180`. |
+| `inputStep`, control blocks | Internal points were unchecked. | Validate bytes 1–32 after the existing size and both leaf-version checks; rust-bitcoin 0.32.8 `src/taproot/mod.rs:1105-1121`, `src/psbt/serialize.rs:310-313`; secp256k1 0.29.1 `src/key.rs:1162-1180`. |
+
+The pinned offline CLI capture confirms all nine new rejection vectors by
+their exact upstream error text, with the original 39 capture rows unchanged.
+Raw storage, serializers, framing, kept BIP rules and theorem statements stay
+unchanged. No proof repair was needed.

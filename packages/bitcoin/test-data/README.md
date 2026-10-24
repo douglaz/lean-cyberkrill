@@ -81,7 +81,7 @@ output only and no source copied.
 Inputs are derived from the published BIP174/370/371 vectors at
 [bitcoin/bips 927b6de9915c9262615a6399de51b200f81e5aa4](https://github.com/bitcoin/bips/tree/927b6de9915c9262615a6399de51b200f81e5aa4),
 BSD-2-Clause, see `Bitcoin/LICENSE-psbt-bips`. Changes: one-record edits derived
-by script. Five bases and twelve BIP370 vectors are unchanged. Base vectors
+by script. Six bases and twelve BIP370 vectors are unchanged (18 rows in all). Base vectors
 are selected by published name; every edit asserts exactly one changed or
 added record and preserves the other maps and records.
 
@@ -96,8 +96,10 @@ The script resolves the pinned binary with the caller's HOME before network
 isolation. Each invocation reads Base64 on stdin inside `unshare -rn`, with
 loopback enabled, a fresh HOME/working directory and a minimal environment.
 Its temporary workspace is removed on success and failure. Records retain
-separate stdout and stderr and no temporary or binary-store paths. The 39 rows
-comprise ten must-reject, thirteen must-accept and sixteen port-stricter inputs.
+separate stdout and stderr and no temporary or binary-store paths. The 49 rows
+comprise nineteen must-reject, fourteen must-accept and sixteen port-stricter inputs.
+The curve follow-up appends nine one-record edits and the key-only-output base,
+and mechanically requires the original 39 rows to remain identical before writing.
 Lean tests read these exact Base64 bytes; `--check` independently checks them
 against the published bases, edits and a fresh capture. The PSBT mutation
 fingerprint includes this record, so changed bytes invalidate checkpoints.

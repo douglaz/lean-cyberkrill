@@ -348,6 +348,8 @@ never mutated, and successful object results are freshly allocated:
 ```lean
 isValidPubkey (key : @& ByteArray) : Bool
 compressPubkey (key : @& ByteArray) : Option ByteArray
+isValidXOnlyPubkey (key : @& ByteArray) : Bool
+isValidDerSignature (sig : @& ByteArray) : Bool
 verify (hash signature key : @& ByteArray) : Bool
 recover (hash signature : @& ByteArray) (recid : UInt8) : Option ByteArray
 sign (hash secretKey : @& ByteArray) : Option ByteArray
@@ -363,9 +365,14 @@ published test vectors in v1. `contextRoundTrip : IO Bool` is unchanged.
 |---|---|
 | `isValidPubkey` | 33-byte compressed SEC1 (02/03) or 65-byte uncompressed (04). False for wrong lengths, invalid prefixes, invalid coordinates or off-curve points. |
 | `compressPubkey` | libsecp256k1's own parse rule: 33-byte 02/03, 65-byte 04, or a 65-byte 06/07 hybrid whose tag matches y parity. Returns a fresh 33-byte compressed key, or none for an invalid encoding or point. |
+| `isValidXOnlyPubkey` | Exactly 32 bytes, parsed by `secp256k1_xonly_pubkey_parse`. False for wrong lengths, out-of-field coordinates or off-curve points. |
+| `isValidDerSignature` | Nonempty strict DER bytes, without a sighash byte, parsed by `secp256k1_ecdsa_signature_parse_der`. Encoding only: no verification, low-S rule or normalization. Well-encoded out-of-range integers follow the library's parse rule. |
 | `verify` | 32-byte hash, 64-byte compact signature (big-endian r ‖ s), SEC1 key as above. False for any malformed input, r or s ≥ the curve order, zero scalars, high-S, or failure to verify. No normalisation. |
 | `recover` | Same hash and compact signature; recid 0–3. Returns a 33-byte compressed SEC1 key, or none for wrong lengths, recid > 3, invalid scalars, or recovery failure. Preserves high-S. |
 | `sign` | 32-byte hash and 32-byte secret key. Returns 65 bytes: compact r ‖ s (always low-S), then recid 0–3. None for wrong lengths, secret zero or ≥ the curve order, context failure or signing failure. |
+
+The BIP340 public-key and Wycheproof DER parsing vectors and counts are
+recorded in the [PSBT curve follow-up](#phase-4a-psbt-curve-parity-follow-up).
 
 Parse and verify both reject hybrid (06/07) keys, including matching parity;
 tests cover both matching and mismatched parity. This matches rust-bitcoin
@@ -472,8 +479,8 @@ nix build
 (cd packages/cyberkrill && nix develop -c lake build)
 ```
 
-The app printed `cyberkrill 0.1.0`. The regenerated
-`packages/secp256k1/.lake/build/ir/Secp256k1.c` declares the same five `lck_`
+The app printed `cyberkrill 0.1.0`. At that step, the regenerated
+`packages/secp256k1/.lake/build/ir/Secp256k1.c` declared the same five `lck_`
 functions as the shim: zero, one, three, three and two runtime arguments
 respectively, with recid as `uint8_t`, Bool as `uint8_t`, and arrays/results as
 object pointers. None has a world argument. In `packages/secp256k1`, this also
@@ -3020,13 +3027,16 @@ Mathlib, sighash or PSBT role modules.
 | `Bitcoin.Base64` | `encode`, `decode`: RFC4648 standard alphabet, mandatory canonical padding |
 | `Bitcoin.Psbt.Codec` / `Bitcoin.Psbt` | `Record`, `KeyValueMap`, `Psbt`, `PsbtError`, framing, `Record.WellFormed`, `KeyValueMap.Unique`, `KeyValueMap.WellFormed`, `Psbt.WellFormed`, `Psbt.encode`, `Psbt.serialize`, `decodePsbtWith` |
 | `Bitcoin.Psbt.Fields` / `Bitcoin.Psbt` | Typed global/input/output fields, `Psbt.parse cap hashes bytes`, `p.decode cap hashes`, `Psbt.parseBase64 cap hashes text`, `p.toBase64`, `DecodedPsbt`, `determineLocktime`, `DecodedPsbt.unsignedTransaction` |
-| `Bitcoin.Psbt.Capability` / `Bitcoin.Psbt` | `PubkeyCapability` supplies `isValidPubkey : ByteArray → Bool` and `compressPubkey : ByteArray → Option ByteArray`; `PreimageHashes` supplies `ripemd160` and `hash160` as one argument |
+| `Bitcoin.Psbt.Capability` / `Bitcoin.Psbt` | `PubkeyCapability` supplies `isValidPubkey`, `isValidXOnlyPubkey`, `isValidDerSignature : ByteArray → Bool` and `compressPubkey : ByteArray → Option ByteArray`; `PreimageHashes` supplies `ripemd160` and `hash160` as one argument |
 | `Bitcoin.Psbt.SamePoint` / `Bitcoin.Psbt` | `p.checkBip32SamePoint cap : Except PsbtError Unit`, with `duplicateBip32Point scope first second` retaining both raw key-data encodings |
 
 SHA256 preimages call `Sha256.hash`; HASH256 preimages and transaction identifiers
 call `Sha256.sha256d`. RIPEMD160 and HASH160 preimage checks call the supplied
-parameter. Their actual implementations remain Phase 4a (2 of 3). The strict
-curve check handles partial-signature keys; successful compression handles input
+parameter; Phase 4a (2 of 3) supplies their implementations. The strict
+curve check handles partial-signature keys and global xpub points; x-only
+validation handles Taproot keys and control-block internal keys, and DER
+validation handles partial-signature values without their sighash byte.
+Successful compression handles input
 and output BIP32 derivation keys, including matching-parity hybrids.
 `Secp256k1.compressPubkey` supplies that operation for later application wiring.
 
@@ -3102,7 +3112,9 @@ Each runtime vector set pins its loaded count before inspecting its elements:
 | BIP370 locktimes | 10 | Determined locktime, Base64 bytes, and unsigned-transaction locktime or exact incompatible-locktime error |
 
 Pure top-level `BitcoinTests.PsbtTests.testCapability` is a **shape-only** stand-in:
-strict validation accepts 33-byte 02/03 and 65-byte 04; compression additionally
+strict validation accepts 33-byte 02/03 except x = 5, and 65-byte 04. Its x-only
+operation rejects wrong lengths and x = 5; its DER operation rejects empty
+and 31-prefixed bytes. Compression additionally
 accepts 65-byte 06/07 with matching final-y-byte parity and returns parity plus x.
 It makes no on-curve claim. It suffices for every valid/invalid vector above.
 `testHashes.ripemd160` is the first 20 bytes of SHA256 of byte 160 followed by the
@@ -3165,7 +3177,7 @@ No Wycheproof bytes or derived fixtures are stored in the repository.
 The gate's named list grows from **43 to 56**: nine of the eleven earlier
 deserialization theorems were not named individually, and all four remaining
 ones are now imported. It names all **15** from upstream's
-`DeserializationProofs.lean` L7–232. The current gate prints
+`DeserializationProofs.lean` L7–232. At that phase, the gate printed
 `Bitcoin axiom gate: 652 library theorems; 56 named; 0 offenders`.
 Its allowlist is still exactly `propext`, `Classical.choice`, `Quot.sound`;
 every theorem in every imported `Bitcoin` library module is scanned, including
@@ -3557,20 +3569,10 @@ and `surplus-witness-format` from the subset run above.
 
 ### Deltas not taken
 
-These remaining differences need curve checks and are tracked for fixing before
-the Phase 7c goldens; the list is not a full parity audit. The field-parity
-follow-up below fixes the non-curve differences and records the three kept BIP
-rules under "Deltas taken".
-
-| Copied field rule | rust-bitcoin 0.32.8 reference and difference |
-|---|---|
-| Global extended public keys: embedded curve point is unchecked | `src/psbt/map/global.rs:113-149`, `src/bip32.rs:789-815`: `Xpub::decode` parses the embedded curve point. Version bytes are now checked; depth/path equality is a kept BIP rule under "Deltas taken". |
-| Partial-signature DER is unchecked | `src/psbt/serialize.rs:179-200`: decodes `ecdsa::Signature`, including DER encoding. Empty values and non-standard sighash bytes are now rejected. |
-| X-only keys are checked only for length | `src/psbt/serialize.rs:263-266,295-301`: parses `XOnlyPublicKey`, rejecting invalid curve points. |
-| Taproot input control blocks: internal curve point is unchecked | `src/psbt/serialize.rs:311-313`, `src/taproot/mod.rs:1102-1120`: decodes the internal curve point. Shape and leaf versions are now checked. |
-
-The table reflects the field-parity follow-up below. PSBT roles, signing and
-application wiring remain later work; the hash and proof phases below supply
+The two PSBT parity follow-ups below fixed every row of the earlier list,
+including the four curve-dependent rules. The three kept BIP rules appear
+under "Deltas taken". This is not a full parity audit; PSBT roles, signing and
+application wiring remain later work. The hash and proof phases below supply
 the real RIPEMD160/HASH160 and transaction/PSBT theorems.
 
 ## Phase 4a: RIPEMD-160 and HASH160 (2 of 3)
@@ -3651,8 +3653,9 @@ before insertion and return `InvalidPreimageHashPair` on mismatch.
 
 ### Structured mismatch error and stack use
 
-Option A retains `.invalidValue "input" keyType "preimage does not match hash"`;
-`Bitcoin/Psbt/Codec.lean` and `Fields.lean` are unchanged. In `Fields.lean`,
+Option A retains `.invalidValue "input" keyType "preimage does not match hash"`.
+At that phase, `Bitcoin/Psbt/Codec.lean` and `Fields.lean` were unchanged;
+the following line numbers refer to that revision. In `Fields.lean`,
 `inputStep` sets scope to `"input"` at line 364. Its single branch for types
 0x0a–0x0d is lines 398–410. That branch has exactly one value check, the
 preimage comparison at line 402; no other path for these key types yields
@@ -3670,7 +3673,7 @@ block loop carries five `UInt32` chaining words and runs 80 steps per block.
 Output conversion is fixed at 5 × 4 bytes. No recursive call depth grows with
 the input. This is a structural observation about the loops, independent of
 the million-byte vector. There is no new named theorem or proof obligation.
-The axiom gate remains **652 library theorems; 56 named; 0 offenders**.
+At that phase, the axiom gate reported **652 library theorems; 56 named; 0 offenders**.
 
 ### Mutation and final validation records
 
@@ -3801,9 +3804,9 @@ and in the port. Port paths are relative to `packages/bitcoin/`.
 |---|---|---|
 | `LeanMiniscript/Psbt/ParseProofs.lean:31-34` | `Psbt.parse_serialize` | `Bitcoin/Psbt/ParseProofs.lean:34-36` (docstring at `:32`) |
 | `LeanMiniscript/Psbt/ParseProofs.lean:40` | `Psbt.serialize_parse` | `Bitcoin/Psbt/ParseProofs.lean:43-45` |
-| `LeanMiniscript/Psbt/Fields.lean:536-539` | `Psbt.parse` | `Bitcoin/Psbt/Fields.lean:560-563`; `Psbt.decode` at `:552-557` |
-| `LeanMiniscript/Psbt/Fields.lean:206-207` | `validPublicKey`, replaced by the capability | `Bitcoin/Psbt/Fields.lean:397` (`cap.isValidPubkey`), `:411` and `:511` (`cap.compressPubkey`) |
-| `LeanMiniscript/Psbt/Fields.lean:272-276` | `preimageHash` | `Bitcoin/Psbt/Fields.lean:286-290` |
+| `LeanMiniscript/Psbt/Fields.lean:536-539` | `Psbt.parse` | `Bitcoin/Psbt/Fields.lean:570-573`; `Psbt.decode` at `:560-567` |
+| `LeanMiniscript/Psbt/Fields.lean:206-207` | `validPublicKey`, replaced by the capability | `Bitcoin/Psbt/Fields.lean:398` (`cap.isValidPubkey`), `:413` and `:517` (`cap.compressPubkey`) |
+| `LeanMiniscript/Psbt/Fields.lean:272-276` | `preimageHash` | `Bitcoin/Psbt/Fields.lean:287-291` |
 | `LeanMiniscript/Psbt/Codec.lean:68-69` | `KeyValueMap.WellFormed`, including `Unique` | `Bitcoin/Psbt/Codec.lean:70-71`; `KeyValueMap.Unique` at `:62-63` |
 | `LeanMiniscript/Psbt/Codec.lean:127` | `throw .trailingData` | `Bitcoin/Psbt/Codec.lean:129` |
 | `LeanMiniscript/Bitcoin/Deserialization.lean:115-170` | `readTransaction` to `serializeWitnessTransaction` | `Bitcoin/Deserialization.lean:43-96`: reader `:43-73`, serializer `:87-96` |
@@ -4232,8 +4235,8 @@ retaining the exact signature-length, control-size and hybrid-key errors.
 
 The proprietary limit counts at most 1,025 bytes after the identifier, including
 the first subtype byte, in every scope. It does not start at the end of our
-canonical CompactSize subtype. DER, xpub/x-only/internal curve points remain
-in the separate curve follow-up. Taproot signature bytes need only their
+canonical CompactSize subtype. The curve follow-up below now checks DER and
+xpub/x-only/internal curve points. Taproot signature bytes need only their
 length check: secp256k1 0.29.1 `src/schnorr.rs:78-87` checks no other property.
 The three kept port-stricter BIP rules are unchanged and listed below.
 
@@ -4247,7 +4250,7 @@ nix build --dry-run --no-link github:douglaz/cyberkrill/27cad1faba86260b06665a89
 
 `nix build --no-link --print-out-paths` of that reference also exited **0**.
 `capture-cyberkrill-psbt.py` derives inputs by published name from the pinned
-BIP174/370/371 vectors, asserts one-record edits, and captures all 39 invocations
+BIP174/370/371 vectors, asserts one-record edits, and captures all 49 invocations
 of `onchain-decode-psbt`. Each receives Base64 on stdin in a fresh HOME and
 working directory under `unshare -rn`, with loopback enabled and an explicit
 minimal environment. Binary resolution happens first with the caller's HOME.
@@ -4263,15 +4266,16 @@ TMPDIR="${TMP_ROOT:?}" python3 -I packages/bitcoin/capture-cyberkrill-psbt.py --
 
 The record is `test-data/cyberkrill-psbt-capture.json` under `packages/bitcoin`.
 It holds the reference/revision, base names, edits, Base64 and separate streams.
-The Lean actions read those exact bytes, pin 39 rows and counts **10/13/16**,
+The Lean actions read those exact bytes, pin 49 rows and counts **19/14/16**,
 and select each unique name with `lake test -- --psbt 'parity NAME'`.
 The original 24 BIP370 invalid inputs remain pinned, including indices 1–12.
 
-cyberkrill exits **1** on all ten must-reject inputs, and each stderr names the
+In the original field-parity capture, cyberkrill exited **1** on all ten
+must-reject inputs, and each stderr named the
 rust-bitcoin 0.32.8 error's Display text; the tracker item's table gives its
-Debug form. All five bases and all eight edited acceptance boundaries exit
-**0**, so no expectation is hand-derived and there is no open exit-parity
-finding. All sixteen port-stricter inputs exit **0** upstream and are rejected
+Debug form. All five bases and all eight edited acceptance boundaries exited
+**0**. The curve follow-up adds nine rejections and one base with no
+hand-derived expectation. All sixteen port-stricter inputs exit **0** upstream and are rejected
 by the port. The four new port-stricter tests return exactly the reasons the
 tracker item names:
 `decode truncated`, `decode nonCanonicalCompactSize`,
@@ -4323,8 +4327,8 @@ Every one of the five rules was therefore implemented.
 
 ### Field-parity mutation evidence
 
-All six full commands below completed sequentially, each in its own foreground
-scope with `MemoryMax=8G`, `MemorySwapMax=0`, `OOMPolicy=continue`,
+During the field-parity step, all six full commands below completed sequentially,
+each in its own foreground scope with `MemoryMax=8G`, `MemorySwapMax=0`, `OOMPolicy=continue`,
 `TasksMax=4096` and `timeout 3600`. No capped continuation was needed.
 Each runner requires a full restored `lake test` at exit **0**.
 
@@ -4374,20 +4378,21 @@ No existing mutation anchor or pinned published-vector count changed. The new
 capture JSON is added to the resume fingerprint inputs. Nine exact replacement
 steps register the field edits in `check-tx-psbt-copy.py`; the fresh upstream
 checkout at `cb9bc5f2f80987ad18b696a9c660f90f4bc1b6bd` reconstructs all ten files.
-The three current port-location rows in the preceding proof-source table move
-only because `Fields.lean` gained decoding checks: parse/decode to 560/552,
+The three port-location rows in the preceding proof-source table moved at
+that step because `Fields.lean` gained decoding checks: parse/decode to 560/552,
 capability calls to 397/411/511, and preimage hashing to 286–290.
 Historical phase counts and earlier command records remain historical.
 
-The current PSBT action count is **91/91**, up from **52/52**: one selectable
-action for each capture row. The gate remains **764 library theorems; 60 named;
+The current PSBT action count is **101/101** after both parity follow-ups,
+with one selectable action for each of the 49 capture rows. The field-parity
+step had 91/91 actions, up from 52/52. The gate remains **764 library theorems; 60 named;
 0 offenders**, with only `propext`, `Classical.choice` and `Quot.sound` allowed.
 No library theorem count, statement, proof module or axiom allowlist changes.
 
 ### Field-parity validation and changed files
 
-The following results were re-recorded on 2026-10-23 after the documentation
-corrections. Every command used `TMPDIR="${TMP_ROOT:?}"`; the six full mutation
+During the field-parity step, the following results were re-recorded on
+2026-10-23 after the documentation corrections. Every command used `TMPDIR="${TMP_ROOT:?}"`; the six full mutation
 commands and their results are recorded above.
 
 | Command | Directory | Exit | Observation |
@@ -4423,7 +4428,7 @@ lean-miniscript clone and temporary caches, and asserted that the root, clone
 and `packages/bitcoin/__pycache__` were absent. No pre-existing external path
 was removed. Normal build outputs and validation logs remain.
 
-The twelve changed or added paths relative to the base revision are:
+The field-parity step changed or added these twelve paths relative to its base:
 
 - `packages/bitcoin/Bitcoin/Psbt/Fields.lean`: five decoding rules and seven named reasons.
 - `packages/bitcoin/BitcoinTests/Psbt.lean`: 39 actions reading the captured bytes.
@@ -4437,6 +4442,275 @@ The twelve changed or added paths relative to the base revision are:
 - `README.md`: rule, capture, mutation, delta and validation records; three moved source locations.
 - `plan.md`: only the provisional §3 clause, replaced with the measured 16-input result.
 - `.beads/issues.jsonl`: the tracker item's status.
+
+## Phase 4a: PSBT curve parity follow-up
+
+Four decoding rules now use the supplied curve capability, preserving pure
+Lean package boundaries, raw bytes and every theorem statement. The capability
+gains exactly `isValidXOnlyPubkey` and `isValidDerSignature`; the xpub rule
+reuses `isValidPubkey`. The C bindings use the immutable static context in
+`packages/secp256k1/link_shim.c`, including a length guard before the x-only
+parser reads its fixed 32 bytes. DER parsing rejects empty input and applies
+neither verification nor a low-S rule.
+
+| Rule and sites | rust-bitcoin 0.32.8 / secp256k1 0.29.1 source | Must-reject vectors and exact port reasons |
+|---|---|---|
+| Global xpub point, bytes 45–77 | bitcoin `src/bip32.rs:789-815`, `src/psbt/map/global.rs:113-118`; secp256k1 `src/key.rs:444-462` | `xpub-point`: `invalidKey "global" 1 "invalid extended key point"` |
+| Partial-signature DER, excluding the last sighash byte | bitcoin `src/crypto/ecdsa.rs:38-43`, `src/psbt/serialize.rs:179-200`; secp256k1 `src/ecdsa/mod.rs:52-71` | `partial-sig-der`, `partial-sig-no-der`: `invalidValue "input" 2 "invalid DER signature"` |
+| Five x-only key sites | bitcoin `src/psbt/serialize.rs:263-266,295-301`, `src/psbt/map/input.rs:331,341,346`, `src/psbt/map/output.rs:85,95`; secp256k1 `src/key.rs:1162-1180` | `xonly-in-internal`: `invalidValue "input" 23 "invalid x-only public key"`; `xonly-out-internal`: `invalidValue "output" 5 "invalid x-only public key"`; `xonly-in-tap-bip32`: `invalidKey "input" 22 "invalid x-only public key"`; `xonly-out-tap-bip32`: `invalidKey "output" 7 "invalid x-only public key"`; `xonly-in-tap-script-sig`: `invalidKey "input" 20 "invalid x-only public key"` |
+| Control-block internal key, bytes 1–32 | bitcoin `src/taproot/mod.rs:1105-1121`, `src/psbt/serialize.rs:310-313`; secp256k1 `src/key.rs:1162-1180` | `control-block-internal`: `invalidKey "input" 21 "invalid control block internal key"` |
+
+All existing checks retain their order. Partial signatures check the key,
+nonempty value, sighash and then DER. Script-signature keys check length and
+x-only parse before signature-value checks. Taproot BIP32 keys check length
+and x-only parse before the origin; internal-key values check length before
+x-only parse. Control blocks retain size, missing leaf version, masked control
+leaf version and value leaf version checks, then check the internal point.
+Global xpub points are checked in `Psbt.decode` after global decoding and map
+counts, before input/output decoding. `globalCounts`, the framing call and
+every theorem statement stay textually unchanged; no proof repair was needed.
+The axiom gate still reports **764 library theorems; 60 named; 0 offenders**.
+The test capability remains a shape-only stand-in: it rejects compressed
+02/03 encodings of x = 5, wrong-length x-only keys and x = 5, and empty or
+31-prefixed DER, while accepting every pinned published valid vector.
+
+### Curve-function vectors
+
+`Secp256k1.isValidXOnlyPubkey` uses the public-key columns of
+[BIP340 at bitcoin/bips @ 927b6de](https://github.com/bitcoin/bips/blob/927b6de9915c9262615a6399de51b200f81e5aa4/bip-0340/test-vectors.csv).
+`generate-bip340.py` fetches only during generation and retains index, public
+key and comment, lowercasing the hex. It asserts that no secret-key column or
+nonempty secret-key value remains, comparing without case sensitivity.
+`bip340-public-keys.json.provenance` records the dropped columns and the CSV's
+BSD-2-Clause OR MIT OR CC0-1.0 offer under `bip-0340/LICENSE` at the pinned
+commit, taken under MIT. The corrected `LICENSE-bip340` reproduces that offer,
+names the authors and carries the MIT permission notice and disclaimer.
+The comment column supplies the oracle: **19 rows, 17 parsed, indices 5 and
+14 rejected**. Lengths 0/31 and x = 5 are also rejected. The valid published
+32-byte key from row 0 parses; that same key plus one byte (33 bytes) is rejected.
+The fresh test printed:
+
+```text
+BIP340 x-only: 19 rows / 17 parsed / rejected indices 5,14; lengths 0,31 and x=5 rejected; published valid key parsed / key plus one byte (33) rejected
+```
+
+The committed Euler check proves 5³ + 7 = 132 is a quadratic non-residue modulo
+p = 2²⁵⁶ − 2³² − 977 independently of the curve binding.
+
+From the root, the generation command exited **0** and its subsequent
+`git diff --exit-code -- packages/secp256k1/bip340-public-keys.json` exited
+**0**, reproducing the committed file:
+
+```bash
+TMPDIR="${TMP_ROOT:?}" python3 -I packages/secp256k1/generate-bip340.py
+```
+
+It printed `BIP340 public keys: 19 rows; only index, public key and comment;
+no secret-key values` and `Euler x=5: True`. The Euler expression in that
+script is `pow(132, (p - 1) // 2, p) == p - 1`.
+
+`Secp256k1.isValidDerSignature` reads
+[Wycheproof's DER file at 7a32593](https://github.com/C2SP/wycheproof/blob/7a325932231bd7a724c791c8b0d65ea4d6d2f435/testvectors_v1/ecdsa_secp256k1_sha256_test.json)
+through the new `WYCHEPROOF_DER_JSON` variable in the existing flake input.
+The Apache-2.0-only vectors and subsets remain outside the repository.
+Tests require the variable/file, 476 cases, 109 `EcdsaVerify` groups and unique
+case ids. Every `valid` case must parse; every case with `BerEncodedSignature`,
+`InvalidEncoding` or `InvalidTypesInSignature` must fail. Other invalid cases
+have no per-case parse assertion: verification verdicts do not determine DER
+parsing, and libsecp256k1 permits well-encoded out-of-range integers.
+The following aggregate counts are **measured regression counts**, separately
+pinned from that oracle:
+
+```text
+Wycheproof DER measured: 476 cases / 109 groups; valid parsed 168; encoding rejected 162; ModifiedSignature rejected 31 / parsed 17; overall parsed 283 / rejected 193
+```
+
+The unchanged BIP174 one-signature DER part parses; replacing its first 30
+byte by 31, and empty input, both fail. Its provenance comment cites
+bitcoin/bips @ `927b6de9915c9262615a6399de51b200f81e5aa4`, `bip-0174.mediawiki`,
+BSD-2-Clause, with the existing BIP174 notice. No bitcoin import is added to
+the binding package. Existing BOLT, P1363 and compression counts are unchanged.
+
+### Extended offline capture
+
+The capture has **49 rows: 19 must-reject, 14 must-accept, 16 port-stricter**.
+The original 39 row objects remain identical and in their original order;
+the script checks equality before writing. Nine curve edits and the unchanged
+`base-key-output` are appended. Every edit checks its byte offsets and lengths,
+including preserving the xpub prefix, control byte and script-signature leaf
+hash. All six distinct bases parse in the port and exit 0 in the reference.
+
+| New input | Reference exit | stderr summary |
+|---|---|---|
+| `xpub-point` | 1 | `xpub key error -  Can't deserialize ExtendedPublicKey from global XPUB key data` |
+| `partial-sig-der` | 1 | `invalid ECDSA signature` |
+| `partial-sig-no-der` | 1 | `invalid ECDSA signature` |
+| `xonly-in-internal` | 1 | `invalid xonly public key` |
+| `xonly-in-tap-bip32` | 1 | `invalid xonly public key` |
+| `xonly-in-tap-script-sig` | 1 | `invalid xonly public key` |
+| `xonly-out-internal` | 1 | `invalid xonly public key` |
+| `xonly-out-tap-bip32` | 1 | `invalid xonly public key` |
+| `control-block-internal` | 1 | `invalid control block` |
+| `base-key-output` | 0 | empty |
+
+Each expected error is mechanically confirmed from stderr. No contingency
+or hand-derived expectation was needed. The dry run of the pinned reference
+exited 0 with nothing to build. The fresh `--check` invocation exited 0 with
+`PSBT capture: 49/49; existing 39 rows unchanged; 9 curve errors confirmed;
+temporary workspace removed`. The method remains stdin to the offline CLI
+in a fresh empty HOME/working directory, with temporary workspaces removed.
+
+### Curve-site mutation evidence
+
+Eight independent production mutations bypass exactly one decoder site each.
+The xpub mutation evaluates the capability call and ORs its result with `true`,
+retaining the loop variable's use. The other seven replace their site's call
+with `true`, anchored on that field's branch. Tests, expected values and the
+test capability are unchanged. Every row ran `lake test -- --psbt 'SELECTOR'`,
+exited **1**, and reached its runtime assertion after the 764/60/0 axiom gate.
+
+| Mutation label | Selector | Exit | First failure line |
+|---|---|---|---|
+| `parity-xpub-point` | `parity xpub-point` | 1 | `uncaught exception: assertion failed: parity xpub-point: expected Bitcoin.Psbt.PsbtError.invalidKey "global" 1 "invalid extended key point", got accepted` |
+| `parity-partial-sig-der` | `parity partial-sig-der` | 1 | `uncaught exception: assertion failed: parity partial-sig-der: expected Bitcoin.Psbt.PsbtError.invalidValue "input" 2 "invalid DER signature", got accepted` |
+| `parity-xonly-in-internal` | `parity xonly-in-internal` | 1 | `uncaught exception: assertion failed: parity xonly-in-internal: expected Bitcoin.Psbt.PsbtError.invalidValue "input" 23 "invalid x-only public key", got accepted` |
+| `parity-xonly-out-internal` | `parity xonly-out-internal` | 1 | `uncaught exception: assertion failed: parity xonly-out-internal: expected Bitcoin.Psbt.PsbtError.invalidValue "output" 5 "invalid x-only public key", got accepted` |
+| `parity-xonly-in-tap-bip32` | `parity xonly-in-tap-bip32` | 1 | `uncaught exception: assertion failed: parity xonly-in-tap-bip32: expected Bitcoin.Psbt.PsbtError.invalidKey "input" 22 "invalid x-only public key", got accepted` |
+| `parity-xonly-out-tap-bip32` | `parity xonly-out-tap-bip32` | 1 | `uncaught exception: assertion failed: parity xonly-out-tap-bip32: expected Bitcoin.Psbt.PsbtError.invalidKey "output" 7 "invalid x-only public key", got accepted` |
+| `parity-xonly-in-tap-script-sig` | `parity xonly-in-tap-script-sig` | 1 | `uncaught exception: assertion failed: parity xonly-in-tap-script-sig: expected Bitcoin.Psbt.PsbtError.invalidKey "input" 20 "invalid x-only public key", got accepted` |
+| `parity-control-block-internal` | `parity control-block-internal` | 1 | `uncaught exception: assertion failed: parity control-block-internal: expected Bitcoin.Psbt.PsbtError.invalidKey "input" 21 "invalid control block internal key", got accepted` |
+
+The fresh full invocation of `nix develop -c python3 -I check-psbt-mutations.py`
+on 2026-10-24 exited **0** after **2160.69 seconds**:
+`PSBT mutations: 125/125 detected; restored lake test: EXIT=0`.
+All **117** existing record objects are identical to the base revision;
+the eight runtime rows above are appended in `test-data/psbt-mutations.json`.
+No existing diagnostic line number or pinned theorem count changed.
+The generated record is byte-identical to the committed file. No timeout
+continuation or `--resume` was needed.
+
+The binding runner, `nix develop -c python3 -I check-negative-mutations.py`
+from `packages/secp256k1`, exited **0** with **44/44** negative mutations
+(the original 42 plus two) and **18/18** compression mutations detected.
+Each new mutation returns true at the start of its production shim; it never
+removes the fixed-length x-only guard or reads beyond an input. Separate
+streams and records retain the existing `.lake/mutation-checks` layout.
+
+| Property | Command | Exit | First failure line |
+|---|---|---|---|
+| x-only off-curve | `lake test -- --negative 'x-only off-curve'` | 1 | `uncaught exception: assertion failed: x-only off-curve` |
+| DER empty | `lake test -- --negative 'DER empty'` | 1 | `uncaught exception: assertion failed: DER empty` |
+
+The existing compression guard-removal experiment still exits **0**, recorded
+separately from the 18 detected mutations. Every temporary adapter edit is
+restored in `finally`.
+
+### Final curve-parity validation
+
+On 2026-10-24, commands ran in the foreground with separate stdout and stderr
+under `packages/bitcoin/.lake/curve-parity-recheck-20261024`.
+Every heavy command used its own scope with `MemoryMax=8G`, `MemorySwapMax=0`,
+`OOMPolicy=continue`, `TasksMax=4096` and `timeout 3600`, one at a time.
+`TMPDIR` was set to the private `TMP_ROOT`. No timeout continuation was needed.
+`nix develop -c bash -c 'lean --version && python3 --version && git --version && nix --version'`
+exited **0**: Lean **4.35.0** Release, Python **3.14.7**, Git **2.54.0**,
+Nix **2.34.8**. The configured library directory identifies the pinned
+libsecp256k1 **0.8.0** package, checked in the same invocation by
+`test "${SECP256K1_LIB_DIR#*-secp256k1-0.8.0/}" != "$SECP256K1_LIB_DIR"`
+and printing `libsecp256k1: 0.8.0`. Outside the development shell,
+`python3 --version` exited **0** and printed **Python 3.13.15**; this is the
+interpreter used for the capture, copy check and BIP340 generation.
+
+All seven full mutation commands completed with these results:
+
+| Directory | Command | Exit | Detected |
+|---|---|---|---|
+| `packages/bitcoin` | `nix develop -c python3 -I check-mutations.py` | 0 | 6/6 |
+| `packages/bitcoin` | `nix develop -c python3 -I check-base58-mutations.py` | 0 | 6/6 |
+| `packages/bitcoin` | `nix develop -c python3 -I check-bech32-mutations.py` | 0 | 18/18 |
+| `packages/bitcoin` | `nix develop -c python3 -I check-address-mutations.py` | 0 | 20/20 |
+| `packages/bitcoin` | `nix develop -c python3 -I check-psbt-mutations.py` | 0 | 125/125 |
+| `packages/bitcoin` | `nix develop -c python3 -I check-ripemd160-mutations.py` | 0 | 8/8 |
+| `packages/secp256k1` | `nix develop -c python3 -I check-negative-mutations.py` | 0 | 44/44 negative; 18/18 compression |
+
+The Bitcoin total is **183/183**. All five other Bitcoin mutation-record
+files are byte-identical to the base revision. The PSBT record appends eight
+objects while retaining the original 117 unchanged. The only changed pinned
+counts are PSBT actions **91 → 101**, capture rows **39 → 49** with classes
+**10/13/16 → 19/14/16**, PSBT mutations **117 → 125**, and binding negative
+mutations **42 → 44**. Published PSBT set counts and theorem counts are unchanged.
+
+The fresh commands and observations are:
+
+| Directory | Command | Exit | Observation |
+|---|---|---|---|
+| `packages/secp256k1` | `nix develop -c lake build` | 0 | Package builds. |
+| `packages/secp256k1` | `nix develop -c lake test` | 0 | BOLT 16/16 recovery/signing; P1363 252 loaded / 95 accepted / 157 rejected; 108 compression keys / 1944 checks; BIP340 and measured DER counts above; `negative tests: PASS`. |
+| `packages/bitcoin` | `nix develop -c lake build` | 0 | Package builds. |
+| `packages/bitcoin` | `nix develop -c lake test` | 0 | All pinned valid/invalid sets retained; 101/101 PSBT actions; 764/60/0 axiom gate. |
+| `packages/secp256k1` | `nix develop -c bash -c 'cc -fsyntax-only -I "$(lean --print-prefix)/include" -include .lake/build/ir/Secp256k1.c link_shim.c'` | 0 | Generated declarations and shim definitions compile together. |
+| root | `nix flake check -L --max-jobs 1 --cores 4` | 0 | Actual rebuild in 110.55 seconds; all seven package builds/tests and the one-OpenSSL checks; `all checks passed!`. |
+| root | `nix build --max-jobs 1 --cores 4` | 0 | Reuses the checked default executable; empty stdout, dirty-tree warning on stderr. |
+| root | `./result/bin/cyberkrill` | 0 | `cyberkrill 0.1.0`; empty stderr. |
+| root | `nix build --dry-run --no-link github:douglaz/cyberkrill/27cad1faba86260b06665a89f0af5134d23525c2` | 0 | Nothing to build; empty stdout/stderr. |
+| root | `TMPDIR="${TMP_ROOT:?}" python3 -I packages/bitcoin/capture-cyberkrill-psbt.py --check` | 0 | 49/49 reproduced; temporary capture workspace removed. |
+| root | `git diff --exit-code -- packages/bitcoin/test-data/cyberkrill-psbt-capture.json` | 0 | Both streams empty; capture file unchanged. |
+| root | `git clone --no-checkout https://github.com/febyeji/lean-miniscript "$TMP_ROOT/miniscript"` | 0 | Fresh clone; copied nothing into the tree. |
+| root | `git -C "$TMP_ROOT/miniscript" checkout cb9bc5f` | 0 | Pinned checkout. |
+| root | `git -C "$TMP_ROOT/miniscript" rev-parse HEAD` | 0 | Asserted exact revision `cb9bc5f2f80987ad18b696a9c660f90f4bc1b6bd`. |
+| root | `python3 -I packages/bitcoin/check-tx-psbt-copy.py "$TMP_ROOT/miniscript"` | 0 | Fresh pinned checkout; `transaction/PSBT copy: 10/10; MIT notice reused; forbidden fixture slice excluded`. |
+| root | `TMPDIR="${TMP_ROOT:?}" python3 -I packages/secp256k1/generate-bip340.py` | 0 | 19 public-key rows; no secret-key values; `Euler x=5: True`. |
+| root | `git diff --exit-code -- packages/secp256k1/bip340-public-keys.json` | 0 | Regeneration reproduces the committed file. |
+| root | `grep -rnw sorry --include='*.lean' --exclude-dir=.lake packages` | 1 | Both streams empty. |
+| root | `grep -rnE 'native_decide\|bv_decide' --include='*.lean' packages/bitcoin/Bitcoin packages/bitcoin/Bitcoin.lean packages/secp256k1/Secp256k1.lean` | 1 | Both streams empty. |
+| root | `git diff --check 86f429e4fae17c88ab3ee894573c498cab75d1dd` | 0 | Both streams empty. |
+| root | `git diff --stat 86f429e4fae17c88ab3ee894573c498cab75d1dd -- flake.lock plan.md AGENTS.md packages/cyberkrill packages/lightning packages/fedimint-invite packages/http-curl packages/sha256` | 0 | Empty; an additional assertion confirms those paths and all proof modules are unchanged. |
+| root | `git diff --stat 86f429e4fae17c88ab3ee894573c498cab75d1dd -- ':(glob)packages/bitcoin/Bitcoin/**/*Proofs*.lean' packages/bitcoin/BitcoinTests/AxiomGate.lean` | 0 | Both streams empty. |
+| root | `find packages -name __pycache__ -not -path '*/.lake/*'` | 0 | Both streams empty. |
+
+The public-text scan over the full diff excluding the tracker
+is recorded separately from the key-material scan. Both operate on saved added
+lines, so each command runs unpiped and retains its own exit code and separate
+streams. The scan commands below use `BASE=86f429e4fae17c88ab3ee894573c498cab75d1dd`
+and `LOGS=packages/bitcoin/.lake/curve-parity-recheck-20261024`.
+
+```bash
+git diff -U0 "$BASE" > "$LOGS/21-key-diff.stdout" 2> "$LOGS/21-key-diff.stderr"
+grep '^+' "$LOGS/21-key-diff.stdout" > "$LOGS/21-key-added.stdout" 2> "$LOGS/21-key-added.stderr"
+grep -nE '[xt]prv[1-9A-HJ-NP-Za-km-z]{100,}|\b[5KLc9][1-9A-HJ-NP-Za-km-z]{50,51}\b' "$LOGS/21-key-added.stdout"
+git diff -U0 "$BASE" -- . ':(exclude).beads/**' > "$LOGS/22-public-diff.stdout" 2> "$LOGS/22-public-diff.stderr"
+grep '^+' "$LOGS/22-public-diff.stdout" > "$LOGS/22-public-added.stdout" 2> "$LOGS/22-public-added.stderr"
+```
+
+The public-text scan then ran a case-insensitive `grep -niP` over
+`22-public-added.stdout` for every category AGENTS.md's "Public text" rule
+forbids. The expression is not reproduced here because it consists of the
+forbidden words themselves.
+The key-material and public-text scans each exited **1**, with **empty stdout
+and stderr**. The public-text expression permits the literal instruction
+filename `AGENTS.md`; the broader initial expression matched that filename in
+the boundary-check command above. No key-material exception was needed.
+
+The changed paths are:
+
+- Under `packages/bitcoin`, `Bitcoin/Psbt/Capability.lean`, `Bitcoin/Psbt/Fields.lean`
+  and `BitcoinTests/Psbt.lean`: two operations, eight sites, nine rejections and
+  one additional base.
+- Under `packages/bitcoin`, `capture-cyberkrill-psbt.py`, `check-psbt-mutations.py`,
+  `check-tx-psbt-copy.py`, `test-data/cyberkrill-psbt-capture.json`,
+  `test-data/psbt-mutations.json` and `test-data/README.md`: reproducible capture,
+  mutation evidence, exact copied-code registration and provenance.
+- Under `packages/secp256k1`, `Secp256k1.lean`, `link_shim.c`,
+  `Secp256k1Tests.lean`, `check-negative-mutations.py`, `generate-bip340.py`,
+  `bip340-public-keys.json`, `bip340-public-keys.json.provenance` and
+  `LICENSE-bip340`: bindings, vector tests, red runs and the corrected MIT licence record.
+- `flake.nix`: only the additional DER-vector environment variable.
+  `README.md`, `docs/upstream-fixes.md` and `.beads/issues.jsonl`: documentation
+  and task status.
+
+`plan.md` is unchanged. Its §2 `secp256k1` function list and `bitcoin`
+capability description now omit the two new operations and their decoder
+sites; those omissions are reported without editing the plan.
 
 ## Deltas taken
 

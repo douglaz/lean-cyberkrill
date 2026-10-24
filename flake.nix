@@ -79,6 +79,7 @@
 
       ffiEnvironment = {
         WYCHEPROOF_JSON = wycheproofJson;
+        WYCHEPROOF_DER_JSON = "${wycheproof}/testvectors_v1/ecdsa_secp256k1_sha256_test.json";
         WYCHEPROOF_DIGESTS = "${wycheproofDigests}";
         SECP256K1_LIB_DIR = "${pkgs.secp256k1}/lib";
         CURL_LIB_DIR = "${pkgs.curl.out}/lib";

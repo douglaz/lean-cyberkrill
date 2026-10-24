@@ -304,6 +304,20 @@ def mutations(originals):
     parity("proprietary-subtype-fd01", '    | .error _ => false\n    | .ok _ => true',
            '    | .error _ => true\n    | .ok _ => true')
     parity("xpub-depth", '(source.path.length == keyData[4]!.toNat)', '(true)')
+    parity("xpub-point", '(cap.isValidPubkey (xpub.extract 45 78))',
+           '(cap.isValidPubkey (xpub.extract 45 78) || true)')
+    parity("partial-sig-der", '(cap.isValidDerSignature (value.extract 0 (value.size - 1)))', '(true)')
+    for kind, name, call in [
+        ("inTapInternalKey", "xonly-in-internal", '(cap.isValidXOnlyPubkey value)'),
+        ("outTapInternalKey", "xonly-out-internal", '(cap.isValidXOnlyPubkey value)'),
+        ("inTapBip32Derivation", "xonly-in-tap-bip32", '(cap.isValidXOnlyPubkey keyData)'),
+        ("outTapBip32Derivation", "xonly-out-tap-bip32", '(cap.isValidXOnlyPubkey keyData)'),
+        ("inTapScriptSig", "xonly-in-tap-script-sig", '(cap.isValidXOnlyPubkey (keyData.extract 0 32))'),
+        ("inTapLeafScript", "control-block-internal", '(cap.isValidXOnlyPubkey (keyData.extract 1 33))')]:
+        start = originals[fields].index(f"  else if keyType == KeyType.{kind} then")
+        end = originals[fields].index("  else ", start + 3)
+        old = originals[fields][start:end]
+        parity(name, old, replace(old, call, '(true)'))
     # These classifications follow diagnostics from the isolated discovery checks.
     proof_caught = {
         "trailing-data": ("Bitcoin/Psbt/CodecProofs.lean", "decodePsbtWith_ok"),
