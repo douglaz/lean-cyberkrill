@@ -1,0 +1,2626 @@
+{
+  "rates": [
+    {
+      "msat": "0",
+      "rate": "0msat"
+    },
+    {
+      "msat": "1",
+      "rate": "1msat"
+    },
+    {
+      "msat": "1000",
+      "rate": "1000msat"
+    },
+    {
+      "msat": "1000",
+      "rate": "1sat"
+    },
+    {
+      "msat": "500",
+      "rate": "0.5sat"
+    },
+    {
+      "msat": "100",
+      "rate": "0.1sat"
+    },
+    {
+      "msat": "10",
+      "rate": "0.01sat"
+    },
+    {
+      "msat": "1150",
+      "rate": "1.15sats"
+    },
+    {
+      "msat": "2500",
+      "rate": "2.5sats"
+    },
+    {
+      "msat": "15000",
+      "rate": "15sats"
+    },
+    {
+      "msat": "20000",
+      "rate": "20sats"
+    },
+    {
+      "msat": "100000",
+      "rate": "100sats"
+    },
+    {
+      "msat": "2000",
+      "rate": "0.00000002"
+    },
+    {
+      "msat": "2000",
+      "rate": "0.00000002btc"
+    },
+    {
+      "msat": "1500000000000",
+      "rate": "15"
+    },
+    {
+      "msat": "9007199254740993",
+      "rate": "9007199254740993msat"
+    },
+    {
+      "msat": "18446744073709551615",
+      "rate": "18446744073709551615msat"
+    },
+    {
+      "msat": "18446744073709551615",
+      "rate": "200000000btc"
+    }
+  ],
+  "shapes": [
+    {
+      "inputs": "0",
+      "outputs": "0",
+      "vbytes": "10",
+      "weight": "40"
+    },
+    {
+      "inputs": "0",
+      "outputs": "1",
+      "vbytes": "41",
+      "weight": "164"
+    },
+    {
+      "inputs": "1",
+      "outputs": "0",
+      "vbytes": "79",
+      "weight": "314"
+    },
+    {
+      "inputs": "1",
+      "outputs": "1",
+      "vbytes": "110",
+      "weight": "438"
+    },
+    {
+      "inputs": "1",
+      "outputs": "2",
+      "vbytes": "141",
+      "weight": "562"
+    },
+    {
+      "inputs": "2",
+      "outputs": "2",
+      "vbytes": "209",
+      "weight": "834"
+    },
+    {
+      "inputs": "3",
+      "outputs": "1",
+      "vbytes": "246",
+      "weight": "982"
+    },
+    {
+      "inputs": "5",
+      "outputs": "1",
+      "vbytes": "382",
+      "weight": "1526"
+    },
+    {
+      "inputs": "10",
+      "outputs": "1",
+      "vbytes": "722",
+      "weight": "2886"
+    },
+    {
+      "inputs": "20",
+      "outputs": "1",
+      "vbytes": "1402",
+      "weight": "5606"
+    },
+    {
+      "inputs": "252",
+      "outputs": "1",
+      "vbytes": "17178",
+      "weight": "68710"
+    },
+    {
+      "inputs": "253",
+      "outputs": "1",
+      "vbytes": "17248",
+      "weight": "68990"
+    },
+    {
+      "inputs": "1",
+      "outputs": "252",
+      "vbytes": "7891",
+      "weight": "31562"
+    },
+    {
+      "inputs": "1",
+      "outputs": "253",
+      "vbytes": "7924",
+      "weight": "31694"
+    },
+    {
+      "inputs": "65535",
+      "outputs": "1",
+      "vbytes": "4456424",
+      "weight": "17825694"
+    },
+    {
+      "inputs": "65536",
+      "outputs": "1",
+      "vbytes": "4456494",
+      "weight": "17825974"
+    }
+  ],
+  "shapeFees": [
+    {
+      "inputs": "0",
+      "outputs": "0",
+      "rate": "0msat",
+      "sats": "0"
+    },
+    {
+      "inputs": "0",
+      "outputs": "0",
+      "rate": "1msat",
+      "sats": "0"
+    },
+    {
+      "inputs": "0",
+      "outputs": "0",
+      "rate": "1000msat",
+      "sats": "10"
+    },
+    {
+      "inputs": "0",
+      "outputs": "0",
+      "rate": "1sat",
+      "sats": "10"
+    },
+    {
+      "inputs": "0",
+      "outputs": "0",
+      "rate": "0.5sat",
+      "sats": "5"
+    },
+    {
+      "inputs": "0",
+      "outputs": "0",
+      "rate": "0.1sat",
+      "sats": "1"
+    },
+    {
+      "inputs": "0",
+      "outputs": "0",
+      "rate": "0.01sat",
+      "sats": "0"
+    },
+    {
+      "inputs": "0",
+      "outputs": "0",
+      "rate": "1.15sats",
+      "sats": "12"
+    },
+    {
+      "inputs": "0",
+      "outputs": "0",
+      "rate": "2.5sats",
+      "sats": "25"
+    },
+    {
+      "inputs": "0",
+      "outputs": "0",
+      "rate": "15sats",
+      "sats": "150"
+    },
+    {
+      "inputs": "0",
+      "outputs": "0",
+      "rate": "20sats",
+      "sats": "200"
+    },
+    {
+      "inputs": "0",
+      "outputs": "0",
+      "rate": "100sats",
+      "sats": "1000"
+    },
+    {
+      "inputs": "0",
+      "outputs": "0",
+      "rate": "0.00000002",
+      "sats": "20"
+    },
+    {
+      "inputs": "0",
+      "outputs": "0",
+      "rate": "0.00000002btc",
+      "sats": "20"
+    },
+    {
+      "inputs": "0",
+      "outputs": "0",
+      "rate": "15",
+      "sats": "15000000000"
+    },
+    {
+      "inputs": "0",
+      "outputs": "0",
+      "rate": "9007199254740993msat",
+      "sats": "90071992547410"
+    },
+    {
+      "inputs": "0",
+      "outputs": "0",
+      "rate": "18446744073709551615msat",
+      "sats": "184467440737095520"
+    },
+    {
+      "inputs": "0",
+      "outputs": "0",
+      "rate": "200000000btc",
+      "sats": "184467440737095520"
+    },
+    {
+      "inputs": "0",
+      "outputs": "1",
+      "rate": "0msat",
+      "sats": "0"
+    },
+    {
+      "inputs": "0",
+      "outputs": "1",
+      "rate": "1msat",
+      "sats": "0"
+    },
+    {
+      "inputs": "0",
+      "outputs": "1",
+      "rate": "1000msat",
+      "sats": "41"
+    },
+    {
+      "inputs": "0",
+      "outputs": "1",
+      "rate": "1sat",
+      "sats": "41"
+    },
+    {
+      "inputs": "0",
+      "outputs": "1",
+      "rate": "0.5sat",
+      "sats": "21"
+    },
+    {
+      "inputs": "0",
+      "outputs": "1",
+      "rate": "0.1sat",
+      "sats": "4"
+    },
+    {
+      "inputs": "0",
+      "outputs": "1",
+      "rate": "0.01sat",
+      "sats": "0"
+    },
+    {
+      "inputs": "0",
+      "outputs": "1",
+      "rate": "1.15sats",
+      "sats": "47"
+    },
+    {
+      "inputs": "0",
+      "outputs": "1",
+      "rate": "2.5sats",
+      "sats": "103"
+    },
+    {
+      "inputs": "0",
+      "outputs": "1",
+      "rate": "15sats",
+      "sats": "615"
+    },
+    {
+      "inputs": "0",
+      "outputs": "1",
+      "rate": "20sats",
+      "sats": "820"
+    },
+    {
+      "inputs": "0",
+      "outputs": "1",
+      "rate": "100sats",
+      "sats": "4100"
+    },
+    {
+      "inputs": "0",
+      "outputs": "1",
+      "rate": "0.00000002",
+      "sats": "82"
+    },
+    {
+      "inputs": "0",
+      "outputs": "1",
+      "rate": "0.00000002btc",
+      "sats": "82"
+    },
+    {
+      "inputs": "0",
+      "outputs": "1",
+      "rate": "15",
+      "sats": "61500000000"
+    },
+    {
+      "inputs": "0",
+      "outputs": "1",
+      "rate": "9007199254740993msat",
+      "sats": "369295169444381"
+    },
+    {
+      "inputs": "0",
+      "outputs": "1",
+      "rate": "18446744073709551615msat",
+      "sats": "756316507022091648"
+    },
+    {
+      "inputs": "0",
+      "outputs": "1",
+      "rate": "200000000btc",
+      "sats": "756316507022091648"
+    },
+    {
+      "inputs": "1",
+      "outputs": "0",
+      "rate": "0msat",
+      "sats": "0"
+    },
+    {
+      "inputs": "1",
+      "outputs": "0",
+      "rate": "1msat",
+      "sats": "0"
+    },
+    {
+      "inputs": "1",
+      "outputs": "0",
+      "rate": "1000msat",
+      "sats": "79"
+    },
+    {
+      "inputs": "1",
+      "outputs": "0",
+      "rate": "1sat",
+      "sats": "79"
+    },
+    {
+      "inputs": "1",
+      "outputs": "0",
+      "rate": "0.5sat",
+      "sats": "40"
+    },
+    {
+      "inputs": "1",
+      "outputs": "0",
+      "rate": "0.1sat",
+      "sats": "8"
+    },
+    {
+      "inputs": "1",
+      "outputs": "0",
+      "rate": "0.01sat",
+      "sats": "1"
+    },
+    {
+      "inputs": "1",
+      "outputs": "0",
+      "rate": "1.15sats",
+      "sats": "91"
+    },
+    {
+      "inputs": "1",
+      "outputs": "0",
+      "rate": "2.5sats",
+      "sats": "198"
+    },
+    {
+      "inputs": "1",
+      "outputs": "0",
+      "rate": "15sats",
+      "sats": "1185"
+    },
+    {
+      "inputs": "1",
+      "outputs": "0",
+      "rate": "20sats",
+      "sats": "1580"
+    },
+    {
+      "inputs": "1",
+      "outputs": "0",
+      "rate": "100sats",
+      "sats": "7900"
+    },
+    {
+      "inputs": "1",
+      "outputs": "0",
+      "rate": "0.00000002",
+      "sats": "158"
+    },
+    {
+      "inputs": "1",
+      "outputs": "0",
+      "rate": "0.00000002btc",
+      "sats": "158"
+    },
+    {
+      "inputs": "1",
+      "outputs": "0",
+      "rate": "15",
+      "sats": "118500000000"
+    },
+    {
+      "inputs": "1",
+      "outputs": "0",
+      "rate": "9007199254740993msat",
+      "sats": "711568741124538"
+    },
+    {
+      "inputs": "1",
+      "outputs": "0",
+      "rate": "18446744073709551615msat",
+      "sats": "1457292781823054592"
+    },
+    {
+      "inputs": "1",
+      "outputs": "0",
+      "rate": "200000000btc",
+      "sats": "1457292781823054592"
+    },
+    {
+      "inputs": "1",
+      "outputs": "1",
+      "rate": "0msat",
+      "sats": "0"
+    },
+    {
+      "inputs": "1",
+      "outputs": "1",
+      "rate": "1msat",
+      "sats": "0"
+    },
+    {
+      "inputs": "1",
+      "outputs": "1",
+      "rate": "1000msat",
+      "sats": "110"
+    },
+    {
+      "inputs": "1",
+      "outputs": "1",
+      "rate": "1sat",
+      "sats": "110"
+    },
+    {
+      "inputs": "1",
+      "outputs": "1",
+      "rate": "0.5sat",
+      "sats": "55"
+    },
+    {
+      "inputs": "1",
+      "outputs": "1",
+      "rate": "0.1sat",
+      "sats": "11"
+    },
+    {
+      "inputs": "1",
+      "outputs": "1",
+      "rate": "0.01sat",
+      "sats": "1"
+    },
+    {
+      "inputs": "1",
+      "outputs": "1",
+      "rate": "1.15sats",
+      "sats": "126"
+    },
+    {
+      "inputs": "1",
+      "outputs": "1",
+      "rate": "2.5sats",
+      "sats": "275"
+    },
+    {
+      "inputs": "1",
+      "outputs": "1",
+      "rate": "15sats",
+      "sats": "1650"
+    },
+    {
+      "inputs": "1",
+      "outputs": "1",
+      "rate": "20sats",
+      "sats": "2200"
+    },
+    {
+      "inputs": "1",
+      "outputs": "1",
+      "rate": "100sats",
+      "sats": "11000"
+    },
+    {
+      "inputs": "1",
+      "outputs": "1",
+      "rate": "0.00000002",
+      "sats": "220"
+    },
+    {
+      "inputs": "1",
+      "outputs": "1",
+      "rate": "0.00000002btc",
+      "sats": "220"
+    },
+    {
+      "inputs": "1",
+      "outputs": "1",
+      "rate": "15",
+      "sats": "165000000000"
+    },
+    {
+      "inputs": "1",
+      "outputs": "1",
+      "rate": "9007199254740993msat",
+      "sats": "990791918021509"
+    },
+    {
+      "inputs": "1",
+      "outputs": "1",
+      "rate": "18446744073709551615msat",
+      "sats": "2029141848108050688"
+    },
+    {
+      "inputs": "1",
+      "outputs": "1",
+      "rate": "200000000btc",
+      "sats": "2029141848108050688"
+    },
+    {
+      "inputs": "1",
+      "outputs": "2",
+      "rate": "0msat",
+      "sats": "0"
+    },
+    {
+      "inputs": "1",
+      "outputs": "2",
+      "rate": "1msat",
+      "sats": "0"
+    },
+    {
+      "inputs": "1",
+      "outputs": "2",
+      "rate": "1000msat",
+      "sats": "141"
+    },
+    {
+      "inputs": "1",
+      "outputs": "2",
+      "rate": "1sat",
+      "sats": "141"
+    },
+    {
+      "inputs": "1",
+      "outputs": "2",
+      "rate": "0.5sat",
+      "sats": "71"
+    },
+    {
+      "inputs": "1",
+      "outputs": "2",
+      "rate": "0.1sat",
+      "sats": "14"
+    },
+    {
+      "inputs": "1",
+      "outputs": "2",
+      "rate": "0.01sat",
+      "sats": "1"
+    },
+    {
+      "inputs": "1",
+      "outputs": "2",
+      "rate": "1.15sats",
+      "sats": "162"
+    },
+    {
+      "inputs": "1",
+      "outputs": "2",
+      "rate": "2.5sats",
+      "sats": "353"
+    },
+    {
+      "inputs": "1",
+      "outputs": "2",
+      "rate": "15sats",
+      "sats": "2115"
+    },
+    {
+      "inputs": "1",
+      "outputs": "2",
+      "rate": "20sats",
+      "sats": "2820"
+    },
+    {
+      "inputs": "1",
+      "outputs": "2",
+      "rate": "100sats",
+      "sats": "14100"
+    },
+    {
+      "inputs": "1",
+      "outputs": "2",
+      "rate": "0.00000002",
+      "sats": "282"
+    },
+    {
+      "inputs": "1",
+      "outputs": "2",
+      "rate": "0.00000002btc",
+      "sats": "282"
+    },
+    {
+      "inputs": "1",
+      "outputs": "2",
+      "rate": "15",
+      "sats": "211500000000"
+    },
+    {
+      "inputs": "1",
+      "outputs": "2",
+      "rate": "9007199254740993msat",
+      "sats": "1270015094918480"
+    },
+    {
+      "inputs": "1",
+      "outputs": "2",
+      "rate": "18446744073709551615msat",
+      "sats": "2600990914393047040"
+    },
+    {
+      "inputs": "1",
+      "outputs": "2",
+      "rate": "200000000btc",
+      "sats": "2600990914393047040"
+    },
+    {
+      "inputs": "2",
+      "outputs": "2",
+      "rate": "0msat",
+      "sats": "0"
+    },
+    {
+      "inputs": "2",
+      "outputs": "2",
+      "rate": "1msat",
+      "sats": "0"
+    },
+    {
+      "inputs": "2",
+      "outputs": "2",
+      "rate": "1000msat",
+      "sats": "209"
+    },
+    {
+      "inputs": "2",
+      "outputs": "2",
+      "rate": "1sat",
+      "sats": "209"
+    },
+    {
+      "inputs": "2",
+      "outputs": "2",
+      "rate": "0.5sat",
+      "sats": "105"
+    },
+    {
+      "inputs": "2",
+      "outputs": "2",
+      "rate": "0.1sat",
+      "sats": "21"
+    },
+    {
+      "inputs": "2",
+      "outputs": "2",
+      "rate": "0.01sat",
+      "sats": "2"
+    },
+    {
+      "inputs": "2",
+      "outputs": "2",
+      "rate": "1.15sats",
+      "sats": "240"
+    },
+    {
+      "inputs": "2",
+      "outputs": "2",
+      "rate": "2.5sats",
+      "sats": "523"
+    },
+    {
+      "inputs": "2",
+      "outputs": "2",
+      "rate": "15sats",
+      "sats": "3135"
+    },
+    {
+      "inputs": "2",
+      "outputs": "2",
+      "rate": "20sats",
+      "sats": "4180"
+    },
+    {
+      "inputs": "2",
+      "outputs": "2",
+      "rate": "100sats",
+      "sats": "20900"
+    },
+    {
+      "inputs": "2",
+      "outputs": "2",
+      "rate": "0.00000002",
+      "sats": "418"
+    },
+    {
+      "inputs": "2",
+      "outputs": "2",
+      "rate": "0.00000002btc",
+      "sats": "418"
+    },
+    {
+      "inputs": "2",
+      "outputs": "2",
+      "rate": "15",
+      "sats": "313500000000"
+    },
+    {
+      "inputs": "2",
+      "outputs": "2",
+      "rate": "9007199254740993msat",
+      "sats": "1882504644240867"
+    },
+    {
+      "inputs": "2",
+      "outputs": "2",
+      "rate": "18446744073709551615msat",
+      "sats": "3855369511405296128"
+    },
+    {
+      "inputs": "2",
+      "outputs": "2",
+      "rate": "200000000btc",
+      "sats": "3855369511405296128"
+    },
+    {
+      "inputs": "3",
+      "outputs": "1",
+      "rate": "0msat",
+      "sats": "0"
+    },
+    {
+      "inputs": "3",
+      "outputs": "1",
+      "rate": "1msat",
+      "sats": "0"
+    },
+    {
+      "inputs": "3",
+      "outputs": "1",
+      "rate": "1000msat",
+      "sats": "246"
+    },
+    {
+      "inputs": "3",
+      "outputs": "1",
+      "rate": "1sat",
+      "sats": "246"
+    },
+    {
+      "inputs": "3",
+      "outputs": "1",
+      "rate": "0.5sat",
+      "sats": "123"
+    },
+    {
+      "inputs": "3",
+      "outputs": "1",
+      "rate": "0.1sat",
+      "sats": "25"
+    },
+    {
+      "inputs": "3",
+      "outputs": "1",
+      "rate": "0.01sat",
+      "sats": "2"
+    },
+    {
+      "inputs": "3",
+      "outputs": "1",
+      "rate": "1.15sats",
+      "sats": "283"
+    },
+    {
+      "inputs": "3",
+      "outputs": "1",
+      "rate": "2.5sats",
+      "sats": "615"
+    },
+    {
+      "inputs": "3",
+      "outputs": "1",
+      "rate": "15sats",
+      "sats": "3690"
+    },
+    {
+      "inputs": "3",
+      "outputs": "1",
+      "rate": "20sats",
+      "sats": "4920"
+    },
+    {
+      "inputs": "3",
+      "outputs": "1",
+      "rate": "100sats",
+      "sats": "24600"
+    },
+    {
+      "inputs": "3",
+      "outputs": "1",
+      "rate": "0.00000002",
+      "sats": "492"
+    },
+    {
+      "inputs": "3",
+      "outputs": "1",
+      "rate": "0.00000002btc",
+      "sats": "492"
+    },
+    {
+      "inputs": "3",
+      "outputs": "1",
+      "rate": "15",
+      "sats": "369000000000"
+    },
+    {
+      "inputs": "3",
+      "outputs": "1",
+      "rate": "9007199254740993msat",
+      "sats": "2215771016666284"
+    },
+    {
+      "inputs": "3",
+      "outputs": "1",
+      "rate": "18446744073709551615msat",
+      "sats": "4537899042132549632"
+    },
+    {
+      "inputs": "3",
+      "outputs": "1",
+      "rate": "200000000btc",
+      "sats": "4537899042132549632"
+    },
+    {
+      "inputs": "5",
+      "outputs": "1",
+      "rate": "0msat",
+      "sats": "0"
+    },
+    {
+      "inputs": "5",
+      "outputs": "1",
+      "rate": "1msat",
+      "sats": "0"
+    },
+    {
+      "inputs": "5",
+      "outputs": "1",
+      "rate": "1000msat",
+      "sats": "382"
+    },
+    {
+      "inputs": "5",
+      "outputs": "1",
+      "rate": "1sat",
+      "sats": "382"
+    },
+    {
+      "inputs": "5",
+      "outputs": "1",
+      "rate": "0.5sat",
+      "sats": "191"
+    },
+    {
+      "inputs": "5",
+      "outputs": "1",
+      "rate": "0.1sat",
+      "sats": "38"
+    },
+    {
+      "inputs": "5",
+      "outputs": "1",
+      "rate": "0.01sat",
+      "sats": "4"
+    },
+    {
+      "inputs": "5",
+      "outputs": "1",
+      "rate": "1.15sats",
+      "sats": "439"
+    },
+    {
+      "inputs": "5",
+      "outputs": "1",
+      "rate": "2.5sats",
+      "sats": "955"
+    },
+    {
+      "inputs": "5",
+      "outputs": "1",
+      "rate": "15sats",
+      "sats": "5730"
+    },
+    {
+      "inputs": "5",
+      "outputs": "1",
+      "rate": "20sats",
+      "sats": "7640"
+    },
+    {
+      "inputs": "5",
+      "outputs": "1",
+      "rate": "100sats",
+      "sats": "38200"
+    },
+    {
+      "inputs": "5",
+      "outputs": "1",
+      "rate": "0.00000002",
+      "sats": "764"
+    },
+    {
+      "inputs": "5",
+      "outputs": "1",
+      "rate": "0.00000002btc",
+      "sats": "764"
+    },
+    {
+      "inputs": "5",
+      "outputs": "1",
+      "rate": "15",
+      "sats": "573000000000"
+    },
+    {
+      "inputs": "5",
+      "outputs": "1",
+      "rate": "9007199254740993msat",
+      "sats": "3440750115311059"
+    },
+    {
+      "inputs": "5",
+      "outputs": "1",
+      "rate": "18446744073709551615msat",
+      "sats": "7046656236157048832"
+    },
+    {
+      "inputs": "5",
+      "outputs": "1",
+      "rate": "200000000btc",
+      "sats": "7046656236157048832"
+    },
+    {
+      "inputs": "10",
+      "outputs": "1",
+      "rate": "0msat",
+      "sats": "0"
+    },
+    {
+      "inputs": "10",
+      "outputs": "1",
+      "rate": "1msat",
+      "sats": "1"
+    },
+    {
+      "inputs": "10",
+      "outputs": "1",
+      "rate": "1000msat",
+      "sats": "722"
+    },
+    {
+      "inputs": "10",
+      "outputs": "1",
+      "rate": "1sat",
+      "sats": "722"
+    },
+    {
+      "inputs": "10",
+      "outputs": "1",
+      "rate": "0.5sat",
+      "sats": "361"
+    },
+    {
+      "inputs": "10",
+      "outputs": "1",
+      "rate": "0.1sat",
+      "sats": "72"
+    },
+    {
+      "inputs": "10",
+      "outputs": "1",
+      "rate": "0.01sat",
+      "sats": "7"
+    },
+    {
+      "inputs": "10",
+      "outputs": "1",
+      "rate": "1.15sats",
+      "sats": "830"
+    },
+    {
+      "inputs": "10",
+      "outputs": "1",
+      "rate": "2.5sats",
+      "sats": "1805"
+    },
+    {
+      "inputs": "10",
+      "outputs": "1",
+      "rate": "15sats",
+      "sats": "10830"
+    },
+    {
+      "inputs": "10",
+      "outputs": "1",
+      "rate": "20sats",
+      "sats": "14440"
+    },
+    {
+      "inputs": "10",
+      "outputs": "1",
+      "rate": "100sats",
+      "sats": "72200"
+    },
+    {
+      "inputs": "10",
+      "outputs": "1",
+      "rate": "0.00000002",
+      "sats": "1444"
+    },
+    {
+      "inputs": "10",
+      "outputs": "1",
+      "rate": "0.00000002btc",
+      "sats": "1444"
+    },
+    {
+      "inputs": "10",
+      "outputs": "1",
+      "rate": "15",
+      "sats": "1083000000000"
+    },
+    {
+      "inputs": "10",
+      "outputs": "1",
+      "rate": "9007199254740993msat",
+      "sats": "6503197861922996"
+    },
+    {
+      "inputs": "10",
+      "outputs": "1",
+      "rate": "18446744073709551615msat",
+      "sats": "13318549221218295808"
+    },
+    {
+      "inputs": "10",
+      "outputs": "1",
+      "rate": "200000000btc",
+      "sats": "13318549221218295808"
+    },
+    {
+      "inputs": "20",
+      "outputs": "1",
+      "rate": "0msat",
+      "sats": "0"
+    },
+    {
+      "inputs": "20",
+      "outputs": "1",
+      "rate": "1msat",
+      "sats": "1"
+    },
+    {
+      "inputs": "20",
+      "outputs": "1",
+      "rate": "1000msat",
+      "sats": "1402"
+    },
+    {
+      "inputs": "20",
+      "outputs": "1",
+      "rate": "1sat",
+      "sats": "1402"
+    },
+    {
+      "inputs": "20",
+      "outputs": "1",
+      "rate": "0.5sat",
+      "sats": "701"
+    },
+    {
+      "inputs": "20",
+      "outputs": "1",
+      "rate": "0.1sat",
+      "sats": "140"
+    },
+    {
+      "inputs": "20",
+      "outputs": "1",
+      "rate": "0.01sat",
+      "sats": "14"
+    },
+    {
+      "inputs": "20",
+      "outputs": "1",
+      "rate": "1.15sats",
+      "sats": "1612"
+    },
+    {
+      "inputs": "20",
+      "outputs": "1",
+      "rate": "2.5sats",
+      "sats": "3505"
+    },
+    {
+      "inputs": "20",
+      "outputs": "1",
+      "rate": "15sats",
+      "sats": "21030"
+    },
+    {
+      "inputs": "20",
+      "outputs": "1",
+      "rate": "20sats",
+      "sats": "28040"
+    },
+    {
+      "inputs": "20",
+      "outputs": "1",
+      "rate": "100sats",
+      "sats": "140200"
+    },
+    {
+      "inputs": "20",
+      "outputs": "1",
+      "rate": "0.00000002",
+      "sats": "2804"
+    },
+    {
+      "inputs": "20",
+      "outputs": "1",
+      "rate": "0.00000002btc",
+      "sats": "2804"
+    },
+    {
+      "inputs": "20",
+      "outputs": "1",
+      "rate": "15",
+      "sats": "2103000000000"
+    },
+    {
+      "inputs": "20",
+      "outputs": "1",
+      "rate": "9007199254740993msat",
+      "sats": "12628093355146872"
+    },
+    {
+      "inputs": "20",
+      "outputs": "1",
+      "rate": "18446744073709551615msat",
+      "sats": "18446744073709551615"
+    },
+    {
+      "inputs": "20",
+      "outputs": "1",
+      "rate": "200000000btc",
+      "sats": "18446744073709551615"
+    },
+    {
+      "inputs": "252",
+      "outputs": "1",
+      "rate": "0msat",
+      "sats": "0"
+    },
+    {
+      "inputs": "252",
+      "outputs": "1",
+      "rate": "1msat",
+      "sats": "17"
+    },
+    {
+      "inputs": "252",
+      "outputs": "1",
+      "rate": "1000msat",
+      "sats": "17178"
+    },
+    {
+      "inputs": "252",
+      "outputs": "1",
+      "rate": "1sat",
+      "sats": "17178"
+    },
+    {
+      "inputs": "252",
+      "outputs": "1",
+      "rate": "0.5sat",
+      "sats": "8589"
+    },
+    {
+      "inputs": "252",
+      "outputs": "1",
+      "rate": "0.1sat",
+      "sats": "1718"
+    },
+    {
+      "inputs": "252",
+      "outputs": "1",
+      "rate": "0.01sat",
+      "sats": "172"
+    },
+    {
+      "inputs": "252",
+      "outputs": "1",
+      "rate": "1.15sats",
+      "sats": "19755"
+    },
+    {
+      "inputs": "252",
+      "outputs": "1",
+      "rate": "2.5sats",
+      "sats": "42945"
+    },
+    {
+      "inputs": "252",
+      "outputs": "1",
+      "rate": "15sats",
+      "sats": "257670"
+    },
+    {
+      "inputs": "252",
+      "outputs": "1",
+      "rate": "20sats",
+      "sats": "343560"
+    },
+    {
+      "inputs": "252",
+      "outputs": "1",
+      "rate": "100sats",
+      "sats": "1717800"
+    },
+    {
+      "inputs": "252",
+      "outputs": "1",
+      "rate": "0.00000002",
+      "sats": "34356"
+    },
+    {
+      "inputs": "252",
+      "outputs": "1",
+      "rate": "0.00000002btc",
+      "sats": "34356"
+    },
+    {
+      "inputs": "252",
+      "outputs": "1",
+      "rate": "15",
+      "sats": "25767000000000"
+    },
+    {
+      "inputs": "252",
+      "outputs": "1",
+      "rate": "9007199254740993msat",
+      "sats": "154725668797940768"
+    },
+    {
+      "inputs": "252",
+      "outputs": "1",
+      "rate": "18446744073709551615msat",
+      "sats": "18446744073709551615"
+    },
+    {
+      "inputs": "252",
+      "outputs": "1",
+      "rate": "200000000btc",
+      "sats": "18446744073709551615"
+    },
+    {
+      "inputs": "253",
+      "outputs": "1",
+      "rate": "0msat",
+      "sats": "0"
+    },
+    {
+      "inputs": "253",
+      "outputs": "1",
+      "rate": "1msat",
+      "sats": "17"
+    },
+    {
+      "inputs": "253",
+      "outputs": "1",
+      "rate": "1000msat",
+      "sats": "17248"
+    },
+    {
+      "inputs": "253",
+      "outputs": "1",
+      "rate": "1sat",
+      "sats": "17248"
+    },
+    {
+      "inputs": "253",
+      "outputs": "1",
+      "rate": "0.5sat",
+      "sats": "8624"
+    },
+    {
+      "inputs": "253",
+      "outputs": "1",
+      "rate": "0.1sat",
+      "sats": "1725"
+    },
+    {
+      "inputs": "253",
+      "outputs": "1",
+      "rate": "0.01sat",
+      "sats": "172"
+    },
+    {
+      "inputs": "253",
+      "outputs": "1",
+      "rate": "1.15sats",
+      "sats": "19835"
+    },
+    {
+      "inputs": "253",
+      "outputs": "1",
+      "rate": "2.5sats",
+      "sats": "43120"
+    },
+    {
+      "inputs": "253",
+      "outputs": "1",
+      "rate": "15sats",
+      "sats": "258720"
+    },
+    {
+      "inputs": "253",
+      "outputs": "1",
+      "rate": "20sats",
+      "sats": "344960"
+    },
+    {
+      "inputs": "253",
+      "outputs": "1",
+      "rate": "100sats",
+      "sats": "1724800"
+    },
+    {
+      "inputs": "253",
+      "outputs": "1",
+      "rate": "0.00000002",
+      "sats": "34496"
+    },
+    {
+      "inputs": "253",
+      "outputs": "1",
+      "rate": "0.00000002btc",
+      "sats": "34496"
+    },
+    {
+      "inputs": "253",
+      "outputs": "1",
+      "rate": "15",
+      "sats": "25872000000000"
+    },
+    {
+      "inputs": "253",
+      "outputs": "1",
+      "rate": "9007199254740993msat",
+      "sats": "155356172745772640"
+    },
+    {
+      "inputs": "253",
+      "outputs": "1",
+      "rate": "18446744073709551615msat",
+      "sats": "18446744073709551615"
+    },
+    {
+      "inputs": "253",
+      "outputs": "1",
+      "rate": "200000000btc",
+      "sats": "18446744073709551615"
+    },
+    {
+      "inputs": "1",
+      "outputs": "252",
+      "rate": "0msat",
+      "sats": "0"
+    },
+    {
+      "inputs": "1",
+      "outputs": "252",
+      "rate": "1msat",
+      "sats": "8"
+    },
+    {
+      "inputs": "1",
+      "outputs": "252",
+      "rate": "1000msat",
+      "sats": "7891"
+    },
+    {
+      "inputs": "1",
+      "outputs": "252",
+      "rate": "1sat",
+      "sats": "7891"
+    },
+    {
+      "inputs": "1",
+      "outputs": "252",
+      "rate": "0.5sat",
+      "sats": "3946"
+    },
+    {
+      "inputs": "1",
+      "outputs": "252",
+      "rate": "0.1sat",
+      "sats": "789"
+    },
+    {
+      "inputs": "1",
+      "outputs": "252",
+      "rate": "0.01sat",
+      "sats": "79"
+    },
+    {
+      "inputs": "1",
+      "outputs": "252",
+      "rate": "1.15sats",
+      "sats": "9075"
+    },
+    {
+      "inputs": "1",
+      "outputs": "252",
+      "rate": "2.5sats",
+      "sats": "19728"
+    },
+    {
+      "inputs": "1",
+      "outputs": "252",
+      "rate": "15sats",
+      "sats": "118365"
+    },
+    {
+      "inputs": "1",
+      "outputs": "252",
+      "rate": "20sats",
+      "sats": "157820"
+    },
+    {
+      "inputs": "1",
+      "outputs": "252",
+      "rate": "100sats",
+      "sats": "789100"
+    },
+    {
+      "inputs": "1",
+      "outputs": "252",
+      "rate": "0.00000002",
+      "sats": "15782"
+    },
+    {
+      "inputs": "1",
+      "outputs": "252",
+      "rate": "0.00000002btc",
+      "sats": "15782"
+    },
+    {
+      "inputs": "1",
+      "outputs": "252",
+      "rate": "15",
+      "sats": "11836500000000"
+    },
+    {
+      "inputs": "1",
+      "outputs": "252",
+      "rate": "9007199254740993msat",
+      "sats": "71075809319161168"
+    },
+    {
+      "inputs": "1",
+      "outputs": "252",
+      "rate": "18446744073709551615msat",
+      "sats": "18446744073709551615"
+    },
+    {
+      "inputs": "1",
+      "outputs": "252",
+      "rate": "200000000btc",
+      "sats": "18446744073709551615"
+    },
+    {
+      "inputs": "1",
+      "outputs": "253",
+      "rate": "0msat",
+      "sats": "0"
+    },
+    {
+      "inputs": "1",
+      "outputs": "253",
+      "rate": "1msat",
+      "sats": "8"
+    },
+    {
+      "inputs": "1",
+      "outputs": "253",
+      "rate": "1000msat",
+      "sats": "7924"
+    },
+    {
+      "inputs": "1",
+      "outputs": "253",
+      "rate": "1sat",
+      "sats": "7924"
+    },
+    {
+      "inputs": "1",
+      "outputs": "253",
+      "rate": "0.5sat",
+      "sats": "3962"
+    },
+    {
+      "inputs": "1",
+      "outputs": "253",
+      "rate": "0.1sat",
+      "sats": "792"
+    },
+    {
+      "inputs": "1",
+      "outputs": "253",
+      "rate": "0.01sat",
+      "sats": "79"
+    },
+    {
+      "inputs": "1",
+      "outputs": "253",
+      "rate": "1.15sats",
+      "sats": "9113"
+    },
+    {
+      "inputs": "1",
+      "outputs": "253",
+      "rate": "2.5sats",
+      "sats": "19810"
+    },
+    {
+      "inputs": "1",
+      "outputs": "253",
+      "rate": "15sats",
+      "sats": "118860"
+    },
+    {
+      "inputs": "1",
+      "outputs": "253",
+      "rate": "20sats",
+      "sats": "158480"
+    },
+    {
+      "inputs": "1",
+      "outputs": "253",
+      "rate": "100sats",
+      "sats": "792400"
+    },
+    {
+      "inputs": "1",
+      "outputs": "253",
+      "rate": "0.00000002",
+      "sats": "15848"
+    },
+    {
+      "inputs": "1",
+      "outputs": "253",
+      "rate": "0.00000002btc",
+      "sats": "15848"
+    },
+    {
+      "inputs": "1",
+      "outputs": "253",
+      "rate": "15",
+      "sats": "11886000000000"
+    },
+    {
+      "inputs": "1",
+      "outputs": "253",
+      "rate": "9007199254740993msat",
+      "sats": "71373046894567624"
+    },
+    {
+      "inputs": "1",
+      "outputs": "253",
+      "rate": "18446744073709551615msat",
+      "sats": "18446744073709551615"
+    },
+    {
+      "inputs": "1",
+      "outputs": "253",
+      "rate": "200000000btc",
+      "sats": "18446744073709551615"
+    },
+    {
+      "inputs": "65535",
+      "outputs": "1",
+      "rate": "0msat",
+      "sats": "0"
+    },
+    {
+      "inputs": "65535",
+      "outputs": "1",
+      "rate": "1msat",
+      "sats": "4456"
+    },
+    {
+      "inputs": "65535",
+      "outputs": "1",
+      "rate": "1000msat",
+      "sats": "4456424"
+    },
+    {
+      "inputs": "65535",
+      "outputs": "1",
+      "rate": "1sat",
+      "sats": "4456424"
+    },
+    {
+      "inputs": "65535",
+      "outputs": "1",
+      "rate": "0.5sat",
+      "sats": "2228212"
+    },
+    {
+      "inputs": "65535",
+      "outputs": "1",
+      "rate": "0.1sat",
+      "sats": "445642"
+    },
+    {
+      "inputs": "65535",
+      "outputs": "1",
+      "rate": "0.01sat",
+      "sats": "44564"
+    },
+    {
+      "inputs": "65535",
+      "outputs": "1",
+      "rate": "1.15sats",
+      "sats": "5124888"
+    },
+    {
+      "inputs": "65535",
+      "outputs": "1",
+      "rate": "2.5sats",
+      "sats": "11141060"
+    },
+    {
+      "inputs": "65535",
+      "outputs": "1",
+      "rate": "15sats",
+      "sats": "66846360"
+    },
+    {
+      "inputs": "65535",
+      "outputs": "1",
+      "rate": "20sats",
+      "sats": "89128480"
+    },
+    {
+      "inputs": "65535",
+      "outputs": "1",
+      "rate": "100sats",
+      "sats": "445642400"
+    },
+    {
+      "inputs": "65535",
+      "outputs": "1",
+      "rate": "0.00000002",
+      "sats": "8912848"
+    },
+    {
+      "inputs": "65535",
+      "outputs": "1",
+      "rate": "0.00000002btc",
+      "sats": "8912848"
+    },
+    {
+      "inputs": "65535",
+      "outputs": "1",
+      "rate": "15",
+      "sats": "6684636000000000"
+    },
+    {
+      "inputs": "65535",
+      "outputs": "1",
+      "rate": "9007199254740993msat",
+      "sats": "18446744073709551615"
+    },
+    {
+      "inputs": "65535",
+      "outputs": "1",
+      "rate": "18446744073709551615msat",
+      "sats": "18446744073709551615"
+    },
+    {
+      "inputs": "65535",
+      "outputs": "1",
+      "rate": "200000000btc",
+      "sats": "18446744073709551615"
+    },
+    {
+      "inputs": "65536",
+      "outputs": "1",
+      "rate": "0msat",
+      "sats": "0"
+    },
+    {
+      "inputs": "65536",
+      "outputs": "1",
+      "rate": "1msat",
+      "sats": "4456"
+    },
+    {
+      "inputs": "65536",
+      "outputs": "1",
+      "rate": "1000msat",
+      "sats": "4456494"
+    },
+    {
+      "inputs": "65536",
+      "outputs": "1",
+      "rate": "1sat",
+      "sats": "4456494"
+    },
+    {
+      "inputs": "65536",
+      "outputs": "1",
+      "rate": "0.5sat",
+      "sats": "2228247"
+    },
+    {
+      "inputs": "65536",
+      "outputs": "1",
+      "rate": "0.1sat",
+      "sats": "445649"
+    },
+    {
+      "inputs": "65536",
+      "outputs": "1",
+      "rate": "0.01sat",
+      "sats": "44565"
+    },
+    {
+      "inputs": "65536",
+      "outputs": "1",
+      "rate": "1.15sats",
+      "sats": "5124968"
+    },
+    {
+      "inputs": "65536",
+      "outputs": "1",
+      "rate": "2.5sats",
+      "sats": "11141235"
+    },
+    {
+      "inputs": "65536",
+      "outputs": "1",
+      "rate": "15sats",
+      "sats": "66847410"
+    },
+    {
+      "inputs": "65536",
+      "outputs": "1",
+      "rate": "20sats",
+      "sats": "89129880"
+    },
+    {
+      "inputs": "65536",
+      "outputs": "1",
+      "rate": "100sats",
+      "sats": "445649400"
+    },
+    {
+      "inputs": "65536",
+      "outputs": "1",
+      "rate": "0.00000002",
+      "sats": "8912988"
+    },
+    {
+      "inputs": "65536",
+      "outputs": "1",
+      "rate": "0.00000002btc",
+      "sats": "8912988"
+    },
+    {
+      "inputs": "65536",
+      "outputs": "1",
+      "rate": "15",
+      "sats": "6684741000000000"
+    },
+    {
+      "inputs": "65536",
+      "outputs": "1",
+      "rate": "9007199254740993msat",
+      "sats": "18446744073709551615"
+    },
+    {
+      "inputs": "65536",
+      "outputs": "1",
+      "rate": "18446744073709551615msat",
+      "sats": "18446744073709551615"
+    },
+    {
+      "inputs": "65536",
+      "outputs": "1",
+      "rate": "200000000btc",
+      "sats": "18446744073709551615"
+    }
+  ],
+  "weightFees": [
+    {
+      "rate": "0msat",
+      "sats": "0",
+      "weight": "0"
+    },
+    {
+      "rate": "1msat",
+      "sats": "0",
+      "weight": "0"
+    },
+    {
+      "rate": "1000msat",
+      "sats": "0",
+      "weight": "0"
+    },
+    {
+      "rate": "1sat",
+      "sats": "0",
+      "weight": "0"
+    },
+    {
+      "rate": "0.5sat",
+      "sats": "0",
+      "weight": "0"
+    },
+    {
+      "rate": "0.1sat",
+      "sats": "0",
+      "weight": "0"
+    },
+    {
+      "rate": "0.01sat",
+      "sats": "0",
+      "weight": "0"
+    },
+    {
+      "rate": "1.15sats",
+      "sats": "0",
+      "weight": "0"
+    },
+    {
+      "rate": "2.5sats",
+      "sats": "0",
+      "weight": "0"
+    },
+    {
+      "rate": "15sats",
+      "sats": "0",
+      "weight": "0"
+    },
+    {
+      "rate": "20sats",
+      "sats": "0",
+      "weight": "0"
+    },
+    {
+      "rate": "100sats",
+      "sats": "0",
+      "weight": "0"
+    },
+    {
+      "rate": "0.00000002",
+      "sats": "0",
+      "weight": "0"
+    },
+    {
+      "rate": "0.00000002btc",
+      "sats": "0",
+      "weight": "0"
+    },
+    {
+      "rate": "15",
+      "sats": "0",
+      "weight": "0"
+    },
+    {
+      "rate": "9007199254740993msat",
+      "sats": "0",
+      "weight": "0"
+    },
+    {
+      "rate": "18446744073709551615msat",
+      "sats": "0",
+      "weight": "0"
+    },
+    {
+      "rate": "200000000btc",
+      "sats": "0",
+      "weight": "0"
+    },
+    {
+      "rate": "0msat",
+      "sats": "0",
+      "weight": "1"
+    },
+    {
+      "rate": "1msat",
+      "sats": "0",
+      "weight": "1"
+    },
+    {
+      "rate": "1000msat",
+      "sats": "1",
+      "weight": "1"
+    },
+    {
+      "rate": "1sat",
+      "sats": "1",
+      "weight": "1"
+    },
+    {
+      "rate": "0.5sat",
+      "sats": "1",
+      "weight": "1"
+    },
+    {
+      "rate": "0.1sat",
+      "sats": "0",
+      "weight": "1"
+    },
+    {
+      "rate": "0.01sat",
+      "sats": "0",
+      "weight": "1"
+    },
+    {
+      "rate": "1.15sats",
+      "sats": "1",
+      "weight": "1"
+    },
+    {
+      "rate": "2.5sats",
+      "sats": "3",
+      "weight": "1"
+    },
+    {
+      "rate": "15sats",
+      "sats": "15",
+      "weight": "1"
+    },
+    {
+      "rate": "20sats",
+      "sats": "20",
+      "weight": "1"
+    },
+    {
+      "rate": "100sats",
+      "sats": "100",
+      "weight": "1"
+    },
+    {
+      "rate": "0.00000002",
+      "sats": "2",
+      "weight": "1"
+    },
+    {
+      "rate": "0.00000002btc",
+      "sats": "2",
+      "weight": "1"
+    },
+    {
+      "rate": "15",
+      "sats": "1500000000",
+      "weight": "1"
+    },
+    {
+      "rate": "9007199254740993msat",
+      "sats": "9007199254741",
+      "weight": "1"
+    },
+    {
+      "rate": "18446744073709551615msat",
+      "sats": "18446744073709552",
+      "weight": "1"
+    },
+    {
+      "rate": "200000000btc",
+      "sats": "18446744073709552",
+      "weight": "1"
+    },
+    {
+      "rate": "0msat",
+      "sats": "0",
+      "weight": "3"
+    },
+    {
+      "rate": "1msat",
+      "sats": "0",
+      "weight": "3"
+    },
+    {
+      "rate": "1000msat",
+      "sats": "1",
+      "weight": "3"
+    },
+    {
+      "rate": "1sat",
+      "sats": "1",
+      "weight": "3"
+    },
+    {
+      "rate": "0.5sat",
+      "sats": "1",
+      "weight": "3"
+    },
+    {
+      "rate": "0.1sat",
+      "sats": "0",
+      "weight": "3"
+    },
+    {
+      "rate": "0.01sat",
+      "sats": "0",
+      "weight": "3"
+    },
+    {
+      "rate": "1.15sats",
+      "sats": "1",
+      "weight": "3"
+    },
+    {
+      "rate": "2.5sats",
+      "sats": "3",
+      "weight": "3"
+    },
+    {
+      "rate": "15sats",
+      "sats": "15",
+      "weight": "3"
+    },
+    {
+      "rate": "20sats",
+      "sats": "20",
+      "weight": "3"
+    },
+    {
+      "rate": "100sats",
+      "sats": "100",
+      "weight": "3"
+    },
+    {
+      "rate": "0.00000002",
+      "sats": "2",
+      "weight": "3"
+    },
+    {
+      "rate": "0.00000002btc",
+      "sats": "2",
+      "weight": "3"
+    },
+    {
+      "rate": "15",
+      "sats": "1500000000",
+      "weight": "3"
+    },
+    {
+      "rate": "9007199254740993msat",
+      "sats": "9007199254741",
+      "weight": "3"
+    },
+    {
+      "rate": "18446744073709551615msat",
+      "sats": "18446744073709552",
+      "weight": "3"
+    },
+    {
+      "rate": "200000000btc",
+      "sats": "18446744073709552",
+      "weight": "3"
+    },
+    {
+      "rate": "0msat",
+      "sats": "0",
+      "weight": "4"
+    },
+    {
+      "rate": "1msat",
+      "sats": "0",
+      "weight": "4"
+    },
+    {
+      "rate": "1000msat",
+      "sats": "1",
+      "weight": "4"
+    },
+    {
+      "rate": "1sat",
+      "sats": "1",
+      "weight": "4"
+    },
+    {
+      "rate": "0.5sat",
+      "sats": "1",
+      "weight": "4"
+    },
+    {
+      "rate": "0.1sat",
+      "sats": "0",
+      "weight": "4"
+    },
+    {
+      "rate": "0.01sat",
+      "sats": "0",
+      "weight": "4"
+    },
+    {
+      "rate": "1.15sats",
+      "sats": "1",
+      "weight": "4"
+    },
+    {
+      "rate": "2.5sats",
+      "sats": "3",
+      "weight": "4"
+    },
+    {
+      "rate": "15sats",
+      "sats": "15",
+      "weight": "4"
+    },
+    {
+      "rate": "20sats",
+      "sats": "20",
+      "weight": "4"
+    },
+    {
+      "rate": "100sats",
+      "sats": "100",
+      "weight": "4"
+    },
+    {
+      "rate": "0.00000002",
+      "sats": "2",
+      "weight": "4"
+    },
+    {
+      "rate": "0.00000002btc",
+      "sats": "2",
+      "weight": "4"
+    },
+    {
+      "rate": "15",
+      "sats": "1500000000",
+      "weight": "4"
+    },
+    {
+      "rate": "9007199254740993msat",
+      "sats": "9007199254741",
+      "weight": "4"
+    },
+    {
+      "rate": "18446744073709551615msat",
+      "sats": "18446744073709552",
+      "weight": "4"
+    },
+    {
+      "rate": "200000000btc",
+      "sats": "18446744073709552",
+      "weight": "4"
+    },
+    {
+      "rate": "0msat",
+      "sats": "0",
+      "weight": "5"
+    },
+    {
+      "rate": "1msat",
+      "sats": "0",
+      "weight": "5"
+    },
+    {
+      "rate": "1000msat",
+      "sats": "2",
+      "weight": "5"
+    },
+    {
+      "rate": "1sat",
+      "sats": "2",
+      "weight": "5"
+    },
+    {
+      "rate": "0.5sat",
+      "sats": "1",
+      "weight": "5"
+    },
+    {
+      "rate": "0.1sat",
+      "sats": "0",
+      "weight": "5"
+    },
+    {
+      "rate": "0.01sat",
+      "sats": "0",
+      "weight": "5"
+    },
+    {
+      "rate": "1.15sats",
+      "sats": "2",
+      "weight": "5"
+    },
+    {
+      "rate": "2.5sats",
+      "sats": "5",
+      "weight": "5"
+    },
+    {
+      "rate": "15sats",
+      "sats": "30",
+      "weight": "5"
+    },
+    {
+      "rate": "20sats",
+      "sats": "40",
+      "weight": "5"
+    },
+    {
+      "rate": "100sats",
+      "sats": "200",
+      "weight": "5"
+    },
+    {
+      "rate": "0.00000002",
+      "sats": "4",
+      "weight": "5"
+    },
+    {
+      "rate": "0.00000002btc",
+      "sats": "4",
+      "weight": "5"
+    },
+    {
+      "rate": "15",
+      "sats": "3000000000",
+      "weight": "5"
+    },
+    {
+      "rate": "9007199254740993msat",
+      "sats": "18014398509482",
+      "weight": "5"
+    },
+    {
+      "rate": "18446744073709551615msat",
+      "sats": "36893488147419104",
+      "weight": "5"
+    },
+    {
+      "rate": "200000000btc",
+      "sats": "36893488147419104",
+      "weight": "5"
+    },
+    {
+      "rate": "0msat",
+      "sats": "0",
+      "weight": "36028797018963972"
+    },
+    {
+      "rate": "1msat",
+      "sats": "9007199254741",
+      "weight": "36028797018963972"
+    },
+    {
+      "rate": "1000msat",
+      "sats": "9007199254740992",
+      "weight": "36028797018963972"
+    },
+    {
+      "rate": "1sat",
+      "sats": "9007199254740992",
+      "weight": "36028797018963972"
+    },
+    {
+      "rate": "0.5sat",
+      "sats": "4503599627370496",
+      "weight": "36028797018963972"
+    },
+    {
+      "rate": "0.1sat",
+      "sats": "900719925474099",
+      "weight": "36028797018963972"
+    },
+    {
+      "rate": "0.01sat",
+      "sats": "90071992547410",
+      "weight": "36028797018963972"
+    },
+    {
+      "rate": "1.15sats",
+      "sats": "10358279142952140",
+      "weight": "36028797018963972"
+    },
+    {
+      "rate": "2.5sats",
+      "sats": "22517998136852480",
+      "weight": "36028797018963972"
+    },
+    {
+      "rate": "15sats",
+      "sats": "135107988821114880",
+      "weight": "36028797018963972"
+    },
+    {
+      "rate": "20sats",
+      "sats": "180143985094819840",
+      "weight": "36028797018963972"
+    },
+    {
+      "rate": "100sats",
+      "sats": "900719925474099200",
+      "weight": "36028797018963972"
+    },
+    {
+      "rate": "0.00000002",
+      "sats": "18014398509481984",
+      "weight": "36028797018963972"
+    },
+    {
+      "rate": "0.00000002btc",
+      "sats": "18014398509481984",
+      "weight": "36028797018963972"
+    },
+    {
+      "rate": "15",
+      "sats": "18446744073709551615",
+      "weight": "36028797018963972"
+    },
+    {
+      "rate": "9007199254740993msat",
+      "sats": "18446744073709551615",
+      "weight": "36028797018963972"
+    },
+    {
+      "rate": "18446744073709551615msat",
+      "sats": "18446744073709551615",
+      "weight": "36028797018963972"
+    },
+    {
+      "rate": "200000000btc",
+      "sats": "18446744073709551615",
+      "weight": "36028797018963972"
+    },
+    {
+      "rate": "0msat",
+      "sats": "0",
+      "weight": "36028797018963980"
+    },
+    {
+      "rate": "1msat",
+      "sats": "9007199254741",
+      "weight": "36028797018963980"
+    },
+    {
+      "rate": "1000msat",
+      "sats": "9007199254740996",
+      "weight": "36028797018963980"
+    },
+    {
+      "rate": "1sat",
+      "sats": "9007199254740996",
+      "weight": "36028797018963980"
+    },
+    {
+      "rate": "0.5sat",
+      "sats": "4503599627370498",
+      "weight": "36028797018963980"
+    },
+    {
+      "rate": "0.1sat",
+      "sats": "900719925474100",
+      "weight": "36028797018963980"
+    },
+    {
+      "rate": "0.01sat",
+      "sats": "90071992547410",
+      "weight": "36028797018963980"
+    },
+    {
+      "rate": "1.15sats",
+      "sats": "10358279142952144",
+      "weight": "36028797018963980"
+    },
+    {
+      "rate": "2.5sats",
+      "sats": "22517998136852488",
+      "weight": "36028797018963980"
+    },
+    {
+      "rate": "15sats",
+      "sats": "135107988821114944",
+      "weight": "36028797018963980"
+    },
+    {
+      "rate": "20sats",
+      "sats": "180143985094819904",
+      "weight": "36028797018963980"
+    },
+    {
+      "rate": "100sats",
+      "sats": "900719925474099584",
+      "weight": "36028797018963980"
+    },
+    {
+      "rate": "0.00000002",
+      "sats": "18014398509481992",
+      "weight": "36028797018963980"
+    },
+    {
+      "rate": "0.00000002btc",
+      "sats": "18014398509481992",
+      "weight": "36028797018963980"
+    },
+    {
+      "rate": "15",
+      "sats": "18446744073709551615",
+      "weight": "36028797018963980"
+    },
+    {
+      "rate": "9007199254740993msat",
+      "sats": "18446744073709551615",
+      "weight": "36028797018963980"
+    },
+    {
+      "rate": "18446744073709551615msat",
+      "sats": "18446744073709551615",
+      "weight": "36028797018963980"
+    },
+    {
+      "rate": "200000000btc",
+      "sats": "18446744073709551615",
+      "weight": "36028797018963980"
+    },
+    {
+      "rate": "0msat",
+      "sats": "0",
+      "weight": "18446744073709551615"
+    },
+    {
+      "rate": "1msat",
+      "sats": "4611686018427388",
+      "weight": "18446744073709551615"
+    },
+    {
+      "rate": "1000msat",
+      "sats": "4611686018427387904",
+      "weight": "18446744073709551615"
+    },
+    {
+      "rate": "1sat",
+      "sats": "4611686018427387904",
+      "weight": "18446744073709551615"
+    },
+    {
+      "rate": "0.5sat",
+      "sats": "2305843009213693952",
+      "weight": "18446744073709551615"
+    },
+    {
+      "rate": "0.1sat",
+      "sats": "461168601842738816",
+      "weight": "18446744073709551615"
+    },
+    {
+      "rate": "0.01sat",
+      "sats": "46116860184273880",
+      "weight": "18446744073709551615"
+    },
+    {
+      "rate": "1.15sats",
+      "sats": "5303438921191495680",
+      "weight": "18446744073709551615"
+    },
+    {
+      "rate": "2.5sats",
+      "sats": "11529215046068469760",
+      "weight": "18446744073709551615"
+    },
+    {
+      "rate": "15sats",
+      "sats": "18446744073709551615",
+      "weight": "18446744073709551615"
+    },
+    {
+      "rate": "20sats",
+      "sats": "18446744073709551615",
+      "weight": "18446744073709551615"
+    },
+    {
+      "rate": "100sats",
+      "sats": "18446744073709551615",
+      "weight": "18446744073709551615"
+    },
+    {
+      "rate": "0.00000002",
+      "sats": "9223372036854775808",
+      "weight": "18446744073709551615"
+    },
+    {
+      "rate": "0.00000002btc",
+      "sats": "9223372036854775808",
+      "weight": "18446744073709551615"
+    },
+    {
+      "rate": "15",
+      "sats": "18446744073709551615",
+      "weight": "18446744073709551615"
+    },
+    {
+      "rate": "9007199254740993msat",
+      "sats": "18446744073709551615",
+      "weight": "18446744073709551615"
+    },
+    {
+      "rate": "18446744073709551615msat",
+      "sats": "18446744073709551615",
+      "weight": "18446744073709551615"
+    },
+    {
+      "rate": "200000000btc",
+      "sats": "18446744073709551615",
+      "weight": "18446744073709551615"
+    }
+  ]
+}

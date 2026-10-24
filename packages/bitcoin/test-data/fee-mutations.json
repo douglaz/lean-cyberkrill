@@ -1,0 +1,152 @@
+[
+  {
+    "mutation": "vbytes-floor",
+    "source": "Bitcoin/Fee.lean",
+    "command": [
+      "lake",
+      "test",
+      "--",
+      "--fee",
+      "shapes"
+    ],
+    "exit": 1,
+    "caught_by": "test",
+    "property": "fee shape (1,0) vbytes",
+    "failure": "uncaught exception: assertion failed: fee shape (1,0) vbytes"
+  },
+  {
+    "mutation": "drop-witness-flag",
+    "source": "Bitcoin/Fee.lean",
+    "command": [
+      "lake",
+      "test",
+      "--",
+      "--fee",
+      "shapes"
+    ],
+    "exit": 1,
+    "caught_by": "test",
+    "property": "fee shape (1,0) weight",
+    "failure": "uncaught exception: assertion failed: fee shape (1,0) weight"
+  },
+  {
+    "mutation": "always-witness-flag",
+    "source": "Bitcoin/Fee.lean",
+    "command": [
+      "lake",
+      "test",
+      "--",
+      "--fee",
+      "shapes"
+    ],
+    "exit": 1,
+    "caught_by": "test",
+    "property": "fee shape (0,0) weight",
+    "failure": "uncaught exception: assertion failed: fee shape (0,0) weight"
+  },
+  {
+    "mutation": "signature-length",
+    "source": "Bitcoin/Fee.lean",
+    "command": [
+      "lake",
+      "test",
+      "--",
+      "--fee",
+      "shapes"
+    ],
+    "exit": 1,
+    "caught_by": "test",
+    "property": "fee shape (1,0) weight",
+    "failure": "uncaught exception: assertion failed: fee shape (1,0) weight"
+  },
+  {
+    "mutation": "output-script-length",
+    "source": "Bitcoin/Fee.lean",
+    "command": [
+      "lake",
+      "test",
+      "--",
+      "--fee",
+      "shapes"
+    ],
+    "exit": 1,
+    "caught_by": "test",
+    "property": "fee shape (0,1) weight",
+    "failure": "uncaught exception: assertion failed: fee shape (0,1) weight"
+  },
+  {
+    "mutation": "input-count-compactsize",
+    "source": "Bitcoin/Fee.lean",
+    "command": [
+      "lake",
+      "test",
+      "--",
+      "--fee",
+      "shapes"
+    ],
+    "exit": 1,
+    "caught_by": "test",
+    "property": "fee shape (253,1) weight",
+    "failure": "uncaught exception: assertion failed: fee shape (253,1) weight"
+  },
+  {
+    "mutation": "output-count-compactsize",
+    "source": "Bitcoin/Fee.lean",
+    "command": [
+      "lake",
+      "test",
+      "--",
+      "--fee",
+      "shapes"
+    ],
+    "exit": 1,
+    "caught_by": "test",
+    "property": "fee shape (1,253) weight",
+    "failure": "uncaught exception: assertion failed: fee shape (1,253) weight"
+  },
+  {
+    "mutation": "fee-floor",
+    "source": "Bitcoin/Fee.lean",
+    "command": [
+      "lake",
+      "test",
+      "--",
+      "--fee",
+      "pins"
+    ],
+    "exit": 1,
+    "caught_by": "test",
+    "property": "fee named pins (2,2) at 0.5sat = 105",
+    "failure": "uncaught exception: assertion failed: fee named pins (2,2) at 0.5sat = 105"
+  },
+  {
+    "mutation": "multiply-before-divide",
+    "source": "Bitcoin/Fee.lean",
+    "command": [
+      "lake",
+      "test",
+      "--",
+      "--fee",
+      "pins"
+    ],
+    "exit": 1,
+    "caught_by": "test",
+    "property": "fee named pins (1,1) at 1.15sats = 126",
+    "failure": "uncaught exception: assertion failed: fee named pins (1,1) at 1.15sats = 126"
+  },
+  {
+    "mutation": "wrapping-rate",
+    "source": "Bitcoin/Fee.lean",
+    "command": [
+      "lake",
+      "test",
+      "--",
+      "--fee",
+      "shape-fees"
+    ],
+    "exit": 1,
+    "caught_by": "test",
+    "property": "fee shape (0,0) at 200000000btc sats",
+    "failure": "uncaught exception: assertion failed: fee shape (0,0) at 200000000btc sats"
+  }
+]

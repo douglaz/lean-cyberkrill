@@ -27,6 +27,8 @@ deterministic 15/21-word and rejection cases.
 Phase 4c adds SLIP-132 conversion among six public versions, string round-trip
 and payload-preservation proofs, 12 BIP32 public vectors, 72 conversions and
 48 offline cyberkrill goldens.
+Phase 4d adds P2WPKH weight and fee estimation with the same binary64 arithmetic
+as cyberkrill, checked against 466 offline captured rows.
 Other packages remain skeletons;
 `plan.md` is the plan for v1.
 
@@ -36,7 +38,7 @@ Other packages remain skeletons;
 |---|---|---|---|
 | `packages/sha256` | `sha256` | `Sha256` | SHA-256 and SHA-256d |
 | `packages/secp256k1` | `secp256k1` | `Secp256k1` | libsecp256k1 bindings (FFI) |
-| `packages/bitcoin` | `bitcoin` | `Bitcoin` | Bitcoin encodings, transactions, PSBT, BIP39, SLIP-132 |
+| `packages/bitcoin` | `bitcoin` | `Bitcoin` | Bitcoin encodings, transactions, PSBT, BIP39, SLIP-132, weight and fee estimation |
 | `packages/lightning` | `lightning` | `Lightning` | BOLT11 and LNURL |
 | `packages/fedimint-invite` | `fedimint-invite` | `FedimintInvite` | Fedimint invite codes |
 | `packages/http-curl` | `http-curl` | `HttpCurl` | HTTP(S) client over libcurl (FFI) |
@@ -5443,6 +5445,211 @@ for this library, which has no v1 caller. No tracker item or follow-up was
 created, and `docs/upstream-fixes.md` is unchanged. `plan.md` is unchanged;
 no sentence in it became stale. The remaining Phase 4 weight/fee work is outside
 this change, as are CLI, BIP32 derivation and multisig/private conversions.
+
+## Phase 4d: P2WPKH weight and fee estimation
+
+`Bitcoin.Fee` exports three functions:
+
+```lean
+estimateWeight (inputs outputs : Nat) : Nat
+vbytes (weight : Nat) : Nat
+estimateFee (weight : Nat) (rate : Bitcoin.Amount) : Bitcoin.Amount
+```
+
+Weight follows [rust-bitcoin 0.32.8's `predict_weight`, `predict_weight_internal`,
+`P2WPKH_MAX` and `from_slice`](https://github.com/rust-bitcoin/rust-bitcoin/blob/4668580774b2c4e1f6626af55cb20917e6674892/bitcoin/src/blockdata/transaction.rs#L1385-L1645),
+with the counts and output length used by
+[cyberkrill's estimator and fee calculation](https://github.com/douglaz/cyberkrill/blob/27cad1faba86260b06665a89f0af5134d23525c2/cyberkrill-core/src/bitcoin_rpc.rs#L984-L1006).
+No upstream implementation is copied. Let `cs(n)` be
+`(Bitcoin.CompactSize.compactSize n).length`. The empty input script contributes
+`0 + cs(0)` bytes; its witness contributes
+`72 + cs(72) + 33 + cs(33) + cs(2)` bytes. Including the 32-byte transaction ID,
+4-byte index and 4-byte sequence, each input contributes 272 WU. Each output
+contributes `8 + 22 + cs(22) = 31` bytes. The output script is **22 bytes**;
+cyberkrill's comment says 21 because it omits the push byte. Thus, for counts
+`i` and `o`:
+
+```text
+nonInputSize = 4 + cs(i) + cs(o) + 31 * o + 4
+weight = 4 * nonInputSize + 272 * i + (if i > 0 then 2 else 0)
+vbytes = (weight + 3) / 4
+```
+
+The implementation retains the individual script and witness lengths rather
+than folding them into 272 or 31. With no inputs there is no witness flag's +2.
+All weight and vbyte arithmetic is exact `Nat` arithmetic.
+
+The rate is **msat per vB**, supplied as `Bitcoin.Amount`. The fee calculation
+clamps vbytes and rate msat separately to `18446744073709551615`, converts each
+with `UInt64.toFloat`, then evaluates `(v * (r / 1000.0)).round.toUInt64` in that
+order and returns `Bitcoin.Amount.ofSats` of the result's `toNat`. Binary64 is
+intentional: 110 vB at `1.15sats` yields `126.49999999999999`, rounded to **126**
+sats; exact arithmetic or multiplying before dividing would produce 127.
+`Float.round` rounds half away from zero, and `Float.toUInt64` saturates as
+Rust's `as u64` does. The integer-to-binary64 conversion rounds ties to even.
+
+The rate clamp is exercised by `200000000btc`: Phase 3a parses exactly
+20000000000000000000 msat, whereas cyberkrill saturates at 18446744073709551615.
+Every fee for this input agrees after clamping. No captured row checks the
+vbytes clamp: cyberkrill's u64 weight can yield at most 2^62 vbytes. A bare CLI
+number is BTC, so `15` parses as 1500000000000 msat and means 1.5e9 sat/vB,
+despite cyberkrill's help text.
+
+### Reference capture and tests
+
+`packages/bitcoin/capture-cyberkrill-fee.py` uses a fresh clone of cyberkrill at
+`27cad1faba86260b06665a89f0af5134d23525c2`, checks HEAD and clean status, and
+adds only a pure test to `bitcoin_rpc.rs`. It fetches locked dependencies with
+a private Cargo cache, then runs the `bitcoin_rpc::tests` suite offline under
+`unshare -rn` with loopback and a temporary HOME. The clone, cache and HOME are
+deleted in `finally` and their absence asserted. Regenerate from the root with
+`TMP_ROOT` set to a fresh private directory; the clone, Cargo cache and build
+land there. The script only requires `TMPDIR` to be set and to name an
+existing directory:
+
+```bash
+TMPDIR="${TMP_ROOT:?}" systemd-run --user --scope --quiet -p MemoryMax=8G -p MemorySwapMax=0 -p OOMPolicy=continue -p TasksMax=4096 timeout 3600 python3 -I packages/bitcoin/capture-cyberkrill-fee.py
+```
+
+`test-data/cyberkrill-fee.json` stores integers as decimal strings. The grid has
+18 rates, 16 shapes, 288 shape fees and 144 direct-weight fees: **466 rows**.
+Shapes include zero inputs/outputs, both CompactSize boundaries at 253 and
+65536 inputs, and 253 outputs. Rates include zero, fractional sats, BTC,
+integers above 2^53 and the u64 saturation boundary. Direct weights include
+0/1/3/4/5, 4 × (2^53 + 1), 4 × (2^53 + 3), and the largest u64.
+Both the script and Lean suite pin all four counts and grid order.
+
+The ordered shapes are `(0,0), (0,1), (1,0), (1,1), (1,2), (2,2), (3,1),
+(5,1), (10,1), (20,1), (252,1), (253,1), (1,252), (1,253), (65535,1),
+(65536,1)`. The ordered rates are `0msat`, `1msat`, `1000msat`, `1sat`,
+`0.5sat`, `0.1sat`, `0.01sat`, `1.15sats`, `2.5sats`, `15sats`, `20sats`,
+`100sats`, `0.00000002`, `0.00000002btc`, `15`, `9007199254740993msat`,
+`18446744073709551615msat`, `200000000btc`. Each shape or direct weight is
+followed by all rates in this order.
+
+`BitcoinTests/Fee.lean` compares every parsed rate, weight, vbyte count and fee
+with the capture. Fee inputs always use the port's parsed rate, including the
+above-u64 case. Fourteen named pins also compare independent literals against
+the port and capture: (1,1) is 438 WU / 110 vB, (2,2) is 834 / 209, (5,1) is
+1526 / 382, (0,1) is 164 / 41, 110 vB at `1.15sats` costs 126 sats, (2,2) at
+`0.5sat` costs 105, the two large conversion ties give 2^53 and 2^53 + 4 sats,
+(253,1) at the largest msat rate saturates, and bare `15` means BTC. The three
+upstream vbyte ranges remain beside the exact checks: 109..=112, 206..=212
+and 378..=385. Select `rates`, `shapes`, `shape-fees`, `weight-fees` or `pins`
+with `lake test -- --fee NAME`; the full suite follows all earlier suites.
+No theorem is added; the axiom gate remains 894 library theorems, 73 named,
+0 offenders.
+
+### Mutation checks and validation
+
+`check-fee-mutations.py` changes one production expression per case, checks the
+actual first failing assertion and the axiom gate, restores the original bytes
+in `finally`, and requires a final full `lake test` to exit 0. Separate streams
+are retained under `.lake/fee-mutation-checks`; the compact evidence is
+`test-data/fee-mutations.json`.
+
+The fee mutation command, from `packages/bitcoin`, is
+`nix develop -c python3 -I check-fee-mutations.py`: exit 0, 10/10 detected,
+152.49 seconds, restored full test exit 0. Each individual mutation exits 1:
+
+| Production change | First catching assertion |
+|---|---|
+| Round vbytes down | `fee shape (1,0) vbytes` |
+| Drop witness flag +2 | `fee shape (1,0) weight` |
+| Always add witness flag +2 | `fee shape (0,0) weight` |
+| Signature length 72 → 73 | `fee shape (1,0) weight` |
+| Output script length 22 → 21 | `fee shape (0,1) weight` |
+| Input-count CompactSize length → 1 | `fee shape (253,1) weight` |
+| Output-count CompactSize length → 1 | `fee shape (1,253) weight` |
+| Fee round → floor | `fee named pins (2,2) at 0.5sat = 105` |
+| Multiply before dividing | `fee named pins (1,1) at 1.15sats = 126` |
+| Rate clamp → wrapping conversion | `fee shape (0,0) at 200000000btc sats` |
+
+The capture command above exited 0 in 177.77 seconds; all 466 rows and every
+reference pin matched. All 42 selected upstream tests passed offline. The
+capture used rustc 1.89.0 (29483883e 2025-08-04) and cargo 1.89.0
+(c24e10642 2025-06-23), as printed by `rustc --version && cargo --version`
+during the locked fetch.
+
+Every heavy command used its own foreground scope, one at a time, with
+`TMPDIR` under the persistent temporary root and this prefix:
+
+```bash
+systemd-run --user --scope --quiet -p MemoryMax=8G -p MemorySwapMax=0 -p OOMPolicy=continue -p TasksMax=4096 timeout 3600
+```
+
+Stdout and stderr were redirected separately under
+`packages/bitcoin/.lake/fee-work`, with the capture's own separate streams in
+`.lake/fee-capture-checks` and each mutation runner's existing log directory.
+The command's actual exit status was retained; no gate was piped through an
+output filter.
+
+| Package | Existing regression command | Exit | Detected | Wall seconds |
+|---|---|---|---|---|
+| bitcoin | `nix develop -c python3 -I check-mutations.py` | 0 | 6/6 | 84.51 |
+| bitcoin | `nix develop -c python3 -I check-base58-mutations.py` | 0 | 6/6 | 75.70 |
+| bitcoin | `nix develop -c python3 -I check-bech32-mutations.py` | 0 | 18/18 | 281.20 |
+| bitcoin | `nix develop -c python3 -I check-address-mutations.py` | 0 | 20/20 | 209.69 |
+| bitcoin | `nix develop -c python3 -I check-psbt-mutations.py` | 0 | 125/125 | 1926.88 |
+| bitcoin | `nix develop -c python3 -I check-ripemd160-mutations.py` | 0 | 8/8 | 129.23 |
+| bitcoin | `nix develop -c python3 -I check-bip39-mutations.py` | 0 | 9/9 | 102.66 |
+| bitcoin | `nix develop -c python3 -I check-slip132-mutations.py` | 0 | 4/4 | 28.92 |
+| secp256k1 | `nix develop -c python3 -I check-negative-mutations.py` | 0 | 44/44 negative + 18/18 compression | 213.39 |
+
+Every Bitcoin runner's restored full `lake test` exited 0. From the root, the
+following key-material regression command exited 0 in 4.33 seconds, with
+PyYAML 6.0.3: ten prefixes tested alone in CI and in the Bitcoin test executable,
+**20/20** red detections, restored CI scan exit 0, missing-path rejection exit 1,
+and disposable copy deleted.
+
+```bash
+nix shell --impure --expr 'let pkgs = import (builtins.getFlake (toString ./.)).inputs.nixpkgs {}; in pkgs.python3.withPackages (p: [p.pyyaml])' -c python3 -I packages/bitcoin/check-key-material.py
+```
+
+The secp256k1 adapter was restored byte for byte; the existing redundant
+compression-length-guard check exited 0 and is not counted as a detection.
+The existing checks detected **278/278** mutations in total; the new fee
+checks add **10/10**. No temporary test copy remains.
+
+All 25 pre-existing Bitcoin JSON fixtures and provenance sidecars remain
+byte-identical to the base revision. No count, named pin, theorem statement or
+recorded diagnostic line number changed, and no count differs from the
+reference grid.
+
+Final validation used the same foreground scope and separate streams:
+
+| Working directory | Command | Exit | Observation |
+|---|---|---|---|
+| bitcoin | `nix develop -c lake build` | 0 | 47 jobs; 7.70 seconds |
+| bitcoin | `nix develop -c lake test` | 0 | All earlier pinned sets, 466/466 fee rows, 14/14 named pins, 3/3 ranges, 894/73/0 gate; 16.30 seconds |
+| root | `nix flake check -L` | 0 | All seven packages built and tested, app checked; 91.26 seconds |
+| root | `nix build` | 0 | Default app build; 0.72 seconds |
+| root | `grep -rnw sorry --include='*.lean' --exclude-dir=.lake packages` | 1 | Both streams empty |
+| root | `grep -rnE 'native_decide\|bv_decide' --include='*.lean' packages/bitcoin/Bitcoin packages/bitcoin/Bitcoin.lean` | 1 | Both streams empty |
+| root | Protected-path diff below | 0 | Both streams empty |
+| root | `find packages -name __pycache__ -not -path '*/.lake/*'` | 0 | Both streams empty |
+| root | Staged key-material scan below | 1 | Both streams empty; no key material printed |
+| root | `git diff --cached --check` | 0 | Both streams empty |
+
+The scans ran over the staged files, including the new capture and scripts:
+
+```bash
+git diff --stat ae8a566223778fad8886f99e8ca88a3bcd34a2e1 -- .github flake.nix flake.lock AGENTS.md plan.md packages/sha256 packages/secp256k1 packages/lightning packages/fedimint-invite packages/http-curl packages/cyberkrill
+git diff --cached -U0 | grep '^+' | grep -n -E '[tuvxyzUVYZ]prv[1-9A-HJ-NP-Za-km-z]{100,}|\b[5KLc9][1-9A-HJ-NP-Za-km-z]{50,51}\b'
+```
+
+All foreground checks completed, the capture workspace is absent, and the
+private Cargo cache and temporary HOME are deleted. No process from these
+checks remains running.
+
+### Deltas not taken
+
+There are none in the fee arithmetic. `Nat` counts never wrap where
+cyberkrill's `usize` arithmetic would, only at counts no transaction can have.
+Vbytes and rates above 2^64 − 1 are clamped as described above. Input selection,
+rate fetching, dust and relay policy, and CLI commands belong to later phases.
+`plan.md` is unchanged; its Phase 4 scope and definition of done still describe
+the intended behavior.
 
 ## Deltas taken
 
