@@ -145,8 +145,9 @@ decimal strings so u64 values round-trip exactly. There are 18 rate rows,
 16 shape rows, 288 shape fees and 144 direct-weight fees, 466 in all.
 No upstream source code or private key material is included.
 
-Regenerate from the root with `TMP_ROOT` set to a fresh private directory under
-the persistent temporary root:
+Regenerate from the root with `TMP_ROOT` set to a fresh private directory; the
+clone, Cargo cache and build land there. The script only requires `TMPDIR` to be
+set and to name an existing directory:
 
 ```bash
 TMPDIR="${TMP_ROOT:?}" systemd-run --user --scope --quiet -p MemoryMax=8G -p MemorySwapMax=0 -p OOMPolicy=continue -p TasksMax=4096 timeout 3600 python3 -I packages/bitcoin/capture-cyberkrill-fee.py

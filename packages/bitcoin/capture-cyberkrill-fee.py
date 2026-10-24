@@ -76,7 +76,7 @@ def main():
     LOGS.mkdir(parents=True, exist_ok=True)
     assert os.environ.get("TMPDIR"), "TMPDIR must be set"
     tmp = Path(os.environ["TMPDIR"]).resolve()
-    assert tmp == Path("/var/tmp") or Path("/var/tmp") in tmp.parents
+    assert tmp.is_dir(), "TMPDIR must name an existing directory"
     work = Path(tempfile.mkdtemp(prefix="cyberkrill-fee-", dir=tmp))
     try:
         clone = work / "source"

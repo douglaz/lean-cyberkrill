@@ -5503,8 +5503,9 @@ adds only a pure test to `bitcoin_rpc.rs`. It fetches locked dependencies with
 a private Cargo cache, then runs the `bitcoin_rpc::tests` suite offline under
 `unshare -rn` with loopback and a temporary HOME. The clone, cache and HOME are
 deleted in `finally` and their absence asserted. Regenerate from the root with
-`TMP_ROOT` set to a fresh private directory under the system's persistent
-temporary root:
+`TMP_ROOT` set to a fresh private directory; the clone, Cargo cache and build
+land there. The script only requires `TMPDIR` to be set and to name an
+existing directory:
 
 ```bash
 TMPDIR="${TMP_ROOT:?}" systemd-run --user --scope --quiet -p MemoryMax=8G -p MemorySwapMax=0 -p OOMPolicy=continue -p TasksMax=4096 timeout 3600 python3 -I packages/bitcoin/capture-cyberkrill-fee.py
