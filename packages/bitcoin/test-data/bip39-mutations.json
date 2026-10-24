@@ -1,0 +1,142 @@
+[
+  {
+    "mutation": "skip-checksum",
+    "source": "Bitcoin/Bip39.lean",
+    "command": [
+      "lake",
+      "test",
+      "--",
+      "--bip39",
+      "bad-checksum"
+    ],
+    "exit": 1,
+    "failure": "error: Bitcoin/Bip39.lean:373:9: Tactic `unfold` failed to unfold `checksum` in",
+    "caught_by": "theorem build",
+    "theorem_file": "Bitcoin/Bip39.lean",
+    "theorem": "mnemonicToEntropy_checksum_mismatch"
+  },
+  {
+    "mutation": "checksum-length-plus-one",
+    "source": "Bitcoin/Bip39.lean",
+    "command": [
+      "lake",
+      "test",
+      "--",
+      "--bip39",
+      "english"
+    ],
+    "exit": 1,
+    "failure": "error: Bitcoin/Bip39.lean:307:6: Tactic `rfl` failed: The left-hand side",
+    "caught_by": "theorem build",
+    "theorem_file": "Bitcoin/Bip39.lean",
+    "theorem": "mnemonicToEntropy_entropyToMnemonic"
+  },
+  {
+    "mutation": "word-index-plus-one",
+    "source": "Bitcoin/Bip39.lean",
+    "command": [
+      "lake",
+      "test",
+      "--",
+      "--bip39",
+      "english"
+    ],
+    "exit": 1,
+    "failure": "error: Bitcoin/Bip39.lean:307:6: Tactic `rfl` failed: The left-hand side",
+    "caught_by": "theorem build",
+    "theorem_file": "Bitcoin/Bip39.lean",
+    "theorem": "mnemonicToEntropy_entropyToMnemonic"
+  },
+  {
+    "mutation": "lookup-index-plus-one",
+    "source": "Bitcoin/Bip39.lean",
+    "command": [
+      "lake",
+      "test",
+      "--",
+      "--bip39",
+      "english"
+    ],
+    "exit": 1,
+    "failure": "error: Bitcoin/Bip39.lean:182:11: unsolved goals",
+    "caught_by": "theorem build",
+    "theorem_file": "Bitcoin/Bip39.lean",
+    "theorem": "lookup_get"
+  },
+  {
+    "mutation": "drop-word-count",
+    "source": "Bitcoin/Bip39.lean",
+    "command": [
+      "lake",
+      "test",
+      "--",
+      "--bip39",
+      "bad-word-count"
+    ],
+    "exit": 1,
+    "failure": "error: Bitcoin/Bip39.lean:332:62: Application type mismatch: The argument",
+    "caught_by": "theorem build",
+    "theorem_file": "Bitcoin/Bip39.lean",
+    "theorem": "entropyToMnemonic_mnemonicToEntropy"
+  },
+  {
+    "mutation": "sorted-wordlist-file",
+    "source": "Bitcoin/Bip39Wordlist.lean",
+    "command": [
+      "lake",
+      "test",
+      "--",
+      "--bip39",
+      "wordlist"
+    ],
+    "exit": 1,
+    "failure": "uncaught exception: assertion failed: bip39 wordlist library equality",
+    "caught_by": "test",
+    "property": "bip39 wordlist library equality"
+  },
+  {
+    "mutation": "sorted-wordlist-vectors",
+    "source": "Bitcoin/Bip39Wordlist.lean",
+    "command": [
+      "lake",
+      "test",
+      "--",
+      "--bip39",
+      "english"
+    ],
+    "exit": 1,
+    "failure": "uncaught exception: assertion failed: bip39 English vector 0 encode",
+    "caught_by": "test",
+    "property": "bip39 English vector 0 encode"
+  },
+  {
+    "mutation": "unknown-position-plus-one",
+    "source": "Bitcoin/Bip39.lean",
+    "command": [
+      "lake",
+      "test",
+      "--",
+      "--bip39",
+      "unknown-word"
+    ],
+    "exit": 1,
+    "failure": "uncaught exception: assertion failed: bip39 unknown-word case 0 position",
+    "caught_by": "test",
+    "property": "bip39 unknown-word case 0 position"
+  },
+  {
+    "mutation": "drop-entropy-length",
+    "source": "Bitcoin/Bip39.lean",
+    "command": [
+      "lake",
+      "test",
+      "--",
+      "--bip39",
+      "bad-entropy-length"
+    ],
+    "exit": 1,
+    "failure": "uncaught exception: assertion failed: bip39 bad-entropy-length case 0 rejected",
+    "caught_by": "test",
+    "property": "bip39 bad-entropy-length case 0 rejected"
+  }
+]

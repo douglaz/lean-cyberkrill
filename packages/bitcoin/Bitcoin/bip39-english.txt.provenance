@@ -1,0 +1,7 @@
+Source: https://github.com/bitcoin/bips/blob/130b8e0fa7f30fa45532f080b87b8db27a79e46e/bip-0039/english.txt
+Commit: 130b8e0fa7f30fa45532f080b87b8db27a79e46e
+Path: bip-0039/english.txt
+SHA-256: 2f5eed53a4727b4bf8880d8f3f199efc90e58503646d9ff8eff3a2ed3b24dbda
+Licence: MIT per the `License: MIT` header of `bip-0039.mediawiki`; see LICENSE-bip39.
+Attribution: Marek Palatinus, Pavol Rusnak, Aaron Voisine, Sean Bowe / BIP39.
+Byte-identical, no changes.
