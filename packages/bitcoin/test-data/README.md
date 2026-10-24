@@ -135,6 +135,45 @@ building BitcoinTests:
 TMPDIR="${TMP_ROOT:?}" systemd-run --user --scope --quiet -p MemoryMax=8G -p MemorySwapMax=0 -p OOMPolicy=continue -p TasksMax=4096 timeout 3600 nix shell --impure --expr 'let pkgs = import (builtins.getFlake (toString ./.)).inputs.nixpkgs {}; in pkgs.python3.withPackages (p: [p.pyyaml])' -c python3 -I packages/bitcoin/check-key-material.py
 ```
 
+## P2WPKH weight and fee capture
+
+`cyberkrill-fee.json` is captured output on our own synthetic inputs from
+[cyberkrill `bitcoin_rpc.rs` at 27cad1faba86260b06665a89f0af5134d23525c2](https://github.com/douglaz/cyberkrill/blob/27cad1faba86260b06665a89f0af5134d23525c2/cyberkrill-core/src/bitcoin_rpc.rs),
+MIT OR Apache-2.0, taken under MIT. Its provenance sidecar records the pure
+functions called, input order and regeneration command. Integer fields are
+decimal strings so u64 values round-trip exactly. There are 18 rate rows,
+16 shape rows, 288 shape fees and 144 direct-weight fees, 466 in all.
+No upstream source code or private key material is included.
+
+Regenerate from the root with `TMP_ROOT` set to a fresh private directory under
+the persistent temporary root:
+
+```bash
+TMPDIR="${TMP_ROOT:?}" systemd-run --user --scope --quiet -p MemoryMax=8G -p MemorySwapMax=0 -p OOMPolicy=continue -p TasksMax=4096 timeout 3600 python3 -I packages/bitcoin/capture-cyberkrill-fee.py
+```
+
+The script checks a fresh clone's pinned HEAD and clean status, fetches locked
+dependencies into a private cache, then runs only the upstream `bitcoin_rpc`
+test module offline under `unshare -rn`, with temporary HOME and loopback.
+It asserts all row counts, order and reference pins before writing the fixture,
+and deletes its exact workspace, clone, Cargo cache and HOME in `finally`.
+Stdout and stderr remain separate under `.lake/fee-capture-checks`.
+
+## Fee mutation evidence
+
+`fee-mutations.json` records ten changes to the library weight and fee code:
+vbytes flooring, missing or unconditional witness flag, witness-element length,
+output-script length, each count's CompactSize length, fee flooring, reordered
+multiply/divide, and a wrapping rate conversion. Each row names the actual
+first failing test assertion and its exit status. `check-fee-mutations.py`
+restores exact original bytes in `finally` and finishes with a restored full
+`lake test`, requiring the unchanged 894/73/0 axiom gate. Run in the bitcoin
+package, inside the same capped scope:
+
+```bash
+nix develop -c python3 -I check-fee-mutations.py
+```
+
 ## PSBT proof and definition checks
 
 `psbt-inventory.json` is unchanged. Its 136 transaction occurrences also drive

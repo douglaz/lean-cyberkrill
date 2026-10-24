@@ -1,0 +1,9 @@
+Producer: cyberkrill at 27cad1faba86260b06665a89f0af5134d23525c2, MIT OR Apache-2.0, taken under MIT.
+Source: https://github.com/douglaz/cyberkrill/blob/27cad1faba86260b06665a89f0af5134d23525c2/cyberkrill-core/src/bitcoin_rpc.rs
+Functions: AmountInput::from_str, as_millisats, as_fractional_sats, estimate_transaction_weight, Weight::from_wu, calculate_fee_with_feerate, to_sat.
+Command: TMPDIR="${TMP_ROOT:?}" systemd-run --user --scope --quiet -p MemoryMax=8G -p MemorySwapMax=0 -p OOMPolicy=continue -p TasksMax=4096 timeout 3600 python3 -I packages/bitcoin/capture-cyberkrill-fee.py
+Inputs: our own synthetic inputs; captured output on our own synthetic inputs.
+Order: 18 rates, 16 shapes, 288 shape-major/rate-minor fees, 144 weight-major/rate-minor fees.
+All integer fields are decimal strings, preserving values above 2^53 exactly.
+Dependencies fetched online; tests offline under unshare -rn with temporary HOME.
+Output only; no upstream code copied.
