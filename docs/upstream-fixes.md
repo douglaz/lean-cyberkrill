@@ -137,3 +137,18 @@ The pinned offline CLI capture confirms all nine new rejection vectors by
 their exact upstream error text, with the original 39 capture rows unchanged.
 Raw storage, serializers, framing, kept BIP rules and theorem statements stay
 unchanged. No proof repair was needed.
+
+## cyberkrill
+
+Source: `douglaz/cyberkrill` at `27cad1faba86260b06665a89f0af5134d23525c2`
+(MIT OR Apache-2.0), the reference this port follows. These problems were
+found while porting and are reported as upstream issues; cyberkrill is never
+patched from this repository. Paths and line numbers refer to that revision.
+
+| File | Problem | Fix used in this port |
+|---|---|---|
+| `cyberkrill-core/src/bitcoin_rpc.rs` L1354, L1390 ([#152](https://github.com/douglaz/cyberkrill/issues/152)) | On the Bitcoin Core path, `onchain-move-utxos --max-amount` clamps the input total to the cap, so a selection that overshoots the cap pays the excess to the miner, and `fee_sats` leaves it out. | Not built yet (Phase 8c). Decided: keep the largest-first selection, but the output is the full selected total minus the fee, with no clamp, as a documented and tested difference. |
+| `cyberkrill-core/src/slip132.rs` L35 ([#153](https://github.com/douglaz/cyberkrill/issues/153)) | `parse_slip132_xpub` panics on a valid Base58Check string whose payload is 0 to 3 bytes, because it slices the version before any length check. | `Bitcoin.Slip132.decode` requires exactly 78 bytes before it reads the version, and returns `wrongLength` otherwise. |
+| `cyberkrill-core/src/bitcoin_rpc.rs` L275–284; `cyberkrill/src/main.rs` L920, L992, L1046, L1049 ([#154](https://github.com/douglaz/cyberkrill/issues/154)) | The `--fee-rate` and `--fee` help says a bare number is sat/vB (or sat), but it parses as BTC, so `--fee-rate 15` means 1.5e9 sat/vB. | The amount parser matches cyberkrill (a bare number is BTC), and a Phase 4d test pins it. How the CLI treats an unsuffixed fee rate or fee is still open (Phase 7a). |
+| `cyberkrill-core/src/bdk_wallet.rs` L614, L703 ([#155](https://github.com/douglaz/cyberkrill/issues/155)) | The BDK `onchain-create-psbt` and `onchain-create-funded-psbt` paths truncate `--fee-rate` to whole sat/vB (`rate as u64`): `20.5sats` becomes 20, and any rate below 1 sat/vB builds a zero-fee PSBT. | Nothing to port: the BDK backends are out of v1. `Bitcoin.Fee` takes the rate in msat/vB, so fractional rates are kept. |
+| `cyberkrill-core/src/bdk_wallet.rs` L888–912 ([#156](https://github.com/douglaz/cyberkrill/issues/156)) | The BDK `onchain-move-utxos` path never sets a fee rate or fee on the builder, so BDK pays its 1 sat/vB default and returns the rest as change, while the JSON reports the planned fee and no change. Low rates fail with "Insufficient funds". | Nothing to port: the BDK backends are out of v1. The port's `onchain-move-utxos` (Phase 8c, Core path) will pay its computed fee, with one output and no change. |
