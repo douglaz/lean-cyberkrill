@@ -82,7 +82,7 @@ def main():
             assert path.read_text() == changed
             status, command, output = run(label, selection)
             assert status == 1, (label, status, output)
-            assert re.search(r"Bitcoin axiom gate: \d+ library theorems; 60 named; 0 offenders", output), output
+            assert re.search(r"Bitcoin axiom gate: \d+ library theorems; 65 named; 0 offenders", output), output
             failures = [line for line in output.splitlines()
                         if "assertion failed:" in line or line.startswith("error:")]
             assert failures and "assertion failed: " + expected in failures[0], (label, output)

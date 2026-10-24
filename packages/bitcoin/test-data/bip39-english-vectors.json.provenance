@@ -1,0 +1,8 @@
+Source: https://github.com/trezor/python-mnemonic/blob/b57a5ad77a981e743f4167ab2f7927a55c1e82a8/vectors.json
+Commit: b57a5ad77a981e743f4167ab2f7927a55c1e82a8
+Path: vectors.json
+Source SHA-256: fa3b937b7cff9c9b8ecd3aa011faeb8d6dd67993174b72326e83f4de8fdb30f8
+Licence: MIT, see LICENSE-python-mnemonic.
+Attribution: Pavol Rusnak / python-mnemonic.
+Extracted: entropy and mnemonic of the English entries; reformatted as objects.
+Dropped: seed and xprv columns, and all eleven other languages.

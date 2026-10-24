@@ -47,6 +47,41 @@ bytes in `finally`, and finishes with a successful full `lake test`.
 The existing `psbt-mutations.json` skip/swap cases for types 10 and 12 now test
 the exported real hashes with independently constructed record digests.
 
+## BIP39 English fixtures
+
+`bip39-english-vectors.json` extracts only entropy and mnemonic from the 24
+English rows of [python-mnemonic vectors.json](https://github.com/trezor/python-mnemonic/blob/b57a5ad77a981e743f4167ab2f7927a55c1e82a8/vectors.json),
+commit `b57a5ad77a981e743f4167ab2f7927a55c1e82a8`. Source SHA-256:
+`fa3b937b7cff9c9b8ecd3aa011faeb8d6dd67993174b72326e83f4de8fdb30f8`.
+The MIT attribution and verbatim notice are in `LICENSE-python-mnemonic`;
+the sidecar records the extraction and the dropped seed, xprv and other-language
+data. The extract has eight rows each of 12, 18 and 24 words.
+
+From the root, with `TMP_ROOT` set to a private temporary workspace:
+
+```bash
+TMPDIR="${TMP_ROOT:?}" python3 -I packages/bitcoin/generate-bip39-vectors.py
+git diff --exit-code -- packages/bitcoin/test-data/bip39-english-vectors.json
+```
+
+The script pins the source digest and row counts, permits exactly the two
+retained fields, and checks that none of the 24 English seed or xprv values
+appears in the output. No complete upstream vector file is kept in the tree.
+All 15/21-word, invalid-checksum, unknown-word, invalid-count and invalid-length
+cases are derived at test time from these published rows. No derived mnemonic
+is committed.
+
+The wordlist is the separate byte-identical `Bitcoin/bip39-english.txt`, with
+its own provenance and MIT notice. `bip39-mutations.json` records nine
+production mutations: five caught during theorem builds and four by tests.
+`check-bip39-mutations.py` checks exact replacement counts and pins each
+proof-caught mutation to one theorem whose statement the edit falsifies.
+It records the first diagnostic inside that theorem's original declaration
+range and fails if none exists; the location check does not prove falsity.
+The script restores and byte-checks
+sources in `finally`, and finishes with a successful full `lake test`.
+Separate streams remain under `.lake/bip39-mutation-checks`.
+
 ## PSBT proof and definition checks
 
 `psbt-inventory.json` is unchanged. Its 136 transaction occurrences also drive

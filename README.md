@@ -21,6 +21,9 @@ feasibility spike is delivered with a **stop** verdict: the complete split finit
 check (220 chunk files, all passing) took **1,198 s** with four files checked at
 once, against the ten-minute (600 s) added build budget. The full theorem remains
 unproved; both Phase 3b beads are deferred until a new proof route is chosen.
+Phase 4b adds pure English BIP39 entropy/word conversion, both round-trip
+theorems and checksum soundness, with the 24 published English vectors and
+deterministic 15/21-word and rejection cases.
 Other packages remain skeletons;
 `plan.md` is the plan for v1.
 
@@ -4711,6 +4714,362 @@ The changed paths are:
 `plan.md` is unchanged. Its §2 `secp256k1` function list and `bitcoin`
 capability description now omit the two new operations and their decoder
 sites; those omissions are reported without editing the plan.
+
+## Phase 4b: BIP39 entropy and English words
+
+`import Bitcoin` exposes `Bitcoin.Bip39.entropyToMnemonic : ByteArray →
+Except Error (List String)` and `mnemonicToEntropy : List String → Except
+Error ByteArray`. Both functions are pure Lean and use the existing qualified
+`Sha256.hash`. They add no dependency, FFI or CLI command.
+
+| `Bitcoin.Bip39.Error` constructor | Meaning |
+|---|---|
+| `badEntropyLength` | Encoder input is not 16, 20, 24, 28 or 32 bytes |
+| `badWordCount` | Decoder input is not 12, 15, 18, 21 or 24 words |
+| `unknownWord position` | First unknown word; `position` is **zero-based** |
+| `badChecksum` | The supplied checksum bits differ from the SHA-256 prefix |
+
+The error type derives `Repr`, `DecidableEq` and `BEq`. Decoding checks **word
+count first, then each word from left to right, then checksum**. Words must
+match the published lines exactly: no case folding, trimming, Unicode
+normalisation or four-letter-prefix expansion. The input is already split.
+There is no v1 mnemonic-decoding command.
+
+For ENT = eight times the byte length, CS = ENT/32. The encoder concatenates
+the entropy with the first CS bits of `Sha256.hash e`, then emits 11-bit
+big-endian indices. Fixed-width radix conversion preserves leading zero
+bytes and indices. The decoder reverses that conversion and checks the
+checksum before returning the entropy.
+
+### Published sources and tests
+
+The English list is [bitcoin/bips `bip-0039/english.txt`](https://github.com/bitcoin/bips/blob/130b8e0fa7f30fa45532f080b87b8db27a79e46e/bip-0039/english.txt)
+at `130b8e0fa7f30fa45532f080b87b8db27a79e46e`, SHA-256
+`2f5eed53a4727b4bf8880d8f3f199efc90e58503646d9ff8eff3a2ed3b24dbda`.
+A fresh fetch confirmed 13,116 bytes, 2,048 LF-terminated lines, a final newline,
+no CR, lowercase ASCII words of 3–8 letters, strict order and no duplicates.
+`Bitcoin/bip39-english.txt` is byte-identical. The library's reformatted list
+is checked against every line in order. One string literal is split into two
+concatenated pieces to avoid a false positive in the proof-token scan.
+The sidecar records provenance; `Bitcoin/LICENSE-bip39` reproduces the BIP's
+authors, MIT declaration and copyright section, and the MIT permission notice
+and disclaimer. The BIP supplies no copyright year or holder line.
+
+The vector source is [trezor/python-mnemonic `vectors.json`](https://github.com/trezor/python-mnemonic/blob/b57a5ad77a981e743f4167ab2f7927a55c1e82a8/vectors.json)
+at `b57a5ad77a981e743f4167ab2f7927a55c1e82a8`, SHA-256
+`fa3b937b7cff9c9b8ecd3aa011faeb8d6dd67993174b72326e83f4de8fdb30f8`.
+The extract retains **24 English rows: eight each of 12, 18 and 24 words**,
+with exactly `entropy` and `mnemonic` fields. It drops every seed and xprv
+column and all eleven other languages. The MIT notice credits Pavol Rusnak,
+2013–2016, in `test-data/LICENSE-python-mnemonic`; the extraction sidecar names
+the changes. The full upstream JSON is never kept in the repository.
+
+Regenerate from the root, with `TMP_ROOT` set to a private temporary workspace:
+
+```bash
+TMPDIR="${TMP_ROOT:?}" python3 -I packages/bitcoin/generate-bip39-vectors.py
+git diff --exit-code -- packages/bitcoin/test-data/bip39-english-vectors.json
+```
+
+The script verifies the source digest and counts, permits only the two retained
+fields, and asserts that none of the 24 English seeds or xprvs appears in its
+output. The tests reject missing or extra fields. Every test set pins its count
+before checking cases. Failure labels contain set/case identifiers, never words
+or entropy. All derived cases are constructed at test time from published rows;
+no derived mnemonic is committed and no entropy source is used.
+
+| Printed BIP39 set | Count | Checks |
+|---|---|---|
+| `bip39 wordlist` | 2048/2048 | File digest, byte length, LF termination and ordered library equality |
+| `bip39 English` | 24/24 | Published encoding and decoding |
+| `bip39 English-12`, `English-18`, `English-24` | 8/8 each | Published word-count groups |
+| `bip39 derived-15`, `derived-21` | 8/8 each | First 20/28 entropy bytes of every 24-word source; word counts and both round trips |
+| `bip39 bad-checksum` | 40/40 | Last index bit flipped; checksum error |
+| `bip39 bad-checksum-12/15/18/21/24` | 8/8 each | Every accepted word count covered |
+| `bip39 unknown-word` | 5/5 | Absent string, capitalised word, trailing space, four-letter prefix and empty string; exact positions |
+| `bip39 check-order` | 3/3 | Count before unknown word; unknown before checksum; first unknown position |
+| `bip39 bad-word-count` | 8/8 | 11, 13, 25, 0, 14, 16, 20 and 22 words |
+| `bip39 bad-entropy-length` | 5/5 | 0, 15, 17, 33 and 36 bytes by truncation or append |
+
+`lake test -- --bip39 NAME` selects `wordlist`, `english`, `derived-15`,
+`derived-21`, `bad-checksum`, `unknown-word`, `check-order`, `bad-word-count`
+or `bad-entropy-length`. The complete suite includes them all. An independent
+Python `hashlib` computation outside the tree matched all **16/16** derived
+15/21-word encodings through `lake env lean --run "$TMP_ROOT/Cross.lean"
+"$TMP_ROOT/derived-crosscheck.json"`, exit **0**. None of its derived output is
+committed.
+
+### Proof statements and checking cost
+
+The following are the exact three statements in `Bitcoin/Bip39.lean`, in
+namespace `Bitcoin.Bip39`. `validEntropyLength n` means
+`n = 16 ∨ n = 20 ∨ n = 24 ∨ n = 28 ∨ n = 32`; `validWordCount n` means
+`n = 12 ∨ n = 15 ∨ n = 18 ∨ n = 21 ∨ n = 24`.
+`beNat` reads a byte array big-endian. The transparent generic `beDigits base`
+reads a natural-number digit list big-endian, equivalently folding
+`fun acc i => acc * base + i` from zero.
+
+```lean
+theorem mnemonicToEntropy_entropyToMnemonic (e : ByteArray)
+    (h : validEntropyLength e.size) :
+    ∃ ws, entropyToMnemonic e = .ok ws ∧ ws.length = e.size * 3 / 4 ∧
+      mnemonicToEntropy ws = .ok e
+
+theorem entropyToMnemonic_mnemonicToEntropy (ws : List String) (e : ByteArray)
+    (h : mnemonicToEntropy ws = .ok e) : entropyToMnemonic e = .ok ws
+
+theorem mnemonicToEntropy_checksum_mismatch
+    (ws : List String) (idx : List Nat) (e : ByteArray)
+    (hcount : validWordCount ws.length)
+    (hidx : ∀ i ∈ idx, i < 2048)
+    (hws : ws = idx.map (fun i => wordlist[i]!))
+    (he_size : e.size = (ws.length * 11 - ws.length / 3) / 8)
+    (he : beNat e = beDigits 2048 idx / 2 ^ (ws.length / 3))
+    (hbad : beDigits 2048 idx % 2 ^ (ws.length / 3) ≠
+      beNat (Sha256.hash e) / 2 ^ (256 - ws.length / 3)) :
+    mnemonicToEntropy ws = .error .badChecksum
+```
+
+For every valid count and in-range index list, the entropy hypotheses are
+satisfiable: the fixed-width big-endian encoding of N/2^CS fits in ENT/8 bytes,
+since N < 2048^count = 2^(ENT+CS). The mismatch hypothesis compares the actual
+trailing index bits with the prefix of `Sha256.hash` of that entropy, independently
+of the decoder's checksum helper. **BIP39's checksum gives no error-detection
+guarantee beyond this comparison, and none is claimed.**
+
+The initial kernel experiment checked all 2,047 adjacent `String` comparisons
+on the real list, outside the library. It used
+`((words.zip words.tail).all (fun p => decide (p.1 < p.2))) = true`, proved by
+`decide +kernel`. Its command, from `packages/bitcoin`, was:
+
+```bash
+systemd-run --user --scope --quiet -p MemoryMax=8G -p MemorySwapMax=0 -p OOMPolicy=continue -p TasksMax=4096 timeout 3600 "$TIME_BIN" -v nix develop -c lake env lean "$TMP_ROOT/Sorted.lean"
+```
+
+Here `TIME_BIN` is GNU Time **1.10**. The experiment exited **0** in **36.80 s**,
+with **5,159,200 KiB** peak RSS. Its printed axioms were only `propext`,
+`Classical.choice` and `Quot.sound`. That memory use left less headroom under
+the 8 GiB cap than the permitted base-27 fallback. The fallback pads codes to
+eight digits, checks increasing adjacent natural numbers, derives pairwise
+order and then no duplicates. It exited **0** in **19.67 s**, with
+**3,768,028 KiB** peak RSS and the same permitted axioms. An earlier scratch
+decidability instance using a recursor failed code generation, exit **1**;
+the structural recursive instance above is the measured successful version.
+
+On the final sources, timed `nix develop -c lake build` took **0.56 s** cached.
+Removing only the newly created wordlist-proof `.olean` and rebuilding with
+the same command took **19.44 s**, **3,742,600 KiB** peak RSS, exit **0**:
+**18.88 s** additional wall time. Lake reported the proof module itself at
+18 s. The scope, timeout and `time -v` wrapper were identical to the example
+above. No scope exceeded the cap or timed out.
+
+The final fresh axiom gate is **852 library theorems; 65 named; 0 offenders**,
+up from **764; 60; 0**. The 88 additions are 81 in `Bitcoin.Bip39` and seven
+in `Bitcoin.Bip39WordlistProofs`: 31 explicit theorems and 57 generated
+declarations. The five new named entries are T1–T3 above, `wordlist_nodup`
+and `wordlist_length`, each with its own `#print axioms`. A fresh local
+`nix develop -c lake test` printed
+`'Bitcoin.Bip39.wordlist_length' depends on axioms: [propext]`, matching the
+sandbox length check.
+Both checks printed only the permitted three for the other named theorems.
+The full library scan also passes. Every existing theorem statement is unchanged.
+
+### Mutation evidence
+
+From `packages/bitcoin`, `nix develop -c python3 -I check-bip39-mutations.py`
+exited **0**, detecting **9/9**, then restored full `lake test` exited **0**.
+The script uses exact-count production edits, restores and byte-checks sources
+in `finally`, and stores separate streams under `.lake/bip39-mutation-checks`.
+Compact records are in `test-data/bip39-mutations.json`. Each proof-caught
+mutation pins exactly one theorem whose statement the edit falsifies. The
+runner records the first diagnostic inside that theorem's range in the
+original source and fails if none exists. Each selector
+below follows `lake test -- --bip39`.
+
+| Mutation | Selector | Exit | Pinned theorem or test and exact recorded failure line |
+|---|---|---|---|
+| `skip-checksum` | `bad-checksum` | 1 | T3 build: ``error: Bitcoin/Bip39.lean:373:9: Tactic `unfold` failed to unfold `checksum` in`` |
+| `checksum-length-plus-one` | `english` | 1 | T1 build: ``error: Bitcoin/Bip39.lean:307:6: Tactic `rfl` failed: The left-hand side`` |
+| `word-index-plus-one` | `english` | 1 | T1 build: ``error: Bitcoin/Bip39.lean:307:6: Tactic `rfl` failed: The left-hand side`` |
+| `lookup-index-plus-one` | `english` | 1 | `lookup_get` build: `error: Bitcoin/Bip39.lean:182:11: unsolved goals` |
+| `drop-word-count` | `bad-word-count` | 1 | T2 build: `error: Bitcoin/Bip39.lean:332:62: Application type mismatch: The argument` |
+| `sorted-wordlist-file` | `wordlist` | 1 | Test: `uncaught exception: assertion failed: bip39 wordlist library equality` |
+| `sorted-wordlist-vectors` | `english` | 1 | Test: `uncaught exception: assertion failed: bip39 English vector 0 encode` |
+| `unknown-position-plus-one` | `unknown-word` | 1 | Test: `uncaught exception: assertion failed: bip39 unknown-word case 0 position` |
+| `drop-entropy-length` | `bad-entropy-length` | 1 | Test: `uncaught exception: assertion failed: bip39 bad-entropy-length case 0 rejected` |
+
+Reading each production edit explains why its pinned statement becomes false:
+
+- `skip-checksum`: T3 requires `badChecksum` on mismatched checksum bits; the
+  edited decoder returns success instead.
+- `checksum-length-plus-one`: T1 fails on the published all-zero 16-byte
+  entropy vector: the encoder appends five checksum bits while the decoder
+  checks four, so decoding rejects the encoded words.
+- `word-index-plus-one`: T1 fails because shifting every encoded word index
+  changes the entropy bits recovered by the decoder, even if its checksum passes.
+- `lookup-index-plus-one`: `lookup_get` requires index zero for the first
+  dictionary word; the edited search returns one, already on a singleton list.
+- `drop-word-count`: T2 fails on 13 known words with a matching checksum that
+  decode to 17 bytes, which the encoder rejects as `badEntropyLength`.
+
+These are proof failures inside theorems whose statements the edits falsify;
+the runner checks diagnostic locations and does not prove that falsity.
+The encoder guard and unknown-position edits reached their runtime assertions.
+The ordered-list edits still satisfied the uniqueness theorem and were caught
+independently by file equality and the published vectors.
+
+After freezing all Lean sources, root imports and the lakefile, all seven
+existing suites were checked once in full, sequentially, without checkpoint
+resume. Each command is `nix develop -c python3 -I SCRIPT`, from the package
+shown, in its own foreground scope with the same 8 GiB/3,600 s limits.
+
+| Package | Script | Exit | Detected | Seconds | Restored full tests |
+|---|---|---|---|---|---|
+| bitcoin | `check-mutations.py` | 0 | 6/6 | 76.28 | 0 |
+| bitcoin | `check-base58-mutations.py` | 0 | 6/6 | 77.02 | 0 |
+| bitcoin | `check-bech32-mutations.py` | 0 | 18/18 | 299.68 | 0 |
+| bitcoin | `check-address-mutations.py` | 0 | 20/20 | 218.30 | 0 |
+| bitcoin | `check-psbt-mutations.py` | 0 | 125/125 | 2059.24 | 0 |
+| bitcoin | `check-ripemd160-mutations.py` | 0 | 8/8 | 121.99 | 0 |
+| secp256k1 | `check-negative-mutations.py` | 0 | 44/44 negative; 18/18 compression | 262.81 | 0 |
+
+That is **245/245 existing mutations**, **254/254 including BIP39**.
+The seven existing suites ran once on the final Lean sources; the later
+change to the BIP39 runner and its records touched no Lean source, and the
+frozen source fingerprints still match.
+Source fingerprints matched after every suite. The four changed pins are
+`60 named` → `65 named` in `check-address-mutations.py`,
+`check-bech32-mutations.py`, `check-ripemd160-mutations.py` and
+`check-psbt-mutations.py`. `check-mutations.py` regenerated only the permitted
+`AxiomGate.lean:77:0` → `AxiomGate.lean:81:0` diagnostic in
+`test-data/mutations.json`. `git diff --exit-code` on every other existing
+mutation-record file and all of `packages/secp256k1` exited **0**, with empty
+streams. No other existing mutation source or record changed.
+
+### Final validation
+
+On 2026-10-24, `nix develop -c bash -c 'lean --version; lake --version;
+python3 --version'` exited **0**: Lean **4.35.0** (Release,
+`eb6cafb7290e8bd5f2937522d8d804f58f02bafc`), Lake **5.0.0-src+eb6cafb**,
+Python **3.14.7**. Host `python3 --version` reported **3.13.15** and
+`"$TIME_BIN" --version` reported GNU Time **1.10**, both exit **0**.
+Build, test and proof commands ran one at a time in the foreground under the
+scope and timeout shown above. After the BIP39 runner change, the build, full
+test, BIP39 mutations, sandbox check, default build and executable were run
+again, each with stdout and stderr saved to separate files. Logs of the earlier
+validation remain in `packages/bitcoin/.lake/bip39-validation`, and mutation
+streams are in each suite's own `.lake` directory. No gate was piped through an
+output filter.
+
+| Directory | Command | Exit | Observation |
+|---|---|---|---|
+| bitcoin | `nix develop -c lake build` | 0 | 45 jobs; both round trips and independent checksum rejection compiled |
+| bitcoin | `nix develop -c lake test` | 0 | All BIP39 counts above; all prior pinned sets; PSBT 101/101; axiom gate 852/65/0 |
+| bitcoin / secp256k1 | The eight mutation commands above | 0 each | 254/254 detected; seven retained results plus the BIP39 9/9 rerun; every restored full test exited 0 |
+| root | `nix flake check -L` | 0 | All seven package builds/tests in the sandbox, all BIP39 counts, 852/65/0 gate and `all checks passed!` |
+| root | `nix build` | 0 | Default executable built |
+| root | `./result/bin/cyberkrill` | 0 | `cyberkrill 0.1.0`; empty stderr |
+| bitcoin | `git diff --exit-code -- Bitcoin/Bip39.lean Bitcoin/Bip39Wordlist.lean` | 0 | Both sources restored; both streams empty |
+| root | `diff "$TMP_ROOT/bip39-mit.txt" "$TMP_ROOT/bip340-mit.txt"` after extracting each block from `MIT License` to EOF | 0 | Byte-identical blocks; both streams empty |
+| root | Compare every frozen-source SHA-256 fingerprint | 0 | 45/45 matched |
+| root | `git diff --stat` before staging the runner change | 0 | Only the runner, its record, `LICENSE-bip39` and the two READMEs, besides the tracker |
+| root | `TMPDIR="$TMP_ROOT" python3 -I packages/bitcoin/generate-bip39-vectors.py` | 0 | 24 rows, eight each of 12/18/24, only entropy and mnemonic |
+| root | `git diff --exit-code -- packages/bitcoin/test-data/bip39-english-vectors.json packages/bitcoin/test-data/bip39-english-vectors.json.provenance` | 0 | Both streams empty after regeneration |
+| root | Fresh pinned wordlist fetch, then `cmp "$TMP_ROOT/english-fresh.txt" packages/bitcoin/Bitcoin/bip39-english.txt` | 0 | Source digest rechecked; byte-identical; empty comparison streams |
+| root | `rc=0; grep -rnw sorry --include='*.lean' --exclude-dir=.lake packages \|\| rc=$?; test "$rc" -eq 1` | 0 | Both streams empty |
+| root | `grep -rnE 'native_decide\|bv_decide' --include='*.lean' packages/bitcoin/Bitcoin packages/bitcoin/Bitcoin.lean` | 1 | Both streams empty |
+| root | `grep -F sorry packages/bitcoin/BitcoinTests/AxiomGate.lean` | 1 | Both streams empty |
+| root | `git diff --check ca7800538a07f377c4ffd801b2bdbaf01a4ccb17` | 0 | Both streams empty |
+| root | `git diff --stat ca7800538a07f377c4ffd801b2bdbaf01a4ccb17 -- flake.nix flake.lock AGENTS.md plan.md .github packages/sha256 packages/secp256k1 packages/cyberkrill packages/lightning packages/fedimint-invite packages/http-curl` | 0 | Both streams empty |
+| root | `find packages -name __pycache__ -not -path '*/.lake/*'` | 0 | Both streams empty |
+
+All existing Bitcoin printed counts remain the original pinned values:
+hex 12; CompactSize boundaries/noncanonical/truncated 8/4/4; Amount 36;
+CLI and amount cross-check 124 each; Base58 vectors/zeros/invalid 21/5/6;
+Base58Check known/rejections/alphabet 4/2/1; Bech32 valid/Bech32m valid 7/7,
+cross-variant 14, invalid 12/14, limits/mixed-case/non-ASCII 3/1/1,
+regrouping 10 and HRP maximum 8; BIP350 valid/BIP173-v0/replaced 8/3/3,
+invalid BIP350/BIP173 15/10; Core addresses 22, network mismatches 3,
+regtest answers 2, network matrix 128, malformed scripts 9, Base58 negatives 10;
+RIPEMD-160 9 and HASH160 BIP173 1. PSBT valid sets are 10/4/14/6,
+invalid sets 20/24/11, re-encoded valid/signer/version-2/Taproot sets 10/4/14/6,
+roles 14 and locktimes 10; transaction well-formedness is 135/136 with the
+unchanged published exception; wire transactions 136/136 and non-witness txids
+60/60 (56 matching, four published invalid exceptions); malformed transactions
+2, invalid Base64 20, each of four preimage pairs 2, each hybrid pair 2,
+each same-point case 1, PSBT actions 101 and key-shaped grep 1.
+The sandbox also retains the earlier SHA-256, secp256k1 and HTTP/TLS counts
+documented in their sections, with every package's tests passing.
+
+The staged-content scans use saved added lines, with their own separate
+stdout/stderr files:
+
+1. The required extended-private-key/WIF expression over the added lines exited
+   **1**, printing nothing on either stream.
+2. The scan for twelve or more consecutive wordlist words found **24/24** lines,
+   each exactly one of the extracted published English mnemonics, and **0** other
+   matches; the assertion command exited **0**. No values were printed.
+3. A fresh pinned vector fetch was kept outside the tree. Each of its 24 English
+   seeds and 24 xprvs was checked using `git grep -F -- VALUE` over both
+   `--cached` and the working tree: **96 calls**, each exit **1**, all streams
+   empty. The asserting command exited **0**.
+
+The public-text scan covered all added lines excluding `.beads/`. Its broad
+`grep -niP` exited **0**, with five matches, all in required published data:
+two wordlist values, their two reformatted literal entries and one permitted
+published vector. Each matched data line was checked against the pinned list
+or the 24-row extract. Removing only those five verified data lines and checking
+the remaining added lines exited **1**, with empty stdout/stderr: no prohibited
+names, local paths or attribution trailers in prose or code. The scan's
+expression is not reproduced because it contains the forbidden names.
+The assertions checking the five data matches and all 24 staged paths exited
+**0**; index bytes matched the working files, the tracker was excluded and the
+frozen Lean-source fingerprints still matched.
+
+The changed files, with paths relative to `packages/bitcoin` except the root README:
+
+| File | Purpose |
+|---|---|
+| Root `README.md` | API, proofs, sources, measurements and validation report |
+| `Bitcoin.lean` | Export the new library and extend the module description |
+| `Bitcoin/Bip39.lean` | Codec, errors, generic arithmetic helpers and T1–T3 |
+| `Bitcoin/Bip39Wordlist.lean` | Reformatted MIT English wordlist constant |
+| `Bitcoin/Bip39WordlistProofs.lean` | Kernel-checked uniqueness and length |
+| `Bitcoin/bip39-english.txt` | Byte-identical pinned source |
+| `Bitcoin/bip39-english.txt.provenance` | Source digest, attribution and licence |
+| `Bitcoin/LICENSE-bip39` | BIP39-specific MIT record and notice |
+| `BitcoinTests.lean` | Full-suite wiring, selector and usage |
+| `BitcoinTests/Bip39.lean` | Published, derived, exact-match and rejection tests |
+| `BitcoinTests/AxiomGate.lean` | Five new named entries and axiom prints |
+| `lakefile.lean` | Register the BIP39 test root |
+| `generate-bip39-vectors.py` | Reproducible two-column English extraction |
+| `check-bip39-mutations.py` | Nine restored production-mutation checks with one pinned theorem per proof-caught edit |
+| `check-address-mutations.py` | Named-theorem pin 65 |
+| `check-bech32-mutations.py` | Named-theorem pin 65 |
+| `check-psbt-mutations.py` | Named-theorem pin 65 |
+| `check-ripemd160-mutations.py` | Named-theorem pin 65 |
+| `test-data/bip39-english-vectors.json` | Only the 24 published English entropy/mnemonic pairs |
+| `test-data/bip39-english-vectors.json.provenance` | Extraction provenance and dropped columns |
+| `test-data/LICENSE-python-mnemonic` | Verbatim upstream MIT licence with source header |
+| `test-data/bip39-mutations.json` | Exact observed diagnostics and detection classes |
+| `test-data/mutations.json` | Permitted axiom-gate diagnostic line shift only |
+| `test-data/README.md` | Fixture regeneration and mutation-record documentation |
+
+Temporary fetches, independent expectations, scratch modules and private caches
+are removed by their exact created directory; normal `.lake` build outputs and
+validation logs remain. No process started for this work is left running.
+The 24 scoped files are staged and left uncommitted; no commit, push, PR, branch
+switch or tracker command is part of this work session.
+
+### Deltas not taken
+
+No seed derivation, BIP32, other language, entropy generation, normalisation,
+prefix expansion, CLI command, SLIP-132 or fee-estimation work is included.
+The PSBT parity rules, captures and statements stay unchanged.
+`docs/upstream-fixes.md` is unchanged: no general upstream fix was needed.
+`plan.md` is unchanged; its §2 `bitcoin` row still says only
+“BIP39 entropy → English words”, omitting the implemented reverse direction.
+No follow-up is proposed and no tracker item was created or updated.
 
 ## Deltas taken
 

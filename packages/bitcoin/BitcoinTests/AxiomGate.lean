@@ -47,7 +47,11 @@ def namedTheorems : List Name :=
    ``Bitcoin.Bech32.verifyChecksum_residue_eq,
    ``Bitcoin.Psbt.Psbt.roundtrip, ``Bitcoin.Psbt.Psbt.unique_of_parse,
    ``Bitcoin.Psbt.Psbt.no_trailing_data,
-   ``Bitcoin.parseTransaction_serializeWitnessTransaction]
+   ``Bitcoin.parseTransaction_serializeWitnessTransaction,
+   ``Bitcoin.Bip39.wordlist_nodup, ``Bitcoin.Bip39.wordlist_length,
+   ``Bitcoin.Bip39.mnemonicToEntropy_entropyToMnemonic,
+   ``Bitcoin.Bip39.entropyToMnemonic_mnemonicToEntropy,
+   ``Bitcoin.Bip39.mnemonicToEntropy_checksum_mismatch]
 
 private def allowedAxioms : List Name := [``propext, ``Classical.choice, ``Quot.sound]
 
@@ -77,6 +81,11 @@ elab "#bitcoin_axiom_gate" : command => do
 #bitcoin_axiom_gate
 
 #print axioms Bitcoin.Hex.decode_encode
+#print axioms Bitcoin.Bip39.wordlist_nodup
+#print axioms Bitcoin.Bip39.wordlist_length
+#print axioms Bitcoin.Bip39.mnemonicToEntropy_entropyToMnemonic
+#print axioms Bitcoin.Bip39.entropyToMnemonic_mnemonicToEntropy
+#print axioms Bitcoin.Bip39.mnemonicToEntropy_checksum_mismatch
 #print axioms Bitcoin.Psbt.Psbt.roundtrip
 #print axioms Bitcoin.Psbt.Psbt.unique_of_parse
 #print axioms Bitcoin.Psbt.Psbt.no_trailing_data
