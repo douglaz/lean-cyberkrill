@@ -10,6 +10,7 @@ import Bitcoin.CoreAddressVectors
 import BitcoinTests.Psbt
 import BitcoinTests.Ripemd160
 import BitcoinTests.Bip39
+import BitcoinTests.Slip132
 
 open Bitcoin
 open Bitcoin.Amount
@@ -370,8 +371,9 @@ def main (args : List String) : IO Unit := do
   | ["--psbt", name] => BitcoinTests.PsbtTests.run (some name); return
   | ["--hash", name] => BitcoinTests.Ripemd160Tests.run (some name); return
   | ["--bip39", name] => BitcoinTests.Bip39Tests.run (some name); return
+  | ["--slip132", name] => BitcoinTests.Slip132Tests.run (some name); return
   | [] => pure ()
-  | _ => throw <| IO.userError "usage: BitcoinTests [--psbt NAME | --hash NAME | --bip39 NAME]"
+  | _ => throw <| IO.userError "usage: BitcoinTests [--psbt NAME | --hash NAME | --bip39 NAME | --slip132 NAME]"
   BitcoinTests.hexTests
   BitcoinTests.compactTests
   BitcoinTests.amountTests
@@ -381,9 +383,10 @@ def main (args : List String) : IO Unit := do
   BitcoinTests.addressTests
   BitcoinTests.Ripemd160Tests.run
   BitcoinTests.Bip39Tests.run
+  BitcoinTests.Slip132Tests.run
   BitcoinTests.PsbtTests.run
   let scan ← IO.Process.output { cmd := "grep", args := #["-rEn", "--exclude-dir=.lake",
-    "[tx]prv[1-9A-HJ-NP-Za-km-z]{100,}", ".."] }
+    "[tuvxyzUVYZ]prv[1-9A-HJ-NP-Za-km-z]{100,}", ".."] }
   unless scan.exitCode == 1 do
     throw <| IO.userError s!"assertion failed: key-shaped grep: exit {scan.exitCode}\n{scan.stdout}{scan.stderr}"
   IO.println "key-shaped grep: 1/1"

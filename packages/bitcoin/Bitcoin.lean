@@ -19,6 +19,7 @@ import Bitcoin.Psbt.Hashes
 import Bitcoin.Psbt.Proofs
 import Bitcoin.TransactionProofs
 import Bitcoin.Bip39
+import Bitcoin.Slip132
 
 /-! # Bitcoin
 
@@ -27,4 +28,5 @@ and lax bit regrouping, scriptPubKey/address conversion per network, and exact
 millisatoshi amounts including the CLI grammar. Transaction and PSBT codecs,
 supplied curve operations, and pure RIPEMD-160/HASH160 preimage hashes.
 PSBT framing, validated parsing, and transaction serialization round-trip proofs.
-Exact English BIP39 entropy/word conversion, both round-trips and checksum soundness. -/
+Exact English BIP39 entropy/word conversion, both round-trips and checksum soundness.
+SLIP-132 public-version conversion with string round-trip and payload preservation. -/

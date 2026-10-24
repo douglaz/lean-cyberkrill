@@ -24,6 +24,9 @@ unproved; both Phase 3b beads are deferred until a new proof route is chosen.
 Phase 4b adds pure English BIP39 entropy/word conversion, both round-trip
 theorems and checksum soundness, with the 24 published English vectors and
 deterministic 15/21-word and rejection cases.
+Phase 4c adds SLIP-132 conversion among six public versions, string round-trip
+and payload-preservation proofs, 12 BIP32 public vectors, 72 conversions and
+48 offline cyberkrill goldens.
 Other packages remain skeletons;
 `plan.md` is the plan for v1.
 
@@ -33,7 +36,7 @@ Other packages remain skeletons;
 |---|---|---|---|
 | `packages/sha256` | `sha256` | `Sha256` | SHA-256 and SHA-256d |
 | `packages/secp256k1` | `secp256k1` | `Secp256k1` | libsecp256k1 bindings (FFI) |
-| `packages/bitcoin` | `bitcoin` | `Bitcoin` | Bitcoin encodings, transactions, PSBT, BIP39 |
+| `packages/bitcoin` | `bitcoin` | `Bitcoin` | Bitcoin encodings, transactions, PSBT, BIP39, SLIP-132 |
 | `packages/lightning` | `lightning` | `Lightning` | BOLT11 and LNURL |
 | `packages/fedimint-invite` | `fedimint-invite` | `FedimintInvite` | Fedimint invite codes |
 | `packages/http-curl` | `http-curl` | `HttpCurl` | HTTP(S) client over libcurl (FFI) |
@@ -3783,8 +3786,8 @@ path, with absence asserted, exit **0**. Each private gate directory was
 removed before the supervisor reported its final status. The temporary gate
 helper was also deleted and its absence checked, exit **0**. No temporary clone,
 cache or helper process from this work session remains; normal `.lake` build
-outputs and logs remain. Changes are staged for inspection, with no commit,
-push, branch change or tracker operation in this work session.
+outputs and logs remain. The changes were staged before the flake check,
+then committed after review and merged to master.
 
 ## Phase 4a: PSBT and transaction proofs (3 of 3)
 
@@ -4131,8 +4134,8 @@ exported `TMPDIR` before bootstrap as well as inside the gate commands.
 No temporary clone, cache, test or helper process from this work session remains.
 Normal build outputs and logs remain.
 
-All changes are staged on the existing feature branch. There was no commit,
-push, branch change, PR or tracker operation in this work session.
+The changes were staged on the feature branch before the flake check,
+then committed after review and merged to master.
 
 ### Second-round checks
 
@@ -4218,8 +4221,8 @@ Cleanup removed exactly the newly created `TMP_ROOT` using `shutil.rmtree`
 and asserted its absence. `TMPDIR` was beneath that root before every gate
 bootstrap. Each private gate directory was removed before its final status.
 No temporary clone, cache, helper or process from this work session remains;
-normal build outputs and logs remain. The two edited paths are staged on the
-existing feature branch, with no commit, push, PR, branch or tracker operation.
+normal build outputs and logs remain. The two edited paths were staged on the
+feature branch, then committed after review and merged to master.
 
 ## Phase 4a: PSBT field parity follow-up
 
@@ -5058,8 +5061,8 @@ The changed files, with paths relative to `packages/bitcoin` except the root REA
 Temporary fetches, independent expectations, scratch modules and private caches
 are removed by their exact created directory; normal `.lake` build outputs and
 validation logs remain. No process started for this work is left running.
-The 24 scoped files are staged and left uncommitted; no commit, push, PR, branch
-switch or tracker command is part of this work session.
+The 24 scoped files were staged before the flake check, then committed after
+review and merged to master.
 
 ### Deltas not taken
 
@@ -5067,9 +5070,379 @@ No seed derivation, BIP32, other language, entropy generation, normalisation,
 prefix expansion, CLI command, SLIP-132 or fee-estimation work is included.
 The PSBT parity rules, captures and statements stay unchanged.
 `docs/upstream-fixes.md` is unchanged: no general upstream fix was needed.
-`plan.md` is unchanged; its §2 `bitcoin` row still says only
-“BIP39 entropy → English words”, omitting the implemented reverse direction.
+`plan.md` was unchanged during that work; its §2 `bitcoin` row was updated
+afterwards to “BIP39 entropy ↔ English words”, recording the reverse direction.
 No follow-up is proposed and no tracker item was created or updated.
+
+## Phase 4c: SLIP-132 public version conversion
+
+`import Bitcoin` exposes the pure `Bitcoin.Slip132` module. Its six-entry
+`Version` type is `xpub`, `ypub`, `zpub`, `tpub`, `upub`, `vpub`. The version
+table follows [cyberkrill's slip132.rs:9-20](https://github.com/douglaz/cyberkrill/blob/27cad1faba86260b06665a89f0af5134d23525c2/cyberkrill-core/src/slip132.rs#L9-L20)
+at `27cad1faba86260b06665a89f0af5134d23525c2`. The same six single-signature
+public entries appear in [SLIP-0132](https://github.com/satoshilabs/slips/blob/570ed55b7fde158f1116be34fc2faa35dada5912/slip-0132.md),
+which is cited only: its CC-BY-SA-4.0 text and table are not copied.
+
+| Version | Four bytes | Network represented |
+|---|---|---|
+| xpub | `04 88 B2 1E` | mainnet |
+| ypub | `04 9D 7C B2` | mainnet |
+| zpub | `04 B2 47 46` | mainnet |
+| tpub | `04 35 87 CF` | testnet/regtest |
+| upub | `04 4A 52 62` | testnet/regtest |
+| vpub | `04 5F 1C F6` | testnet/regtest |
+
+All four functions below are public, in namespace `Bitcoin.Slip132`:
+
+```lean
+versionBytes : Version → ByteArray
+versionOf : ByteArray → Option Version
+decode : String → Except Error (Version × ByteArray)
+convert : String → Version → Except Error String
+```
+
+`decode` returns the recognized version and the remaining 74-byte body.
+`convert` accepts any of the six as source and target, including across
+networks: an xpub may become a tpub, upub or vpub. Apart from its three checks,
+conversion never checks or changes anything but the four version bytes.
+The other 74 bytes pass through untouched. There is no BIP32 derivation,
+multisig/private version, curve or key-prefix check, new dependency, C code,
+CLI command or v1 caller. The package never imports `secp256k1`.
+
+The public `Error` type derives `Repr`, `DecidableEq` and `BEq`. The module
+imports the shared `Bitcoin.ByteArrayRepr` instance, so `import Bitcoin`
+preserves the existing `ByteArray#…` rendering without registering another
+`Repr ByteArray` instance. Its constructors reflect the exact check order:
+
+| Order | Constructor | Meaning |
+|---|---|---|
+| 1 | `base58 e` | The existing `Bitcoin.Base58.CheckError`, wrapped without merging errors |
+| 2 | `wrongLength n` | Decoded payload length is not exactly 78, including lengths below four |
+| 3 | `unknownVersion bytes` | The first four bytes are outside the six public entries |
+
+### Exact theorem statements
+
+These eight statements are in namespace `Bitcoin.Slip132`. They are all
+registered in `namedTheorems` and each has a `#print axioms` line.
+
+```lean
+theorem versionBytes_size (v : Version) : (versionBytes v).size = 4
+
+theorem versionOf_versionBytes (v : Version) : versionOf (versionBytes v) = some v
+
+theorem versionOf_sound (b : ByteArray) (v : Version) (h : versionOf b = some v) :
+    versionBytes v = b
+
+theorem base58CheckEncode_of_decode (s : String) (p : ByteArray)
+    (h : Base58.base58CheckDecode s = .ok p) : Base58.base58CheckEncode p = s
+
+theorem decode_sound (s : String) (v : Version) (body : ByteArray)
+    (h : decode s = .ok (v, body)) :
+    Base58.base58CheckDecode s = .ok (versionBytes v ++ body) ∧ body.size = 74
+
+theorem decode_encode (v : Version) (body : ByteArray) (h : body.size = 74) :
+    decode (Base58.base58CheckEncode (versionBytes v ++ body)) = .ok (v, body)
+
+theorem convert_payload (s s' : String) (v t : Version) (body : ByteArray)
+    (h : decode s = .ok (v, body)) (hc : convert s t = .ok s') :
+    Base58.base58CheckDecode s' = .ok (versionBytes t ++ body)
+
+theorem convert_roundtrip (s s' : String) (v t : Version) (body : ByteArray)
+    (h : decode s = .ok (v, body)) (hc : convert s t = .ok s') :
+    convert s' v = .ok s
+```
+
+The final theorem returns the original **string**, using Base58's canonical
+spelling and Base58Check soundness. `decode_sound` identifies the source's
+74-byte body, and `convert_payload` identifies that same body after conversion.
+The new string-level Base58Check lemma lives in `Slip132.lean`;
+`Base58.lean` and `Base58Check.lean` remain byte-identical to the baseline.
+No existing theorem statement changes. Library proofs use neither proof holes
+nor `native_decide` nor `bv_decide`.
+
+The axiom gate is **894 library theorems; 73 named; 0 offenders**, against
+Phase 4b's **852; 65; 0**. The additions are the eight explicit statements above
+and 34 generated library theorem declarations. The allowed axioms remain
+`propext`, `Classical.choice` and `Quot.sound`; `versionBytes_size` uses none,
+`versionOf_versionBytes` and `versionOf_sound` use only `propext` and
+`Quot.sound`, and the remaining five use the permitted three.
+
+### Sources, regeneration and counts
+
+The source is [BIP32 bip-0032.mediawiki](https://github.com/bitcoin/bips/blob/130b8e0fa7f30fa45532f080b87b8db27a79e46e/bip-0032.mediawiki)
+at `130b8e0fa7f30fa45532f080b87b8db27a79e46e`, **BSD-2-Clause**. A fresh fetch
+matched **28,032 bytes** and SHA-256
+`e5e00a8289db2f681052cf24a745320afc225e66b25d1e489a7c884d2fc7f11f`.
+Its author is Pieter Wuille; its licence declaration and Copyright section
+are preserved in `Bitcoin/LICENSE-bips`. It supplies no year or holder line.
+
+`generate-slip132-vectors.py` extracts only the six `ext pub` lines of vector 1
+and six of vector 2, in order. It verifies the source digest, exact lengths and
+prefixes and excludes all twelve corresponding private strings from its output.
+The extract and its sidecar are `test-data/bip32-public-vectors.json` and
+`.json.provenance`. The complete mediawiki document stays outside the tree.
+
+`cross-check-slip132.py` uses Python **base58 2.1.1** from the pinned nixpkgs,
+with literal bytes read from cyberkrill's table. It derives and checks **72**
+version swaps, each with the expected prefix, Base58Check payload and unchanged
+last 74 bytes. Its committed output is `test-data/slip132-derived.json`, with
+a sidecar marked “derived: version bytes swapped”. Lean compares its own
+72 conversions against these exact rows. Expected versions and strings never
+come from the library table or conversion.
+
+`capture-cyberkrill-slip132.py` appends only a temporary pure test inside
+`slip132.rs`'s test module in a fresh clone at `27cad1f`. It calls
+`parse_slip132_xpub(s)?.to_string()` for each independently derived
+ypub/zpub/upub/vpub, in that order for each of the twelve sources. One private
+`CARGO_HOME` serves online `cargo fetch --locked` and the subsequent offline
+test. The actual build/test uses the clone's own environment:
+
+```bash
+nix develop -c unshare -rn sh -c 'ip link set lo up && cargo test --offline --locked --target x86_64-unknown-linux-gnu -p cyberkrill-core --no-default-features --features trezor -j 2 --lib slip132 -- --nocapture --test-threads=1'
+```
+
+The offline command has a temporary HOME and opens no connection. The **48**
+captured rows are in `test-data/cyberkrill-slip132.json`, with producer, command,
+BIP32 input provenance and “derived: version bytes swapped, converted back by
+cyberkrill” in the sidecar. Lean checks both the golden input column's exact
+order against its independent derivation and each conversion back to xpub or
+tpub. Capture completed in **191.20 s**, exit **0**; the clone, Cargo cache and
+temporary HOME were deleted, and their workspace's absence was asserted.
+The hand-derived fallback was not used.
+
+From the repository root, with `TMP_ROOT` a fresh private temporary workspace:
+
+```bash
+TMPDIR="${TMP_ROOT:?}" python3 -I packages/bitcoin/generate-slip132-vectors.py
+TMPDIR="${TMP_ROOT:?}" nix shell --impure --expr 'let pkgs = import (builtins.getFlake (toString ./.)).inputs.nixpkgs {}; in pkgs.python3.withPackages (p: [p.base58])' -c python3 -I packages/bitcoin/cross-check-slip132.py
+TMPDIR="${TMP_ROOT:?}" systemd-run --user --scope --quiet -p MemoryMax=8G -p MemorySwapMax=0 -p OOMPolicy=continue -p TasksMax=4096 timeout 3600 python3 -I packages/bitcoin/capture-cyberkrill-slip132.py
+```
+
+All test sets pin their counts before checking cases and read committed files
+only. They never use the network or any wallet, node or device data.
+
+| Printed set | Count | Property |
+|---|---|---|
+| `slip132 vectors` | 12/12 | 111-character xpubs, 78-byte payloads and literal `04 88 B2 1E` version |
+| `slip132 conversions` | 72/72 | Independent Python expectation, prefix and exact swapped payload |
+| `slip132 roundtrips` | 72/72 | Convert every result back to the original xpub string |
+| `slip132 goldens` | 48/48 | Input order, port-produced input and cyberkrill's converted output |
+| `slip132 unknown-version` | 9/9 | Two BIP32 private versions, all-zero version, one-bit change to each of six public versions; each outside the independent table and rejected |
+| `slip132 wrong-length` | 2/2 | 77 and 79 bytes, exact length errors |
+| `slip132 short-payload` | 2/2 | Zero and three bytes, exact length errors |
+| `slip132 Base58Check` | 2/2 | Changed checksum character and invalid alphabet, distinct wrapped errors |
+| `slip132 check-order` | 2/2 | Length before unknown version; checksum before length and version |
+
+Select sets with `lake test -- --slip132 NAME`, where `NAME` is `vectors`,
+`conversions`, `roundtrips`, `goldens`, `unknown-version`, `wrong-length`,
+`short-payload`, `base58check` or `check-order`. Negative strings are constructed
+only at test time and never printed, including strings using private versions.
+No published count differed from the brief.
+
+### Production mutations and widened key-material checks
+
+From `packages/bitcoin`, run
+`nix develop -c python3 -I check-slip132-mutations.py` inside the capped scope
+shown above. The runner makes exact-count production replacements, restores
+the original bytes in `finally`, and records separate stdout/stderr under
+`.lake/slip132-mutation-checks`. Its compact record is
+`test-data/slip132-mutations.json`. It exited **0**, **4/4 detected**, in
+**33.74 s**, and its final full restored `lake test` exited **0**.
+
+| Production mutation | Detection | Exact assertion or theorem and first diagnostic |
+|---|---|---|
+| ypub table row's last byte changed from `B2` to `B3` | Test | `slip132 conversion 1 independent expectation` |
+| Unknown-version rejection replaced by successful decoding; table unchanged | Theorem build | `decode_sound`, `Bitcoin/Slip132.lean:81:13: unsolved goals` |
+| Required length changed from 78 to 79 | Theorem build | `decode_sound`, `Bitcoin/Slip132.lean:91:8: unsolved goals` |
+| Source version re-encoded unchanged instead of swapped | Theorem build | `convert_payload`, `Bitcoin/Slip132.lean:108:66: unsolved goals` |
+
+The wrong-byte test compares against the independently generated expected
+string; the round-trip property alone would not detect that edit. Each
+proof-caught record pins a statement falsified by its edit and records the
+first diagnostic inside that declaration's range.
+
+The live extended-private-key expression is widened from `[tx]prv…` to
+`[tuvxyzUVYZ]prv[1-9A-HJ-NP-Za-km-z]{100,}` in exactly the CI step,
+`BitcoinTests.lean` and `check-key-material.py`'s `CI_COMMAND`. It covers the
+SLIP-132 private forms and their multisig forms as well as xprv/tprv. The
+pre-edit widened scan printed nothing, exit **1**. Earlier Phase 4a records
+with the old expression are historical and unchanged.
+
+`check-key-material.py` uses **PyYAML 6.0.3** to compare the parsed CI command
+exactly. In a disposable copy it plants each prefix alone, constructed by
+concatenation: t/u/v/x/y/z/U/V/Y/Z followed by `prv` and 110 `z` characters.
+All **20/20** CI/Bitcoin checks went red, exit **1**; the restored CI scan
+exited **0**, and the missing-path check exited **1**. The runner exited **0**
+in **4.35 s**, confirmed the copy was removed, and wrote **22** records.
+No planted line appears literally in committed text: records preserve the
+`<synthetic planted line>` placeholder and describe each plant in prose.
+
+Run from the root after `lake test` has built BitcoinTests:
+
+```bash
+TMPDIR="${TMP_ROOT:?}" systemd-run --user --scope --quiet -p MemoryMax=8G -p MemorySwapMax=0 -p OOMPolicy=continue -p TasksMax=4096 timeout 3600 nix shell --impure --expr 'let pkgs = import (builtins.getFlake (toString ./.)).inputs.nixpkgs {}; in pkgs.python3.withPackages (p: [p.pyyaml])' -c python3 -I packages/bitcoin/check-key-material.py
+```
+
+### Existing mutation suites and changed files
+
+With the shared ByteArray rendering instance in place, SHA-256 fingerprints
+were recorded for all 78 Lean source files before the SLIP-132 runner and
+these eight existing runners. Each command ran once, sequentially, without
+checkpoint reuse, inside its own foreground scope:
+
+```bash
+systemd-run --user --scope --quiet -p MemoryMax=8G -p MemorySwapMax=0 -p OOMPolicy=continue -p TasksMax=4096 timeout 3600 COMMAND
+```
+
+`TMPDIR` was set to the private `TMP_ROOT`. Separate streams and elapsed-time
+records remain under `packages/bitcoin/.lake/slip132-validation-round3`; each runner
+also keeps its own separate mutation streams. The gate supervisor preserves
+the command's real exit status. No gate was piped through an output filter.
+
+| Package | Command | Exit | Detected | Wall seconds |
+|---|---|---|---|---|
+| bitcoin | `nix develop -c python3 -I check-mutations.py` | 0 | 6/6 | 76.80 |
+| bitcoin | `nix develop -c python3 -I check-base58-mutations.py` | 0 | 6/6 | 71.11 |
+| bitcoin | `nix develop -c python3 -I check-bech32-mutations.py` | 0 | 18/18 | 285.59 |
+| bitcoin | `nix develop -c python3 -I check-address-mutations.py` | 0 | 20/20 | 205.68 |
+| bitcoin | `nix develop -c python3 -I check-psbt-mutations.py` | 0 | 125/125 | 1858.70 |
+| bitcoin | `nix develop -c python3 -I check-ripemd160-mutations.py` | 0 | 8/8 | 116.06 |
+| bitcoin | `nix develop -c python3 -I check-bip39-mutations.py` | 0 | 9/9 | 92.76 |
+| secp256k1 | `nix develop -c python3 -I check-negative-mutations.py` | 0 | 44/44 negative + 18/18 compression | 252.55 |
+
+Total: **254/254 detected**. Each Bitcoin runner's final restored full
+`lake test` exited **0**. The secp256k1 adapter was restored; its existing
+redundant compression-length-guard probe still exits **0** and is not counted
+as a detected mutation. Its source and both records have no diff.
+
+The only existing pins changed are `65 named` → `73 named`, once each in
+`check-address-mutations.py`, `check-bech32-mutations.py`,
+`check-bip39-mutations.py`, `check-psbt-mutations.py` and
+`check-ripemd160-mutations.py`. In `test-data/mutations.json`, the sole changed
+diagnostic location is `BitcoinTests/AxiomGate.lean:81:0` → `:85:0`.
+All other existing mutation records compare byte-identically with the baseline,
+as do all of `packages/secp256k1` and the protected package sources.
+After all nine runners, the frozen Lean-source comparison matched **78/78**
+files. The SLIP-132 mutation record also matched its frozen pre-run bytes;
+all eight existing runners' records compared byte-identically with `HEAD`.
+
+The 29 changed/new files are listed below; paths are relative to
+`packages/bitcoin` unless otherwise stated.
+
+| File | Purpose |
+|---|---|
+| Root `README.md` | API, exact proofs, sources, results, status and the five specified historical corrections |
+| Root `.github/workflows/ci.yml` | Only the widened private-key expression |
+| `Bitcoin.lean` | Import the module and describe its public conversion proofs |
+| `Bitcoin/Slip132.lean` | Six versions, lookup, errors, decoding, conversion and eight theorems; imports the shared ByteArray rendering instance |
+| `Bitcoin/LICENSE-bips` | Add BIP32's BSD-2-Clause attribution and extract path |
+| `BitcoinTests.lean` | Full-suite call, selector, usage and widened grep |
+| `BitcoinTests/Slip132.lean` | Published, independent, golden, round-trip and negative sets |
+| `BitcoinTests/AxiomGate.lean` | Eight named theorems and eight axiom prints |
+| `lakefile.lean` | Test root and package description |
+| `generate-slip132-vectors.py` | Pinned, digest-checked public-only BIP32 extraction |
+| `cross-check-slip132.py` | Independent Python base58 derivation and 12/72/48 checks |
+| `capture-cyberkrill-slip132.py` | Fresh-clone offline pure capture with asserted cleanup |
+| `check-slip132-mutations.py` | Four production mutations and final restored full test |
+| `check-key-material.py` | Widened CI command and ten isolated plants against both greps |
+| `check-address-mutations.py` | Named-count pin 65 → 73 only |
+| `check-bech32-mutations.py` | Named-count pin 65 → 73 only |
+| `check-bip39-mutations.py` | Named-count pin 65 → 73 only |
+| `check-psbt-mutations.py` | Named-count pin 65 → 73 only |
+| `check-ripemd160-mutations.py` | Named-count pin 65 → 73 only |
+| `test-data/README.md` | Fixture provenance, regeneration and mutation-record instructions |
+| `test-data/bip32-public-vectors.json` | Twelve published public extended keys |
+| `test-data/bip32-public-vectors.json.provenance` | Source, digest, BSD attribution and extraction |
+| `test-data/slip132-derived.json` | Seventy-two independent expected conversions |
+| `test-data/slip132-derived.json.provenance` | Literal-byte swap derivation and exact command |
+| `test-data/cyberkrill-slip132.json` | Forty-eight captured conversions back to xpub/tpub |
+| `test-data/cyberkrill-slip132.json.provenance` | Producer, inputs, command, licence and transformation |
+| `test-data/slip132-mutations.json` | Four observed failures with detecting theorem/assertion |
+| `test-data/key-material-mutations.json` | Twenty red checks, restored scan and missing-path check |
+| `test-data/mutations.json` | Permitted diagnostic line shift only |
+
+### Final validation and cleanup
+
+The commands below ran with stdout and stderr saved separately; the build,
+test, capture and mutation commands used the capped scope above. The final
+build, test and mutation records use the shared ByteArray rendering instance.
+The extraction, cross-check and capture records are retained from their earlier
+runs; the capture was not repeated. No theorem statement was weakened.
+Every capped command completed within the memory cap and timeout. The final
+local build/test and whole-repository gates are recorded here.
+
+`BASE` below is `1b093cd9193609013210a450fcf58d20f70216bf`.
+`PROTECTED` denotes `flake.nix flake.lock AGENTS.md plan.md packages/sha256
+packages/secp256k1 packages/lightning packages/fedimint-invite
+packages/http-curl packages/cyberkrill`.
+
+| Directory | Command | Exit | Observation |
+|---|---|---|---|
+| bitcoin | `nix develop -c lake build` | 0 | 46 jobs; final run 1.37 s |
+| bitcoin | `nix develop -c lake test` | 0 | Final run 1.53 s; 12/72/72/48, negative sets 9/2/2/2/2, all earlier pinned sets, 894/73/0 gate and key-shaped grep 1/1 |
+| bitcoin | `nix develop -c lake env lean "$TMP_ROOT/repr.lean"` | 0 | Scratch file imports `Bitcoin`; prints `ByteArray##[1, 2]`; 1.45 s; scratch file deleted |
+| root | `TMPDIR="$TMP_ROOT" python3 -I packages/bitcoin/generate-slip132-vectors.py` | 0 | Initial and repeated extraction each 12/12 |
+| root | `git diff --exit-code -- packages/bitcoin/test-data/bip32-public-vectors.json packages/bitcoin/test-data/bip32-public-vectors.json.provenance` | 0 | Both streams empty after staging both paths and regenerating |
+| root | The pinned `nix shell` / base58 cross-check command above | 0 | Initial and repeated runs each 12/72/48; base58 2.1.1 |
+| root | `git diff --exit-code -- packages/bitcoin/test-data/slip132-derived.json packages/bitcoin/test-data/slip132-derived.json.provenance` | 0 | Both streams empty after staging both paths and regenerating |
+| root | The capped capture command above | 0 | 48 rows; online fetch and offline test each exit 0; private workspace absent after cleanup |
+| bitcoin | `nix develop -c python3 -I check-slip132-mutations.py` | 0 | 4/4 detected; full restored test exit 0; record unchanged; 33.74 s |
+| bitcoin / secp256k1 | All eight commands in the preceding table | 0 each | 254/254 detected on frozen final Lean sources; all records unchanged; times and restored results above |
+| root | The pinned `nix shell` / PyYAML key-material command above | 0 | Twenty planted-line rejections plus restored and missing-path results; 22 unchanged records; 4.35 s |
+| root | `nix flake check -L` | 0 | Fresh sandbox build/tests of all seven packages; every SLIP-132 set, 894/73/0 and `all checks passed!`; 105.10 s |
+| root | `nix build` | 0 | Default executable built; 0.98 s |
+| root | `./result/bin/cyberkrill` | 0 | `cyberkrill 0.1.0`; empty stderr; 0.17 s |
+| root | `rc=0; grep -rnw sorry --include='*.lean' --exclude-dir=.lake packages \|\| rc=$?; test "$rc" -eq 1` | 0 | Both streams empty |
+| root | `grep -rnE 'native_decide\|bv_decide' --include='*.lean' packages/bitcoin/Bitcoin packages/bitcoin/Bitcoin.lean` | 1 | Both streams empty |
+| root | `grep -F sorry packages/bitcoin/BitcoinTests/AxiomGate.lean` | 1 | Both streams empty |
+| root | `grep -n -E '^(private )?instance' packages/bitcoin/Bitcoin/Slip132.lean` | 1 | Both streams empty; no separate instance |
+| root | `git diff --exit-code "$BASE" -- packages/bitcoin/Bitcoin/Base58.lean packages/bitcoin/Bitcoin/Base58Check.lean packages/bitcoin/Bitcoin/ByteArrayRepr.lean` | 0 | All three files byte-identical |
+| root | `git diff --stat "$BASE" -- $PROTECTED` | 0 | Both streams empty |
+| root | `git diff --exit-code "$BASE" -- $PROTECTED` | 0 | Both streams empty; also checks all secp256k1 records |
+| root | `git diff --exit-code "$BASE" -- packages/bitcoin/test-data/{base58,bech32,address,psbt,ripemd160,bip39}-mutations.json` | 0 | All six other Bitcoin mutation records unchanged |
+| root | Compare CI against the baseline with exactly its one expression replaced | 0 | Exact content equality; no other CI change |
+| root | `git diff --check "$BASE"` | 0 | Both streams empty |
+| root | `find packages -name __pycache__ -not -path '*/.lake/*'` | 0 | Both streams empty |
+| root | `git diff --exit-code HEAD -- packages/bitcoin/test-data/README.md` | 0 | Both streams empty; fixture README restored |
+| root | Required stale-line grep over `README.md` | 1 | Both streams empty |
+| root | Compare all frozen Lean SHA-256 fingerprints | 0 | 78/78 matched after all nine runners and again after the final gates |
+
+The three staged-content scans used throwaway commands outside the repository:
+
+1. The required extended-private-key/WIF expression over saved added lines
+   exited **1**, printing nothing on either stream.
+2. All **252** added public-key occurrences (**72** unique strings) independently
+   Base58Check-decoded to 78 bytes, with their last 74 bytes among the twelve
+   published vector payloads. The assertion command exited **0**; no values
+   were printed.
+3. A fresh pinned mediawiki fetch went into its own empty directory outside the
+   tree, with its byte count and digest rechecked. Each of its twelve vector-1/2
+   private strings was searched using `git grep -F -- VALUE`, both working-tree
+   and `--cached`: **24 calls**, each exit **1**, both streams empty. The
+   assertion command exited **0**.
+
+The index was checked against all **29** scoped working files and excludes the
+pre-existing tracker claim. The three refreshed files were staged by explicit
+path before the flake check. Source, manifest and package boundaries are
+unchanged apart from the listed module and test wiring. No process from these
+checks remains running. The private temporary root created for this validation,
+fresh source fetch, disposable scripts and scan inputs were deleted by exact
+path, with their absence asserted. Cleanup removed only paths created for these
+checks. The capture separately removed its fresh clone, Cargo cache and
+temporary HOME, and the key-grep runner removed its disposable copy. Normal
+`.lake` build outputs, frozen fingerprints and separate validation logs remain.
+
+### Deltas not taken
+
+cyberkrill delegates to rust-bitcoin 0.32.8's `Xpub::decode`, which curve-checks
+bytes 45..78 and rejects an invalid point. The pure conversion here performs
+no curve check. cyberkrill checks the version before the 78-byte length and
+panics while slicing a payload below four bytes; this module checks the length
+first and returns `wrongLength` with that length. These differences are settled
+for this library, which has no v1 caller. No tracker item or follow-up was
+created, and `docs/upstream-fixes.md` is unchanged. `plan.md` is unchanged;
+no sentence in it became stale. The remaining Phase 4 weight/fee work is outside
+this change, as are CLI, BIP32 derivation and multisig/private conversions.
 
 ## Deltas taken
 

@@ -15,11 +15,21 @@ https://github.com/bitcoin/bips/blob/130b8e0fa7f30fa45532f080b87b8db27a79e46e/bi
 
 This BIP is licensed under the 2-clause BSD license.
 
-Neither BIP supplies a copyright year or holder line. The authors are named above.
+https://github.com/bitcoin/bips/blob/130b8e0fa7f30fa45532f080b87b8db27a79e46e/bip-0032.mediawiki
+
+  Authors: Pieter Wuille <pieter.wuille@gmail.com>
+  License: BSD-2-Clause
+==Copyright==
+
+This BIP is licensed under the 2-clause BSD license.
+
+None of BIP32, BIP173 or BIP350 supplies a copyright year or holder line. The authors are named above.
 The pinned repository root has no licence file. BIP2 links BSD-2-Clause to
 https://opensource.org/license/BSD-2-Clause . The conditions and disclaimer
 below are reproduced from that page. Codec and address vector strings and
-scriptPubKey hex are extracted and reformatted in Bech32Vectors.lean and AddressVectors.lean.
+scriptPubKey hex are extracted and reformatted in Bech32Vectors.lean and AddressVectors.lean;
+BIP32 vectors 1 and 2's public extended keys are extracted and reformatted in
+test-data/bip32-public-vectors.json.
 
 Redistribution and use in source and binary forms, with or without modification, are permitted provided that the following conditions are met:
 

@@ -99,7 +99,7 @@ def main():
                 failures = [line for line in output.splitlines() if diagnostic.search(line) and
                             start <= int(diagnostic.search(line)[1]) <= end]
             else:
-                assert re.search(r"Bitcoin axiom gate: \d+ library theorems; 65 named; 0 offenders", output), output
+                assert re.search(r"Bitcoin axiom gate: \d+ library theorems; 73 named; 0 offenders", output), output
                 failures = [line for line in output.splitlines()
                             if "assertion failed:" in line or line.startswith("error:")]
             assert failures, (label, expected, output)
