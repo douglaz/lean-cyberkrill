@@ -3,11 +3,9 @@ Copyright (c) 2026 lean-cyberkrill developers. Released under the MIT License or
 Apache License 2.0, at your option; see LICENSE-MIT and LICENSE-APACHE.
 -/
 import Bitcoin.Base58Check
+import Bitcoin.ByteArrayRepr
 
 namespace Bitcoin.Slip132
-
-private instance : Repr ByteArray where
-  reprPrec b n := reprPrec b.data n
 
 /-- The six single-signature public versions in cyberkrill's slip132.rs:9-20
 at 27cad1faba86260b06665a89f0af5134d23525c2. -/

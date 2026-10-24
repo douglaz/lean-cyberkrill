@@ -5109,8 +5109,10 @@ The other 74 bytes pass through untouched. There is no BIP32 derivation,
 multisig/private version, curve or key-prefix check, new dependency, C code,
 CLI command or v1 caller. The package never imports `secp256k1`.
 
-The public `Error` type derives `Repr`, `DecidableEq` and `BEq`. Its constructors
-reflect the exact check order:
+The public `Error` type derives `Repr`, `DecidableEq` and `BEq`. The module
+imports the shared `Bitcoin.ByteArrayRepr` instance, so `import Bitcoin`
+preserves the existing `ByteArray#…` rendering without registering another
+`Repr ByteArray` instance. Its constructors reflect the exact check order:
 
 | Order | Constructor | Meaning |
 |---|---|---|
@@ -5245,14 +5247,14 @@ shown above. The runner makes exact-count production replacements, restores
 the original bytes in `finally`, and records separate stdout/stderr under
 `.lake/slip132-mutation-checks`. Its compact record is
 `test-data/slip132-mutations.json`. It exited **0**, **4/4 detected**, in
-**45.99 s**, and its final full restored `lake test` exited **0**.
+**33.74 s**, and its final full restored `lake test` exited **0**.
 
 | Production mutation | Detection | Exact assertion or theorem and first diagnostic |
 |---|---|---|
 | ypub table row's last byte changed from `B2` to `B3` | Test | `slip132 conversion 1 independent expectation` |
-| Unknown-version rejection replaced by successful decoding; table unchanged | Theorem build | `decode_sound`, `Bitcoin/Slip132.lean:83:13: unsolved goals` |
-| Required length changed from 78 to 79 | Theorem build | `decode_sound`, `Bitcoin/Slip132.lean:93:8: unsolved goals` |
-| Source version re-encoded unchanged instead of swapped | Theorem build | `convert_payload`, `Bitcoin/Slip132.lean:110:66: unsolved goals` |
+| Unknown-version rejection replaced by successful decoding; table unchanged | Theorem build | `decode_sound`, `Bitcoin/Slip132.lean:81:13: unsolved goals` |
+| Required length changed from 78 to 79 | Theorem build | `decode_sound`, `Bitcoin/Slip132.lean:91:8: unsolved goals` |
+| Source version re-encoded unchanged instead of swapped | Theorem build | `convert_payload`, `Bitcoin/Slip132.lean:108:66: unsolved goals` |
 
 The wrong-byte test compares against the independently generated expected
 string; the round-trip property alone would not detect that edit. Each
@@ -5271,7 +5273,7 @@ exactly. In a disposable copy it plants each prefix alone, constructed by
 concatenation: t/u/v/x/y/z/U/V/Y/Z followed by `prv` and 110 `z` characters.
 All **20/20** CI/Bitcoin checks went red, exit **1**; the restored CI scan
 exited **0**, and the missing-path check exited **1**. The runner exited **0**
-in **7.01 s**, confirmed the copy was removed, and wrote **22** records.
+in **4.35 s**, confirmed the copy was removed, and wrote **22** records.
 No planted line appears literally in committed text: records preserve the
 `<synthetic planted line>` placeholder and describe each plant in prose.
 
@@ -5283,28 +5285,30 @@ TMPDIR="${TMP_ROOT:?}" systemd-run --user --scope --quiet -p MemoryMax=8G -p Mem
 
 ### Existing mutation suites and changed files
 
-The Lean sources were frozen before these eight runs. Each command ran once,
-sequentially, without checkpoint reuse, inside its own foreground scope:
+With the shared ByteArray rendering instance in place, SHA-256 fingerprints
+were recorded for all 78 Lean source files before the SLIP-132 runner and
+these eight existing runners. Each command ran once, sequentially, without
+checkpoint reuse, inside its own foreground scope:
 
 ```bash
 systemd-run --user --scope --quiet -p MemoryMax=8G -p MemorySwapMax=0 -p OOMPolicy=continue -p TasksMax=4096 timeout 3600 COMMAND
 ```
 
 `TMPDIR` was set to the private `TMP_ROOT`. Separate streams and elapsed-time
-records remain under `packages/bitcoin/.lake/slip132-validation`; each runner
+records remain under `packages/bitcoin/.lake/slip132-validation-round3`; each runner
 also keeps its own separate mutation streams. The gate supervisor preserves
 the command's real exit status. No gate was piped through an output filter.
 
 | Package | Command | Exit | Detected | Wall seconds |
 |---|---|---|---|---|
-| bitcoin | `nix develop -c python3 -I check-mutations.py` | 0 | 6/6 | 102.47 |
-| bitcoin | `nix develop -c python3 -I check-base58-mutations.py` | 0 | 6/6 | 87.70 |
-| bitcoin | `nix develop -c python3 -I check-bech32-mutations.py` | 0 | 18/18 | 470.51 |
-| bitcoin | `nix develop -c python3 -I check-address-mutations.py` | 0 | 20/20 | 258.28 |
-| bitcoin | `nix develop -c python3 -I check-psbt-mutations.py` | 0 | 125/125 | 1870.17 |
-| bitcoin | `nix develop -c python3 -I check-ripemd160-mutations.py` | 0 | 8/8 | 110.50 |
-| bitcoin | `nix develop -c python3 -I check-bip39-mutations.py` | 0 | 9/9 | 91.12 |
-| secp256k1 | `nix develop -c python3 -I check-negative-mutations.py` | 0 | 44/44 negative + 18/18 compression | 233.93 |
+| bitcoin | `nix develop -c python3 -I check-mutations.py` | 0 | 6/6 | 76.80 |
+| bitcoin | `nix develop -c python3 -I check-base58-mutations.py` | 0 | 6/6 | 71.11 |
+| bitcoin | `nix develop -c python3 -I check-bech32-mutations.py` | 0 | 18/18 | 285.59 |
+| bitcoin | `nix develop -c python3 -I check-address-mutations.py` | 0 | 20/20 | 205.68 |
+| bitcoin | `nix develop -c python3 -I check-psbt-mutations.py` | 0 | 125/125 | 1858.70 |
+| bitcoin | `nix develop -c python3 -I check-ripemd160-mutations.py` | 0 | 8/8 | 116.06 |
+| bitcoin | `nix develop -c python3 -I check-bip39-mutations.py` | 0 | 9/9 | 92.76 |
+| secp256k1 | `nix develop -c python3 -I check-negative-mutations.py` | 0 | 44/44 negative + 18/18 compression | 252.55 |
 
 Total: **254/254 detected**. Each Bitcoin runner's final restored full
 `lake test` exited **0**. The secp256k1 adapter was restored; its existing
@@ -5318,7 +5322,9 @@ The only existing pins changed are `65 named` → `73 named`, once each in
 diagnostic location is `BitcoinTests/AxiomGate.lean:81:0` → `:85:0`.
 All other existing mutation records compare byte-identically with the baseline,
 as do all of `packages/secp256k1` and the protected package sources.
-The frozen Lean-source comparison matched **78/78** files.
+After all nine runners, the frozen Lean-source comparison matched **78/78**
+files. The SLIP-132 mutation record also matched its frozen pre-run bytes;
+all eight existing runners' records compared byte-identically with `HEAD`.
 
 The 29 changed/new files are listed below; paths are relative to
 `packages/bitcoin` unless otherwise stated.
@@ -5328,7 +5334,7 @@ The 29 changed/new files are listed below; paths are relative to
 | Root `README.md` | API, exact proofs, sources, results, status and the five specified historical corrections |
 | Root `.github/workflows/ci.yml` | Only the widened private-key expression |
 | `Bitcoin.lean` | Import the module and describe its public conversion proofs |
-| `Bitcoin/Slip132.lean` | Six versions, lookup, errors, decoding, conversion and eight theorems |
+| `Bitcoin/Slip132.lean` | Six versions, lookup, errors, decoding, conversion and eight theorems; imports the shared ByteArray rendering instance |
 | `Bitcoin/LICENSE-bips` | Add BIP32's BSD-2-Clause attribution and extract path |
 | `BitcoinTests.lean` | Full-suite call, selector, usage and widened grep |
 | `BitcoinTests/Slip132.lean` | Published, independent, golden, round-trip and negative sets |
@@ -5358,13 +5364,12 @@ The 29 changed/new files are listed below; paths are relative to
 ### Final validation and cleanup
 
 The commands below ran with stdout and stderr saved separately; the build,
-test, capture and mutation commands used the capped scope above. All required
-commands completed within the cap and timeout. Initial proof-development checks
-exited **1** while correcting local instance, identifier and simplification
-errors; the corrected standalone module check exited **0** in **1.79 s**.
-No theorem statement was weakened. The fresh initial library build exited
-**0** in **5.05 s**, and the first complete test exited **0** in **19.91 s**.
-The final cached local build/test and fresh sandbox run are recorded here.
+test, capture and mutation commands used the capped scope above. The final
+build, test and mutation records use the shared ByteArray rendering instance.
+The extraction, cross-check and capture records are retained from their earlier
+runs; the capture was not repeated. No theorem statement was weakened.
+Every capped command completed within the memory cap and timeout. The final
+local build/test and whole-repository gates are recorded here.
 
 `BASE` below is `1b093cd9193609013210a450fcf58d20f70216bf`.
 `PROTECTED` denotes `flake.nix flake.lock AGENTS.md plan.md packages/sha256
@@ -5373,31 +5378,34 @@ packages/http-curl packages/cyberkrill`.
 
 | Directory | Command | Exit | Observation |
 |---|---|---|---|
-| bitcoin | `nix develop -c lake build` | 0 | 46 jobs; final cached run 1.12 s |
-| bitcoin | `nix develop -c lake test` | 0 | Final run 1.37 s; 12/72/72/48, negative sets 9/2/2/2/2, all earlier counts and 894/73/0 gate |
+| bitcoin | `nix develop -c lake build` | 0 | 46 jobs; final run 1.37 s |
+| bitcoin | `nix develop -c lake test` | 0 | Final run 1.53 s; 12/72/72/48, negative sets 9/2/2/2/2, all earlier pinned sets, 894/73/0 gate and key-shaped grep 1/1 |
+| bitcoin | `nix develop -c lake env lean "$TMP_ROOT/repr.lean"` | 0 | Scratch file imports `Bitcoin`; prints `ByteArray##[1, 2]`; 1.45 s; scratch file deleted |
 | root | `TMPDIR="$TMP_ROOT" python3 -I packages/bitcoin/generate-slip132-vectors.py` | 0 | Initial and repeated extraction each 12/12 |
 | root | `git diff --exit-code -- packages/bitcoin/test-data/bip32-public-vectors.json packages/bitcoin/test-data/bip32-public-vectors.json.provenance` | 0 | Both streams empty after staging both paths and regenerating |
 | root | The pinned `nix shell` / base58 cross-check command above | 0 | Initial and repeated runs each 12/72/48; base58 2.1.1 |
 | root | `git diff --exit-code -- packages/bitcoin/test-data/slip132-derived.json packages/bitcoin/test-data/slip132-derived.json.provenance` | 0 | Both streams empty after staging both paths and regenerating |
 | root | The capped capture command above | 0 | 48 rows; online fetch and offline test each exit 0; private workspace absent after cleanup |
-| bitcoin | `nix develop -c python3 -I check-slip132-mutations.py` | 0 | 4/4 detected; full restored test exit 0 |
-| bitcoin / secp256k1 | All eight commands in the preceding table | 0 each | 254/254 detected; times and restored results above |
-| root | The pinned `nix shell` / PyYAML key-material command above | 0 | Twenty planted-line rejections plus restored and missing-path results; 22 records |
-| root | `nix flake check -L` | 0 | Fresh sandbox build/tests of all seven packages; every SLIP-132 set, 894/73/0 and `all checks passed!`; 125.84 s |
-| root | `nix build` | 0 | Default executable built; 1.07 s |
-| root | `./result/bin/cyberkrill` | 0 | `cyberkrill 0.1.0`; empty stderr |
+| bitcoin | `nix develop -c python3 -I check-slip132-mutations.py` | 0 | 4/4 detected; full restored test exit 0; record unchanged; 33.74 s |
+| bitcoin / secp256k1 | All eight commands in the preceding table | 0 each | 254/254 detected on frozen final Lean sources; all records unchanged; times and restored results above |
+| root | The pinned `nix shell` / PyYAML key-material command above | 0 | Twenty planted-line rejections plus restored and missing-path results; 22 unchanged records; 4.35 s |
+| root | `nix flake check -L` | 0 | Fresh sandbox build/tests of all seven packages; every SLIP-132 set, 894/73/0 and `all checks passed!`; 105.10 s |
+| root | `nix build` | 0 | Default executable built; 0.98 s |
+| root | `./result/bin/cyberkrill` | 0 | `cyberkrill 0.1.0`; empty stderr; 0.17 s |
 | root | `rc=0; grep -rnw sorry --include='*.lean' --exclude-dir=.lake packages \|\| rc=$?; test "$rc" -eq 1` | 0 | Both streams empty |
 | root | `grep -rnE 'native_decide\|bv_decide' --include='*.lean' packages/bitcoin/Bitcoin packages/bitcoin/Bitcoin.lean` | 1 | Both streams empty |
 | root | `grep -F sorry packages/bitcoin/BitcoinTests/AxiomGate.lean` | 1 | Both streams empty |
-| root | `git diff --exit-code "$BASE" -- packages/bitcoin/Bitcoin/Base58.lean packages/bitcoin/Bitcoin/Base58Check.lean` | 0 | Both files byte-identical |
+| root | `grep -n -E '^(private )?instance' packages/bitcoin/Bitcoin/Slip132.lean` | 1 | Both streams empty; no separate instance |
+| root | `git diff --exit-code "$BASE" -- packages/bitcoin/Bitcoin/Base58.lean packages/bitcoin/Bitcoin/Base58Check.lean packages/bitcoin/Bitcoin/ByteArrayRepr.lean` | 0 | All three files byte-identical |
 | root | `git diff --stat "$BASE" -- $PROTECTED` | 0 | Both streams empty |
 | root | `git diff --exit-code "$BASE" -- $PROTECTED` | 0 | Both streams empty; also checks all secp256k1 records |
 | root | `git diff --exit-code "$BASE" -- packages/bitcoin/test-data/{base58,bech32,address,psbt,ripemd160,bip39}-mutations.json` | 0 | All six other Bitcoin mutation records unchanged |
 | root | Compare CI against the baseline with exactly its one expression replaced | 0 | Exact content equality; no other CI change |
 | root | `git diff --check "$BASE"` | 0 | Both streams empty |
 | root | `find packages -name __pycache__ -not -path '*/.lake/*'` | 0 | Both streams empty |
-| root | Required stale-line grep over `README.md` | 1 | Both streams empty; all five specified corrections present; the earlier separate-commit sentence retained |
-| root | Compare all frozen Lean SHA-256 fingerprints | 0 | 78/78 matched |
+| root | `git diff --exit-code HEAD -- packages/bitcoin/test-data/README.md` | 0 | Both streams empty; fixture README restored |
+| root | Required stale-line grep over `README.md` | 1 | Both streams empty |
+| root | Compare all frozen Lean SHA-256 fingerprints | 0 | 78/78 matched after all nine runners and again after the final gates |
 
 The three staged-content scans used throwaway commands outside the repository:
 
@@ -5414,14 +5422,15 @@ The three staged-content scans used throwaway commands outside the repository:
    assertion command exited **0**.
 
 The index was checked against all **29** scoped working files and excludes the
-pre-existing tracker claim. New files were staged by explicit path before the
-flake check. Source, manifest and package boundaries are unchanged apart from
-the listed module and test wiring. No process from these checks remains running.
-The private temporary root, downloaded source documents, disposable scan scripts,
-fingerprint record and scan inputs were deleted by the exact created directory,
-with its absence asserted. The capture separately removed its fresh clone,
-Cargo cache and temporary HOME, and the key-grep runner removed its disposable
-copy. Normal `.lake` build outputs and separate validation logs remain.
+pre-existing tracker claim. The three refreshed files were staged by explicit
+path before the flake check. Source, manifest and package boundaries are
+unchanged apart from the listed module and test wiring. No process from these
+checks remains running. The private temporary root created for this validation,
+fresh source fetch, disposable scripts and scan inputs were deleted by exact
+path, with their absence asserted. Cleanup removed only paths created for these
+checks. The capture separately removed its fresh clone, Cargo cache and
+temporary HOME, and the key-grep runner removed its disposable copy. Normal
+`.lake` build outputs, frozen fingerprints and separate validation logs remain.
 
 ### Deltas not taken
 
