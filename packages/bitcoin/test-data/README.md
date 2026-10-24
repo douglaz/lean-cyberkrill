@@ -82,6 +82,59 @@ The script restores and byte-checks
 sources in `finally`, and finishes with a successful full `lake test`.
 Separate streams remain under `.lake/bip39-mutation-checks`.
 
+## SLIP-132 public fixtures
+
+`bip32-public-vectors.json` holds exactly the 12 `ext pub` lines of BIP32 test
+vectors 1 and 2, in published order (six each), from
+[bitcoin/bips bip-0032.mediawiki](https://github.com/bitcoin/bips/blob/130b8e0fa7f30fa45532f080b87b8db27a79e46e/bip-0032.mediawiki)
+at `130b8e0fa7f30fa45532f080b87b8db27a79e46e`, BSD-2-Clause. Its sidecar records
+the source digest, authors and extraction; `Bitcoin/LICENSE-bips` preserves
+the BIP's notice. No complete document or private column is retained.
+
+`slip132-derived.json` holds 72 independent Python base58 2.1.1 version swaps:
+each source, then xpub/ypub/zpub/tpub/upub/vpub. The literal versions come from
+cyberkrill `slip132.rs:9-20` at `27cad1faba86260b06665a89f0af5134d23525c2`.
+Every result has the expected prefix, checksum and unchanged 74-byte body.
+The Lean test compares each conversion to this file in order.
+
+`cyberkrill-slip132.json` holds 48 goldens: each source, then ypub/zpub/upub/vpub,
+converted back to xpub or tpub by `parse_slip132_xpub(s)?.to_string()` in a fresh
+clone of that revision. Only a temporary pure test is added. Dependencies are
+fetched first; the actual test runs offline under `unshare -rn` with a throwaway
+HOME. The capture removes its exact workspace, clone and Cargo cache, and
+asserts their absence. Each JSON file has its own provenance sidecar.
+
+Regenerate from the root, with `TMP_ROOT` set to a fresh private workspace:
+
+```bash
+TMPDIR="${TMP_ROOT:?}" python3 -I packages/bitcoin/generate-slip132-vectors.py
+nix shell --impure --expr 'let pkgs = import (builtins.getFlake (toString ./.)).inputs.nixpkgs {}; in pkgs.python3.withPackages (p: [p.base58])' -c python3 -I packages/bitcoin/cross-check-slip132.py
+TMPDIR="${TMP_ROOT:?}" systemd-run --user --scope --quiet -p MemoryMax=8G -p MemorySwapMax=0 -p OOMPolicy=continue -p TasksMax=4096 timeout 3600 python3 -I packages/bitcoin/capture-cyberkrill-slip132.py
+```
+
+The extract checks 28,032 bytes and SHA-256
+`e5e00a8289db2f681052cf24a745320afc225e66b25d1e489a7c884d2fc7f11f`,
+and excludes all twelve private strings. The cross-check pins 12/72/48.
+The Lean goldens test separately checks every input against an independent
+literal-byte derivation, in order. Negative inputs are constructed only at
+test time and never printed, including private-version rejections.
+
+`slip132-mutations.json` records four production mutations, the exact detecting
+assertion or theorem and the first diagnostic in that theorem's declaration
+range. `check-slip132-mutations.py` restores exact bytes in `finally`, keeps
+separate streams under `.lake/slip132-mutation-checks`, and finishes with a full
+restored `lake test`. Select individual test sets with `lake test -- --slip132 NAME`.
+
+`key-material-mutations.json` now records ten prefixes tested alone against
+both the parsed CI command and the Bitcoin test grep: 20 red results plus the
+restored scan and missing-path check. Synthetic lines are described, never
+stored; their output uses `<synthetic planted line>`. Run from the root after
+building BitcoinTests:
+
+```bash
+TMPDIR="${TMP_ROOT:?}" systemd-run --user --scope --quiet -p MemoryMax=8G -p MemorySwapMax=0 -p OOMPolicy=continue -p TasksMax=4096 timeout 3600 nix shell --impure --expr 'let pkgs = import (builtins.getFlake (toString ./.)).inputs.nixpkgs {}; in pkgs.python3.withPackages (p: [p.pyyaml])' -c python3 -I packages/bitcoin/check-key-material.py
+```
+
 ## PSBT proof and definition checks
 
 `psbt-inventory.json` is unchanged. Its 136 transaction occurrences also drive

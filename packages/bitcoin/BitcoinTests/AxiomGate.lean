@@ -51,7 +51,11 @@ def namedTheorems : List Name :=
    ``Bitcoin.Bip39.wordlist_nodup, ``Bitcoin.Bip39.wordlist_length,
    ``Bitcoin.Bip39.mnemonicToEntropy_entropyToMnemonic,
    ``Bitcoin.Bip39.entropyToMnemonic_mnemonicToEntropy,
-   ``Bitcoin.Bip39.mnemonicToEntropy_checksum_mismatch]
+   ``Bitcoin.Bip39.mnemonicToEntropy_checksum_mismatch,
+   ``Bitcoin.Slip132.versionBytes_size, ``Bitcoin.Slip132.versionOf_versionBytes,
+   ``Bitcoin.Slip132.versionOf_sound, ``Bitcoin.Slip132.base58CheckEncode_of_decode,
+   ``Bitcoin.Slip132.decode_sound, ``Bitcoin.Slip132.decode_encode,
+   ``Bitcoin.Slip132.convert_payload, ``Bitcoin.Slip132.convert_roundtrip]
 
 private def allowedAxioms : List Name := [``propext, ``Classical.choice, ``Quot.sound]
 
@@ -79,6 +83,15 @@ elab "#bitcoin_axiom_gate" : command => do
   elabCommand (← `(def $(mkIdent `auditedTheoremCount) : Nat := $(quote count)))
 
 #bitcoin_axiom_gate
+
+#print axioms Bitcoin.Slip132.versionBytes_size
+#print axioms Bitcoin.Slip132.versionOf_versionBytes
+#print axioms Bitcoin.Slip132.versionOf_sound
+#print axioms Bitcoin.Slip132.base58CheckEncode_of_decode
+#print axioms Bitcoin.Slip132.decode_sound
+#print axioms Bitcoin.Slip132.decode_encode
+#print axioms Bitcoin.Slip132.convert_payload
+#print axioms Bitcoin.Slip132.convert_roundtrip
 
 #print axioms Bitcoin.Hex.decode_encode
 #print axioms Bitcoin.Bip39.wordlist_nodup

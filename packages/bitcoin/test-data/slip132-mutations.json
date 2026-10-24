@@ -1,0 +1,65 @@
+[
+  {
+    "mutation": "wrong-table-byte",
+    "source": "Bitcoin/Slip132.lean",
+    "command": [
+      "lake",
+      "test",
+      "--",
+      "--slip132",
+      "conversions"
+    ],
+    "exit": 1,
+    "caught_by": "test",
+    "property": "slip132 conversion 1 independent expectation",
+    "failure": "uncaught exception: assertion failed: slip132 conversion 1 independent expectation"
+  },
+  {
+    "mutation": "drop-unknown-version",
+    "source": "Bitcoin/Slip132.lean",
+    "command": [
+      "lake",
+      "test",
+      "--",
+      "--slip132",
+      "unknown-version"
+    ],
+    "exit": 1,
+    "caught_by": "theorem build",
+    "theorem_file": "Bitcoin/Slip132.lean",
+    "theorem": "decode_sound",
+    "failure": "error: Bitcoin/Slip132.lean:83:13: unsolved goals"
+  },
+  {
+    "mutation": "length-off-by-one",
+    "source": "Bitcoin/Slip132.lean",
+    "command": [
+      "lake",
+      "test",
+      "--",
+      "--slip132",
+      "wrong-length"
+    ],
+    "exit": 1,
+    "caught_by": "theorem build",
+    "theorem_file": "Bitcoin/Slip132.lean",
+    "theorem": "decode_sound",
+    "failure": "error: Bitcoin/Slip132.lean:93:8: unsolved goals"
+  },
+  {
+    "mutation": "skip-version-swap",
+    "source": "Bitcoin/Slip132.lean",
+    "command": [
+      "lake",
+      "test",
+      "--",
+      "--slip132",
+      "conversions"
+    ],
+    "exit": 1,
+    "caught_by": "theorem build",
+    "theorem_file": "Bitcoin/Slip132.lean",
+    "theorem": "convert_payload",
+    "failure": "error: Bitcoin/Slip132.lean:110:66: unsolved goals"
+  }
+]

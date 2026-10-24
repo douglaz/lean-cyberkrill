@@ -1,17 +1,208 @@
 [
   {
     "property": "CI key-shaped grep",
+    "plant": "tprv followed by 110 z characters",
     "command": [
       "bash",
       "-e",
       "-c",
-      "rc=0; grep -rEn --exclude-dir=.lake '[tx]prv[1-9A-HJ-NP-Za-km-z]{100,}' packages || rc=$?; test \"$rc\" -eq 1"
+      "rc=0; grep -rEn --exclude-dir=.lake '[tuvxyzUVYZ]prv[1-9A-HJ-NP-Za-km-z]{100,}' packages || rc=$?; test \"$rc\" -eq 1"
     ],
     "exit": 1,
     "failure": "packages/bitcoin/synthetic-key-shape.txt:1: <synthetic planted line>"
   },
   {
     "property": "bitcoin test key-shaped grep",
+    "plant": "tprv followed by 110 z characters",
+    "command": [
+      "BitcoinTests"
+    ],
+    "exit": 1,
+    "failure": "assertion failed: key-shaped grep: exit 0; ../bitcoin/synthetic-key-shape.txt:1: <synthetic planted line>"
+  },
+  {
+    "property": "CI key-shaped grep",
+    "plant": "uprv followed by 110 z characters",
+    "command": [
+      "bash",
+      "-e",
+      "-c",
+      "rc=0; grep -rEn --exclude-dir=.lake '[tuvxyzUVYZ]prv[1-9A-HJ-NP-Za-km-z]{100,}' packages || rc=$?; test \"$rc\" -eq 1"
+    ],
+    "exit": 1,
+    "failure": "packages/bitcoin/synthetic-key-shape.txt:1: <synthetic planted line>"
+  },
+  {
+    "property": "bitcoin test key-shaped grep",
+    "plant": "uprv followed by 110 z characters",
+    "command": [
+      "BitcoinTests"
+    ],
+    "exit": 1,
+    "failure": "assertion failed: key-shaped grep: exit 0; ../bitcoin/synthetic-key-shape.txt:1: <synthetic planted line>"
+  },
+  {
+    "property": "CI key-shaped grep",
+    "plant": "vprv followed by 110 z characters",
+    "command": [
+      "bash",
+      "-e",
+      "-c",
+      "rc=0; grep -rEn --exclude-dir=.lake '[tuvxyzUVYZ]prv[1-9A-HJ-NP-Za-km-z]{100,}' packages || rc=$?; test \"$rc\" -eq 1"
+    ],
+    "exit": 1,
+    "failure": "packages/bitcoin/synthetic-key-shape.txt:1: <synthetic planted line>"
+  },
+  {
+    "property": "bitcoin test key-shaped grep",
+    "plant": "vprv followed by 110 z characters",
+    "command": [
+      "BitcoinTests"
+    ],
+    "exit": 1,
+    "failure": "assertion failed: key-shaped grep: exit 0; ../bitcoin/synthetic-key-shape.txt:1: <synthetic planted line>"
+  },
+  {
+    "property": "CI key-shaped grep",
+    "plant": "xprv followed by 110 z characters",
+    "command": [
+      "bash",
+      "-e",
+      "-c",
+      "rc=0; grep -rEn --exclude-dir=.lake '[tuvxyzUVYZ]prv[1-9A-HJ-NP-Za-km-z]{100,}' packages || rc=$?; test \"$rc\" -eq 1"
+    ],
+    "exit": 1,
+    "failure": "packages/bitcoin/synthetic-key-shape.txt:1: <synthetic planted line>"
+  },
+  {
+    "property": "bitcoin test key-shaped grep",
+    "plant": "xprv followed by 110 z characters",
+    "command": [
+      "BitcoinTests"
+    ],
+    "exit": 1,
+    "failure": "assertion failed: key-shaped grep: exit 0; ../bitcoin/synthetic-key-shape.txt:1: <synthetic planted line>"
+  },
+  {
+    "property": "CI key-shaped grep",
+    "plant": "yprv followed by 110 z characters",
+    "command": [
+      "bash",
+      "-e",
+      "-c",
+      "rc=0; grep -rEn --exclude-dir=.lake '[tuvxyzUVYZ]prv[1-9A-HJ-NP-Za-km-z]{100,}' packages || rc=$?; test \"$rc\" -eq 1"
+    ],
+    "exit": 1,
+    "failure": "packages/bitcoin/synthetic-key-shape.txt:1: <synthetic planted line>"
+  },
+  {
+    "property": "bitcoin test key-shaped grep",
+    "plant": "yprv followed by 110 z characters",
+    "command": [
+      "BitcoinTests"
+    ],
+    "exit": 1,
+    "failure": "assertion failed: key-shaped grep: exit 0; ../bitcoin/synthetic-key-shape.txt:1: <synthetic planted line>"
+  },
+  {
+    "property": "CI key-shaped grep",
+    "plant": "zprv followed by 110 z characters",
+    "command": [
+      "bash",
+      "-e",
+      "-c",
+      "rc=0; grep -rEn --exclude-dir=.lake '[tuvxyzUVYZ]prv[1-9A-HJ-NP-Za-km-z]{100,}' packages || rc=$?; test \"$rc\" -eq 1"
+    ],
+    "exit": 1,
+    "failure": "packages/bitcoin/synthetic-key-shape.txt:1: <synthetic planted line>"
+  },
+  {
+    "property": "bitcoin test key-shaped grep",
+    "plant": "zprv followed by 110 z characters",
+    "command": [
+      "BitcoinTests"
+    ],
+    "exit": 1,
+    "failure": "assertion failed: key-shaped grep: exit 0; ../bitcoin/synthetic-key-shape.txt:1: <synthetic planted line>"
+  },
+  {
+    "property": "CI key-shaped grep",
+    "plant": "Uprv followed by 110 z characters",
+    "command": [
+      "bash",
+      "-e",
+      "-c",
+      "rc=0; grep -rEn --exclude-dir=.lake '[tuvxyzUVYZ]prv[1-9A-HJ-NP-Za-km-z]{100,}' packages || rc=$?; test \"$rc\" -eq 1"
+    ],
+    "exit": 1,
+    "failure": "packages/bitcoin/synthetic-key-shape.txt:1: <synthetic planted line>"
+  },
+  {
+    "property": "bitcoin test key-shaped grep",
+    "plant": "Uprv followed by 110 z characters",
+    "command": [
+      "BitcoinTests"
+    ],
+    "exit": 1,
+    "failure": "assertion failed: key-shaped grep: exit 0; ../bitcoin/synthetic-key-shape.txt:1: <synthetic planted line>"
+  },
+  {
+    "property": "CI key-shaped grep",
+    "plant": "Vprv followed by 110 z characters",
+    "command": [
+      "bash",
+      "-e",
+      "-c",
+      "rc=0; grep -rEn --exclude-dir=.lake '[tuvxyzUVYZ]prv[1-9A-HJ-NP-Za-km-z]{100,}' packages || rc=$?; test \"$rc\" -eq 1"
+    ],
+    "exit": 1,
+    "failure": "packages/bitcoin/synthetic-key-shape.txt:1: <synthetic planted line>"
+  },
+  {
+    "property": "bitcoin test key-shaped grep",
+    "plant": "Vprv followed by 110 z characters",
+    "command": [
+      "BitcoinTests"
+    ],
+    "exit": 1,
+    "failure": "assertion failed: key-shaped grep: exit 0; ../bitcoin/synthetic-key-shape.txt:1: <synthetic planted line>"
+  },
+  {
+    "property": "CI key-shaped grep",
+    "plant": "Yprv followed by 110 z characters",
+    "command": [
+      "bash",
+      "-e",
+      "-c",
+      "rc=0; grep -rEn --exclude-dir=.lake '[tuvxyzUVYZ]prv[1-9A-HJ-NP-Za-km-z]{100,}' packages || rc=$?; test \"$rc\" -eq 1"
+    ],
+    "exit": 1,
+    "failure": "packages/bitcoin/synthetic-key-shape.txt:1: <synthetic planted line>"
+  },
+  {
+    "property": "bitcoin test key-shaped grep",
+    "plant": "Yprv followed by 110 z characters",
+    "command": [
+      "BitcoinTests"
+    ],
+    "exit": 1,
+    "failure": "assertion failed: key-shaped grep: exit 0; ../bitcoin/synthetic-key-shape.txt:1: <synthetic planted line>"
+  },
+  {
+    "property": "CI key-shaped grep",
+    "plant": "Zprv followed by 110 z characters",
+    "command": [
+      "bash",
+      "-e",
+      "-c",
+      "rc=0; grep -rEn --exclude-dir=.lake '[tuvxyzUVYZ]prv[1-9A-HJ-NP-Za-km-z]{100,}' packages || rc=$?; test \"$rc\" -eq 1"
+    ],
+    "exit": 1,
+    "failure": "packages/bitcoin/synthetic-key-shape.txt:1: <synthetic planted line>"
+  },
+  {
+    "property": "bitcoin test key-shaped grep",
+    "plant": "Zprv followed by 110 z characters",
     "command": [
       "BitcoinTests"
     ],
@@ -24,7 +215,7 @@
       "bash",
       "-e",
       "-c",
-      "rc=0; grep -rEn --exclude-dir=.lake '[tx]prv[1-9A-HJ-NP-Za-km-z]{100,}' packages || rc=$?; test \"$rc\" -eq 1"
+      "rc=0; grep -rEn --exclude-dir=.lake '[tuvxyzUVYZ]prv[1-9A-HJ-NP-Za-km-z]{100,}' packages || rc=$?; test \"$rc\" -eq 1"
     ],
     "exit": 0
   },
@@ -34,7 +225,7 @@
       "bash",
       "-e",
       "-c",
-      "rc=0; grep -rEn --exclude-dir=.lake '[tx]prv[1-9A-HJ-NP-Za-km-z]{100,}' packages || rc=$?; test \"$rc\" -eq 1"
+      "rc=0; grep -rEn --exclude-dir=.lake '[tuvxyzUVYZ]prv[1-9A-HJ-NP-Za-km-z]{100,}' packages || rc=$?; test \"$rc\" -eq 1"
     ],
     "exit": 1,
     "failure": "grep: packages: No such file or directory"

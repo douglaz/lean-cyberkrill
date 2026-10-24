@@ -7,7 +7,7 @@ open Lake DSL
 
 package bitcoin where
   version := v!"0.1.0"
-  description := "Bitcoin encodings: hex, CompactSize, base58, bech32, addresses, amounts, transactions, PSBT, BIP39"
+  description := "Bitcoin encodings: hex, CompactSize, base58, bech32, addresses, amounts, transactions, PSBT, BIP39, SLIP-132"
   license := "MIT OR Apache-2.0"
   licenseFiles := #["../../LICENSE-MIT", "../../LICENSE-APACHE"]
   leanOptions := #[⟨`autoImplicit, false⟩, ⟨`relaxedAutoImplicit, false⟩,
@@ -20,7 +20,7 @@ lean_lib Bitcoin
 
 lean_lib BitcoinTestSupport where
   roots := #[`BitcoinTests.AxiomGate, `BitcoinTests.Psbt, `BitcoinTests.Ripemd160, `BitcoinTests.Bip39,
-    `BitcoinTests.TransactionChecks]
+    `BitcoinTests.TransactionChecks, `BitcoinTests.Slip132]
 
 @[test_driver]
 lean_exe BitcoinTests

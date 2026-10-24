@@ -15,7 +15,7 @@ import yaml
 
 PACKAGE = Path(__file__).resolve().parent
 REPO = PACKAGE.parent.parent
-CI_COMMAND = "rc=0; grep -rEn --exclude-dir=.lake '[tx]prv[1-9A-HJ-NP-Za-km-z]{100,}' packages || rc=$?; test \"$rc\" -eq 1"
+CI_COMMAND = "rc=0; grep -rEn --exclude-dir=.lake '[tuvxyzUVYZ]prv[1-9A-HJ-NP-Za-km-z]{100,}' packages || rc=$?; test \"$rc\" -eq 1"
 LOGS = PACKAGE / ".lake/key-material-checks"
 
 
@@ -39,18 +39,26 @@ def main():
     try:
         shutil.copytree(REPO / "packages", root / "packages", ignore=shutil.ignore_patterns(".lake", "__pycache__"))
         planted = root / "packages/bitcoin/synthetic-key-shape.txt"
-        planted.write_text("t" + "prv" + "z" * 110 + "\n")
-        status, out, err = run("ci-planted", ["bash", "-e", "-c", CI_COMMAND], root)
-        assert status == 1 and "packages/bitcoin/synthetic-key-shape.txt:1:" in out and not err
-        records.append(dict(property="CI key-shaped grep", command=["bash", "-e", "-c", CI_COMMAND],
-                            exit=status, failure="packages/bitcoin/synthetic-key-shape.txt:1: <synthetic planted line>"))
         binary = PACKAGE / ".lake/build/bin/BitcoinTests"
-        status, out, err = run("lake-planted", [str(binary)], root / "packages/bitcoin")
-        assert status == 1 and "assertion failed: key-shaped grep: exit 0" in err
-        assert "../bitcoin/synthetic-key-shape.txt:1:" in err
-        records.append(dict(property="bitcoin test key-shaped grep", command=["BitcoinTests"],
-                            exit=status, failure="assertion failed: key-shaped grep: exit 0; ../bitcoin/synthetic-key-shape.txt:1: <synthetic planted line>"))
-        planted.unlink()
+        prefixes = "tuvxyzUVYZ"
+        assert len(prefixes) == len(set(prefixes)) == 10
+        for prefix in prefixes:
+            assert not planted.exists()
+            planted.write_text(prefix + "prv" + "z" * 110 + "\n")
+            description = prefix + "prv followed by 110 z characters"
+            status, out, err = run(f"ci-planted-{prefix}", ["bash", "-e", "-c", CI_COMMAND], root)
+            assert status == 1 and "packages/bitcoin/synthetic-key-shape.txt:1:" in out and not err
+            records.append(dict(property="CI key-shaped grep", plant=description,
+                                command=["bash", "-e", "-c", CI_COMMAND], exit=status,
+                                failure="packages/bitcoin/synthetic-key-shape.txt:1: <synthetic planted line>"))
+            status, out, err = run(f"lake-planted-{prefix}", [str(binary)], root / "packages/bitcoin")
+            assert status == 1 and "assertion failed: key-shaped grep: exit 0" in err
+            assert "../bitcoin/synthetic-key-shape.txt:1:" in err
+            records.append(dict(property="bitcoin test key-shaped grep", plant=description,
+                                command=["BitcoinTests"], exit=status,
+                                failure="assertion failed: key-shaped grep: exit 0; ../bitcoin/synthetic-key-shape.txt:1: <synthetic planted line>"))
+            planted.unlink()
+        assert len(records) == 20
         status, out, err = run("ci-restored", ["bash", "-e", "-c", CI_COMMAND], root)
         assert status == 0 and not out and not err
         records.append(dict(property="restored CI scan", command=["bash", "-e", "-c", CI_COMMAND], exit=status))

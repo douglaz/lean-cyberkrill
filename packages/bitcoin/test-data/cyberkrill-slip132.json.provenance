@@ -1,0 +1,9 @@
+Producer: cyberkrill at 27cad1faba86260b06665a89f0af5134d23525c2, MIT OR Apache-2.0, taken under MIT.
+Source: https://github.com/douglaz/cyberkrill/blob/27cad1faba86260b06665a89f0af5134d23525c2/cyberkrill-core/src/slip132.rs
+Function: parse_slip132_xpub(s)?.to_string(), through a temporary pure test.
+Command: TMPDIR="${TMP_ROOT:?}" systemd-run --user --scope --quiet -p MemoryMax=8G -p MemorySwapMax=0 -p OOMPolicy=continue -p TasksMax=4096 timeout 3600 python3 -I packages/bitcoin/capture-cyberkrill-slip132.py
+Inputs: BIP32 test vectors 1 and 2, bip-0032.mediawiki at 130b8e0fa7f30fa45532f080b87b8db27a79e46e, BSD-2-Clause; see Bitcoin/LICENSE-bips.
+Input source: https://github.com/bitcoin/bips/blob/130b8e0fa7f30fa45532f080b87b8db27a79e46e/bip-0032.mediawiki
+Changes: derived: version bytes swapped, converted back by cyberkrill.
+Order: each of the 12 public inputs, then ypub, zpub, upub, vpub.
+Output only; no upstream code or private key material copied.

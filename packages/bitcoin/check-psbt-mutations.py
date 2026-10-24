@@ -414,7 +414,7 @@ def main():
                 assert failures, (label, output)
                 failure = failures[0]
             else:
-                assert re.search(r"Bitcoin axiom gate: \d+ library theorems; 65 named; 0 offenders", output), output
+                assert re.search(r"Bitcoin axiom gate: \d+ library theorems; 73 named; 0 offenders", output), output
                 failures = [line for line in output.splitlines()
                             if "assertion failed:" in line or line.startswith("error:")]
                 assert failures and "assertion failed: " + expected in failures[0], (label, output)

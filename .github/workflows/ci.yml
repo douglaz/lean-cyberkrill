@@ -24,7 +24,7 @@ jobs:
 
       - name: No extended private key material
         run: >-
-          rc=0; grep -rEn --exclude-dir=.lake '[tx]prv[1-9A-HJ-NP-Za-km-z]{100,}' packages || rc=$?; test "$rc" -eq 1
+          rc=0; grep -rEn --exclude-dir=.lake '[tuvxyzUVYZ]prv[1-9A-HJ-NP-Za-km-z]{100,}' packages || rc=$?; test "$rc" -eq 1
 
       - name: nix flake check (lake build and lake test for every package)
         run: nix flake check -L

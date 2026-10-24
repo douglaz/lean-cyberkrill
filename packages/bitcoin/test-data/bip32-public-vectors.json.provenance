@@ -1,0 +1,9 @@
+Source: https://raw.githubusercontent.com/bitcoin/bips/130b8e0fa7f30fa45532f080b87b8db27a79e46e/bip-0032.mediawiki
+Commit: 130b8e0fa7f30fa45532f080b87b8db27a79e46e
+Path: bip-0032.mediawiki
+Source SHA-256: e5e00a8289db2f681052cf24a745320afc225e66b25d1e489a7c884d2fc7f11f
+Authors: Pieter Wuille <pieter.wuille@gmail.com>
+Licence: BSD-2-Clause; see Bitcoin/LICENSE-bips.
+Changes: extracted: the ext pub lines of test vectors 1 and 2.
+Order: vector 1's six lines, then vector 2's six lines, in published order.
+No private columns or complete source document retained.
