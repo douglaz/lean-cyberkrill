@@ -130,10 +130,13 @@ def encodeData (parts : Parts) : Except EncodeError (String × List Symbol) := d
   checkEncodeFields parts.fields
   return (hrp, timestamp ++ encodeFields parts.fields)
 
-/-- Preserve the supplied signature while canonically writing parsed parts. -/
+/-- Preserve the supplied signature while canonically writing parsed parts. Refuse when
+the written data's signing hash differs from the invoice's recorded one (a decoded
+leading-zero HRP amount), since the signature would not cover the output; `sign` re-signs. -/
 def encode (invoice : Invoice) : Except EncodeError String := do
   let (hrp, data) ← encodeData invoice.toParts
   if !validSignature invoice.signature then throw .malformedSignature
+  if signingHash hrp data != invoice.signingHash then throw .signingHashMismatch
   return Bitcoin.Bech32.encode hrp
     (data ++ Bitcoin.Bech32.convertbits8to5 invoice.signature) .bech32
 

@@ -5721,13 +5721,17 @@ non-canonical padding and leading zeros (the last three carry the tag),
 signature parsing, each required-field count, invalid features, unknown
 required features, verification, recovery and imprecise amounts.
 `EncodeError` separates field length, amount overflow, invalid HRP,
-timestamp, field shape, malformed signature and signing failure.
-Encoding writes zero padding, minimal integers and amounts without leading
-zeros. `encode` preserves signature bytes; `sign` hashes the exact data it
-writes and calls the supplied signer. Both entry points refuse invalid typed
-field shapes, fields above 1023 symbols, timestamps at or above 2^35, and
-pico amounts at or above 2^64. `encodeFields` is a total writer; its caller
-checks field shapes and length bounds before using it for an invoice.
+timestamp, field shape, malformed signature, signing failure and signing-hash
+mismatch. Encoding writes zero padding, minimal integers and amounts without
+leading zeros. `encode` preserves signature bytes and refuses with
+`signingHashMismatch` when the signing hash of the data it writes differs from
+the invoice's recorded one, as for a decoded leading-zero HRP amount, whose
+signature covers the HRP as written; `sign` hashes the exact data it writes and
+calls the supplied signer, so such parts are re-signed. Both entry points
+refuse invalid typed field shapes, fields above 1023 symbols, timestamps at or
+above 2^35, and pico amounts at or above 2^64. `encodeFields` is a total
+writer; its caller checks field shapes and length bounds before using it for an
+invoice.
 `hrpFromMsat` tries no multiplier first, so 10^11 msat writes `lnbc1` and
 zero writes `lnbc0`; lightning-invoice 0.34.0's builder tries only m/u/n/p
 (`src/lib.rs:427-431,678-692`), writing `lnbc1000m` and `lnbc0m`. Phase 7b's
@@ -5815,6 +5819,7 @@ Every set pins its loaded count and prints the count it tested:
 | Valid examples | 16/16 decoded with the expected payee; L762 preserves raw high-S recovery |
 | Invalid-corpus examples | 15/15 checked: 14 exact errors; L814 accepted and named for parity |
 | Re-encodings | 17/17, the valid examples plus L814, equal their own lowercase strings including signatures |
+| Re-encoding refusals | 2/2: both leading-zero HRP amount vectors give `signingHashMismatch` from `encode` |
 | `n`-field vectors | 2/2: low-S verifies; high-S passes preceding checks and gives `verifyFailed` |
 | Negative vectors | 20/20, including bech32m and all six strictness cases |
 | Positive vectors | 4/4: omitted invalid fallback address, absent overflow amount, both leading-zero HRP amounts |
@@ -5839,7 +5844,7 @@ the proof obligations belong to Phase 5 (3 of 3).
 requires exit **1** and the named first assertion, restores the original
 bytes in `finally`, and ends with a full `lake test` at exit **0**. Separate
 stdout/stderr logs stay under `.lake/bolt11-mutation-checks/`; the compact
-record is `test-data/bolt11-mutations.json`. All **17/17** were detected:
+record is `test-data/bolt11-mutations.json`. All **18/18** were detected:
 
 | Mutation | Exit | First failing assertion |
 |---|---|---|
@@ -5860,6 +5865,7 @@ record is `test-data/bolt11-mutations.json`. All **17/17** were detected:
 | Reject wrong fixed lengths | 1 | `invalid L814 accepted for parity` |
 | Allow unknown even feature | 1 | `invalid L792` |
 | Reject unknown fallback version | 1 | `valid L707` |
+| `encode` keeps a signature over a changed HRP | 1 | `reencode amount-leading-zero refused` |
 
 The encoder-limit cases also check `sign`, with the same seven-case count.
 Four separate temporary production changes filtered an invalid field before
@@ -5917,10 +5923,10 @@ with Lean 4.35.0 and Python 3.14.7 (coincurve 21.0.0 for generation).
 
 | Directory | Command | Exit | Wall time / observation |
 |---|---|---|---|
-| lightning | `nix develop -c lake build` | 0 | 4.041 s; 25 jobs |
-| lightning | `nix develop -c lake test` | 0 | 10.201 s; every pinned count above |
-| lightning | `nix develop -c python3 -I check-bolt11-mutations.py` | 0 | 182.502 s; 17/17 detected, restored full suite exit 0; regenerated record unchanged |
-| lightning | `"$PYTHON_ENV/bin/python3" -I generate-bolt11.py --check` | 0 | 0.372 s; all generator counts above, JSON and sidecar identical |
+| lightning | `nix develop -c lake build` | 0 | 0.910 s; 25 jobs |
+| lightning | `nix develop -c lake test` | 0 | 1.188 s, already built; every pinned count above |
+| lightning | `nix develop -c python3 -I check-bolt11-mutations.py` | 0 | 210.819 s; 18/18 detected, restored full suite exit 0 |
+| lightning | `"$PYTHON_ENV/bin/python3" -I generate-bolt11.py --check` | 0 | 0.408 s; all generator counts above, JSON and sidecar identical |
 | root | `git diff --exit-code -- packages/lightning/test-data/bolt11.json packages/lightning/test-data/bolt11.json.provenance` | 0 | under 0.01 s; both streams empty |
 | lightning | `nix develop -c lake env lean "$TMP_ROOT/FieldShape.lean"` | 0 | 1.437 s; the field-round-trip proposition below elaborates |
 | root | `grep -rnw sorry --include='*.lean' --exclude-dir=.lake packages` | 1 | under 0.01 s; both streams empty |

@@ -69,8 +69,11 @@ def cases():
          "if features.requiresUnknown && false then throw .unknownRequiredFeatures",
          "invalid:L792", "invalid L792"),
         ("unknown-fallback", FIELDS, "if version.toNat > 18 then return .raw tag data",
-         "if version.toNat > 18 then throw (.malformedField tag)", "valid:L707", "valid L707")]
-    assert len(result) == 17
+         "if version.toNat > 18 then throw (.malformedField tag)", "valid:L707", "valid L707"),
+        ("encode-stale-signature", CODEC,
+         "  if signingHash hrp data != invoice.signingHash then throw .signingHashMismatch\n", "",
+         "reencode", "reencode amount-leading-zero refused")]
+    assert len(result) == 18
     return result
 
 
@@ -123,7 +126,7 @@ def main():
     for name, original in originals.items():
         assert (PACKAGE / name).read_bytes() == original
     (PACKAGE / "test-data/bolt11-mutations.json").write_text(json.dumps(records, indent=2) + "\n")
-    print(f"BOLT11 mutations: {len(records)}/17 detected; restored lake test: EXIT=0")
+    print(f"BOLT11 mutations: {len(records)}/18 detected; restored lake test: EXIT=0")
 
 
 if __name__ == "__main__":

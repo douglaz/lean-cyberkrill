@@ -236,5 +236,19 @@
     "exit": 1,
     "property": "valid L707",
     "failure": "uncaught exception: assertion failed: valid L707"
+  },
+  {
+    "mutation": "encode-stale-signature",
+    "source": "Lightning/Bolt11/Codec.lean",
+    "command": [
+      "lake",
+      "test",
+      "--",
+      "--case",
+      "reencode"
+    ],
+    "exit": 1,
+    "property": "reencode amount-leading-zero refused",
+    "failure": "uncaught exception: assertion failed: reencode amount-leading-zero refused"
   }
 ]

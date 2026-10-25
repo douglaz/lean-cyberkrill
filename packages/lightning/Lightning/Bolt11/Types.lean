@@ -132,7 +132,7 @@ inductive Error where
 inductive EncodeError where
   | fieldTooLong | amountOverflow | invalidHrp | invalidTimestamp
   | invalidField (tag : Symbol)
-  | malformedSignature | signingFailed
+  | malformedSignature | signingFailed | signingHashMismatch
   deriving Repr, DecidableEq, BEq
 
 structure Parts where

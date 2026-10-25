@@ -194,7 +194,10 @@ private def limits (cap : Curve) (json : Lean.Json) : IO Unit := do
     ("typed field", failed (encode badTyped) (.invalidField 1) &&
       failed (sign cap badTyped.toParts) (.invalidField 1)),
     ("multiplier without amount", failed (encodeHrp ⟨.bc, none, some .pico⟩) .invalidHrp)]
-  let large := { base with fields := base.fields ++ List.replicate 7 (.raw 2 (List.replicate 1023 0)) }
+  let largeParts : Invoice :=
+    { base with fields := base.fields ++ List.replicate 7 (.raw 2 (List.replicate 1023 0)) }
+  let (largeHrp, largeData) ← getOk "encoder unlimited data" (encodeData largeParts.toParts)
+  let large := { largeParts with signingHash := signingHash largeHrp largeData }
   let largeText ← getOk "encoder unlimited output" (encode large)
   check "encoder unlimited length" (largeText.length > 7089 &&
     match decode cap largeText with | .error e => e == .bech32 .tooLong | _ => false)
@@ -303,6 +306,13 @@ def run (selector : Option String := none) : IO Unit := do
       let inv ← decoded cap row s!"reencode {name} decode"
       check s!"reencode {name}" ((encode inv).toOption == some (Bitcoin.Bech32.lower (← text row "invoice")))
     IO.println "re-encodings: 17/17"
+    let stale := #["amount-leading-zero", "n-amount-leading-zero"]
+    check "re-encoding refusal count" (stale.size == 2)
+    for name in stale do
+      let inv ← decoded cap (← find json "positive" 4 name) s!"reencode {name} decode"
+      check s!"reencode {name} refused"
+        (match encode inv with | .error .signingHashMismatch => true | _ => false)
+    IO.println "re-encoding refusals: 2/2"
   if selector.isNone || selector == some "sign" then
     let row ← find json "nfields" 2 "n-low"
     let inv ← decoded cap row "sign decode"
