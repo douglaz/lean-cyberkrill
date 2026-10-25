@@ -133,6 +133,7 @@ inductive EncodeError where
   | fieldTooLong | amountOverflow | invalidHrp | invalidTimestamp
   | invalidField (tag : Symbol)
   | malformedSignature | signingFailed | signingHashMismatch
+  | invalidInvoice (reason : Error)
   deriving Repr, DecidableEq, BEq
 
 structure Parts where

@@ -66,6 +66,10 @@ def checkFeatures (parts : Parts) : Except Error Unit := do
   if features.requiresUnknown then throw .unknownRequiredFeatures
   if !features.supports 14 then throw .invalidFeatures
 
+def checkPrecision (hrp : Hrp) : Except Error Unit := do
+  if let some pico := hrp.picoAmount then
+    if pico % 10 ≠ 0 then throw .impreciseAmount
+
 def checkSignature (cap : Curve) (parts : Parts) (hash signature : ByteArray) :
     Except Error ByteArray := do
   let compact := signature.extract 0 64
@@ -96,8 +100,7 @@ def decode (cap : Curve) (text : String) : Except Error Invoice := do
   checkFieldCounts fields
   checkFeatures parts
   let key ← checkSignature cap parts hash signature
-  if let some pico := hrp.picoAmount then
-    if pico % 10 ≠ 0 then throw .impreciseAmount
+  checkPrecision hrp
   return { toParts := parts, signature := signature, signingHash := hash, payeeKey := key }
 
 def encodeHrp (hrp : Hrp) : Except EncodeError String := do
@@ -122,12 +125,20 @@ private def checkEncodeFields (fields : List Field) : Except EncodeError Unit :=
     if !validFieldShape field then throw (.invalidField field.tag)
     if (fieldData field).length > 1023 then throw .fieldTooLong
 
+/-- The checks `decode` makes besides the signature, which lightning-invoice 0.34.0's
+builder guarantees for every invoice it signs (`src/lib.rs:976-978`). -/
+def checkParts (parts : Parts) : Except Error Unit := do
+  checkFieldCounts parts.fields
+  checkFeatures parts
+  checkPrecision parts.hrp
+
 def encodeData (parts : Parts) : Except EncodeError (String × List Symbol) := do
   let hrp ← encodeHrp parts.hrp
   if parts.timestamp ≥ 2^35 then throw .invalidTimestamp
   let timestamp := List.ofFn fun i : Fin 7 =>
     BitVec.ofNat 5 (parts.timestamp / 32^(6 - i.val))
   checkEncodeFields parts.fields
+  (checkParts parts).mapError .invalidInvoice
   return (hrp, timestamp ++ encodeFields parts.fields)
 
 /-- Preserve the supplied signature while canonically writing parsed parts. Refuse when

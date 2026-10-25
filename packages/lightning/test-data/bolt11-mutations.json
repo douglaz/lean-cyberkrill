@@ -250,5 +250,19 @@
     "exit": 1,
     "property": "reencode amount-leading-zero refused",
     "failure": "uncaught exception: assertion failed: reencode amount-leading-zero refused"
+  },
+  {
+    "mutation": "encode-unchecked-parts",
+    "source": "Lightning/Bolt11/Codec.lean",
+    "command": [
+      "lake",
+      "test",
+      "--",
+      "--case",
+      "limits"
+    ],
+    "exit": 1,
+    "property": "encoder semantic refusals no p",
+    "failure": "uncaught exception: assertion failed: encoder semantic refusals no p"
   }
 ]

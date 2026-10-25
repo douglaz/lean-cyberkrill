@@ -5720,16 +5720,20 @@ HRP, currency, multiplier, amount overflow, field framing, malformed fields,
 non-canonical padding and leading zeros (the last three carry the tag),
 signature parsing, each required-field count, invalid features, unknown
 required features, verification, recovery and imprecise amounts.
-`EncodeError` separates field length, amount overflow, invalid HRP,
-timestamp, field shape, malformed signature, signing failure and signing-hash
-mismatch. Encoding writes zero padding, minimal integers and amounts without
-leading zeros. `encode` preserves signature bytes and refuses with
-`signingHashMismatch` when the signing hash of the data it writes differs from
-the invoice's recorded one, as for a decoded leading-zero HRP amount, whose
-signature covers the HRP as written; `sign` hashes the exact data it writes and
-calls the supplied signer, so such parts are re-signed. Both entry points
-refuse invalid typed field shapes, fields above 1023 symbols, timestamps at or
-above 2^35, and pico amounts at or above 2^64. `encodeFields` is a total
+`EncodeError` separates field length, amount overflow, invalid HRP, timestamp,
+field shape, malformed signature, signing failure, signing-hash mismatch and
+invalid invoice (carrying the decoder's `Error`). Encoding writes zero padding,
+minimal integers and amounts without leading zeros. `encode` preserves signature
+bytes and refuses with `signingHashMismatch` when the signing hash of the data
+it writes differs from the invoice's recorded one, as for a decoded leading-zero
+HRP amount, whose signature covers the HRP as written; `sign` hashes the exact
+data it writes and calls the supplied signer, so such parts are re-signed. Both
+entry points refuse invalid typed field shapes, fields above 1023 symbols,
+timestamps at or above 2^35, and pico amounts at or above 2^64. They also apply
+the decoder's field-count, feature and amount-precision checks (`checkParts`)
+and refuse with `invalidInvoice`, as lightning-invoice 0.34.0's builder
+guarantees those checks for every invoice it signs (`src/lib.rs:976-978`). They
+apply no 7089-character limit (Deltas not taken). `encodeFields` is a total
 writer; its caller checks field shapes and length bounds before using it for an
 invoice.
 `hrpFromMsat` tries no multiplier first, so 10^11 msat writes `lnbc1` and
@@ -5829,6 +5833,7 @@ Every set pins its loaded count and prints the count it tested:
 | Signing path / hash cross-check | 1/1 each |
 | Independent amount / fallback / getter / route-hop / feature literals | 16/16, 6/6, 12/12, 2/2, 7/7 |
 | Encoder limits / unrestricted total length / amount writer | 7/7, 1/1, 6/6 |
+| Encoder semantic refusals | 7/7: no `p`, two `p`, no `s`, no description, no `9`, unknown even feature, imprecise amount; `encode` and `sign` both give `invalidInvoice` |
 | Field layers and first/all getters / currency mappings / signature scalar bounds | 12/12, 5/5, 3/3 |
 
 L858 fails on its duplicate payment secret before its high-S signature is
@@ -5844,7 +5849,7 @@ the proof obligations belong to Phase 5 (3 of 3).
 requires exit **1** and the named first assertion, restores the original
 bytes in `finally`, and ends with a full `lake test` at exit **0**. Separate
 stdout/stderr logs stay under `.lake/bolt11-mutation-checks/`; the compact
-record is `test-data/bolt11-mutations.json`. All **18/18** were detected:
+record is `test-data/bolt11-mutations.json`. All **19/19** were detected:
 
 | Mutation | Exit | First failing assertion |
 |---|---|---|
@@ -5866,6 +5871,7 @@ record is `test-data/bolt11-mutations.json`. All **18/18** were detected:
 | Allow unknown even feature | 1 | `invalid L792` |
 | Reject unknown fallback version | 1 | `valid L707` |
 | `encode` keeps a signature over a changed HRP | 1 | `reencode amount-leading-zero refused` |
+| Encoder skips the decoder's semantic checks | 1 | `encoder semantic refusals no p` |
 
 The encoder-limit cases also check `sign`, with the same seven-case count.
 Four separate temporary production changes filtered an invalid field before
@@ -5923,16 +5929,16 @@ with Lean 4.35.0 and Python 3.14.7 (coincurve 21.0.0 for generation).
 
 | Directory | Command | Exit | Wall time / observation |
 |---|---|---|---|
-| lightning | `nix develop -c lake build` | 0 | 0.910 s; 25 jobs |
-| lightning | `nix develop -c lake test` | 0 | 1.188 s, already built; every pinned count above |
-| lightning | `nix develop -c python3 -I check-bolt11-mutations.py` | 0 | 210.819 s; 18/18 detected, restored full suite exit 0 |
+| lightning | `nix develop -c lake build` | 0 | 2.340 s; 25 jobs |
+| lightning | `nix develop -c lake test` | 0 | 7.815 s; every pinned count above |
+| lightning | `nix develop -c python3 -I check-bolt11-mutations.py` | 0 | 182.350 s; 19/19 detected, restored full suite exit 0 |
 | lightning | `"$PYTHON_ENV/bin/python3" -I generate-bolt11.py --check` | 0 | 0.408 s; all generator counts above, JSON and sidecar identical |
 | root | `git diff --exit-code -- packages/lightning/test-data/bolt11.json packages/lightning/test-data/bolt11.json.provenance` | 0 | under 0.01 s; both streams empty |
 | lightning | `nix develop -c lake env lean "$TMP_ROOT/FieldShape.lean"` | 0 | 1.437 s; the field-round-trip proposition below elaborates |
 | root | `grep -rnw sorry --include='*.lean' --exclude-dir=.lake packages` | 1 | under 0.01 s; both streams empty |
 | root | `grep -rnE 'partial def\|native_decide\|bv_decide' --include='*.lean' packages/lightning/Lightning packages/lightning/Lightning.lean` | 1 | under 0.01 s; both streams empty |
-| root | `nix flake check -L` | 0 | 112.138 s; all seven packages built and tested in the sandbox, app checked |
-| root | `nix build` | 0 | 0.568 s |
+| root | `nix flake check -L` | 0 | 100.700 s; all seven packages built and tested in the sandbox, app checked |
+| root | `nix build` | 0 | 0.419 s |
 | root | `./result/bin/cyberkrill` | 0 | 0.026 s; `cyberkrill 0.1.0` |
 | root | Protected-path diff below | 0 | under 0.01 s; both streams empty |
 | root | Staged key-material scan below | 1 | under 0.01 s; both streams empty, no key material printed |

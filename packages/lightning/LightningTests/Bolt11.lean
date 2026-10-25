@@ -194,6 +194,20 @@ private def limits (cap : Curve) (json : Lean.Json) : IO Unit := do
     ("typed field", failed (encode badTyped) (.invalidField 1) &&
       failed (sign cap badTyped.toParts) (.invalidField 1)),
     ("multiplier without amount", failed (encodeHrp ⟨.bc, none, some .pico⟩) .invalidHrp)]
+  let without (drop : Field → Bool) : Invoice := { base with fields := base.fields.filter (!drop ·) }
+  let refused (inv : Invoice) (e : Error) :=
+    failed (encode inv) (.invalidInvoice e) && failed (sign cap inv.toParts) (.invalidInvoice e)
+  checkCases "encoder semantic refusals" 7 #[
+    ("no p", refused (without fun | .paymentHash _ => true | _ => false) .noPaymentHash),
+    ("two p", refused { base with fields := base.fields ++ [.paymentHash base.signingHash] }
+      .multiplePaymentHashes),
+    ("no s", refused (without fun | .paymentSecret _ => true | _ => false) .noPaymentSecret),
+    ("no description", refused (without fun
+      | .description _ | .descriptionHash _ => true | _ => false) .noDescription),
+    ("no 9", refused (without fun | .features _ => true | _ => false) .invalidFeatures),
+    ("unknown even feature", refused { base with fields := base.fields.map fun
+      | .features _ => .features (2^14 + 2^100) | f => f } .unknownRequiredFeatures),
+    ("imprecise amount", refused { base with hrp := ⟨.bc, some 1, some .pico⟩ } .impreciseAmount)]
   let largeParts : Invoice :=
     { base with fields := base.fields ++ List.replicate 7 (.raw 2 (List.replicate 1023 0)) }
   let (largeHrp, largeData) ← getOk "encoder unlimited data" (encodeData largeParts.toParts)

@@ -72,8 +72,10 @@ def cases():
          "if version.toNat > 18 then throw (.malformedField tag)", "valid:L707", "valid L707"),
         ("encode-stale-signature", CODEC,
          "  if signingHash hrp data != invoice.signingHash then throw .signingHashMismatch\n", "",
-         "reencode", "reencode amount-leading-zero refused")]
-    assert len(result) == 18
+         "reencode", "reencode amount-leading-zero refused"),
+        ("encode-unchecked-parts", CODEC, "  (checkParts parts).mapError .invalidInvoice\n", "",
+         "limits", "encoder semantic refusals no p")]
+    assert len(result) == 19
     return result
 
 
@@ -126,7 +128,7 @@ def main():
     for name, original in originals.items():
         assert (PACKAGE / name).read_bytes() == original
     (PACKAGE / "test-data/bolt11-mutations.json").write_text(json.dumps(records, indent=2) + "\n")
-    print(f"BOLT11 mutations: {len(records)}/18 detected; restored lake test: EXIT=0")
+    print(f"BOLT11 mutations: {len(records)}/19 detected; restored lake test: EXIT=0")
 
 
 if __name__ == "__main__":
