@@ -2,7 +2,8 @@
 # Apache License 2.0, at your option; see LICENSE-MIT and LICENSE-APACHE.
 """Capture only AmountInput::from_str, never the app or a network client.
 
-Creates and retains an isolated clone, cargo cache and HOME under /var/tmp.
+Creates and retains an isolated clone, cargo cache and HOME under TMPDIR, which
+must be set and name an existing directory.
 Pass --clone only for a fresh clone of the pinned revision made for this run.
 Dependencies are fetched online; the actual test builds and runs in unshare -rn.
 Stdout and stderr are recorded separately under .lake/capture-checks.
@@ -41,10 +42,13 @@ def main():
     parser = argparse.ArgumentParser()
     parser.add_argument("--clone", type=Path)
     args = parser.parse_args()
-    work = Path(tempfile.mkdtemp(prefix="cyberkrill-amount-capture-", dir="/var/tmp"))
+    assert os.environ.get("TMPDIR"), "TMPDIR must be set"
+    tmp = Path(os.environ["TMPDIR"]).resolve()
+    assert tmp.is_dir(), "TMPDIR must name an existing directory"
+    work = Path(tempfile.mkdtemp(prefix="cyberkrill-amount-capture-", dir=tmp))
     clone = args.clone.resolve() if args.clone else work / "source"
-    assert clone.is_relative_to(Path("/var/tmp")), "clone must be isolated under /var/tmp"
-    env = dict(os.environ, TMPDIR="/var/tmp", CARGO_HOME=str(work / "cargo-home"))
+    assert clone.is_relative_to(tmp), "clone must be isolated under TMPDIR"
+    env = dict(os.environ, TMPDIR=str(tmp), CARGO_HOME=str(work / "cargo-home"))
     if not args.clone:
         run("clone", ["git", "clone", "https://github.com/douglaz/cyberkrill", str(clone)],
             work, env)

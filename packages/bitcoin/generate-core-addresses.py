@@ -9,6 +9,7 @@ The source contains private entries: never print its contents or retain its fetc
 from collections import Counter
 import hashlib
 import json
+import os
 from pathlib import Path
 import subprocess
 import sys
@@ -23,7 +24,10 @@ SHA256 = "90bd1d35d12763e0d00c5400b2c9fe551e532a821e1e466c20cad3aced70a7fe"
 
 
 def main():
-    root = Path(tempfile.mkdtemp(prefix="lck-address-core-", dir="/var/tmp"))
+    assert os.environ.get("TMPDIR"), "TMPDIR must be set"
+    tmp = Path(os.environ["TMPDIR"]).resolve()
+    assert tmp.is_dir(), "TMPDIR must name an existing directory"
+    root = Path(tempfile.mkdtemp(prefix="lck-address-core-", dir=tmp))
     fetch = root / "key_io_valid.json"
     try:
         subprocess.run(["curl", "-fL", URL, "-o", str(fetch)], check=True)

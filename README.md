@@ -2515,8 +2515,9 @@ The first line names that URL, commit, path and MIT notice
 commit, SHA-256 `b028769f3852a9368ab10bd754ff01ebb741f84a2fa658c9aff82a631bc6ecfc`.
 
 `python3 -I generate-core-addresses.py [--write]` fetches into a fresh
-temporary directory, verifies the pinned hash, selects only public P2PKH/P2SH
-entries, and asserts 22 with chain counts main/testnet4/signet/regtest = 6/6/6/4.
+directory under `TMPDIR`, which must be set and name an existing directory. It
+verifies the pinned hash, selects only public P2PKH/P2SH entries, and asserts
+22 with chain counts main/testnet4/signet/regtest = 6/6/6/4.
 Only address, script and chain enter the vector file. The source contains secret
 entries; it never enters the repository or logs, and is deleted in `finally`.
 Default mode compares the file with a fresh extraction.
