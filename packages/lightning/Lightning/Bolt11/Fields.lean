@@ -111,12 +111,23 @@ def fieldData : Field → List Symbol
     (hops.foldl (fun bytes hop => bytes ++ encodeHop hop) ByteArray.empty)
   | .raw _ data => data
 
+/-- Whether `decodeField` keeps these symbols raw under this tag: an unknown tag, a
+wrong-length `p`/`h`/`s`/`n`, or a fallback version above 18. -/
+def staysRaw (tag : Symbol) (data : List Symbol) : Bool :=
+  match tag.toNat with
+  | 1 | 23 | 16 => data.length != 52
+  | 19 => data.length != 53
+  | 9 => match data with | version :: _ => version.toNat > 18 | [] => false
+  | 3 | 5 | 6 | 13 | 24 | 27 => false
+  | _ => true
+
 def validFieldShape : Field → Bool
   | .paymentHash b | .descriptionHash b | .paymentSecret b => b.size == 32
   | .payeePubkey b => b.size == 33
   | .fallback (.segwit _ b) => 2 ≤ b.size && b.size ≤ 40
   | .fallback (.p2pkh b) | .fallback (.p2sh b) => b.size == 20
   | .route hops => hops.all fun hop => hop.nodeId.size == 33
+  | .raw tag data => staysRaw tag data
   | _ => true
 
 /-- Write canonical field data and 10-bit lengths, with raw fields verbatim.

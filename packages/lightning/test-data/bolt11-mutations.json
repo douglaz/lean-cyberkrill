@@ -264,5 +264,19 @@
     "exit": 1,
     "property": "encoder semantic refusals no p",
     "failure": "uncaught exception: assertion failed: encoder semantic refusals no p"
+  },
+  {
+    "mutation": "encode-typed-raw",
+    "source": "Lightning/Bolt11/Fields.lean",
+    "command": [
+      "lake",
+      "test",
+      "--",
+      "--case",
+      "limits"
+    ],
+    "exit": 1,
+    "property": "encoder raw fields typed-length p refused",
+    "failure": "uncaught exception: assertion failed: encoder raw fields typed-length p refused"
   }
 ]

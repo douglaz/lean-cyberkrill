@@ -208,6 +208,30 @@ private def limits (cap : Curve) (json : Lean.Json) : IO Unit := do
     ("unknown even feature", refused { base with fields := base.fields.map fun
       | .features _ => .features (2^14 + 2^100) | f => f } .unknownRequiredFeatures),
     ("imprecise amount", refused { base with hrp := ⟨.bc, some 1, some .pico⟩ } .impreciseAmount)]
+  let rawRefused (tag : Symbol) (data : List Symbol) :=
+    let inv : Invoice := { base with fields := base.fields ++ [.raw tag data] }
+    failed (encode inv) (.invalidField tag) && failed (sign cap inv.toParts) (.invalidField tag)
+  let rawKept (tag : Symbol) (data : List Symbol) :=
+    (encodeData { base.toParts with fields := base.fields ++ [.raw tag data] }).isOk
+  checkCases "encoder raw fields" 6 #[
+    ("typed-length p refused", rawRefused 1 (fieldData (.paymentHash base.signingHash))),
+    ("typed-length n refused", rawRefused 19 (fieldData (.payeePubkey base.payeeKey))),
+    ("known fallback version refused",
+      rawRefused 9 (fieldData (.fallback (.p2pkh (base.signingHash.extract 0 20))))),
+    ("description refused", rawRefused 13 []),
+    ("wrong-length p kept", rawKept 1 (List.replicate 51 0)),
+    ("unknown fallback version kept", rawKept 9 [19, 0])]
+  let samples : List (List Symbol) := [[], [0], [1], [19], [31, 1], List.replicate 51 0,
+    List.replicate 52 0, List.replicate 53 0, 17 :: List.replicate 32 0, 19 :: List.replicate 32 0]
+  let mut classified := 0
+  for tag in List.range 32 do
+    for data in samples do
+      let raw := match decodeField cap (BitVec.ofNat 5 tag) data with
+        | .ok (.raw _ _) => true | _ => false
+      check s!"raw classification {tag} {data.length}" (staysRaw (BitVec.ofNat 5 tag) data == raw)
+      classified := classified + 1
+  check "raw classification count" (classified == 320)
+  IO.println "raw classification: 320/320"
   let largeParts : Invoice :=
     { base with fields := base.fields ++ List.replicate 7 (.raw 2 (List.replicate 1023 0)) }
   let (largeHrp, largeData) ← getOk "encoder unlimited data" (encodeData largeParts.toParts)
