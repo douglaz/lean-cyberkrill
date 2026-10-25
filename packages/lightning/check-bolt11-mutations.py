@@ -76,8 +76,11 @@ def cases():
         ("encode-unchecked-parts", CODEC, "  (checkParts parts).mapError .invalidInvoice\n", "",
          "limits", "encoder semantic refusals no p"),
         ("encode-typed-raw", FIELDS, "  | .raw tag data => staysRaw tag data\n", "",
-         "limits", "encoder raw fields typed-length p refused")]
-    assert len(result) == 20
+         "limits", "encoder raw fields typed-length p refused"),
+        ("sign-unchecked-points", CODEC,
+         "  let _ ← (decodeFields cap (encodeFields parts.fields)).mapError .invalidInvoice\n", "",
+         "limits", "sign curve points payee")]
+    assert len(result) == 21
     return result
 
 
@@ -130,7 +133,7 @@ def main():
     for name, original in originals.items():
         assert (PACKAGE / name).read_bytes() == original
     (PACKAGE / "test-data/bolt11-mutations.json").write_text(json.dumps(records, indent=2) + "\n")
-    print(f"BOLT11 mutations: {len(records)}/20 detected; restored lake test: EXIT=0")
+    print(f"BOLT11 mutations: {len(records)}/21 detected; restored lake test: EXIT=0")
 
 
 if __name__ == "__main__":

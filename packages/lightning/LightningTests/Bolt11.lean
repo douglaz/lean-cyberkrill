@@ -221,6 +221,17 @@ private def limits (cap : Curve) (json : Lean.Json) : IO Unit := do
     ("description refused", rawRefused 13 []),
     ("wrong-length p kept", rawKept 1 (List.replicate 51 0)),
     ("unknown fallback version kept", rawKept 9 [19, 0])]
+  let offCurve := ByteArray.mk (Array.replicate 33 2)
+  let hop (key : ByteArray) : RouteHop :=
+    { nodeId := key, shortChannelId := 0, feeBaseMsat := 0, feeProportionalMillionths := 0,
+      cltvExpiryDelta := 0 }
+  let signWith (f : Field) := sign cap { base.toParts with fields := base.fields ++ [f] }
+  let routeKey ← hex "029e03a901b85534ff1e92c43c74431f7ce72046060fcf7a95c37e148f78c77255"
+  checkCases "sign curve points" 3 #[
+    ("payee", failed (signWith (.payeePubkey offCurve)) (.invalidInvoice (.malformedField 19))),
+    ("route node", failed (signWith (.route [hop offCurve])) (.invalidInvoice (.malformedField 3))),
+    ("published route node reaches the signer",
+      failed (signWith (.route [hop routeKey])) .signingFailed)]
   let samples : List (List Symbol) := [[], [0], [1], [19], [31, 1], List.replicate 51 0,
     List.replicate 52 0, List.replicate 53 0, 17 :: List.replicate 32 0, 19 :: List.replicate 32 0]
   let mut classified := 0

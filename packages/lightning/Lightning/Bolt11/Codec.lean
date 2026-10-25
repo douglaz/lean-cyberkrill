@@ -151,9 +151,13 @@ def encode (invoice : Invoice) : Except EncodeError String := do
   return Bitcoin.Bech32.encode hrp
     (data ++ Bitcoin.Bech32.convertbits8to5 invoice.signature) .bech32
 
-/-- Sign the exact canonical output data through the caller's curve capability. -/
+/-- Sign the exact canonical output data through the caller's curve capability, after
+reading the fields back through the decoder's field layer with that capability, so an
+invalid `n` or route-node key is refused. Like lightning-invoice 0.34.0's builder, it does
+not check the signature against an explicit `n`. -/
 def sign (cap : Curve) (parts : Parts) : Except EncodeError String := do
   let (hrp, data) ← encodeData parts
+  let _ ← (decodeFields cap (encodeFields parts.fields)).mapError .invalidInvoice
   let some signature := cap.sign (signingHash hrp data) | throw .signingFailed
   if !validSignature signature then throw .malformedSignature
   return Bitcoin.Bech32.encode hrp (data ++ Bitcoin.Bech32.convertbits8to5 signature) .bech32

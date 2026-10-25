@@ -278,5 +278,19 @@
     "exit": 1,
     "property": "encoder raw fields typed-length p refused",
     "failure": "uncaught exception: assertion failed: encoder raw fields typed-length p refused"
+  },
+  {
+    "mutation": "sign-unchecked-points",
+    "source": "Lightning/Bolt11/Codec.lean",
+    "command": [
+      "lake",
+      "test",
+      "--",
+      "--case",
+      "limits"
+    ],
+    "exit": 1,
+    "property": "sign curve points payee",
+    "failure": "uncaught exception: assertion failed: sign curve points payee"
   }
 ]
