@@ -1,0 +1,6 @@
+Source: https://github.com/douglaz/cyberkrill/blob/27cad1faba86260b06665a89f0af5134d23525c2/cyberkrill-core/src/decoder.rs#L834-L848
+Commit: 27cad1faba86260b06665a89f0af5134d23525c2
+Path: cyberkrill-core/src/decoder.rs:834-848
+Licence: MIT, selected from MIT OR Apache-2.0 (cyberkrill-core/Cargo.toml:6).
+Changes: extracted and reformatted as one JSON row. Expectations hand-derived from
+the pinned test assertions; this is source inspection, not a Rust runtime capture.

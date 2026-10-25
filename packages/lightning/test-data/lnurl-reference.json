@@ -1,0 +1,12 @@
+[
+  {
+    "name": "cyberkrill",
+    "input": "LNURL1DP68GURN8GHJ7UM9WFMXJCM99E5K7TELWY7NXENRXVMRGDTZXSENJCM98PJNWXQ96S9",
+    "bech32": "LNURL1DP68GURN8GHJ7UM9WFMXJCM99E5K7TELWY7NXENRXVMRGDTZXSENJCM98PJNWXQ96S9",
+    "url": "https://service.io/?q=3fc3645b439ce8e7",
+    "host": "service.io",
+    "base": "https://service.io/",
+    "query": "q=3fc3645b439ce8e7",
+    "pairs": [["q", "3fc3645b439ce8e7"]]
+  }
+]

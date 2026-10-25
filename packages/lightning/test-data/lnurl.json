@@ -1,0 +1,1257 @@
+{
+  "url-supported": [
+    {
+      "name": "case-duplicates",
+      "input": "lnurl1fp29g5zn8ghj732cg9x4qnz99ep57nf6xqcrgdpn9acr7ufavy4kyf39xccn6enfwfehgfnp84kxzum5ydn8yct8erpsqy",
+      "bech32": "lnurl1fp29g5zn8ghj732cg9x4qnz99ep57nf6xqcrgdpn9acr7ufavy4kyf39xccn6enfwfehgfnp84kxzum5ydn8yct8erpsqy",
+      "url": "HTTPS://EXAMPLE.COM:00443/p?q=a+b&%61=first&a=last#frag",
+      "host": "example.com",
+      "base": "https://example.com/",
+      "query": "q=a+b&%61=first&a=last",
+      "pairs": [
+        [
+          "q",
+          "a b"
+        ],
+        [
+          "a",
+          "last"
+        ]
+      ]
+    },
+    {
+      "name": "form-pieces",
+      "input": "lnurl1dp68gurn8ghj7etcv9khqmr99e3k7mf08acn6ffjgg4j2v3syejk6ur50y7jvenvv9njvfnc84sn6cs2d68l4",
+      "bech32": "lnurl1dp68gurn8ghj7etcv9khqmr99e3k7mf08acn6ffjgg4j2v3syejk6ur50y7jvenvv9njvfnc84sn6cs2d68l4",
+      "url": "https://example.com/?q=%2B+%20&empty=&flag&&x=a=b",
+      "host": "example.com",
+      "base": "https://example.com/",
+      "query": "q=%2B+%20&empty=&flag&&x=a=b",
+      "pairs": [
+        [
+          "q",
+          "+  "
+        ],
+        [
+          "empty",
+          ""
+        ],
+        [
+          "flag",
+          ""
+        ],
+        [
+          "x",
+          "a=b"
+        ]
+      ]
+    },
+    {
+      "name": "malformed-query",
+      "input": "lnurl1dp68gurn8ghj7etcv9khqmr99e3k7mf08acn6f26tgn8s0f9gerzv7fay4znyffcxgs0gl6r",
+      "bech32": "lnurl1dp68gurn8ghj7etcv9khqmr99e3k7mf08acn6f26tgn8s0f9gerzv7fay4znyffcxgs0gl6r",
+      "url": "https://example.com/?q=%ZZ&x=%FF&y=%E2%82",
+      "host": "example.com",
+      "base": "https://example.com/",
+      "query": "q=%ZZ&x=%FF&y=%E2%82",
+      "pairs": [
+        [
+          "q",
+          "%ZZ"
+        ],
+        [
+          "x",
+          "�"
+        ],
+        [
+          "y",
+          "�"
+        ]
+      ]
+    },
+    {
+      "name": "special-query",
+      "input": "lnurl1dp68gurn8ghj7etcv9khqmr99e3k7mf08acn6cfqvgnkxctxcw5sdsx6t5",
+      "bech32": "lnurl1dp68gurn8ghj7etcv9khqmr99e3k7mf08acn6cfqvgnkxctxcw5sdsx6t5",
+      "url": "https://example.com/?q=a b'café",
+      "host": "example.com",
+      "base": "https://example.com/",
+      "query": "q=a%20b%27caf%C3%A9",
+      "pairs": [
+        [
+          "q",
+          "a b'café"
+        ]
+      ]
+    },
+    {
+      "name": "query-encode-set",
+      "input": "lnurl1dp68gurn8ghj7etcv9khqmr99e3k7mf08acn6g3u8cqj2vnx0u4cg42z",
+      "bech32": "lnurl1dp68gurn8ghj7etcv9khqmr99e3k7mf08acn6g3u8cqj2vnx0u4cg42z",
+      "url": "https://example.com/?q=\"<>\u0001%2f",
+      "host": "example.com",
+      "base": "https://example.com/",
+      "query": "q=%22%3C%3E%01%2f%7F",
+      "pairs": [
+        [
+          "q",
+          "\"<>\u0001/"
+        ]
+      ]
+    },
+    {
+      "name": "no-query",
+      "input": "lnurl1dp68gurn8ghj7etcv9khqmr99e3k7mf047kw9w",
+      "bech32": "lnurl1dp68gurn8ghj7etcv9khqmr99e3k7mf047kw9w",
+      "url": "https://example.com/",
+      "host": "example.com",
+      "base": "https://example.com/",
+      "query": null,
+      "pairs": []
+    },
+    {
+      "name": "empty-query",
+      "input": "lnurl1dp68gurn8ghj7etcv9khqmr99e3k7mf08uadu03m",
+      "bech32": "lnurl1dp68gurn8ghj7etcv9khqmr99e3k7mf08uadu03m",
+      "url": "https://example.com/?",
+      "host": "example.com",
+      "base": "https://example.com/",
+      "query": "",
+      "pairs": []
+    },
+    {
+      "name": "empty-query-fragment",
+      "input": "lnurl1dp68gurn8ghj7etcv9khqmr99e3k7mf08u3kvunpvakk2mn5qfdds8",
+      "bech32": "lnurl1dp68gurn8ghj7etcv9khqmr99e3k7mf08u3kvunpvakk2mn5qfdds8",
+      "url": "https://example.com/?#fragment",
+      "host": "example.com",
+      "base": "https://example.com/",
+      "query": "",
+      "pairs": []
+    },
+    {
+      "name": "encoded-fragment",
+      "input": "lnurl1dp68gurn8ghj7etcv9khqmr99e3k7mf08acn6ffjxv3kvunpvakk2mn568g9mv",
+      "bech32": "lnurl1dp68gurn8ghj7etcv9khqmr99e3k7mf08acn6ffjxv3kvunpvakk2mn568g9mv",
+      "url": "https://example.com/?q=%23#fragment",
+      "host": "example.com",
+      "base": "https://example.com/",
+      "query": "q=%23",
+      "pairs": [
+        [
+          "q",
+          "#"
+        ]
+      ]
+    },
+    {
+      "name": "url-cleanup",
+      "input": "lnurl1qqsp76r5w3c8xw309ajhsztpd4cxcefwvdhk6tmsvyxhg6pl0q7kzznzyqqq8jmqtl",
+      "bech32": "lnurl1qqsp76r5w3c8xw309ajhsztpd4cxcefwvdhk6tmsvyxhg6pl0q7kzznzyqqq8jmqtl",
+      "url": "\u0000 \u001fhttps://ex\tample.com/pa\rth?x=a\nb \u0000",
+      "host": "example.com",
+      "base": "https://example.com/",
+      "query": "x=ab",
+      "pairs": [
+        [
+          "x",
+          "ab"
+        ]
+      ]
+    },
+    {
+      "name": "no-slashes",
+      "input": "lnurl1dp68gurn8fjhsctdwpkx2tnrdaks6ns2e4",
+      "bech32": "lnurl1dp68gurn8fjhsctdwpkx2tnrdaks6ns2e4",
+      "url": "https:example.com",
+      "host": "example.com",
+      "base": "https://example.com/",
+      "query": null,
+      "pairs": []
+    },
+    {
+      "name": "one-slash",
+      "input": "lnurl1dp68gurn8ghk27rpd4cxcefwvdhk66t6nwe",
+      "bech32": "lnurl1dp68gurn8ghk27rpd4cxcefwvdhk66t6nwe",
+      "url": "https:/example.com",
+      "host": "example.com",
+      "base": "https://example.com/",
+      "query": null,
+      "pairs": []
+    },
+    {
+      "name": "backslashes",
+      "input": "lnurl1dp68gurn8fw9ct6uv4uxzmtsd3jjucm0d5hhqct5dq089kl7",
+      "bech32": "lnurl1dp68gurn8fw9ct6uv4uxzmtsd3jjucm0d5hhqct5dq089kl7",
+      "url": "https:\\\\/\\example.com/path",
+      "host": "example.com",
+      "base": "https://example.com/",
+      "query": null,
+      "pairs": []
+    },
+    {
+      "name": "domain-dot",
+      "input": "lnurl1dp68gurn8ghj7etcv9khqmr99e3k7mfwggzmcu",
+      "bech32": "lnurl1dp68gurn8ghj7etcv9khqmr99e3k7mfwggzmcu",
+      "url": "https://example.com.",
+      "host": "example.com.",
+      "base": "https://example.com./",
+      "query": null,
+      "pairs": []
+    },
+    {
+      "name": "encoded-host",
+      "input": "lnurl1dp68gurn8ghj7ffkx4vyzn2sf3zjucm0d5j5lusj",
+      "bech32": "lnurl1dp68gurn8ghj7ffkx4vyzn2sf3zjucm0d5j5lusj",
+      "url": "https://%65XAMPLE.com",
+      "host": "example.com",
+      "base": "https://example.com/",
+      "query": null,
+      "pairs": []
+    },
+    {
+      "name": "port-zero",
+      "input": "lnurl1dp68gurn8ghj7etcv9khqmr99e3k7mf6xqhs7r0nje",
+      "bech32": "lnurl1dp68gurn8ghj7etcv9khqmr99e3k7mf6xqhs7r0nje",
+      "url": "https://example.com:0/",
+      "host": "example.com",
+      "base": "https://example.com/",
+      "query": null,
+      "pairs": []
+    },
+    {
+      "name": "port-max",
+      "input": "lnurl1dp68gurn8ghj7etcv9khqmr99e3k7mf6xc6n2ve49ucu29e0",
+      "bech32": "lnurl1dp68gurn8ghj7etcv9khqmr99e3k7mf6xc6n2ve49ucu29e0",
+      "url": "https://example.com:65535/",
+      "host": "example.com",
+      "base": "https://example.com/",
+      "query": null,
+      "pairs": []
+    },
+    {
+      "name": "port-leading",
+      "input": "lnurl1dp68gurn8ghj7etcv9khqmr99e3k7mf6xqcrqwps9u9l66dj",
+      "bech32": "lnurl1dp68gurn8ghj7etcv9khqmr99e3k7mf6xqcrqwps9u9l66dj",
+      "url": "https://example.com:00080/",
+      "host": "example.com",
+      "base": "https://example.com/",
+      "query": null,
+      "pairs": []
+    },
+    {
+      "name": "port-empty",
+      "input": "lnurl1dp68gurn8ghj7etcv9khqmr99e3k7mf69uqam6xr",
+      "bech32": "lnurl1dp68gurn8ghj7etcv9khqmr99e3k7mf69uqam6xr",
+      "url": "https://example.com:/",
+      "host": "example.com",
+      "base": "https://example.com/",
+      "query": null,
+      "pairs": []
+    },
+    {
+      "name": "loopback",
+      "input": "lnurl1dp68gurn8ghj7vfjxuhrqt3s9ccn5wps8qcz7qpq3un",
+      "bech32": "lnurl1dp68gurn8ghj7vfjxuhrqt3s9ccn5wps8qcz7qpq3un",
+      "url": "https://127.0.0.1:8080/",
+      "host": "127.0.0.1",
+      "base": "https://127.0.0.1/",
+      "query": null,
+      "pairs": []
+    },
+    {
+      "name": "ipv4-zero",
+      "input": "lnurl1dp68gup69uhnqt3s9cczuvp0u3pcyy",
+      "bech32": "lnurl1dp68gup69uhnqt3s9cczuvp0u3pcyy",
+      "url": "http://0.0.0.0/",
+      "host": "0.0.0.0",
+      "base": "http://0.0.0.0/",
+      "query": null,
+      "pairs": []
+    },
+    {
+      "name": "ipv4-max",
+      "input": "lnurl1dp68gurn8ghj7v34x5hrydf49cer2dfwxg6n2tcqcexvk",
+      "bech32": "lnurl1dp68gurn8ghj7v34x5hrydf49cer2dfwxg6n2tcqcexvk",
+      "url": "https://255.255.255.255/",
+      "host": "255.255.255.255",
+      "base": "https://255.255.255.255/",
+      "query": null,
+      "pairs": []
+    },
+    {
+      "name": "encoded-ipv4",
+      "input": "lnurl1dp68gurn8ghj7vf9xfjnyffjv5ej2vn9xshs86yvt2",
+      "bech32": "lnurl1dp68gurn8ghj7vf9xfjnyffjv5ej2vn9xshs86yvt2",
+      "url": "https://1%2e2%2e3%2e4/",
+      "host": "1.2.3.4",
+      "base": "https://1.2.3.4/",
+      "query": null,
+      "pairs": []
+    },
+    {
+      "name": "backslash-at",
+      "input": "lnurl1dp68gurn8ghj7etcv9khqmr99e3k7m2ugpjhv6tv9e5kuanpd35kgtc0q88st",
+      "bech32": "lnurl1dp68gurn8ghj7etcv9khqmr99e3k7m2ugpjhv6tv9e5kuanpd35kgtc0q88st",
+      "url": "https://example.com\\@evil.invalid/",
+      "host": "example.com",
+      "base": "https://example.com/",
+      "query": null,
+      "pairs": []
+    },
+    {
+      "name": "path-at",
+      "input": "lnurl1dp68gurn8ghj7etcv9khqmr99e3k7mf0wpshg6zqdesk6efl0q75q7g3p4flp",
+      "bech32": "lnurl1dp68gurn8ghj7etcv9khqmr99e3k7mf0wpshg6zqdesk6efl0q75q7g3p4flp",
+      "url": "https://example.com/path@name?x=@y",
+      "host": "example.com",
+      "base": "https://example.com/",
+      "query": "x=@y",
+      "pairs": [
+        [
+          "x",
+          "@y"
+        ]
+      ]
+    },
+    {
+      "name": "underscore",
+      "input": "lnurl1dp68gurn8ghj7hmnv4e8v6trv5hx27rpd4cxcefwvdhk6tcmmhmpj",
+      "bech32": "lnurl1dp68gurn8ghj7hmnv4e8v6trv5hx27rpd4cxcefwvdhk6tcmmhmpj",
+      "url": "https://_service.example.com/",
+      "host": "_service.example.com",
+      "base": "https://_service.example.com/",
+      "query": null,
+      "pairs": []
+    },
+    {
+      "name": "hyphens",
+      "input": "lnurl1dp68gurn8ghj7ttp95hx27rpd4cxcefwvdhk6tclp6czg",
+      "bech32": "lnurl1dp68gurn8ghj7ttp95hx27rpd4cxcefwvdhk6tclp6czg",
+      "url": "https://-a-.example.com/",
+      "host": "-a-.example.com",
+      "base": "https://-a-.example.com/",
+      "query": null,
+      "pairs": []
+    },
+    {
+      "name": "empty-label",
+      "input": "lnurl1dp68gurn8ghj7cfw9ejhsctdwpkx2tnrdakj7hug7l5",
+      "bech32": "lnurl1dp68gurn8ghj7cfw9ejhsctdwpkx2tnrdakj7hug7l5",
+      "url": "https://a..example.com/",
+      "host": "a..example.com",
+      "base": "https://a..example.com/",
+      "query": null,
+      "pairs": []
+    },
+    {
+      "name": "ascii-punctuation",
+      "input": "lnurl1dp68gurn8ghj7cfpysnzw2pf9g4jcweatuhx27rpd4cxcefwvdhk6tcealfl7",
+      "bech32": "lnurl1dp68gurn8ghj7cfpysnzw2pf9g4jcweatuhx27rpd4cxcefwvdhk6tcealfl7",
+      "url": "https://a!$&'()*+,;=_.example.com/",
+      "host": "a!$&'()*+,;=_.example.com",
+      "base": "https://a!$&'()*+,;=_.example.com/",
+      "query": null,
+      "pairs": []
+    },
+    {
+      "name": "long-label",
+      "input": "lnurl1dp68gurn8ghj7ctpv9skzctpv9skzctpv9skzctpv9skzctpv9skzctpv9skzctpv9skzctpv9skzctpv9skzctpv9skzctpv9skzctpv9skzctpv9sjuetcv9khqmr99e3k7mf0jqje7r",
+      "bech32": "lnurl1dp68gurn8ghj7ctpv9skzctpv9skzctpv9skzctpv9skzctpv9skzctpv9skzctpv9skzctpv9skzctpv9skzctpv9skzctpv9skzctpv9skzctpv9sjuetcv9khqmr99e3k7mf0jqje7r",
+      "url": "https://aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa.example.com/",
+      "host": "aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa.example.com",
+      "base": "https://aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa.example.com/",
+      "query": null,
+      "pairs": []
+    },
+    {
+      "name": "http-case",
+      "input": "lnurl1fp29g5p69uh52kzpf4gyc3fwfafywtmsv96xs7xrjdy",
+      "bech32": "lnurl1fp29g5p69uh52kzpf4gyc3fwfafywtmsv96xs7xrjdy",
+      "url": "HTTP://EXAMPLE.ORG/path",
+      "host": "example.org",
+      "base": "http://example.org/",
+      "query": null,
+      "pairs": []
+    },
+    {
+      "name": "query-keys",
+      "input": "lnurl1dp68gurn8ghj7etcv9khqmr99e3k7mf08ujnvvfadahx2fnp8468wmex84jk6ur50ynz2vjz84cxcatnyc4n6umsv93k2kujqyr",
+      "bech32": "lnurl1dp68gurn8ghj7etcv9khqmr99e3k7mf08ujnvvfadahx2fnp8468wmex84jk6ur50ynz2vjz84cxcatnyc4n6umsv93k2kujqyr",
+      "url": "https://example.com/?%61=one&a=two&=empty&%2B=plus&+=space",
+      "host": "example.com",
+      "base": "https://example.com/",
+      "query": "%61=one&a=two&=empty&%2B=plus&+=space",
+      "pairs": [
+        [
+          "a",
+          "two"
+        ],
+        [
+          "",
+          "empty"
+        ],
+        [
+          "+",
+          "plus"
+        ],
+        [
+          " ",
+          "space"
+        ]
+      ]
+    },
+    {
+      "name": "query-utf8-subparts",
+      "input": "lnurl1dp68gurn8ghj7etcv9khqmr99e3k7mf08asn6f29xqjnsvp98qczvc3ay4rrqffexqjnsvpxvv7j232yy4qnqffcxqnxg0f9gvej2sfeyejn6f29xgjnsvnc4tarnz",
+      "bech32": "lnurl1dp68gurn8ghj7etcv9khqmr99e3k7mf08asn6f29xqjnsvp98qczvc3ay4rrqffexqjnsvpxvv7j232yy4qnqffcxqnxg0f9gvej2sfeyejn6f29xgjnsvnc4tarnz",
+      "url": "https://example.com/?a=%E0%80%80&b=%F0%90%80&c=%ED%A0%80&d=%C3%A9&e=%E2%82x",
+      "host": "example.com",
+      "base": "https://example.com/",
+      "query": "a=%E0%80%80&b=%F0%90%80&c=%ED%A0%80&d=%C3%A9&e=%E2%82x",
+      "pairs": [
+        [
+          "a",
+          "���"
+        ],
+        [
+          "b",
+          "�"
+        ],
+        [
+          "c",
+          "���"
+        ],
+        [
+          "d",
+          "é"
+        ],
+        [
+          "e",
+          "�x"
+        ]
+      ]
+    },
+    {
+      "name": "percent-once",
+      "input": "lnurl1dp68gurn8ghj7etcv9khqmr99e3k7mf08acn6ffjx5exvfnc85jnyes4y6ses",
+      "bech32": "lnurl1dp68gurn8ghj7etcv9khqmr99e3k7mf08acn6ffjx5exvfnc85jnyes4y6ses",
+      "url": "https://example.com/?q=%252f&x=%2f",
+      "host": "example.com",
+      "base": "https://example.com/",
+      "query": "q=%252f&x=%2f",
+      "pairs": [
+        [
+          "q",
+          "%2f"
+        ],
+        [
+          "x",
+          "/"
+        ]
+      ]
+    },
+    {
+      "name": "fragment-no-query",
+      "input": "lnurl1dp68gurn8ghj7etcv9khqmr99e3k7mf0yvlkjemwdaex2eq9jcc3h",
+      "bech32": "lnurl1dp68gurn8ghj7etcv9khqmr99e3k7mf0yvlkjemwdaex2eq9jcc3h",
+      "url": "https://example.com/#?ignored",
+      "host": "example.com",
+      "base": "https://example.com/",
+      "query": null,
+      "pairs": []
+    }
+  ],
+  "url-refusal": [
+    {
+      "name": "userinfo",
+      "input": "lnurl1dp68gurn8ghj7atnv4eyqetcv9khqmr99e3k7mf08vejrg",
+      "url": "https://user@example.com/",
+      "error": "unsupportedUrlForm:userinfo"
+    },
+    {
+      "name": "userinfo-multiple",
+      "input": "lnurl1dp68gurn8ghj7c2qvfqx27rpd4cxcefwvdhk6tcjswjnv",
+      "url": "https://a@b@example.com/",
+      "error": "unsupportedUrlForm:userinfo"
+    },
+    {
+      "name": "ipv6",
+      "input": "lnurl1dp68gurn8ghj7ke68gc46tcmvcjht",
+      "url": "https://[::1]/",
+      "error": "unsupportedUrlForm:ipv6"
+    },
+    {
+      "name": "ipv4-hex",
+      "input": "lnurl1dp68gurn8ghj7vrcxanrqvpsxqcrztcc6lxus",
+      "url": "https://0x7f000001/",
+      "error": "unsupportedUrlForm:ipv4Form"
+    },
+    {
+      "name": "ipv4-integer",
+      "input": "lnurl1dp68gurn8ghj7v33xvcrwvpkxsenxtckmtvx6",
+      "url": "https://2130706433/",
+      "error": "unsupportedUrlForm:ipv4Form"
+    },
+    {
+      "name": "ipv4-short",
+      "input": "lnurl1dp68gurn8ghj7vfjxuhrztcma59cs",
+      "url": "https://127.1/",
+      "error": "unsupportedUrlForm:ipv4Form"
+    },
+    {
+      "name": "ipv4-octal",
+      "input": "lnurl1dp68gurn8ghj7vp3xumjuvpwxqhrztcruyes8",
+      "url": "https://0177.0.0.1/",
+      "error": "unsupportedUrlForm:ipv4Form"
+    },
+    {
+      "name": "ipv4-leading",
+      "input": "lnurl1dp68gurn8ghj7vfjxuhrqt3s9ccrzvp0pp04l2",
+      "url": "https://127.0.0.010/",
+      "error": "unsupportedUrlForm:ipv4Form"
+    },
+    {
+      "name": "ipv4-dot",
+      "input": "lnurl1dp68gurn8ghj7vfjxuhrqt3s9ccjutcv07p5j",
+      "url": "https://127.0.0.1./",
+      "error": "unsupportedUrlForm:ipv4Form"
+    },
+    {
+      "name": "unicode-host",
+      "input": "lnurl1dp68gurn8ghj7ckrh33ksetj9e5kuanpd35kgtcn42d9m",
+      "url": "https://bücher.invalid/",
+      "error": "unsupportedUrlForm:idnaRequired"
+    },
+    {
+      "name": "encoded-unicode-host",
+      "input": "lnurl1dp68gurn8ghj7f2rxvj5ysewd9h8vctvd9jz7zudhpv",
+      "url": "https://%C3%BC.invalid/",
+      "error": "unsupportedUrlForm:idnaRequired"
+    },
+    {
+      "name": "punycode-host",
+      "input": "lnurl1dp68gurn8ghj77rw95kkycmgv4ez66mkvyhxjmnkv9kxjep0zd5uhj",
+      "url": "https://xn--bcher-kva.invalid/",
+      "error": "unsupportedUrlForm:idnaRequired"
+    },
+    {
+      "name": "punycode-upper",
+      "input": "lnurl1dp68gurn8ghj7kzw95k5ys6gg4fz6j6kgyhxjmnkv9kxjep0ct0lwx",
+      "url": "https://XN--BCHER-KVA.invalid/",
+      "error": "unsupportedUrlForm:idnaRequired"
+    }
+  ],
+  "url-error": [
+    {
+      "name": "missing-host",
+      "input": "lnurl1dp68gurn8ghj74tgry2",
+      "url": "https://",
+      "error": "missingHost"
+    },
+    {
+      "name": "missing-host-query",
+      "input": "lnurl1dp68gurn8ghj70m384uqh9ekk0",
+      "url": "https://?q=x",
+      "error": "missingHost"
+    },
+    {
+      "name": "encoded-hash",
+      "input": "lnurl1dp68gurn8ghj7ffjxvhs3hnp38",
+      "url": "https://%23/",
+      "error": "invalidHost"
+    },
+    {
+      "name": "encoded-slash",
+      "input": "lnurl1dp68gurn8ghj7ffjvchs74jv4z",
+      "url": "https://%2f/",
+      "error": "invalidHost"
+    },
+    {
+      "name": "encoded-at",
+      "input": "lnurl1dp68gurn8ghj7ff5xqhs3fs889",
+      "url": "https://%40/",
+      "error": "invalidHost"
+    },
+    {
+      "name": "encoded-null",
+      "input": "lnurl1dp68gurn8ghj7ffsxqhspdglnp",
+      "url": "https://%00/",
+      "error": "invalidHost"
+    },
+    {
+      "name": "malformed-host",
+      "input": "lnurl1dp68gurn8ghj7f26tghxjmnkv9kxjep05s09lh",
+      "url": "https://%ZZ.invalid/",
+      "error": "invalidHost"
+    },
+    {
+      "name": "truncated-host",
+      "input": "lnurl1dp68gurn8ghj7ffwd9h8vctvd9jz7ed0hh9",
+      "url": "https://%.invalid/",
+      "error": "invalidHost"
+    },
+    {
+      "name": "host-invalid-utf8",
+      "input": "lnurl1dp68gurn8ghj7f2xgchxjmnkv9kxjep06770aw",
+      "url": "https://%FF.invalid/",
+      "error": "invalidHost"
+    },
+    {
+      "name": "host-truncated-utf8",
+      "input": "lnurl1dp68gurn8ghj7f29xgjnsv3wd9h8vctvd9jz7pm3stq",
+      "url": "https://%E2%82.invalid/",
+      "error": "invalidHost"
+    },
+    {
+      "name": "numeric-domain",
+      "input": "lnurl1dp68gurn8ghj7en0duhrzv3n9u6sl2vw",
+      "url": "https://foo.123/",
+      "error": "unsupportedUrlForm:ipv4Form"
+    },
+    {
+      "name": "ipv4-overflow",
+      "input": "lnurl1dp68gurn8ghj7vfjxuhrqt3s9cer2d30wpsskq",
+      "url": "https://127.0.0.256/",
+      "error": "invalidIpv4"
+    },
+    {
+      "name": "port-overflow",
+      "input": "lnurl1dp68gurn8ghj7etcv9khqmr99e3k7mf6xc6n2vek9u7634mw",
+      "url": "https://example.com:65536/",
+      "error": "invalidPort"
+    },
+    {
+      "name": "port-negative",
+      "input": "lnurl1dp68gurn8ghj7etcv9khqmr99e3k7mf695cj7n8q26e",
+      "url": "https://example.com:-1/",
+      "error": "invalidPort"
+    },
+    {
+      "name": "port-letters",
+      "input": "lnurl1dp68gurn8ghj7etcv9khqmr99e3k7mf6v93xxtc6ev7wh",
+      "url": "https://example.com:abc/",
+      "error": "invalidPort"
+    },
+    {
+      "name": "port-sign",
+      "input": "lnurl1dp68gurn8ghj7etcv9khqmr99e3k7mf69vurqtcvtg5k4",
+      "url": "https://example.com:+80/",
+      "error": "invalidPort"
+    },
+    {
+      "name": "port-colon",
+      "input": "lnurl1dp68gurn8ghj7etcv9khqmr99e3k7mf68qcr5wfs9ujxqk6m",
+      "url": "https://example.com:80:90/",
+      "error": "invalidPort"
+    },
+    {
+      "name": "relative",
+      "input": "lnurl19ajhsctdwpkx2tnrdakj7urpw35qfjau3x",
+      "url": "/example.com/path",
+      "error": "unsupportedScheme"
+    },
+    {
+      "name": "scheme",
+      "input": "lnurl1ve68qw309ajhsctdwpkx2tnrdakj765qxrg",
+      "url": "ftp://example.com/",
+      "error": "unsupportedScheme"
+    },
+    {
+      "name": "host-space",
+      "input": "lnurl1dp68gurn8ghj7etcv9kjqurvv5hxxmmd9unnkdgn",
+      "url": "https://exam ple.com/",
+      "error": "invalidHost"
+    },
+    {
+      "name": "host-del",
+      "input": "lnurl1dp68gurn8ghj7etcv9khqmr99e3k7mf9xanz79eg0ty",
+      "url": "https://example.com%7f/",
+      "error": "invalidHost"
+    },
+    {
+      "name": "host-double-percent",
+      "input": "lnurl1dp68gurn8ghj7ffjx5mr27rpd4cxcefwvdhk6tc77tazu",
+      "url": "https://%2565xample.com/",
+      "error": "invalidHost"
+    },
+    {
+      "name": "host-caret",
+      "input": "lnurl1dp68gurn8ghj7etcv90x6urvv5hxxmmd9ukac62w",
+      "url": "https://exa^mple.com/",
+      "error": "invalidHost"
+    }
+  ],
+  "lnurl-positive": [
+    {
+      "name": "lowercase",
+      "input": "lnurl1dp68gurn8ghj7etcv9khqmr99e3k7mf047kw9w",
+      "bech32": "lnurl1dp68gurn8ghj7etcv9khqmr99e3k7mf047kw9w",
+      "url": "https://example.com/",
+      "host": "example.com",
+      "base": "https://example.com/",
+      "query": null,
+      "pairs": []
+    },
+    {
+      "name": "uppercase",
+      "input": "LNURL1DP68GURN8GHJ7ETCV9KHQMR99EHHYEE06NVH29",
+      "bech32": "LNURL1DP68GURN8GHJ7ETCV9KHQMR99EHHYEE06NVH29",
+      "url": "https://example.org/",
+      "host": "example.org",
+      "base": "https://example.org/",
+      "query": null,
+      "pairs": []
+    },
+    {
+      "name": "unicode-trim",
+      "input": " lnurl1dp68gurn8ghj7etcv9khqmr99e3k7mf047kw9w　",
+      "bech32": "lnurl1dp68gurn8ghj7etcv9khqmr99e3k7mf047kw9w",
+      "url": "https://example.com/",
+      "host": "example.com",
+      "base": "https://example.com/",
+      "query": null,
+      "pairs": []
+    },
+    {
+      "name": "all-whitespace",
+      "input": "\t\n\u000b\f\r                  　lnurl1dp68gurn8ghj7etcv9khqmr99e3k7mf047kw9w\t\n\u000b\f\r                  　",
+      "bech32": "lnurl1dp68gurn8ghj7etcv9khqmr99e3k7mf047kw9w",
+      "url": "https://example.com/",
+      "host": "example.com",
+      "base": "https://example.com/",
+      "query": null,
+      "pairs": []
+    },
+    {
+      "name": "long",
+      "input": "lnurl1dp68gurn8ghj7etcv9khqmr99e3k7mf0v9skzctpv9skzctpv9skzctpv9skzctpv9skzctpv9skzctpv9skzctpv9skzctpv9skzctpv9skzctpv9skzctpv9skzctpv9skzctpv9skzctpv9skzctpv9skzctpv9skzctpv9skzctpv9skzctpv9skzctpr856xg",
+      "bech32": "lnurl1dp68gurn8ghj7etcv9khqmr99e3k7mf0v9skzctpv9skzctpv9skzctpv9skzctpv9skzctpv9skzctpv9skzctpv9skzctpv9skzctpv9skzctpv9skzctpv9skzctpv9skzctpv9skzctpv9skzctpv9skzctpv9skzctpv9skzctpv9skzctpv9skzctpr856xg",
+      "url": "https://example.com/aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa",
+      "host": "example.com",
+      "base": "https://example.com/",
+      "query": null,
+      "pairs": []
+    },
+    {
+      "name": "limit-1022",
+      "input": "lnurl1dp68gurn8ghj7etcv9khqmr99e3k7mf0v9skzctpv9skzctpv9skzctpv9skzctpv9skzctpv9skzctpv9skzctpv9skzctpv9skzctpv9skzctpv9skzctpv9skzctpv9skzctpv9skzctpv9skzctpv9skzctpv9skzctpv9skzctpv9skzctpv9skzctpv9skzctpv9skzctpv9skzctpv9skzctpv9skzctpv9skzctpv9skzctpv9skzctpv9skzctpv9skzctpv9skzctpv9skzctpv9skzctpv9skzctpv9skzctpv9skzctpv9skzctpv9skzctpv9skzctpv9skzctpv9skzctpv9skzctpv9skzctpv9skzctpv9skzctpv9skzctpv9skzctpv9skzctpv9skzctpv9skzctpv9skzctpv9skzctpv9skzctpv9skzctpv9skzctpv9skzctpv9skzctpv9skzctpv9skzctpv9skzctpv9skzctpv9skzctpv9skzctpv9skzctpv9skzctpv9skzctpv9skzctpv9skzctpv9skzctpv9skzctpv9skzctpv9skzctpv9skzctpv9skzctpv9skzctpv9skzctpv9skzctpv9skzctpv9skzctpv9skzctpv9skzctpv9skzctpv9skzctpv9skzctpv9skzctpv9skzctpv9skzctpv9skzctpv9skzctpv9skzctpv9skzctpv9skzctpv9skzctpv9skzctpv9skzctpv9skzctpv9skzctpv9skzctpv9skzctpv9skzctpv9skzctpv9skzctpv9skzctpv9skzctpv9skzctpv9skzctpv9skzctpv9skzctpv9skzctpv9skzctpv9skzctpv9skzctpv9skzctpv9skzctpv9skzctpv9skzctpv9skzctpv9skzctpv9skzctpv9skzctpv9skzctpv9skzctpvy00hajg",
+      "bech32": "lnurl1dp68gurn8ghj7etcv9khqmr99e3k7mf0v9skzctpv9skzctpv9skzctpv9skzctpv9skzctpv9skzctpv9skzctpv9skzctpv9skzctpv9skzctpv9skzctpv9skzctpv9skzctpv9skzctpv9skzctpv9skzctpv9skzctpv9skzctpv9skzctpv9skzctpv9skzctpv9skzctpv9skzctpv9skzctpv9skzctpv9skzctpv9skzctpv9skzctpv9skzctpv9skzctpv9skzctpv9skzctpv9skzctpv9skzctpv9skzctpv9skzctpv9skzctpv9skzctpv9skzctpv9skzctpv9skzctpv9skzctpv9skzctpv9skzctpv9skzctpv9skzctpv9skzctpv9skzctpv9skzctpv9skzctpv9skzctpv9skzctpv9skzctpv9skzctpv9skzctpv9skzctpv9skzctpv9skzctpv9skzctpv9skzctpv9skzctpv9skzctpv9skzctpv9skzctpv9skzctpv9skzctpv9skzctpv9skzctpv9skzctpv9skzctpv9skzctpv9skzctpv9skzctpv9skzctpv9skzctpv9skzctpv9skzctpv9skzctpv9skzctpv9skzctpv9skzctpv9skzctpv9skzctpv9skzctpv9skzctpv9skzctpv9skzctpv9skzctpv9skzctpv9skzctpv9skzctpv9skzctpv9skzctpv9skzctpv9skzctpv9skzctpv9skzctpv9skzctpv9skzctpv9skzctpv9skzctpv9skzctpv9skzctpv9skzctpv9skzctpv9skzctpv9skzctpv9skzctpv9skzctpv9skzctpv9skzctpv9skzctpv9skzctpv9skzctpv9skzctpv9skzctpv9skzctpv9skzctpv9skzctpv9skzctpv9skzctpv9skzctpvy00hajg",
+      "url": "https://example.com/aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa",
+      "host": "example.com",
+      "base": "https://example.com/",
+      "query": null,
+      "pairs": []
+    },
+    {
+      "name": "bech32m",
+      "input": "lnurl1dp68gurn8ghj7etcv9khqmr99e3k7mf0qzxzqv",
+      "bech32": "lnurl1dp68gurn8ghj7etcv9khqmr99e3k7mf0qzxzqv",
+      "url": "https://example.com/",
+      "host": "example.com",
+      "base": "https://example.com/",
+      "query": null,
+      "pairs": []
+    },
+    {
+      "name": "nonzero-padding",
+      "input": "lnurl1dp68gurn8ghj7etcv9khqmr99e3k7mf08acn67pzf7huf",
+      "bech32": "lnurl1dp68gurn8ghj7etcv9khqmr99e3k7mf08acn67pzf7huf",
+      "url": "https://example.com/?q=x",
+      "host": "example.com",
+      "base": "https://example.com/",
+      "query": "q=x",
+      "pairs": [
+        [
+          "q",
+          "x"
+        ]
+      ]
+    }
+  ],
+  "lnurl-negative": [
+    {
+      "name": "prefix",
+      "input": "not_an_lnurl",
+      "error": "wrongPrefix"
+    },
+    {
+      "name": "prefix-valid-codec",
+      "input": "other1dp68gurn8ghj7etcv9khqmr99e3k7mf0f903he",
+      "error": "wrongPrefix"
+    },
+    {
+      "name": "hrp",
+      "input": "lnurlx1dp68gurn8ghj7etcv9khqmr99e3k7mf0ddg5e5",
+      "error": "wrongHrp"
+    },
+    {
+      "name": "invalid-utf8",
+      "input": "lnurl1dp68gurn8ghj7etcv9khqmr99e3k7mf0lucxe70e",
+      "error": "invalidUtf8"
+    },
+    {
+      "name": "missing-separator",
+      "input": "LNURL",
+      "error": "bech32:missingSeparator"
+    },
+    {
+      "name": "short-checksum",
+      "input": "lnurl1q",
+      "error": "bech32:shortChecksum"
+    },
+    {
+      "name": "checksum",
+      "input": "lnurl1qqqqqq",
+      "error": "bech32:checksumMismatch"
+    },
+    {
+      "name": "character",
+      "input": "lnurl1iiiiii",
+      "error": "bech32:invalidCharacter"
+    },
+    {
+      "name": "mixed-case",
+      "input": "LNURL1qqqqqq",
+      "error": "bech32:mixedCase"
+    },
+    {
+      "name": "hrp-long",
+      "input": "lnurlxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx1qqqqqq",
+      "error": "bech32:hrpTooLong"
+    },
+    {
+      "name": "hrp-character",
+      "input": "lnurl 1qqqqqq",
+      "error": "bech32:invalidHrp"
+    },
+    {
+      "name": "limit-1024",
+      "input": "lnurl1dp68gurn8ghj7etcv9khqmr99e3k7mf0v9skzctpv9skzctpv9skzctpv9skzctpv9skzctpv9skzctpv9skzctpv9skzctpv9skzctpv9skzctpv9skzctpv9skzctpv9skzctpv9skzctpv9skzctpv9skzctpv9skzctpv9skzctpv9skzctpv9skzctpv9skzctpv9skzctpv9skzctpv9skzctpv9skzctpv9skzctpv9skzctpv9skzctpv9skzctpv9skzctpv9skzctpv9skzctpv9skzctpv9skzctpv9skzctpv9skzctpv9skzctpv9skzctpv9skzctpv9skzctpv9skzctpv9skzctpv9skzctpv9skzctpv9skzctpv9skzctpv9skzctpv9skzctpv9skzctpv9skzctpv9skzctpv9skzctpv9skzctpv9skzctpv9skzctpv9skzctpv9skzctpv9skzctpv9skzctpv9skzctpv9skzctpv9skzctpv9skzctpv9skzctpv9skzctpv9skzctpv9skzctpv9skzctpv9skzctpv9skzctpv9skzctpv9skzctpv9skzctpv9skzctpv9skzctpv9skzctpv9skzctpv9skzctpv9skzctpv9skzctpv9skzctpv9skzctpv9skzctpv9skzctpv9skzctpv9skzctpv9skzctpv9skzctpv9skzctpv9skzctpv9skzctpv9skzctpv9skzctpv9skzctpv9skzctpv9skzctpv9skzctpv9skzctpv9skzctpv9skzctpv9skzctpv9skzctpv9skzctpv9skzctpv9skzctpv9skzctpv9skzctpv9skzctpv9skzctpv9skzctpv9skzctpv9skzctpv9skzctpv9skzctpv9skzctpv9skzctpv9skzctpv9skzctpv9skzctpv9skzctpv9skzctpv9skzctpv9ss7epl4z",
+      "error": "bech32:tooLong",
+      "url": "https://example.com/aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa"
+    }
+  ],
+  "address": [
+    {
+      "name": "address-0",
+      "input": "user@example.com",
+      "output": "https://example.com/.well-known/lnurlp/user"
+    },
+    {
+      "name": "address-1",
+      "input": "user+tag@example.com",
+      "output": "https://example.com/.well-known/lnurlp/user+tag"
+    },
+    {
+      "name": "address-2",
+      "input": "_@example.com",
+      "output": "https://example.com/.well-known/lnurlp/_"
+    },
+    {
+      "name": "address-3",
+      "input": " user @example.com ",
+      "output": "https://example.com /.well-known/lnurlp/ user "
+    },
+    {
+      "name": "address-4",
+      "input": "a/b@example.com",
+      "output": "https://example.com/.well-known/lnurlp/a/b"
+    },
+    {
+      "name": "no-at",
+      "input": "invalid",
+      "error": "malformedAddress"
+    },
+    {
+      "name": "three-parts",
+      "input": "user@domain@com",
+      "error": "malformedAddress"
+    },
+    {
+      "name": "empty-domain",
+      "input": "user@",
+      "error": "malformedAddress"
+    },
+    {
+      "name": "empty-user",
+      "input": "@domain.com",
+      "error": "malformedAddress"
+    },
+    {
+      "name": "empty-both",
+      "input": "@",
+      "error": "malformedAddress"
+    },
+    {
+      "name": "empty-example-user",
+      "input": "@example.com",
+      "error": "malformedAddress"
+    }
+  ],
+  "json-request": [
+    {
+      "name": "absent",
+      "input": "{\"callback\":\"https://example.com/callback\",\"maxSendable\":10000,\"minSendable\":1000,\"metadata\":\"not nested JSON\",\"tag\":\"unchecked-tag\"}",
+      "expected": {
+        "callback": "https://example.com/callback",
+        "maxSendable": 10000,
+        "minSendable": 1000,
+        "metadata": "not nested JSON",
+        "tag": "unchecked-tag"
+      }
+    },
+    {
+      "name": "null",
+      "input": "{\"callback\":\"https://example.com/callback\",\"maxSendable\":10000,\"minSendable\":1000,\"metadata\":\"not nested JSON\",\"tag\":\"unchecked-tag\",\"commentAllowed\":null}",
+      "expected": {
+        "callback": "https://example.com/callback",
+        "maxSendable": 10000,
+        "minSendable": 1000,
+        "metadata": "not nested JSON",
+        "tag": "unchecked-tag",
+        "commentAllowed": null
+      }
+    },
+    {
+      "name": "zero",
+      "input": "{\"callback\":\"https://example.com/callback\",\"maxSendable\":10000,\"minSendable\":1000,\"metadata\":\"not nested JSON\",\"tag\":\"unchecked-tag\",\"commentAllowed\":0}",
+      "expected": {
+        "callback": "https://example.com/callback",
+        "maxSendable": 10000,
+        "minSendable": 1000,
+        "metadata": "not nested JSON",
+        "tag": "unchecked-tag",
+        "commentAllowed": 0
+      }
+    },
+    {
+      "name": "max",
+      "input": "{\"callback\":\"https://example.com/callback\",\"maxSendable\":10000,\"minSendable\":1000,\"metadata\":\"not nested JSON\",\"tag\":\"unchecked-tag\",\"commentAllowed\":65535}",
+      "expected": {
+        "callback": "https://example.com/callback",
+        "maxSendable": 10000,
+        "minSendable": 1000,
+        "metadata": "not nested JSON",
+        "tag": "unchecked-tag",
+        "commentAllowed": 65535
+      }
+    },
+    {
+      "name": "unknown",
+      "input": "{\"callback\":\"https://example.com/callback\",\"maxSendable\":10000,\"minSendable\":1000,\"metadata\":\"not nested JSON\",\"tag\":\"unchecked-tag\",\"ignored\":[1,2]}",
+      "expected": {
+        "callback": "https://example.com/callback",
+        "maxSendable": 10000,
+        "minSendable": 1000,
+        "metadata": "not nested JSON",
+        "tag": "unchecked-tag",
+        "ignored": [
+          1,
+          2
+        ]
+      }
+    },
+    {
+      "name": "bounds",
+      "input": "{\"callback\":\"https://example.com/callback\",\"maxSendable\":18446744073709551615,\"minSendable\":0,\"metadata\":\"not nested JSON\",\"tag\":\"unchecked-tag\"}",
+      "expected": {
+        "callback": "https://example.com/callback",
+        "maxSendable": 18446744073709551615,
+        "minSendable": 0,
+        "metadata": "not nested JSON",
+        "tag": "unchecked-tag"
+      }
+    },
+    {
+      "name": "no-policy",
+      "input": "{\"callback\":\"literal callback\",\"maxSendable\":0,\"minSendable\":10,\"metadata\":\"not nested JSON\",\"tag\":\"unchecked-tag\"}",
+      "expected": {
+        "callback": "literal callback",
+        "maxSendable": 0,
+        "minSendable": 10,
+        "metadata": "not nested JSON",
+        "tag": "unchecked-tag"
+      }
+    },
+    {
+      "name": "missing-callback",
+      "input": "{\"maxSendable\":10000,\"minSendable\":1000,\"metadata\":\"not nested JSON\",\"tag\":\"unchecked-tag\"}",
+      "error": "malformedResponse:callback"
+    },
+    {
+      "name": "type-callback",
+      "input": "{\"callback\":[],\"maxSendable\":10000,\"minSendable\":1000,\"metadata\":\"not nested JSON\",\"tag\":\"unchecked-tag\"}",
+      "error": "malformedResponse:callback"
+    },
+    {
+      "name": "null-callback",
+      "input": "{\"callback\":null,\"maxSendable\":10000,\"minSendable\":1000,\"metadata\":\"not nested JSON\",\"tag\":\"unchecked-tag\"}",
+      "error": "malformedResponse:callback"
+    },
+    {
+      "name": "missing-maxSendable",
+      "input": "{\"callback\":\"https://example.com/callback\",\"minSendable\":1000,\"metadata\":\"not nested JSON\",\"tag\":\"unchecked-tag\"}",
+      "error": "malformedResponse:maxSendable"
+    },
+    {
+      "name": "type-maxSendable",
+      "input": "{\"callback\":\"https://example.com/callback\",\"maxSendable\":[],\"minSendable\":1000,\"metadata\":\"not nested JSON\",\"tag\":\"unchecked-tag\"}",
+      "error": "malformedResponse:maxSendable"
+    },
+    {
+      "name": "null-maxSendable",
+      "input": "{\"callback\":\"https://example.com/callback\",\"maxSendable\":null,\"minSendable\":1000,\"metadata\":\"not nested JSON\",\"tag\":\"unchecked-tag\"}",
+      "error": "malformedResponse:maxSendable"
+    },
+    {
+      "name": "missing-minSendable",
+      "input": "{\"callback\":\"https://example.com/callback\",\"maxSendable\":10000,\"metadata\":\"not nested JSON\",\"tag\":\"unchecked-tag\"}",
+      "error": "malformedResponse:minSendable"
+    },
+    {
+      "name": "type-minSendable",
+      "input": "{\"callback\":\"https://example.com/callback\",\"maxSendable\":10000,\"minSendable\":[],\"metadata\":\"not nested JSON\",\"tag\":\"unchecked-tag\"}",
+      "error": "malformedResponse:minSendable"
+    },
+    {
+      "name": "null-minSendable",
+      "input": "{\"callback\":\"https://example.com/callback\",\"maxSendable\":10000,\"minSendable\":null,\"metadata\":\"not nested JSON\",\"tag\":\"unchecked-tag\"}",
+      "error": "malformedResponse:minSendable"
+    },
+    {
+      "name": "missing-metadata",
+      "input": "{\"callback\":\"https://example.com/callback\",\"maxSendable\":10000,\"minSendable\":1000,\"tag\":\"unchecked-tag\"}",
+      "error": "malformedResponse:metadata"
+    },
+    {
+      "name": "type-metadata",
+      "input": "{\"callback\":\"https://example.com/callback\",\"maxSendable\":10000,\"minSendable\":1000,\"metadata\":[],\"tag\":\"unchecked-tag\"}",
+      "error": "malformedResponse:metadata"
+    },
+    {
+      "name": "null-metadata",
+      "input": "{\"callback\":\"https://example.com/callback\",\"maxSendable\":10000,\"minSendable\":1000,\"metadata\":null,\"tag\":\"unchecked-tag\"}",
+      "error": "malformedResponse:metadata"
+    },
+    {
+      "name": "missing-tag",
+      "input": "{\"callback\":\"https://example.com/callback\",\"maxSendable\":10000,\"minSendable\":1000,\"metadata\":\"not nested JSON\"}",
+      "error": "malformedResponse:tag"
+    },
+    {
+      "name": "type-tag",
+      "input": "{\"callback\":\"https://example.com/callback\",\"maxSendable\":10000,\"minSendable\":1000,\"metadata\":\"not nested JSON\",\"tag\":[]}",
+      "error": "malformedResponse:tag"
+    },
+    {
+      "name": "null-tag",
+      "input": "{\"callback\":\"https://example.com/callback\",\"maxSendable\":10000,\"minSendable\":1000,\"metadata\":\"not nested JSON\",\"tag\":null}",
+      "error": "malformedResponse:tag"
+    },
+    {
+      "name": "negative-maxSendable",
+      "input": "{\"callback\":\"https://example.com/callback\",\"maxSendable\":-1,\"minSendable\":1000,\"metadata\":\"not nested JSON\",\"tag\":\"unchecked-tag\"}",
+      "error": "malformedResponse:maxSendable"
+    },
+    {
+      "name": "overflow-maxSendable",
+      "input": "{\"callback\":\"https://example.com/callback\",\"maxSendable\":18446744073709551616,\"minSendable\":1000,\"metadata\":\"not nested JSON\",\"tag\":\"unchecked-tag\"}",
+      "error": "malformedResponse:maxSendable"
+    },
+    {
+      "name": "fraction-maxSendable",
+      "input": "{\"callback\":\"https://example.com/callback\",\"maxSendable\":1.5,\"minSendable\":1000,\"metadata\":\"not nested JSON\",\"tag\":\"unchecked-tag\"}",
+      "error": "malformedResponse:maxSendable"
+    },
+    {
+      "name": "float-maxSendable",
+      "input": "{\"callback\":\"https://example.com/callback\",\"maxSendable\":1.0,\"minSendable\":1000,\"metadata\":\"not nested JSON\",\"tag\":\"unchecked-tag\"}",
+      "error": "malformedResponse:maxSendable"
+    },
+    {
+      "name": "string-maxSendable",
+      "input": "{\"callback\":\"https://example.com/callback\",\"maxSendable\":\"1000\",\"minSendable\":1000,\"metadata\":\"not nested JSON\",\"tag\":\"unchecked-tag\"}",
+      "error": "malformedResponse:maxSendable"
+    },
+    {
+      "name": "bool-maxSendable",
+      "input": "{\"callback\":\"https://example.com/callback\",\"maxSendable\":true,\"minSendable\":1000,\"metadata\":\"not nested JSON\",\"tag\":\"unchecked-tag\"}",
+      "error": "malformedResponse:maxSendable"
+    },
+    {
+      "name": "negative-minSendable",
+      "input": "{\"callback\":\"https://example.com/callback\",\"maxSendable\":10000,\"minSendable\":-1,\"metadata\":\"not nested JSON\",\"tag\":\"unchecked-tag\"}",
+      "error": "malformedResponse:minSendable"
+    },
+    {
+      "name": "overflow-minSendable",
+      "input": "{\"callback\":\"https://example.com/callback\",\"maxSendable\":10000,\"minSendable\":18446744073709551616,\"metadata\":\"not nested JSON\",\"tag\":\"unchecked-tag\"}",
+      "error": "malformedResponse:minSendable"
+    },
+    {
+      "name": "fraction-minSendable",
+      "input": "{\"callback\":\"https://example.com/callback\",\"maxSendable\":10000,\"minSendable\":1.5,\"metadata\":\"not nested JSON\",\"tag\":\"unchecked-tag\"}",
+      "error": "malformedResponse:minSendable"
+    },
+    {
+      "name": "float-minSendable",
+      "input": "{\"callback\":\"https://example.com/callback\",\"maxSendable\":10000,\"minSendable\":1.0,\"metadata\":\"not nested JSON\",\"tag\":\"unchecked-tag\"}",
+      "error": "malformedResponse:minSendable"
+    },
+    {
+      "name": "string-minSendable",
+      "input": "{\"callback\":\"https://example.com/callback\",\"maxSendable\":10000,\"minSendable\":\"1000\",\"metadata\":\"not nested JSON\",\"tag\":\"unchecked-tag\"}",
+      "error": "malformedResponse:minSendable"
+    },
+    {
+      "name": "bool-minSendable",
+      "input": "{\"callback\":\"https://example.com/callback\",\"maxSendable\":10000,\"minSendable\":true,\"metadata\":\"not nested JSON\",\"tag\":\"unchecked-tag\"}",
+      "error": "malformedResponse:minSendable"
+    },
+    {
+      "name": "comment-overflow",
+      "input": "{\"callback\":\"https://example.com/callback\",\"maxSendable\":10000,\"minSendable\":1000,\"metadata\":\"not nested JSON\",\"tag\":\"unchecked-tag\",\"commentAllowed\":65536}",
+      "error": "malformedResponse:commentAllowed"
+    },
+    {
+      "name": "comment-negative",
+      "input": "{\"callback\":\"https://example.com/callback\",\"maxSendable\":10000,\"minSendable\":1000,\"metadata\":\"not nested JSON\",\"tag\":\"unchecked-tag\",\"commentAllowed\":-1}",
+      "error": "malformedResponse:commentAllowed"
+    },
+    {
+      "name": "comment-fraction",
+      "input": "{\"callback\":\"https://example.com/callback\",\"maxSendable\":10000,\"minSendable\":1000,\"metadata\":\"not nested JSON\",\"tag\":\"unchecked-tag\",\"commentAllowed\":1.5}",
+      "error": "malformedResponse:commentAllowed"
+    },
+    {
+      "name": "comment-float",
+      "input": "{\"callback\":\"https://example.com/callback\",\"maxSendable\":10000,\"minSendable\":1000,\"metadata\":\"not nested JSON\",\"tag\":\"unchecked-tag\",\"commentAllowed\":1.0}",
+      "error": "malformedResponse:commentAllowed"
+    },
+    {
+      "name": "comment-string",
+      "input": "{\"callback\":\"https://example.com/callback\",\"maxSendable\":10000,\"minSendable\":1000,\"metadata\":\"not nested JSON\",\"tag\":\"unchecked-tag\",\"commentAllowed\":\"2\"}",
+      "error": "malformedResponse:commentAllowed"
+    },
+    {
+      "name": "comment-array",
+      "input": "{\"callback\":\"https://example.com/callback\",\"maxSendable\":10000,\"minSendable\":1000,\"metadata\":\"not nested JSON\",\"tag\":\"unchecked-tag\",\"commentAllowed\":[]}",
+      "error": "malformedResponse:commentAllowed"
+    },
+    {
+      "name": "comment-object",
+      "input": "{\"callback\":\"https://example.com/callback\",\"maxSendable\":10000,\"minSendable\":1000,\"metadata\":\"not nested JSON\",\"tag\":\"unchecked-tag\",\"commentAllowed\":{}}",
+      "error": "malformedResponse:commentAllowed"
+    },
+    {
+      "name": "comment-bool",
+      "input": "{\"callback\":\"https://example.com/callback\",\"maxSendable\":10000,\"minSendable\":1000,\"metadata\":\"not nested JSON\",\"tag\":\"unchecked-tag\",\"commentAllowed\":false}",
+      "error": "malformedResponse:commentAllowed"
+    },
+    {
+      "name": "error-reply",
+      "input": "{\"status\":\"ERROR\",\"reason\":\"synthetic refusal\"}",
+      "error": "malformedResponse:callback"
+    }
+  ],
+  "json-callback": [
+    {
+      "name": "absent",
+      "input": "{\"pr\":\"synthetic-pr\"}",
+      "expected": {
+        "pr": "synthetic-pr"
+      }
+    },
+    {
+      "name": "null",
+      "input": "{\"pr\":\"synthetic-pr\",\"routes\":null}",
+      "expected": {
+        "pr": "synthetic-pr",
+        "routes": null
+      }
+    },
+    {
+      "name": "empty",
+      "input": "{\"pr\":\"synthetic-pr\",\"routes\":[]}",
+      "expected": {
+        "pr": "synthetic-pr",
+        "routes": []
+      }
+    },
+    {
+      "name": "strings",
+      "input": "{\"pr\":\"synthetic-pr\",\"routes\":[\"synthetic-route\",\"\"]}",
+      "expected": {
+        "pr": "synthetic-pr",
+        "routes": [
+          "synthetic-route",
+          ""
+        ]
+      }
+    },
+    {
+      "name": "unknown",
+      "input": "{\"pr\":\"synthetic-pr\",\"ignored\":42}",
+      "expected": {
+        "pr": "synthetic-pr",
+        "ignored": 42
+      }
+    },
+    {
+      "name": "missing-pr",
+      "input": "{}",
+      "error": "malformedResponse:pr"
+    },
+    {
+      "name": "type-pr",
+      "input": "{\"pr\":1}",
+      "error": "malformedResponse:pr"
+    },
+    {
+      "name": "null-pr",
+      "input": "{\"pr\":null}",
+      "error": "malformedResponse:pr"
+    },
+    {
+      "name": "route-number",
+      "input": "{\"pr\":\"synthetic-pr\",\"routes\":[1]}",
+      "error": "malformedResponse:routes"
+    },
+    {
+      "name": "route-mixed",
+      "input": "{\"pr\":\"synthetic-pr\",\"routes\":[\"synthetic-route\",1]}",
+      "error": "malformedResponse:routes"
+    },
+    {
+      "name": "route-null-member",
+      "input": "{\"pr\":\"synthetic-pr\",\"routes\":[null]}",
+      "error": "malformedResponse:routes"
+    },
+    {
+      "name": "routes-string",
+      "input": "{\"pr\":\"synthetic-pr\",\"routes\":\"route\"}",
+      "error": "malformedResponse:routes"
+    },
+    {
+      "name": "routes-object",
+      "input": "{\"pr\":\"synthetic-pr\",\"routes\":{}}",
+      "error": "malformedResponse:routes"
+    },
+    {
+      "name": "routes-bool",
+      "input": "{\"pr\":\"synthetic-pr\",\"routes\":false}",
+      "error": "malformedResponse:routes"
+    },
+    {
+      "name": "routes-number",
+      "input": "{\"pr\":\"synthetic-pr\",\"routes\":0}",
+      "error": "malformedResponse:routes"
+    },
+    {
+      "name": "error-reply",
+      "input": "{\"status\":\"ERROR\",\"reason\":\"synthetic refusal\"}",
+      "error": "malformedResponse:pr"
+    }
+  ]
+}
