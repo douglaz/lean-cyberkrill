@@ -86,8 +86,8 @@ v1 commands (from the `Commands` enum in `cyberkrill/src/main.rs`): `ln-decode-i
   decision, 2026-10-23: canonical CompactSize key types, the global xpub path length matching its
   depth, and no v2-only fields in a v0 PSBT; on 16 such inputs cyberkrill exits 0 in the pinned
   offline `onchain-decode-psbt` capture while the port's decoder rejects all 16; the capture and
-  tests are recorded in Phase 4a's PSBT field-parity follow-up); otherwise the port exits non-zero
-  wherever cyberkrill does.
+  tests are recorded in Phase 4a's PSBT field-parity follow-up). The LNURL URL subset below is a
+  fifth exception (owner decision, 2026-10-25); otherwise the port exits non-zero wherever cyberkrill does.
   Goldens cover v0; v2 gets its own tests from the BIP370 vectors; the README lists each delta.
 - **BOLT11 signing hash.** The port hashes the invoice's own lower-cased hrp and its data part as
   written (BOLT #11 L117-119; owner decision, 2026-10-21), as LND and Core Lightning do.
@@ -105,6 +105,23 @@ v1 commands (from the `Commands` enum in `cyberkrill/src/main.rs`): `ln-decode-i
   third documented, tested exception to golden parity: Phase 5 tests the rejected classes as negative
   vectors and the leading-zero amount as positive ones, Phase 7b captures cyberkrill's output on
   each, and the README lists it.
+- **LNURL URL subset.** Phase 5b follows cyberkrill's `url` 2.5.7 behaviour exactly for http/https
+  URLs with ASCII domain names or plain dotted IPv4 and an optional port (owner decision,
+  2026-10-25). Other schemes are refused with `unsupportedScheme`. Plain dotted IPv4 means four
+  decimal octets in 0-255, with no trailing dot and no leading zeros except the single digit `0`.
+  After the same input cleanup and host percent-decoding, userinfo, IPv6, other IPv4 spellings
+  (hex, octal or shorthand, including a numeric trailing dot), non-ASCII hosts and hosts with an
+  `xn--` label are refused with the named error `unsupportedUrlForm`. Invalid inputs within the supported
+  forms still fail as in `url` 2.5.7. For supported inputs the decoded URL string stays unchanged;
+  the parsed scheme, host, base, query and decoded query pairs follow cyberkrill, including host
+  case folding, query escaping and last-value-wins duplicate keys. This is a documented, tested
+  parity exception: the port exits non-zero on refused forms that cyberkrill accepts. Phase 5b
+  tests both boundaries, and Phase 7b captures cyberkrill's outputs on those vectors. Its LNURL
+  "decodes identically" criterion applies within the subset; for accepted reference URLs outside
+  it, assert cyberkrill's zero exit and the port's named refusal instead. This exception governs
+  that criterion, and README lists the delta. IDNA / non-ASCII host support and any widening to
+  userinfo, IPv6 or other IPv4 forms remain deferred in `lck-x37`; Phase 9b reuses the subset parser
+  for callback serialisation.
 - **Hybrid public keys.** rust-bitcoin 0.32.8's `PublicKey::from_slice` rejects a 65-byte hybrid key
   (prefix 06/07), but cyberkrill parses two v1 inputs with libsecp256k1's own `ec_pubkey_parse`,
   which accepts one whose prefix matches y's parity: PSBT `bip32_derivation` keys (input and output
