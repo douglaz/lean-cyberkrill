@@ -1,0 +1,11 @@
+Source: https://raw.githubusercontent.com/lightning/bolts/191462825ae341f0a27098765c075f01ca9bc6c2/11-payment-encoding.md
+Commit: 191462825ae341f0a27098765c075f01ca9bc6c2
+Path: 11-payment-encoding.md
+Licence: CC-BY-4.0; attribution: lightning/bolts contributors.
+Examples headed at lines 382, 410, 438, 466, 491, 516, 554, 579, 602, 625, 648, 682, 704, 707, 735, 762, 792, 814, 821, 824, 827, 830, 833, 836, 839, 842, 845, 848, 851, 854, 858: extracted and reformatted.
+n-field vectors: L858, modified: second s field removed, re-signed with the spec's example key (the twin with s replaced by n - s), checksum recomputed.
+Negative and small vectors: modified as each row's change specifies, checksum recomputed; bech32m: checksum recomputed under bech32m.
+Positive vectors and the two length strings: modified as each row's change specifies, re-signed with the spec's example key, checksum recomputed.
+Tampered signature: modified: one signature byte changed, checksum recomputed.
+Hashes computed independently from the as-written HRP and data. Curve table extracted from those rows.
+Generated with coincurve 21.0.0, libsecp256k1 0.8.0, RFC 6979, hasher=None.

@@ -29,6 +29,8 @@ and payload-preservation proofs, 12 BIP32 public vectors, 72 conversions and
 48 offline cyberkrill goldens.
 Phase 4d adds P2WPKH weight and fee estimation with the same binary64 arithmetic
 as cyberkrill, checked against 466 offline captured rows.
+Phase 5 (1 of 3) adds pure BOLT11 decoding, canonical encoding, supplied curve
+operations and the published invoice corpus with generated boundary vectors.
 Other packages remain skeletons;
 `plan.md` is the plan for v1.
 
@@ -5651,7 +5653,344 @@ rate fetching, dust and relay policy, and CLI commands belong to later phases.
 `plan.md` is unchanged; its Phase 4 scope and definition of done still describe
 the intended behavior.
 
+## Phase 5 (1 of 3): BOLT11 invoices
+
+`import Lightning` exposes `Lightning.Bolt11`, implemented in
+`Lightning/Bolt11/{Types,Fields,Codec}.lean`. The package requires only
+`bitcoin`, with `sha256` available through it. It contains no C or curve
+implementation. The public entry points are:
+
+```lean
+decodeFields : Curve → List Symbol → Except Error (List Field)
+encodeFields : List Field → List Symbol
+decode : Curve → String → Except Error Invoice
+encode : Invoice → Except EncodeError String
+sign : Curve → Parts → Except EncodeError String
+signingHash : String → List Symbol → ByteArray
+hrpFromMsat : Currency → Bitcoin.Amount → Except EncodeError Hrp
+```
+
+`Symbol` is `Bitcoin.Bech32.Symbol` (`BitVec 5`), so an out-of-range raw tag
+or data symbol is unrepresentable. `Currency` covers `bc`, `tb`, `bcrt`, `sb`
+and `tbs`. `Hrp` keeps the optional `UInt64` raw amount and optional
+`Multiplier`; `Hrp.picoAmount` and `Hrp.amount` expose pico-BTC and exact
+`Bitcoin.Amount` millisatoshis after successful decoding. A no-multiplier
+pico-u64 overflow keeps its raw amount but exposes no amount.
+
+`Parts` holds the HRP, timestamp and ordered fields. `Invoice` additionally
+holds the 65 signature bytes, checked signing hash and payee key. `Field`
+types `p`, `s`, `d`, `h`, `n`, `x`, `c`, `9`, `m`, `f` and `r`, retaining
+other fields as a raw tag and symbols. Wrong-length `p`/`h`/`s`/`n` fields
+and fallback versions above 18 stay raw. The field layer checks framing,
+strict padding, UTF-8, integer ranges and supplied point validation; it
+performs no semantic counts, feature requirements or signature validation.
+The whole decoder checks field counts, features, signature and then amount
+precision, in that order, after parsing the fields and signature bytes.
+
+`Parts.paymentHash`, `paymentSecret`, `description` (text or hash),
+`payeePubkey`, `expiry`, `minFinalCltvExpiryDelta`, `features` and `metadata`
+return the first typed occurrence. Expiry defaults to 3600 seconds and CLTV
+delta to 18. `fallbacks` and `routeHints` return every occurrence.
+`fallbackAddresses` uses `Bitcoin.Address.encodeScript` with the currency's
+network, omitting a fallback whose script cannot form an address. A version
+0 program of 25 bytes therefore decodes but contributes no address.
+Each `RouteHop` retains the node id and big-endian channel id, base fee,
+proportional fee and CLTV delta, in their u64/u32/u32/u16 types.
+
+`Features` is a natural-number bitset. `has`, `requires` and `supports`
+expose individual bits and even/odd pairs; `unknownBits`, `optionalBits`
+and `requiresUnknown` retain the information needed for later CLI
+classification. Known pairs are 8/9, 14/15, 16/17, 48/49 and 56/57.
+
+`Curve` supplies `recover : ByteArray → ByteArray → UInt8 → Option ByteArray`,
+`verify : ByteArray → ByteArray → ByteArray → Bool`,
+`sign : ByteArray → Option ByteArray`, and
+`isValidPubkey : ByteArray → Bool`. Hashes are 32 bytes, compact signatures
+64 bytes and compressed keys 33 bytes; signing returns 65 bytes including
+the recovery id. Verification requires low-S; recovery preserves S as
+written, including high-S. A valid typed `n` uses verification; otherwise
+the payee comes from recovery. There is one signing digest, with no fallback
+to another digest. The executable's curve table is confined to test support:
+it is keyed by the generator's recorded digests and signatures, independently
+of the Lean hash function. It accepts exactly the four published payee and
+route-node keys. The low-S `n` vector's high-S twin is absent from that table.
+
+`Error` separates bech32 reasons, checksum failure, short data, malformed
+HRP, currency, multiplier, amount overflow, field framing, malformed fields,
+non-canonical padding and leading zeros (the last three carry the tag),
+signature parsing, each required-field count, invalid features, unknown
+required features, verification, recovery and imprecise amounts.
+`EncodeError` separates field length, amount overflow, invalid HRP, timestamp,
+field shape, malformed signature, signing failure, signing-hash mismatch and
+invalid invoice (carrying the decoder's `Error`). Encoding writes zero padding,
+minimal integers and amounts without leading zeros. `encode` preserves signature
+bytes and refuses with `signingHashMismatch` when the signing hash of the data
+it writes differs from the invoice's recorded one, as for a decoded leading-zero
+HRP amount, whose signature covers the HRP as written; `sign` hashes the exact
+data it writes and calls the supplied signer, so such parts are re-signed. Both
+entry points refuse invalid typed field shapes, raw fields that the decoder
+would read as typed (`staysRaw`: only an unknown tag, a wrong-length
+`p`/`h`/`s`/`n` or a fallback version above 18 stays raw), fields above 1023
+symbols, timestamps at or above 2^35, and pico amounts at or above 2^64. They
+also apply the decoder's field-count, feature and amount-precision checks
+(`checkParts`) and refuse with `invalidInvoice`, as lightning-invoice 0.34.0's
+builder guarantees those checks for every invoice it signs
+(`src/lib.rs:976-978`). `sign` also reads its fields back through the decoder's
+field layer with its capability, so an invalid `n` or route-node key gives
+`invalidInvoice (malformedField tag)`; `encode` has no capability and cannot
+check points. Like that builder, `sign` does not check the signature against an
+explicit `n`, so a mismatched key and signer give an invoice that decoding
+rejects with `verifyFailed`, as cyberkrill's `ln-encode-invoice` does for a
+`destination` that differs from its `--private-key`. They apply no
+7089-character limit (Deltas not taken). `encodeFields` is a total writer; its
+caller checks field shapes and length bounds before using it for an invoice.
+`hrpFromMsat` tries no multiplier first, so 10^11 msat writes `lnbc1` and
+zero writes `lnbc0`; lightning-invoice 0.34.0's builder tries only m/u/n/p
+(`src/lib.rs:427-431,678-692`), writing `lnbc1000m` and `lnbc0m`. Phase 7b's
+`ln-encode-invoice` must use the builder's rule where parity requires it.
+
+### Sources and reproducible fixtures
+
+The normative source is [BOLT #11, 11-payment-encoding.md](https://github.com/lightning/bolts/blob/191462825ae341f0a27098765c075f01ca9bc6c2/11-payment-encoding.md)
+at `191462825ae341f0a27098765c075f01ca9bc6c2`: amount rules at lines 80-87,
+signing hash at 117-119, field requirements at 208-241, example key at 378,
+and examples at 382-859. Its SHA-256 is
+`c659da1bc08091f7fe691cd4ce661e578dfbe1f77a0b9cd9c53d1839010ae029`;
+the file has 868 lines. The extracted and modified examples in
+`packages/lightning/test-data/bolt11.json` are CC-BY-4.0, attributed to the
+lightning/bolts contributors in the adjacent provenance sidecar. Every
+derived row names its source and modification. No private key is stored;
+the generator reads the published example key from the pinned spec.
+
+Compatibility readings use the versions locked by
+[cyberkrill Cargo.lock](https://github.com/douglaz/cyberkrill/blob/27cad1faba86260b06665a89f0af5134d23525c2/Cargo.lock)
+at `27cad1faba86260b06665a89f0af5134d23525c2`:
+
+| Source | Relevant locations |
+|---|---|
+| [lightning-invoice 0.34.0](https://docs.rs/crate/lightning-invoice/0.34.0/source/src/de.rs) | `src/de.rs:144-303,380-478,493-730`: HRP, framing, typed fields and signature parsing |
+| [lightning-invoice 0.34.0 semantics](https://docs.rs/crate/lightning-invoice/0.34.0/source/src/lib.rs) | `src/lib.rs:143-175,468-476,678-686,1009-1028,1048-1052,1164-1215,1314-1440,1585-1603`: defaults, limits, getters, signature rule, check order and fallback addresses |
+| [lightning-invoice 0.34.0 encoding](https://docs.rs/crate/lightning-invoice/0.34.0/source/src/ser.rs) | `src/ser.rs:158-172,221-235,408`: total length, minimal integers and field length |
+| [lightning-types 0.3.0](https://docs.rs/crate/lightning-types/0.3.0/source/src/features.rs) | `src/features.rs:214-231,1191-1211`: known features and unknown required bits |
+| [bech32 0.11.1](https://docs.rs/crate/bech32/0.11.1/source/src/primitives/decode.rs) | `src/primitives/decode.rs:131-141,253-283`; `src/primitives/hrp.rs:78-88`: HRP and total-length check order |
+| [secp256k1 0.29.1](https://docs.rs/crate/secp256k1/0.29.1/source/src/ecdsa/recovery.rs) | `src/ecdsa/recovery.rs:26-31,42-64`: recovery-id and compact-signature parsing |
+| [cyberkrill decoder](https://github.com/douglaz/cyberkrill/blob/27cad1faba86260b06665a89f0af5134d23525c2/cyberkrill-core/src/decoder.rs#L242-L433) | `cyberkrill-core/src/decoder.rs:242-257,306-341,360-368,398-402,429-433`: later CLI output and feature classification |
+
+The four downloaded crate archives were checksum-checked against that lockfile
+and read as source only. No Rust code or cyberkrill executable was built or
+executed for this phase. Phase 7b supplies the actual CLI golden captures.
+
+`generate-bolt11.py` uses its own bit regrouping, checksum, field framing
+and signing-preimage implementation. It asserts canonicality of **16/16**
+valid examples, checks their digests/signatures/recovery ids against the
+existing secp256k1 fixture (**16/16**), and checks the spec's published
+preimage hashes (**11/11**). The derived low-S `n` invoice removes L858's
+second `s` field, then signs the digest directly using RFC 6979 and
+`hasher=None`. Both its digest and the low/high-S string hashes are pinned.
+coincurve verifies the low-S signature and rejects its high-S twin; both
+recover to the published payee key. The built Lean hash function separately
+matches the low-S digest (**1/1**).
+
+Build the reproducible signing interpreter with this exact command:
+
+```bash
+nix build --impure --no-link --print-out-paths --expr 'let p = (builtins.getFlake "github:NixOS/nixpkgs/fe13242281a67641c0102cdb1087f0ebe586c7df").legacyPackages.x86_64-linux; in p.python3.withPackages (ps: [ ps.coincurve ])'
+```
+
+It provides Python 3.14, coincurve 21.0.0 and libsecp256k1 0.8.0. Set
+`PYTHON_ENV` to the returned store path. Use a private existing temporary
+parent for `TMPDIR`; generation fetches the pinned spec into memory, while
+tests read committed files only. Heavy commands use the same foreground
+scope shown below, one at a time:
+
+```bash
+REPO=$PWD
+TMP_ROOT=$(mktemp -d "${TMPDIR:?}/bolt11.XXXXXXXX")
+export TMPDIR="$TMP_ROOT"
+scope=(systemd-run --user --scope --quiet -p MemoryMax=8G -p MemorySwapMax=0 -p OOMPolicy=continue -p TasksMax=4096 timeout 3600)
+cd "$REPO/packages/lightning"
+"${scope[@]}" nix develop -c lake build LightningTests
+"${scope[@]}" "$PYTHON_ENV/bin/python3" -I generate-bolt11.py
+"${scope[@]}" "$PYTHON_ENV/bin/python3" -I generate-bolt11.py --check
+"${scope[@]}" nix develop -c lake test
+"${scope[@]}" nix develop -c python3 -I check-bolt11-mutations.py
+rmdir "$TMP_ROOT"
+```
+
+`--check` compares both the JSON and its sidecar byte for byte. The generator
+uses no Lean-derived expected hashes. The test driver reads only this
+package's fixture. Its optional selector is `lake test -- --case SET:NAME`
+(or just `SET`); `LightningTests --hash INVOICE` prints the hash alone.
+
+### Acceptance counts and red checks
+
+Every set pins its loaded count and prints the count it tested:
+
+| Set | Count and result |
+|---|---|
+| Valid examples | 16/16 decoded with the expected payee; L762 preserves raw high-S recovery |
+| Invalid-corpus examples | 15/15 checked: 14 exact errors; L814 accepted and named for parity |
+| Re-encodings | 17/17, the valid examples plus L814, equal their own lowercase strings including signatures |
+| Re-encoding refusals | 2/2: both leading-zero HRP amount vectors give `signingHashMismatch` from `encode` |
+| `n`-field vectors | 2/2: low-S verifies; high-S passes preceding checks and gives `verifyFailed` |
+| Negative vectors | 20/20, including bech32m and all six strictness cases |
+| Positive vectors | 4/4: omitted invalid fallback address, absent overflow amount, both leading-zero HRP amounts |
+| Curve table | 23/23 rows, 22/22 distinct pairs, 4/4 accepted keys |
+| Outside tests | 3/3: 84-character HRP, 7090-character invoice, tampered signature lookup miss |
+| Small parse cases | 3/3: malformed HRP, unknown currency, truncated field framing |
+| Signing path / hash cross-check | 1/1 each |
+| Independent amount / fallback / getter / route-hop / feature literals | 16/16, 6/6, 12/12, 2/2, 7/7 |
+| Encoder limits / unrestricted total length / amount writer | 7/7, 1/1, 6/6 |
+| Encoder semantic refusals | 7/7: no `p`, two `p`, no `s`, no description, no `9`, unknown even feature, imprecise amount; `encode` and `sign` both give `invalidInvoice` |
+| Sign curve points | 3/3: an invalid `n` and an invalid route-node key are refused before signing; a published route-node key reaches the signer |
+| Encoder raw fields / raw classification | 6/6: typed-length raw `p` and `n`, a raw known fallback version and a raw `d` are refused through both entry points, a wrong-length raw `p` and fallback version 19 are kept; 320/320: `staysRaw` agrees with `decodeField` on 32 tags × 10 data samples |
+| Field layers and first/all getters / currency mappings / signature scalar bounds | 12/12, 5/5, 3/3 |
+
+L858 fails on its duplicate payment secret before its high-S signature is
+checked. The generated high-S `n` twin tests verification rejection directly.
+L851's independent pair is in the table, so its `impreciseAmount` failure
+occurs after successful recovery. Tampering without `n` tests only a lookup
+miss; a real curve capability can recover a different key and accept it.
+No listed corpus count differs from the task; the small and literal sets
+above are additional explicitly pinned checks. This phase adds no theorem;
+the proof obligations belong to Phase 5 (3 of 3).
+
+`check-bolt11-mutations.py` makes one exact production replacement at a time,
+requires exit **1** and the named first assertion, restores the original
+bytes in `finally`, and ends with a full `lake test` at exit **0**. Separate
+stdout/stderr logs stay under `.lake/bolt11-mutation-checks/`; the compact
+record is `test-data/bolt11-mutations.json`. All **21/21** were detected:
+
+| Mutation | Exit | First failing assertion |
+|---|---|---|
+| HRP case preserved in hash | 1 | `valid L704` |
+| Hash tail padding dropped | 1 | `valid L382` |
+| Exclude 103 signature symbols | 1 | `valid L382` |
+| Lax byte-field regrouping | 1 | `negative payment-hash-padding` |
+| Allow leading-zero `x` | 1 | `negative expiry-leading-zero` |
+| Allow leading-zero `c` | 1 | `negative cltv-leading-zero` |
+| Allow leading-zero `9` | 1 | `negative features-leading-zero` |
+| Reject leading-zero HRP amount | 1 | `positive amount-leading-zero` |
+| Recover instead of verifying `n` | 1 | `nfields n-high` |
+| Remove recovery-byte range check | 1 | `negative recovery-byte` |
+| Signature before field counts | 1 | `invalid L821` |
+| Remove pico precision check | 1 | `invalid L851` |
+| Accept bech32m | 1 | `negative bech32m` |
+| Allow length 7090 | 1 | `outside length-7090` |
+| Reject wrong fixed lengths | 1 | `invalid L814 accepted for parity` |
+| Allow unknown even feature | 1 | `invalid L792` |
+| Reject unknown fallback version | 1 | `valid L707` |
+| `encode` keeps a signature over a changed HRP | 1 | `reencode amount-leading-zero refused` |
+| Encoder skips the decoder's semantic checks | 1 | `encoder semantic refusals no p` |
+| Encoder accepts a raw field the decoder would type | 1 | `encoder raw fields typed-length p refused` |
+| `sign` skips the field read-back | 1 | `sign curve points payee` |
+
+The encoder-limit cases also check `sign`, with the same seven-case count.
+Four separate temporary production changes filtered an invalid field before
+each entry point's validation. Inside `nix develop`, each
+`lake test -- --case limits` exited **1** at its named assertion; exact source
+bytes were restored after each change. The final restored `lake test` exited
+**0** (9.279 s).
+
+| Entry point | Refusal bypassed | Exit | First failing assertion | Wall time |
+|---|---|---|---|---|
+| `encode` | Over-long field | 1 | `encoder limits fieldTooLong` | 9.134 s |
+| `encode` | Invalid typed field | 1 | `encoder limits typed field` | 9.496 s |
+| `sign` | Over-long field | 1 | `encoder limits fieldTooLong` | 9.407 s |
+| `sign` | Invalid typed field | 1 | `encoder limits typed field` | 9.413 s |
+
+### Deltas taken
+
+The signing hash follows the invoice's own lower-cased HRP and data symbols
+as written ([BOLT #11:117-119](https://github.com/lightning/bolts/blob/191462825ae341f0a27098765c075f01ca9bc6c2/11-payment-encoding.md#L117-L119)).
+lightning-invoice 0.34.0 instead hashes re-encoded parsed fields
+(`src/de.rs:395`; `RawBolt11Invoice::signable_hash`). The two positive vectors
+`amount-leading-zero` and `n-amount-leading-zero` are signed over their own
+leading-zero HRP amounts and decode with the published payee. In the crate,
+the first is expected to recover another key and the second not to verify;
+Phase 7b captures those outcomes. Leading-zero HRP amounts remain accepted.
+
+The port rejects non-zero or whole-symbol padding in byte-valued fields
+([BOLT #11:208](https://github.com/lightning/bolts/blob/191462825ae341f0a27098765c075f01ca9bc6c2/11-payment-encoding.md#L208))
+and non-minimal `x`, `c` and `9`
+([BOLT #11:239-241](https://github.com/lightning/bolts/blob/191462825ae341f0a27098765c075f01ca9bc6c2/11-payment-encoding.md#L239-L241)).
+The corresponding six negatives are `payment-hash-padding`,
+`description-padding`, `expiry-leading-zero`, `cltv-leading-zero`,
+`features-leading-zero` and `n-payment-hash-padding`. The crate accepts these
+classes after canonicalizing their fields; the port returns the tag-bearing
+padding or leading-zero error before checking a signature. These and the
+as-written signing hash form the third golden-parity exception in plan §3.
+
+### Deltas not taken
+
+- [BOLT #11:214](https://github.com/lightning/bolts/blob/191462825ae341f0a27098765c075f01ca9bc6c2/11-payment-encoding.md#L214)
+  requires failing wrong-length `p`, `h`, `s` and `n`. They remain raw for
+  parity with lightning-invoice 0.34.0, including L814. The deferred decision
+  is `lck-decide-bolt11-l214-field-length-v8r`.
+- The existing Bitcoin decoder checks total length before HRP length;
+  bech32 0.11.1 checks HRP length first. Only the error on a string violating
+  both limits differs.
+- The encoder has no 7089-character total cap, matching
+  lightning-invoice 0.34.0 `src/ser.rs:158-172`. An output longer than 7089
+  characters cannot be decoded by this decoder.
+
+### Final validation
+
+Commands used the foreground scope above and separate stdout/stderr records,
+with Lean 4.35.0 and Python 3.14.7 (coincurve 21.0.0 for generation).
+
+| Directory | Command | Exit | Wall time / observation |
+|---|---|---|---|
+| lightning | `nix develop -c lake build` | 0 | 5.063 s; 25 jobs |
+| lightning | `nix develop -c lake test` | 0 | 11.778 s; every pinned count above |
+| lightning | `nix develop -c python3 -I check-bolt11-mutations.py` | 0 | 253.723 s; 21/21 detected, restored full suite exit 0 |
+| lightning | `"$PYTHON_ENV/bin/python3" -I generate-bolt11.py --check` | 0 | 0.408 s; all generator counts above, JSON and sidecar identical |
+| root | `git diff --exit-code -- packages/lightning/test-data/bolt11.json packages/lightning/test-data/bolt11.json.provenance` | 0 | under 0.01 s; both streams empty |
+| lightning | `nix develop -c lake env lean "$TMP_ROOT/FieldShape.lean"` | 0 | 1.437 s; the field-round-trip proposition below elaborates |
+| root | `grep -rnw sorry --include='*.lean' --exclude-dir=.lake packages` | 1 | under 0.01 s; both streams empty |
+| root | `grep -rnE 'partial def\|native_decide\|bv_decide' --include='*.lean' packages/lightning/Lightning packages/lightning/Lightning.lean` | 1 | under 0.01 s; both streams empty |
+| root | `nix flake check -L` | 0 | 114.718 s; all seven packages built and tested in the sandbox, app checked |
+| root | `nix build` | 0 | 0.437 s |
+| root | `./result/bin/cyberkrill` | 0 | 0.026 s; `cyberkrill 0.1.0` |
+| root | Protected-path diff below | 0 | under 0.01 s; both streams empty |
+| root | Staged key-material scan below | 1 | under 0.01 s; both streams empty, no key material printed |
+| root | `find packages -name __pycache__ -not -path '*/.lake/*'` | 0 | under 0.01 s; both streams empty |
+| root | `git diff --cached --check` | 0 | under 0.01 s; both streams empty |
+| root | Added-line public-text scan | 1 | under 0.01 s; both streams empty |
+
+The temporary `FieldShape.lean` contained only the licence header and:
+
+```lean
+import Lightning
+open Lightning.Bolt11
+example (cap : Curve) (fs : List Field) : Prop := decodeFields cap (encodeFields fs) = .ok fs
+```
+
+The same command on the earlier library exited **1** (1.511 s), naming the
+`Except EncodeError (List Symbol)` versus `List Symbol` mismatch at
+`decodeFields cap (encodeFields fs)`. The total writer makes the proposition
+elaborate without proving or weakening it. The temporary file was deleted.
+
+The protected-path comparison and key-material scan were:
+
+```bash
+git diff --stat 22aae0ed5fb894c5247970a1b4dfd8d85b04a172 -- .github flake.nix flake.lock AGENTS.md plan.md docs packages/bitcoin packages/sha256 packages/secp256k1 packages/fedimint-invite packages/http-curl packages/cyberkrill
+git diff --cached -U0 | grep '^+' | grep -n -E '[tuvxyzUVYZ]prv[1-9A-HJ-NP-Za-km-z]{100,}|\b[5KLc9][1-9A-HJ-NP-Za-km-z]{50,51}\b'
+```
+
+For the staged scans, each producer's output was captured and its status
+checked before running the next filter. No build or test gate was piped.
+All thirteen staged paths are `README.md` or under `packages/lightning/`;
+the pre-existing tracker diff remains unstaged. `plan.md` is unchanged; no
+stale scope or decision sentence was found. LNURL, proofs, app wiring and
+CLI goldens remain the later phases' work.
+
 ## Deltas taken
+
+The BOLT11 as-written signing hash and strict field canonicality are the third
+golden-parity exception in plan §3. See [Phase 5 (1 of 3)](#phase-5-1-of-3-bolt11-invoices)
+for the positive leading-zero amounts, strictness negatives and source lines;
+Phase 7b supplies the cyberkrill CLI captures.
 
 The following input classes are rejected although cyberkrill accepts them.
 Reference behavior comes from the pinned offline amount and PSBT captures above.
