@@ -5867,8 +5867,9 @@ without proofs; Phase 5 (3 of 3) below now supplies all four proof families.
 
 `check-bolt11-mutations.py` makes one exact production replacement at a time,
 restores and compares the original bytes in `finally`, and ends with a full
-`lake test` at exit **0**. The current run detects **33/33** mutations: all
-21 original properties plus twelve additions. Thirteen reach their named runtime
+`lake test` at exit **0**. The current run detects **33/33** named mutation
+executions across **32 distinct production edits**: all 21 original properties
+plus twelve additional executions. Thirteen reach their named runtime
 assertions; twenty falsify named theorems and stop in their declarations.
 Separate stdout/stderr logs stay under `.lake/bolt11-mutation-checks/`;
 `test-data/bolt11-mutations.json` records current dispositions, theorem ranges,
@@ -6133,9 +6134,13 @@ semantic refusals, raw-field refusals and sign's point-validation paths.
 ### Current mutation evidence
 
 The current [mutation record](packages/lightning/test-data/bolt11-mutations.json)
-contains **33/33** detections at mutated `lake test` exit **1**, followed by the
-restored full suite at exit **0**. It retains all 21 historical runtime records
-inside their corresponding current entries. Runtime-caught cases still require
+contains **33/33** named detections across **32 distinct production edits**,
+at mutated `lake test` exit **1**, followed by the restored full suite at exit **0**.
+`hash-padding` and `direct-spec-hash` execute the same production edit with
+different test selectors; both stop at `signingHash_spec` before those selectors
+run. They are two recorded executions of one falsified property. The record retains
+all 21 historical runtime records inside their corresponding current entries.
+Runtime-caught cases still require
 the original first named assertion; a still-true theorem is not used to stop one.
 Proof-caught cases require a diagnostic in the named theorem's recorded source
 range and an explanation of why the edit falsifies its statement. Parse errors,
@@ -6250,9 +6255,8 @@ axiom gate, Lightning's field/amount/signing proofs and library import, tests,
 the mutation harness, focused history regression and two evidence records. Existing manifests, curve
 interface, codec source, fixtures, LNURL implementation, plan, CI, app and
 unrelated packages are unchanged. Relative to the fixed base, the tracker differs
-only in the selected entry's existing claim (`status` and `updated_at`); it stays
-`in_progress`. Continuation edits are staged for review. Acceptance and final
-closure remain pending; no push follows this session.
+only in the selected entry's status, timestamps and completion evidence.
+The completed proof work is committed and the selected entry is closed.
 
 ## Phase 5 (2 of 3): LNURL, Lightning addresses and LNURL-pay models
 
