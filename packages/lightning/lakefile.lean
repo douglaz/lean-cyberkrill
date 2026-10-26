@@ -19,7 +19,7 @@ require bitcoin from ".." / "bitcoin"
 lean_lib Lightning
 
 lean_lib LightningTestSupport where
-  roots := #[`LightningTests.Bolt11]
+  roots := #[`LightningTests.Bolt11, `LightningTests.Lnurl, `LightningTests.AxiomGate]
 
 @[test_driver]
 lean_exe LightningTests

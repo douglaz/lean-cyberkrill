@@ -1,0 +1,589 @@
+{
+  "mutations": [
+    {
+      "mutation": "strict-padding",
+      "source": "Lightning/Lnurl/Codec.lean",
+      "command": [
+        "lake",
+        "test",
+        "--",
+        "--lnurl-case",
+        "lnurl-positive:nonzero-padding"
+      ],
+      "exit": 1,
+      "property": "lnurl-positive nonzero-padding",
+      "failure": "uncaught exception: assertion failed: lnurl-positive nonzero-padding",
+      "unexpected_success": false,
+      "wall_seconds": 12.841
+    },
+    {
+      "mutation": "reject-bech32m",
+      "source": "Lightning/Lnurl/Codec.lean",
+      "command": [
+        "lake",
+        "test",
+        "--",
+        "--lnurl-case",
+        "lnurl-positive:bech32m"
+      ],
+      "exit": 1,
+      "property": "lnurl-positive bech32m",
+      "failure": "uncaught exception: assertion failed: lnurl-positive bech32m",
+      "unexpected_success": false,
+      "wall_seconds": 11.859
+    },
+    {
+      "mutation": "limit-90",
+      "source": "Lightning/Lnurl/Codec.lean",
+      "command": [
+        "lake",
+        "test",
+        "--",
+        "--lnurl-case",
+        "lnurl-positive:long"
+      ],
+      "exit": 1,
+      "property": "lnurl-positive long",
+      "failure": "uncaught exception: assertion failed: lnurl-positive long",
+      "unexpected_success": false,
+      "wall_seconds": 11.566
+    },
+    {
+      "mutation": "limit-1024",
+      "source": "Lightning/Lnurl/Codec.lean",
+      "command": [
+        "lake",
+        "test",
+        "--",
+        "--lnurl-case",
+        "lnurl-negative:limit-1024"
+      ],
+      "exit": 1,
+      "property": "lnurl-negative limit-1024",
+      "failure": "uncaught exception: assertion failed: lnurl-negative limit-1024",
+      "unexpected_success": true,
+      "wall_seconds": 11.571
+    },
+    {
+      "mutation": "prefix-case",
+      "source": "Lightning/Lnurl/Codec.lean",
+      "command": [
+        "lake",
+        "test",
+        "--",
+        "--lnurl-case",
+        "lnurl-positive:lowercase"
+      ],
+      "exit": 1,
+      "property": "lnurl-positive lowercase",
+      "failure": "uncaught exception: assertion failed: lnurl-positive lowercase",
+      "unexpected_success": false,
+      "wall_seconds": 11.89
+    },
+    {
+      "mutation": "prefix-removed",
+      "source": "Lightning/Lnurl/Codec.lean",
+      "command": [
+        "lake",
+        "test",
+        "--",
+        "--lnurl-case",
+        "lnurl-negative:prefix"
+      ],
+      "exit": 1,
+      "property": "lnurl-negative prefix",
+      "failure": "uncaught exception: assertion failed: lnurl-negative prefix",
+      "unexpected_success": false,
+      "wall_seconds": 11.979
+    },
+    {
+      "mutation": "ascii-trim",
+      "source": "Lightning/Lnurl/Codec.lean",
+      "command": [
+        "lake",
+        "test",
+        "--",
+        "--lnurl-case",
+        "lnurl-positive:unicode-trim"
+      ],
+      "exit": 1,
+      "property": "lnurl-positive unicode-trim",
+      "failure": "uncaught exception: assertion failed: lnurl-positive unicode-trim",
+      "unexpected_success": false,
+      "wall_seconds": 11.667
+    },
+    {
+      "mutation": "lossy-lnurl",
+      "source": "Lightning/Lnurl/Codec.lean",
+      "command": [
+        "lake",
+        "test",
+        "--",
+        "--lnurl-case",
+        "lnurl-negative:invalid-utf8"
+      ],
+      "exit": 1,
+      "property": "lnurl-negative invalid-utf8",
+      "failure": "uncaught exception: assertion failed: lnurl-negative invalid-utf8",
+      "unexpected_success": true,
+      "wall_seconds": 11.763
+    },
+    {
+      "mutation": "empty-address-user",
+      "source": "Lightning/Lnurl/Codec.lean",
+      "command": [
+        "lake",
+        "test",
+        "--",
+        "--lnurl-case",
+        "address:empty-example-user"
+      ],
+      "exit": 1,
+      "property": "address empty-example-user",
+      "failure": "uncaught exception: assertion failed: address empty-example-user",
+      "unexpected_success": false,
+      "wall_seconds": 10.748
+    },
+    {
+      "mutation": "three-address-parts",
+      "source": "Lightning/Lnurl/Codec.lean",
+      "command": [
+        "lake",
+        "test",
+        "--",
+        "--lnurl-case",
+        "address:three-parts"
+      ],
+      "exit": 1,
+      "property": "address three-parts",
+      "failure": "uncaught exception: assertion failed: address three-parts",
+      "unexpected_success": false,
+      "wall_seconds": 10.494
+    },
+    {
+      "mutation": "routes-null",
+      "source": "Lightning/Lnurl/Models.lean",
+      "command": [
+        "lake",
+        "test",
+        "--",
+        "--lnurl-case",
+        "json-callback:null"
+      ],
+      "exit": 1,
+      "property": "json-callback null",
+      "failure": "uncaught exception: assertion failed: json-callback null",
+      "unexpected_success": false,
+      "wall_seconds": 10.434
+    },
+    {
+      "mutation": "comment-bound",
+      "source": "Lightning/Lnurl/Models.lean",
+      "command": [
+        "lake",
+        "test",
+        "--",
+        "--lnurl-case",
+        "json-request:comment-overflow"
+      ],
+      "exit": 1,
+      "property": "json-request comment-overflow",
+      "failure": "uncaught exception: assertion failed: json-request comment-overflow",
+      "unexpected_success": false,
+      "wall_seconds": 10.536
+    },
+    {
+      "mutation": "max-msat-bound",
+      "source": "Lightning/Lnurl/Models.lean",
+      "command": [
+        "lake",
+        "test",
+        "--",
+        "--lnurl-case",
+        "json-request:overflow-maxSendable"
+      ],
+      "exit": 1,
+      "property": "json-request overflow-maxSendable",
+      "failure": "uncaught exception: assertion failed: json-request overflow-maxSendable",
+      "unexpected_success": false,
+      "wall_seconds": 11.69
+    },
+    {
+      "mutation": "min-msat-bound",
+      "source": "Lightning/Lnurl/Models.lean",
+      "command": [
+        "lake",
+        "test",
+        "--",
+        "--lnurl-case",
+        "json-request:overflow-minSendable"
+      ],
+      "exit": 1,
+      "property": "json-request overflow-minSendable",
+      "failure": "uncaught exception: assertion failed: json-request overflow-minSendable",
+      "unexpected_success": false,
+      "wall_seconds": 11.367
+    },
+    {
+      "mutation": "host-case",
+      "source": "Lightning/Lnurl/Url.lean",
+      "command": [
+        "lake",
+        "test",
+        "--",
+        "--lnurl-case",
+        "url-supported:case-duplicates"
+      ],
+      "exit": 1,
+      "property": "url-supported case-duplicates host",
+      "failure": "uncaught exception: assertion failed: url-supported case-duplicates host",
+      "unexpected_success": false,
+      "wall_seconds": 11.646
+    },
+    {
+      "mutation": "special-query",
+      "source": "Lightning/Lnurl/Url.lean",
+      "command": [
+        "lake",
+        "test",
+        "--",
+        "--lnurl-case",
+        "url-supported:special-query"
+      ],
+      "exit": 1,
+      "property": "url-supported special-query query",
+      "failure": "uncaught exception: assertion failed: url-supported special-query query",
+      "unexpected_success": false,
+      "wall_seconds": 11.344
+    },
+    {
+      "mutation": "plus-literal",
+      "source": "Lightning/Lnurl/Url.lean",
+      "command": [
+        "lake",
+        "test",
+        "--",
+        "--lnurl-case",
+        "url-supported:case-duplicates"
+      ],
+      "exit": 1,
+      "property": "url-supported case-duplicates pairs q",
+      "failure": "uncaught exception: assertion failed: url-supported case-duplicates pairs q",
+      "unexpected_success": false,
+      "wall_seconds": 11.738
+    },
+    {
+      "mutation": "duplicate-first",
+      "source": "Lightning/Lnurl/Url.lean",
+      "command": [
+        "lake",
+        "test",
+        "--",
+        "--lnurl-case",
+        "url-supported:case-duplicates"
+      ],
+      "exit": 1,
+      "property": "url-supported case-duplicates pairs a",
+      "failure": "uncaught exception: assertion failed: url-supported case-duplicates pairs a",
+      "unexpected_success": false,
+      "wall_seconds": 11.44
+    },
+    {
+      "mutation": "malformed-query-reject",
+      "source": "Lightning/Lnurl/Url.lean",
+      "command": [
+        "lake",
+        "test",
+        "--",
+        "--lnurl-case",
+        "url-supported:malformed-query"
+      ],
+      "exit": 1,
+      "property": "url-supported malformed-query",
+      "failure": "uncaught exception: assertion failed: url-supported malformed-query",
+      "unexpected_success": false,
+      "wall_seconds": 11.342
+    },
+    {
+      "mutation": "strict-query-utf8",
+      "source": "Lightning/Lnurl/Url.lean",
+      "command": [
+        "lake",
+        "test",
+        "--",
+        "--lnurl-case",
+        "url-supported:malformed-query"
+      ],
+      "exit": 1,
+      "property": "url-supported malformed-query",
+      "failure": "uncaught exception: assertion failed: url-supported malformed-query",
+      "unexpected_success": false,
+      "wall_seconds": 11.911
+    },
+    {
+      "mutation": "absent-query",
+      "source": "Lightning/Lnurl/Url.lean",
+      "command": [
+        "lake",
+        "test",
+        "--",
+        "--lnurl-case",
+        "url-supported:no-query"
+      ],
+      "exit": 1,
+      "property": "url-supported no-query query",
+      "failure": "uncaught exception: assertion failed: url-supported no-query query",
+      "unexpected_success": false,
+      "wall_seconds": 11.568
+    },
+    {
+      "mutation": "empty-query",
+      "source": "Lightning/Lnurl/Url.lean",
+      "command": [
+        "lake",
+        "test",
+        "--",
+        "--lnurl-case",
+        "url-supported:empty-query"
+      ],
+      "exit": 1,
+      "property": "url-supported empty-query query",
+      "failure": "uncaught exception: assertion failed: url-supported empty-query query",
+      "unexpected_success": false,
+      "wall_seconds": 12.244
+    },
+    {
+      "mutation": "port-validation",
+      "source": "Lightning/Lnurl/Url.lean",
+      "command": [
+        "lake",
+        "test",
+        "--",
+        "--lnurl-case",
+        "url-error:port-overflow"
+      ],
+      "exit": 1,
+      "property": "url-error port-overflow",
+      "failure": "uncaught exception: assertion failed: url-error port-overflow",
+      "unexpected_success": true,
+      "wall_seconds": 11.88
+    },
+    {
+      "mutation": "authority-backslash",
+      "source": "Lightning/Lnurl/Url.lean",
+      "command": [
+        "lake",
+        "test",
+        "--",
+        "--lnurl-case",
+        "url-supported:backslash-at"
+      ],
+      "exit": 1,
+      "property": "url-supported backslash-at",
+      "failure": "uncaught exception: assertion failed: url-supported backslash-at",
+      "unexpected_success": false,
+      "wall_seconds": 11.751
+    },
+    {
+      "mutation": "allow-userinfo",
+      "source": "Lightning/Lnurl/Url.lean",
+      "command": [
+        "lake",
+        "test",
+        "--",
+        "--lnurl-case",
+        "url-refusal:userinfo"
+      ],
+      "exit": 1,
+      "property": "url-refusal userinfo",
+      "failure": "uncaught exception: assertion failed: url-refusal userinfo",
+      "unexpected_success": true,
+      "wall_seconds": 11.443
+    },
+    {
+      "mutation": "allow-ipv6",
+      "source": "Lightning/Lnurl/Url.lean",
+      "command": [
+        "lake",
+        "test",
+        "--",
+        "--lnurl-case",
+        "url-refusal:ipv6"
+      ],
+      "exit": 1,
+      "property": "url-refusal ipv6",
+      "failure": "uncaught exception: assertion failed: url-refusal ipv6",
+      "unexpected_success": true,
+      "wall_seconds": 11.962
+    },
+    {
+      "mutation": "allow-nonascii",
+      "source": "Lightning/Lnurl/Url.lean",
+      "command": [
+        "lake",
+        "test",
+        "--",
+        "--lnurl-case",
+        "url-refusal:unicode-host"
+      ],
+      "exit": 1,
+      "property": "url-refusal unicode-host",
+      "failure": "uncaught exception: assertion failed: url-refusal unicode-host",
+      "unexpected_success": true,
+      "wall_seconds": 11.84
+    },
+    {
+      "mutation": "allow-encoded-nonascii",
+      "source": "Lightning/Lnurl/Url.lean",
+      "command": [
+        "lake",
+        "test",
+        "--",
+        "--lnurl-case",
+        "url-refusal:encoded-unicode-host"
+      ],
+      "exit": 1,
+      "property": "url-refusal encoded-unicode-host",
+      "failure": "uncaught exception: assertion failed: url-refusal encoded-unicode-host",
+      "unexpected_success": true,
+      "wall_seconds": 0.421
+    },
+    {
+      "mutation": "allow-punycode",
+      "source": "Lightning/Lnurl/Url.lean",
+      "command": [
+        "lake",
+        "test",
+        "--",
+        "--lnurl-case",
+        "url-refusal:punycode-host"
+      ],
+      "exit": 1,
+      "property": "url-refusal punycode-host",
+      "failure": "uncaught exception: assertion failed: url-refusal punycode-host",
+      "unexpected_success": true,
+      "wall_seconds": 11.64
+    },
+    {
+      "mutation": "allow-uppercase-punycode",
+      "source": "Lightning/Lnurl/Url.lean",
+      "command": [
+        "lake",
+        "test",
+        "--",
+        "--lnurl-case",
+        "url-refusal:punycode-upper"
+      ],
+      "exit": 1,
+      "property": "url-refusal punycode-upper",
+      "failure": "uncaught exception: assertion failed: url-refusal punycode-upper",
+      "unexpected_success": true,
+      "wall_seconds": 0.434
+    },
+    {
+      "mutation": "allow-ipv4-hex",
+      "source": "Lightning/Lnurl/Url.lean",
+      "command": [
+        "lake",
+        "test",
+        "--",
+        "--lnurl-case",
+        "url-refusal:ipv4-hex"
+      ],
+      "exit": 1,
+      "property": "url-refusal ipv4-hex",
+      "failure": "uncaught exception: assertion failed: url-refusal ipv4-hex",
+      "unexpected_success": true,
+      "wall_seconds": 11.747
+    },
+    {
+      "mutation": "allow-ipv4-integer",
+      "source": "Lightning/Lnurl/Url.lean",
+      "command": [
+        "lake",
+        "test",
+        "--",
+        "--lnurl-case",
+        "url-refusal:ipv4-integer"
+      ],
+      "exit": 1,
+      "property": "url-refusal ipv4-integer",
+      "failure": "uncaught exception: assertion failed: url-refusal ipv4-integer",
+      "unexpected_success": true,
+      "wall_seconds": 11.559
+    },
+    {
+      "mutation": "allow-ipv4-short",
+      "source": "Lightning/Lnurl/Url.lean",
+      "command": [
+        "lake",
+        "test",
+        "--",
+        "--lnurl-case",
+        "url-refusal:ipv4-short"
+      ],
+      "exit": 1,
+      "property": "url-refusal ipv4-short",
+      "failure": "uncaught exception: assertion failed: url-refusal ipv4-short",
+      "unexpected_success": true,
+      "wall_seconds": 12.047
+    },
+    {
+      "mutation": "allow-ipv4-octal",
+      "source": "Lightning/Lnurl/Url.lean",
+      "command": [
+        "lake",
+        "test",
+        "--",
+        "--lnurl-case",
+        "url-refusal:ipv4-octal"
+      ],
+      "exit": 1,
+      "property": "url-refusal ipv4-octal",
+      "failure": "uncaught exception: assertion failed: url-refusal ipv4-octal",
+      "unexpected_success": true,
+      "wall_seconds": 11.645
+    },
+    {
+      "mutation": "allow-ipv4-leading",
+      "source": "Lightning/Lnurl/Url.lean",
+      "command": [
+        "lake",
+        "test",
+        "--",
+        "--lnurl-case",
+        "url-refusal:ipv4-leading"
+      ],
+      "exit": 1,
+      "property": "url-refusal ipv4-leading",
+      "failure": "uncaught exception: assertion failed: url-refusal ipv4-leading",
+      "unexpected_success": true,
+      "wall_seconds": 11.751
+    },
+    {
+      "mutation": "allow-ipv4-dot",
+      "source": "Lightning/Lnurl/Url.lean",
+      "command": [
+        "lake",
+        "test",
+        "--",
+        "--lnurl-case",
+        "url-refusal:ipv4-dot"
+      ],
+      "exit": 1,
+      "property": "url-refusal ipv4-dot",
+      "failure": "uncaught exception: assertion failed: url-refusal ipv4-dot",
+      "unexpected_success": true,
+      "wall_seconds": 11.54
+    }
+  ],
+  "count": 36,
+  "restored": {
+    "command": [
+      "lake",
+      "test"
+    ],
+    "exit": 0,
+    "wall_seconds": 11.788
+  }
+}

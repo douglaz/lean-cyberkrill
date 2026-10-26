@@ -31,6 +31,8 @@ Phase 4d adds P2WPKH weight and fee estimation with the same binary64 arithmetic
 as cyberkrill, checked against 466 offline captured rows.
 Phase 5 (1 of 3) adds pure BOLT11 decoding, canonical encoding, supplied curve
 operations and the published invoice corpus with generated boundary vectors.
+Phase 5 (2 of 3) adds pure LNURL decoding, a bounded HTTP(S) URL subset,
+Lightning address construction, LNURL-pay JSON models and two bech32 corollaries.
 Other packages remain skeletons;
 `plan.md` is the plan for v1.
 
@@ -5985,6 +5987,373 @@ All thirteen staged paths are `README.md` or under `packages/lightning/`;
 the pre-existing tracker diff remains unstaged. `plan.md` is unchanged; no
 stale scope or decision sentence was found. LNURL, proofs, app wiring and
 CLI goldens remain the later phases' work.
+
+## Phase 5 (2 of 3): LNURL, Lightning addresses and LNURL-pay models
+
+`import Lightning` exposes `decodeLnurl : String → Except LnurlError LnurlOutput`,
+`lightningAddressUrl : String → Except LnurlError String`,
+`LnurlPayRequest.fromJson` and `LnurlPayCallback.fromJson`. The package stays pure
+Lean, with the existing direct `bitcoin` path dependency and inherited `sha256`.
+The committed manifest is unchanged. No BOLT11 behavior or fixture changes.
+
+`LnurlOutput` preserves `bech32` after Unicode White_Space trimming and `url`
+as the exact decoded UTF-8 source. Its `host` is normalized without a port;
+`base` is the normalized `scheme://host/`, without the source path or port.
+`query : Option String` distinguishes absent from present-empty and contains
+the escaped query before the fragment. `queryParams : List (String × String)`
+contains unique decoded keys, with the last decoded duplicate winning. Pair
+order is an implementation detail. `Lightning.Lnurl.parseUrl` exposes the same
+parts plus `scheme` for reuse; `queryPairs`, `specialQuery` and `percentDecode`
+are pure parsing helpers. Callback construction, complete serialization and
+every HTTP step remain Phase 9b's work. There is no public LNURL encoder.
+
+The LNURL pipeline checks the case-insensitive five-character prefix separately,
+then calls `Bitcoin.Bech32.decode 1023`, accepts either checksum variant,
+requires HRP `lnurl`, calls `fesToBytesLax`, and checks `String.fromUTF8?`.
+Incomplete final bit groups are dropped unchecked, including nonzero padding.
+Trimming covers Rust's Unicode White_Space set, including leading U+00A0 and
+trailing U+3000; URL input cleanup is a separate operation.
+
+The twelve `LnurlError` constructors are `wrongPrefix`, `wrongHrp`,
+`bech32` carrying `Bitcoin.Bech32.DecodeError`, `invalidUtf8`, `unsupportedScheme`,
+`unsupportedUrlForm`, `missingHost`, `invalidHost`, `invalidPort`, `invalidIpv4`,
+`malformedAddress`, and `malformedResponse` carrying the field name.
+`UnsupportedUrlForm` has `userinfo`, `ipv6`, `ipv4Form`, and `idnaRequired`.
+The prefix precondition makes the shared codec's `emptyHrp` error unreachable;
+all eight other codec errors have fixtures. Malformed inputs also fail when
+their classification is outside the supported URL subset.
+
+### URL and model boundaries
+
+The parser follows `url` 2.5.7 for absolute HTTP(S) URLs with ASCII domain names
+or plain four-octet dotted IPv4 and an optional decimal port in 0–65535.
+Leading port zeros and an empty port are accepted. IPv4 octets are 0–255,
+without leading zeros except `0`, and without a trailing dot. Domain root dots
+are preserved. ASCII domains use the URL deny list and UTS #46 ASCII behavior
+with `Hyphens::Allow` and `DnsLength::Ignore`, rather than stricter DNS rules:
+underscores, permitted punctuation, empty labels and long labels have fixtures.
+The ends-in-a-number check prevents `foo.123` from passing as an ordinary domain.
+
+URL cleanup trims C0 controls/space at both ends, removes every interior tab,
+CR and LF, then handles special-scheme slash/backslash runs before determining
+the authority. `https:example.com`, one slash, and mixed slash/backslash runs
+work. A backslash before `@evil.invalid` ends the authority at `example.com`;
+the resulting path begins `/@evil.invalid/`, without userinfo. Path/query `@`
+is otherwise ordinary data. Host percent decoding happens once, before
+classification and case folding; encoded separators in dotted IPv4 work.
+Forbidden decoded host characters, malformed escapes, invalid UTF-8 hosts,
+out-of-range IPv4 octets and invalid ports fail.
+
+Special queries escape C0, DEL, space, double quote, apostrophe, `<`, `>` and
+non-ASCII UTF-8 bytes; raw `#` ends the query. Existing percent-escape spelling
+is retained. Query pairs split at `&`, skip empty pieces, split at the first
+`=`, replace `+` with space, percent-decode and decode UTF-8 lossily with
+maximal-subpart replacement. `%ZZ` remains literal, `%FF` gives one U+FFFD,
+and truncated `%E2%82` also gives one U+FFFD. Decoded keys collide, so `%61`
+and `a` share the last value. These are generic parsing rules, not fixture cases.
+
+Lightning addresses split at `@` into exactly two nonempty parts, with no
+trimming or character checks. Construction is the literal
+`https://{domain}/.well-known/lnurlp/{user}`; `+` is preserved. The tests include
+ordinary `_`, surrounding spaces and a slash in a user to pin that boundary.
+
+`LnurlPayRequest` stores string `callback`, `metadata`, `tag`, two required
+`Bitcoin.Amount` msat fields `maxSendable`/`minSendable` bounded by 2^64−1,
+and optional `commentAllowed : Option Nat` bounded by 65535. Absent/null
+optionals are `none`. `LnurlPayCallback` stores string `pr` and optional
+`routes : Option (Array String)`; absent, null and string arrays work.
+Unknown fields are ignored. Required fields, optionals and both msat fields
+have separate malformed-field coverage. ERROR replies fail on the first
+missing required field. This layer applies no amount-range business policy,
+callback canonicalization or invoice validation.
+
+### Pins, generation and counts
+
+Reference: [cyberkrill decoder](https://github.com/douglaz/cyberkrill/blob/27cad1faba86260b06665a89f0af5134d23525c2/cyberkrill-core/src/decoder.rs)
+at `27cad1faba86260b06665a89f0af5134d23525c2`: output/decode L420–471,
+models L474–492, address split L522–526 and construction L531; test L834–848.
+MIT is declared in `cyberkrill-core/Cargo.toml:6`. Its
+single reference LNURL is isolated in `test-data/lnurl-reference.json`, with
+an extraction/provenance sidecar. It has **73 characters**, HRP `lnurl`,
+**61 payload symbols + 6 checksum symbols**, **305 payload bits**, **38 bytes**
+and **1 dropped bit**, checked by seven shape assertions. Expectations are
+**hand-derived from pinned source**, not captured Rust results. No Rust was
+built or run for this work.
+
+Five downloaded crate archives were checked against that commit's `Cargo.lock`
+before source inspection: **5/5 SHA-256 matches**. Crate/version/path:line pins:
+
+| Crate | SHA-256 | Source inspected |
+|---|---|---|
+| bech32 0.11.1 | `32637268377fc7b10a8c6d51de3e7fba1ce5dd371a96e342b34e6078db558e7f` | `src/lib.rs:208-221`, `src/primitives/mod.rs:44,52`, `decode.rs:246-283`, `hrp.rs:249-254`, `iter.rs:165-195` |
+| url 2.5.7 | `08bc136a29a3d1758e07a9cca267be308aeebf5cfd5a10f3f67ab2097683ef5b` | `src/parser.rs:45-46,225-229,286-292,326-332,378-380,448-469,1114-1148,1544-1620`; `src/host.rs:92-162,265-340`; `src/lib.rs:1162,1471-1483,1509` |
+| form_urlencoded 1.2.2 | `cb4cb245038516f5f85277875cdaa4f7d2c9a0fa0468de06ed190163b1581fcf` | `src/lib.rs:39-40,51-90` |
+| percent-encoding 2.3.2 | `9b4f627cb1b25917193a259e49bdad08f671f8d9708acfd5fe0a8c1455d87220` | `src/lib.rs:239-272` |
+| idna 1.1.0 | `3b0875f23caa03898994f6ddc501886a45c7d3d62d04d2d90788d47be1b1e4de` | `src/lib.rs:132-142`, `src/uts46.rs:275-352,1094-1247` |
+
+The LUD sources are cited only: [LUD-01](https://github.com/lnurl/luds/blob/913c49e5b65081473eed7889eee5f806dd30f049/01.md),
+[LUD-06](https://github.com/lnurl/luds/blob/913c49e5b65081473eed7889eee5f806dd30f049/06.md)
+and [LUD-16](https://github.com/lnurl/luds/blob/913c49e5b65081473eed7889eee5f806dd30f049/16.md),
+commit `913c49e5b65081473eed7889eee5f806dd30f049`. No LUD text or example vector
+is copied. All other fixtures are synthetic URLs, addresses or own LUD-06 JSON.
+They are pure test inputs and never connect to a host.
+
+`generate-lnurl.py` generates `lnurl.json` and its provenance sidecar:
+**generator artifacts 2/2**. It requires Python **3.14.7** with nix bech32
+**1.2.0**. Reproduce the environment with:
+
+```bash
+PYTHON_ENV=$(nix build --impure --no-link --print-out-paths --expr 'let p = (builtins.getFlake "github:NixOS/nixpkgs/fe13242281a67641c0102cdb1087f0ebe586c7df").legacyPackages.x86_64-linux; in p.python3.withPackages (ps: [ ps.bech32 ])')
+cd packages/lightning
+"$PYTHON_ENV/bin/python3" -I generate-lnurl.py --check
+```
+
+bech32m uses BIP350's **0x2bc830a3** residue with `bech32_polymod` and
+`bech32_hrp_expand`; bech32 1.2.0 has no bech32m `Encoding` API and its
+90-character decoder limit is commented out. The script uses the package's
+bit conversion and alphabet, with an explicit checksum variant. URL parts
+are hand-derived, not computed by an alternative URL parser. `--check`
+rederives and compares both artifacts. Tests read only committed files.
+
+Each loaded set asserts its exact size and prints `<set>: N/N`:
+
+| Set | Count |
+|---|---:|
+| `url-supported` | 35/35 |
+| `url-refusal` | 13/13 |
+| `url-error` | 23/23 |
+| `lnurl-positive` | 8/8 |
+| `lnurl-negative` | 12/12 |
+| `lnurl-reference` | 1/1 |
+| `reference shape` | 7/7 |
+| `address` | 11/11 |
+| `json-request` | 43/43 |
+| `json-callback` | 16/16 |
+| `JSON measurements` | 7/7 |
+| Generator artifacts | 2/2 |
+| Crate checksum checks | 5/5 |
+| Named production-mutation executions | 36/36 (34 distinct edits) |
+| BOLT11 driver compatibility (`--case`, `--hash`) | 2/2 |
+
+There are **161 generated vector rows plus one reference row**. Subdivision
+counts are chosen here, not supplied source/probe counts. The reference's
+73/61/305/38/1 dimensions match preparation exactly. The 36 named executions
+cover 34 distinct production edits, exceeding the required minimum of 26.
+They test both msat fields with field-specific edits, absent and empty query
+independently, four IDNA refusal boundaries and six separate IPv4 spellings.
+The non-ASCII/encoded-non-ASCII pair shares one edit, and the
+punycode/uppercase-punycode pair shares another; each pair runs separate fixtures.
+Boundary data include uppercase/lowercase LNURLs, bech32m, nonzero dropped
+padding, successful lengths above 90 (up to **1022**) and a valid-checksum
+supported URL of **exactly 1024 characters** that fails with `bech32 tooLong`.
+Every URL fixture checks its exact decoded source as well as parts or error.
+The complete existing BOLT11 default suite, `--case` and `--hash` are retained.
+
+### Corollaries and axiom gate
+
+`Lightning.Lnurl.bech32_roundTrip data v` has the sole hypothesis
+`5 + data.length + 7 ≤ 1023` and concludes
+`Bitcoin.Bech32.decode 1023 (Bitcoin.Bech32.encode "lnurl" data v) = .ok ("lnurl", data, v)`.
+It applies qualified `Bitcoin.Bech32.decode_encode`, discharging nonempty,
+character range, no-uppercase and HRP-length conditions for `lnurl`.
+
+`Lightning.Lnurl.bech32_checksumSound s data v`, assuming
+`Bitcoin.Bech32.decode 1023 s = .ok ("lnurl", data, v)`, witnesses `chk` of
+length six, reconstruction of `Bitcoin.Bech32.lower s` as
+`"lnurl1" ++ String.ofList ((data ++ chk).map Bitcoin.Bech32.charOf)`, and
+`Bitcoin.Bech32.verifyChecksum v "lnurl" (data ++ chk) = true`.
+It applies qualified `Bitcoin.Bech32.decode_sound` to the actual source
+checksum symbols. Neither corollary proves URL encoding or four-error detection.
+
+Both `#print axioms` results are `[propext, Classical.choice, Quot.sound]`.
+`LightningTests.AxiomGate` is imported by the actual test executable and
+requires both named theorems, scans all Lightning library theorems, and rejects
+any other axiom. Its successful totals are **library 340/340, named 2/2,
+offenders 0/0**. Library modules contain no partial definitions or native
+decision tactics; the gate contains no proof-placeholder substring.
+
+### JSON measurements
+
+Command: `nix develop -c lake test -- --lnurl-case json-measurements`, Lean
+**4.35.0**, `Lean.Json.parse` followed by `LnurlPayRequest.fromJson`. Each
+number below occupies `maxSendable` in the same otherwise-valid synthetic
+request. The executable prints the full raw input and representation; stdout
+and stderr are captured separately during validation. `JsonNumber` represents
+`mantissa * 10^(-exponent)`.
+
+| Raw input | Parsed `(mantissa, exponent)` | Model result |
+|---|---|---|
+| `1.0` | `(10, 1)` | malformed `maxSendable` |
+| `1e3` | `(1000, 0)` | accepted as 1000 msat |
+| `1e0` | `(1, 0)` | accepted as 1 msat |
+| `1.0e1` | `(10, 0)` | accepted as 10 msat |
+| `1.5` | `(15, 1)` | malformed `maxSendable` |
+| `-0` | `(0, 0)` | accepted as 0 msat |
+| Repeated `maxSendable:1,maxSendable:2` | one field, numeric `(2, 0)` | accepted as 2 msat |
+
+The parsed representation retains decimal scale for `1.0` and `1.5`, so the
+model rejects them, all negative mantissas, and all values above the wire
+bounds. Exponent notation can be folded into the mantissa/scale, losing its
+spelling; zero loses its minus sign. Duplicate object keys collapse to the
+last value, discarding their multiplicity and earlier values. No model taking
+only `Lean.Json` can recover that discarded syntax or distinguish an already
+identical parsed integer. Object order/whitespace are also outside this model's
+contract. This does not claim serde_json's syntactic integer/duplicate parity.
+
+### Production mutation evidence
+
+The initial `nix develop -c python3 -I check-lnurl-mutations.py` run exited **0**.
+The two msat-bound cases were then rerun with field-specific edits: each failed
+its own named overflow assertion (exit **1**), while the other field's overflow
+test still passed (exit **0**). The other 34 named execution records retain their
+initial results. Together the 36 executions cover 34 distinct production edits.
+Each mutation
+changes production behavior only, runs `lake test -- --lnurl-case SET:NAME`,
+requires exit **1** and the exact named assertion, and restores exact original
+bytes in `finally`. Logs are separate `.stdout` and `.stderr` paths under
+`.lake/lnurl-mutation-checks`; executable/source paths are distinct from logs.
+The compact record is [lnurl-mutations.json](packages/lightning/test-data/lnurl-mutations.json).
+Every refusal mutation and the raised length-limit mutation additionally
+records an actual unexpected decoder success. A later rejection cannot count
+as detecting a removed refusal. The final complete restored `lake test`
+exited **0**, wall **11.788 s**, after the msat-bound recheck.
+
+| Production mutation | Catching acceptance assertion |
+|---|---|
+| Strict 5→8 padding | `lnurl-positive nonzero-padding` |
+| Reject bech32m | `lnurl-positive bech32m` |
+| Limit 90 | `lnurl-positive long` |
+| Limit 1024 | `lnurl-negative limit-1024` |
+| Case-sensitive prefix | `lnurl-positive lowercase` |
+| Removed prefix check | `lnurl-negative prefix` |
+| ASCII-only trim | `lnurl-positive unicode-trim` |
+| Lossy decoded URL | `lnurl-negative invalid-utf8` |
+| Empty address user | `address empty-example-user` |
+| Three address parts | `address three-parts` |
+| Reject null routes | `json-callback null` |
+| Remove comment bound | `json-request comment-overflow` |
+| Remove max msat bound | `json-request overflow-maxSendable` |
+| Remove min msat bound | `json-request overflow-minSendable` |
+| Remove host folding | `url-supported case-duplicates host` |
+| Remove query escaping | `url-supported special-query query` |
+| Literal plus | `url-supported case-duplicates pairs q` |
+| First decoded duplicate | `url-supported case-duplicates pairs a` |
+| Reject malformed query escapes | `url-supported malformed-query` |
+| Strict query UTF-8 | `url-supported malformed-query` |
+| Absent query becomes empty | `url-supported no-query query` |
+| Empty query becomes absent | `url-supported empty-query query` |
+| Skip port validation | `url-error port-overflow` |
+| Split authority before backslash | `url-supported backslash-at` |
+| Allow userinfo | `url-refusal userinfo` |
+| Allow IPv6 | `url-refusal ipv6` |
+| Allow non-ASCII | `url-refusal unicode-host` |
+| Allow encoded non-ASCII | `url-refusal encoded-unicode-host` |
+| Allow punycode | `url-refusal punycode-host` |
+| Allow uppercase punycode | `url-refusal punycode-upper` |
+| Allow hex IPv4 | `url-refusal ipv4-hex` |
+| Allow integer IPv4 | `url-refusal ipv4-integer` |
+| Allow shorthand IPv4 | `url-refusal ipv4-short` |
+| Allow octal IPv4 | `url-refusal ipv4-octal` |
+| Allow leading-zero IPv4 | `url-refusal ipv4-leading` |
+| Allow trailing-dot IPv4 | `url-refusal ipv4-dot` |
+
+### Deltas taken
+
+Plan §3's fifth golden-parity exception is this narrow URL subset. cyberkrill
+accepts some userinfo, IPv6, unusual IPv4, non-ASCII and `xn--` URL forms;
+the port returns a named `unsupportedUrlForm` refusal instead. Supported
+inputs follow the pinned parsing behavior. The URL expectations here are
+source-derived and are not CLI captures.
+
+Phase 7b's generic “decodes identically” criterion applies within this subset.
+Its launch instruction must carry this settled exception: for refused forms
+accepted by cyberkrill, the later CLI captures assert reference exit zero and
+the port's named nonzero refusal. No other bead is edited to carry that handoff.
+
+### Deltas not taken
+
+- Shared bech32 checks length before characters/HRP; bech32 0.11.1 does the
+  reverse. Only the error kind differs when both fail. The shared codec tries
+  bech32 before bech32m, also the reverse of the reference; no string satisfies
+  both variants, so success agrees. The shared codec is unchanged.
+- LUD-16 username character checks are omitted, matching cyberkrill. Optional
+  empty-user `_` shorthand is omitted; literal `_` remains an ordinary user.
+- `tag` is an unchecked string, not constrained to `payRequest`; `metadata`
+  remains an opaque string, not nested JSON. `pr` is not parsed as BOLT11 here.
+- Lean.Json's measured exponent, signed-zero and duplicate-key losses above
+  remain visible API limitations. No raw JSON parser/dependency recovers them.
+- IDNA/non-ASCII and `xn--` support, and widening to userinfo, IPv6 or other
+  IPv4 forms, remain deferred under owner-decision `lck-x37`. There is no claim
+  of complete WHATWG/IDNA parity.
+
+### Validation
+
+Commands ran in the foreground, with separate stdout/stderr capture and the
+repository's process-group supervisor preserving the real exit status. Heavy
+commands ran one at a time under `systemd-run --user --scope --quiet` with
+`MemoryMax=8G`, `MemorySwapMax=0`, `OOMPolicy=continue`, `TasksMax=4096` and
+`timeout 3600`. No timeout or OOM was observed. Times below include scope and
+environment startup; the test time includes rebuilding its changed axiom gate.
+
+| Directory / command | Exit | Wall seconds |
+|---|---:|---:|
+| `packages/lightning`: `nix develop -c lake build` | 0 | 0.917 |
+| `packages/lightning`: `nix develop -c lake test` | 0 | **9.945** |
+| `packages/lightning`: `"$PYTHON_ENV/bin/python3" -I generate-lnurl.py --check` | 0 | 0.059 |
+| `packages/lightning`: `nix develop -c python3 -I check-lnurl-mutations.py` (initial full run; two msat records refreshed) | 0 | Recorded individual runs; sum 395.298 |
+| Complete restored `lake test` after the msat-bound recheck | 0 | 11.788 |
+| Root: `grep -rnw sorry --include='*.lean' --exclude-dir=.lake packages` | 1 (no matches) | — |
+| Root: `nix flake check -L` | 0 | 108.386 |
+| Root: `nix build` | 0 | 0.442 |
+
+The mutation sum counts the recorded 36 selected test subprocesses, including
+the two refreshed msat-bound results. It excludes the restored suite and is not
+a measurement of a single outer command's wall time.
+The separate JSON-measurement command above exited **0**. Two sequential
+`lake test` invocations, `-- --case valid:L382` and `-- --hash` with that
+committed invoice, exited **0**; the first selected one of 16 valid examples,
+and the second matched its committed signing hash: **compatibility 2/2**.
+Python environment inspection printed **3.14.7**, bech32 **1.2.0**; decoding
+the **204-character** `long` fixture with `bech32.bech32_decode` returned HRP
+`lnurl`, `hasattr(bech32, "Encoding")` was false, and source inspection showed
+the commented `or len(bech) > 90` check. Recheck that observation with:
+
+```bash
+"$PYTHON_ENV/bin/python3" -I -c 'import bech32, inspect, json; j=json.load(open("test-data/lnurl.json")); s=next(r["input"] for r in j["lnurl-positive"] if r["name"]=="long"); print(len(s), bech32.bech32_decode(s)[0], hasattr(bech32, "Encoding")); print(inspect.getsource(bech32.bech32_decode))'
+```
+
+The successful sandbox derivation's log was read with `nix log` and checked
+for all nine loaded fixture sets, seven reference-shape assertions, seven JSON
+measurements and the **340 library / 2 named / 0 offender** Lightning gate.
+It includes the existing BOLT11 tests. The source scan for `partial def`,
+`native_decide` and `bv_decide` under `Lightning` printed nothing (exit **1**);
+the axiom-gate substring scan also printed nothing (exit **1**).
+
+The exact protected-path comparison against master base
+`aca3310cbe741c2f9fd9878a9e7e5bb494ace26e` exited **0** and printed nothing:
+
+```bash
+git diff --stat aca3310cbe741c2f9fd9878a9e7e5bb494ace26e -- .github flake.nix flake.lock AGENTS.md plan.md docs packages/bitcoin packages/sha256 packages/secp256k1 packages/fedimint-invite packages/http-curl packages/cyberkrill
+```
+
+The staged key-material scan printed **nothing**, with producer statuses
+**0, 0, 1** for diff, added-line filter and no-match scan. Whitespace, explicit
+path allowlist, licence headers, public text, and staged/worktree byte checks
+exited **0**. All **18 staged paths** are this README or under
+`packages/lightning/`; they comprise five library modules, two test modules,
+two scripts, five data/provenance files, the Lightning root, driver and
+lakefile, and this README. The manifest is unchanged. The tracker remains
+unstaged, with only the selected bead's pre-existing `status`/`updated_at`
+changes, no `source_repo_path`, and status `in_progress`. No other bead changed.
+The implementation remains uncommitted on `feat/lnurl` for review.
+
+`plan.md` is unchanged; no newly stale scope or decision sentence was found.
+The earlier Phase 5 (1 of 3) paragraph about LNURL being later work records
+that phase's historical boundary; this section supplies it. Phase 5c's proofs,
+Phase 7b's CLI captures, and Phase 9b's callback/HTTP work remain outstanding.
+Owned source archives, extracts and scratch wrappers are removed after these
+checks; ignored diagnostic logs remain under `.lake`. No owned process is
+left running.
 
 ## Deltas taken
 
