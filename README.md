@@ -6808,7 +6808,7 @@ the published endpoint or any other endpoint. The test executable is a
 ### Independent red checks
 
 [The mutation record](packages/fedimint-invite/test-data/mutations.json) pins
-**31/31** independent production edits. Each changed runtime compiled with
+**31/31 named executions across 30 distinct production edits**. Each changed runtime compiled with
 exit 0, then the selected test exited 1 at the assertion below. Expected
 values and test setup were unchanged; no incidental proof failure counts.
 The checker restores exact source bytes after each check and on errors or
@@ -6850,7 +6850,9 @@ managed termination, then requires a restored build and full test run.
 
 The valid wrong-HRP input has HRP `fed1x`, so it passes the prefix guard.
 The two 633-byte cap checks use a correctly checksummed string. The two UTF-8,
-overwrite and padding properties each have their own independent edit/run.
+overwrite and padding properties each have their own execution. The two padding
+executions reuse the same strict-regroup edit with independently selected inputs,
+so neither property's detection relies on the other failing first.
 
 [The separate axiom-gate record](packages/fedimint-invite/test-data/axiom-gate.json)
 pins **1/1** rejection check: an otherwise unused private theorem temporarily

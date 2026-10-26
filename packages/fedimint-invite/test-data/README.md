@@ -38,7 +38,8 @@ BigSize 3, four mandatory lax cases 4, part semantics 6, parser errors 13,
 encoding 13, normalization 2, wrappers 9, padding 2, boundaries 2. Both Python
 and the executable test driver independently pin every collection's count.
 
-`mutations.json` records 31 independent production edits, successful runtime
+`mutations.json` records 31 named executions across 30 distinct production edits,
+with the strict-regroup edit run separately on each padding class, successful runtime
 builds, real failing test exits, their exact detecting assertions and separate
 stdout/stderr lines. The checker restores exact original source bytes after
 each edit and on managed termination or errors. Its final build and full test
