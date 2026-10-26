@@ -269,4 +269,73 @@ theorem decode_encode (limit : Nat) (hrp : String) (data : List Symbol) (v : Var
       simp [residue, Variant.constant]
     simp [other, checked, String.length_toList] <;> omega
 
+set_option linter.unusedSimpArgs false
+
+/-- Recover the normalized HRP and payload without imposing an application length
+limit or verifying the checksum. The final six symbols are excluded. -/
+def extractData (s : String) : Option (String × List Symbol) := do
+  let (hrp, chars) ← splitLast (s.toList.map Char.toLower)
+  let ds ← readChars chars
+  if ds.length < 6 then none else some (String.ofList hrp, ds.take (ds.length - 6))
+
+theorem decode_extractData (limit : Nat) (s hrp : String) (data : List Symbol) (v : Variant)
+    (success : decode limit s = .ok (hrp, data, v)) :
+    extractData s = some (hrp, data) := by
+  unfold decode at success
+  unfold extractData
+  repeat' split at success
+  all_goals simp_all [Bind.bind, Option.bind, Pure.pure]
+  all_goals repeat' split at success
+  all_goals simp_all
+
+theorem extractData_encode (hrp : String) (data : List Symbol) (v : Variant)
+    (lowerH : hrp.toList.map Char.toLower = hrp.toList) :
+    extractData (encode hrp data v) = some (hrp, data) := by
+  let ds := data ++ createChecksum hrp data v
+  have lowerD : (ds.map charOf).map Char.toLower = ds.map charOf := by
+    simpa only [List.map_id] using (List.map_congr_left (l := ds.map charOf)
+      (g := id) (fun c hc => by
+        obtain ⟨x, _, rfl⟩ := List.mem_map.mp hc
+        exact (alphabet_properties x).1))
+  have normalized : (encode hrp data v).toList.map Char.toLower =
+      hrp.toList ++ '1' :: ds.map charOf := by
+    simp only [encode, String.toList_append, String.toList_ofList]
+    change (hrp.toList ++ ['1'] ++ ds.map charOf).map Char.toLower = _
+    rw [List.map_append, List.map_append, lowerH, lowerD]
+    simp only [List.map_cons, List.map_nil, show Char.toLower '1' = '1' by decide,
+      List.append_assoc, List.singleton_append]
+  have split : splitLast ((encode hrp data v).toList.map Char.toLower) =
+      some (hrp.toList, ds.map charOf) := by
+    rw [normalized]
+    apply splitLast_append
+    intro c hc
+    obtain ⟨x, _, rfl⟩ := List.mem_map.mp hc
+    exact (alphabet_properties x).2.2
+  have length : (createChecksum hrp data v).length = 6 := by simp [createChecksum]
+  unfold extractData
+  rw [split]
+  simp only [Bind.bind, Option.bind_some, String.ofList_toList]
+  change (do
+    let xs ← readChars (ds.map charOf)
+    if xs.length < 6 then none else some (hrp, xs.take (xs.length - 6))) = _
+  rw [readChars_chars]
+  simp [ds, length]
+
+theorem decode_lower_prefix (limit : Nat) (s hrp : String) (data : List Symbol) (v : Variant)
+    (success : decode limit s = .ok (hrp, data, v)) :
+    lower (String.ofList (s.toList.take hrp.length)) = hrp := by
+  obtain ⟨chk, _, reconstruction, _⟩ := decode_sound limit s hrp data v success
+  have chars := congrArg String.toList reconstruction
+  simp only [lower, String.toList_ofList, String.toList_append] at chars
+  apply String.toList_inj.mp
+  simp only [lower, String.toList_ofList]
+  rw [List.map_take, chars]
+  rw [List.append_assoc]
+  rw [← String.length_toList (s := hrp)]
+  rw [List.take_left]
+
+#print axioms decode_extractData
+#print axioms extractData_encode
+#print axioms decode_lower_prefix
+
 end Bitcoin.Bech32

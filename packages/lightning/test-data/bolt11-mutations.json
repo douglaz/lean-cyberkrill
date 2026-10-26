@@ -11,7 +11,31 @@
     ],
     "exit": 1,
     "property": "valid L704",
-    "failure": "uncaught exception: assertion failed: valid L704"
+    "disposition": "proof-caught",
+    "theorem": "Lightning.Bolt11.signingHash_spec",
+    "proof_source": "Lightning/Bolt11/Proofs.lean",
+    "declaration_lines": [
+      31,
+      34
+    ],
+    "failure": "error: Lightning/Bolt11/Proofs.lean:32:48: unsolved goals",
+    "falsification": "Uppercase HRP hashes different UTF-8 bytes from its lowercase form.",
+    "stdout": ".lake/bolt11-mutation-checks/hrp-case.stdout",
+    "stderr": ".lake/bolt11-mutation-checks/hrp-case.stderr",
+    "historical_runtime": {
+      "mutation": "hrp-case",
+      "source": "Lightning/Bolt11/Codec.lean",
+      "command": [
+        "lake",
+        "test",
+        "--",
+        "--case",
+        "valid:L704"
+      ],
+      "exit": 1,
+      "property": "valid L704",
+      "failure": "uncaught exception: assertion failed: valid L704"
+    }
   },
   {
     "mutation": "hash-padding",
@@ -25,7 +49,31 @@
     ],
     "exit": 1,
     "property": "valid L382",
-    "failure": "uncaught exception: assertion failed: valid L382"
+    "disposition": "proof-caught",
+    "theorem": "Lightning.Bolt11.signingHash_spec",
+    "proof_source": "Lightning/Bolt11/Proofs.lean",
+    "declaration_lines": [
+      31,
+      34
+    ],
+    "failure": "error: Lightning/Bolt11/Proofs.lean:32:48: unsolved goals",
+    "falsification": "A one-symbol [1] tail loses its final partial byte.",
+    "stdout": ".lake/bolt11-mutation-checks/hash-padding.stdout",
+    "stderr": ".lake/bolt11-mutation-checks/hash-padding.stderr",
+    "historical_runtime": {
+      "mutation": "hash-padding",
+      "source": "Lightning/Bolt11/Codec.lean",
+      "command": [
+        "lake",
+        "test",
+        "--",
+        "--case",
+        "valid:L382"
+      ],
+      "exit": 1,
+      "property": "valid L382",
+      "failure": "uncaught exception: assertion failed: valid L382"
+    }
   },
   {
     "mutation": "signature-boundary",
@@ -39,7 +87,45 @@
     ],
     "exit": 1,
     "property": "valid L382",
-    "failure": "uncaught exception: assertion failed: valid L382"
+    "disposition": "proof-caught",
+    "theorem": "Lightning.Bolt11.decode_trace",
+    "proof_source": "Lightning/Bolt11/Proofs.lean",
+    "declaration_lines": [
+      58,
+      81
+    ],
+    "failure": "error: Lightning/Bolt11/Proofs.lean:76:4: unsolved goals",
+    "falsification": "With a constant successful recovery capability, use timestamp plus valid fields ending in symbol zero and append 103 zero signature symbols. The shifted parser succeeds, but its signed prefix includes one more symbol than the trace conclusion.",
+    "counterexample": {
+      "command": [
+        "lake",
+        "env",
+        "lean",
+        "--run",
+        "LightningTests/ProofCounterexamples.lean",
+        "signature-boundary"
+      ],
+      "exit": 0,
+      "observation": "signature-boundary: successful decode; trace hash equality false",
+      "stdout": ".lake/bolt11-mutation-checks/signature-boundary-witness.stdout",
+      "stderr": ".lake/bolt11-mutation-checks/signature-boundary-witness.stderr"
+    },
+    "stdout": ".lake/bolt11-mutation-checks/signature-boundary.stdout",
+    "stderr": ".lake/bolt11-mutation-checks/signature-boundary.stderr",
+    "historical_runtime": {
+      "mutation": "signature-boundary",
+      "source": "Lightning/Bolt11/Codec.lean",
+      "command": [
+        "lake",
+        "test",
+        "--",
+        "--case",
+        "valid:L382"
+      ],
+      "exit": 1,
+      "property": "valid L382",
+      "failure": "uncaught exception: assertion failed: valid L382"
+    }
   },
   {
     "mutation": "lax-byte-fields",
@@ -53,7 +139,24 @@
     ],
     "exit": 1,
     "property": "negative payment-hash-padding",
-    "failure": "uncaught exception: assertion failed: negative payment-hash-padding"
+    "disposition": "runtime-caught",
+    "failure": "uncaught exception: assertion failed: negative payment-hash-padding",
+    "stdout": ".lake/bolt11-mutation-checks/lax-byte-fields.stdout",
+    "stderr": ".lake/bolt11-mutation-checks/lax-byte-fields.stderr",
+    "historical_runtime": {
+      "mutation": "lax-byte-fields",
+      "source": "Lightning/Bolt11/Fields.lean",
+      "command": [
+        "lake",
+        "test",
+        "--",
+        "--case",
+        "negative:payment-hash-padding"
+      ],
+      "exit": 1,
+      "property": "negative payment-hash-padding",
+      "failure": "uncaught exception: assertion failed: negative payment-hash-padding"
+    }
   },
   {
     "mutation": "expiry-leading-zero",
@@ -67,7 +170,24 @@
     ],
     "exit": 1,
     "property": "negative expiry-leading-zero",
-    "failure": "uncaught exception: assertion failed: negative expiry-leading-zero"
+    "disposition": "runtime-caught",
+    "failure": "uncaught exception: assertion failed: negative expiry-leading-zero",
+    "stdout": ".lake/bolt11-mutation-checks/expiry-leading-zero.stdout",
+    "stderr": ".lake/bolt11-mutation-checks/expiry-leading-zero.stderr",
+    "historical_runtime": {
+      "mutation": "expiry-leading-zero",
+      "source": "Lightning/Bolt11/Fields.lean",
+      "command": [
+        "lake",
+        "test",
+        "--",
+        "--case",
+        "negative:expiry-leading-zero"
+      ],
+      "exit": 1,
+      "property": "negative expiry-leading-zero",
+      "failure": "uncaught exception: assertion failed: negative expiry-leading-zero"
+    }
   },
   {
     "mutation": "cltv-leading-zero",
@@ -81,7 +201,24 @@
     ],
     "exit": 1,
     "property": "negative cltv-leading-zero",
-    "failure": "uncaught exception: assertion failed: negative cltv-leading-zero"
+    "disposition": "runtime-caught",
+    "failure": "uncaught exception: assertion failed: negative cltv-leading-zero",
+    "stdout": ".lake/bolt11-mutation-checks/cltv-leading-zero.stdout",
+    "stderr": ".lake/bolt11-mutation-checks/cltv-leading-zero.stderr",
+    "historical_runtime": {
+      "mutation": "cltv-leading-zero",
+      "source": "Lightning/Bolt11/Fields.lean",
+      "command": [
+        "lake",
+        "test",
+        "--",
+        "--case",
+        "negative:cltv-leading-zero"
+      ],
+      "exit": 1,
+      "property": "negative cltv-leading-zero",
+      "failure": "uncaught exception: assertion failed: negative cltv-leading-zero"
+    }
   },
   {
     "mutation": "features-leading-zero",
@@ -95,7 +232,24 @@
     ],
     "exit": 1,
     "property": "negative features-leading-zero",
-    "failure": "uncaught exception: assertion failed: negative features-leading-zero"
+    "disposition": "runtime-caught",
+    "failure": "uncaught exception: assertion failed: negative features-leading-zero",
+    "stdout": ".lake/bolt11-mutation-checks/features-leading-zero.stdout",
+    "stderr": ".lake/bolt11-mutation-checks/features-leading-zero.stderr",
+    "historical_runtime": {
+      "mutation": "features-leading-zero",
+      "source": "Lightning/Bolt11/Fields.lean",
+      "command": [
+        "lake",
+        "test",
+        "--",
+        "--case",
+        "negative:features-leading-zero"
+      ],
+      "exit": 1,
+      "property": "negative features-leading-zero",
+      "failure": "uncaught exception: assertion failed: negative features-leading-zero"
+    }
   },
   {
     "mutation": "hrp-leading-zero",
@@ -109,7 +263,31 @@
     ],
     "exit": 1,
     "property": "positive amount-leading-zero",
-    "failure": "uncaught exception: assertion failed: positive amount-leading-zero"
+    "disposition": "proof-caught",
+    "theorem": "Lightning.Bolt11.parseHrp_spelling",
+    "proof_source": "Lightning/Bolt11/AmountProofs.lean",
+    "declaration_lines": [
+      212,
+      265
+    ],
+    "failure": "error: Lightning/Bolt11/AmountProofs.lean:254:9: unsolved goals",
+    "falsification": "The representable zero HRP encodes as lnbc0, now rejected; this also falsifies parseHrp_encodeHrp and hrpFromMsat_roundTrip at zero.",
+    "stdout": ".lake/bolt11-mutation-checks/hrp-leading-zero.stdout",
+    "stderr": ".lake/bolt11-mutation-checks/hrp-leading-zero.stderr",
+    "historical_runtime": {
+      "mutation": "hrp-leading-zero",
+      "source": "Lightning/Bolt11/Codec.lean",
+      "command": [
+        "lake",
+        "test",
+        "--",
+        "--case",
+        "positive:amount-leading-zero"
+      ],
+      "exit": 1,
+      "property": "positive amount-leading-zero",
+      "failure": "uncaught exception: assertion failed: positive amount-leading-zero"
+    }
   },
   {
     "mutation": "recover-instead-of-verify",
@@ -123,7 +301,24 @@
     ],
     "exit": 1,
     "property": "nfields n-high",
-    "failure": "uncaught exception: assertion failed: nfields n-high"
+    "disposition": "runtime-caught",
+    "failure": "uncaught exception: assertion failed: nfields n-high",
+    "stdout": ".lake/bolt11-mutation-checks/recover-instead-of-verify.stdout",
+    "stderr": ".lake/bolt11-mutation-checks/recover-instead-of-verify.stderr",
+    "historical_runtime": {
+      "mutation": "recover-instead-of-verify",
+      "source": "Lightning/Bolt11/Codec.lean",
+      "command": [
+        "lake",
+        "test",
+        "--",
+        "--case",
+        "nfields:n-high"
+      ],
+      "exit": 1,
+      "property": "nfields n-high",
+      "failure": "uncaught exception: assertion failed: nfields n-high"
+    }
   },
   {
     "mutation": "recovery-byte-range",
@@ -137,7 +332,24 @@
     ],
     "exit": 1,
     "property": "negative recovery-byte",
-    "failure": "uncaught exception: assertion failed: negative recovery-byte"
+    "disposition": "runtime-caught",
+    "failure": "uncaught exception: assertion failed: negative recovery-byte",
+    "stdout": ".lake/bolt11-mutation-checks/recovery-byte-range.stdout",
+    "stderr": ".lake/bolt11-mutation-checks/recovery-byte-range.stderr",
+    "historical_runtime": {
+      "mutation": "recovery-byte-range",
+      "source": "Lightning/Bolt11/Codec.lean",
+      "command": [
+        "lake",
+        "test",
+        "--",
+        "--case",
+        "negative:recovery-byte"
+      ],
+      "exit": 1,
+      "property": "negative recovery-byte",
+      "failure": "uncaught exception: assertion failed: negative recovery-byte"
+    }
   },
   {
     "mutation": "signature-before-counts",
@@ -151,7 +363,24 @@
     ],
     "exit": 1,
     "property": "invalid L821",
-    "failure": "uncaught exception: assertion failed: invalid L821"
+    "disposition": "runtime-caught",
+    "failure": "uncaught exception: assertion failed: invalid L821",
+    "stdout": ".lake/bolt11-mutation-checks/signature-before-counts.stdout",
+    "stderr": ".lake/bolt11-mutation-checks/signature-before-counts.stderr",
+    "historical_runtime": {
+      "mutation": "signature-before-counts",
+      "source": "Lightning/Bolt11/Codec.lean",
+      "command": [
+        "lake",
+        "test",
+        "--",
+        "--case",
+        "invalid:L821"
+      ],
+      "exit": 1,
+      "property": "invalid L821",
+      "failure": "uncaught exception: assertion failed: invalid L821"
+    }
   },
   {
     "mutation": "pico-precision",
@@ -165,7 +394,31 @@
     ],
     "exit": 1,
     "property": "invalid L851",
-    "failure": "uncaught exception: assertion failed: invalid L851"
+    "disposition": "proof-caught",
+    "theorem": "Lightning.Bolt11.checkPrecision_rejects",
+    "proof_source": "Lightning/Bolt11/AmountProofs.lean",
+    "declaration_lines": [
+      19,
+      26
+    ],
+    "failure": "error: Lightning/Bolt11/AmountProofs.lean:24:2: 'change' tactic failed, pattern",
+    "falsification": "Available pico 1 is imprecise but is now accepted.",
+    "stdout": ".lake/bolt11-mutation-checks/pico-precision.stdout",
+    "stderr": ".lake/bolt11-mutation-checks/pico-precision.stderr",
+    "historical_runtime": {
+      "mutation": "pico-precision",
+      "source": "Lightning/Bolt11/Codec.lean",
+      "command": [
+        "lake",
+        "test",
+        "--",
+        "--case",
+        "invalid:L851"
+      ],
+      "exit": 1,
+      "property": "invalid L851",
+      "failure": "uncaught exception: assertion failed: invalid L851"
+    }
   },
   {
     "mutation": "bech32m",
@@ -179,7 +432,31 @@
     ],
     "exit": 1,
     "property": "negative bech32m",
-    "failure": "uncaught exception: assertion failed: negative bech32m"
+    "disposition": "proof-caught",
+    "theorem": "Lightning.Bolt11.decode_trace",
+    "proof_source": "Lightning/Bolt11/Proofs.lean",
+    "declaration_lines": [
+      58,
+      81
+    ],
+    "failure": "error: Lightning/Bolt11/Proofs.lean:75:12: Tactic `assumption` failed",
+    "falsification": "A valid invoice framed with bech32m can succeed, contrary to the bech32 conclusion.",
+    "stdout": ".lake/bolt11-mutation-checks/bech32m.stdout",
+    "stderr": ".lake/bolt11-mutation-checks/bech32m.stderr",
+    "historical_runtime": {
+      "mutation": "bech32m",
+      "source": "Lightning/Bolt11/Codec.lean",
+      "command": [
+        "lake",
+        "test",
+        "--",
+        "--case",
+        "negative:bech32m"
+      ],
+      "exit": 1,
+      "property": "negative bech32m",
+      "failure": "uncaught exception: assertion failed: negative bech32m"
+    }
   },
   {
     "mutation": "length-7090",
@@ -193,7 +470,45 @@
     ],
     "exit": 1,
     "property": "outside length-7090",
-    "failure": "uncaught exception: assertion failed: outside length-7090"
+    "disposition": "proof-caught",
+    "theorem": "Lightning.Bolt11.decode_trace",
+    "proof_source": "Lightning/Bolt11/Proofs.lean",
+    "declaration_lines": [
+      58,
+      81
+    ],
+    "failure": "error: Lightning/Bolt11/Proofs.lean:66:12: unsolved goals",
+    "falsification": "A valid 7090-character invoice can succeed while its 7089-limited bech32 parse fails.",
+    "counterexample": {
+      "command": [
+        "lake",
+        "env",
+        "lean",
+        "--run",
+        "LightningTests/ProofCounterexamples.lean",
+        "length-7090"
+      ],
+      "exit": 0,
+      "observation": "length-7090: successful decode; required 7089 source parse fails",
+      "stdout": ".lake/bolt11-mutation-checks/length-7090-witness.stdout",
+      "stderr": ".lake/bolt11-mutation-checks/length-7090-witness.stderr"
+    },
+    "stdout": ".lake/bolt11-mutation-checks/length-7090.stdout",
+    "stderr": ".lake/bolt11-mutation-checks/length-7090.stderr",
+    "historical_runtime": {
+      "mutation": "length-7090",
+      "source": "Lightning/Bolt11/Codec.lean",
+      "command": [
+        "lake",
+        "test",
+        "--",
+        "--case",
+        "outside:length-7090"
+      ],
+      "exit": 1,
+      "property": "outside length-7090",
+      "failure": "uncaught exception: assertion failed: outside length-7090"
+    }
   },
   {
     "mutation": "wrong-fixed-length",
@@ -207,7 +522,31 @@
     ],
     "exit": 1,
     "property": "invalid L814 accepted for parity",
-    "failure": "uncaught exception: assertion failed: invalid L814 accepted for parity"
+    "disposition": "proof-caught",
+    "theorem": "Lightning.Bolt11.decodeField_keptRaw",
+    "proof_source": "Lightning/Bolt11/Fields.lean",
+    "declaration_lines": [
+      217,
+      225
+    ],
+    "failure": "error: Lightning/Bolt11/Fields.lean:222:9: Tactic `rcases` failed: `kept : data.length = 52 \u2192 False` is not an inductive datatype",
+    "falsification": "KeptRaw 1 [] now errors rather than returning raw.",
+    "stdout": ".lake/bolt11-mutation-checks/wrong-fixed-length.stdout",
+    "stderr": ".lake/bolt11-mutation-checks/wrong-fixed-length.stderr",
+    "historical_runtime": {
+      "mutation": "wrong-fixed-length",
+      "source": "Lightning/Bolt11/Fields.lean",
+      "command": [
+        "lake",
+        "test",
+        "--",
+        "--case",
+        "invalid:L814"
+      ],
+      "exit": 1,
+      "property": "invalid L814 accepted for parity",
+      "failure": "uncaught exception: assertion failed: invalid L814 accepted for parity"
+    }
   },
   {
     "mutation": "unknown-even-feature",
@@ -221,7 +560,24 @@
     ],
     "exit": 1,
     "property": "invalid L792",
-    "failure": "uncaught exception: assertion failed: invalid L792"
+    "disposition": "runtime-caught",
+    "failure": "uncaught exception: assertion failed: invalid L792",
+    "stdout": ".lake/bolt11-mutation-checks/unknown-even-feature.stdout",
+    "stderr": ".lake/bolt11-mutation-checks/unknown-even-feature.stderr",
+    "historical_runtime": {
+      "mutation": "unknown-even-feature",
+      "source": "Lightning/Bolt11/Codec.lean",
+      "command": [
+        "lake",
+        "test",
+        "--",
+        "--case",
+        "invalid:L792"
+      ],
+      "exit": 1,
+      "property": "invalid L792",
+      "failure": "uncaught exception: assertion failed: invalid L792"
+    }
   },
   {
     "mutation": "unknown-fallback",
@@ -235,7 +591,31 @@
     ],
     "exit": 1,
     "property": "valid L707",
-    "failure": "uncaught exception: assertion failed: valid L707"
+    "disposition": "proof-caught",
+    "theorem": "Lightning.Bolt11.decodeField_keptRaw",
+    "proof_source": "Lightning/Bolt11/Fields.lean",
+    "declaration_lines": [
+      217,
+      225
+    ],
+    "failure": "error: Lightning/Bolt11/Fields.lean:224:2: Tactic `rfl` failed: The left-hand side",
+    "falsification": "KeptRaw 9 [19] now errors rather than returning raw.",
+    "stdout": ".lake/bolt11-mutation-checks/unknown-fallback.stdout",
+    "stderr": ".lake/bolt11-mutation-checks/unknown-fallback.stderr",
+    "historical_runtime": {
+      "mutation": "unknown-fallback",
+      "source": "Lightning/Bolt11/Fields.lean",
+      "command": [
+        "lake",
+        "test",
+        "--",
+        "--case",
+        "valid:L707"
+      ],
+      "exit": 1,
+      "property": "valid L707",
+      "failure": "uncaught exception: assertion failed: valid L707"
+    }
   },
   {
     "mutation": "encode-stale-signature",
@@ -249,7 +629,31 @@
     ],
     "exit": 1,
     "property": "reencode amount-leading-zero refused",
-    "failure": "uncaught exception: assertion failed: reencode amount-leading-zero refused"
+    "disposition": "proof-caught",
+    "theorem": "Lightning.Bolt11.encode_signingHash_spec",
+    "proof_source": "Lightning/Bolt11/Proofs.lean",
+    "declaration_lines": [
+      142,
+      165
+    ],
+    "failure": "error: Lightning/Bolt11/Proofs.lean:152:4: Tactic `split` failed: Could not split an `if` or `match` expression in the type",
+    "falsification": "A semantically valid invoice with an arbitrary stale recorded hash now encodes successfully.",
+    "stdout": ".lake/bolt11-mutation-checks/encode-stale-signature.stdout",
+    "stderr": ".lake/bolt11-mutation-checks/encode-stale-signature.stderr",
+    "historical_runtime": {
+      "mutation": "encode-stale-signature",
+      "source": "Lightning/Bolt11/Codec.lean",
+      "command": [
+        "lake",
+        "test",
+        "--",
+        "--case",
+        "reencode"
+      ],
+      "exit": 1,
+      "property": "reencode amount-leading-zero refused",
+      "failure": "uncaught exception: assertion failed: reencode amount-leading-zero refused"
+    }
   },
   {
     "mutation": "encode-unchecked-parts",
@@ -263,7 +667,24 @@
     ],
     "exit": 1,
     "property": "encoder semantic refusals no p",
-    "failure": "uncaught exception: assertion failed: encoder semantic refusals no p"
+    "disposition": "runtime-caught",
+    "failure": "uncaught exception: assertion failed: encoder semantic refusals no p",
+    "stdout": ".lake/bolt11-mutation-checks/encode-unchecked-parts.stdout",
+    "stderr": ".lake/bolt11-mutation-checks/encode-unchecked-parts.stderr",
+    "historical_runtime": {
+      "mutation": "encode-unchecked-parts",
+      "source": "Lightning/Bolt11/Codec.lean",
+      "command": [
+        "lake",
+        "test",
+        "--",
+        "--case",
+        "limits"
+      ],
+      "exit": 1,
+      "property": "encoder semantic refusals no p",
+      "failure": "uncaught exception: assertion failed: encoder semantic refusals no p"
+    }
   },
   {
     "mutation": "encode-typed-raw",
@@ -277,7 +698,24 @@
     ],
     "exit": 1,
     "property": "encoder raw fields typed-length p refused",
-    "failure": "uncaught exception: assertion failed: encoder raw fields typed-length p refused"
+    "disposition": "runtime-caught",
+    "failure": "uncaught exception: assertion failed: encoder raw fields typed-length p refused",
+    "stdout": ".lake/bolt11-mutation-checks/encode-typed-raw.stdout",
+    "stderr": ".lake/bolt11-mutation-checks/encode-typed-raw.stderr",
+    "historical_runtime": {
+      "mutation": "encode-typed-raw",
+      "source": "Lightning/Bolt11/Fields.lean",
+      "command": [
+        "lake",
+        "test",
+        "--",
+        "--case",
+        "limits"
+      ],
+      "exit": 1,
+      "property": "encoder raw fields typed-length p refused",
+      "failure": "uncaught exception: assertion failed: encoder raw fields typed-length p refused"
+    }
   },
   {
     "mutation": "sign-unchecked-points",
@@ -291,6 +729,309 @@
     ],
     "exit": 1,
     "property": "sign curve points payee",
-    "failure": "uncaught exception: assertion failed: sign curve points payee"
+    "disposition": "runtime-caught",
+    "failure": "uncaught exception: assertion failed: sign curve points payee",
+    "stdout": ".lake/bolt11-mutation-checks/sign-unchecked-points.stdout",
+    "stderr": ".lake/bolt11-mutation-checks/sign-unchecked-points.stderr",
+    "historical_runtime": {
+      "mutation": "sign-unchecked-points",
+      "source": "Lightning/Bolt11/Codec.lean",
+      "command": [
+        "lake",
+        "test",
+        "--",
+        "--case",
+        "limits"
+      ],
+      "exit": 1,
+      "property": "sign curve points payee",
+      "failure": "uncaught exception: assertion failed: sign curve points payee"
+    }
+  },
+  {
+    "mutation": "typed-zero-payment-hash",
+    "source": "Lightning/Bolt11/Fields.lean",
+    "command": [
+      "lake",
+      "test",
+      "--",
+      "--case",
+      "raw-counterexample"
+    ],
+    "exit": 1,
+    "property": "KeptRaw typed zero payment hash",
+    "disposition": "proof-caught",
+    "theorem": "Lightning.Bolt11.decodeField_fieldData",
+    "proof_source": "Lightning/Bolt11/Fields.lean",
+    "declaration_lines": [
+      367,
+      420
+    ],
+    "failure": "error: Lightning/Bolt11/Fields.lean:375:4: Tactic `rfl` failed: The left-hand side",
+    "falsification": "A representable payment hash of 32 zero bytes now decodes to raw.",
+    "stdout": ".lake/bolt11-mutation-checks/typed-zero-payment-hash.stdout",
+    "stderr": ".lake/bolt11-mutation-checks/typed-zero-payment-hash.stderr",
+    "historical_runtime": null
+  },
+  {
+    "mutation": "amount-exact",
+    "source": "Lightning/Bolt11/Codec.lean",
+    "command": [
+      "lake",
+      "test",
+      "--",
+      "--case",
+      "amount-boundaries"
+    ],
+    "exit": 1,
+    "property": "amount boundary exact",
+    "disposition": "proof-caught",
+    "theorem": "Lightning.Bolt11.hrpFromMsat_exact",
+    "proof_source": "Lightning/Bolt11/AmountProofs.lean",
+    "declaration_lines": [
+      65,
+      82
+    ],
+    "failure": "error: Lightning/Bolt11/AmountProofs.lean:76:20: Application type mismatch: The argument",
+    "falsification": "Zero msat is now represented by ten pico, giving one msat.",
+    "stdout": ".lake/bolt11-mutation-checks/amount-exact.stdout",
+    "stderr": ".lake/bolt11-mutation-checks/amount-exact.stderr",
+    "historical_runtime": null
+  },
+  {
+    "mutation": "amount-reverse",
+    "source": "Lightning/Bolt11/Codec.lean",
+    "command": [
+      "lake",
+      "test",
+      "--",
+      "--case",
+      "amount-boundaries"
+    ],
+    "exit": 1,
+    "property": "reverse amount equality",
+    "disposition": "proof-caught",
+    "theorem": "Lightning.Bolt11.hrpFromMsat_exact",
+    "proof_source": "Lightning/Bolt11/AmountProofs.lean",
+    "declaration_lines": [
+      65,
+      82
+    ],
+    "failure": "error: Lightning/Bolt11/AmountProofs.lean:76:20: Application type mismatch: The argument",
+    "falsification": "Canonicalizing ten pico through one msat now returns twenty pico, changing the amount.",
+    "stdout": ".lake/bolt11-mutation-checks/amount-reverse.stdout",
+    "stderr": ".lake/bolt11-mutation-checks/amount-reverse.stderr",
+    "historical_runtime": null
+  },
+  {
+    "mutation": "amount-overflow-bound",
+    "source": "Lightning/Bolt11/Codec.lean",
+    "command": [
+      "lake",
+      "test",
+      "--",
+      "--case",
+      "amount-boundaries"
+    ],
+    "exit": 1,
+    "property": "amount boundary overflow",
+    "disposition": "proof-caught",
+    "theorem": "Lightning.Bolt11.hrpFromMsat_overflow",
+    "proof_source": "Lightning/Bolt11/AmountProofs.lean",
+    "declaration_lines": [
+      83,
+      90
+    ],
+    "failure": "error: Lightning/Bolt11/AmountProofs.lean:88:2: Tactic `rfl` failed: The left-hand side",
+    "falsification": "1844674407370955162 msat is now accepted despite exceeding the pico-u64 bound.",
+    "stdout": ".lake/bolt11-mutation-checks/amount-overflow-bound.stdout",
+    "stderr": ".lake/bolt11-mutation-checks/amount-overflow-bound.stderr",
+    "historical_runtime": null
+  },
+  {
+    "mutation": "amount-milli",
+    "source": "Lightning/Bolt11/Codec.lean",
+    "command": [
+      "lake",
+      "test",
+      "--",
+      "--case",
+      "amount-boundaries"
+    ],
+    "exit": 1,
+    "property": "amount boundary canonical unit",
+    "disposition": "proof-caught",
+    "theorem": "Lightning.Bolt11.hrpFromMsat_exact",
+    "proof_source": "Lightning/Bolt11/AmountProofs.lean",
+    "declaration_lines": [
+      65,
+      82
+    ],
+    "failure": "error: Lightning/Bolt11/AmountProofs.lean:68:93: unsolved goals",
+    "falsification": "100000000 msat selects milli but the changed divisor makes its represented pico product incorrect.",
+    "stdout": ".lake/bolt11-mutation-checks/amount-milli.stdout",
+    "stderr": ".lake/bolt11-mutation-checks/amount-milli.stderr",
+    "historical_runtime": null
+  },
+  {
+    "mutation": "amount-micro",
+    "source": "Lightning/Bolt11/Codec.lean",
+    "command": [
+      "lake",
+      "test",
+      "--",
+      "--case",
+      "amount-boundaries"
+    ],
+    "exit": 1,
+    "property": "amount boundary canonical unit",
+    "disposition": "proof-caught",
+    "theorem": "Lightning.Bolt11.hrpFromMsat_exact",
+    "proof_source": "Lightning/Bolt11/AmountProofs.lean",
+    "declaration_lines": [
+      65,
+      82
+    ],
+    "failure": "error: Lightning/Bolt11/AmountProofs.lean:68:93: unsolved goals",
+    "falsification": "100000 msat selects micro but the changed divisor makes its represented pico product incorrect.",
+    "stdout": ".lake/bolt11-mutation-checks/amount-micro.stdout",
+    "stderr": ".lake/bolt11-mutation-checks/amount-micro.stderr",
+    "historical_runtime": null
+  },
+  {
+    "mutation": "amount-nano",
+    "source": "Lightning/Bolt11/Codec.lean",
+    "command": [
+      "lake",
+      "test",
+      "--",
+      "--case",
+      "amount-boundaries"
+    ],
+    "exit": 1,
+    "property": "amount boundary canonical unit",
+    "disposition": "proof-caught",
+    "theorem": "Lightning.Bolt11.hrpFromMsat_exact",
+    "proof_source": "Lightning/Bolt11/AmountProofs.lean",
+    "declaration_lines": [
+      65,
+      82
+    ],
+    "failure": "error: Lightning/Bolt11/AmountProofs.lean:68:93: unsolved goals",
+    "falsification": "100 msat selects nano but the changed divisor makes its represented pico product incorrect.",
+    "stdout": ".lake/bolt11-mutation-checks/amount-nano.stdout",
+    "stderr": ".lake/bolt11-mutation-checks/amount-nano.stderr",
+    "historical_runtime": null
+  },
+  {
+    "mutation": "amount-pico",
+    "source": "Lightning/Bolt11/Codec.lean",
+    "command": [
+      "lake",
+      "test",
+      "--",
+      "--case",
+      "amount-boundaries"
+    ],
+    "exit": 1,
+    "property": "amount boundary canonical unit",
+    "disposition": "proof-caught",
+    "theorem": "Lightning.Bolt11.hrpFromMsat_exact",
+    "proof_source": "Lightning/Bolt11/AmountProofs.lean",
+    "declaration_lines": [
+      65,
+      82
+    ],
+    "failure": "error: Lightning/Bolt11/AmountProofs.lean:68:93: unsolved goals",
+    "falsification": "One msat selects pico but the changed divisor represents five pico.",
+    "stdout": ".lake/bolt11-mutation-checks/amount-pico.stdout",
+    "stderr": ".lake/bolt11-mutation-checks/amount-pico.stderr",
+    "historical_runtime": null
+  },
+  {
+    "mutation": "amount-unavailable",
+    "source": "Lightning/Bolt11/Codec.lean",
+    "command": [
+      "lake",
+      "test",
+      "--",
+      "--case",
+      "amount-boundaries"
+    ],
+    "exit": 1,
+    "property": "unavailable amounts absent",
+    "disposition": "proof-caught",
+    "theorem": "Lightning.Bolt11.checkPrecision_unavailable",
+    "proof_source": "Lightning/Bolt11/AmountProofs.lean",
+    "declaration_lines": [
+      35,
+      39
+    ],
+    "failure": "error: Lightning/Bolt11/AmountProofs.lean:38:2: Tactic `rfl` failed: The left-hand side",
+    "falsification": "An absent amount now gives impreciseAmount instead of success.",
+    "stdout": ".lake/bolt11-mutation-checks/amount-unavailable.stdout",
+    "stderr": ".lake/bolt11-mutation-checks/amount-unavailable.stderr",
+    "historical_runtime": null
+  },
+  {
+    "mutation": "direct-spec-hash",
+    "source": "Lightning/Bolt11/Codec.lean",
+    "command": [
+      "lake",
+      "test",
+      "--",
+      "--case",
+      "spec-hashes"
+    ],
+    "exit": 1,
+    "property": "direct spec hash L382",
+    "disposition": "proof-caught",
+    "theorem": "Lightning.Bolt11.signingHash_spec",
+    "proof_source": "Lightning/Bolt11/Proofs.lean",
+    "declaration_lines": [
+      31,
+      34
+    ],
+    "failure": "error: Lightning/Bolt11/Proofs.lean:32:48: unsolved goals",
+    "falsification": "Dropping the padded final byte disagrees with the direct original-string spec digest.",
+    "stdout": ".lake/bolt11-mutation-checks/direct-spec-hash.stdout",
+    "stderr": ".lake/bolt11-mutation-checks/direct-spec-hash.stderr",
+    "historical_runtime": null
+  },
+  {
+    "mutation": "amount-canonical-choice",
+    "source": "Lightning/Bolt11/Codec.lean",
+    "command": [
+      "lake",
+      "test",
+      "--",
+      "--case",
+      "amount-boundaries"
+    ],
+    "exit": 1,
+    "property": "amount boundary canonical unit",
+    "disposition": "runtime-caught",
+    "failure": "uncaught exception: assertion failed: amount boundary canonical unit",
+    "stdout": ".lake/bolt11-mutation-checks/amount-canonical-choice.stdout",
+    "stderr": ".lake/bolt11-mutation-checks/amount-canonical-choice.stderr",
+    "historical_runtime": null
+  },
+  {
+    "mutation": "amount-raw-overflow-acceptance",
+    "source": "Lightning/Bolt11/Codec.lean",
+    "command": [
+      "lake",
+      "test",
+      "--",
+      "--case",
+      "amount-boundaries"
+    ],
+    "exit": 1,
+    "property": "unavailable amounts raw overflow",
+    "disposition": "runtime-caught",
+    "failure": "uncaught exception: assertion failed: unavailable amounts raw overflow",
+    "stdout": ".lake/bolt11-mutation-checks/amount-raw-overflow-acceptance.stdout",
+    "stderr": ".lake/bolt11-mutation-checks/amount-raw-overflow-acceptance.stderr",
+    "historical_runtime": null
   }
 ]

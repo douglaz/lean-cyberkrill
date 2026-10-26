@@ -1,0 +1,379 @@
+{
+  "commands": {
+    "lightning": "nix develop -c lake build",
+    "bitcoin": "nix develop -c lake test"
+  },
+  "exits": {
+    "lightning": 0,
+    "bitcoin": 0
+  },
+  "lightning_gate": {
+    "library": 646,
+    "named": 42,
+    "offenders": 0
+  },
+  "bitcoin_gate": {
+    "library": 924,
+    "named": 78,
+    "offenders": 0
+  },
+  "theorems": [
+    {
+      "name": "Lightning.Lnurl.bech32_roundTrip",
+      "axioms": [
+        "propext",
+        "Classical.choice",
+        "Quot.sound"
+      ]
+    },
+    {
+      "name": "Lightning.Lnurl.bech32_checksumSound",
+      "axioms": [
+        "propext",
+        "Classical.choice",
+        "Quot.sound"
+      ]
+    },
+    {
+      "name": "Lightning.Bolt11.readNat_writeNat",
+      "axioms": [
+        "propext",
+        "Quot.sound"
+      ]
+    },
+    {
+      "name": "Lightning.Bolt11.writeNat_head",
+      "axioms": [
+        "propext",
+        "Quot.sound"
+      ]
+    },
+    {
+      "name": "Lightning.Bolt11.integer_writeNat",
+      "axioms": [
+        "propext",
+        "Quot.sound"
+      ]
+    },
+    {
+      "name": "Lightning.Bolt11.strictBytes_encode",
+      "axioms": [
+        "propext",
+        "Classical.choice",
+        "Quot.sound"
+      ]
+    },
+    {
+      "name": "Lightning.Bolt11.string_utf8_roundTrip",
+      "axioms": [
+        "propext",
+        "Classical.choice",
+        "Quot.sound"
+      ]
+    },
+    {
+      "name": "Lightning.Bolt11.keptRaw_iff_staysRaw",
+      "axioms": [
+        "propext",
+        "Quot.sound"
+      ]
+    },
+    {
+      "name": "Lightning.Bolt11.decodeField_keptRaw",
+      "axioms": [
+        "propext",
+        "Classical.choice",
+        "Quot.sound"
+      ]
+    },
+    {
+      "name": "Lightning.Bolt11.readBytes_writeBytes",
+      "axioms": [
+        "propext",
+        "Classical.choice",
+        "Quot.sound"
+      ]
+    },
+    {
+      "name": "Lightning.Bolt11.decodeHop_encodeHop",
+      "axioms": [
+        "propext",
+        "Classical.choice",
+        "Quot.sound"
+      ]
+    },
+    {
+      "name": "Lightning.Bolt11.route_roundTrip",
+      "axioms": [
+        "propext",
+        "Classical.choice",
+        "Quot.sound"
+      ]
+    },
+    {
+      "name": "Lightning.Bolt11.decodeField_fieldData",
+      "axioms": [
+        "propext",
+        "Classical.choice",
+        "Quot.sound"
+      ]
+    },
+    {
+      "name": "Lightning.Bolt11.decodeFields_encodeFields",
+      "axioms": [
+        "propext",
+        "Classical.choice",
+        "Quot.sound"
+      ]
+    },
+    {
+      "name": "Lightning.Bolt11.parseHrp_encodeHrp",
+      "axioms": [
+        "propext",
+        "Classical.choice",
+        "Quot.sound"
+      ]
+    },
+    {
+      "name": "Lightning.Bolt11.parseHrp_spelling",
+      "axioms": [
+        "propext",
+        "Classical.choice",
+        "Quot.sound"
+      ]
+    },
+    {
+      "name": "Lightning.Bolt11.hrpFromMsat_roundTrip",
+      "axioms": [
+        "propext",
+        "Classical.choice",
+        "Quot.sound"
+      ]
+    },
+    {
+      "name": "Lightning.Bolt11.encodeHrp_properties",
+      "axioms": [
+        "propext",
+        "Classical.choice",
+        "Quot.sound"
+      ]
+    },
+    {
+      "name": "Lightning.Bolt11.checkPrecision_rejects",
+      "axioms": [
+        "propext"
+      ]
+    },
+    {
+      "name": "Lightning.Bolt11.checkPrecision_accepts",
+      "axioms": [
+        "propext"
+      ]
+    },
+    {
+      "name": "Lightning.Bolt11.checkPrecision_unavailable",
+      "axioms": [
+        "propext"
+      ]
+    },
+    {
+      "name": "Lightning.Bolt11.hrpFromMsat_exact",
+      "axioms": [
+        "propext",
+        "Classical.choice",
+        "Quot.sound"
+      ]
+    },
+    {
+      "name": "Lightning.Bolt11.hrpFromMsat_overflow",
+      "axioms": [
+        "propext",
+        "Quot.sound"
+      ]
+    },
+    {
+      "name": "Lightning.Bolt11.hrp_amount_canonical",
+      "axioms": [
+        "propext",
+        "Classical.choice",
+        "Quot.sound"
+      ]
+    },
+    {
+      "name": "Lightning.Bolt11.hrp_amount_absent",
+      "axioms": [
+        "propext"
+      ]
+    },
+    {
+      "name": "Lightning.Bolt11.signingHash_spec",
+      "axioms": [
+        "propext",
+        "Classical.choice",
+        "Quot.sound"
+      ]
+    },
+    {
+      "name": "Lightning.Bolt11.decode_trace",
+      "axioms": [
+        "propext",
+        "Classical.choice",
+        "Quot.sound"
+      ]
+    },
+    {
+      "name": "Lightning.Bolt11.decode_signingHash_spec",
+      "axioms": [
+        "propext",
+        "Classical.choice",
+        "Quot.sound"
+      ]
+    },
+    {
+      "name": "Lightning.Bolt11.decode_signature_check_spec",
+      "axioms": [
+        "propext",
+        "Classical.choice",
+        "Quot.sound"
+      ]
+    },
+    {
+      "name": "Lightning.Bolt11.encode_signingHash_spec",
+      "axioms": [
+        "propext",
+        "Classical.choice",
+        "Quot.sound"
+      ]
+    },
+    {
+      "name": "Lightning.Bolt11.sign_signingHash_spec",
+      "axioms": [
+        "propext",
+        "Classical.choice",
+        "Quot.sound"
+      ]
+    },
+    {
+      "name": "Lightning.Bolt11.invoice_bech32_roundTrip",
+      "axioms": [
+        "propext",
+        "Classical.choice",
+        "Quot.sound"
+      ]
+    },
+    {
+      "name": "Lightning.Bolt11.invoice_checksumSound",
+      "axioms": [
+        "propext",
+        "Classical.choice",
+        "Quot.sound"
+      ]
+    },
+    {
+      "name": "Lightning.Bolt11.readNat_append",
+      "axioms": [
+        "propext",
+        "Quot.sound"
+      ]
+    },
+    {
+      "name": "Lightning.Bolt11.writeBytes_size",
+      "axioms": [
+        "propext"
+      ]
+    },
+    {
+      "name": "Lightning.Bolt11.writeBytes_succ",
+      "axioms": [
+        "propext",
+        "Quot.sound"
+      ]
+    },
+    {
+      "name": "Lightning.Bolt11.encodeHop_size",
+      "axioms": [
+        "propext",
+        "Quot.sound"
+      ]
+    },
+    {
+      "name": "Lightning.Bolt11.lower_idempotent",
+      "axioms": [
+        "propext",
+        "Classical.choice",
+        "Quot.sound"
+      ]
+    },
+    {
+      "name": "Lightning.Bolt11.encodeData_hrp",
+      "axioms": [
+        "propext",
+        "Quot.sound"
+      ]
+    },
+    {
+      "name": "Lightning.Bolt11.encodeHrp_lower",
+      "axioms": [
+        "propext",
+        "Classical.choice",
+        "Quot.sound"
+      ]
+    },
+    {
+      "name": "Lightning.Bolt11.signature_symbols_length",
+      "axioms": [
+        "propext",
+        "Classical.choice",
+        "Quot.sound"
+      ]
+    },
+    {
+      "name": "Lightning.Bolt11.writer_specHash",
+      "axioms": [
+        "propext",
+        "Classical.choice",
+        "Quot.sound"
+      ]
+    },
+    {
+      "name": "Bitcoin.Bech32.convertbits8to5_length_exact",
+      "axioms": [
+        "propext",
+        "Classical.choice",
+        "Quot.sound"
+      ]
+    },
+    {
+      "name": "Bitcoin.Bech32.fesToBytesLax_padded5Bytes",
+      "axioms": [
+        "propext",
+        "Classical.choice",
+        "Quot.sound"
+      ]
+    },
+    {
+      "name": "Bitcoin.Bech32.decode_extractData",
+      "axioms": [
+        "propext",
+        "Classical.choice",
+        "Quot.sound"
+      ]
+    },
+    {
+      "name": "Bitcoin.Bech32.extractData_encode",
+      "axioms": [
+        "propext",
+        "Classical.choice",
+        "Quot.sound"
+      ]
+    },
+    {
+      "name": "Bitcoin.Bech32.decode_lower_prefix",
+      "axioms": [
+        "propext",
+        "Classical.choice",
+        "Quot.sound"
+      ]
+    }
+  ]
+}

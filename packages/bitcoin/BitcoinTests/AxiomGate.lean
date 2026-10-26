@@ -34,6 +34,11 @@ def namedTheorems : List Name :=
    ``Bitcoin.Base58.base58Decode_encode, ``Bitcoin.Base58.base58Encode_of_decode,
    ``Bitcoin.Base58.base58CheckDecode_encode, ``Bitcoin.Base58.base58CheckDecode_sound,
    ``Bitcoin.Bech32.decode_encode, ``Bitcoin.Bech32.decode_sound,
+   ``Bitcoin.Bech32.convertbits8to5_length_exact,
+   ``Bitcoin.Bech32.fesToBytesLax_padded5Bytes,
+   ``Bitcoin.Bech32.decode_extractData,
+   ``Bitcoin.Bech32.extractData_encode,
+   ``Bitcoin.Bech32.decode_lower_prefix,
    ``Bitcoin.Bech32.convertbits5to8_convertbits8to5,
    ``Bitcoin.Bech32.fesToBytesLax_convertbits8to5,
    ``Bitcoin.Address.p2pkh_script_roundtrip,
@@ -159,5 +164,11 @@ elab "#bitcoin_axiom_gate" : command => do
 #print axioms Bitcoin.Address.decode_of_bech32_error
 #print axioms Bitcoin.Address.fromScript_toScript
 #print axioms Bitcoin.Bech32.verifyChecksum_residue_eq
+
+#print axioms Bitcoin.Bech32.convertbits8to5_length_exact
+#print axioms Bitcoin.Bech32.fesToBytesLax_padded5Bytes
+#print axioms Bitcoin.Bech32.decode_extractData
+#print axioms Bitcoin.Bech32.extractData_encode
+#print axioms Bitcoin.Bech32.decode_lower_prefix
 
 end BitcoinTests

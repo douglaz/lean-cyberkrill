@@ -193,4 +193,127 @@ theorem convertbits8to5_length (bs : ByteArray) :
   change 5 * (convertbits8to5 bs).length = 8 * bs.size + padding at h
   omega
 
+/-- Exact padded symbol count, including the empty byte string. -/
+theorem convertbits8to5_length_exact (bs : ByteArray) :
+    (convertbits8to5 bs).length = (bs.size * 8 + 4) / 5 := by
+  have flatLength {w : Nat} (xs : List (BitVec w)) :
+      (xs.map writeBits).flatten.length = w * xs.length := by
+    induction xs with
+    | nil => simp
+    | cons x xs ih =>
+      simp only [List.map_cons, List.flatten_cons, List.length_append,
+        writeBits, List.length_ofFn, ih, List.length_cons, Nat.mul_add, Nat.mul_one]
+      omega
+  obtain ⟨padding, bound, eq⟩ := pack_flat 5 (by decide)
+    ((bs.data.toList.map fun b => writeBits b.toBitVec).flatten)
+  have bitsLength : (bs.data.toList.map fun b => writeBits b.toBitVec).flatten.length =
+      8 * bs.size := by
+    simpa only [List.map_map, Function.comp_def, List.length_map,
+      Array.length_toList, ByteArray.size] using flatLength (bs.data.toList.map UInt8.toBitVec)
+  have h := congrArg List.length eq
+  rw [flatLength, List.length_append, List.length_replicate, bitsLength] at h
+  change 5 * (convertbits8to5 bs).length = 8 * bs.size + padding at h
+  omega
+
+private theorem unpack_length (bits : List Bool) :
+    (unpack 8 (by decide) bits).length = bits.length / 8 := by
+  rw [unpack]
+  split
+  · simp only [List.length_nil]; omega
+  · rw [List.length_cons, unpack_length (bits.drop 8), List.length_drop]
+    omega
+termination_by bits.length
+decreasing_by simp only [List.length_drop]; omega
+
+private theorem unpack_get? (bits : List Bool) (i : Nat)
+    (hi : (i + 1) * 8 ≤ bits.length) :
+    (unpack 8 (by decide) bits)[i]? = some (readBits 8 (bits.drop (i * 8))) := by
+  have long : ¬ bits.length < 8 := by omega
+  induction i generalizing bits with
+  | zero =>
+    rw [unpack, ite_eq_right long]
+    simp
+  | succ i ih =>
+    rw [unpack, ite_eq_right long]
+    simp only [List.getElem?_cons_succ]
+    rw [ih (bits := bits.drop 8) (by simp only [List.length_drop]; omega)
+      (by simp only [List.length_drop]; omega), List.drop_drop]
+    congr 3
+    omega
+
+private theorem unpack_get (bits : List Bool) (i : Nat)
+    (hi : i < (unpack 8 (by decide) bits).length) :
+    (unpack 8 (by decide) bits)[i] = readBits 8 (bits.drop (i * 8)) := by
+  have bound := hi
+  rw [unpack_length] at bound
+  have h := unpack_get? bits i (by omega)
+  simpa only [List.getElem?_eq_getElem hi, Option.some.injEq] using h
+
+/-- Independent bit-level packing: five most-significant-first bits per symbol,
+then bytes indexed directly from that bit stream, with false beyond its end. -/
+def padded5Bytes (symbols : List (BitVec 5)) : ByteArray :=
+  let bits := symbols.flatMap fun x => List.ofFn fun i : Fin 5 => x.getMsbD i.val
+  ⟨(List.ofFn fun i : Fin ((symbols.length * 5 + 7) / 8) =>
+    UInt8.ofBitVec ((BitVec.ofBoolListBE (List.ofFn fun j : Fin 8 =>
+      bits.getD (i.val * 8 + j.val) false)).cast (by simp))).toArray⟩
+
+private theorem bits_length (symbols : List (BitVec 5)) :
+    (symbols.map writeBits).flatten.length = symbols.length * 5 := by
+  induction symbols with
+  | nil => rfl
+  | cons x xs ih =>
+    simp only [List.map_cons, List.flatten_cons, List.length_append,
+      writeBits, List.length_ofFn, ih, List.length_cons]
+    omega
+
+private theorem getD_zeros (bits : List Bool) (n i : Nat) :
+    (bits ++ List.replicate n false).getD i false = bits.getD i false := by
+  by_cases hi : i < bits.length
+  · simp [List.getD_eq_getElem?_getD, List.getElem?_append, hi]
+  · by_cases hn : i - bits.length < n
+    · simp [List.getD_eq_getElem?_getD, List.getElem?_append, hi, hn]
+    · simp [List.getD_eq_getElem?_getD, List.getElem?_append, hi, hn]
+
+/-- The implementation's two zero symbols supply every partial final byte.
+Extraction removes complete extra bytes, leaving exactly the spec padding. -/
+theorem fesToBytesLax_padded5Bytes (symbols : List (BitVec 5)) :
+    (fesToBytesLax (symbols ++ [0, 0])).extract 0 ((symbols.length * 5 + 7) / 8) =
+      padded5Bytes symbols := by
+  have length := bits_length (symbols ++ [0, 0])
+  have original := bits_length symbols
+  have zeros : (((symbols ++ [0, 0]).map writeBits).flatten) =
+      (symbols.map writeBits).flatten ++ List.replicate 10 false := by
+    simp only [List.map_append, List.flatten_append]
+    rfl
+  have whole : ((symbols.length * 5 + 7) / 8) ≤
+      (unpack 8 (by decide) (((symbols ++ [0, 0]).map writeBits).flatten)).length := by
+    rw [unpack_length, length]
+    simp only [List.length_append, List.length_cons, List.length_nil]
+    omega
+  apply ByteArray.ext
+  apply Array.toList_inj.mp
+  simp only [fesToBytesLax, ByteArray.data_extract, Array.toList_extract,
+    List.toList_toArray, padded5Bytes]
+  apply List.ext_getElem
+  · simp only [List.length_take, List.length_drop, List.length_map,
+      unpack_length, List.length_ofFn, Nat.sub_zero]
+    simp only [List.length_append, List.length_cons, List.length_nil] at length
+    omega
+  · intro i hi hj
+    simp only [List.getElem_take, List.getElem_drop, List.getElem_map, Nat.zero_add,
+      List.getElem_ofFn]
+    rw [unpack_get]
+    congr 1
+    apply BitVec.eq_of_getLsbD_eq
+    intro k hk
+    simp only [readBits, BitVec.getLsbD_cast, BitVec.getLsbD_ofBoolListBE,
+      List.length_ofFn, decide_eq_true hk, Bool.true_and]
+    have small : 8 - 1 - k < 8 := by omega
+    simp only [List.getD_eq_getElem?_getD, List.getElem?_ofFn, small, ↓reduceDIte,
+      Option.getD_some, List.getElem?_drop]
+    change (((symbols ++ [0, 0]).map writeBits).flatten).getD
+      (i * 8 + (8 - 1 - k)) false =
+        ((symbols.map writeBits).flatten).getD (i * 8 + (8 - 1 - k)) false
+    rw [zeros, getD_zeros]
+
 end Bitcoin.Bech32

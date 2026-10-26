@@ -259,6 +259,101 @@ private def limits (cap : Curve) (json : Lean.Json) : IO Unit := do
     check s!"amount writer {msat}" ((encodeHrp built).toOption == some hrp)
   IO.println "amount writer: 6/6"
 
+/-- A numeric bit-packing path, reading the source string directly. This uses
+neither the production hash/convertbits helpers nor the proof's Bool packing. -/
+private def directSpecHash (s : String) : IO ByteArray := do
+  let chars := s.toList.reverse.takeWhile (· != '1') |>.reverse
+  let hrp := String.ofList (s.toList.take (s.length - chars.length - 1))
+  let alphabet := "qpzry9x8gf2tvdw0s3jn54khce6mua7l".toList
+  let symbols ← chars.mapM fun c => do
+    let some n := alphabet.idxOf? c.toLower | throw (IO.userError "spec hash alphabet")
+    return n
+  let signed := symbols.take (symbols.length - 6 - 104)
+  let bits := signed.flatMap fun n => (List.range 5).map fun i => n / 2^(4-i) % 2
+  let bytes := (List.range ((bits.length + 7) / 8)).map fun i => UInt8.ofNat
+    ((List.range 8).foldl (fun acc j => 2 * acc + bits.getD (8*i+j) 0) 0)
+  return Sha256.hash ((String.ofList (hrp.toList.map Char.toLower)).toUTF8 ++ ⟨bytes.toArray⟩)
+
+private def specHashes (cap : Curve) (json : Lean.Json) : IO Unit := do
+  let cases := ((← rows json "valid" 16).push (← find json "invalid" 15 "L814")) ++
+    (← rows json "positive" 4)
+  check "direct spec hash loaded count" (cases.size == 21)
+  let mut executed := 0
+  for row in cases do
+    let name ← text row "name"
+    let source ← text row "invoice"
+    let inv ← decoded cap row s!"direct spec hash {name} decode"
+    check s!"direct spec hash {name}" (inv.signingHash == (← directSpecHash source))
+    executed := executed + 1
+  check "direct spec hash executed count" (executed == 21)
+  IO.println "direct spec hashes: 21/21"
+
+private def amountBoundaries : IO Unit := do
+  let currencies : Array Currency := #[.bc, .tb, .bcrt, .sb, .tbs]
+  let values : Array (Nat × String) := #[(0, "0"), (1, "10p"), (100, "1n"),
+    (100000, "1u"), (100000000, "1m"), (100000000000, "1"),
+    (967878534, "9678785340p"), (1844674407370955161, "18446744073709551610p")]
+  check "amount boundary loaded count" (currencies.size == 5 && values.size == 8)
+  let mut executed := 0
+  for currency in currencies do
+    for (msat, suffix) in values do
+      let hrp ← getOk "amount boundary build" (hrpFromMsat currency (Bitcoin.Amount.ofMsat msat))
+      check "amount boundary exact" (hrp.amount.map (·.msat) == some msat)
+      check "amount boundary pico" (hrp.picoAmount == some (msat * 10))
+      let written ← getOk "amount boundary encode" (encodeHrp hrp)
+      check "amount boundary canonical unit" (written == "ln" ++ currency.text ++ suffix)
+      check "amount boundary parse" ((parseHrp written).toOption == some hrp)
+      executed := executed + 1
+  check "amount boundary executed count" (executed == 40)
+  IO.println "amount boundaries: 40/40"
+  let overflow : Array Nat := #[1844674407370955162, 18446744073709551616, 10^30]
+  check "amount overflow loaded count" (overflow.size == 3)
+  let mut overflowCount := 0
+  for currency in currencies do
+    for msat in overflow do
+      check "amount boundary overflow" (match hrpFromMsat currency (Bitcoin.Amount.ofMsat msat) with
+        | .error .amountOverflow => true | _ => false)
+      overflowCount := overflowCount + 1
+  check "amount overflow executed count" (overflowCount == 15)
+  IO.println "amount overflows: 15/15"
+  let picoValues : Array (UInt64 × Bool) := #[(0, true), (10, true),
+    (18446744073709551610, true), (1, false), (9, false), (11, false),
+    (19, false), (18446744073709551615, false)]
+  check "pico boundary loaded count" (picoValues.size == 8)
+  let mut picoCount := 0
+  let mut reverseCount := 0
+  for (pico, precise) in picoValues do
+    let hrp : Hrp := ⟨.bc, some pico, some .pico⟩
+    check "pico boundary rejection" (match checkPrecision hrp with
+      | .ok () => precise | .error .impreciseAmount => !precise | _ => false)
+    if precise then
+      let canonical ← getOk "reverse amount construction"
+        (hrpFromMsat .bc (Bitcoin.Amount.ofMsat (pico.toNat / 10)))
+      check "reverse amount equality" (canonical.amount == hrp.amount)
+      reverseCount := reverseCount + 1
+    picoCount := picoCount + 1
+  check "pico boundary executed count" (picoCount == 8)
+  check "reverse amount executed count" (reverseCount == 3)
+  IO.println "pico boundaries: 8/8; reverse precise amounts: 3/3"
+  let absent : Hrp := ⟨.bc, none, none⟩
+  let unavailable : Hrp := ⟨.bc, some 20000000, none⟩
+  checkCases "unavailable amounts" 2 #[
+    ("absent", absent.picoAmount.isNone && absent.amount.isNone && (checkPrecision absent).isOk),
+    ("raw overflow", unavailable.picoAmount.isNone && unavailable.amount.isNone &&
+      (checkPrecision unavailable).isOk && (parseHrp "lnbc20000000").toOption == some unavailable)]
+
+private def rawCounterexample (cap : Curve) : IO Unit := do
+  let raw : Field := .raw 1 (List.replicate 52 0)
+  let expected : List Field := [.paymentHash ⟨Array.replicate 32 0⟩]
+  let cases := #[raw]
+  check "KeptRaw counterexample loaded count" (cases.size == 1)
+  let mut executed := 0
+  for field in cases do
+    check "KeptRaw typed zero payment hash" ((decodeFields cap (encodeFields [field])).toOption == some expected)
+    executed := executed + 1
+  check "KeptRaw counterexample executed count" (executed == 1)
+  IO.println "KeptRaw counterexample: 1/1"
+
 private def layers (cap : Curve) (json : Lean.Json) : IO Unit := do
   let base ← decoded cap (← find json "valid" 16 "L382") "layers base decode"
   let fs : List Field := [.expiry 0, .minFinalCltvExpiryDelta 0, .features 0,
@@ -372,5 +467,8 @@ def run (selector : Option String := none) : IO Unit := do
   if selector.isNone || selector == some "literals" then literals cap json
   if selector.isNone || selector == some "limits" then limits cap json
   if selector.isNone || selector == some "layers" then layers cap json
+  if selector.isNone || selector == some "spec-hashes" then specHashes cap json
+  if selector.isNone || selector == some "amount-boundaries" then amountBoundaries
+  if selector.isNone || selector == some "raw-counterexample" then rawCounterexample cap
 
 end LightningTests.Bolt11
