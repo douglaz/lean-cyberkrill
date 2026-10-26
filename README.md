@@ -6072,7 +6072,7 @@ callback canonicalization or invoice validation.
 Reference: [cyberkrill decoder](https://github.com/douglaz/cyberkrill/blob/27cad1faba86260b06665a89f0af5134d23525c2/cyberkrill-core/src/decoder.rs)
 at `27cad1faba86260b06665a89f0af5134d23525c2`: output/decode L420–471,
 models L474–492, address split L522–526 and construction L531; test L834–848.
-MIT is selected from its dual licence (`cyberkrill-core/Cargo.toml:6`). Its
+MIT is declared in `cyberkrill-core/Cargo.toml:6`. Its
 single reference LNURL is isolated in `test-data/lnurl-reference.json`, with
 an extraction/provenance sidecar. It has **73 characters**, HRP `lnurl`,
 **61 payload symbols + 6 checksum symbols**, **305 payload bits**, **38 bytes**
