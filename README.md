@@ -33,6 +33,9 @@ Phase 5 (1 of 3) adds pure BOLT11 decoding, canonical encoding, supplied curve
 operations and the published invoice corpus with generated boundary vectors.
 Phase 5 (2 of 3) adds pure LNURL decoding, a bounded HTTP(S) URL subset,
 Lightning address construction, LNURL-pay JSON models and two bech32 corollaries.
+Phase 5 (3 of 3) proves BOLT11 tagged-field and exact amount round-trips,
+as-written signing hashes for decoding and both writers, and invoice-length
+bech32 round-trip and checksum soundness.
 Other packages remain skeletons;
 `plan.md` is the plan for v1.
 
@@ -5848,6 +5851,10 @@ Every set pins its loaded count and prints the count it tested:
 | Sign curve points | 3/3: an invalid `n` and an invalid route-node key are refused before signing; a published route-node key reaches the signer |
 | Encoder raw fields / raw classification | 6/6: typed-length raw `p` and `n`, a raw known fallback version and a raw `d` are refused through both entry points, a wrong-length raw `p` and fallback version 19 are kept; 320/320: `staysRaw` agrees with `decodeField` on 32 tags × 10 data samples |
 | Field layers and first/all getters / currency mappings / signature scalar bounds | 12/12, 5/5, 3/3 |
+| Direct original-string spec hashes | 21/21: 16 valid examples, L814 and all 4 positives, through independent numeric bit packing |
+| Structural raw-field counterexample | 1/1: raw `p` with 52 zero symbols decodes as a typed payment hash of 32 zero bytes |
+| Exact amount boundaries / overflows | 40/40: five currencies × eight amounts; 15/15: five currencies × three overflows |
+| Pico boundaries / reverse precise amounts / unavailable amounts | 8/8, 3/3, 2/2; exact rejection, amount equality, absent and overflowing raw no-multiplier behavior |
 
 L858 fails on its duplicate payment secret before its high-S signature is
 checked. The generated high-S `n` twin tests verification rejection directly.
@@ -5855,14 +5862,20 @@ L851's independent pair is in the table, so its `impreciseAmount` failure
 occurs after successful recovery. Tampering without `n` tests only a lookup
 miss; a real curve capability can recover a different key and accept it.
 No listed corpus count differs from the task; the small and literal sets
-above are additional explicitly pinned checks. This phase adds no theorem;
-the proof obligations belong to Phase 5 (3 of 3).
+above are additional explicitly pinned checks. The codec originally landed
+without proofs; Phase 5 (3 of 3) below now supplies all four proof families.
 
 `check-bolt11-mutations.py` makes one exact production replacement at a time,
-requires exit **1** and the named first assertion, restores the original
-bytes in `finally`, and ends with a full `lake test` at exit **0**. Separate
-stdout/stderr logs stay under `.lake/bolt11-mutation-checks/`; the compact
-record is `test-data/bolt11-mutations.json`. All **21/21** were detected:
+restores and compares the original bytes in `finally`, and ends with a full
+`lake test` at exit **0**. The current run detects **33/33** named mutation
+executions across **32 distinct production edits**: all 21 original properties
+plus twelve additional executions. Thirteen reach their named runtime
+assertions; twenty falsify named theorems and stop in their declarations.
+Separate stdout/stderr logs stay under `.lake/bolt11-mutation-checks/`;
+`test-data/bolt11-mutations.json` records current dispositions, theorem ranges,
+counterexamples and the original runtime evidence. The table below is the
+**historical, pre-proof 21/21 runtime run**; current evidence is detailed in
+Phase 5 (3 of 3).
 
 | Mutation | Exit | First failing assertion |
 |---|---|---|
@@ -5937,10 +5950,10 @@ as-written signing hash form the third golden-parity exception in plan §3.
   lightning-invoice 0.34.0 `src/ser.rs:158-172`. An output longer than 7089
   characters cannot be decoded by this decoder.
 
-### Final validation
+### Historical codec validation
 
-Commands used the foreground scope above and separate stdout/stderr records,
-with Lean 4.35.0 and Python 3.14.7 (coincurve 21.0.0 for generation).
+The original codec commands used the foreground scope above and separate
+stdout/stderr records, with Lean 4.35.0 and Python 3.14.7 (coincurve 21.0.0 for generation).
 
 | Directory | Command | Exit | Wall time / observation |
 |---|---|---|---|
@@ -5983,10 +5996,267 @@ git diff --cached -U0 | grep '^+' | grep -n -E '[tuvxyzUVYZ]prv[1-9A-HJ-NP-Za-km
 
 For the staged scans, each producer's output was captured and its status
 checked before running the next filter. No build or test gate was piped.
-All thirteen staged paths are `README.md` or under `packages/lightning/`;
-the pre-existing tracker diff remains unstaged. `plan.md` is unchanged; no
-stale scope or decision sentence was found. LNURL, proofs, app wiring and
-CLI goldens remain the later phases' work.
+At that checkpoint all thirteen staged paths were `README.md` or under
+`packages/lightning/`, and the pre-existing tracker diff remained unstaged.
+`plan.md` was unchanged. LNURL and proofs are documented in the following
+sections; app wiring and CLI goldens remain later work.
+
+## Phase 5 (3 of 3): BOLT11 proofs
+
+The default `Lightning` library imports the field, amount and signing/framing
+proofs. All four obligations are general theorems over the production codec.
+No production codec behavior changed. Bitcoin gains general bit-packing and
+source-extraction support; the original conversion and bech32 functions are
+unchanged. No additional dependency is needed.
+
+### Domains and theorem inventory
+
+`RepresentableField cap f` is structural: every field's encoded data has
+fewer than 1024 symbols; `p/h/s` carry exactly 32 bytes; `n` carries 33 bytes
+and passes `cap.isValidPubkey`; every route node has 33 bytes and passes that
+same supplied check. Segwit versions are `Fin 17`, with programs of 2–40 bytes,
+including witness-v0 programs outside the address renderer's stricter range.
+P2PKH/P2SH hashes have 20 bytes. Integer constructors already carry `UInt64`;
+features are arbitrary natural bitsets. Lean strings, metadata and empty
+integer/description/metadata/route encodings remain in the domain. No invoice
+counts, supported-feature restrictions or signature assumptions enter family A.
+
+Raw constructors require `KeptRaw tag data`: unknown tags, wrong symbol lengths
+for `p/h/s` (not 52) or `n` (not 53), or a nonempty `f` whose first version is
+above 18. Empty fallbacks and hard typed errors are excluded. Without this
+condition the field round-trip is false: `.raw 1 (List.replicate 52 0)` becomes
+a typed 32-zero-byte payment hash. The explicit default test executes **1/1**.
+
+All names in the next tables have prefix **`Lightning.Bolt11.`**; concatenating
+the prefix and displayed name gives the full declaration name. Each has its
+own `#print axioms` and named gate entry. The exact measured axiom lists,
+including the two preserved `Lightning.Lnurl.bech32_roundTrip` and
+`Lightning.Lnurl.bech32_checksumSound` entries, are in
+[bolt11-proof-axioms.json](packages/lightning/test-data/bolt11-proof-axioms.json).
+Every list is a subset of `propext`, `Classical.choice`, `Quot.sound`.
+
+| Family | Name | Exact domain and conclusion |
+|---|---|---|
+| A | `keptRaw_iff_staysRaw` | All tags/data: `KeptRaw tag data ↔ staysRaw tag data = true`. |
+| A | `decodeField_keptRaw` | Any cap/tag/data with `KeptRaw`: decoding returns that raw constructor. |
+| A | `decodeField_fieldData` | Any cap/field with `RepresentableField`: decoding its tag/data returns the field. |
+| A | `decodeFields_encodeFields` | Any cap/list where every member is representable: `decodeFields cap (encodeFields fs) = .ok fs`. |
+| B | `hrpFromMsat_exact` | Any of the five currencies and natural-msat amount `a`, with `10*a.msat < 2^64`: construction succeeds, preserves currency, yields pico `10*a.msat` and amount `some a`. |
+| B | `hrpFromMsat_roundTrip` | Same domain: construction and `encodeHrp` succeed; `parseHrp` returns the same HRP, whose amount is `some a`. Covers zero and every canonical unit branch. |
+| B | `hrpFromMsat_overflow` | Any currency/amount with `2^64 ≤ 10*a.msat`: returns `.error .amountOverflow`. |
+| B | `hrp_amount_canonical` | Any HRP with `picoAmount = some pico` and `pico % 10 = 0`: canonicalizing `ofMsat (pico/10)` succeeds and preserves `hrp.amount`. Units and spelling need not survive. |
+| B | `hrp_amount_absent` | Any HRP with raw amount `none`: pico and amount are `none`; precision succeeds. |
+| B | `checkPrecision_rejects` | Available pico with nonzero remainder modulo 10: exactly `.error .impreciseAmount`. |
+| B | `checkPrecision_accepts` | Available pico divisible by 10: `.ok ()`. |
+| B | `checkPrecision_unavailable` | `picoAmount = none`: `.ok ()`, including missing amount and accepted raw no-multiplier overflow. |
+| B/D | `encodeHrp_properties` | `encodeHrp hrp = .ok text`: text is nonempty, printable ASCII, has no uppercase characters and length at most 83. No HRP-validity premise. |
+| B | `parseHrp_spelling` | Any currency, UInt64 raw amount `n`, optional unit `m`, with `n.toNat * unitFactor < 2^64`: parsing its canonical decimal spelling returns exactly those components. The absent-unit factor is `10^12`. |
+| B | `parseHrp_encodeHrp` | `RepresentableHrp hrp`: some text is successfully encoded and parses back to the same HRP. For no raw amount the unit must be absent; otherwise its pico product is below `2^64`. No parser equality is assumed. |
+| C1 | `signingHash_spec` | Arbitrary HRP and symbol list: production hashing equals `specHash`, including partial final bytes. |
+| C2 | `decode_trace` | Every `decode cap s = .ok inv`: recovers `s`'s actual bech32 HRP/data, the recorded hash of its original HRP prefix and signed data, and successful `checkSignature` on that exact hash/signature/key. |
+| C2 | `decode_signingHash_spec` | Same success premise: `specHashFromString s = some inv.signingHash`, and signature checking used that recorded hash. |
+| C2 | `decode_signature_check_spec` | Same premise: some hash is extracted from `s` and supplied to successful signature checking with the returned signature and payee key. |
+| C3 | `encode_signingHash_spec` | Every `encode inv = .ok s`: extraction from output `s` equals `some inv.signingHash`. No decode success or total-length premise. |
+| C4 | `sign_signingHash_spec` | Every `sign cap parts = .ok s`: exhibits the actual successful `encodeData`, the hash argument to `cap.sign`, its returned valid signature, exact output framing and equality to the spec hash extracted from `s`. No signer/verification law or agreement with explicit `n` is assumed. |
+| D | `invoice_bech32_roundTrip` | Successful `encodeData parts = .ok (hrp,data)`, valid signature and `hrp.length + data.length + 104 + 7 ≤ 7089`: bech32 decoding the output returns exactly HRP, timestamp/field symbols plus the 104 signature symbols, and `.bech32`. All HRP conditions are derived. |
+| D | `invoice_checksumSound` | Every successful invoice decode: exhibits its actual HRP/data and six source checksum symbols, reconstructs the lowercased source and proves verification of those symbols. |
+
+Supporting named declarations have the same prefix:
+
+| Name | Domain and identity |
+|---|---|
+| `readNat_append` | Any symbol lists and accumulator: folding an append equals successive folds. |
+| `readNat_writeNat` | Every natural: minimal base-32 writing then reading is identity. |
+| `writeNat_head` | Every natural: the minimal encoding never starts with zero; zero is empty. |
+| `integer_writeNat` | Any tag/UInt64: typed integer decoding its minimal symbols returns the integer. |
+| `strictBytes_encode` | Any tag/bytes: strict decoding of `convertbits8to5` returns the bytes. |
+| `string_utf8_roundTrip` | Every Lean String: `String.fromUTF8? s.toUTF8 = some s`, using the actual core declarations. |
+| `writeBytes_size` | Any width/value: the fixed-width big-endian writer has that width. |
+| `writeBytes_succ` | Any width/value: writing width+1 is writing width of value/256 followed by its low byte. |
+| `readBytes_writeBytes` | Width/value with `value < 256^width`: fixed-width write/read is identity. |
+| `encodeHop_size` | A route hop with a 33-byte node id encodes to 51 bytes. |
+| `decodeHop_encodeHop` | Such a hop whose node passes the supplied point check decodes identically. |
+| `route_roundTrip` | Any hop list with those shapes/checks: reading its 51-byte chunks returns the same list, including empty. |
+| `lower_idempotent` | Every String: lowercase normalization is idempotent. |
+| `encodeData_hrp` | Successful `encodeData`: its HRP comes from successful `encodeHrp parts.hrp`. |
+| `encodeHrp_lower` | Successful `encodeData`: the HRP character list is fixed by lowercase mapping. |
+| `signature_symbols_length` | Every signature passing `validSignature`: conversion yields exactly 104 symbols. |
+| `writer_specHash` | Successful `encodeData` and a valid signature: the framed string's extracted spec hash is exactly the signing hash of that HRP/data, without a total-length limit. |
+
+Bitcoin's five added named entries are `Bitcoin.Bech32.convertbits8to5_length_exact`
+(all bytes: length `(size*8+4)/5`), `Bitcoin.Bech32.fesToBytesLax_padded5Bytes`
+(all symbol lists: the implementation's padded extraction equals independent
+MSB-first bit packing), `Bitcoin.Bech32.decode_extractData` (any successful
+bounded bech32 parse yields the same unbounded source extraction),
+`Bitcoin.Bech32.extractData_encode` (all data/variants and an HRP fixed by
+lowercase mapping: source extraction of the generated string returns HRP/data),
+and `Bitcoin.Bech32.decode_lower_prefix` (any successful bech32 parse: lowercasing
+the original string's HRP-length prefix gives the parsed HRP). Their measured
+axioms are in the same record. Strict byte proofs reuse the existing
+`Bitcoin.Bech32.convertbits5to8_convertbits8to5` theorem.
+
+### Exact amounts and original-string hashing
+
+The writable amount format has the **pico-u64 bound `10 * msat < 2^64`**.
+The largest whole-msat amount is **1844674407370955161**, written canonically
+as `18446744073709551610p`. Zero uses no multiplier. `RepresentableHrp`
+spells the raw-product bound independently of parser success; reverse amount
+equality additionally requires available pico divisible by ten. Missing raw
+amounts have no amount; representable writable missing-amount HRPs have no
+unit. A raw no-multiplier amount whose pico conversion overflows remains
+accepted by parsing/precision but has no available msat amount and cannot be
+written. `Hrp.amount` is unchanged.
+
+`specHash` is SHA-256 of lowercase HRP UTF-8 followed by independently defined
+MSB-first five-bit symbols, padded with false bits only through the final byte.
+`specHashFromString` extracts the source's own HRP/data, excluding six checksum
+and 104 signature symbols, without the decoder's length cap. The source links
+use bech32 decomposition and account for the decoder's original-prefix slicing.
+They never replace source data with encoded parsed fields or require decoding
+writer output. Both writer hash clauses therefore cover output above 7089.
+
+The runtime cross-check uses a third path: scan the original string with the
+literal alphabet, expand numeric bits by division/remainder, fold groups of
+eight and hash those bytes. It calls neither `signingHash` nor either bit-packing
+helper for the expected digest. Its **21/21** executions cover the 17 successfully
+decoded spec examples and four positives. The independent generator's expected
+hashes and all existing fixtures remain unchanged.
+
+Default tests also pin and print **40/40** amount boundaries (five currencies
+times zero, all five canonical unit choices, an uneven amount and the largest
+whole-msat amount), **15/15** overflows, **8/8** pico boundaries, **3/3** reverse
+precise amounts and **2/2** unavailable amounts. Pico values are 0, 10,
+18446744073709551610, 1, 9, 11, 19 and 18446744073709551615. The original
+31 spec outcomes, two `n` cases, twenty negatives, four positives and every
+additional baseline and LNURL count pass unchanged, including both writers'
+semantic refusals, raw-field refusals and sign's point-validation paths.
+
+### Current mutation evidence
+
+The current [mutation record](packages/lightning/test-data/bolt11-mutations.json)
+contains **33/33** named detections across **32 distinct production edits**,
+at mutated `lake test` exit **1**, followed by the restored full suite at exit **0**.
+`hash-padding` and `direct-spec-hash` execute the same production edit with
+different test selectors; both stop at `signingHash_spec` before those selectors
+run. They are two recorded executions of one falsified property. The record retains
+all 21 historical runtime records inside their corresponding current entries.
+Runtime-caught cases still require
+the original first named assertion; a still-true theorem is not used to stop one.
+Proof-caught cases require a diagnostic in the named theorem's recorded source
+range and an explanation of why the edit falsifies its statement. Parse errors,
+missing names, resource limits and axiom-gate failures are not accepted as proof
+evidence. Raw stdout and stderr remain separate.
+
+| Disposition | Mutations and evidence |
+|---|---|
+| Runtime, original 11/11 | Lax byte fields; leading-zero expiry, CLTV and features; recovery instead of verification; recovery-byte range; signature before counts; unknown even features; unchecked writer semantics; typed raw writer fields; unchecked sign points. Each reaches its historical named assertion. |
+| Runtime, new 2/2 | `amount-canonical-choice` moves the exact pico choice first and reaches `assertion failed: amount boundary canonical unit`; `amount-raw-overflow-acceptance` rejects an overflowing raw amount with no multiplier and reaches `assertion failed: unavailable amounts raw overflow`. Both compile without a proof error and have no historical runtime prior. |
+| Proof, original 10/10 | HRP case and hash padding → `signingHash_spec`; signature boundary, bech32m and decoder length → `decode_trace`; leading-zero HRP → `parseHrp_spelling` (zero makes the canonical parse statements false); pico precision → `checkPrecision_rejects`; wrong fixed lengths and unknown fallback → `decodeField_keptRaw`; stale encode signature → `encode_signingHash_spec`. |
+| Proof, new 10/10 | Typed zero payment hash → `decodeField_fieldData`; exact/reverse amounts and four altered unit divisors → `hrpFromMsat_exact`; overflow bound → `hrpFromMsat_overflow`; unavailable pico → `checkPrecision_unavailable`; direct spec hash padding → `signingHash_spec`. |
+
+The raw-overflow mutation leaves `parseHrp_spelling` true: its explicit product
+bound excludes that overflow. The proof simplifies the added branch from that
+bound, so this mutation reaches its runtime assertion. Its statement and domain
+are unchanged. The canonical-choice mutation also preserves amount exactness;
+its runtime check separately pins canonical unit selection.
+
+Two executable synthetic counterexamples accompany the proof diagnostics. With
+a constant successful recovery capability, the shifted signature-boundary parser
+successfully decodes a complete signed field list followed by 103 zero symbols;
+its recorded hash differs from the theorem's 104-excluding prefix. A separately
+constructed **7090-character** invoice succeeds with the mutated decoder while
+the theorem's 7089-limited source parse returns `tooLong`. They use no real signer
+or key material. Their commands, exits **0**, observations and stream locations
+are retained in the respective mutation entries.
+
+`historical_runtime()` reads the original 21 objects from the fixed codec-only
+base `730c23ae4481e4f66e05b633a70d510e1594d96b`, rather than moving `HEAD`.
+Those objects remain exact, without nested proof-era records; all twelve new
+labels have null historical evidence. The focused regression simulates `HEAD`
+containing the current proof-era record, while leaving real history unchanged.
+Run its green check from `packages/lightning`:
+
+```bash
+nix develop -c python3 -I check-bolt11-mutation-history.py
+```
+
+The measured green exits **0** and prints `21/21 exact original objects; new
+labels: no history`. For the red, only the production harness's `RUNTIME_BASE`
+assignment changes to `"HEAD"` in a disposable copy beneath the repository's
+`.lake` directory. The regression and JSON bytes are copied unchanged, and
+`historical_runtime()` remains present. Reproduce the variant from the root:
+
+```bash
+HISTORY_COPY=$(mktemp -d "$PWD/.lake/bolt11-history.XXXXXXXX")
+mkdir "$HISTORY_COPY/test-data"
+cp packages/lightning/check-bolt11-mutations.py packages/lightning/check-bolt11-mutation-history.py "$HISTORY_COPY/"
+cp packages/lightning/test-data/bolt11-mutations.json "$HISTORY_COPY/test-data/"
+nix develop -c python3 -I - "$HISTORY_COPY/check-bolt11-mutations.py" <<'PY'
+from pathlib import Path
+import sys
+path = Path(sys.argv[1])
+text = path.read_text()
+old = 'RUNTIME_BASE = "730c23ae4481e4f66e05b633a70d510e1594d96b"'
+new = 'RUNTIME_BASE = "HEAD"'
+assert text.count(old) == 1
+path.write_text(text.replace(old, new))
+assert new in path.read_text() and old not in path.read_text()
+PY
+nix develop -c python3 -I "$HISTORY_COPY/check-bolt11-mutation-history.py"
+```
+
+The last command exits **1** at `historical_runtime()`'s
+`assert len(historical) == len(prior) == 21`, after the simulated source returns
+33 proof-era entries. This is a history-size failure, with no launcher, parse
+or missing-name error. The measured disposable copy is
+`.lake/bolt11-proof-final/history-head`; the actual red command was
+`nix develop -c python3 -I .lake/bolt11-proof-final/history-head/check-bolt11-mutation-history.py`
+from the root. Separate red/green streams and outer exit records use labels
+`history-red` and `history-green` in the evidence directory below.
+
+### Current validation
+
+On 2026-10-26, Lean **4.35.0**, all commands below ran in the foreground with
+separate stdout/stderr capture and the repository's process-group supervisor.
+Whole-repository gates used the 8 GiB foreground scope shown above. Stream pairs are
+`.lake/bolt11-proof-final/LABEL.stdout` and `.stderr` at the repository root;
+mutation details are under `packages/lightning/.lake/bolt11-mutation-checks/`.
+Each label also has a JSON command/exit record and separate
+`.supervisor.stdout`/`.supervisor.stderr` streams recording the outer status.
+`versions` records `lean --version`, `lake --version`, `python3 --version`,
+`git --version`, `nix --version` and `br --version` inside `nix develop`:
+Lean **4.35.0**, Lake **5.0.0-src+eb6cafb**, Python **3.14.7**, Git **2.54.0**,
+Nix **2.34.8** and br **0.7.4**; exit **0**.
+
+| Directory | Command | Exit | Label / observed result |
+|---|---|---|---|
+| `packages/lightning` | `nix develop -c lake build` | 0 | `lightning-build`; all proof modules imported |
+| `packages/lightning` | `nix develop -c lake test` | 0 | `lightning-test`; all baseline and new pins; library **646/646**, named **42/42**, zero axiom offenders |
+| `packages/lightning` | `nix develop -c python3 -I check-bolt11-mutations.py` | 0 | `mutations`; **33/33**, 13 runtime / 20 proof; restored full `lake test` exit 0 |
+| `packages/lightning` | `nix develop -c python3 -I check-bolt11-mutation-history.py` | 0 | `history-green`; 21 exact original history objects, twelve new labels without history |
+| Root | Disposable HEAD-source history regression command above | 1, expected | `history-red`; actual 21-object assertion fails on 33 proof-era entries |
+| `packages/bitcoin` | `nix develop -c lake build` | 0 | `bitcoin-build` |
+| `packages/bitcoin` | `nix develop -c lake test` | 0 | `bitcoin-test`; library **924/924**, named **78/78**, zero axiom offenders |
+| Root | `nix build` | 0 | `nix-build`; builds/tests all seven packages and runs the app in the shared derivation |
+| Root | `nix flake check` | 0 | `flake-check`; evaluates `checks.default` to that same successful derivation; reports all checks passed |
+| Root | `nix log ./result` | 0 | `nix-log`; sandbox log includes every new count pin and both measured axiom totals |
+| Root | Required no-placeholder grep followed by `test "$rc" -eq 1` | 0 | `no-placeholders`; grep itself exits **1**, no matches |
+| Root | Staged-source audit | 0 | `scope-audit`; exact index bytes for all 16 base-to-final paths, protected/executable/corpus preservation, 47 freshly compared axiom records, all 33 mutation dispositions, licence/public-text/key/proof-escape/whitespace checks |
+
+The named Lightning denominator is pinned at 42 and printed by default;
+the full imported-Lightning scan is preserved. The machine-readable axiom
+record contains all 42 Lightning entries and five added Bitcoin entries.
+No collision resistance, signature correctness or 1–4-error detection for long
+invoices is claimed. The existing sign/explicit-`n`, leading-zero HRP and
+unrestricted writer-length behavior described above is unchanged.
+
+The scoped diff contains this README, Bitcoin's conversion/bech32 support and
+axiom gate, Lightning's field/amount/signing proofs and library import, tests,
+the mutation harness, focused history regression and two evidence records. Existing manifests, curve
+interface, codec source, fixtures, LNURL implementation, plan, CI, app and
+unrelated packages are unchanged. Relative to the fixed base, the tracker differs
+only in the selected entry's status, timestamps and completion evidence.
+The completed proof work is committed and the selected entry is closed.
 
 ## Phase 5 (2 of 3): LNURL, Lightning addresses and LNURL-pay models
 
@@ -6349,8 +6619,9 @@ The implementation remains uncommitted on `feat/lnurl` for review.
 
 `plan.md` is unchanged; no newly stale scope or decision sentence was found.
 The earlier Phase 5 (1 of 3) paragraph about LNURL being later work records
-that phase's historical boundary; this section supplies it. Phase 5c's proofs,
-Phase 7b's CLI captures, and Phase 9b's callback/HTTP work remain outstanding.
+that phase's historical boundary; this section supplies it. Phase 5c's proofs
+are documented above. Phase 7b's CLI captures and Phase 9b's callback/HTTP work
+remain outstanding.
 Owned source archives, extracts and scratch wrappers are removed after these
 checks; ignored diagnostic logs remain under `.lake`. No owned process is
 left running.

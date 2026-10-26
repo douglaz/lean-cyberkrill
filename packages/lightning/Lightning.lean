@@ -4,6 +4,7 @@ Apache License 2.0, at your option; see LICENSE-MIT and LICENSE-APACHE.
 -/
 
 import Lightning.Bolt11.Codec
+import Lightning.Bolt11.Proofs
 import Lightning.Lnurl.Codec
 import Lightning.Lnurl.Models
 import Lightning.Lnurl.Proofs
