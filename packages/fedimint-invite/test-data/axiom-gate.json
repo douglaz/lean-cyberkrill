@@ -11,7 +11,7 @@
       "test"
     ],
     "exit": 1,
-    "wall_seconds": 3.179,
+    "wall_seconds": 5.087,
     "diagnostic_stream": "stderr",
     "diagnostic": "error: FedimintInviteTests/AxiomGate.lean:40:0: Invite axiom gate: _private.FedimintInvite.ConsensusProofs.0.FedimintInvite.rejectedPrivateHelper reaches disallowed axiom FedimintInvite.libraryGateProbe"
   },
@@ -21,6 +21,6 @@
       "test"
     ],
     "exit": 0,
-    "wall_seconds": 15.639
+    "wall_seconds": 5.781
   }
 }

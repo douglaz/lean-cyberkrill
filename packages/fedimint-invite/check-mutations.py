@@ -19,9 +19,9 @@ def cases():
         ("big-endian", CONSENSUS, "decodeLE data.reverse", "decodeLE data",
          "bigsize/256", "bigsize/256 reader and consumed"),
         ("nonminimal", CONSENSUS,
-         "| .ok (data, after) => .ok (decodeLE data.reverse, after)",
-         "| .ok (data, after) => if decodeLE data.reverse < 253 then\n"
-         "          .error (.truncatedBigSize width rest.length) else .ok (decodeLE data.reverse, after)",
+         "if data.length = width then .ok (decodeLE data.reverse, after)",
+         "if data.length = width then if decodeLE data.reverse < 253 then\n"
+         "          .error (.truncatedBigSize width data.length) else .ok (decodeLE data.reverse, after)",
          "lax/nonminimal", "lax/nonminimal"),
         ("peer-truncation", CONSENSUS, "UInt16.ofNat peer, url", "UInt16.ofNat (peer % 65535), url",
          "lax/peer-truncation", "lax/peer-truncation"),
@@ -104,8 +104,35 @@ def cases():
         ("secret-prefix", CONSENSUS, "| .secret s => [2] ++ stringBytes s",
          "| .secret s => [2] ++ writeBigSize (stringBytes s).length ++ stringBytes s",
          "encoding/empty-secret", "encoding/empty-secret consensus bytes"),
+        ("guardian-append", CONSENSUS, "guardians := g :: state.guardians",
+         "guardians := state.guardians ++ [g]",
+         "large/ascending", "large/ascending processing budget"),
+        ("insertion-sort", CONSENSUS,
+         "/-- Stable merge sort preserves wire order among equal peer ids. -/\n"
+         "def sortGuardians (guardians : List Guardian) : List Guardian :=\n"
+         "  guardians.mergeSort (fun g h => g.peerId.toNat ≤ h.peerId.toNat)",
+         "def insertGuardian (g : Guardian) : List Guardian → List Guardian\n"
+         "  | [] => [g]\n"
+         "  | h :: rest => if g.peerId.toNat ≤ h.peerId.toNat then g :: h :: rest\n"
+         "                else h :: insertGuardian g rest\n\n"
+         "def sortGuardians : List Guardian → List Guardian\n"
+         "  | [] => []\n"
+         "  | g :: rest => insertGuardian g (sortGuardians rest)",
+         "large/descending", "large/descending processing budget"),
+        ("data-tail-scan", CONSENSUS, "if data.length = n then",
+         "if n ≤ bytes.length then", "large/ascending", "large/ascending processing budget"),
+        ("bigsize-tail-scan", CONSENSUS, "if data.length = width then",
+         "if width ≤ rest.length then", "large/ascending", "large/ascending processing budget"),
+        ("part-tail-scan", CONSENSUS,
+         "bigSizeWidth data + url.toUTF8.size + bigSizeWidth afterUrl",
+         "data.length - afterPeer.length", "large/ascending", "large/ascending processing budget"),
+        ("url-prefix-width", CONSENSUS, "bigSizeWidth data + url.toUTF8.size",
+         "(writeBigSize url.toUTF8.size).length + url.toUTF8.size",
+         "parts/nonminimal-url-length", "parts/nonminimal-url-length"),
+        ("peer-prefix-width", CONSENSUS, "bigSizeWidth afterUrl", "(writeBigSize peer).length",
+         "parts/nonminimal-peer", "parts/nonminimal-peer"),
     ]
-    assert len(rows) == 31
+    assert len(rows) == 38
     return rows
 
 
@@ -167,9 +194,9 @@ def main():
         status, out, err, wall = run(label, command)
         assert status == 0, (label, status, out, err)
         restored.append(dict(command=command, exit=status, wall_seconds=wall))
-    assert len(records) == 31
-    RECORD.write_text(json.dumps(dict(count=31, mutations=records, restored=restored), indent=2) + "\n")
-    print("invite mutations: 31/31; restored lake build and lake test: EXIT=0", flush=True)
+    assert len(records) == 38
+    RECORD.write_text(json.dumps(dict(count=38, mutations=records, restored=restored), indent=2) + "\n")
+    print("invite mutations: 38/38; restored lake build and lake test: EXIT=0", flush=True)
 
 
 if __name__ == "__main__":

@@ -27,26 +27,30 @@ theorem readBigSize_writeBigSize {value : Nat} (bound : value < 2 ^ 64)
     by_cases two : value ≤ 65535
     · obtain ⟨len, dec⟩ := wide 2 (by omega)
       simp only [List.reverse_reverse] at dec
-      have taken := takeExact_append (unsignedLE 2 value).reverse rest
-      rw [len] at taken
-      simp [small, two, readBigSize, taken, dec]
+      simp [small, two, readBigSize, len, dec]
     · by_cases four : value ≤ 4294967295
       · obtain ⟨len, dec⟩ := wide 4 (by omega)
         simp only [List.reverse_reverse] at dec
-        have taken := takeExact_append (unsignedLE 4 value).reverse rest
-        rw [len] at taken
-        simp [small, two, four, readBigSize, taken, dec]
+        simp [small, two, four, readBigSize, len, dec]
       · obtain ⟨len, dec⟩ := wide 8 (by omega)
         simp only [List.reverse_reverse] at dec
-        have taken := takeExact_append (unsignedLE 8 value).reverse rest
-        rw [len] at taken
-        simp [small, two, four, readBigSize, taken, dec]
+        simp [small, two, four, readBigSize, len, dec]
 
 theorem readData_append (field : Field) (data : ByteArray) (rest : List UInt8) :
     readData field data.size (data.data.toList ++ rest) = .ok (data, rest) := by
   have len : data.data.toList.length = data.size := by simp
   rw [← len]
-  simp [readData]
+  simp [readData, List.splitAt_eq]
+
+theorem bigSizeWidth_writeBigSize (value : Nat) (rest : List UInt8) :
+    bigSizeWidth (writeBigSize value ++ rest) = (writeBigSize value).length := by
+  unfold writeBigSize
+  dsimp only
+  split
+  · rename_i small
+    have fits : value % 2 ^ 64 < 256 := by omega
+    simp [bigSizeWidth, Nat.mod_eq_of_lt fits, small]
+  · split <;> (try split) <;> simp [bigSizeWidth, Bitcoin.CompactSize.unsignedLE_length]
 
 theorem string_utf8_roundTrip (s : String) : String.fromUTF8? s.toUTF8 = some s := by
   simp only [String.toUTF8_eq_toByteArray, String.fromUTF8?]
@@ -76,7 +80,8 @@ theorem readPart_encode_guardian (g : Guardian)
     by simp [guardianData, List.append_assoc], readString_stringBytes _ _ urlBound]
   dsimp only [bind, Except.bind]
   rw [readBigSize_writeBigSize peerBound]
-  simp [guardianData, List.length_append]
+  simp [guardianData, stringBytes, List.append_assoc, bigSizeWidth_writeBigSize,
+    List.length_append]
   omega
 
 theorem readPart_encode_federation (data : ByteArray) (size : data.size = 32)
@@ -136,26 +141,17 @@ theorem readParts_encodeParts (parts : List Part) (bound : ∀ part ∈ parts, p
 
 theorem foldl_guardians (guardians : List Guardian) (state : State) :
     (guardians.map Part.guardian).foldl applyPart state =
-      { state with guardians := state.guardians ++ guardians } := by
+      { state with guardians := guardians.reverse ++ state.guardians } := by
   induction guardians generalizing state with
   | nil => simp
   | cons g gs ih =>
-    simp only [List.map_cons, List.foldl_cons, applyPart, ih, List.append_assoc]
-    rfl
+    simp [applyPart, ih, List.reverse_cons, List.append_assoc]
 
 theorem sortGuardians_eq (guardians : List Guardian)
     (sortedUnique : guardians.Pairwise (fun a b => a.peerId.toNat < b.peerId.toNat)) :
     sortGuardians guardians = guardians := by
-  induction guardians with
-  | nil => rfl
-  | cons g gs ih =>
-    obtain ⟨before, sorted⟩ := List.pairwise_cons.mp sortedUnique
-    rw [sortGuardians, ih sorted]
-    cases gs with
-    | nil => rfl
-    | cons h hs =>
-      have le : g.peerId.toNat ≤ h.peerId.toNat := Nat.le_of_lt (before h (by simp))
-      simp [insertGuardian, le]
+  apply List.mergeSort_of_pairwise
+  exact sortedUnique.imp (fun h => by simpa using Nat.le_of_lt h)
 
 theorem hex_encode_length (bytes : ByteArray) :
     (Bitcoin.Hex.encode bytes).length = 2 * bytes.size := by
@@ -207,11 +203,12 @@ theorem consensus_roundTrip (inv : Invite) (federation : ByteArray)
   simp only [List.append_nil] at parsed
   rw [parsed]
   have folded : parts.foldl applyPart {} =
-      (⟨some inv.federationId, inv.guardians, inv.apiSecret⟩ : State) := by
+      (⟨some inv.federationId, inv.guardians.reverse, inv.apiSecret⟩ : State) := by
     simp only [parts, List.foldl_append, foldl_guardians]
     cases inv.apiSecret <;> simp [applyPart, ← fedId]
   rw [folded]
   dsimp only [bind, Except.bind]
+  simp only [List.reverse_eq_nil_iff, List.reverse_reverse]
   rw [ite_eq_right nonempty, sortGuardians_eq _ sortedUnique]
 
 end FedimintInvite

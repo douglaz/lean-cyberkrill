@@ -4,7 +4,7 @@
     "bigsize-truncated": 14,
     "bigsize-lax": 3,
     "lax": 4,
-    "parts": 6,
+    "parts": 8,
     "errors": 13,
     "encoding": 13,
     "normalization": 2,
@@ -502,6 +502,42 @@
             }
           ],
           "api_secret": "new"
+        }
+      }
+    },
+    {
+      "group": "parts",
+      "name": "nonminimal-url-length",
+      "op": "consensus",
+      "input": "020006fd000268690001200000000000000000000000000000000000000000000000000000000000000000",
+      "expected": {
+        "ok": {
+          "federation_id": "0000000000000000000000000000000000000000000000000000000000000000",
+          "guardians": [
+            {
+              "peer_id": 0,
+              "url": "hi"
+            }
+          ],
+          "api_secret": null
+        }
+      }
+    },
+    {
+      "group": "parts",
+      "name": "nonminimal-peer",
+      "op": "consensus",
+      "input": "020006026869fd000001200000000000000000000000000000000000000000000000000000000000000000",
+      "expected": {
+        "ok": {
+          "federation_id": "0000000000000000000000000000000000000000000000000000000000000000",
+          "guardians": [
+            {
+              "peer_id": 0,
+              "url": "hi"
+            }
+          ],
+          "api_secret": null
         }
       }
     },

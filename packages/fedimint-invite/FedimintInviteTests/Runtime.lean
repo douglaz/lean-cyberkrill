@@ -78,6 +78,21 @@ private def checkDecoded (label : String) (result : Except Error Invite) (expect
 private def readJson (path : String) : IO Json := do
   IO.ofExcept (Json.parse (← IO.FS.readFile path))
 
+/-- Raw consensus decoding is not restricted to the string wrapper's size. -/
+private def largeConsensus (descending : Bool) : IO Unit := do
+  let count := 60000
+  let ordered := (List.range count).map fun peer => (⟨UInt16.ofNat peer, ""⟩ : Guardian)
+  let inv : Invite := ⟨String.ofList (List.replicate 64 '0'),
+    if descending then ordered.reverse else ordered, none⟩
+  let label := if descending then "large/descending" else "large/ascending"
+  let encoded ← IO.ofExcept ((encodeConsensus inv).mapError (fun e => reprStr e))
+  let start ← IO.monoMsNow
+  let decoded := decodeConsensus encoded
+  check (label ++ " exact fields") (decoded == .ok { inv with guardians := ordered })
+  let elapsed ← IO.monoMsNow
+  IO.println s!"{label}: {count} guardians; {encoded.size} bytes; {elapsed - start} ms"
+  check (label ++ " processing budget") (elapsed - start < 5000)
+
 private def runRow (row : Json) : IO Unit := do
   let label := (← string (← field row "group")) ++ "/" ++ (← string (← field row "name"))
   let op ← string (← field row "op")
@@ -129,6 +144,12 @@ private def runRow (row : Json) : IO Unit := do
   | _ => throw (IO.userError ("unknown test operation " ++ op))
 
 def run (args : List String) : IO UInt32 := do
+  if args == ["--case", "large/ascending"] then
+    largeConsensus false
+    return 0
+  if args == ["--case", "large/descending"] then
+    largeConsensus true
+    return 0
   let selection := match args with | ["--case", name] => some name | _ => none
   let primary ← IO.ofExcept (← readJson "test-data/primary.json").getArr?
   check "primary collection count" (primary.size == 3)
@@ -141,9 +162,9 @@ def run (args : List String) : IO UInt32 := do
     IO.println "primary vectors: 3/3"
   let fixture ← readJson "test-data/synthetic.json"
   let rows ← IO.ofExcept (← field fixture "rows").getArr?
-  check "synthetic total count" (rows.size == 80)
+  check "synthetic total count" (rows.size == 82)
   let counts : List (String × Nat) := [("bigsize", 12), ("bigsize-truncated", 14),
-    ("bigsize-lax", 3), ("lax", 4), ("parts", 6), ("errors", 13), ("encoding", 13),
+    ("bigsize-lax", 3), ("lax", 4), ("parts", 8), ("errors", 13), ("encoding", 13),
     ("normalization", 2), ("wrapper", 9), ("padding", 2), ("boundaries", 2)]
   let mut executed := 0
   for (group, count) in counts do
@@ -158,8 +179,12 @@ def run (args : List String) : IO UInt32 := do
     check (group ++ " collection count") (loaded == count)
     check (group ++ " manifest count") ((← nat (← field (← field fixture "counts") group)) == count)
     if selection.isNone then IO.println s!"{group}: {loaded}/{count}"
-  check "executed count" (executed == if selection.isSome then 1 else 80)
-  IO.println s!"runtime assertions: {executed}/{if selection.isSome then 1 else 80}"
+  check "executed count" (executed == if selection.isSome then 1 else 82)
+  IO.println s!"runtime assertions: {executed}/{if selection.isSome then 1 else 82}"
+  if selection.isNone then
+    largeConsensus false
+    largeConsensus true
+    IO.println "large raw consensus cases: 2/2"
   return 0
 
 end FedimintInviteTests

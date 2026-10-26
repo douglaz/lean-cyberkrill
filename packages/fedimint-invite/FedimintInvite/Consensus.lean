@@ -6,6 +6,7 @@ import Bitcoin.Hex
 import Bitcoin.CompactSize
 import Bitcoin.Bech32Codec
 import Init.Data.String.Lemmas
+import Init.Data.List.Sort
 
 namespace FedimintInvite
 
@@ -59,15 +60,22 @@ def readBigSize : List UInt8 → Except Error (Nat × List UInt8)
     if tag.toNat < 253 then .ok (tag.toNat, rest)
     else
       let width := if tag.toNat = 253 then 2 else if tag.toNat = 254 then 4 else 8
-      match takeExact width rest with
-      | .ok (data, after) => .ok (decodeLE data.reverse, after)
-      | .error _ => .error (.truncatedBigSize width rest.length)
+      let (data, after) := rest.splitAt width
+      if data.length = width then .ok (decodeLE data.reverse, after)
+      else .error (.truncatedBigSize width data.length)
 
-/-- Read a whole-buffer byte span, checking the natural-number bound first. -/
+/-- Read a bounded prefix without scanning the unused suffix. -/
 def readData (field : Field) (n : Nat) (bytes : List UInt8) :
     Except Error (ByteArray × List UInt8) :=
-  if n ≤ bytes.length then .ok (⟨(bytes.take n).toArray⟩, bytes.drop n)
-  else .error (.overrun field n bytes.length)
+  let (data, rest) := bytes.splitAt n
+  if data.length = n then .ok (⟨data.toArray⟩, rest)
+  else .error (.overrun field n data.length)
+
+/-- Width of the original BigSize prefix, including non-minimal spellings. -/
+def bigSizeWidth : List UInt8 → Nat
+  | [] => 1
+  | tag :: _ => if tag.toNat < 253 then 1
+                else if tag.toNat = 253 then 3 else if tag.toNat = 254 then 5 else 9
 
 def readString (field : Field) (bytes : List UInt8) :
     Except Error (String × List UInt8) := do
@@ -100,7 +108,7 @@ def readPart (bytes : List UInt8) : Except Error (Option Part × List UInt8) := 
     let (declared, data) ← readBigSize rest
     let (url, afterUrl) ← readString .url data
     let (peer, afterPeer) ← readBigSize afterUrl
-    let consumed := data.length - afterPeer.length
+    let consumed := bigSizeWidth data + url.toUTF8.size + bigSizeWidth afterUrl
     if consumed = declared then
       .ok (some (.guardian ⟨UInt16.ofNat peer, url⟩), afterPeer)
     else .error (.guardianLength declared consumed)
@@ -117,12 +125,13 @@ def readPart (bytes : List UInt8) : Except Error (Option Part × List UInt8) := 
 
 structure State where
   federation : Option String := none
+  /-- Guardians accumulated in reverse wire order. -/
   guardians : List Guardian := []
   secret : Option String := none
   deriving Repr, DecidableEq
 
 def applyPart (state : State) : Part → State
-  | .guardian g => { state with guardians := state.guardians ++ [g] }
+  | .guardian g => { state with guardians := g :: state.guardians }
   | .federation bytes => { state with federation := some (Bitcoin.Hex.encode bytes) }
   | .secret s => { state with secret := some s }
 
@@ -136,15 +145,9 @@ def readParts : Nat → List UInt8 → State → Except Error State
       | none => .ok state
       | some part => readParts n rest (applyPart state part)
 
-/-- Left insertion before equal ids makes this tail-first sort stable. -/
-def insertGuardian (g : Guardian) : List Guardian → List Guardian
-  | [] => [g]
-  | h :: rest => if g.peerId.toNat ≤ h.peerId.toNat then g :: h :: rest
-                else h :: insertGuardian g rest
-
-def sortGuardians : List Guardian → List Guardian
-  | [] => []
-  | g :: rest => insertGuardian g (sortGuardians rest)
+/-- Stable merge sort preserves wire order among equal peer ids. -/
+def sortGuardians (guardians : List Guardian) : List Guardian :=
+  guardians.mergeSort (fun g h => g.peerId.toNat ≤ h.peerId.toNat)
 
 def decodeConsensus (bytes : ByteArray) : Except Error Invite := do
   let (n, rest) ← readBigSize bytes.data.toList
@@ -153,7 +156,7 @@ def decodeConsensus (bytes : ByteArray) : Except Error Invite := do
   | none => .error .missingFederation
   | some id =>
     if state.guardians = [] then .error .noGuardian
-    else .ok ⟨id, sortGuardians state.guardians, state.secret⟩
+    else .ok ⟨id, sortGuardians state.guardians.reverse, state.secret⟩
 
 def inviteParts (inv : Invite) : Except Error (List Part) := do
   let federation ← if inv.federationId = "" then .ok [] else

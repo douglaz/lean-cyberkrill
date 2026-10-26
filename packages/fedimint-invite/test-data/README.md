@@ -33,17 +33,24 @@ and bit regrouping construct both padding cases and the correctly checksummed
 These are synthetic bytes and opaque strings, including Unicode and invalid
 UTF-8; no wallet, node, credential or device input is used.
 
-The pinned synthetic count is 80: BigSize 12, tagged truncations 14, wider
-BigSize 3, four mandatory lax cases 4, part semantics 6, parser errors 13,
+The pinned synthetic count is 82: BigSize 12, tagged truncations 14, wider
+BigSize 3, four mandatory lax cases 4, part semantics 8, parser errors 13,
 encoding 13, normalization 2, wrappers 9, padding 2, boundaries 2. Both Python
 and the executable test driver independently pin every collection's count.
 
-`mutations.json` records 31 named executions across 30 distinct production edits,
-with the strict-regroup edit run separately on each padding class, successful runtime
-builds, real failing test exits, their exact detecting assertions and separate
+`mutations.json` records 38 named executions across 37 distinct production edits.
+The strict-regroup edit runs separately on each padding class. Records include
+successful runtime builds, real failing test exits, their exact detecting assertions and separate
 stdout/stderr lines. The checker restores exact original source bytes after
 each edit and on managed termination or errors. Its final build and full test
 run must pass before it writes the success record. No expectation is mutated.
+
+The executable also constructs two large raw inputs independently of this JSON
+corpus: 60,000 empty-URL guardians in ascending or descending peer order. Every
+decoded field must match within a five-second processing budget. Separate edits
+reintroduce repeated guardian append, insertion sort, data-bound, BigSize-bound and
+guardian-length suffix scans, each checked against its selected budget assertion.
+The two extra part fixtures preserve non-minimal URL-length and peer prefixes.
 
 From this package, with a fresh owned temporary directory in `TMPDIR`:
 

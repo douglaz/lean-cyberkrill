@@ -6660,8 +6660,11 @@ decodePayload : String → Except Error (List Bitcoin.Bech32.Symbol)
 `tooLong length`, `prefix`, `wrongHrp actual`, `wrongVariant` and
 `bech32 Bitcoin.Bech32.DecodeError`. `Field` distinguishes URL, secret and federation
 data. UTF-8 decoding is strict. Length checks use unbounded natural arithmetic
-before taking data; guardian fields read from the whole remaining buffer before
+when splitting bounded prefixes; guardian fields read from the whole remaining buffer before
 checking equality with the declared variant-data length.
+Prefix reads do not traverse the unused suffix. Guardian byte accounting uses
+the original BigSize prefix widths, including non-minimal spellings. Guardians
+accumulate in reverse order, then reverse once before a stable merge sort.
 
 BigSize tags fd/fe/ff carry 2/4/8 **big-endian** bytes. Non-minimal encodings
 are accepted; writers produce minimal encodings after the reference's u64
@@ -6764,7 +6767,7 @@ defines the regrouping behavior.
 There are exactly **3 primary vectors**: one published full invite at line 659,
 the two-guardian with-secret struct at 710-737, and the three-guardian struct
 at 741-776. Capture verifies exact encoded strings and parsed decoded JSON.
-The executable additionally pins **80 synthetic cases**:
+The executable additionally pins **82 synthetic cases**:
 
 | Collection | Count |
 |---|---:|
@@ -6772,7 +6775,7 @@ The executable additionally pins **80 synthetic cases**:
 | Every tagged truncation position | 14 |
 | Non-minimal tagged widths | 3 |
 | Mandatory lax consensus cases | 4 |
-| Part semantics | 6 |
+| Part semantics | 8 |
 | Parser errors | 13 |
 | Encoding and strings | 13 |
 | Hex normalization | 2 |
@@ -6785,6 +6788,13 @@ executable. [Fixture provenance and commands](packages/fedimint-invite/test-data
 describe the exact offline capture and deterministic synthetic constructions.
 Synthetic expectations are explicitly hand-derived from the pinned parser;
 they are not described as Rust captures. No pure Rust probe was needed.
+
+Two additional raw consensus cases each decode 60,000 guardians with empty URLs
+and distinct peer ids, in ascending and descending wire order. Each input is
+359,531 bytes, well beyond the string wrapper's cap. The tests assert every
+decoded field and a generous five-second processing budget; the optimized decoder
+took 20–23 ms per case locally. The fixture corpus remains independently counted
+at 82/82, and the large cases print their separate 2/2 count.
 
 From `packages/fedimint-invite`, with `TMPDIR` set to a fresh owned temporary
 directory, run these in the foreground under the repository gate supervision:
@@ -6808,7 +6818,7 @@ the published endpoint or any other endpoint. The test executable is a
 ### Independent red checks
 
 [The mutation record](packages/fedimint-invite/test-data/mutations.json) pins
-**31/31 named executions across 30 distinct production edits**. Each changed runtime compiled with
+**38/38 named executions across 37 distinct production edits**. Each changed runtime compiled with
 exit 0, then the selected test exited 1 at the assertion below. Expected
 values and test setup were unchanged; no incidental proof failure counts.
 The checker restores exact source bytes after each check and on errors or
@@ -6847,6 +6857,13 @@ managed termination, then requires a restored build and full test run.
 | Count URL characters as bytes | `encoding/unicode consensus bytes` |
 | Count secret characters as bytes | `encoding/unicode consensus bytes` |
 | Add nested secret prefix | `encoding/empty-secret consensus bytes` |
+| Append guardians repeatedly | `large/ascending processing budget` |
+| Use insertion sort | `large/descending processing budget` |
+| Scan the suffix for data bounds | `large/ascending processing budget` |
+| Scan the suffix for BigSize bounds | `large/ascending processing budget` |
+| Scan the suffix for guardian length | `large/ascending processing budget` |
+| Use canonical URL prefix width | `parts/nonminimal-url-length` |
+| Use canonical peer prefix width | `parts/nonminimal-peer` |
 
 The valid wrong-HRP input has HRP `fed1x`, so it passes the prefix guard.
 The two 633-byte cap checks use a correctly checksummed string. The two UTF-8,

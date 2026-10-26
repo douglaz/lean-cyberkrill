@@ -113,6 +113,8 @@ def make():
         invite([(0, "b"), (1, "c"), (2, "a")]))
     dec("parts", "last-federation", parts(guardian(), federation(), federation(ONE)), invite(fid=ONE))
     dec("parts", "last-secret", parts(guardian(), federation(), secret("old"), secret("new")), invite(api="new"))
+    dec("parts", "nonminimal-url-length", parts(b"\x00\x06\xfd\x00\x02hi\x00", federation()), model)
+    dec("parts", "nonminimal-peer", parts(b"\x00\x06\x02hi\xfd\x00\x00", federation()), model)
     err("parts", "unknown-first", parts(b"\x09", guardian(), federation()), "missingFederation")
     err("parts", "unknown-before-id", parts(guardian(), b"\x09", federation()), "missingFederation")
     err("errors", "missing-id", parts(guardian()), "missingFederation")
@@ -178,10 +180,10 @@ def make():
         add("boundaries", str(size), "boundary", inv,
             dict(hex=b.hex(), string=s, byte_length=size, string_length=len(s)))
     counts = {g: sum(r["group"] == g for r in rows) for g in dict.fromkeys(r["group"] for r in rows)}
-    pinned = {"bigsize": 12, "bigsize-truncated": 14, "bigsize-lax": 3, "lax": 4, "parts": 6,
+    pinned = {"bigsize": 12, "bigsize-truncated": 14, "bigsize-lax": 3, "lax": 4, "parts": 8,
               "errors": 13, "encoding": 13, "normalization": 2, "wrapper": 9, "padding": 2, "boundaries": 2}
     assert counts == pinned, counts
-    assert len(rows) == 80
+    assert len(rows) == 82
     return dict(counts=pinned, rows=rows)
 
 
@@ -195,7 +197,7 @@ def main():
         path.write_text(json.dumps(expected, indent=2, ensure_ascii=False) + "\n")
     else:
         assert json.loads(path.read_text()) == expected
-    print("synthetic vectors: 80/80; " + "; ".join(f"{g}: {n}/{n}" for g, n in expected["counts"].items()))
+    print("synthetic vectors: 82/82; " + "; ".join(f"{g}: {n}/{n}" for g, n in expected["counts"].items()))
 
 
 if __name__ == "__main__":

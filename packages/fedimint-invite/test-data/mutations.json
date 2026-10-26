@@ -1,5 +1,5 @@
 {
-  "count": 31,
+  "count": 38,
   "mutations": [
     {
       "mutation": "big-endian",
@@ -25,15 +25,15 @@
       "stderr": [
         "uncaught exception: assertion failed: bigsize/256 reader and consumed"
       ],
-      "build_wall_seconds": 15.204,
-      "test_wall_seconds": 0.088
+      "build_wall_seconds": 10.41,
+      "test_wall_seconds": 0.029
     },
     {
       "mutation": "nonminimal",
       "source": "FedimintInvite/Consensus.lean",
       "production_edit": {
-        "old": "| .ok (data, after) => .ok (decodeLE data.reverse, after)",
-        "new": "| .ok (data, after) => if decodeLE data.reverse < 253 then\n          .error (.truncatedBigSize width rest.length) else .ok (decodeLE data.reverse, after)"
+        "old": "if data.length = width then .ok (decodeLE data.reverse, after)",
+        "new": "if data.length = width then if decodeLE data.reverse < 253 then\n          .error (.truncatedBigSize width data.length) else .ok (decodeLE data.reverse, after)"
       },
       "build_command": [
         "lake",
@@ -49,13 +49,13 @@
       "exit": 1,
       "assertion": "lax/nonminimal",
       "stdout": [
-        "actual error: FedimintInvite.Error.truncatedBigSize 2 42"
+        "actual error: FedimintInvite.Error.truncatedBigSize 2 2"
       ],
       "stderr": [
         "uncaught exception: assertion failed: lax/nonminimal"
       ],
-      "build_wall_seconds": 13.814,
-      "test_wall_seconds": 0.051
+      "build_wall_seconds": 9.503,
+      "test_wall_seconds": 0.025
     },
     {
       "mutation": "peer-truncation",
@@ -81,8 +81,8 @@
       "stderr": [
         "uncaught exception: assertion failed: lax/peer-truncation"
       ],
-      "build_wall_seconds": 13.748,
-      "test_wall_seconds": 0.038
+      "build_wall_seconds": 9.609,
+      "test_wall_seconds": 0.027
     },
     {
       "mutation": "unknown-stop",
@@ -110,8 +110,8 @@
       "stderr": [
         "uncaught exception: assertion failed: lax/unknown-stop"
       ],
-      "build_wall_seconds": 11.982,
-      "test_wall_seconds": 0.036
+      "build_wall_seconds": 9.639,
+      "test_wall_seconds": 0.024
     },
     {
       "mutation": "trailing",
@@ -139,8 +139,8 @@
       "stderr": [
         "uncaught exception: assertion failed: lax/trailing"
       ],
-      "build_wall_seconds": 12.175,
-      "test_wall_seconds": 0.028
+      "build_wall_seconds": 9.799,
+      "test_wall_seconds": 0.025
     },
     {
       "mutation": "sort",
@@ -166,8 +166,8 @@
       "stderr": [
         "uncaught exception: assertion failed: parts/unsorted"
       ],
-      "build_wall_seconds": 13.476,
-      "test_wall_seconds": 0.054
+      "build_wall_seconds": 10.016,
+      "test_wall_seconds": 0.026
     },
     {
       "mutation": "stable-sort",
@@ -193,8 +193,8 @@
       "stderr": [
         "uncaught exception: assertion failed: parts/stable-duplicates"
       ],
-      "build_wall_seconds": 13.118,
-      "test_wall_seconds": 0.033
+      "build_wall_seconds": 9.74,
+      "test_wall_seconds": 0.028
     },
     {
       "mutation": "federation-last",
@@ -220,7 +220,7 @@
       "stderr": [
         "uncaught exception: assertion failed: parts/last-federation"
       ],
-      "build_wall_seconds": 13.914,
+      "build_wall_seconds": 9.697,
       "test_wall_seconds": 0.032
     },
     {
@@ -247,8 +247,8 @@
       "stderr": [
         "uncaught exception: assertion failed: parts/last-secret"
       ],
-      "build_wall_seconds": 12.024,
-      "test_wall_seconds": 0.026
+      "build_wall_seconds": 9.897,
+      "test_wall_seconds": 0.03
     },
     {
       "mutation": "url-utf8",
@@ -271,13 +271,13 @@
       "exit": 1,
       "assertion": "errors/url-utf8",
       "stdout": [
-        "unexpected success: errors/url-utf8"
+        "actual error: FedimintInvite.Error.guardianLength 3 5"
       ],
       "stderr": [
         "uncaught exception: assertion failed: errors/url-utf8"
       ],
-      "build_wall_seconds": 11.214,
-      "test_wall_seconds": 0.058
+      "build_wall_seconds": 9.401,
+      "test_wall_seconds": 0.07
     },
     {
       "mutation": "secret-utf8",
@@ -305,8 +305,8 @@
       "stderr": [
         "uncaught exception: assertion failed: errors/secret-utf8"
       ],
-      "build_wall_seconds": 11.16,
-      "test_wall_seconds": 0.025
+      "build_wall_seconds": 8.874,
+      "test_wall_seconds": 0.023
     },
     {
       "mutation": "guardian-length",
@@ -334,8 +334,8 @@
       "stderr": [
         "uncaught exception: assertion failed: errors/guardian-length"
       ],
-      "build_wall_seconds": 9.666,
-      "test_wall_seconds": 0.026
+      "build_wall_seconds": 8.129,
+      "test_wall_seconds": 0.025
     },
     {
       "mutation": "absent-secret",
@@ -361,8 +361,8 @@
       "stderr": [
         "uncaught exception: assertion failed: encoding/absent-secret consensus bytes"
       ],
-      "build_wall_seconds": 11.839,
-      "test_wall_seconds": 0.12
+      "build_wall_seconds": 9.406,
+      "test_wall_seconds": 0.025
     },
     {
       "mutation": "empty-secret-wire",
@@ -388,8 +388,8 @@
       "stderr": [
         "uncaught exception: assertion failed: encoding/empty-secret consensus bytes"
       ],
-      "build_wall_seconds": 11.128,
-      "test_wall_seconds": 0.025
+      "build_wall_seconds": 9.092,
+      "test_wall_seconds": 0.022
     },
     {
       "mutation": "empty-secret-model",
@@ -415,8 +415,8 @@
       "stderr": [
         "uncaught exception: assertion failed: encoding/empty-secret decoded fields"
       ],
-      "build_wall_seconds": 11.207,
-      "test_wall_seconds": 0.028
+      "build_wall_seconds": 8.756,
+      "test_wall_seconds": 0.024
     },
     {
       "mutation": "hrp",
@@ -444,8 +444,8 @@
       "stderr": [
         "uncaught exception: assertion failed: wrapper/wrong-hrp"
       ],
-      "build_wall_seconds": 12.647,
-      "test_wall_seconds": 0.028
+      "build_wall_seconds": 9.101,
+      "test_wall_seconds": 0.024
     },
     {
       "mutation": "variant",
@@ -473,8 +473,8 @@
       "stderr": [
         "uncaught exception: assertion failed: wrapper/wrong-variant"
       ],
-      "build_wall_seconds": 10.443,
-      "test_wall_seconds": 0.028
+      "build_wall_seconds": 7.945,
+      "test_wall_seconds": 0.025
     },
     {
       "mutation": "prefix-case",
@@ -502,8 +502,8 @@
       "stderr": [
         "uncaught exception: assertion failed: wrapper/uppercase"
       ],
-      "build_wall_seconds": 9.563,
-      "test_wall_seconds": 0.032
+      "build_wall_seconds": 7.729,
+      "test_wall_seconds": 0.025
     },
     {
       "mutation": "mixed-case",
@@ -531,8 +531,8 @@
       "stderr": [
         "uncaught exception: assertion failed: wrapper/mixed-case"
       ],
-      "build_wall_seconds": 9.73,
-      "test_wall_seconds": 0.029
+      "build_wall_seconds": 8.423,
+      "test_wall_seconds": 0.025
     },
     {
       "mutation": "unicode-trim",
@@ -560,8 +560,8 @@
       "stderr": [
         "uncaught exception: assertion failed: wrapper/unicode-space"
       ],
-      "build_wall_seconds": 10.006,
-      "test_wall_seconds": 0.026
+      "build_wall_seconds": 8.639,
+      "test_wall_seconds": 0.022
     },
     {
       "mutation": "nonzero-padding",
@@ -589,8 +589,8 @@
       "stderr": [
         "uncaught exception: assertion failed: padding/nonzero-padding"
       ],
-      "build_wall_seconds": 9.891,
-      "test_wall_seconds": 0.055
+      "build_wall_seconds": 8.331,
+      "test_wall_seconds": 0.023
     },
     {
       "mutation": "extra-symbol",
@@ -618,8 +618,8 @@
       "stderr": [
         "uncaught exception: assertion failed: padding/extra-symbol"
       ],
-      "build_wall_seconds": 0.635,
-      "test_wall_seconds": 0.049
+      "build_wall_seconds": 0.418,
+      "test_wall_seconds": 0.024
     },
     {
       "mutation": "checksum",
@@ -647,8 +647,8 @@
       "stderr": [
         "uncaught exception: assertion failed: wrapper/bad-checksum"
       ],
-      "build_wall_seconds": 10.861,
-      "test_wall_seconds": 0.034
+      "build_wall_seconds": 8.45,
+      "test_wall_seconds": 0.024
     },
     {
       "mutation": "encode-cap",
@@ -674,8 +674,8 @@
       "stderr": [
         "uncaught exception: assertion failed: boundaries/633 encode cap"
       ],
-      "build_wall_seconds": 9.312,
-      "test_wall_seconds": 0.035
+      "build_wall_seconds": 8.431,
+      "test_wall_seconds": 0.028
     },
     {
       "mutation": "decode-cap",
@@ -701,8 +701,8 @@
       "stderr": [
         "uncaught exception: assertion failed: boundaries/633 decode cap"
       ],
-      "build_wall_seconds": 9.736,
-      "test_wall_seconds": 0.041
+      "build_wall_seconds": 8.806,
+      "test_wall_seconds": 0.028
     },
     {
       "mutation": "encode-order",
@@ -728,8 +728,8 @@
       "stderr": [
         "uncaught exception: assertion failed: encoding/encode-order consensus bytes"
       ],
-      "build_wall_seconds": 11.317,
-      "test_wall_seconds": 0.067
+      "build_wall_seconds": 9.236,
+      "test_wall_seconds": 0.029
     },
     {
       "mutation": "empty-id",
@@ -755,8 +755,8 @@
       "stderr": [
         "uncaught exception: assertion failed: encoding/empty-id consensus bytes"
       ],
-      "build_wall_seconds": 10.628,
-      "test_wall_seconds": 0.033
+      "build_wall_seconds": 9.118,
+      "test_wall_seconds": 0.024
     },
     {
       "mutation": "no-guardian-encode",
@@ -782,8 +782,8 @@
       "stderr": [
         "uncaught exception: assertion failed: encoding/no-guardian consensus bytes"
       ],
-      "build_wall_seconds": 10.194,
-      "test_wall_seconds": 0.024
+      "build_wall_seconds": 8.304,
+      "test_wall_seconds": 0.023
     },
     {
       "mutation": "url-byte-length",
@@ -809,8 +809,8 @@
       "stderr": [
         "uncaught exception: assertion failed: encoding/unicode consensus bytes"
       ],
-      "build_wall_seconds": 9.95,
-      "test_wall_seconds": 0.027
+      "build_wall_seconds": 9.018,
+      "test_wall_seconds": 0.025
     },
     {
       "mutation": "secret-byte-length",
@@ -836,8 +836,8 @@
       "stderr": [
         "uncaught exception: assertion failed: encoding/unicode consensus bytes"
       ],
-      "build_wall_seconds": 12.575,
-      "test_wall_seconds": 0.027
+      "build_wall_seconds": 9.687,
+      "test_wall_seconds": 0.023
     },
     {
       "mutation": "secret-prefix",
@@ -863,8 +863,211 @@
       "stderr": [
         "uncaught exception: assertion failed: encoding/empty-secret consensus bytes"
       ],
-      "build_wall_seconds": 11.316,
-      "test_wall_seconds": 0.025
+      "build_wall_seconds": 8.954,
+      "test_wall_seconds": 0.023
+    },
+    {
+      "mutation": "guardian-append",
+      "source": "FedimintInvite/Consensus.lean",
+      "production_edit": {
+        "old": "guardians := g :: state.guardians",
+        "new": "guardians := state.guardians ++ [g]"
+      },
+      "build_command": [
+        "lake",
+        "build",
+        "inviteRuntime"
+      ],
+      "build_exit": 0,
+      "command": [
+        ".lake/build/bin/inviteRuntime",
+        "--case",
+        "large/ascending"
+      ],
+      "exit": 1,
+      "assertion": "large/ascending processing budget",
+      "stdout": [
+        "large/ascending: 60000 guardians; 359531 bytes; 12900 ms"
+      ],
+      "stderr": [
+        "uncaught exception: assertion failed: large/ascending processing budget"
+      ],
+      "build_wall_seconds": 9.484,
+      "test_wall_seconds": 12.937
+    },
+    {
+      "mutation": "insertion-sort",
+      "source": "FedimintInvite/Consensus.lean",
+      "production_edit": {
+        "old": "/-- Stable merge sort preserves wire order among equal peer ids. -/\ndef sortGuardians (guardians : List Guardian) : List Guardian :=\n  guardians.mergeSort (fun g h => g.peerId.toNat \u2264 h.peerId.toNat)",
+        "new": "def insertGuardian (g : Guardian) : List Guardian \u2192 List Guardian\n  | [] => [g]\n  | h :: rest => if g.peerId.toNat \u2264 h.peerId.toNat then g :: h :: rest\n                else h :: insertGuardian g rest\n\ndef sortGuardians : List Guardian \u2192 List Guardian\n  | [] => []\n  | g :: rest => insertGuardian g (sortGuardians rest)"
+      },
+      "build_command": [
+        "lake",
+        "build",
+        "inviteRuntime"
+      ],
+      "build_exit": 0,
+      "command": [
+        ".lake/build/bin/inviteRuntime",
+        "--case",
+        "large/descending"
+      ],
+      "exit": 1,
+      "assertion": "large/descending processing budget",
+      "stdout": [
+        "large/descending: 60000 guardians; 359531 bytes; 12538 ms"
+      ],
+      "stderr": [
+        "uncaught exception: assertion failed: large/descending processing budget"
+      ],
+      "build_wall_seconds": 9.567,
+      "test_wall_seconds": 12.576
+    },
+    {
+      "mutation": "data-tail-scan",
+      "source": "FedimintInvite/Consensus.lean",
+      "production_edit": {
+        "old": "if data.length = n then",
+        "new": "if n \u2264 bytes.length then"
+      },
+      "build_command": [
+        "lake",
+        "build",
+        "inviteRuntime"
+      ],
+      "build_exit": 0,
+      "command": [
+        ".lake/build/bin/inviteRuntime",
+        "--case",
+        "large/ascending"
+      ],
+      "exit": 1,
+      "assertion": "large/ascending processing budget",
+      "stdout": [
+        "large/ascending: 60000 guardians; 359531 bytes; 9645 ms"
+      ],
+      "stderr": [
+        "uncaught exception: assertion failed: large/ascending processing budget"
+      ],
+      "build_wall_seconds": 9.602,
+      "test_wall_seconds": 9.717
+    },
+    {
+      "mutation": "bigsize-tail-scan",
+      "source": "FedimintInvite/Consensus.lean",
+      "production_edit": {
+        "old": "if data.length = width then",
+        "new": "if width \u2264 rest.length then"
+      },
+      "build_command": [
+        "lake",
+        "build",
+        "inviteRuntime"
+      ],
+      "build_exit": 0,
+      "command": [
+        ".lake/build/bin/inviteRuntime",
+        "--case",
+        "large/ascending"
+      ],
+      "exit": 1,
+      "assertion": "large/ascending processing budget",
+      "stdout": [
+        "large/ascending: 60000 guardians; 359531 bytes; 8574 ms"
+      ],
+      "stderr": [
+        "uncaught exception: assertion failed: large/ascending processing budget"
+      ],
+      "build_wall_seconds": 9.719,
+      "test_wall_seconds": 8.653
+    },
+    {
+      "mutation": "part-tail-scan",
+      "source": "FedimintInvite/Consensus.lean",
+      "production_edit": {
+        "old": "bigSizeWidth data + url.toUTF8.size + bigSizeWidth afterUrl",
+        "new": "data.length - afterPeer.length"
+      },
+      "build_command": [
+        "lake",
+        "build",
+        "inviteRuntime"
+      ],
+      "build_exit": 0,
+      "command": [
+        ".lake/build/bin/inviteRuntime",
+        "--case",
+        "large/ascending"
+      ],
+      "exit": 1,
+      "assertion": "large/ascending processing budget",
+      "stdout": [
+        "large/ascending: 60000 guardians; 359531 bytes; 17375 ms"
+      ],
+      "stderr": [
+        "uncaught exception: assertion failed: large/ascending processing budget"
+      ],
+      "build_wall_seconds": 9.149,
+      "test_wall_seconds": 17.426
+    },
+    {
+      "mutation": "url-prefix-width",
+      "source": "FedimintInvite/Consensus.lean",
+      "production_edit": {
+        "old": "bigSizeWidth data + url.toUTF8.size",
+        "new": "(writeBigSize url.toUTF8.size).length + url.toUTF8.size"
+      },
+      "build_command": [
+        "lake",
+        "build",
+        "inviteRuntime"
+      ],
+      "build_exit": 0,
+      "command": [
+        ".lake/build/bin/inviteRuntime",
+        "--case",
+        "parts/nonminimal-url-length"
+      ],
+      "exit": 1,
+      "assertion": "parts/nonminimal-url-length",
+      "stdout": [
+        "actual error: FedimintInvite.Error.guardianLength 6 4"
+      ],
+      "stderr": [
+        "uncaught exception: assertion failed: parts/nonminimal-url-length"
+      ],
+      "build_wall_seconds": 9.005,
+      "test_wall_seconds": 0.026
+    },
+    {
+      "mutation": "peer-prefix-width",
+      "source": "FedimintInvite/Consensus.lean",
+      "production_edit": {
+        "old": "bigSizeWidth afterUrl",
+        "new": "(writeBigSize peer).length"
+      },
+      "build_command": [
+        "lake",
+        "build",
+        "inviteRuntime"
+      ],
+      "build_exit": 0,
+      "command": [
+        ".lake/build/bin/inviteRuntime",
+        "--case",
+        "parts/nonminimal-peer"
+      ],
+      "exit": 1,
+      "assertion": "parts/nonminimal-peer",
+      "stdout": [
+        "actual error: FedimintInvite.Error.guardianLength 6 4"
+      ],
+      "stderr": [
+        "uncaught exception: assertion failed: parts/nonminimal-peer"
+      ],
+      "build_wall_seconds": 9.336,
+      "test_wall_seconds": 0.022
     }
   ],
   "restored": [
@@ -874,7 +1077,7 @@
         "build"
       ],
       "exit": 0,
-      "wall_seconds": 2.777
+      "wall_seconds": 4.096
     },
     {
       "command": [
@@ -882,7 +1085,7 @@
         "test"
       ],
       "exit": 0,
-      "wall_seconds": 2.133
+      "wall_seconds": 8.173
     }
   ]
 }
