@@ -87,7 +87,8 @@ v1 commands (from the `Commands` enum in `cyberkrill/src/main.rs`): `ln-decode-i
   depth, and no v2-only fields in a v0 PSBT; on 16 such inputs cyberkrill exits 0 in the pinned
   offline `onchain-decode-psbt` capture while the port's decoder rejects all 16; the capture and
   tests are recorded in Phase 4a's PSBT field-parity follow-up). The LNURL URL subset below is a
-  fifth exception (owner decision, 2026-10-25); otherwise the port exits non-zero wherever cyberkrill does.
+  fifth exception (owner decision, 2026-10-25), and the explicit fee-unit rule below is a sixth
+  (owner decision, 2026-10-26); otherwise the port exits non-zero wherever cyberkrill does.
   Goldens cover v0; v2 gets its own tests from the BIP370 vectors; the README lists each delta.
 - **BOLT11 signing hash.** The port hashes the invoice's own lower-cased hrp and its data part as
   written (BOLT #11 L117-119; owner decision, 2026-10-21), as LND and Core Lightning do.
@@ -122,6 +123,18 @@ v1 commands (from the `Commands` enum in `cyberkrill/src/main.rs`): `ln-decode-i
   that criterion, and README lists the delta. IDNA / non-ASCII host support and any widening to
   userinfo, IPv6 or other IPv4 forms remain deferred in `lck-x37`; Phase 9b reuses the subset parser
   for callback serialisation.
+- **Explicit fee units.** The CLI refuses `--fee-rate` or `--fee` values without a unit, with a
+  named `feeUnitRequired` error on stderr, a non-zero exit and an example asking for a unit
+  (for example `15sats`; owner decision, 2026-10-26). This applies to `onchain-create-psbt`,
+  `onchain-create-funded-psbt` and `onchain-move-utxos` wherever they expose those flags; help
+  examples also include units. It does not change ordinary amount inputs such as `convert-amount`
+  or `--outputs`. cyberkrill @ `27cad1f` parses a bare fee number as BTC, despite help suggesting
+  sat/vB (`AmountInput::from_str`, `cyberkrill-core/src/bitcoin_rpc.rs:275-284`); upstream
+  [#154](https://github.com/douglaz/cyberkrill/issues/154) has since been fixed. This is a documented,
+  tested parity exception. Phase 7a provides the shared fee parser and golden-harness support;
+  when fee commands land, goldens on safe offline fixtures assert the reference's zero exit and
+  the port's named refusal instead of matching output. Tests never contact a real node to obtain
+  those goldens. README lists the delta; the parity reference remains pinned.
 - **Hybrid public keys.** rust-bitcoin 0.32.8's `PublicKey::from_slice` rejects a 65-byte hybrid key
   (prefix 06/07), but cyberkrill parses two v1 inputs with libsecp256k1's own `ec_pubkey_parse`,
   which accepts one whose prefix matches y's parity: PSBT `bip32_derivation` keys (input and output
