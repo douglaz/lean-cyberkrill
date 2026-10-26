@@ -33,6 +33,9 @@ Phase 5 (1 of 3) adds pure BOLT11 decoding, canonical encoding, supplied curve
 operations and the published invoice corpus with generated boundary vectors.
 Phase 5 (2 of 3) adds pure LNURL decoding, a bounded HTTP(S) URL subset,
 Lightning address construction, LNURL-pay JSON models and two bech32 corollaries.
+Phase 5 (3 of 3) proves BOLT11 tagged-field and exact amount round-trips,
+as-written signing hashes for decoding and both writers, and invoice-length
+bech32 round-trip and checksum soundness.
 Other packages remain skeletons;
 `plan.md` is the plan for v1.
 
@@ -5864,8 +5867,8 @@ without proofs; Phase 5 (3 of 3) below now supplies all four proof families.
 
 `check-bolt11-mutations.py` makes one exact production replacement at a time,
 restores and compares the original bytes in `finally`, and ends with a full
-`lake test` at exit **0**. The current run detects **31/31** mutations: all
-21 original properties plus ten additions. Eleven reach their named runtime
+`lake test` at exit **0**. The current run detects **33/33** mutations: all
+21 original properties plus twelve additions. Thirteen reach their named runtime
 assertions; twenty falsify named theorems and stop in their declarations.
 Separate stdout/stderr logs stay under `.lake/bolt11-mutation-checks/`;
 `test-data/bolt11-mutations.json` records current dispositions, theorem ranges,
@@ -6130,7 +6133,7 @@ semantic refusals, raw-field refusals and sign's point-validation paths.
 ### Current mutation evidence
 
 The current [mutation record](packages/lightning/test-data/bolt11-mutations.json)
-contains **31/31** detections at mutated `lake test` exit **1**, followed by the
+contains **33/33** detections at mutated `lake test` exit **1**, followed by the
 restored full suite at exit **0**. It retains all 21 historical runtime records
 inside their corresponding current entries. Runtime-caught cases still require
 the original first named assertion; a still-true theorem is not used to stop one.
@@ -6141,9 +6144,16 @@ evidence. Raw stdout and stderr remain separate.
 
 | Disposition | Mutations and evidence |
 |---|---|
-| Runtime, 11/11 | Lax byte fields; leading-zero expiry, CLTV and features; recovery instead of verification; recovery-byte range; signature before counts; unknown even features; unchecked writer semantics; typed raw writer fields; unchecked sign points. Each reaches its historical named assertion. |
+| Runtime, original 11/11 | Lax byte fields; leading-zero expiry, CLTV and features; recovery instead of verification; recovery-byte range; signature before counts; unknown even features; unchecked writer semantics; typed raw writer fields; unchecked sign points. Each reaches its historical named assertion. |
+| Runtime, new 2/2 | `amount-canonical-choice` moves the exact pico choice first and reaches `assertion failed: amount boundary canonical unit`; `amount-raw-overflow-acceptance` rejects an overflowing raw amount with no multiplier and reaches `assertion failed: unavailable amounts raw overflow`. Both compile without a proof error and have no historical runtime prior. |
 | Proof, original 10/10 | HRP case and hash padding → `signingHash_spec`; signature boundary, bech32m and decoder length → `decode_trace`; leading-zero HRP → `parseHrp_spelling` (zero makes the canonical parse statements false); pico precision → `checkPrecision_rejects`; wrong fixed lengths and unknown fallback → `decodeField_keptRaw`; stale encode signature → `encode_signingHash_spec`. |
 | Proof, new 10/10 | Typed zero payment hash → `decodeField_fieldData`; exact/reverse amounts and four altered unit divisors → `hrpFromMsat_exact`; overflow bound → `hrpFromMsat_overflow`; unavailable pico → `checkPrecision_unavailable`; direct spec hash padding → `signingHash_spec`. |
+
+The raw-overflow mutation leaves `parseHrp_spelling` true: its explicit product
+bound excludes that overflow. The proof simplifies the added branch from that
+bound, so this mutation reaches its runtime assertion. Its statement and domain
+are unchanged. The canonical-choice mutation also preserves amount exactness;
+its runtime check separately pins canonical unit selection.
 
 Two executable synthetic counterexamples accompany the proof diagnostics. With
 a constant successful recovery capability, the shifted signature-boundary parser
@@ -6154,26 +6164,79 @@ the theorem's 7089-limited source parse returns `tooLong`. They use no real sign
 or key material. Their commands, exits **0**, observations and stream locations
 are retained in the respective mutation entries.
 
+`historical_runtime()` reads the original 21 objects from the fixed codec-only
+base `730c23ae4481e4f66e05b633a70d510e1594d96b`, rather than moving `HEAD`.
+Those objects remain exact, without nested proof-era records; all twelve new
+labels have null historical evidence. The focused regression simulates `HEAD`
+containing the current proof-era record, while leaving real history unchanged.
+Run its green check from `packages/lightning`:
+
+```bash
+nix develop -c python3 -I check-bolt11-mutation-history.py
+```
+
+The measured green exits **0** and prints `21/21 exact original objects; new
+labels: no history`. For the red, only the production harness's `RUNTIME_BASE`
+assignment changes to `"HEAD"` in a disposable copy beneath the repository's
+`.lake` directory. The regression and JSON bytes are copied unchanged, and
+`historical_runtime()` remains present. Reproduce the variant from the root:
+
+```bash
+HISTORY_COPY=$(mktemp -d "$PWD/.lake/bolt11-history.XXXXXXXX")
+mkdir "$HISTORY_COPY/test-data"
+cp packages/lightning/check-bolt11-mutations.py packages/lightning/check-bolt11-mutation-history.py "$HISTORY_COPY/"
+cp packages/lightning/test-data/bolt11-mutations.json "$HISTORY_COPY/test-data/"
+nix develop -c python3 -I - "$HISTORY_COPY/check-bolt11-mutations.py" <<'PY'
+from pathlib import Path
+import sys
+path = Path(sys.argv[1])
+text = path.read_text()
+old = 'RUNTIME_BASE = "730c23ae4481e4f66e05b633a70d510e1594d96b"'
+new = 'RUNTIME_BASE = "HEAD"'
+assert text.count(old) == 1
+path.write_text(text.replace(old, new))
+assert new in path.read_text() and old not in path.read_text()
+PY
+nix develop -c python3 -I "$HISTORY_COPY/check-bolt11-mutation-history.py"
+```
+
+The last command exits **1** at `historical_runtime()`'s
+`assert len(historical) == len(prior) == 21`, after the simulated source returns
+33 proof-era entries. This is a history-size failure, with no launcher, parse
+or missing-name error. The measured disposable copy is
+`.lake/bolt11-proof-final/history-head`; the actual red command was
+`nix develop -c python3 -I .lake/bolt11-proof-final/history-head/check-bolt11-mutation-history.py`
+from the root. Separate red/green streams and outer exit records use labels
+`history-red` and `history-green` in the evidence directory below.
+
 ### Current validation
 
 On 2026-10-26, Lean **4.35.0**, all commands below ran in the foreground with
 separate stdout/stderr capture and the repository's process-group supervisor.
 Whole-repository gates used the 8 GiB foreground scope shown above. Stream pairs are
-`.lake/bolt11-proof-evidence/LABEL.stdout` and `.stderr` at the repository root;
+`.lake/bolt11-proof-final/LABEL.stdout` and `.stderr` at the repository root;
 mutation details are under `packages/lightning/.lake/bolt11-mutation-checks/`.
+Each label also has a JSON command/exit record and separate
+`.supervisor.stdout`/`.supervisor.stderr` streams recording the outer status.
+`versions` records `lean --version`, `lake --version`, `python3 --version`,
+`git --version`, `nix --version` and `br --version` inside `nix develop`:
+Lean **4.35.0**, Lake **5.0.0-src+eb6cafb**, Python **3.14.7**, Git **2.54.0**,
+Nix **2.34.8** and br **0.7.4**; exit **0**.
 
 | Directory | Command | Exit | Label / observed result |
 |---|---|---|---|
 | `packages/lightning` | `nix develop -c lake build` | 0 | `lightning-build`; all proof modules imported |
 | `packages/lightning` | `nix develop -c lake test` | 0 | `lightning-test`; all baseline and new pins; library **646/646**, named **42/42**, zero axiom offenders |
-| `packages/lightning` | `nix develop -c python3 -I check-bolt11-mutations.py` | 0 | `mutations`; **31/31**, restored full `lake test` exit 0 |
+| `packages/lightning` | `nix develop -c python3 -I check-bolt11-mutations.py` | 0 | `mutations`; **33/33**, 13 runtime / 20 proof; restored full `lake test` exit 0 |
+| `packages/lightning` | `nix develop -c python3 -I check-bolt11-mutation-history.py` | 0 | `history-green`; 21 exact original history objects, twelve new labels without history |
+| Root | Disposable HEAD-source history regression command above | 1, expected | `history-red`; actual 21-object assertion fails on 33 proof-era entries |
 | `packages/bitcoin` | `nix develop -c lake build` | 0 | `bitcoin-build` |
 | `packages/bitcoin` | `nix develop -c lake test` | 0 | `bitcoin-test`; library **924/924**, named **78/78**, zero axiom offenders |
 | Root | `nix build` | 0 | `nix-build`; builds/tests all seven packages and runs the app in the shared derivation |
 | Root | `nix flake check` | 0 | `flake-check`; evaluates `checks.default` to that same successful derivation; reports all checks passed |
 | Root | `nix log ./result` | 0 | `nix-log`; sandbox log includes every new count pin and both measured axiom totals |
 | Root | Required no-placeholder grep followed by `test "$rc" -eq 1` | 0 | `no-placeholders`; grep itself exits **1**, no matches |
-| Root | Staged-source audit | 0 | `scope-audit`; exact index bytes for all 14 paths, protected/executable/corpus preservation, 47 axiom records, all mutation dispositions, licence/public-text/key/proof-escape/whitespace checks |
+| Root | Staged-source audit | 0 | `scope-audit`; exact index bytes for all 16 base-to-final paths, protected/executable/corpus preservation, 47 freshly compared axiom records, all 33 mutation dispositions, licence/public-text/key/proof-escape/whitespace checks |
 
 The named Lightning denominator is pinned at 42 and printed by default;
 the full imported-Lightning scan is preserved. The machine-readable axiom
@@ -6184,12 +6247,12 @@ unrestricted writer-length behavior described above is unchanged.
 
 The scoped diff contains this README, Bitcoin's conversion/bech32 support and
 axiom gate, Lightning's field/amount/signing proofs and library import, tests,
-the mutation harness and its two evidence records. Existing manifests, curve
+the mutation harness, focused history regression and two evidence records. Existing manifests, curve
 interface, codec source, fixtures, LNURL implementation, plan, CI, app and
-unrelated packages are unchanged. The only unstaged change is the selected
-tracker entry's pre-existing claim (`status` and `updated_at`); it stays
-`in_progress`. The implementation is staged for review and remains uncommitted
-until acceptance; no push follows this session.
+unrelated packages are unchanged. Relative to the fixed base, the tracker differs
+only in the selected entry's existing claim (`status` and `updated_at`); it stays
+`in_progress`. Continuation edits are staged for review. Acceptance and final
+closure remain pending; no push follows this session.
 
 ## Phase 5 (2 of 3): LNURL, Lightning addresses and LNURL-pay models
 
