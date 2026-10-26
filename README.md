@@ -36,6 +36,8 @@ Lightning address construction, LNURL-pay JSON models and two bech32 corollaries
 Phase 5 (3 of 3) proves BOLT11 tagged-field and exact amount round-trips,
 as-written signing hashes for decoding and both writers, and invoice-length
 bech32 round-trip and checksum soundness.
+Phase 6 adds pure Fedimint invite consensus and bech32m codecs, general
+round-trip proofs and checksum soundness, with published and synthetic vectors.
 Other packages remain skeletons;
 `plan.md` is the plan for v1.
 
