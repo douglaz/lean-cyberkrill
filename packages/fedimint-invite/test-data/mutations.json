@@ -1,0 +1,888 @@
+{
+  "count": 31,
+  "mutations": [
+    {
+      "mutation": "big-endian",
+      "source": "FedimintInvite/Consensus.lean",
+      "production_edit": {
+        "old": "decodeLE data.reverse",
+        "new": "decodeLE data"
+      },
+      "build_command": [
+        "lake",
+        "build",
+        "inviteRuntime"
+      ],
+      "build_exit": 0,
+      "command": [
+        ".lake/build/bin/inviteRuntime",
+        "--case",
+        "bigsize/256"
+      ],
+      "exit": 1,
+      "assertion": "bigsize/256 reader and consumed",
+      "stdout": [],
+      "stderr": [
+        "uncaught exception: assertion failed: bigsize/256 reader and consumed"
+      ],
+      "build_wall_seconds": 15.204,
+      "test_wall_seconds": 0.088
+    },
+    {
+      "mutation": "nonminimal",
+      "source": "FedimintInvite/Consensus.lean",
+      "production_edit": {
+        "old": "| .ok (data, after) => .ok (decodeLE data.reverse, after)",
+        "new": "| .ok (data, after) => if decodeLE data.reverse < 253 then\n          .error (.truncatedBigSize width rest.length) else .ok (decodeLE data.reverse, after)"
+      },
+      "build_command": [
+        "lake",
+        "build",
+        "inviteRuntime"
+      ],
+      "build_exit": 0,
+      "command": [
+        ".lake/build/bin/inviteRuntime",
+        "--case",
+        "lax/nonminimal"
+      ],
+      "exit": 1,
+      "assertion": "lax/nonminimal",
+      "stdout": [
+        "actual error: FedimintInvite.Error.truncatedBigSize 2 42"
+      ],
+      "stderr": [
+        "uncaught exception: assertion failed: lax/nonminimal"
+      ],
+      "build_wall_seconds": 13.814,
+      "test_wall_seconds": 0.051
+    },
+    {
+      "mutation": "peer-truncation",
+      "source": "FedimintInvite/Consensus.lean",
+      "production_edit": {
+        "old": "UInt16.ofNat peer, url",
+        "new": "UInt16.ofNat (peer % 65535), url"
+      },
+      "build_command": [
+        "lake",
+        "build",
+        "inviteRuntime"
+      ],
+      "build_exit": 0,
+      "command": [
+        ".lake/build/bin/inviteRuntime",
+        "--case",
+        "lax/peer-truncation"
+      ],
+      "exit": 1,
+      "assertion": "lax/peer-truncation",
+      "stdout": [],
+      "stderr": [
+        "uncaught exception: assertion failed: lax/peer-truncation"
+      ],
+      "build_wall_seconds": 13.748,
+      "test_wall_seconds": 0.038
+    },
+    {
+      "mutation": "unknown-stop",
+      "source": "FedimintInvite/Consensus.lean",
+      "production_edit": {
+        "old": "| none => .ok state",
+        "new": "| none => .error .missingFederation"
+      },
+      "build_command": [
+        "lake",
+        "build",
+        "inviteRuntime"
+      ],
+      "build_exit": 0,
+      "command": [
+        ".lake/build/bin/inviteRuntime",
+        "--case",
+        "lax/unknown-stop"
+      ],
+      "exit": 1,
+      "assertion": "lax/unknown-stop",
+      "stdout": [
+        "actual error: FedimintInvite.Error.missingFederation"
+      ],
+      "stderr": [
+        "uncaught exception: assertion failed: lax/unknown-stop"
+      ],
+      "build_wall_seconds": 11.982,
+      "test_wall_seconds": 0.036
+    },
+    {
+      "mutation": "trailing",
+      "source": "FedimintInvite/Consensus.lean",
+      "production_edit": {
+        "old": "| 0, _, state => .ok state",
+        "new": "| 0, bytes, state => if bytes = [] then .ok state else .error (.unexpectedPart 0)"
+      },
+      "build_command": [
+        "lake",
+        "build",
+        "inviteRuntime"
+      ],
+      "build_exit": 0,
+      "command": [
+        ".lake/build/bin/inviteRuntime",
+        "--case",
+        "lax/trailing"
+      ],
+      "exit": 1,
+      "assertion": "lax/trailing",
+      "stdout": [
+        "actual error: FedimintInvite.Error.unexpectedPart 0"
+      ],
+      "stderr": [
+        "uncaught exception: assertion failed: lax/trailing"
+      ],
+      "build_wall_seconds": 12.175,
+      "test_wall_seconds": 0.028
+    },
+    {
+      "mutation": "sort",
+      "source": "FedimintInvite/Consensus.lean",
+      "production_edit": {
+        "old": "sortGuardians state.guardians",
+        "new": "state.guardians"
+      },
+      "build_command": [
+        "lake",
+        "build",
+        "inviteRuntime"
+      ],
+      "build_exit": 0,
+      "command": [
+        ".lake/build/bin/inviteRuntime",
+        "--case",
+        "parts/unsorted"
+      ],
+      "exit": 1,
+      "assertion": "parts/unsorted",
+      "stdout": [],
+      "stderr": [
+        "uncaught exception: assertion failed: parts/unsorted"
+      ],
+      "build_wall_seconds": 13.476,
+      "test_wall_seconds": 0.054
+    },
+    {
+      "mutation": "stable-sort",
+      "source": "FedimintInvite/Consensus.lean",
+      "production_edit": {
+        "old": "g.peerId.toNat \u2264 h.peerId.toNat",
+        "new": "g.peerId.toNat < h.peerId.toNat"
+      },
+      "build_command": [
+        "lake",
+        "build",
+        "inviteRuntime"
+      ],
+      "build_exit": 0,
+      "command": [
+        ".lake/build/bin/inviteRuntime",
+        "--case",
+        "parts/stable-duplicates"
+      ],
+      "exit": 1,
+      "assertion": "parts/stable-duplicates",
+      "stdout": [],
+      "stderr": [
+        "uncaught exception: assertion failed: parts/stable-duplicates"
+      ],
+      "build_wall_seconds": 13.118,
+      "test_wall_seconds": 0.033
+    },
+    {
+      "mutation": "federation-last",
+      "source": "FedimintInvite/Consensus.lean",
+      "production_edit": {
+        "old": "| .federation bytes => { state with federation := some (Bitcoin.Hex.encode bytes) }",
+        "new": "| .federation bytes => if state.federation.isSome then state else\n      { state with federation := some (Bitcoin.Hex.encode bytes) }"
+      },
+      "build_command": [
+        "lake",
+        "build",
+        "inviteRuntime"
+      ],
+      "build_exit": 0,
+      "command": [
+        ".lake/build/bin/inviteRuntime",
+        "--case",
+        "parts/last-federation"
+      ],
+      "exit": 1,
+      "assertion": "parts/last-federation",
+      "stdout": [],
+      "stderr": [
+        "uncaught exception: assertion failed: parts/last-federation"
+      ],
+      "build_wall_seconds": 13.914,
+      "test_wall_seconds": 0.032
+    },
+    {
+      "mutation": "secret-last",
+      "source": "FedimintInvite/Consensus.lean",
+      "production_edit": {
+        "old": "| .secret s => { state with secret := some s }",
+        "new": "| .secret s => if state.secret.isSome then state else { state with secret := some s }"
+      },
+      "build_command": [
+        "lake",
+        "build",
+        "inviteRuntime"
+      ],
+      "build_exit": 0,
+      "command": [
+        ".lake/build/bin/inviteRuntime",
+        "--case",
+        "parts/last-secret"
+      ],
+      "exit": 1,
+      "assertion": "parts/last-secret",
+      "stdout": [],
+      "stderr": [
+        "uncaught exception: assertion failed: parts/last-secret"
+      ],
+      "build_wall_seconds": 12.024,
+      "test_wall_seconds": 0.026
+    },
+    {
+      "mutation": "url-utf8",
+      "source": "FedimintInvite/Consensus.lean",
+      "production_edit": {
+        "old": "match String.fromUTF8? data with",
+        "new": "match (if field == .url then some ((String.fromUTF8? data).getD \"\ufffd\") else String.fromUTF8? data) with"
+      },
+      "build_command": [
+        "lake",
+        "build",
+        "inviteRuntime"
+      ],
+      "build_exit": 0,
+      "command": [
+        ".lake/build/bin/inviteRuntime",
+        "--case",
+        "errors/url-utf8"
+      ],
+      "exit": 1,
+      "assertion": "errors/url-utf8",
+      "stdout": [
+        "unexpected success: errors/url-utf8"
+      ],
+      "stderr": [
+        "uncaught exception: assertion failed: errors/url-utf8"
+      ],
+      "build_wall_seconds": 11.214,
+      "test_wall_seconds": 0.058
+    },
+    {
+      "mutation": "secret-utf8",
+      "source": "FedimintInvite/Consensus.lean",
+      "production_edit": {
+        "old": "match String.fromUTF8? data with",
+        "new": "match (if field == .secret then some ((String.fromUTF8? data).getD \"\ufffd\") else String.fromUTF8? data) with"
+      },
+      "build_command": [
+        "lake",
+        "build",
+        "inviteRuntime"
+      ],
+      "build_exit": 0,
+      "command": [
+        ".lake/build/bin/inviteRuntime",
+        "--case",
+        "errors/secret-utf8"
+      ],
+      "exit": 1,
+      "assertion": "errors/secret-utf8",
+      "stdout": [
+        "unexpected success: errors/secret-utf8"
+      ],
+      "stderr": [
+        "uncaught exception: assertion failed: errors/secret-utf8"
+      ],
+      "build_wall_seconds": 11.16,
+      "test_wall_seconds": 0.025
+    },
+    {
+      "mutation": "guardian-length",
+      "source": "FedimintInvite/Consensus.lean",
+      "production_edit": {
+        "old": "if consumed = declared then",
+        "new": "if true then"
+      },
+      "build_command": [
+        "lake",
+        "build",
+        "inviteRuntime"
+      ],
+      "build_exit": 0,
+      "command": [
+        ".lake/build/bin/inviteRuntime",
+        "--case",
+        "errors/guardian-length"
+      ],
+      "exit": 1,
+      "assertion": "errors/guardian-length",
+      "stdout": [
+        "unexpected success: errors/guardian-length"
+      ],
+      "stderr": [
+        "uncaught exception: assertion failed: errors/guardian-length"
+      ],
+      "build_wall_seconds": 9.666,
+      "test_wall_seconds": 0.026
+    },
+    {
+      "mutation": "absent-secret",
+      "source": "FedimintInvite/Consensus.lean",
+      "production_edit": {
+        "old": "inv.apiSecret.toList.map Part.secret",
+        "new": "(inv.apiSecret.toList ++ (if inv.apiSecret.isNone then [\"\"] else [])).map Part.secret"
+      },
+      "build_command": [
+        "lake",
+        "build",
+        "inviteRuntime"
+      ],
+      "build_exit": 0,
+      "command": [
+        ".lake/build/bin/inviteRuntime",
+        "--case",
+        "encoding/absent-secret"
+      ],
+      "exit": 1,
+      "assertion": "encoding/absent-secret consensus bytes",
+      "stdout": [],
+      "stderr": [
+        "uncaught exception: assertion failed: encoding/absent-secret consensus bytes"
+      ],
+      "build_wall_seconds": 11.839,
+      "test_wall_seconds": 0.12
+    },
+    {
+      "mutation": "empty-secret-wire",
+      "source": "FedimintInvite/Consensus.lean",
+      "production_edit": {
+        "old": "inv.apiSecret.toList.map Part.secret",
+        "new": "((inv.apiSecret.toList).filter (\u00b7 != \"\")).map Part.secret"
+      },
+      "build_command": [
+        "lake",
+        "build",
+        "inviteRuntime"
+      ],
+      "build_exit": 0,
+      "command": [
+        ".lake/build/bin/inviteRuntime",
+        "--case",
+        "encoding/empty-secret"
+      ],
+      "exit": 1,
+      "assertion": "encoding/empty-secret consensus bytes",
+      "stdout": [],
+      "stderr": [
+        "uncaught exception: assertion failed: encoding/empty-secret consensus bytes"
+      ],
+      "build_wall_seconds": 11.128,
+      "test_wall_seconds": 0.025
+    },
+    {
+      "mutation": "empty-secret-model",
+      "source": "FedimintInvite/Consensus.lean",
+      "production_edit": {
+        "old": "| .secret s => { state with secret := some s }",
+        "new": "| .secret s => { state with secret := if s = \"\" then none else some s }"
+      },
+      "build_command": [
+        "lake",
+        "build",
+        "inviteRuntime"
+      ],
+      "build_exit": 0,
+      "command": [
+        ".lake/build/bin/inviteRuntime",
+        "--case",
+        "encoding/empty-secret"
+      ],
+      "exit": 1,
+      "assertion": "encoding/empty-secret decoded fields",
+      "stdout": [],
+      "stderr": [
+        "uncaught exception: assertion failed: encoding/empty-secret decoded fields"
+      ],
+      "build_wall_seconds": 11.207,
+      "test_wall_seconds": 0.028
+    },
+    {
+      "mutation": "hrp",
+      "source": "FedimintInvite/Codec.lean",
+      "production_edit": {
+        "old": "if hrp \u2260 \"fed1\" then",
+        "new": "if false then"
+      },
+      "build_command": [
+        "lake",
+        "build",
+        "inviteRuntime"
+      ],
+      "build_exit": 0,
+      "command": [
+        ".lake/build/bin/inviteRuntime",
+        "--case",
+        "wrapper/wrong-hrp"
+      ],
+      "exit": 1,
+      "assertion": "wrapper/wrong-hrp",
+      "stdout": [
+        "unexpected success: wrapper/wrong-hrp"
+      ],
+      "stderr": [
+        "uncaught exception: assertion failed: wrapper/wrong-hrp"
+      ],
+      "build_wall_seconds": 12.647,
+      "test_wall_seconds": 0.028
+    },
+    {
+      "mutation": "variant",
+      "source": "FedimintInvite/Codec.lean",
+      "production_edit": {
+        "old": "if variant \u2260 .bech32m then",
+        "new": "if false then"
+      },
+      "build_command": [
+        "lake",
+        "build",
+        "inviteRuntime"
+      ],
+      "build_exit": 0,
+      "command": [
+        ".lake/build/bin/inviteRuntime",
+        "--case",
+        "wrapper/wrong-variant"
+      ],
+      "exit": 1,
+      "assertion": "wrapper/wrong-variant",
+      "stdout": [
+        "unexpected success: wrapper/wrong-variant"
+      ],
+      "stderr": [
+        "uncaught exception: assertion failed: wrapper/wrong-variant"
+      ],
+      "build_wall_seconds": 10.443,
+      "test_wall_seconds": 0.028
+    },
+    {
+      "mutation": "prefix-case",
+      "source": "FedimintInvite/Codec.lean",
+      "production_edit": {
+        "old": "if text.toList.take 4 \u2260 \"fed1\".toList then",
+        "new": "if false then"
+      },
+      "build_command": [
+        "lake",
+        "build",
+        "inviteRuntime"
+      ],
+      "build_exit": 0,
+      "command": [
+        ".lake/build/bin/inviteRuntime",
+        "--case",
+        "wrapper/uppercase"
+      ],
+      "exit": 1,
+      "assertion": "wrapper/uppercase",
+      "stdout": [
+        "unexpected success: wrapper/uppercase"
+      ],
+      "stderr": [
+        "uncaught exception: assertion failed: wrapper/uppercase"
+      ],
+      "build_wall_seconds": 9.563,
+      "test_wall_seconds": 0.032
+    },
+    {
+      "mutation": "mixed-case",
+      "source": "FedimintInvite/Codec.lean",
+      "production_edit": {
+        "old": "Bitcoin.Bech32.decode 1023 text",
+        "new": "Bitcoin.Bech32.decode 1023 (Bitcoin.Bech32.lower text)"
+      },
+      "build_command": [
+        "lake",
+        "build",
+        "inviteRuntime"
+      ],
+      "build_exit": 0,
+      "command": [
+        ".lake/build/bin/inviteRuntime",
+        "--case",
+        "wrapper/mixed-case"
+      ],
+      "exit": 1,
+      "assertion": "wrapper/mixed-case",
+      "stdout": [
+        "unexpected success: wrapper/mixed-case"
+      ],
+      "stderr": [
+        "uncaught exception: assertion failed: wrapper/mixed-case"
+      ],
+      "build_wall_seconds": 9.73,
+      "test_wall_seconds": 0.029
+    },
+    {
+      "mutation": "unicode-trim",
+      "source": "FedimintInvite/Codec.lean",
+      "production_edit": {
+        "old": "String.ofList (s.toList.dropWhile whiteSpace |>.reverse.dropWhile whiteSpace |>.reverse)",
+        "new": "(s.trimAscii).copy"
+      },
+      "build_command": [
+        "lake",
+        "build",
+        "inviteRuntime"
+      ],
+      "build_exit": 0,
+      "command": [
+        ".lake/build/bin/inviteRuntime",
+        "--case",
+        "wrapper/unicode-space"
+      ],
+      "exit": 1,
+      "assertion": "wrapper/unicode-space",
+      "stdout": [
+        "actual error: FedimintInvite.Error.prefix"
+      ],
+      "stderr": [
+        "uncaught exception: assertion failed: wrapper/unicode-space"
+      ],
+      "build_wall_seconds": 10.006,
+      "test_wall_seconds": 0.026
+    },
+    {
+      "mutation": "nonzero-padding",
+      "source": "FedimintInvite/Codec.lean",
+      "production_edit": {
+        "old": "decodeConsensus (Bitcoin.Bech32.fesToBytesLax data)",
+        "new": "let bytes \u2190 (Bitcoin.Bech32.convertbits5to8 data).mapError (fun _ => Error.invalidHex)\n  decodeConsensus bytes"
+      },
+      "build_command": [
+        "lake",
+        "build",
+        "inviteRuntime"
+      ],
+      "build_exit": 0,
+      "command": [
+        ".lake/build/bin/inviteRuntime",
+        "--case",
+        "padding/nonzero-padding"
+      ],
+      "exit": 1,
+      "assertion": "padding/nonzero-padding",
+      "stdout": [
+        "actual error: FedimintInvite.Error.invalidHex"
+      ],
+      "stderr": [
+        "uncaught exception: assertion failed: padding/nonzero-padding"
+      ],
+      "build_wall_seconds": 9.891,
+      "test_wall_seconds": 0.055
+    },
+    {
+      "mutation": "extra-symbol",
+      "source": "FedimintInvite/Codec.lean",
+      "production_edit": {
+        "old": "decodeConsensus (Bitcoin.Bech32.fesToBytesLax data)",
+        "new": "let bytes \u2190 (Bitcoin.Bech32.convertbits5to8 data).mapError (fun _ => Error.invalidHex)\n  decodeConsensus bytes"
+      },
+      "build_command": [
+        "lake",
+        "build",
+        "inviteRuntime"
+      ],
+      "build_exit": 0,
+      "command": [
+        ".lake/build/bin/inviteRuntime",
+        "--case",
+        "padding/extra-symbol"
+      ],
+      "exit": 1,
+      "assertion": "padding/extra-symbol",
+      "stdout": [
+        "actual error: FedimintInvite.Error.invalidHex"
+      ],
+      "stderr": [
+        "uncaught exception: assertion failed: padding/extra-symbol"
+      ],
+      "build_wall_seconds": 0.635,
+      "test_wall_seconds": 0.049
+    },
+    {
+      "mutation": "checksum",
+      "source": "FedimintInvite/Codec.lean",
+      "production_edit": {
+        "old": "(Bitcoin.Bech32.decode 1023 text).mapError .bech32",
+        "new": "(match Bitcoin.Bech32.extractData text with\n      | some (h, d) => Except.ok (h, d, Bitcoin.Bech32.Variant.bech32m)\n      | none => Except.error (Error.bech32 .checksumMismatch))"
+      },
+      "build_command": [
+        "lake",
+        "build",
+        "inviteRuntime"
+      ],
+      "build_exit": 0,
+      "command": [
+        ".lake/build/bin/inviteRuntime",
+        "--case",
+        "wrapper/bad-checksum"
+      ],
+      "exit": 1,
+      "assertion": "wrapper/bad-checksum",
+      "stdout": [
+        "unexpected success: wrapper/bad-checksum"
+      ],
+      "stderr": [
+        "uncaught exception: assertion failed: wrapper/bad-checksum"
+      ],
+      "build_wall_seconds": 10.861,
+      "test_wall_seconds": 0.034
+    },
+    {
+      "mutation": "encode-cap",
+      "source": "FedimintInvite/Codec.lean",
+      "production_edit": {
+        "old": "length > 1023",
+        "new": "length > 1024"
+      },
+      "build_command": [
+        "lake",
+        "build",
+        "inviteRuntime"
+      ],
+      "build_exit": 0,
+      "command": [
+        ".lake/build/bin/inviteRuntime",
+        "--case",
+        "boundaries/633"
+      ],
+      "exit": 1,
+      "assertion": "boundaries/633 encode cap",
+      "stdout": [],
+      "stderr": [
+        "uncaught exception: assertion failed: boundaries/633 encode cap"
+      ],
+      "build_wall_seconds": 9.312,
+      "test_wall_seconds": 0.035
+    },
+    {
+      "mutation": "decode-cap",
+      "source": "FedimintInvite/Codec.lean",
+      "production_edit": {
+        "old": "Bitcoin.Bech32.decode 1023 text",
+        "new": "Bitcoin.Bech32.decode 1024 text"
+      },
+      "build_command": [
+        "lake",
+        "build",
+        "inviteRuntime"
+      ],
+      "build_exit": 0,
+      "command": [
+        ".lake/build/bin/inviteRuntime",
+        "--case",
+        "boundaries/633"
+      ],
+      "exit": 1,
+      "assertion": "boundaries/633 decode cap",
+      "stdout": [],
+      "stderr": [
+        "uncaught exception: assertion failed: boundaries/633 decode cap"
+      ],
+      "build_wall_seconds": 9.736,
+      "test_wall_seconds": 0.041
+    },
+    {
+      "mutation": "encode-order",
+      "source": "FedimintInvite/Consensus.lean",
+      "production_edit": {
+        "old": "inv.guardians.map Part.guardian",
+        "new": "(sortGuardians inv.guardians).map Part.guardian"
+      },
+      "build_command": [
+        "lake",
+        "build",
+        "inviteRuntime"
+      ],
+      "build_exit": 0,
+      "command": [
+        ".lake/build/bin/inviteRuntime",
+        "--case",
+        "encoding/encode-order"
+      ],
+      "exit": 1,
+      "assertion": "encoding/encode-order consensus bytes",
+      "stdout": [],
+      "stderr": [
+        "uncaught exception: assertion failed: encoding/encode-order consensus bytes"
+      ],
+      "build_wall_seconds": 11.317,
+      "test_wall_seconds": 0.067
+    },
+    {
+      "mutation": "empty-id",
+      "source": "FedimintInvite/Consensus.lean",
+      "production_edit": {
+        "old": "if inv.federationId = \"\" then .ok []",
+        "new": "if inv.federationId = \"\" then .error .invalidHex"
+      },
+      "build_command": [
+        "lake",
+        "build",
+        "inviteRuntime"
+      ],
+      "build_exit": 0,
+      "command": [
+        ".lake/build/bin/inviteRuntime",
+        "--case",
+        "encoding/empty-id"
+      ],
+      "exit": 1,
+      "assertion": "encoding/empty-id consensus bytes",
+      "stdout": [],
+      "stderr": [
+        "uncaught exception: assertion failed: encoding/empty-id consensus bytes"
+      ],
+      "build_wall_seconds": 10.628,
+      "test_wall_seconds": 0.033
+    },
+    {
+      "mutation": "no-guardian-encode",
+      "source": "FedimintInvite/Consensus.lean",
+      "production_edit": {
+        "old": "let parts \u2190 inviteParts inv",
+        "new": "if inv.guardians = [] then throw .noGuardian\n  let parts \u2190 inviteParts inv"
+      },
+      "build_command": [
+        "lake",
+        "build",
+        "inviteRuntime"
+      ],
+      "build_exit": 0,
+      "command": [
+        ".lake/build/bin/inviteRuntime",
+        "--case",
+        "encoding/no-guardian"
+      ],
+      "exit": 1,
+      "assertion": "encoding/no-guardian consensus bytes",
+      "stdout": [],
+      "stderr": [
+        "uncaught exception: assertion failed: encoding/no-guardian consensus bytes"
+      ],
+      "build_wall_seconds": 10.194,
+      "test_wall_seconds": 0.024
+    },
+    {
+      "mutation": "url-byte-length",
+      "source": "FedimintInvite/Consensus.lean",
+      "production_edit": {
+        "old": "stringBytes g.url ++ writeBigSize g.peerId.toNat",
+        "new": "(writeBigSize g.url.length ++ g.url.toUTF8.data.toList) ++ writeBigSize g.peerId.toNat"
+      },
+      "build_command": [
+        "lake",
+        "build",
+        "inviteRuntime"
+      ],
+      "build_exit": 0,
+      "command": [
+        ".lake/build/bin/inviteRuntime",
+        "--case",
+        "encoding/unicode"
+      ],
+      "exit": 1,
+      "assertion": "encoding/unicode consensus bytes",
+      "stdout": [],
+      "stderr": [
+        "uncaught exception: assertion failed: encoding/unicode consensus bytes"
+      ],
+      "build_wall_seconds": 9.95,
+      "test_wall_seconds": 0.027
+    },
+    {
+      "mutation": "secret-byte-length",
+      "source": "FedimintInvite/Consensus.lean",
+      "production_edit": {
+        "old": "| .secret s => [2] ++ stringBytes s",
+        "new": "| .secret s => [2] ++ writeBigSize s.length ++ s.toUTF8.data.toList"
+      },
+      "build_command": [
+        "lake",
+        "build",
+        "inviteRuntime"
+      ],
+      "build_exit": 0,
+      "command": [
+        ".lake/build/bin/inviteRuntime",
+        "--case",
+        "encoding/unicode"
+      ],
+      "exit": 1,
+      "assertion": "encoding/unicode consensus bytes",
+      "stdout": [],
+      "stderr": [
+        "uncaught exception: assertion failed: encoding/unicode consensus bytes"
+      ],
+      "build_wall_seconds": 12.575,
+      "test_wall_seconds": 0.027
+    },
+    {
+      "mutation": "secret-prefix",
+      "source": "FedimintInvite/Consensus.lean",
+      "production_edit": {
+        "old": "| .secret s => [2] ++ stringBytes s",
+        "new": "| .secret s => [2] ++ writeBigSize (stringBytes s).length ++ stringBytes s"
+      },
+      "build_command": [
+        "lake",
+        "build",
+        "inviteRuntime"
+      ],
+      "build_exit": 0,
+      "command": [
+        ".lake/build/bin/inviteRuntime",
+        "--case",
+        "encoding/empty-secret"
+      ],
+      "exit": 1,
+      "assertion": "encoding/empty-secret consensus bytes",
+      "stdout": [],
+      "stderr": [
+        "uncaught exception: assertion failed: encoding/empty-secret consensus bytes"
+      ],
+      "build_wall_seconds": 11.316,
+      "test_wall_seconds": 0.025
+    }
+  ],
+  "restored": [
+    {
+      "command": [
+        "lake",
+        "build"
+      ],
+      "exit": 0,
+      "wall_seconds": 2.777
+    },
+    {
+      "command": [
+        "lake",
+        "test"
+      ],
+      "exit": 0,
+      "wall_seconds": 2.133
+    }
+  ]
+}

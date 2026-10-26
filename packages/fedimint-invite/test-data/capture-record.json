@@ -1,0 +1,129 @@
+{
+  "build_command": [
+    "nix",
+    "build",
+    "--no-link",
+    "--print-out-paths",
+    "--max-jobs",
+    "2",
+    "--cores",
+    "4",
+    "github:douglaz/cyberkrill/27cad1faba86260b06665a89f0af5134d23525c2"
+  ],
+  "build_exit": 0,
+  "primary_count": 3,
+  "namespace": "unshare -rn; loopback up; isolated HOME",
+  "commands": [
+    {
+      "command": [
+        "fm-encode-invite",
+        "$INPUT_JSON"
+      ],
+      "exit": 0,
+      "wall_seconds": 0.007,
+      "stdout": [
+        "fed11qgqzxgthwden5te0v9cxjtnzd96xxmmfdckhqunfde3kjurvv4ejucm0d5hsqqfqkggx3jz0tvfv5n7lj0e7gs7nh47z06ry95x4963wfh8xlka7a80su3952t"
+      ],
+      "stderr": []
+    },
+    {
+      "command": [
+        "fm-decode-invite",
+        "$INVITE"
+      ],
+      "exit": 0,
+      "wall_seconds": 0.007,
+      "stdout": [
+        "{",
+        "  \"federation_id\": \"b21068c84f5b12ca4fdf93f3e443d3bd7c27e8642d0d52ea2e4dce6fdbbee9df\",",
+        "  \"guardians\": [",
+        "    {",
+        "      \"peer_id\": 0,",
+        "      \"url\": \"wss://api.bitcoin-principles.com/\"",
+        "    }",
+        "  ],",
+        "  \"api_secret\": null",
+        "}"
+      ],
+      "stderr": []
+    },
+    {
+      "command": [
+        "fm-encode-invite",
+        "$INPUT_JSON"
+      ],
+      "exit": 0,
+      "wall_seconds": 0.006,
+      "stdout": [
+        "fed11qsqpu8rhwden5te0va6kzunyd9skuvfwv4uxzmtsd3jjucm0d5hsqqq7r3mhxue69uhkwatpwfjxjctwxghx27rpd4cxcefwvdhk6tcpqyspydzk0zg2hn00zg69v7ys40x77y352eufp27daufrg4ncjz4ummczz3eh2ur9wf0hxetrwfjhghmpwp5476m90yv09ryg"
+      ],
+      "stderr": []
+    },
+    {
+      "command": [
+        "fm-decode-invite",
+        "$INVITE"
+      ],
+      "exit": 0,
+      "wall_seconds": 0.007,
+      "stdout": [
+        "{",
+        "  \"federation_id\": \"1234567890abcdef1234567890abcdef1234567890abcdef1234567890abcdef\",",
+        "  \"guardians\": [",
+        "    {",
+        "      \"peer_id\": 0,",
+        "      \"url\": \"wss://guardian1.example.com/\"",
+        "    },",
+        "    {",
+        "      \"peer_id\": 1,",
+        "      \"url\": \"wss://guardian2.example.com/\"",
+        "    }",
+        "  ],",
+        "  \"api_secret\": \"super_secret_api_key\"",
+        "}"
+      ],
+      "stderr": []
+    },
+    {
+      "command": [
+        "fm-encode-invite",
+        "$INPUT_JSON"
+      ],
+      "exit": 0,
+      "wall_seconds": 0.006,
+      "stdout": [
+        "fed11qsqp5xrhwden5te0v9k8q6rp9ejhsctdwpkx2tnrdakj7qqqrythwumn8ghj7cn9w3sjuetcv9khqmr99e3k7mf0qyqp5xrhwden5te0vask6mtp9ejhsctdwpkx2tnrdakj7qspyz4ummcjx3t83y9tehh3ydzk0zg2hn00zg69v7ys40x77y352eufq2zvug9"
+      ],
+      "stderr": []
+    },
+    {
+      "command": [
+        "fm-decode-invite",
+        "$INVITE"
+      ],
+      "exit": 0,
+      "wall_seconds": 0.006,
+      "stdout": [
+        "{",
+        "  \"federation_id\": \"abcdef1234567890abcdef1234567890abcdef1234567890abcdef1234567890\",",
+        "  \"guardians\": [",
+        "    {",
+        "      \"peer_id\": 0,",
+        "      \"url\": \"wss://alpha.example.com/\"",
+        "    },",
+        "    {",
+        "      \"peer_id\": 1,",
+        "      \"url\": \"wss://beta.example.com/\"",
+        "    },",
+        "    {",
+        "      \"peer_id\": 2,",
+        "      \"url\": \"wss://gamma.example.com/\"",
+        "    }",
+        "  ],",
+        "  \"api_secret\": null",
+        "}"
+      ],
+      "stderr": []
+    }
+  ]
+}
