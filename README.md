@@ -6132,14 +6132,17 @@ Each loaded set asserts its exact size and prints `<set>: N/N`:
 | `JSON measurements` | 7/7 |
 | Generator artifacts | 2/2 |
 | Crate checksum checks | 5/5 |
-| Production mutations | 36/36 |
+| Named production-mutation executions | 36/36 (34 distinct edits) |
 | BOLT11 driver compatibility (`--case`, `--hash`) | 2/2 |
 
 There are **161 generated vector rows plus one reference row**. Subdivision
 counts are chosen here, not supplied source/probe counts. The reference's
-73/61/305/38/1 dimensions match preparation exactly. The 36 mutations expand
-the required minimum of 26 by testing both msat fields, absent and empty query
+73/61/305/38/1 dimensions match preparation exactly. The 36 named executions
+cover 34 distinct production edits, exceeding the required minimum of 26.
+They test both msat fields with field-specific edits, absent and empty query
 independently, four IDNA refusal boundaries and six separate IPv4 spellings.
+The non-ASCII/encoded-non-ASCII pair shares one edit, and the
+punycode/uppercase-punycode pair shares another; each pair runs separate fixtures.
 Boundary data include uppercase/lowercase LNURLs, bech32m, nonzero dropped
 padding, successful lengths above 90 (up to **1022**) and a valid-checksum
 supported URL of **exactly 1024 characters** that fails with `bech32 tooLong`.
@@ -6199,7 +6202,12 @@ contract. This does not claim serde_json's syntactic integer/duplicate parity.
 
 ### Production mutation evidence
 
-`nix develop -c python3 -I check-lnurl-mutations.py` exited **0**. Each mutation
+The initial `nix develop -c python3 -I check-lnurl-mutations.py` run exited **0**.
+The two msat-bound cases were then rerun with field-specific edits: each failed
+its own named overflow assertion (exit **1**), while the other field's overflow
+test still passed (exit **0**). The other 34 named execution records retain their
+initial results. Together the 36 executions cover 34 distinct production edits.
+Each mutation
 changes production behavior only, runs `lake test -- --lnurl-case SET:NAME`,
 requires exit **1** and the exact named assertion, and restores exact original
 bytes in `finally`. Logs are separate `.stdout` and `.stderr` paths under
@@ -6208,7 +6216,7 @@ The compact record is [lnurl-mutations.json](packages/lightning/test-data/lnurl-
 Every refusal mutation and the raised length-limit mutation additionally
 records an actual unexpected decoder success. A later rejection cannot count
 as detecting a removed refusal. The final complete restored `lake test`
-exited **0**, wall **12.168 s**.
+exited **0**, wall **11.788 s**, after the msat-bound recheck.
 
 | Production mutation | Catching acceptance assertion |
 |---|---|
@@ -6292,14 +6300,15 @@ environment startup; the test time includes rebuilding its changed axiom gate.
 | `packages/lightning`: `nix develop -c lake build` | 0 | 0.917 |
 | `packages/lightning`: `nix develop -c lake test` | 0 | **9.945** |
 | `packages/lightning`: `"$PYTHON_ENV/bin/python3" -I generate-lnurl.py --check` | 0 | 0.059 |
-| `packages/lightning`: `nix develop -c python3 -I check-lnurl-mutations.py` | 0 | Individual runs in the JSON record; sum 383.395 |
-| Mutation runner's complete restored `lake test` | 0 | 12.168 |
+| `packages/lightning`: `nix develop -c python3 -I check-lnurl-mutations.py` (initial full run; two msat records refreshed) | 0 | Recorded individual runs; sum 395.298 |
+| Complete restored `lake test` after the msat-bound recheck | 0 | 11.788 |
 | Root: `grep -rnw sorry --include='*.lean' --exclude-dir=.lake packages` | 1 (no matches) | — |
 | Root: `nix flake check -L` | 0 | 108.386 |
 | Root: `nix build` | 0 | 0.442 |
 
-The mutation sum counts only its 36 selected test subprocesses, excludes the
-restored suite, and is not a measurement of the outer command's wall time.
+The mutation sum counts the recorded 36 selected test subprocesses, including
+the two refreshed msat-bound results. It excludes the restored suite and is not
+a measurement of a single outer command's wall time.
 The separate JSON-measurement command above exited **0**. Two sequential
 `lake test` invocations, `-- --case valid:L382` and `-- --hash` with that
 committed invoice, exited **0**; the first selected one of 16 valid examples,

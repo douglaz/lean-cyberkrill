@@ -206,7 +206,7 @@
       "property": "json-request overflow-maxSendable",
       "failure": "uncaught exception: assertion failed: json-request overflow-maxSendable",
       "unexpected_success": false,
-      "wall_seconds": 10.735
+      "wall_seconds": 11.69
     },
     {
       "mutation": "min-msat-bound",
@@ -222,7 +222,7 @@
       "property": "json-request overflow-minSendable",
       "failure": "uncaught exception: assertion failed: json-request overflow-minSendable",
       "unexpected_success": false,
-      "wall_seconds": 0.419
+      "wall_seconds": 11.367
     },
     {
       "mutation": "host-case",
@@ -584,6 +584,6 @@
       "test"
     ],
     "exit": 0,
-    "wall_seconds": 12.168
+    "wall_seconds": 11.788
   }
 }
