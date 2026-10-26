@@ -1,0 +1,14 @@
+{
+  "federation_id": "1234567890abcdef1234567890abcdef1234567890abcdef1234567890abcdef",
+  "guardians": [
+    {
+      "peer_id": 0,
+      "url": "wss://guardian1.example.com/"
+    },
+    {
+      "peer_id": 1,
+      "url": "wss://guardian2.example.com/"
+    }
+  ],
+  "api_secret": "super_secret_api_key"
+}

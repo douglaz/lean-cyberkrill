@@ -16,5 +16,11 @@ require bitcoin from ".." / "bitcoin"
 @[default_target]
 lean_lib FedimintInvite
 
+lean_lib FedimintInviteTestSupport where
+  roots := #[`FedimintInviteTests.Runtime, `FedimintInviteTests.AxiomGate]
+
 @[test_driver]
-lean_lib FedimintInviteTests
+lean_exe FedimintInviteTests
+
+lean_exe inviteRuntime where
+  root := `RuntimeMain

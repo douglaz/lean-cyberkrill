@@ -1,0 +1,26 @@
+{
+  "count": 1,
+  "source": "FedimintInvite/ConsensusProofs.lean",
+  "production_edit": {
+    "old": "end FedimintInvite",
+    "new": "axiom libraryGateProbe : False\nprivate theorem rejectedPrivateHelper : False := libraryGateProbe\n\nend FedimintInvite"
+  },
+  "red": {
+    "command": [
+      "lake",
+      "test"
+    ],
+    "exit": 1,
+    "wall_seconds": 5.087,
+    "diagnostic_stream": "stderr",
+    "diagnostic": "error: FedimintInviteTests/AxiomGate.lean:40:0: Invite axiom gate: _private.FedimintInvite.ConsensusProofs.0.FedimintInvite.rejectedPrivateHelper reaches disallowed axiom FedimintInvite.libraryGateProbe"
+  },
+  "restored": {
+    "command": [
+      "lake",
+      "test"
+    ],
+    "exit": 0,
+    "wall_seconds": 5.781
+  }
+}

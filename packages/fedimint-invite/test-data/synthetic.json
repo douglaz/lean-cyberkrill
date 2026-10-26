@@ -1,0 +1,1316 @@
+{
+  "counts": {
+    "bigsize": 12,
+    "bigsize-truncated": 14,
+    "bigsize-lax": 3,
+    "lax": 4,
+    "parts": 8,
+    "errors": 13,
+    "encoding": 13,
+    "normalization": 2,
+    "wrapper": 9,
+    "padding": 2,
+    "boundaries": 2
+  },
+  "rows": [
+    {
+      "group": "bigsize",
+      "name": "0",
+      "op": "bigsize",
+      "input": 0,
+      "expected": {
+        "hex": "00",
+        "consumed": 1
+      }
+    },
+    {
+      "group": "bigsize",
+      "name": "1",
+      "op": "bigsize",
+      "input": 1,
+      "expected": {
+        "hex": "01",
+        "consumed": 1
+      }
+    },
+    {
+      "group": "bigsize",
+      "name": "252",
+      "op": "bigsize",
+      "input": 252,
+      "expected": {
+        "hex": "fc",
+        "consumed": 1
+      }
+    },
+    {
+      "group": "bigsize",
+      "name": "253",
+      "op": "bigsize",
+      "input": 253,
+      "expected": {
+        "hex": "fd00fd",
+        "consumed": 3
+      }
+    },
+    {
+      "group": "bigsize",
+      "name": "254",
+      "op": "bigsize",
+      "input": 254,
+      "expected": {
+        "hex": "fd00fe",
+        "consumed": 3
+      }
+    },
+    {
+      "group": "bigsize",
+      "name": "255",
+      "op": "bigsize",
+      "input": 255,
+      "expected": {
+        "hex": "fd00ff",
+        "consumed": 3
+      }
+    },
+    {
+      "group": "bigsize",
+      "name": "256",
+      "op": "bigsize",
+      "input": 256,
+      "expected": {
+        "hex": "fd0100",
+        "consumed": 3
+      }
+    },
+    {
+      "group": "bigsize",
+      "name": "65535",
+      "op": "bigsize",
+      "input": 65535,
+      "expected": {
+        "hex": "fdffff",
+        "consumed": 3
+      }
+    },
+    {
+      "group": "bigsize",
+      "name": "65536",
+      "op": "bigsize",
+      "input": 65536,
+      "expected": {
+        "hex": "fe00010000",
+        "consumed": 5
+      }
+    },
+    {
+      "group": "bigsize",
+      "name": "4294967295",
+      "op": "bigsize",
+      "input": 4294967295,
+      "expected": {
+        "hex": "feffffffff",
+        "consumed": 5
+      }
+    },
+    {
+      "group": "bigsize",
+      "name": "4294967296",
+      "op": "bigsize",
+      "input": 4294967296,
+      "expected": {
+        "hex": "ff0000000100000000",
+        "consumed": 9
+      }
+    },
+    {
+      "group": "bigsize",
+      "name": "18446744073709551615",
+      "op": "bigsize",
+      "input": 18446744073709551615,
+      "expected": {
+        "hex": "ffffffffffffffffff",
+        "consumed": 9
+      }
+    },
+    {
+      "group": "bigsize-truncated",
+      "name": "2-0",
+      "op": "consensus",
+      "input": "fd",
+      "expected": {
+        "error": "truncatedBigSize",
+        "details": [
+          2,
+          0
+        ]
+      }
+    },
+    {
+      "group": "bigsize-truncated",
+      "name": "2-1",
+      "op": "consensus",
+      "input": "fd00",
+      "expected": {
+        "error": "truncatedBigSize",
+        "details": [
+          2,
+          1
+        ]
+      }
+    },
+    {
+      "group": "bigsize-lax",
+      "name": "2",
+      "op": "read-bigsize",
+      "input": "fd0001",
+      "expected": {
+        "value": 1,
+        "consumed": 3
+      }
+    },
+    {
+      "group": "bigsize-truncated",
+      "name": "4-0",
+      "op": "consensus",
+      "input": "fe",
+      "expected": {
+        "error": "truncatedBigSize",
+        "details": [
+          4,
+          0
+        ]
+      }
+    },
+    {
+      "group": "bigsize-truncated",
+      "name": "4-1",
+      "op": "consensus",
+      "input": "fe00",
+      "expected": {
+        "error": "truncatedBigSize",
+        "details": [
+          4,
+          1
+        ]
+      }
+    },
+    {
+      "group": "bigsize-truncated",
+      "name": "4-2",
+      "op": "consensus",
+      "input": "fe0000",
+      "expected": {
+        "error": "truncatedBigSize",
+        "details": [
+          4,
+          2
+        ]
+      }
+    },
+    {
+      "group": "bigsize-truncated",
+      "name": "4-3",
+      "op": "consensus",
+      "input": "fe000000",
+      "expected": {
+        "error": "truncatedBigSize",
+        "details": [
+          4,
+          3
+        ]
+      }
+    },
+    {
+      "group": "bigsize-lax",
+      "name": "4",
+      "op": "read-bigsize",
+      "input": "fe00000001",
+      "expected": {
+        "value": 1,
+        "consumed": 5
+      }
+    },
+    {
+      "group": "bigsize-truncated",
+      "name": "8-0",
+      "op": "consensus",
+      "input": "ff",
+      "expected": {
+        "error": "truncatedBigSize",
+        "details": [
+          8,
+          0
+        ]
+      }
+    },
+    {
+      "group": "bigsize-truncated",
+      "name": "8-1",
+      "op": "consensus",
+      "input": "ff00",
+      "expected": {
+        "error": "truncatedBigSize",
+        "details": [
+          8,
+          1
+        ]
+      }
+    },
+    {
+      "group": "bigsize-truncated",
+      "name": "8-2",
+      "op": "consensus",
+      "input": "ff0000",
+      "expected": {
+        "error": "truncatedBigSize",
+        "details": [
+          8,
+          2
+        ]
+      }
+    },
+    {
+      "group": "bigsize-truncated",
+      "name": "8-3",
+      "op": "consensus",
+      "input": "ff000000",
+      "expected": {
+        "error": "truncatedBigSize",
+        "details": [
+          8,
+          3
+        ]
+      }
+    },
+    {
+      "group": "bigsize-truncated",
+      "name": "8-4",
+      "op": "consensus",
+      "input": "ff00000000",
+      "expected": {
+        "error": "truncatedBigSize",
+        "details": [
+          8,
+          4
+        ]
+      }
+    },
+    {
+      "group": "bigsize-truncated",
+      "name": "8-5",
+      "op": "consensus",
+      "input": "ff0000000000",
+      "expected": {
+        "error": "truncatedBigSize",
+        "details": [
+          8,
+          5
+        ]
+      }
+    },
+    {
+      "group": "bigsize-truncated",
+      "name": "8-6",
+      "op": "consensus",
+      "input": "ff000000000000",
+      "expected": {
+        "error": "truncatedBigSize",
+        "details": [
+          8,
+          6
+        ]
+      }
+    },
+    {
+      "group": "bigsize-truncated",
+      "name": "8-7",
+      "op": "consensus",
+      "input": "ff00000000000000",
+      "expected": {
+        "error": "truncatedBigSize",
+        "details": [
+          8,
+          7
+        ]
+      }
+    },
+    {
+      "group": "bigsize-lax",
+      "name": "8",
+      "op": "read-bigsize",
+      "input": "ff0000000000000001",
+      "expected": {
+        "value": 1,
+        "consumed": 9
+      }
+    },
+    {
+      "group": "lax",
+      "name": "nonminimal",
+      "op": "consensus",
+      "input": "fd000200040268690001200000000000000000000000000000000000000000000000000000000000000000",
+      "expected": {
+        "ok": {
+          "federation_id": "0000000000000000000000000000000000000000000000000000000000000000",
+          "guardians": [
+            {
+              "peer_id": 0,
+              "url": "hi"
+            }
+          ],
+          "api_secret": null
+        }
+      }
+    },
+    {
+      "group": "lax",
+      "name": "peer-truncation",
+      "op": "consensus",
+      "input": "020008026869fe0001000001200000000000000000000000000000000000000000000000000000000000000000",
+      "expected": {
+        "ok": {
+          "federation_id": "0000000000000000000000000000000000000000000000000000000000000000",
+          "guardians": [
+            {
+              "peer_id": 0,
+              "url": "hi"
+            }
+          ],
+          "api_secret": null
+        }
+      }
+    },
+    {
+      "group": "lax",
+      "name": "unknown-stop",
+      "op": "consensus",
+      "input": "030004026869000120000000000000000000000000000000000000000000000000000000000000000009ff",
+      "expected": {
+        "ok": {
+          "federation_id": "0000000000000000000000000000000000000000000000000000000000000000",
+          "guardians": [
+            {
+              "peer_id": 0,
+              "url": "hi"
+            }
+          ],
+          "api_secret": null
+        }
+      }
+    },
+    {
+      "group": "lax",
+      "name": "trailing",
+      "op": "consensus",
+      "input": "0200040268690001200000000000000000000000000000000000000000000000000000000000000000ffff",
+      "expected": {
+        "ok": {
+          "federation_id": "0000000000000000000000000000000000000000000000000000000000000000",
+          "guardians": [
+            {
+              "peer_id": 0,
+              "url": "hi"
+            }
+          ],
+          "api_secret": null
+        }
+      }
+    },
+    {
+      "group": "parts",
+      "name": "stable-duplicates",
+      "op": "consensus",
+      "input": "0400030161010003017800000301620101200000000000000000000000000000000000000000000000000000000000000000",
+      "expected": {
+        "ok": {
+          "federation_id": "0000000000000000000000000000000000000000000000000000000000000000",
+          "guardians": [
+            {
+              "peer_id": 0,
+              "url": "x"
+            },
+            {
+              "peer_id": 1,
+              "url": "a"
+            },
+            {
+              "peer_id": 1,
+              "url": "b"
+            }
+          ],
+          "api_secret": null
+        }
+      }
+    },
+    {
+      "group": "parts",
+      "name": "unsorted",
+      "op": "consensus",
+      "input": "0400030161020003016200000301630101200000000000000000000000000000000000000000000000000000000000000000",
+      "expected": {
+        "ok": {
+          "federation_id": "0000000000000000000000000000000000000000000000000000000000000000",
+          "guardians": [
+            {
+              "peer_id": 0,
+              "url": "b"
+            },
+            {
+              "peer_id": 1,
+              "url": "c"
+            },
+            {
+              "peer_id": 2,
+              "url": "a"
+            }
+          ],
+          "api_secret": null
+        }
+      }
+    },
+    {
+      "group": "parts",
+      "name": "last-federation",
+      "op": "consensus",
+      "input": "030004026869000120000000000000000000000000000000000000000000000000000000000000000001201111111111111111111111111111111111111111111111111111111111111111",
+      "expected": {
+        "ok": {
+          "federation_id": "1111111111111111111111111111111111111111111111111111111111111111",
+          "guardians": [
+            {
+              "peer_id": 0,
+              "url": "hi"
+            }
+          ],
+          "api_secret": null
+        }
+      }
+    },
+    {
+      "group": "parts",
+      "name": "last-secret",
+      "op": "consensus",
+      "input": "040004026869000120000000000000000000000000000000000000000000000000000000000000000002036f6c6402036e6577",
+      "expected": {
+        "ok": {
+          "federation_id": "0000000000000000000000000000000000000000000000000000000000000000",
+          "guardians": [
+            {
+              "peer_id": 0,
+              "url": "hi"
+            }
+          ],
+          "api_secret": "new"
+        }
+      }
+    },
+    {
+      "group": "parts",
+      "name": "nonminimal-url-length",
+      "op": "consensus",
+      "input": "020006fd000268690001200000000000000000000000000000000000000000000000000000000000000000",
+      "expected": {
+        "ok": {
+          "federation_id": "0000000000000000000000000000000000000000000000000000000000000000",
+          "guardians": [
+            {
+              "peer_id": 0,
+              "url": "hi"
+            }
+          ],
+          "api_secret": null
+        }
+      }
+    },
+    {
+      "group": "parts",
+      "name": "nonminimal-peer",
+      "op": "consensus",
+      "input": "020006026869fd000001200000000000000000000000000000000000000000000000000000000000000000",
+      "expected": {
+        "ok": {
+          "federation_id": "0000000000000000000000000000000000000000000000000000000000000000",
+          "guardians": [
+            {
+              "peer_id": 0,
+              "url": "hi"
+            }
+          ],
+          "api_secret": null
+        }
+      }
+    },
+    {
+      "group": "parts",
+      "name": "unknown-first",
+      "op": "consensus",
+      "input": "030900040268690001200000000000000000000000000000000000000000000000000000000000000000",
+      "expected": {
+        "error": "missingFederation",
+        "details": []
+      }
+    },
+    {
+      "group": "parts",
+      "name": "unknown-before-id",
+      "op": "consensus",
+      "input": "030004026869000901200000000000000000000000000000000000000000000000000000000000000000",
+      "expected": {
+        "error": "missingFederation",
+        "details": []
+      }
+    },
+    {
+      "group": "errors",
+      "name": "missing-id",
+      "op": "consensus",
+      "input": "01000402686900",
+      "expected": {
+        "error": "missingFederation",
+        "details": []
+      }
+    },
+    {
+      "group": "errors",
+      "name": "no-guardian",
+      "op": "consensus",
+      "input": "0101200000000000000000000000000000000000000000000000000000000000000000",
+      "expected": {
+        "error": "noGuardian",
+        "details": []
+      }
+    },
+    {
+      "group": "errors",
+      "name": "premature-count",
+      "op": "consensus",
+      "input": "02000402686900",
+      "expected": {
+        "error": "unexpectedPart",
+        "details": [
+          1
+        ]
+      }
+    },
+    {
+      "group": "errors",
+      "name": "empty",
+      "op": "consensus",
+      "input": "",
+      "expected": {
+        "error": "truncatedBigSize",
+        "details": [
+          1,
+          0
+        ]
+      }
+    },
+    {
+      "group": "errors",
+      "name": "tag",
+      "op": "consensus",
+      "input": "fd",
+      "expected": {
+        "error": "truncatedBigSize",
+        "details": [
+          2,
+          0
+        ]
+      }
+    },
+    {
+      "group": "errors",
+      "name": "id-length",
+      "op": "consensus",
+      "input": "01011f00000000000000000000000000000000000000000000000000000000000000",
+      "expected": {
+        "error": "federationLength",
+        "details": [
+          31
+        ]
+      }
+    },
+    {
+      "group": "errors",
+      "name": "id-truncated",
+      "op": "consensus",
+      "input": "01012000000000000000000000000000000000000000000000000000000000000000",
+      "expected": {
+        "error": "overrun",
+        "details": [
+          "federation",
+          32,
+          31
+        ]
+      }
+    },
+    {
+      "group": "errors",
+      "name": "url-utf8",
+      "op": "consensus",
+      "input": "02000301ff0001200000000000000000000000000000000000000000000000000000000000000000",
+      "expected": {
+        "error": "invalidUtf8",
+        "details": [
+          "url"
+        ]
+      }
+    },
+    {
+      "group": "errors",
+      "name": "secret-utf8",
+      "op": "consensus",
+      "input": "03000402686900012000000000000000000000000000000000000000000000000000000000000000000201ff",
+      "expected": {
+        "error": "invalidUtf8",
+        "details": [
+          "secret"
+        ]
+      }
+    },
+    {
+      "group": "errors",
+      "name": "url-overrun",
+      "op": "consensus",
+      "input": "0100020561",
+      "expected": {
+        "error": "overrun",
+        "details": [
+          "url",
+          5,
+          1
+        ]
+      }
+    },
+    {
+      "group": "errors",
+      "name": "secret-overrun",
+      "op": "consensus",
+      "input": "01020561",
+      "expected": {
+        "error": "overrun",
+        "details": [
+          "secret",
+          5,
+          1
+        ]
+      }
+    },
+    {
+      "group": "errors",
+      "name": "guardian-length",
+      "op": "consensus",
+      "input": "020003000001200000000000000000000000000000000000000000000000000000000000000000",
+      "expected": {
+        "error": "guardianLength",
+        "details": [
+          3,
+          2
+        ]
+      }
+    },
+    {
+      "group": "errors",
+      "name": "whole-buffer",
+      "op": "consensus",
+      "input": "0200000268690001200000000000000000000000000000000000000000000000000000000000000000",
+      "expected": {
+        "error": "guardianLength",
+        "details": [
+          0,
+          4
+        ]
+      }
+    },
+    {
+      "group": "encoding",
+      "name": "absent-secret",
+      "op": "encode",
+      "input": {
+        "federation_id": "0000000000000000000000000000000000000000000000000000000000000000",
+        "guardians": [
+          {
+            "peer_id": 0,
+            "url": "hi"
+          }
+        ],
+        "api_secret": null
+      },
+      "expected": {
+        "hex": "0200040268690001200000000000000000000000000000000000000000000000000000000000000000",
+        "string": "fed11qgqqgqngdyqqzgqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqquf2ucz",
+        "decoded": {
+          "ok": {
+            "federation_id": "0000000000000000000000000000000000000000000000000000000000000000",
+            "guardians": [
+              {
+                "peer_id": 0,
+                "url": "hi"
+              }
+            ],
+            "api_secret": null
+          }
+        }
+      }
+    },
+    {
+      "group": "encoding",
+      "name": "empty-secret",
+      "op": "encode",
+      "input": {
+        "federation_id": "0000000000000000000000000000000000000000000000000000000000000000",
+        "guardians": [
+          {
+            "peer_id": 0,
+            "url": "hi"
+          }
+        ],
+        "api_secret": ""
+      },
+      "expected": {
+        "hex": "03000402686900012000000000000000000000000000000000000000000000000000000000000000000200",
+        "string": "fed11qvqqgqngdyqqzgqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqpqqnxrzuz",
+        "decoded": {
+          "ok": {
+            "federation_id": "0000000000000000000000000000000000000000000000000000000000000000",
+            "guardians": [
+              {
+                "peer_id": 0,
+                "url": "hi"
+              }
+            ],
+            "api_secret": ""
+          }
+        }
+      }
+    },
+    {
+      "group": "encoding",
+      "name": "empty-url",
+      "op": "encode",
+      "input": {
+        "federation_id": "0000000000000000000000000000000000000000000000000000000000000000",
+        "guardians": [
+          {
+            "peer_id": 0,
+            "url": ""
+          }
+        ],
+        "api_secret": null
+      },
+      "expected": {
+        "hex": "020002000001200000000000000000000000000000000000000000000000000000000000000000",
+        "string": "fed11qgqqyqqqqysqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqq45z7lx",
+        "decoded": {
+          "ok": {
+            "federation_id": "0000000000000000000000000000000000000000000000000000000000000000",
+            "guardians": [
+              {
+                "peer_id": 0,
+                "url": ""
+              }
+            ],
+            "api_secret": null
+          }
+        }
+      }
+    },
+    {
+      "group": "encoding",
+      "name": "opaque",
+      "op": "encode",
+      "input": {
+        "federation_id": "0000000000000000000000000000000000000000000000000000000000000000",
+        "guardians": [
+          {
+            "peer_id": 0,
+            "url": "opaque value"
+          }
+        ],
+        "api_secret": null
+      },
+      "expected": {
+        "hex": "02000e0c6f70617175652076616c75650001200000000000000000000000000000000000000000000000000000000000000000",
+        "string": "fed11qgqqurr0wpshzat9ypmxzmr4v5qqzgqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqfmfwl9",
+        "decoded": {
+          "ok": {
+            "federation_id": "0000000000000000000000000000000000000000000000000000000000000000",
+            "guardians": [
+              {
+                "peer_id": 0,
+                "url": "opaque value"
+              }
+            ],
+            "api_secret": null
+          }
+        }
+      }
+    },
+    {
+      "group": "encoding",
+      "name": "unicode",
+      "op": "encode",
+      "input": {
+        "federation_id": "0000000000000000000000000000000000000000000000000000000000000000",
+        "guardians": [
+          {
+            "peer_id": 253,
+            "url": "λ☃"
+          }
+        ],
+        "api_secret": "雪🦀"
+      },
+      "expected": {
+        "hex": "03000905cebbe29883fd00fd012000000000000000000000000000000000000000000000000000000000000000000207e99baaf09fa680",
+        "string": "fed11qvqqjpwwh03f3qlaqr7szgqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqpq06vm4tcflf5qrdfrx2",
+        "decoded": {
+          "ok": {
+            "federation_id": "0000000000000000000000000000000000000000000000000000000000000000",
+            "guardians": [
+              {
+                "peer_id": 253,
+                "url": "λ☃"
+              }
+            ],
+            "api_secret": "雪🦀"
+          }
+        }
+      }
+    },
+    {
+      "group": "encoding",
+      "name": "encode-order",
+      "op": "encode",
+      "input": {
+        "federation_id": "0000000000000000000000000000000000000000000000000000000000000000",
+        "guardians": [
+          {
+            "peer_id": 2,
+            "url": "a"
+          },
+          {
+            "peer_id": 0,
+            "url": "b"
+          }
+        ],
+        "api_secret": null
+      },
+      "expected": {
+        "hex": "030003016102000301620001200000000000000000000000000000000000000000000000000000000000000000",
+        "string": "fed11qvqqxqtpqgqqxqtzqqqjqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqlr6xf2",
+        "decoded": {
+          "ok": {
+            "federation_id": "0000000000000000000000000000000000000000000000000000000000000000",
+            "guardians": [
+              {
+                "peer_id": 0,
+                "url": "b"
+              },
+              {
+                "peer_id": 2,
+                "url": "a"
+              }
+            ],
+            "api_secret": null
+          }
+        }
+      }
+    },
+    {
+      "group": "encoding",
+      "name": "empty-id",
+      "op": "encode",
+      "input": {
+        "federation_id": "",
+        "guardians": [
+          {
+            "peer_id": 0,
+            "url": "hi"
+          }
+        ],
+        "api_secret": null
+      },
+      "expected": {
+        "hex": "01000402686900",
+        "string": "fed11qyqqgqngdyqqeffg3p",
+        "decoded": {
+          "error": "missingFederation",
+          "details": []
+        }
+      }
+    },
+    {
+      "group": "encoding",
+      "name": "no-guardian",
+      "op": "encode",
+      "input": {
+        "federation_id": "0000000000000000000000000000000000000000000000000000000000000000",
+        "guardians": [],
+        "api_secret": null
+      },
+      "expected": {
+        "hex": "0101200000000000000000000000000000000000000000000000000000000000000000",
+        "string": "fed11qyqjqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqtwuvcd",
+        "decoded": {
+          "error": "noGuardian",
+          "details": []
+        }
+      }
+    },
+    {
+      "group": "encoding",
+      "name": "bad-hex",
+      "op": "encode-error",
+      "input": {
+        "federation_id": "zzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzz",
+        "guardians": [
+          {
+            "peer_id": 0,
+            "url": "hi"
+          }
+        ],
+        "api_secret": null
+      },
+      "expected": {
+        "error": "invalidHex",
+        "details": []
+      }
+    },
+    {
+      "group": "encoding",
+      "name": "odd-hex",
+      "op": "encode-error",
+      "input": {
+        "federation_id": "a",
+        "guardians": [
+          {
+            "peer_id": 0,
+            "url": "hi"
+          }
+        ],
+        "api_secret": null
+      },
+      "expected": {
+        "error": "invalidHex",
+        "details": []
+      }
+    },
+    {
+      "group": "encoding",
+      "name": "short-id",
+      "op": "encode-error",
+      "input": {
+        "federation_id": "ab",
+        "guardians": [
+          {
+            "peer_id": 0,
+            "url": "hi"
+          }
+        ],
+        "api_secret": null
+      },
+      "expected": {
+        "error": "federationLength",
+        "details": [
+          1
+        ]
+      }
+    },
+    {
+      "group": "encoding",
+      "name": "upper-hex",
+      "op": "encode",
+      "input": {
+        "federation_id": "ABABABABABABABABABABABABABABABABABABABABABABABABABABABABABABABAB",
+        "guardians": [
+          {
+            "peer_id": 0,
+            "url": "hi"
+          }
+        ],
+        "api_secret": null
+      },
+      "expected": {
+        "hex": "020004026869000120abababababababababababababababababababababababababababababababab",
+        "string": "fed11qgqqgqngdyqqzg9t4w46h2at4w46h2at4w46h2at4w46h2at4w46h2at4w46h2at4vxk0r36",
+        "decoded": {
+          "ok": {
+            "federation_id": "abababababababababababababababababababababababababababababababab",
+            "guardians": [
+              {
+                "peer_id": 0,
+                "url": "hi"
+              }
+            ],
+            "api_secret": null
+          }
+        }
+      }
+    },
+    {
+      "group": "normalization",
+      "name": "upper-hex",
+      "op": "consensus",
+      "input": "020004026869000120abababababababababababababababababababababababababababababababab",
+      "expected": {
+        "ok": {
+          "federation_id": "abababababababababababababababababababababababababababababababab",
+          "guardians": [
+            {
+              "peer_id": 0,
+              "url": "hi"
+            }
+          ],
+          "api_secret": null
+        }
+      }
+    },
+    {
+      "group": "encoding",
+      "name": "mixed-hex",
+      "op": "encode",
+      "input": {
+        "federation_id": "aBaBaBaBaBaBaBaBaBaBaBaBaBaBaBaBaBaBaBaBaBaBaBaBaBaBaBaBaBaBaBaB",
+        "guardians": [
+          {
+            "peer_id": 0,
+            "url": "hi"
+          }
+        ],
+        "api_secret": null
+      },
+      "expected": {
+        "hex": "020004026869000120abababababababababababababababababababababababababababababababab",
+        "string": "fed11qgqqgqngdyqqzg9t4w46h2at4w46h2at4w46h2at4w46h2at4w46h2at4w46h2at4vxk0r36",
+        "decoded": {
+          "ok": {
+            "federation_id": "abababababababababababababababababababababababababababababababab",
+            "guardians": [
+              {
+                "peer_id": 0,
+                "url": "hi"
+              }
+            ],
+            "api_secret": null
+          }
+        }
+      }
+    },
+    {
+      "group": "normalization",
+      "name": "mixed-hex",
+      "op": "consensus",
+      "input": "020004026869000120abababababababababababababababababababababababababababababababab",
+      "expected": {
+        "ok": {
+          "federation_id": "abababababababababababababababababababababababababababababababab",
+          "guardians": [
+            {
+              "peer_id": 0,
+              "url": "hi"
+            }
+          ],
+          "api_secret": null
+        }
+      }
+    },
+    {
+      "group": "wrapper",
+      "name": "ascii-space",
+      "op": "decode",
+      "input": " \t\r\nfed11qgqqgqngdyqqzgqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqquf2ucz\n ",
+      "expected": {
+        "ok": {
+          "federation_id": "0000000000000000000000000000000000000000000000000000000000000000",
+          "guardians": [
+            {
+              "peer_id": 0,
+              "url": "hi"
+            }
+          ],
+          "api_secret": null
+        }
+      }
+    },
+    {
+      "group": "wrapper",
+      "name": "unicode-space",
+      "op": "decode",
+      "input": "   fed11qgqqgqngdyqqzgqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqquf2ucz    　",
+      "expected": {
+        "ok": {
+          "federation_id": "0000000000000000000000000000000000000000000000000000000000000000",
+          "guardians": [
+            {
+              "peer_id": 0,
+              "url": "hi"
+            }
+          ],
+          "api_secret": null
+        }
+      }
+    },
+    {
+      "group": "wrapper",
+      "name": "plain",
+      "op": "decode",
+      "input": "fed11qgqqgqngdyqqzgqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqquf2ucz",
+      "expected": {
+        "ok": {
+          "federation_id": "0000000000000000000000000000000000000000000000000000000000000000",
+          "guardians": [
+            {
+              "peer_id": 0,
+              "url": "hi"
+            }
+          ],
+          "api_secret": null
+        }
+      }
+    },
+    {
+      "group": "wrapper",
+      "name": "uppercase",
+      "op": "decode",
+      "input": "FED11QGQQGQNGDYQQZGQQQQQQQQQQQQQQQQQQQQQQQQQQQQQQQQQQQQQQQQQQQQQQQQQQQQUF2UCZ",
+      "expected": {
+        "error": "prefix",
+        "details": []
+      }
+    },
+    {
+      "group": "wrapper",
+      "name": "mixed-case",
+      "op": "decode",
+      "input": "fed11qgqqgQngdyqqzgqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqquf2ucz",
+      "expected": {
+        "error": "bech32.mixedCase",
+        "details": []
+      }
+    },
+    {
+      "group": "wrapper",
+      "name": "wrong-hrp",
+      "op": "decode",
+      "input": "fed1x1qgqqgqngdyqqzgqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqk7frss",
+      "expected": {
+        "error": "wrongHrp",
+        "details": [
+          "fed1x"
+        ]
+      }
+    },
+    {
+      "group": "wrapper",
+      "name": "wrong-variant",
+      "op": "decode",
+      "input": "fed11qgqqgqngdyqqzgqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqf46saq",
+      "expected": {
+        "error": "wrongVariant",
+        "details": []
+      }
+    },
+    {
+      "group": "wrapper",
+      "name": "bad-checksum",
+      "op": "decode",
+      "input": "fed11qgqqgqngdyqqzgqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqquf2ucq",
+      "expected": {
+        "error": "bech32.checksumMismatch",
+        "details": []
+      }
+    },
+    {
+      "group": "wrapper",
+      "name": "consensus-truncation",
+      "op": "decode",
+      "input": "fed11qgqqrygr78",
+      "expected": {
+        "error": "truncatedBigSize",
+        "details": [
+          1,
+          0
+        ]
+      }
+    },
+    {
+      "group": "padding",
+      "name": "nonzero-padding",
+      "op": "decode",
+      "input": "fed11qgqqgqngdyqqzgqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqppl7f9s",
+      "expected": {
+        "ok": {
+          "federation_id": "0000000000000000000000000000000000000000000000000000000000000000",
+          "guardians": [
+            {
+              "peer_id": 0,
+              "url": "hi"
+            }
+          ],
+          "api_secret": null
+        }
+      }
+    },
+    {
+      "group": "padding",
+      "name": "extra-symbol",
+      "op": "decode",
+      "input": "fed11qgqqgqngdyqqzgqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqlfgtvd8",
+      "expected": {
+        "ok": {
+          "federation_id": "0000000000000000000000000000000000000000000000000000000000000000",
+          "guardians": [
+            {
+              "peer_id": 0,
+              "url": "hi"
+            }
+          ],
+          "api_secret": null
+        }
+      }
+    },
+    {
+      "group": "boundaries",
+      "name": "632",
+      "op": "boundary",
+      "input": {
+        "federation_id": "0000000000000000000000000000000000000000000000000000000000000000",
+        "guardians": [
+          {
+            "peer_id": 0,
+            "url": "xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx"
+          }
+        ],
+        "api_secret": null
+      },
+      "expected": {
+        "hex": "0200fd0251fd024d787878787878787878787878787878787878787878787878787878787878787878787878787878787878787878787878787878787878787878787878787878787878787878787878787878787878787878787878787878787878787878787878787878787878787878787878787878787878787878787878787878787878787878787878787878787878787878787878787878787878787878787878787878787878787878787878787878787878787878787878787878787878787878787878787878787878787878787878787878787878787878787878787878787878787878787878787878787878787878787878787878787878787878787878787878787878787878787878787878787878787878787878787878787878787878787878787878787878787878787878787878787878787878787878787878787878787878787878787878787878787878787878787878787878787878787878787878787878787878787878787878787878787878787878787878787878787878787878787878787878787878787878787878787878787878787878787878787878787878787878787878787878787878787878787878787878787878787878787878787878787878787878787878787878787878787878787878787878787878787878787878787878787878787878787878787878787878787878787878787878787878787878787878787878787878787878787878787878787878787878787878787878787878787878787878787878787878787878787878787878787878787878787878787878787878787878780001200000000000000000000000000000000000000000000000000000000000000000",
+        "string": "fed11qgq06qj3l5py67rc0pu8s7rc0pu8s7rc0pu8s7rc0pu8s7rc0pu8s7rc0pu8s7rc0pu8s7rc0pu8s7rc0pu8s7rc0pu8s7rc0pu8s7rc0pu8s7rc0pu8s7rc0pu8s7rc0pu8s7rc0pu8s7rc0pu8s7rc0pu8s7rc0pu8s7rc0pu8s7rc0pu8s7rc0pu8s7rc0pu8s7rc0pu8s7rc0pu8s7rc0pu8s7rc0pu8s7rc0pu8s7rc0pu8s7rc0pu8s7rc0pu8s7rc0pu8s7rc0pu8s7rc0pu8s7rc0pu8s7rc0pu8s7rc0pu8s7rc0pu8s7rc0pu8s7rc0pu8s7rc0pu8s7rc0pu8s7rc0pu8s7rc0pu8s7rc0pu8s7rc0pu8s7rc0pu8s7rc0pu8s7rc0pu8s7rc0pu8s7rc0pu8s7rc0pu8s7rc0pu8s7rc0pu8s7rc0pu8s7rc0pu8s7rc0pu8s7rc0pu8s7rc0pu8s7rc0pu8s7rc0pu8s7rc0pu8s7rc0pu8s7rc0pu8s7rc0pu8s7rc0pu8s7rc0pu8s7rc0pu8s7rc0pu8s7rc0pu8s7rc0pu8s7rc0pu8s7rc0pu8s7rc0pu8s7rc0pu8s7rc0pu8s7rc0pu8s7rc0pu8s7rc0pu8s7rc0pu8s7rc0pu8s7rc0pu8s7rc0pu8s7rc0pu8s7rc0pu8s7rc0pu8s7rc0pu8s7rc0pu8s7rc0pu8s7rc0pu8s7rc0pu8s7rc0pu8s7rc0pu8s7rc0pu8s7rc0pu8s7rc0pu8s7rc0pu8s7rc0pu8s7rc0pu8s7rc0pu8s7rc0pu8s7rc0pu8s7rc0pu8s7rc0pu8s7rc0pu8s7rc0pu8s7rc0pu8s7rc0pu8s7rc0pu8s7rc0pu8s7rc0pu8s7rc0pu8s7rc0pu8s7rc0pu8s7rc0pu8s7rc0pu8s7rc0pu8s7rc0puqqqfqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqtv56zs",
+        "byte_length": 632,
+        "string_length": 1023
+      }
+    },
+    {
+      "group": "boundaries",
+      "name": "633",
+      "op": "boundary",
+      "input": {
+        "federation_id": "0000000000000000000000000000000000000000000000000000000000000000",
+        "guardians": [
+          {
+            "peer_id": 0,
+            "url": "xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx"
+          }
+        ],
+        "api_secret": null
+      },
+      "expected": {
+        "hex": "0200fd0252fd024e78787878787878787878787878787878787878787878787878787878787878787878787878787878787878787878787878787878787878787878787878787878787878787878787878787878787878787878787878787878787878787878787878787878787878787878787878787878787878787878787878787878787878787878787878787878787878787878787878787878787878787878787878787878787878787878787878787878787878787878787878787878787878787878787878787878787878787878787878787878787878787878787878787878787878787878787878787878787878787878787878787878787878787878787878787878787878787878787878787878787878787878787878787878787878787878787878787878787878787878787878787878787878787878787878787878787878787878787878787878787878787878787878787878787878787878787878787878787878787878787878787878787878787878787878787878787878787878787878787878787878787878787878787878787878787878787878787878787878787878787878787878787878787878787878787878787878787878787878787878787878787878787878787878787878787878787878787878787878787878787878787878787878787878787878787878787878787878787878787878787878787878787878787878787878787878787878787878787878787878787878787878787878787878787878787878787878787878787878787878787878787878787878787878787878787878787878780001200000000000000000000000000000000000000000000000000000000000000000",
+        "string": "fed11qgq06qjjl5pyu7rc0pu8s7rc0pu8s7rc0pu8s7rc0pu8s7rc0pu8s7rc0pu8s7rc0pu8s7rc0pu8s7rc0pu8s7rc0pu8s7rc0pu8s7rc0pu8s7rc0pu8s7rc0pu8s7rc0pu8s7rc0pu8s7rc0pu8s7rc0pu8s7rc0pu8s7rc0pu8s7rc0pu8s7rc0pu8s7rc0pu8s7rc0pu8s7rc0pu8s7rc0pu8s7rc0pu8s7rc0pu8s7rc0pu8s7rc0pu8s7rc0pu8s7rc0pu8s7rc0pu8s7rc0pu8s7rc0pu8s7rc0pu8s7rc0pu8s7rc0pu8s7rc0pu8s7rc0pu8s7rc0pu8s7rc0pu8s7rc0pu8s7rc0pu8s7rc0pu8s7rc0pu8s7rc0pu8s7rc0pu8s7rc0pu8s7rc0pu8s7rc0pu8s7rc0pu8s7rc0pu8s7rc0pu8s7rc0pu8s7rc0pu8s7rc0pu8s7rc0pu8s7rc0pu8s7rc0pu8s7rc0pu8s7rc0pu8s7rc0pu8s7rc0pu8s7rc0pu8s7rc0pu8s7rc0pu8s7rc0pu8s7rc0pu8s7rc0pu8s7rc0pu8s7rc0pu8s7rc0pu8s7rc0pu8s7rc0pu8s7rc0pu8s7rc0pu8s7rc0pu8s7rc0pu8s7rc0pu8s7rc0pu8s7rc0pu8s7rc0pu8s7rc0pu8s7rc0pu8s7rc0pu8s7rc0pu8s7rc0pu8s7rc0pu8s7rc0pu8s7rc0pu8s7rc0pu8s7rc0pu8s7rc0pu8s7rc0pu8s7rc0pu8s7rc0pu8s7rc0pu8s7rc0pu8s7rc0pu8s7rc0pu8s7rc0pu8s7rc0pu8s7rc0pu8s7rc0pu8s7rc0pu8s7rc0pu8s7rc0pu8s7rc0pu8s7rc0pu8s7rc0pu8s7rc0pu8s7rc0pu8s7rc0pu8s7rc0pu8s7rc0pu8s7rc0pu8s7rc0pu8sqqpyqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqxm48qa",
+        "byte_length": 633,
+        "string_length": 1024
+      }
+    }
+  ]
+}

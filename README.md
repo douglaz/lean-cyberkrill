@@ -36,6 +36,8 @@ Lightning address construction, LNURL-pay JSON models and two bech32 corollaries
 Phase 5 (3 of 3) proves BOLT11 tagged-field and exact amount round-trips,
 as-written signing hashes for decoding and both writers, and invoice-length
 bech32 round-trip and checksum soundness.
+Phase 6 adds pure Fedimint invite consensus and bech32m codecs, general
+round-trip proofs and checksum soundness, with published and synthetic vectors.
 Other packages remain skeletons;
 `plan.md` is the plan for v1.
 
@@ -6625,6 +6627,257 @@ remain outstanding.
 Owned source archives, extracts and scratch wrappers are removed after these
 checks; ignored diagnostic logs remain under `.lake`. No owned process is
 left running.
+
+## Phase 6: Fedimint invite library
+
+`packages/fedimint-invite` now provides pure consensus and bech32m codecs.
+Import `FedimintInvite`. The namespace is `FedimintInvite`; there are no network,
+curve, FFI or Mathlib dependencies. Heuristic fallback, CLI skip-secret handling
+and config fetch remain later work (Phases 7c and 9c). This phase makes no CLI
+parity claim.
+
+`Guardian` contains `peerId : UInt16` and `url : String`. `Invite` contains
+`federationId : String`, `guardians : List Guardian` and
+`apiSecret : Option String`. Absent and present-empty secrets are distinct.
+URLs are opaque UTF-8 strings, including empty strings and non-URLs; their
+bytes are preserved without normalization.
+
+The public entry points are:
+
+```lean
+writeBigSize : Nat → List UInt8
+readBigSize : List UInt8 → Except Error (Nat × List UInt8)
+encodeConsensus : Invite → Except Error ByteArray
+decodeConsensus : ByteArray → Except Error Invite
+encode : Invite → Except Error String
+decode : String → Except Error Invite
+decodePayload : String → Except Error (List Bitcoin.Bech32.Symbol)
+```
+
+`Error` distinguishes `truncatedBigSize width available`, `unexpectedPart remaining`,
+`overrun field requested available`, `invalidUtf8 field`, `federationLength length`,
+`guardianLength declared consumed`, `missingFederation`, `noGuardian`, `invalidHex`,
+`tooLong length`, `prefix`, `wrongHrp actual`, `wrongVariant` and
+`bech32 Bitcoin.Bech32.DecodeError`. `Field` distinguishes URL, secret and federation
+data. UTF-8 decoding is strict. Length checks use unbounded natural arithmetic
+when splitting bounded prefixes; guardian fields read from the whole remaining buffer before
+checking equality with the declared variant-data length.
+Prefix reads do not traverse the unused suffix. Guardian byte accounting uses
+the original BigSize prefix widths, including non-minimal spellings. Guardians
+accumulate in reverse order, then reverse once before a stable merge sort.
+
+BigSize tags fd/fe/ff carry 2/4/8 **big-endian** bytes. Non-minimal encodings
+are accepted; writers produce minimal encodings after the reference's u64
+reduction. Guardian peers decode modulo 65536. Unknown discriminators stop
+immediately, leaving their payload uninterpreted; trailing bytes are ignored.
+The final required-field checks still require a federation id and a guardian.
+Repeated federation ids and secrets use the last value. Decode sorts guardians
+stably by peer id, preserving the input order of equal ids and all duplicates.
+Encode preserves the supplied guardian order, then writes a nonempty federation
+id, then any secret. Empty ids omit their part; no-guardian inputs still encode.
+Nonempty ids must hex-decode to 32 bytes; mixed/uppercase input is accepted and
+decode returns lowercase hex. Secret bytes have one string-length prefix.
+
+The string wrapper trims Rust's Unicode White_Space set and requires the literal
+case-sensitive prefix `fed1`. The HRP is also `fed1`, so actual strings start
+`fed11`. Both checksum variants are recognized by Bitcoin's decoder, but the
+invite wrapper requires bech32m and reports a separate wrong-variant error.
+The checksum is validated on the original symbols, before `fesToBytesLax`
+drops incomplete bits unchecked. Nonzero incomplete padding and an extra whole
+incomplete symbol are accepted. All-uppercase input fails the prefix; mixed
+case fails bech32 validation. The overall trimmed format limit is 1023 characters.
+
+For `n` consensus bytes, the exact length is
+`4 + 1 + (8*n + 4)/5 + 6`: 632 bytes fit in 1023 characters; 633 require 1024.
+`bech32m_encodedLength` proves that formula using
+`Bitcoin.Bech32.convertbits8to5_length_exact`; `bech32m_fits_iff` proves that
+the wrapper fits exactly when the consensus byte size is at most 632. The
+633-byte encoder and decoder tests use the **same bytes**. The independent
+generator deliberately bypasses the cap to produce their valid 1024-character
+checksum, so the decoder test reaches the length check.
+
+### General proofs and their domains
+
+The four named obligations are `consensus_roundTrip`, `invite_roundTrip`,
+`bech32m_roundTrip` and `bech32m_checksumSound`. The two complete-invite theorems
+have exactly these shared hypotheses:
+
+- `federation : ByteArray`, `federation.size = 32` and
+  `inv.federationId = Bitcoin.Hex.encode federation`. This is a witness for
+  exactly 64 lowercase hex characters, without a restriction on their value.
+- `inv.guardians ≠ []` and
+  `inv.guardians.Pairwise (fun a b => a.peerId.toNat < b.peerId.toNat)`:
+  sorted, unique peer ids. Each `UInt16` peer is intrinsically below `2^16`.
+- `inv.guardians.length + 1 + inv.apiSecret.toList.length < 2^64`.
+- Every guardian URL's `toUTF8.size` and `guardianData` byte-list length are
+  below `2^64`; every present secret's `toUTF8.size` is below `2^64`.
+
+These hypotheses describe the proof domain; the decoder applies none of the
+sorting, uniqueness, canonical-hex spelling or minimal-BigSize restrictions.
+No URL or arbitrary message-size bound is hidden in a validity predicate.
+`writeBigSize` exposes the u64 reduction explicitly as modulo `2^64`;
+`readBigSize_writeBigSize` removes it only under its bound. The peer conversion
+proof uses `UInt16.toNat_lt` and `UInt16.ofNat_toNat`.
+
+Under those hypotheses, the actual statements are:
+
+```lean
+consensus_roundTrip :
+  (encodeConsensus inv >>= decodeConsensus) = .ok inv
+invite_roundTrip :
+  encode inv = .ok s → decode s = .ok inv
+```
+
+The consensus theorem has no wrapper-cap hypothesis. The invite theorem uses
+successful encoding to obtain the format cap, and reuses
+`Bitcoin.Bech32.fesToBytesLax_convertbits8to5`. The other two statements are:
+
+```lean
+bech32m_roundTrip (data) (fits : 4 + data.length + 7 ≤ 1023) :
+  Bitcoin.Bech32.decode 1023 (Bitcoin.Bech32.encode "fed1" data .bech32m) =
+    .ok ("fed1", data, .bech32m)
+bech32m_checksumSound (input) (data) (success : decodePayload input = .ok data) :
+  ∃ chk, chk.length = 6 ∧
+    Bitcoin.Bech32.lower (trimInput input) = "fed1" ++ "1" ++
+      String.ofList ((data ++ chk).map Bitcoin.Bech32.charOf) ∧
+    Bitcoin.Bech32.verifyChecksum .bech32m "fed1" (data ++ chk) = true
+```
+
+These are caller corollaries of `Bitcoin.Bech32.decode_encode` and `decode_sound`
+at limit 1023. All fixed HRP nonempty/range/case/83-character premises are
+discharged. Soundness concerns the checksum symbols in the actual trimmed
+input, before byte regrouping. There is no four-error theorem for long strings.
+The executable's allowlist gate prints all four axiom reports, scans every
+library theorem including private helpers, and permits only `propext`,
+`Classical.choice` and `Quot.sound`.
+
+### Sources, acceptance counts and reproduction
+
+The reference is [cyberkrill](https://github.com/douglaz/cyberkrill/tree/27cad1faba86260b06665a89f0af5134d23525c2)
+at `27cad1faba86260b06665a89f0af5134d23525c2`,
+`fedimint-lite/src/lib.rs:43-380,648-795` and
+`cyberkrill/src/main.rs:583-593,1978-2009`.
+Its Cargo.lock pins bech32 **0.11.1**, whose archive SHA-256 is
+`32637268377fc7b10a8c6d51de3e7fba1ce5dd371a96e342b34e6078db558e7f`.
+The relevant bech32 paths are `src/primitives/iter.rs:150-195`,
+`src/primitives/decode.rs:251-280` and `src/lib.rs:425-442`.
+The crate's unchecked byte iterator, rather than strict convertbits padding,
+defines the regrouping behavior.
+
+There are exactly **3 primary vectors**: one published full invite at line 659,
+the two-guardian with-secret struct at 710-737, and the three-guardian struct
+at 741-776. Capture verifies exact encoded strings and parsed decoded JSON.
+The executable additionally pins **82 synthetic cases**:
+
+| Collection | Count |
+|---|---:|
+| BigSize values, including u64 max | 12 |
+| Every tagged truncation position | 14 |
+| Non-minimal tagged widths | 3 |
+| Mandatory lax consensus cases | 4 |
+| Part semantics | 8 |
+| Parser errors | 13 |
+| Encoding and strings | 13 |
+| Hex normalization | 2 |
+| Wrapper checks | 9 |
+| Incomplete padding classes | 2 |
+| Byte/string boundaries | 2 |
+
+Every collection's expected count is pinned independently in the generator and
+executable. [Fixture provenance and commands](packages/fedimint-invite/test-data/README.md)
+describe the exact offline capture and deterministic synthetic constructions.
+Synthetic expectations are explicitly hand-derived from the pinned parser;
+they are not described as Rust captures. No pure Rust probe was needed.
+
+Two additional raw consensus cases each decode 60,000 guardians with empty URLs
+and distinct peer ids, in ascending and descending wire order. Each input is
+359,531 bytes, well beyond the string wrapper's cap. The tests assert every
+decoded field and a generous five-second processing budget; the optimized decoder
+took 20–23 ms per case locally. The fixture corpus remains independently counted
+at 82/82, and the large cases print their separate 2/2 count.
+
+From `packages/fedimint-invite`, with `TMPDIR` set to a fresh owned temporary
+directory, run these in the foreground under the repository gate supervision:
+
+```bash
+python3 capture-fixtures.py --capture
+python3 capture-fixtures.py
+python3 generate-fixtures.py
+nix develop -c lake build
+nix develop -c lake test
+nix develop -c python3 -I check-mutations.py
+nix develop -c python3 -I check-axiom-gate.py
+```
+
+The capture script uses the exact pinned Nix build command recorded in the
+provenance file. After dependency retrieval, each CLI invocation runs inside
+`unshare -rn` with loopback up and an isolated temporary HOME. It never contacts
+the published endpoint or any other endpoint. The test executable is a
+`lean_exe`; the sandbox runs it and its axiom gate through `lake test`.
+
+### Independent red checks
+
+[The mutation record](packages/fedimint-invite/test-data/mutations.json) pins
+**38/38 named executions across 37 distinct production edits**. Each changed runtime compiled with
+exit 0, then the selected test exited 1 at the assertion below. Expected
+values and test setup were unchanged; no incidental proof failure counts.
+The checker restores exact source bytes after each check and on errors or
+managed termination, then requires a restored build and full test run.
+
+| Mutation | Actual detecting assertion |
+|---|---|
+| BigSize byte order | `bigsize/256 reader and consumed` |
+| Reject non-minimal BigSize | `lax/nonminimal` |
+| Change peer reduction | `lax/peer-truncation` |
+| Reject unknown stop | `lax/unknown-stop` |
+| Reject ignored trailing bytes | `lax/trailing` |
+| Omit guardian sort | `parts/unsorted` |
+| Reverse equal-id ordering | `parts/stable-duplicates` |
+| Keep first federation id | `parts/last-federation` |
+| Keep first secret | `parts/last-secret` |
+| Replace invalid URL UTF-8 | `errors/url-utf8` |
+| Replace invalid secret UTF-8 | `errors/secret-utf8` |
+| Remove guardian length equality | `errors/guardian-length` |
+| Encode absent secret as empty | `encoding/absent-secret consensus bytes` |
+| Omit present empty secret | `encoding/empty-secret consensus bytes` |
+| Decode empty secret as absent | `encoding/empty-secret decoded fields` |
+| Remove HRP check | `wrapper/wrong-hrp` |
+| Remove variant check | `wrapper/wrong-variant` |
+| Remove literal prefix guard | `wrapper/uppercase` |
+| Lowercase before checksum decode | `wrapper/mixed-case` |
+| Trim only ASCII | `wrapper/unicode-space` |
+| Strict regroup, nonzero padding | `padding/nonzero-padding` |
+| Strict regroup, extra symbol | `padding/extra-symbol` |
+| Bypass original checksum | `wrapper/bad-checksum` |
+| Increase encoder cap | `boundaries/633 encode cap` |
+| Increase decoder cap | `boundaries/633 decode cap` |
+| Sort guardians on encode | `encoding/encode-order consensus bytes` |
+| Reject empty federation id | `encoding/empty-id consensus bytes` |
+| Reject no-guardian encoding | `encoding/no-guardian consensus bytes` |
+| Count URL characters as bytes | `encoding/unicode consensus bytes` |
+| Count secret characters as bytes | `encoding/unicode consensus bytes` |
+| Add nested secret prefix | `encoding/empty-secret consensus bytes` |
+| Append guardians repeatedly | `large/ascending processing budget` |
+| Use insertion sort | `large/descending processing budget` |
+| Scan the suffix for data bounds | `large/ascending processing budget` |
+| Scan the suffix for BigSize bounds | `large/ascending processing budget` |
+| Scan the suffix for guardian length | `large/ascending processing budget` |
+| Use canonical URL prefix width | `parts/nonminimal-url-length` |
+| Use canonical peer prefix width | `parts/nonminimal-peer` |
+
+The valid wrong-HRP input has HRP `fed1x`, so it passes the prefix guard.
+The two 633-byte cap checks use a correctly checksummed string. The two UTF-8,
+overwrite and padding properties each have their own execution. The two padding
+executions reuse the same strict-regroup edit with independently selected inputs,
+so neither property's detection relies on the other failing first.
+
+[The separate axiom-gate record](packages/fedimint-invite/test-data/axiom-gate.json)
+pins **1/1** rejection check: an otherwise unused private theorem temporarily
+depends on `FedimintInvite.libraryGateProbe`. The scan rejects
+`rejectedPrivateHelper` with `reaches disallowed axiom`, even while all four
+named obligations retain their allowed axiom reports. The exact source is
+restored and the full test passes. This checks the allowlist, without claiming
+that a false theorem statement was detected.
 
 ## Deltas taken
 
