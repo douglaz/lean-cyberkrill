@@ -1,0 +1,162 @@
+[
+  {
+    "case": "max-cli-msat",
+    "field": "stdout[\"btc\"]",
+    "kind": "number",
+    "reference": "184467440.7370955",
+    "port": "184467440.73709551615",
+    "rationale": "Exact integer msat arithmetic replaces reference binary64 rounding or u64 saturation"
+  },
+  {
+    "case": "large-exact-msat",
+    "field": "stdout[\"btc\"]",
+    "kind": "number",
+    "reference": "90071.99254740991",
+    "port": "90071.99254740993",
+    "rationale": "Exact integer msat arithmetic replaces reference binary64 rounding or u64 saturation"
+  },
+  {
+    "case": "saturated-btc",
+    "field": "stdout[\"btc\"]",
+    "kind": "number",
+    "reference": "184467440.7370955",
+    "port": "200000000",
+    "rationale": "Exact integer msat arithmetic replaces reference binary64 rounding or u64 saturation"
+  },
+  {
+    "case": "saturated-btc",
+    "field": "stdout[\"sats\"]",
+    "kind": "number",
+    "reference": "18446744073709551",
+    "port": "20000000000000000",
+    "rationale": "Exact integer msat arithmetic replaces reference binary64 rounding or u64 saturation"
+  },
+  {
+    "case": "saturated-btc",
+    "field": "stdout[\"msats\"]",
+    "kind": "number",
+    "reference": "18446744073709551615",
+    "port": "20000000000000000000",
+    "rationale": "Exact integer msat arithmetic replaces reference binary64 rounding or u64 saturation"
+  },
+  {
+    "case": "saturated-sats",
+    "field": "stdout[\"btc\"]",
+    "kind": "number",
+    "reference": "184467440.7370955",
+    "port": "200000000",
+    "rationale": "Exact integer msat arithmetic replaces reference binary64 rounding or u64 saturation"
+  },
+  {
+    "case": "saturated-sats",
+    "field": "stdout[\"sats\"]",
+    "kind": "number",
+    "reference": "18446744073709551",
+    "port": "20000000000000000",
+    "rationale": "Exact integer msat arithmetic replaces reference binary64 rounding or u64 saturation"
+  },
+  {
+    "case": "saturated-sats",
+    "field": "stdout[\"msats\"]",
+    "kind": "number",
+    "reference": "18446744073709551615",
+    "port": "20000000000000000000",
+    "rationale": "Exact integer msat arithmetic replaces reference binary64 rounding or u64 saturation"
+  },
+  {
+    "case": "rounded-btc",
+    "field": "stdout[\"btc\"]",
+    "kind": "number",
+    "reference": "90071992.54740994",
+    "port": "90071992.54740993",
+    "rationale": "Exact integer msat arithmetic replaces reference binary64 rounding or u64 saturation"
+  },
+  {
+    "case": "rounded-btc",
+    "field": "stdout[\"sats\"]",
+    "kind": "number",
+    "reference": "9007199254740994",
+    "port": "9007199254740993",
+    "rationale": "Exact integer msat arithmetic replaces reference binary64 rounding or u64 saturation"
+  },
+  {
+    "case": "rounded-btc",
+    "field": "stdout[\"msats\"]",
+    "kind": "number",
+    "reference": "9007199254740994048",
+    "port": "9007199254740993000",
+    "rationale": "Exact integer msat arithmetic replaces reference binary64 rounding or u64 saturation"
+  },
+  {
+    "case": "rounded-sats",
+    "field": "stdout[\"btc\"]",
+    "kind": "number",
+    "reference": "90071.99254740991",
+    "port": "90071.99254740993",
+    "rationale": "Exact integer msat arithmetic replaces reference binary64 rounding or u64 saturation"
+  },
+  {
+    "case": "rounded-sats",
+    "field": "stdout[\"msats\"]",
+    "kind": "number",
+    "reference": "9007199254740992",
+    "port": "9007199254740993",
+    "rationale": "Exact integer msat arithmetic replaces reference binary64 rounding or u64 saturation"
+  },
+  {
+    "case": "large-exact-json",
+    "field": "stdout[\"btc\"]",
+    "kind": "number",
+    "reference": "21000000.0",
+    "port": "20999999.99999999999",
+    "rationale": "Exact integer msat arithmetic replaces reference binary64 rounding or u64 saturation"
+  },
+  {
+    "case": "large-exact-json",
+    "field": "stdout[\"sats\"]",
+    "kind": "number",
+    "reference": "2100000000000000",
+    "port": "2099999999999999",
+    "rationale": "Exact integer msat arithmetic replaces reference binary64 rounding or u64 saturation"
+  },
+  {
+    "case": "large-exact-json",
+    "field": "stdout[\"msats\"]",
+    "kind": "number",
+    "reference": "2100000000000000000",
+    "port": "2099999999999999999",
+    "rationale": "Exact integer msat arithmetic replaces reference binary64 rounding or u64 saturation"
+  },
+  {
+    "case": "large-exact-btc",
+    "field": "stdout",
+    "kind": "string",
+    "reference": "21000000\n",
+    "port": "20999999.99999999999\n",
+    "rationale": "Exact amount scalar retains the last millisatoshi"
+  },
+  {
+    "case": "large-exact-sats",
+    "field": "stdout",
+    "kind": "string",
+    "reference": "2100000000000000\n",
+    "port": "2099999999999999\n",
+    "rationale": "Exact amount scalar retains the last millisatoshi"
+  },
+  {
+    "case": "large-exact-sats",
+    "field": "stderr",
+    "kind": "string",
+    "reference": "",
+    "port": "[convert-amount] note: input has fractional satoshis (2099999999999999999 msat); --as sats floors to 2099999999999999 sat\n",
+    "rationale": "Exact amount retains a fractional satoshi that reference rounding removes"
+  },
+  {
+    "case": "large-exact-msats",
+    "field": "stdout",
+    "kind": "string",
+    "reference": "2100000000000000000\n",
+    "port": "2099999999999999999\n",
+    "rationale": "Exact amount scalar retains the last millisatoshi"
+  }
+]

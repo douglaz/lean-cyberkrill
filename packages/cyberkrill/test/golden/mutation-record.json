@@ -1,0 +1,629 @@
+{
+  "count": 21,
+  "source_sha256": {
+    "Cyberkrill/Amounts.lean": "6dd85ef39ff48b07320256702af2f32c39ad7989d8bbec894d203573ab0bba65",
+    "Cyberkrill/App.lean": "d1e9368f956f2f06b1133d52049473da0168cac662d234db0cfcbfc3f1019651",
+    "Cyberkrill/Capabilities.lean": "35a0f3dc6dff6a88989c9de7665c93a117f26341f8869ba28c4c01e298d064a8",
+    "test/mutate.py": "2f2af8261e854b8db1c51c81aadeffa62bf24e06817695df1f76258ff3118189",
+    "test/driver.py": "59a23528a7f39ebc81bd6901f87cf40bb6f25bcddd4369def1a274e7c54f3cc7",
+    "test/compare.py": "65792ec70aab8f33fa83736d1fb7a9708e373d0d74712bc3ce5c3d511b64ba82",
+    "test/selftest.py": "8dd5a8fc9ce3f3f9eac06b595242e88e064d628fc91898cca929a2cb3f779221",
+    "test/regressions.py": "b1e757d159d3255817c8227c80b18822040ea77073f4ef2dcb8a75218fdd7787",
+    "test/cases.py": "78feb1ba8266b5d1934aafa19d83e41d59b412cdb38de63da88cc367b21ac2ee",
+    "Main.lean": "915167be1211cea874cd9f781d9651bc3e441b81dd9979415ba55d44e34f2eb1",
+    "lakefile.lean": "d44fd2f61f2a9c36193b512fdd7a20f8280e3625c35bffed5a0d968cf831cb7d",
+    "CyberkrillTests/Capabilities.lean": "50172673976ead4aef29242efa591ed2237d2db4f60a6a323c2d5f9f4555fd66",
+    "CyberkrillTests/Helpers.lean": "d4484cedac1da7a20e5bc0a05080c7d6c171e7ec49f7a64e3a80ad3d075bc70a",
+    "CyberkrillTests/Mnemonic.lean": "8afa3185be3c76554509bc98dda37128d030d9a146719374b16bddab5faf9c1e",
+    "CyberkrillTests/Output.lean": "9912e5c699b4fb7c07ff5eaacd2d5d821d6585118cb17a0829b224c96965a966",
+    "CyberkrillTests/Support.lean": "80dbdfd22c0478dde791bfc46ae73418a8cf838f7728bb08f248291cdb3a179c",
+    "CyberkrillTests.lean": "d18f3a7a1a8468e09727b0dae9def1ce3f67ffaa45433526ebd13279feed717f",
+    "test/output-regressions.py": "0c9c3284471ab2fde2ed27559b7a76d05a30ac8e81e1a865c3d8c4fa14d73c14"
+  },
+  "mutations": [
+    {
+      "property": "amount-scaling",
+      "file": "Cyberkrill/App.lean",
+      "replace": "let a \u2190 parseAmount input",
+      "with_text": "let a \u2190 parseAmount input\n  let a := Bitcoin.Amount.ofMsat (a.msat * 10)",
+      "build_command": [
+        "timeout",
+        "--foreground",
+        "180",
+        "lake",
+        "build",
+        "cyberkrill",
+        "CyberkrillTests"
+      ],
+      "build_status": 0,
+      "command": [
+        "timeout",
+        "--foreground",
+        "180",
+        "python3",
+        "-B",
+        "test/driver.py",
+        "--cli"
+      ],
+      "status": 1,
+      "detecting_assertion": "amount scaling",
+      "seconds": 0.943,
+      "restored_status": 0
+    },
+    {
+      "property": "sats-flooring",
+      "file": "Cyberkrill/App.lean",
+      "replace": "let sats := a.msat / 1000",
+      "with_text": "let sats := (a.msat + 500) / 1000",
+      "build_command": [
+        "timeout",
+        "--foreground",
+        "180",
+        "lake",
+        "build",
+        "cyberkrill",
+        "CyberkrillTests"
+      ],
+      "build_status": 0,
+      "command": [
+        "timeout",
+        "--foreground",
+        "180",
+        "python3",
+        "-B",
+        "test/driver.py",
+        "--cli"
+      ],
+      "status": 1,
+      "detecting_assertion": "sats flooring",
+      "seconds": 2.385,
+      "restored_status": 0
+    },
+    {
+      "property": "stderr-routing",
+      "file": "Cyberkrill/App.lean",
+      "replace": "services.stderr (error.message ++",
+      "with_text": "services.stdout (error.message ++",
+      "build_command": [
+        "timeout",
+        "--foreground",
+        "180",
+        "lake",
+        "build",
+        "cyberkrill",
+        "CyberkrillTests"
+      ],
+      "build_status": 0,
+      "command": [
+        "timeout",
+        "--foreground",
+        "180",
+        "python3",
+        "-B",
+        "test/driver.py",
+        "--cli"
+      ],
+      "status": 1,
+      "detecting_assertion": "output refusal 0 stdout",
+      "seconds": 0.085,
+      "restored_status": 0
+    },
+    {
+      "property": "whole-rounding",
+      "file": "Cyberkrill/Amounts.lean",
+      "replace": "satsResult a ((a.msat + 500) / 1000)",
+      "with_text": "satsResult a ((a.msat + 499) / 1000)",
+      "build_command": [
+        "timeout",
+        "--foreground",
+        "180",
+        "lake",
+        "build",
+        "cyberkrill",
+        "CyberkrillTests"
+      ],
+      "build_status": 0,
+      "command": [
+        "timeout",
+        "--foreground",
+        "180",
+        ".lake/build/bin/CyberkrillTests",
+        "--check",
+        "whole-round"
+      ],
+      "status": 1,
+      "detecting_assertion": "wholeSat half-up",
+      "seconds": 0.036,
+      "restored_status": 0
+    },
+    {
+      "property": "whole-tiny",
+      "file": "Cyberkrill/Amounts.lean",
+      "replace": "satsResult a ((a.msat + 500) / 1000)",
+      "with_text": ".ok (Bitcoin.Amount.ofSats ((a.msat + 500) / 1000))",
+      "build_command": [
+        "timeout",
+        "--foreground",
+        "180",
+        "lake",
+        "build",
+        "cyberkrill",
+        "CyberkrillTests"
+      ],
+      "build_status": 0,
+      "command": [
+        "timeout",
+        "--foreground",
+        "180",
+        ".lake/build/bin/CyberkrillTests",
+        "--check",
+        "whole-tiny"
+      ],
+      "status": 1,
+      "detecting_assertion": "wholeSat tiny",
+      "seconds": 0.038,
+      "restored_status": 0
+    },
+    {
+      "property": "floor-tiny",
+      "file": "Cyberkrill/Amounts.lean",
+      "replace": "satsResult a (a.msat / 1000)",
+      "with_text": ".ok (Bitcoin.Amount.ofSats (a.msat / 1000))",
+      "build_command": [
+        "timeout",
+        "--foreground",
+        "180",
+        "lake",
+        "build",
+        "cyberkrill",
+        "CyberkrillTests"
+      ],
+      "build_status": 0,
+      "command": [
+        "timeout",
+        "--foreground",
+        "180",
+        ".lake/build/bin/CyberkrillTests",
+        "--check",
+        "floor-tiny"
+      ],
+      "status": 1,
+      "detecting_assertion": "floorSat tiny",
+      "seconds": 0.03,
+      "restored_status": 0
+    },
+    {
+      "property": "whole-exact",
+      "file": "Cyberkrill/Amounts.lean",
+      "replace": "if a.msat % 1000 != 0 then",
+      "with_text": "if a.msat % 1000 == 0 then",
+      "build_command": [
+        "timeout",
+        "--foreground",
+        "180",
+        "lake",
+        "build",
+        "cyberkrill",
+        "CyberkrillTests"
+      ],
+      "build_status": 0,
+      "command": [
+        "timeout",
+        "--foreground",
+        "180",
+        ".lake/build/bin/CyberkrillTests",
+        "--check",
+        "whole-exact"
+      ],
+      "status": 1,
+      "detecting_assertion": "exact wholeSat rejects",
+      "seconds": 0.029,
+      "restored_status": 0
+    },
+    {
+      "property": "fee-unit",
+      "file": "Cyberkrill/Amounts.lean",
+      "replace": "if hasBitcoinUnit s then parseAmount s else .error .feeUnitRequired",
+      "with_text": "parseAmount s",
+      "build_command": [
+        "timeout",
+        "--foreground",
+        "180",
+        "lake",
+        "build",
+        "cyberkrill",
+        "CyberkrillTests"
+      ],
+      "build_status": 0,
+      "command": [
+        "timeout",
+        "--foreground",
+        "180",
+        ".lake/build/bin/CyberkrillTests",
+        "--check",
+        "fee"
+      ],
+      "status": 1,
+      "detecting_assertion": "fee unit requirement",
+      "seconds": 0.032,
+      "restored_status": 0
+    },
+    {
+      "property": "mnemonic-mapping",
+      "file": "Cyberkrill/App.lean",
+      "replace": "15 => .ok 20",
+      "with_text": "15 => .ok 21",
+      "build_command": [
+        "timeout",
+        "--foreground",
+        "180",
+        "lake",
+        "build",
+        "cyberkrill",
+        "CyberkrillTests"
+      ],
+      "build_status": 0,
+      "command": [
+        "timeout",
+        "--foreground",
+        "180",
+        "python3",
+        "-B",
+        "test/driver.py",
+        "--mnemonic"
+      ],
+      "status": 1,
+      "detecting_assertion": "mnemonic entropy mapping",
+      "seconds": 0.088,
+      "restored_status": 0
+    },
+    {
+      "property": "entropy-wiring",
+      "file": "Cyberkrill/App.lean",
+      "replace": "IO.getRandomBytes n.toUSize",
+      "with_text": "IO.getRandomBytes (n + 1).toUSize",
+      "build_command": [
+        "timeout",
+        "--foreground",
+        "180",
+        "lake",
+        "build",
+        "cyberkrill",
+        "CyberkrillTests"
+      ],
+      "build_status": 0,
+      "command": [
+        "timeout",
+        "--foreground",
+        "180",
+        ".lake/build/bin/CyberkrillTests",
+        "--check",
+        "entropy-source"
+      ],
+      "status": 1,
+      "detecting_assertion": "entropy production length",
+      "seconds": 0.03,
+      "restored_status": 0
+    },
+    {
+      "property": "file-routing",
+      "file": "Cyberkrill/App.lean",
+      "replace": "some p => { file := some (p, text) }",
+      "with_text": "some _ => { stdout := text }",
+      "build_command": [
+        "timeout",
+        "--foreground",
+        "180",
+        "lake",
+        "build",
+        "cyberkrill",
+        "CyberkrillTests"
+      ],
+      "build_status": 0,
+      "command": [
+        "timeout",
+        "--foreground",
+        "180",
+        "python3",
+        "-B",
+        "test/driver.py",
+        "--mnemonic"
+      ],
+      "status": 1,
+      "detecting_assertion": "mnemonic file stdout",
+      "seconds": 0.086,
+      "restored_status": 0
+    },
+    {
+      "property": "cap-pubkey",
+      "file": "Cyberkrill/Capabilities.lean",
+      "replace": "where\n  isValidPubkey := Secp256k1.isValidPubkey\n  compressPubkey",
+      "with_text": "where\n  isValidPubkey := fun _ => false\n  compressPubkey",
+      "build_command": [
+        "timeout",
+        "--foreground",
+        "180",
+        "lake",
+        "build",
+        "cyberkrill",
+        "CyberkrillTests"
+      ],
+      "build_status": 0,
+      "command": [
+        "timeout",
+        "--foreground",
+        "180",
+        ".lake/build/bin/CyberkrillTests",
+        "--check",
+        "cap-pubkey"
+      ],
+      "status": 1,
+      "detecting_assertion": "cap Bitcoin pubkey accepts",
+      "seconds": 0.032,
+      "restored_status": 0
+    },
+    {
+      "property": "cap-compress",
+      "file": "Cyberkrill/Capabilities.lean",
+      "replace": "compressPubkey := Secp256k1.compressPubkey",
+      "with_text": "compressPubkey := fun _ => none",
+      "build_command": [
+        "timeout",
+        "--foreground",
+        "180",
+        "lake",
+        "build",
+        "cyberkrill",
+        "CyberkrillTests"
+      ],
+      "build_status": 0,
+      "command": [
+        "timeout",
+        "--foreground",
+        "180",
+        ".lake/build/bin/CyberkrillTests",
+        "--check",
+        "cap-compress"
+      ],
+      "status": 1,
+      "detecting_assertion": "cap Bitcoin compression matches",
+      "seconds": 0.03,
+      "restored_status": 0
+    },
+    {
+      "property": "cap-xonly",
+      "file": "Cyberkrill/Capabilities.lean",
+      "replace": "isValidXOnlyPubkey := Secp256k1.isValidXOnlyPubkey",
+      "with_text": "isValidXOnlyPubkey := fun _ => false",
+      "build_command": [
+        "timeout",
+        "--foreground",
+        "180",
+        "lake",
+        "build",
+        "cyberkrill",
+        "CyberkrillTests"
+      ],
+      "build_status": 0,
+      "command": [
+        "timeout",
+        "--foreground",
+        "180",
+        ".lake/build/bin/CyberkrillTests",
+        "--check",
+        "cap-xonly"
+      ],
+      "status": 1,
+      "detecting_assertion": "cap Bitcoin xonly accepts",
+      "seconds": 0.032,
+      "restored_status": 0
+    },
+    {
+      "property": "cap-der",
+      "file": "Cyberkrill/Capabilities.lean",
+      "replace": "isValidDerSignature := Secp256k1.isValidDerSignature",
+      "with_text": "isValidDerSignature := fun _ => false",
+      "build_command": [
+        "timeout",
+        "--foreground",
+        "180",
+        "lake",
+        "build",
+        "cyberkrill",
+        "CyberkrillTests"
+      ],
+      "build_status": 0,
+      "command": [
+        "timeout",
+        "--foreground",
+        "180",
+        ".lake/build/bin/CyberkrillTests",
+        "--check",
+        "cap-der"
+      ],
+      "status": 1,
+      "detecting_assertion": "cap Bitcoin DER accepts",
+      "seconds": 0.029,
+      "restored_status": 0
+    },
+    {
+      "property": "cap-recover",
+      "file": "Cyberkrill/Capabilities.lean",
+      "replace": "recover := Secp256k1.recover",
+      "with_text": "recover := fun _ _ _ => none",
+      "build_command": [
+        "timeout",
+        "--foreground",
+        "180",
+        "lake",
+        "build",
+        "cyberkrill",
+        "CyberkrillTests"
+      ],
+      "build_status": 0,
+      "command": [
+        "timeout",
+        "--foreground",
+        "180",
+        ".lake/build/bin/CyberkrillTests",
+        "--check",
+        "cap-recover"
+      ],
+      "status": 1,
+      "detecting_assertion": "cap BOLT recover L382",
+      "seconds": 0.029,
+      "restored_status": 0
+    },
+    {
+      "property": "cap-verify",
+      "file": "Cyberkrill/Capabilities.lean",
+      "replace": "verify := Secp256k1.verify",
+      "with_text": "verify := fun _ _ _ => false",
+      "build_command": [
+        "timeout",
+        "--foreground",
+        "180",
+        "lake",
+        "build",
+        "cyberkrill",
+        "CyberkrillTests"
+      ],
+      "build_status": 0,
+      "command": [
+        "timeout",
+        "--foreground",
+        "180",
+        ".lake/build/bin/CyberkrillTests",
+        "--check",
+        "cap-verify"
+      ],
+      "status": 1,
+      "detecting_assertion": "cap BOLT verify decode",
+      "seconds": 0.032,
+      "restored_status": 0
+    },
+    {
+      "property": "cap-sign",
+      "file": "Cyberkrill/Capabilities.lean",
+      "replace": "sign := fun hash => Secp256k1.sign hash secret",
+      "with_text": "sign := fun _ => none",
+      "build_command": [
+        "timeout",
+        "--foreground",
+        "180",
+        "lake",
+        "build",
+        "cyberkrill",
+        "CyberkrillTests"
+      ],
+      "build_status": 0,
+      "command": [
+        "timeout",
+        "--foreground",
+        "180",
+        ".lake/build/bin/CyberkrillTests",
+        "--check",
+        "cap-sign"
+      ],
+      "status": 1,
+      "detecting_assertion": "cap BOLT signature exact",
+      "seconds": 0.03,
+      "restored_status": 0
+    },
+    {
+      "property": "cap-point",
+      "file": "Cyberkrill/Capabilities.lean",
+      "replace": "sign := fun hash => Secp256k1.sign hash secret\n  isValidPubkey := Secp256k1.isValidPubkey",
+      "with_text": "sign := fun hash => Secp256k1.sign hash secret\n  isValidPubkey := fun _ => false",
+      "build_command": [
+        "timeout",
+        "--foreground",
+        "180",
+        "lake",
+        "build",
+        "cyberkrill",
+        "CyberkrillTests"
+      ],
+      "build_status": 0,
+      "command": [
+        "timeout",
+        "--foreground",
+        "180",
+        ".lake/build/bin/CyberkrillTests",
+        "--check",
+        "cap-point"
+      ],
+      "status": 1,
+      "detecting_assertion": "cap BOLT point accepts",
+      "seconds": 0.031,
+      "restored_status": 0
+    },
+    {
+      "property": "hash-ripemd",
+      "file": "Cyberkrill/Capabilities.lean",
+      "replace": "ripemd160 := Bitcoin.ripemd160",
+      "with_text": "ripemd160 := Bitcoin.hash160",
+      "build_command": [
+        "timeout",
+        "--foreground",
+        "180",
+        "lake",
+        "build",
+        "cyberkrill",
+        "CyberkrillTests"
+      ],
+      "build_status": 0,
+      "command": [
+        "timeout",
+        "--foreground",
+        "180",
+        ".lake/build/bin/CyberkrillTests",
+        "--check",
+        "hashes"
+      ],
+      "status": 1,
+      "detecting_assertion": "cap RIPEMD160",
+      "seconds": 0.03,
+      "restored_status": 0
+    },
+    {
+      "property": "hash-hash160",
+      "file": "Cyberkrill/Capabilities.lean",
+      "replace": "hash160 := Bitcoin.hash160",
+      "with_text": "hash160 := Bitcoin.ripemd160",
+      "build_command": [
+        "timeout",
+        "--foreground",
+        "180",
+        "lake",
+        "build",
+        "cyberkrill",
+        "CyberkrillTests"
+      ],
+      "build_status": 0,
+      "command": [
+        "timeout",
+        "--foreground",
+        "180",
+        ".lake/build/bin/CyberkrillTests",
+        "--check",
+        "hashes"
+      ],
+      "status": 1,
+      "detecting_assertion": "cap HASH160",
+      "seconds": 0.03,
+      "restored_status": 0
+    }
+  ],
+  "restored_full": {
+    "command": [
+      "timeout",
+      "--foreground",
+      "180",
+      "lake",
+      "test"
+    ],
+    "status": 0,
+    "seconds": 7.965
+  }
+}

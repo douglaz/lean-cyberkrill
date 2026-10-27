@@ -1,0 +1,332 @@
+{
+  "before": {
+    "tests_sha256": {
+      "test/regressions.py": "b1e757d159d3255817c8227c80b18822040ea77073f4ef2dcb8a75218fdd7787",
+      "test/record-regressions.py": "6a461309c058eda0c2ea48082c96418d24ac6db07ec7fb301c08349e7ed8b22b",
+      "CyberkrillTests/Mnemonic.lean": "a154c704c10d713b453aab91ce4173a6e2929eefce65ff42794d4203e19e203d",
+      "CyberkrillTests.lean": "1c84aac366aaa1a30246aa437763024dc17775bba284170b3f3806d277876615"
+    },
+    "source_sha256": {
+      "Cyberkrill/App.lean": "37a19666ca5e458b8de3a38abe1ce4590efd402849bca3561e64989d30890615",
+      "test/driver.py": "13aa2cdb884ec9b184e6472e3deae7f812042b07803ef52d56e8686839c9ba90",
+      "test/compare.py": "5a19c681d6ee0df2297a09ae1b55a48fd92bc68d5144cc82268375aabd15de0c"
+    },
+    "checks": [
+      {
+        "property": "word-count-rejections",
+        "command": [
+          "timeout",
+          "--foreground",
+          "60",
+          "python3",
+          "-B",
+          "test/regressions.py",
+          "word-count-rejections"
+        ],
+        "status": 1,
+        "seconds": 0.094,
+        "detecting_assertion": "word-count rejection before entropy"
+      },
+      {
+        "property": "word-count-plus",
+        "command": [
+          "timeout",
+          "--foreground",
+          "60",
+          "python3",
+          "-B",
+          "test/regressions.py",
+          "word-count-plus"
+        ],
+        "status": 1,
+        "seconds": 0.136,
+        "detecting_assertion": "mnemonic exact status 0"
+      },
+      {
+        "property": "bare-negative-zero",
+        "command": [
+          "timeout",
+          "--foreground",
+          "60",
+          "python3",
+          "-B",
+          "test/regressions.py",
+          "bare-negative-zero"
+        ],
+        "status": 1,
+        "seconds": 0.088,
+        "detecting_assertion": "bare negative-zero refused 0"
+      },
+      {
+        "property": "delimited-negative-zero",
+        "command": [
+          "timeout",
+          "--foreground",
+          "60",
+          "python3",
+          "-B",
+          "test/regressions.py",
+          "delimited-negative-zero"
+        ],
+        "status": 0,
+        "seconds": 0.158,
+        "detecting_assertion": ""
+      },
+      {
+        "property": "stdout-crlf",
+        "command": [
+          "timeout",
+          "--foreground",
+          "60",
+          "python3",
+          "-B",
+          "test/regressions.py",
+          "stdout-crlf"
+        ],
+        "status": 1,
+        "seconds": 0.068,
+        "detecting_assertion": "subprocess stdout CRLF preserved"
+      },
+      {
+        "property": "stdout-cr",
+        "command": [
+          "timeout",
+          "--foreground",
+          "60",
+          "python3",
+          "-B",
+          "test/regressions.py",
+          "stdout-cr"
+        ],
+        "status": 1,
+        "seconds": 0.071,
+        "detecting_assertion": "subprocess stdout CR preserved"
+      },
+      {
+        "property": "stderr-crlf",
+        "command": [
+          "timeout",
+          "--foreground",
+          "60",
+          "python3",
+          "-B",
+          "test/regressions.py",
+          "stderr-crlf"
+        ],
+        "status": 1,
+        "seconds": 0.07,
+        "detecting_assertion": "subprocess stderr CRLF preserved"
+      },
+      {
+        "property": "stderr-cr",
+        "command": [
+          "timeout",
+          "--foreground",
+          "60",
+          "python3",
+          "-B",
+          "test/regressions.py",
+          "stderr-cr"
+        ],
+        "status": 1,
+        "seconds": 0.069,
+        "detecting_assertion": "subprocess stderr CR preserved"
+      },
+      {
+        "property": "dotted-collision",
+        "command": [
+          "timeout",
+          "--foreground",
+          "60",
+          "python3",
+          "-B",
+          "test/regressions.py",
+          "dotted-collision"
+        ],
+        "status": 1,
+        "seconds": 0.054,
+        "detecting_assertion": "dotted leaf collision refused"
+      },
+      {
+        "property": "bracket-collision",
+        "command": [
+          "timeout",
+          "--foreground",
+          "60",
+          "python3",
+          "-B",
+          "test/regressions.py",
+          "bracket-collision"
+        ],
+        "status": 1,
+        "seconds": 0.058,
+        "detecting_assertion": "bracket leaf collision refused"
+      }
+    ]
+  },
+  "after": {
+    "tests_sha256": {
+      "test/regressions.py": "b1e757d159d3255817c8227c80b18822040ea77073f4ef2dcb8a75218fdd7787",
+      "test/record-regressions.py": "6a461309c058eda0c2ea48082c96418d24ac6db07ec7fb301c08349e7ed8b22b",
+      "CyberkrillTests/Mnemonic.lean": "a154c704c10d713b453aab91ce4173a6e2929eefce65ff42794d4203e19e203d",
+      "CyberkrillTests.lean": "1c84aac366aaa1a30246aa437763024dc17775bba284170b3f3806d277876615"
+    },
+    "source_sha256": {
+      "Cyberkrill/App.lean": "4052c142b8e3b10f4322fc22fce1f6e7d5c9300f477ac4ee55d60206eec2957b",
+      "test/driver.py": "4c3fa9f730116d440ae664dd63e44ec3e9eb6083ad906edcbe138c2419d429ca",
+      "test/compare.py": "65792ec70aab8f33fa83736d1fb7a9708e373d0d74712bc3ce5c3d511b64ba82"
+    },
+    "checks": [
+      {
+        "property": "word-count-rejections",
+        "command": [
+          "timeout",
+          "--foreground",
+          "60",
+          "python3",
+          "-B",
+          "test/regressions.py",
+          "word-count-rejections"
+        ],
+        "status": 0,
+        "seconds": 0.068,
+        "detecting_assertion": ""
+      },
+      {
+        "property": "word-count-plus",
+        "command": [
+          "timeout",
+          "--foreground",
+          "60",
+          "python3",
+          "-B",
+          "test/regressions.py",
+          "word-count-plus"
+        ],
+        "status": 0,
+        "seconds": 0.081,
+        "detecting_assertion": ""
+      },
+      {
+        "property": "bare-negative-zero",
+        "command": [
+          "timeout",
+          "--foreground",
+          "60",
+          "python3",
+          "-B",
+          "test/regressions.py",
+          "bare-negative-zero"
+        ],
+        "status": 0,
+        "seconds": 0.121,
+        "detecting_assertion": ""
+      },
+      {
+        "property": "delimited-negative-zero",
+        "command": [
+          "timeout",
+          "--foreground",
+          "60",
+          "python3",
+          "-B",
+          "test/regressions.py",
+          "delimited-negative-zero"
+        ],
+        "status": 0,
+        "seconds": 0.119,
+        "detecting_assertion": ""
+      },
+      {
+        "property": "stdout-crlf",
+        "command": [
+          "timeout",
+          "--foreground",
+          "60",
+          "python3",
+          "-B",
+          "test/regressions.py",
+          "stdout-crlf"
+        ],
+        "status": 0,
+        "seconds": 0.05,
+        "detecting_assertion": ""
+      },
+      {
+        "property": "stdout-cr",
+        "command": [
+          "timeout",
+          "--foreground",
+          "60",
+          "python3",
+          "-B",
+          "test/regressions.py",
+          "stdout-cr"
+        ],
+        "status": 0,
+        "seconds": 0.051,
+        "detecting_assertion": ""
+      },
+      {
+        "property": "stderr-crlf",
+        "command": [
+          "timeout",
+          "--foreground",
+          "60",
+          "python3",
+          "-B",
+          "test/regressions.py",
+          "stderr-crlf"
+        ],
+        "status": 0,
+        "seconds": 0.051,
+        "detecting_assertion": ""
+      },
+      {
+        "property": "stderr-cr",
+        "command": [
+          "timeout",
+          "--foreground",
+          "60",
+          "python3",
+          "-B",
+          "test/regressions.py",
+          "stderr-cr"
+        ],
+        "status": 0,
+        "seconds": 0.05,
+        "detecting_assertion": ""
+      },
+      {
+        "property": "dotted-collision",
+        "command": [
+          "timeout",
+          "--foreground",
+          "60",
+          "python3",
+          "-B",
+          "test/regressions.py",
+          "dotted-collision"
+        ],
+        "status": 0,
+        "seconds": 0.039,
+        "detecting_assertion": ""
+      },
+      {
+        "property": "bracket-collision",
+        "command": [
+          "timeout",
+          "--foreground",
+          "60",
+          "python3",
+          "-B",
+          "test/regressions.py",
+          "bracket-collision"
+        ],
+        "status": 0,
+        "seconds": 0.038,
+        "detecting_assertion": ""
+      }
+    ]
+  }
+}

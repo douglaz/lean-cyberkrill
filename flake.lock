@@ -1,5 +1,22 @@
 {
   "nodes": {
+    "lean4-cli": {
+      "flake": false,
+      "locked": {
+        "lastModified": 1791829768,
+        "narHash": "sha256-DAhtgb9B3ZZsOb82QXhD7Z3dMvjsQCfTALCcZDfZQUw=",
+        "owner": "leanprover",
+        "repo": "lean4-cli",
+        "rev": "c24fe6078c630e89b489bffe59b3e20ac30d12c8",
+        "type": "github"
+      },
+      "original": {
+        "owner": "leanprover",
+        "repo": "lean4-cli",
+        "rev": "c24fe6078c630e89b489bffe59b3e20ac30d12c8",
+        "type": "github"
+      }
+    },
     "nixpkgs": {
       "locked": {
         "lastModified": 1792094642,
@@ -18,6 +35,7 @@
     },
     "root": {
       "inputs": {
+        "lean4-cli": "lean4-cli",
         "nixpkgs": "nixpkgs",
         "wycheproof": "wycheproof"
       }

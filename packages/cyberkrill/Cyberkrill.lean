@@ -8,10 +8,12 @@ import Bitcoin
 import Lightning
 import FedimintInvite
 import HttpCurl
+import Cyberkrill.Capabilities
+import Cyberkrill.App
 
 /-! # Cyberkrill
 
-The cyberkrill command-line tool. Commands arrive in Phases 7-9 (plan.md section 4). -/
+The offline version, amount conversion and mnemonic commands. -/
 
 namespace Cyberkrill
 

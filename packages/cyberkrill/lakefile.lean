@@ -17,6 +17,7 @@ require bitcoin from ".." / "bitcoin"
 require lightning from ".." / "lightning"
 require «fedimint-invite» from ".." / "fedimint-invite"
 require «http-curl» from ".." / "http-curl"
+require Cli from ".lake" / "packages" / "Cli"
 
 lean_lib Cyberkrill
 
@@ -27,5 +28,9 @@ lean_exe cyberkrill where
 lean_exe linkspike where
   root := `LinkSpike
 
+lean_lib CyberkrillTestSupport where
+  globs := #[.submodules `CyberkrillTests]
+
 @[test_driver]
-lean_lib CyberkrillTests
+lean_exe CyberkrillTests where
+  extraDepTargets := #[`cyberkrill]

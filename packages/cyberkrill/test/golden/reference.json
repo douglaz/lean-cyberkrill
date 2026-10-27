@@ -1,0 +1,2545 @@
+[
+  {
+    "id": "version",
+    "args": [
+      "version"
+    ],
+    "mode": "version",
+    "result": {
+      "status": 0,
+      "stdout": "{\n  \"version\": \"0.2.0\"\n}\n",
+      "stderr": ""
+    }
+  },
+  {
+    "id": "suffix-msats",
+    "args": [
+      "convert-amount",
+      "--",
+      "5msats"
+    ],
+    "mode": "json",
+    "result": {
+      "status": 0,
+      "stdout": "{\n  \"input\": \"5msats\",\n  \"btc\": 5e-11,\n  \"sats\": 0,\n  \"msats\": 5\n}",
+      "stderr": ""
+    }
+  },
+  {
+    "id": "suffix-MSATS",
+    "args": [
+      "convert-amount",
+      "--",
+      "5MSATS"
+    ],
+    "mode": "json",
+    "result": {
+      "status": 0,
+      "stdout": "{\n  \"input\": \"5MSATS\",\n  \"btc\": 5e-11,\n  \"sats\": 0,\n  \"msats\": 5\n}",
+      "stderr": ""
+    }
+  },
+  {
+    "id": "suffix-msat",
+    "args": [
+      "convert-amount",
+      "--",
+      "5msat"
+    ],
+    "mode": "json",
+    "result": {
+      "status": 0,
+      "stdout": "{\n  \"input\": \"5msat\",\n  \"btc\": 5e-11,\n  \"sats\": 0,\n  \"msats\": 5\n}",
+      "stderr": ""
+    }
+  },
+  {
+    "id": "suffix-MSAT",
+    "args": [
+      "convert-amount",
+      "--",
+      "5MSAT"
+    ],
+    "mode": "json",
+    "result": {
+      "status": 0,
+      "stdout": "{\n  \"input\": \"5MSAT\",\n  \"btc\": 5e-11,\n  \"sats\": 0,\n  \"msats\": 5\n}",
+      "stderr": ""
+    }
+  },
+  {
+    "id": "suffix-sats",
+    "args": [
+      "convert-amount",
+      "--",
+      "5sats"
+    ],
+    "mode": "json",
+    "result": {
+      "status": 0,
+      "stdout": "{\n  \"input\": \"5sats\",\n  \"btc\": 5e-8,\n  \"sats\": 5,\n  \"msats\": 5000\n}",
+      "stderr": ""
+    }
+  },
+  {
+    "id": "suffix-SATS",
+    "args": [
+      "convert-amount",
+      "--",
+      "5SATS"
+    ],
+    "mode": "json",
+    "result": {
+      "status": 0,
+      "stdout": "{\n  \"input\": \"5SATS\",\n  \"btc\": 5e-8,\n  \"sats\": 5,\n  \"msats\": 5000\n}",
+      "stderr": ""
+    }
+  },
+  {
+    "id": "suffix-sat",
+    "args": [
+      "convert-amount",
+      "--",
+      "5sat"
+    ],
+    "mode": "json",
+    "result": {
+      "status": 0,
+      "stdout": "{\n  \"input\": \"5sat\",\n  \"btc\": 5e-8,\n  \"sats\": 5,\n  \"msats\": 5000\n}",
+      "stderr": ""
+    }
+  },
+  {
+    "id": "suffix-SAT",
+    "args": [
+      "convert-amount",
+      "--",
+      "5SAT"
+    ],
+    "mode": "json",
+    "result": {
+      "status": 0,
+      "stdout": "{\n  \"input\": \"5SAT\",\n  \"btc\": 5e-8,\n  \"sats\": 5,\n  \"msats\": 5000\n}",
+      "stderr": ""
+    }
+  },
+  {
+    "id": "suffix-btc",
+    "args": [
+      "convert-amount",
+      "--",
+      "5btc"
+    ],
+    "mode": "json",
+    "result": {
+      "status": 0,
+      "stdout": "{\n  \"input\": \"5btc\",\n  \"btc\": 5.0,\n  \"sats\": 500000000,\n  \"msats\": 500000000000\n}",
+      "stderr": ""
+    }
+  },
+  {
+    "id": "suffix-BTC",
+    "args": [
+      "convert-amount",
+      "--",
+      "5BTC"
+    ],
+    "mode": "json",
+    "result": {
+      "status": 0,
+      "stdout": "{\n  \"input\": \"5BTC\",\n  \"btc\": 5.0,\n  \"sats\": 500000000,\n  \"msats\": 500000000000\n}",
+      "stderr": ""
+    }
+  },
+  {
+    "id": "mixed-case",
+    "args": [
+      "convert-amount",
+      "--",
+      "0.5bTc"
+    ],
+    "mode": "json",
+    "result": {
+      "status": 0,
+      "stdout": "{\n  \"input\": \"0.5bTc\",\n  \"btc\": 0.5,\n  \"sats\": 50000000,\n  \"msats\": 50000000000\n}",
+      "stderr": ""
+    }
+  },
+  {
+    "id": "bare",
+    "args": [
+      "convert-amount",
+      "--",
+      "1"
+    ],
+    "mode": "json",
+    "result": {
+      "status": 0,
+      "stdout": "{\n  \"input\": \"1\",\n  \"btc\": 1.0,\n  \"sats\": 100000000,\n  \"msats\": 100000000000\n}",
+      "stderr": ""
+    }
+  },
+  {
+    "id": "one-satoshi",
+    "args": [
+      "convert-amount",
+      "--",
+      "0.00000001"
+    ],
+    "mode": "json",
+    "result": {
+      "status": 0,
+      "stdout": "{\n  \"input\": \"0.00000001\",\n  \"btc\": 1e-8,\n  \"sats\": 1,\n  \"msats\": 1000\n}",
+      "stderr": ""
+    }
+  },
+  {
+    "id": "supply",
+    "args": [
+      "convert-amount",
+      "--",
+      "21000000"
+    ],
+    "mode": "json",
+    "result": {
+      "status": 0,
+      "stdout": "{\n  \"input\": \"21000000\",\n  \"btc\": 21000000.0,\n  \"sats\": 2100000000000000,\n  \"msats\": 2100000000000000000\n}",
+      "stderr": ""
+    }
+  },
+  {
+    "id": "leading-zeros",
+    "args": [
+      "convert-amount",
+      "--",
+      "007btc"
+    ],
+    "mode": "json",
+    "result": {
+      "status": 0,
+      "stdout": "{\n  \"input\": \"007btc\",\n  \"btc\": 7.0,\n  \"sats\": 700000000,\n  \"msats\": 700000000000\n}",
+      "stderr": ""
+    }
+  },
+  {
+    "id": "leading-zeros-fraction",
+    "args": [
+      "convert-amount",
+      "--",
+      "00.5"
+    ],
+    "mode": "json",
+    "result": {
+      "status": 0,
+      "stdout": "{\n  \"input\": \"00.5\",\n  \"btc\": 0.5,\n  \"sats\": 50000000,\n  \"msats\": 50000000000\n}",
+      "stderr": ""
+    }
+  },
+  {
+    "id": "trailing-zero-btc",
+    "args": [
+      "convert-amount",
+      "--",
+      "0.100000000000btc"
+    ],
+    "mode": "json",
+    "result": {
+      "status": 0,
+      "stdout": "{\n  \"input\": \"0.100000000000btc\",\n  \"btc\": 0.1,\n  \"sats\": 10000000,\n  \"msats\": 10000000000\n}",
+      "stderr": ""
+    }
+  },
+  {
+    "id": "trailing-zero-msat",
+    "args": [
+      "convert-amount",
+      "--",
+      "0.000000000010btc"
+    ],
+    "mode": "json",
+    "result": {
+      "status": 0,
+      "stdout": "{\n  \"input\": \"0.000000000010btc\",\n  \"btc\": 1e-11,\n  \"sats\": 0,\n  \"msats\": 1\n}",
+      "stderr": ""
+    }
+  },
+  {
+    "id": "trailing-zero-sats",
+    "args": [
+      "convert-amount",
+      "--",
+      "0.5000sat"
+    ],
+    "mode": "json",
+    "result": {
+      "status": 0,
+      "stdout": "{\n  \"input\": \"0.5000sat\",\n  \"btc\": 5e-9,\n  \"sats\": 0,\n  \"msats\": 500\n}",
+      "stderr": ""
+    }
+  },
+  {
+    "id": "leading-dot",
+    "args": [
+      "convert-amount",
+      "--",
+      ".5"
+    ],
+    "mode": "json",
+    "result": {
+      "status": 0,
+      "stdout": "{\n  \"input\": \".5\",\n  \"btc\": 0.5,\n  \"sats\": 50000000,\n  \"msats\": 50000000000\n}",
+      "stderr": ""
+    }
+  },
+  {
+    "id": "trailing-dot",
+    "args": [
+      "convert-amount",
+      "--",
+      "5."
+    ],
+    "mode": "json",
+    "result": {
+      "status": 0,
+      "stdout": "{\n  \"input\": \"5.\",\n  \"btc\": 5.0,\n  \"sats\": 500000000,\n  \"msats\": 500000000000\n}",
+      "stderr": ""
+    }
+  },
+  {
+    "id": "leading-plus-msat",
+    "args": [
+      "convert-amount",
+      "--",
+      "+5msat"
+    ],
+    "mode": "json",
+    "result": {
+      "status": 0,
+      "stdout": "{\n  \"input\": \"+5msat\",\n  \"btc\": 5e-11,\n  \"sats\": 0,\n  \"msats\": 5\n}",
+      "stderr": ""
+    }
+  },
+  {
+    "id": "leading-plus-btc",
+    "args": [
+      "convert-amount",
+      "--",
+      "+0.5btc"
+    ],
+    "mode": "json",
+    "result": {
+      "status": 0,
+      "stdout": "{\n  \"input\": \"+0.5btc\",\n  \"btc\": 0.5,\n  \"sats\": 50000000,\n  \"msats\": 50000000000\n}",
+      "stderr": ""
+    }
+  },
+  {
+    "id": "leading-plus-bare",
+    "args": [
+      "convert-amount",
+      "--",
+      "+0.5"
+    ],
+    "mode": "json",
+    "result": {
+      "status": 0,
+      "stdout": "{\n  \"input\": \"+0.5\",\n  \"btc\": 0.5,\n  \"sats\": 50000000,\n  \"msats\": 50000000000\n}",
+      "stderr": ""
+    }
+  },
+  {
+    "id": "negative-zero",
+    "args": [
+      "convert-amount",
+      "--",
+      "-0"
+    ],
+    "mode": "json",
+    "result": {
+      "status": 0,
+      "stdout": "{\n  \"input\": \"-0\",\n  \"btc\": 0.0,\n  \"sats\": 0,\n  \"msats\": 0\n}",
+      "stderr": ""
+    }
+  },
+  {
+    "id": "negative-zero-btc",
+    "args": [
+      "convert-amount",
+      "--",
+      "-0.0btc"
+    ],
+    "mode": "json",
+    "result": {
+      "status": 0,
+      "stdout": "{\n  \"input\": \"-0.0btc\",\n  \"btc\": 0.0,\n  \"sats\": 0,\n  \"msats\": 0\n}",
+      "stderr": ""
+    }
+  },
+  {
+    "id": "negative-zero-sats",
+    "args": [
+      "convert-amount",
+      "--",
+      "-0.000sat"
+    ],
+    "mode": "json",
+    "result": {
+      "status": 0,
+      "stdout": "{\n  \"input\": \"-0.000sat\",\n  \"btc\": 0.0,\n  \"sats\": 0,\n  \"msats\": 0\n}",
+      "stderr": ""
+    }
+  },
+  {
+    "id": "max-cli-msat",
+    "args": [
+      "convert-amount",
+      "--",
+      "18446744073709551615msat"
+    ],
+    "mode": "json",
+    "result": {
+      "status": 0,
+      "stdout": "{\n  \"input\": \"18446744073709551615msat\",\n  \"btc\": 184467440.7370955,\n  \"sats\": 18446744073709551,\n  \"msats\": 18446744073709551615\n}",
+      "stderr": ""
+    }
+  },
+  {
+    "id": "large-exact-msat",
+    "args": [
+      "convert-amount",
+      "--",
+      "9007199254740993msat"
+    ],
+    "mode": "json",
+    "result": {
+      "status": 0,
+      "stdout": "{\n  \"input\": \"9007199254740993msat\",\n  \"btc\": 90071.99254740991,\n  \"sats\": 9007199254740,\n  \"msats\": 9007199254740993\n}",
+      "stderr": ""
+    }
+  },
+  {
+    "id": "saturated-btc",
+    "args": [
+      "convert-amount",
+      "--",
+      "200000000btc"
+    ],
+    "mode": "json",
+    "result": {
+      "status": 0,
+      "stdout": "{\n  \"input\": \"200000000btc\",\n  \"btc\": 184467440.7370955,\n  \"sats\": 18446744073709551,\n  \"msats\": 18446744073709551615\n}",
+      "stderr": ""
+    }
+  },
+  {
+    "id": "saturated-sats",
+    "args": [
+      "convert-amount",
+      "--",
+      "20000000000000000sat"
+    ],
+    "mode": "json",
+    "result": {
+      "status": 0,
+      "stdout": "{\n  \"input\": \"20000000000000000sat\",\n  \"btc\": 184467440.7370955,\n  \"sats\": 18446744073709551,\n  \"msats\": 18446744073709551615\n}",
+      "stderr": ""
+    }
+  },
+  {
+    "id": "rounded-btc",
+    "args": [
+      "convert-amount",
+      "--",
+      "90071992.54740993btc"
+    ],
+    "mode": "json",
+    "result": {
+      "status": 0,
+      "stdout": "{\n  \"input\": \"90071992.54740993btc\",\n  \"btc\": 90071992.54740994,\n  \"sats\": 9007199254740994,\n  \"msats\": 9007199254740994048\n}",
+      "stderr": ""
+    }
+  },
+  {
+    "id": "rounded-sats",
+    "args": [
+      "convert-amount",
+      "--",
+      "9007199254740.993sat"
+    ],
+    "mode": "json",
+    "result": {
+      "status": 0,
+      "stdout": "{\n  \"input\": \"9007199254740.993sat\",\n  \"btc\": 90071.99254740991,\n  \"sats\": 9007199254740,\n  \"msats\": 9007199254740992\n}",
+      "stderr": ""
+    }
+  },
+  {
+    "id": "ascii-trim",
+    "args": [
+      "convert-amount",
+      "--",
+      " \t\n5msat\r "
+    ],
+    "mode": "json",
+    "result": {
+      "status": 0,
+      "stdout": "{\n  \"input\": \" \\t\\n5msat\\r \",\n  \"btc\": 5e-11,\n  \"sats\": 0,\n  \"msats\": 5\n}",
+      "stderr": ""
+    }
+  },
+  {
+    "id": "vertical-tab-trim",
+    "args": [
+      "convert-amount",
+      "--",
+      "\u000b5msat\u000b"
+    ],
+    "mode": "json",
+    "result": {
+      "status": 0,
+      "stdout": "{\n  \"input\": \"\\u000b5msat\\u000b\",\n  \"btc\": 5e-11,\n  \"sats\": 0,\n  \"msats\": 5\n}",
+      "stderr": ""
+    }
+  },
+  {
+    "id": "nbsp-trim",
+    "args": [
+      "convert-amount",
+      "--",
+      "\u00a05msat\u00a0"
+    ],
+    "mode": "json",
+    "result": {
+      "status": 0,
+      "stdout": "{\n  \"input\": \"\u00a05msat\u00a0\",\n  \"btc\": 5e-11,\n  \"sats\": 0,\n  \"msats\": 5\n}",
+      "stderr": ""
+    }
+  },
+  {
+    "id": "trim-U+0009",
+    "args": [
+      "convert-amount",
+      "--",
+      "\t5sat\t"
+    ],
+    "mode": "json",
+    "result": {
+      "status": 0,
+      "stdout": "{\n  \"input\": \"\\t5sat\\t\",\n  \"btc\": 5e-8,\n  \"sats\": 5,\n  \"msats\": 5000\n}",
+      "stderr": ""
+    }
+  },
+  {
+    "id": "trim-U+000A",
+    "args": [
+      "convert-amount",
+      "--",
+      "\n5sat\n"
+    ],
+    "mode": "json",
+    "result": {
+      "status": 0,
+      "stdout": "{\n  \"input\": \"\\n5sat\\n\",\n  \"btc\": 5e-8,\n  \"sats\": 5,\n  \"msats\": 5000\n}",
+      "stderr": ""
+    }
+  },
+  {
+    "id": "trim-U+000B",
+    "args": [
+      "convert-amount",
+      "--",
+      "\u000b5sat\u000b"
+    ],
+    "mode": "json",
+    "result": {
+      "status": 0,
+      "stdout": "{\n  \"input\": \"\\u000b5sat\\u000b\",\n  \"btc\": 5e-8,\n  \"sats\": 5,\n  \"msats\": 5000\n}",
+      "stderr": ""
+    }
+  },
+  {
+    "id": "trim-U+000C",
+    "args": [
+      "convert-amount",
+      "--",
+      "\f5sat\f"
+    ],
+    "mode": "json",
+    "result": {
+      "status": 0,
+      "stdout": "{\n  \"input\": \"\\f5sat\\f\",\n  \"btc\": 5e-8,\n  \"sats\": 5,\n  \"msats\": 5000\n}",
+      "stderr": ""
+    }
+  },
+  {
+    "id": "trim-U+000D",
+    "args": [
+      "convert-amount",
+      "--",
+      "\r5sat\r"
+    ],
+    "mode": "json",
+    "result": {
+      "status": 0,
+      "stdout": "{\n  \"input\": \"\\r5sat\\r\",\n  \"btc\": 5e-8,\n  \"sats\": 5,\n  \"msats\": 5000\n}",
+      "stderr": ""
+    }
+  },
+  {
+    "id": "trim-U+0020",
+    "args": [
+      "convert-amount",
+      "--",
+      " 5sat "
+    ],
+    "mode": "json",
+    "result": {
+      "status": 0,
+      "stdout": "{\n  \"input\": \" 5sat \",\n  \"btc\": 5e-8,\n  \"sats\": 5,\n  \"msats\": 5000\n}",
+      "stderr": ""
+    }
+  },
+  {
+    "id": "trim-U+0085",
+    "args": [
+      "convert-amount",
+      "--",
+      "\u00855sat\u0085"
+    ],
+    "mode": "json",
+    "result": {
+      "status": 0,
+      "stdout": "{\n  \"input\": \"\u00855sat\u0085\",\n  \"btc\": 5e-8,\n  \"sats\": 5,\n  \"msats\": 5000\n}",
+      "stderr": ""
+    }
+  },
+  {
+    "id": "trim-U+00A0",
+    "args": [
+      "convert-amount",
+      "--",
+      "\u00a05sat\u00a0"
+    ],
+    "mode": "json",
+    "result": {
+      "status": 0,
+      "stdout": "{\n  \"input\": \"\u00a05sat\u00a0\",\n  \"btc\": 5e-8,\n  \"sats\": 5,\n  \"msats\": 5000\n}",
+      "stderr": ""
+    }
+  },
+  {
+    "id": "trim-U+1680",
+    "args": [
+      "convert-amount",
+      "--",
+      "\u16805sat\u1680"
+    ],
+    "mode": "json",
+    "result": {
+      "status": 0,
+      "stdout": "{\n  \"input\": \"\u16805sat\u1680\",\n  \"btc\": 5e-8,\n  \"sats\": 5,\n  \"msats\": 5000\n}",
+      "stderr": ""
+    }
+  },
+  {
+    "id": "trim-U+2000",
+    "args": [
+      "convert-amount",
+      "--",
+      "\u20005sat\u2000"
+    ],
+    "mode": "json",
+    "result": {
+      "status": 0,
+      "stdout": "{\n  \"input\": \"\u20005sat\u2000\",\n  \"btc\": 5e-8,\n  \"sats\": 5,\n  \"msats\": 5000\n}",
+      "stderr": ""
+    }
+  },
+  {
+    "id": "trim-U+2001",
+    "args": [
+      "convert-amount",
+      "--",
+      "\u20015sat\u2001"
+    ],
+    "mode": "json",
+    "result": {
+      "status": 0,
+      "stdout": "{\n  \"input\": \"\u20015sat\u2001\",\n  \"btc\": 5e-8,\n  \"sats\": 5,\n  \"msats\": 5000\n}",
+      "stderr": ""
+    }
+  },
+  {
+    "id": "trim-U+2002",
+    "args": [
+      "convert-amount",
+      "--",
+      "\u20025sat\u2002"
+    ],
+    "mode": "json",
+    "result": {
+      "status": 0,
+      "stdout": "{\n  \"input\": \"\u20025sat\u2002\",\n  \"btc\": 5e-8,\n  \"sats\": 5,\n  \"msats\": 5000\n}",
+      "stderr": ""
+    }
+  },
+  {
+    "id": "trim-U+2003",
+    "args": [
+      "convert-amount",
+      "--",
+      "\u20035sat\u2003"
+    ],
+    "mode": "json",
+    "result": {
+      "status": 0,
+      "stdout": "{\n  \"input\": \"\u20035sat\u2003\",\n  \"btc\": 5e-8,\n  \"sats\": 5,\n  \"msats\": 5000\n}",
+      "stderr": ""
+    }
+  },
+  {
+    "id": "trim-U+2004",
+    "args": [
+      "convert-amount",
+      "--",
+      "\u20045sat\u2004"
+    ],
+    "mode": "json",
+    "result": {
+      "status": 0,
+      "stdout": "{\n  \"input\": \"\u20045sat\u2004\",\n  \"btc\": 5e-8,\n  \"sats\": 5,\n  \"msats\": 5000\n}",
+      "stderr": ""
+    }
+  },
+  {
+    "id": "trim-U+2005",
+    "args": [
+      "convert-amount",
+      "--",
+      "\u20055sat\u2005"
+    ],
+    "mode": "json",
+    "result": {
+      "status": 0,
+      "stdout": "{\n  \"input\": \"\u20055sat\u2005\",\n  \"btc\": 5e-8,\n  \"sats\": 5,\n  \"msats\": 5000\n}",
+      "stderr": ""
+    }
+  },
+  {
+    "id": "trim-U+2006",
+    "args": [
+      "convert-amount",
+      "--",
+      "\u20065sat\u2006"
+    ],
+    "mode": "json",
+    "result": {
+      "status": 0,
+      "stdout": "{\n  \"input\": \"\u20065sat\u2006\",\n  \"btc\": 5e-8,\n  \"sats\": 5,\n  \"msats\": 5000\n}",
+      "stderr": ""
+    }
+  },
+  {
+    "id": "trim-U+2007",
+    "args": [
+      "convert-amount",
+      "--",
+      "\u20075sat\u2007"
+    ],
+    "mode": "json",
+    "result": {
+      "status": 0,
+      "stdout": "{\n  \"input\": \"\u20075sat\u2007\",\n  \"btc\": 5e-8,\n  \"sats\": 5,\n  \"msats\": 5000\n}",
+      "stderr": ""
+    }
+  },
+  {
+    "id": "trim-U+2008",
+    "args": [
+      "convert-amount",
+      "--",
+      "\u20085sat\u2008"
+    ],
+    "mode": "json",
+    "result": {
+      "status": 0,
+      "stdout": "{\n  \"input\": \"\u20085sat\u2008\",\n  \"btc\": 5e-8,\n  \"sats\": 5,\n  \"msats\": 5000\n}",
+      "stderr": ""
+    }
+  },
+  {
+    "id": "trim-U+2009",
+    "args": [
+      "convert-amount",
+      "--",
+      "\u20095sat\u2009"
+    ],
+    "mode": "json",
+    "result": {
+      "status": 0,
+      "stdout": "{\n  \"input\": \"\u20095sat\u2009\",\n  \"btc\": 5e-8,\n  \"sats\": 5,\n  \"msats\": 5000\n}",
+      "stderr": ""
+    }
+  },
+  {
+    "id": "trim-U+200A",
+    "args": [
+      "convert-amount",
+      "--",
+      "\u200a5sat\u200a"
+    ],
+    "mode": "json",
+    "result": {
+      "status": 0,
+      "stdout": "{\n  \"input\": \"\u200a5sat\u200a\",\n  \"btc\": 5e-8,\n  \"sats\": 5,\n  \"msats\": 5000\n}",
+      "stderr": ""
+    }
+  },
+  {
+    "id": "trim-U+2028",
+    "args": [
+      "convert-amount",
+      "--",
+      "\u20285sat\u2028"
+    ],
+    "mode": "json",
+    "result": {
+      "status": 0,
+      "stdout": "{\n  \"input\": \"\u20285sat\u2028\",\n  \"btc\": 5e-8,\n  \"sats\": 5,\n  \"msats\": 5000\n}",
+      "stderr": ""
+    }
+  },
+  {
+    "id": "trim-U+2029",
+    "args": [
+      "convert-amount",
+      "--",
+      "\u20295sat\u2029"
+    ],
+    "mode": "json",
+    "result": {
+      "status": 0,
+      "stdout": "{\n  \"input\": \"\u20295sat\u2029\",\n  \"btc\": 5e-8,\n  \"sats\": 5,\n  \"msats\": 5000\n}",
+      "stderr": ""
+    }
+  },
+  {
+    "id": "trim-U+202F",
+    "args": [
+      "convert-amount",
+      "--",
+      "\u202f5sat\u202f"
+    ],
+    "mode": "json",
+    "result": {
+      "status": 0,
+      "stdout": "{\n  \"input\": \"\u202f5sat\u202f\",\n  \"btc\": 5e-8,\n  \"sats\": 5,\n  \"msats\": 5000\n}",
+      "stderr": ""
+    }
+  },
+  {
+    "id": "trim-U+205F",
+    "args": [
+      "convert-amount",
+      "--",
+      "\u205f5sat\u205f"
+    ],
+    "mode": "json",
+    "result": {
+      "status": 0,
+      "stdout": "{\n  \"input\": \"\u205f5sat\u205f\",\n  \"btc\": 5e-8,\n  \"sats\": 5,\n  \"msats\": 5000\n}",
+      "stderr": ""
+    }
+  },
+  {
+    "id": "trim-U+3000",
+    "args": [
+      "convert-amount",
+      "--",
+      "\u30005sat\u3000"
+    ],
+    "mode": "json",
+    "result": {
+      "status": 0,
+      "stdout": "{\n  \"input\": \"\u30005sat\u3000\",\n  \"btc\": 5e-8,\n  \"sats\": 5,\n  \"msats\": 5000\n}",
+      "stderr": ""
+    }
+  },
+  {
+    "id": "empty",
+    "args": [
+      "convert-amount",
+      "--",
+      ""
+    ],
+    "mode": "failure",
+    "result": {
+      "status": 1,
+      "stdout": "",
+      "stderr": "Error: Cannot parse amount: ''\n"
+    }
+  },
+  {
+    "id": "white-only",
+    "args": [
+      "convert-amount",
+      "--",
+      "\u000b\u00a0 "
+    ],
+    "mode": "failure",
+    "result": {
+      "status": 1,
+      "stdout": "",
+      "stderr": "Error: Cannot parse amount: '\u000b\u00a0 '\n"
+    }
+  },
+  {
+    "id": "embedded-btc-space",
+    "args": [
+      "convert-amount",
+      "--",
+      "1 btc"
+    ],
+    "mode": "failure",
+    "result": {
+      "status": 1,
+      "stdout": "",
+      "stderr": "Error: Invalid Bitcoin amount '1 btc': Invalid BTC amount: '1 '\n"
+    }
+  },
+  {
+    "id": "embedded-sat-space",
+    "args": [
+      "convert-amount",
+      "--",
+      "5 sats"
+    ],
+    "mode": "failure",
+    "result": {
+      "status": 1,
+      "stdout": "",
+      "stderr": "Error: Invalid Bitcoin amount '5 sats': Invalid satoshi amount: '5 '\n"
+    }
+  },
+  {
+    "id": "fractional-msat",
+    "args": [
+      "convert-amount",
+      "--",
+      "1.5msat"
+    ],
+    "mode": "failure",
+    "result": {
+      "status": 1,
+      "stdout": "",
+      "stderr": "Error: Invalid Bitcoin amount '1.5msat': Invalid satoshi amount: '1.5'\n"
+    }
+  },
+  {
+    "id": "negative-btc",
+    "args": [
+      "convert-amount",
+      "--",
+      "-1btc"
+    ],
+    "mode": "failure",
+    "result": {
+      "status": 1,
+      "stdout": "",
+      "stderr": "Error: Invalid Bitcoin amount '-1btc': Amount cannot be negative: -1\n"
+    }
+  },
+  {
+    "id": "negative-msat",
+    "args": [
+      "convert-amount",
+      "--",
+      "-5msat"
+    ],
+    "mode": "failure",
+    "result": {
+      "status": 1,
+      "stdout": "",
+      "stderr": "Error: Invalid Bitcoin amount '-5msat': Invalid satoshi amount: '-5'\n"
+    }
+  },
+  {
+    "id": "negative-zero-msat",
+    "args": [
+      "convert-amount",
+      "--",
+      "-0msat"
+    ],
+    "mode": "failure",
+    "result": {
+      "status": 1,
+      "stdout": "",
+      "stderr": "Error: Invalid Bitcoin amount '-0msat': Invalid satoshi amount: '-0'\n"
+    }
+  },
+  {
+    "id": "letters",
+    "args": [
+      "convert-amount",
+      "--",
+      "abc"
+    ],
+    "mode": "failure",
+    "result": {
+      "status": 1,
+      "stdout": "",
+      "stderr": "Error: Cannot parse amount: 'abc'\n"
+    }
+  },
+  {
+    "id": "dot",
+    "args": [
+      "convert-amount",
+      "--",
+      "."
+    ],
+    "mode": "failure",
+    "result": {
+      "status": 1,
+      "stdout": "",
+      "stderr": "Error: Unrecognized amount unit '' in '.'\n"
+    }
+  },
+  {
+    "id": "plus",
+    "args": [
+      "convert-amount",
+      "--",
+      "+"
+    ],
+    "mode": "failure",
+    "result": {
+      "status": 1,
+      "stdout": "",
+      "stderr": "Error: Cannot parse amount: '+'\n"
+    }
+  },
+  {
+    "id": "empty-msat",
+    "args": [
+      "convert-amount",
+      "--",
+      "msat"
+    ],
+    "mode": "failure",
+    "result": {
+      "status": 1,
+      "stdout": "",
+      "stderr": "Error: Cannot parse amount: 'msat'\n"
+    }
+  },
+  {
+    "id": "empty-btc",
+    "args": [
+      "convert-amount",
+      "--",
+      "btc"
+    ],
+    "mode": "failure",
+    "result": {
+      "status": 1,
+      "stdout": "",
+      "stderr": "Error: Cannot parse amount: 'btc'\n"
+    }
+  },
+  {
+    "id": "comma",
+    "args": [
+      "convert-amount",
+      "--",
+      "1,5"
+    ],
+    "mode": "failure",
+    "result": {
+      "status": 1,
+      "stdout": "",
+      "stderr": "Error: Unrecognized amount unit '' in '1,5'\n"
+    }
+  },
+  {
+    "id": "underscore",
+    "args": [
+      "convert-amount",
+      "--",
+      "1_000sat"
+    ],
+    "mode": "failure",
+    "result": {
+      "status": 1,
+      "stdout": "",
+      "stderr": "Error: Invalid Bitcoin amount '1_000sat': Invalid satoshi amount: '1_000'\n"
+    }
+  },
+  {
+    "id": "hex-number",
+    "args": [
+      "convert-amount",
+      "--",
+      "0x10sat"
+    ],
+    "mode": "failure",
+    "result": {
+      "status": 1,
+      "stdout": "",
+      "stderr": "Error: Invalid Bitcoin amount '0x10sat': Invalid satoshi amount: '0x10'\n"
+    }
+  },
+  {
+    "id": "plural-btc",
+    "args": [
+      "convert-amount",
+      "--",
+      "5btcs"
+    ],
+    "mode": "failure",
+    "result": {
+      "status": 1,
+      "stdout": "",
+      "stderr": "Error: Unrecognized amount unit 'btcs' in '5btcs'\n"
+    }
+  },
+  {
+    "id": "cli-msat-overflow",
+    "args": [
+      "convert-amount",
+      "--",
+      "18446744073709551616msat"
+    ],
+    "mode": "failure",
+    "result": {
+      "status": 1,
+      "stdout": "",
+      "stderr": "Error: Invalid Bitcoin amount '18446744073709551616msat': Invalid satoshi amount: '18446744073709551616'\n"
+    }
+  },
+  {
+    "id": "double-plus",
+    "args": [
+      "convert-amount",
+      "--",
+      "++5msat"
+    ],
+    "mode": "failure",
+    "result": {
+      "status": 1,
+      "stdout": "",
+      "stderr": "Error: Invalid Bitcoin amount '++5msat': Invalid satoshi amount: '++5'\n"
+    }
+  },
+  {
+    "id": "double-sign",
+    "args": [
+      "convert-amount",
+      "--",
+      "+-0btc"
+    ],
+    "mode": "failure",
+    "result": {
+      "status": 1,
+      "stdout": "",
+      "stderr": "Error: Invalid Bitcoin amount '+-0btc': Invalid BTC amount: '+-0'\n"
+    }
+  },
+  {
+    "id": "double-dot",
+    "args": [
+      "convert-amount",
+      "--",
+      "1.2.3"
+    ],
+    "mode": "failure",
+    "result": {
+      "status": 1,
+      "stdout": "",
+      "stderr": "Error: Unrecognized amount unit '' in '1.2.3'\n"
+    }
+  },
+  {
+    "id": "inner-newline",
+    "args": [
+      "convert-amount",
+      "--",
+      "1\nbtc"
+    ],
+    "mode": "failure",
+    "result": {
+      "status": 1,
+      "stdout": "",
+      "stderr": "Error: Invalid Bitcoin amount '1\nbtc': Invalid BTC amount: '1\n'\n"
+    }
+  },
+  {
+    "id": "unicode-digits",
+    "args": [
+      "convert-amount",
+      "--",
+      "\uff15sat"
+    ],
+    "mode": "failure",
+    "result": {
+      "status": 1,
+      "stdout": "",
+      "stderr": "Error: Cannot parse amount: '\uff15sat'\n"
+    }
+  },
+  {
+    "id": "kelvin-sign",
+    "args": [
+      "convert-amount",
+      "--",
+      "1\u212abtc"
+    ],
+    "mode": "failure",
+    "result": {
+      "status": 1,
+      "stdout": "",
+      "stderr": "Error: Unrecognized amount unit '\u212abtc' in '1\u212abtc'\n"
+    }
+  },
+  {
+    "id": "not-white-U+001C",
+    "args": [
+      "convert-amount",
+      "--",
+      "\u001c5sat"
+    ],
+    "mode": "failure",
+    "result": {
+      "status": 1,
+      "stdout": "",
+      "stderr": "Error: Invalid Bitcoin amount '\u001c5sat': Invalid satoshi amount: '\u001c5'\n"
+    }
+  },
+  {
+    "id": "not-white-U+180E",
+    "args": [
+      "convert-amount",
+      "--",
+      "\u180e5sat"
+    ],
+    "mode": "failure",
+    "result": {
+      "status": 1,
+      "stdout": "",
+      "stderr": "Error: Invalid Bitcoin amount '\u180e5sat': Invalid satoshi amount: '\u180e5'\n"
+    }
+  },
+  {
+    "id": "not-white-U+200B",
+    "args": [
+      "convert-amount",
+      "--",
+      "\u200b5sat"
+    ],
+    "mode": "failure",
+    "result": {
+      "status": 1,
+      "stdout": "",
+      "stderr": "Error: Invalid Bitcoin amount '\u200b5sat': Invalid satoshi amount: '\u200b5'\n"
+    }
+  },
+  {
+    "id": "not-white-U+FEFF",
+    "args": [
+      "convert-amount",
+      "--",
+      "\ufeff5sat"
+    ],
+    "mode": "failure",
+    "result": {
+      "status": 1,
+      "stdout": "",
+      "stderr": "Error: Invalid Bitcoin amount '\ufeff5sat': Invalid satoshi amount: '\ufeff5'\n"
+    }
+  },
+  {
+    "id": "sub-msat-btc",
+    "args": [
+      "convert-amount",
+      "--",
+      "0.000000000001"
+    ],
+    "mode": "failure",
+    "error": "subMillisatoshi",
+    "result": {
+      "status": 0,
+      "stdout": "{\n  \"input\": \"0.000000000001\",\n  \"btc\": 0.0,\n  \"sats\": 0,\n  \"msats\": 0\n}",
+      "stderr": ""
+    }
+  },
+  {
+    "id": "sub-msat-sats",
+    "args": [
+      "convert-amount",
+      "--",
+      "0.0001sat"
+    ],
+    "mode": "failure",
+    "error": "subMillisatoshi",
+    "result": {
+      "status": 0,
+      "stdout": "{\n  \"input\": \"0.0001sat\",\n  \"btc\": 0.0,\n  \"sats\": 0,\n  \"msats\": 0\n}",
+      "stderr": ""
+    }
+  },
+  {
+    "id": "exponent-1e-3",
+    "args": [
+      "convert-amount",
+      "--",
+      "1e-3"
+    ],
+    "mode": "failure",
+    "error": "invalidNumber",
+    "result": {
+      "status": 0,
+      "stdout": "{\n  \"input\": \"1e-3\",\n  \"btc\": 0.001,\n  \"sats\": 100000,\n  \"msats\": 100000000\n}",
+      "stderr": ""
+    }
+  },
+  {
+    "id": "exponent-1E-3",
+    "args": [
+      "convert-amount",
+      "--",
+      "1E-3"
+    ],
+    "mode": "failure",
+    "error": "invalidNumber",
+    "result": {
+      "status": 0,
+      "stdout": "{\n  \"input\": \"1E-3\",\n  \"btc\": 0.001,\n  \"sats\": 100000,\n  \"msats\": 100000000\n}",
+      "stderr": ""
+    }
+  },
+  {
+    "id": "exponent-1e3",
+    "args": [
+      "convert-amount",
+      "--",
+      "1e3"
+    ],
+    "mode": "failure",
+    "error": "invalidNumber",
+    "result": {
+      "status": 0,
+      "stdout": "{\n  \"input\": \"1e3\",\n  \"btc\": 1000.0,\n  \"sats\": 100000000000,\n  \"msats\": 100000000000000\n}",
+      "stderr": ""
+    }
+  },
+  {
+    "id": "exponent-1e-3sat",
+    "args": [
+      "convert-amount",
+      "--",
+      "1e-3sat"
+    ],
+    "mode": "failure",
+    "error": "invalidNumber",
+    "result": {
+      "status": 0,
+      "stdout": "{\n  \"input\": \"1e-3sat\",\n  \"btc\": 1e-11,\n  \"sats\": 0,\n  \"msats\": 1\n}",
+      "stderr": ""
+    }
+  },
+  {
+    "id": "exponent-+1e0btc",
+    "args": [
+      "convert-amount",
+      "--",
+      "+1e0btc"
+    ],
+    "mode": "failure",
+    "error": "invalidNumber",
+    "result": {
+      "status": 0,
+      "stdout": "{\n  \"input\": \"+1e0btc\",\n  \"btc\": 1.0,\n  \"sats\": 100000000,\n  \"msats\": 100000000000\n}",
+      "stderr": ""
+    }
+  },
+  {
+    "id": "exponent--0e3",
+    "args": [
+      "convert-amount",
+      "--",
+      "-0e3"
+    ],
+    "mode": "failure",
+    "error": "invalidNumber",
+    "result": {
+      "status": 0,
+      "stdout": "{\n  \"input\": \"-0e3\",\n  \"btc\": 0.0,\n  \"sats\": 0,\n  \"msats\": 0\n}",
+      "stderr": ""
+    }
+  },
+  {
+    "id": "nonfinite-inf",
+    "args": [
+      "convert-amount",
+      "--",
+      "inf"
+    ],
+    "mode": "failure",
+    "error": "invalidNumber",
+    "result": {
+      "status": 0,
+      "stdout": "{\n  \"input\": \"inf\",\n  \"btc\": 184467440.7370955,\n  \"sats\": 18446744073709551,\n  \"msats\": 18446744073709551615\n}",
+      "stderr": ""
+    }
+  },
+  {
+    "id": "nonfinite-infbtc",
+    "args": [
+      "convert-amount",
+      "--",
+      "infbtc"
+    ],
+    "mode": "failure",
+    "error": "invalidNumber",
+    "result": {
+      "status": 0,
+      "stdout": "{\n  \"input\": \"infbtc\",\n  \"btc\": 184467440.7370955,\n  \"sats\": 18446744073709551,\n  \"msats\": 18446744073709551615\n}",
+      "stderr": ""
+    }
+  },
+  {
+    "id": "nonfinite-infsat",
+    "args": [
+      "convert-amount",
+      "--",
+      "infsat"
+    ],
+    "mode": "failure",
+    "error": "invalidNumber",
+    "result": {
+      "status": 0,
+      "stdout": "{\n  \"input\": \"infsat\",\n  \"btc\": 184467440.7370955,\n  \"sats\": 18446744073709551,\n  \"msats\": 18446744073709551615\n}",
+      "stderr": ""
+    }
+  },
+  {
+    "id": "nonfinite-+inf",
+    "args": [
+      "convert-amount",
+      "--",
+      "+inf"
+    ],
+    "mode": "failure",
+    "error": "invalidNumber",
+    "result": {
+      "status": 0,
+      "stdout": "{\n  \"input\": \"+inf\",\n  \"btc\": 184467440.7370955,\n  \"sats\": 18446744073709551,\n  \"msats\": 18446744073709551615\n}",
+      "stderr": ""
+    }
+  },
+  {
+    "id": "nonfinite-+infbtc",
+    "args": [
+      "convert-amount",
+      "--",
+      "+infbtc"
+    ],
+    "mode": "failure",
+    "error": "invalidNumber",
+    "result": {
+      "status": 0,
+      "stdout": "{\n  \"input\": \"+infbtc\",\n  \"btc\": 184467440.7370955,\n  \"sats\": 18446744073709551,\n  \"msats\": 18446744073709551615\n}",
+      "stderr": ""
+    }
+  },
+  {
+    "id": "nonfinite-+infsat",
+    "args": [
+      "convert-amount",
+      "--",
+      "+infsat"
+    ],
+    "mode": "failure",
+    "error": "invalidNumber",
+    "result": {
+      "status": 0,
+      "stdout": "{\n  \"input\": \"+infsat\",\n  \"btc\": 184467440.7370955,\n  \"sats\": 18446744073709551,\n  \"msats\": 18446744073709551615\n}",
+      "stderr": ""
+    }
+  },
+  {
+    "id": "nonfinite--inf",
+    "args": [
+      "convert-amount",
+      "--",
+      "-inf"
+    ],
+    "mode": "failure",
+    "result": {
+      "status": 1,
+      "stdout": "",
+      "stderr": "Error: Cannot parse amount: '-inf'\n"
+    }
+  },
+  {
+    "id": "nonfinite--infbtc",
+    "args": [
+      "convert-amount",
+      "--",
+      "-infbtc"
+    ],
+    "mode": "failure",
+    "result": {
+      "status": 1,
+      "stdout": "",
+      "stderr": "Error: Cannot parse amount: '-infbtc'\n"
+    }
+  },
+  {
+    "id": "nonfinite--infsat",
+    "args": [
+      "convert-amount",
+      "--",
+      "-infsat"
+    ],
+    "mode": "failure",
+    "result": {
+      "status": 1,
+      "stdout": "",
+      "stderr": "Error: Cannot parse amount: '-infsat'\n"
+    }
+  },
+  {
+    "id": "nonfinite-infinity",
+    "args": [
+      "convert-amount",
+      "--",
+      "infinity"
+    ],
+    "mode": "failure",
+    "error": "invalidNumber",
+    "result": {
+      "status": 0,
+      "stdout": "{\n  \"input\": \"infinity\",\n  \"btc\": 184467440.7370955,\n  \"sats\": 18446744073709551,\n  \"msats\": 18446744073709551615\n}",
+      "stderr": ""
+    }
+  },
+  {
+    "id": "nonfinite-infinitybtc",
+    "args": [
+      "convert-amount",
+      "--",
+      "infinitybtc"
+    ],
+    "mode": "failure",
+    "error": "invalidNumber",
+    "result": {
+      "status": 0,
+      "stdout": "{\n  \"input\": \"infinitybtc\",\n  \"btc\": 184467440.7370955,\n  \"sats\": 18446744073709551,\n  \"msats\": 18446744073709551615\n}",
+      "stderr": ""
+    }
+  },
+  {
+    "id": "nonfinite-infinitysat",
+    "args": [
+      "convert-amount",
+      "--",
+      "infinitysat"
+    ],
+    "mode": "failure",
+    "error": "invalidNumber",
+    "result": {
+      "status": 0,
+      "stdout": "{\n  \"input\": \"infinitysat\",\n  \"btc\": 184467440.7370955,\n  \"sats\": 18446744073709551,\n  \"msats\": 18446744073709551615\n}",
+      "stderr": ""
+    }
+  },
+  {
+    "id": "nonfinite-+infinity",
+    "args": [
+      "convert-amount",
+      "--",
+      "+infinity"
+    ],
+    "mode": "failure",
+    "error": "invalidNumber",
+    "result": {
+      "status": 0,
+      "stdout": "{\n  \"input\": \"+infinity\",\n  \"btc\": 184467440.7370955,\n  \"sats\": 18446744073709551,\n  \"msats\": 18446744073709551615\n}",
+      "stderr": ""
+    }
+  },
+  {
+    "id": "nonfinite-+infinitybtc",
+    "args": [
+      "convert-amount",
+      "--",
+      "+infinitybtc"
+    ],
+    "mode": "failure",
+    "error": "invalidNumber",
+    "result": {
+      "status": 0,
+      "stdout": "{\n  \"input\": \"+infinitybtc\",\n  \"btc\": 184467440.7370955,\n  \"sats\": 18446744073709551,\n  \"msats\": 18446744073709551615\n}",
+      "stderr": ""
+    }
+  },
+  {
+    "id": "nonfinite-+infinitysat",
+    "args": [
+      "convert-amount",
+      "--",
+      "+infinitysat"
+    ],
+    "mode": "failure",
+    "error": "invalidNumber",
+    "result": {
+      "status": 0,
+      "stdout": "{\n  \"input\": \"+infinitysat\",\n  \"btc\": 184467440.7370955,\n  \"sats\": 18446744073709551,\n  \"msats\": 18446744073709551615\n}",
+      "stderr": ""
+    }
+  },
+  {
+    "id": "nonfinite--infinity",
+    "args": [
+      "convert-amount",
+      "--",
+      "-infinity"
+    ],
+    "mode": "failure",
+    "result": {
+      "status": 1,
+      "stdout": "",
+      "stderr": "Error: Cannot parse amount: '-infinity'\n"
+    }
+  },
+  {
+    "id": "nonfinite--infinitybtc",
+    "args": [
+      "convert-amount",
+      "--",
+      "-infinitybtc"
+    ],
+    "mode": "failure",
+    "result": {
+      "status": 1,
+      "stdout": "",
+      "stderr": "Error: Cannot parse amount: '-infinitybtc'\n"
+    }
+  },
+  {
+    "id": "nonfinite--infinitysat",
+    "args": [
+      "convert-amount",
+      "--",
+      "-infinitysat"
+    ],
+    "mode": "failure",
+    "result": {
+      "status": 1,
+      "stdout": "",
+      "stderr": "Error: Cannot parse amount: '-infinitysat'\n"
+    }
+  },
+  {
+    "id": "nonfinite-nan",
+    "args": [
+      "convert-amount",
+      "--",
+      "nan"
+    ],
+    "mode": "failure",
+    "error": "invalidNumber",
+    "result": {
+      "status": 0,
+      "stdout": "{\n  \"input\": \"nan\",\n  \"btc\": 0.0,\n  \"sats\": 0,\n  \"msats\": 0\n}",
+      "stderr": ""
+    }
+  },
+  {
+    "id": "nonfinite-nanbtc",
+    "args": [
+      "convert-amount",
+      "--",
+      "nanbtc"
+    ],
+    "mode": "failure",
+    "error": "invalidNumber",
+    "result": {
+      "status": 0,
+      "stdout": "{\n  \"input\": \"nanbtc\",\n  \"btc\": 0.0,\n  \"sats\": 0,\n  \"msats\": 0\n}",
+      "stderr": ""
+    }
+  },
+  {
+    "id": "nonfinite-nansat",
+    "args": [
+      "convert-amount",
+      "--",
+      "nansat"
+    ],
+    "mode": "failure",
+    "error": "invalidNumber",
+    "result": {
+      "status": 0,
+      "stdout": "{\n  \"input\": \"nansat\",\n  \"btc\": 0.0,\n  \"sats\": 0,\n  \"msats\": 0\n}",
+      "stderr": ""
+    }
+  },
+  {
+    "id": "nonfinite-+nan",
+    "args": [
+      "convert-amount",
+      "--",
+      "+nan"
+    ],
+    "mode": "failure",
+    "error": "invalidNumber",
+    "result": {
+      "status": 0,
+      "stdout": "{\n  \"input\": \"+nan\",\n  \"btc\": 0.0,\n  \"sats\": 0,\n  \"msats\": 0\n}",
+      "stderr": ""
+    }
+  },
+  {
+    "id": "nonfinite-+nanbtc",
+    "args": [
+      "convert-amount",
+      "--",
+      "+nanbtc"
+    ],
+    "mode": "failure",
+    "error": "invalidNumber",
+    "result": {
+      "status": 0,
+      "stdout": "{\n  \"input\": \"+nanbtc\",\n  \"btc\": 0.0,\n  \"sats\": 0,\n  \"msats\": 0\n}",
+      "stderr": ""
+    }
+  },
+  {
+    "id": "nonfinite-+nansat",
+    "args": [
+      "convert-amount",
+      "--",
+      "+nansat"
+    ],
+    "mode": "failure",
+    "error": "invalidNumber",
+    "result": {
+      "status": 0,
+      "stdout": "{\n  \"input\": \"+nansat\",\n  \"btc\": 0.0,\n  \"sats\": 0,\n  \"msats\": 0\n}",
+      "stderr": ""
+    }
+  },
+  {
+    "id": "nonfinite--nan",
+    "args": [
+      "convert-amount",
+      "--",
+      "-nan"
+    ],
+    "mode": "failure",
+    "error": "invalidNumber",
+    "result": {
+      "status": 0,
+      "stdout": "{\n  \"input\": \"-nan\",\n  \"btc\": 0.0,\n  \"sats\": 0,\n  \"msats\": 0\n}",
+      "stderr": ""
+    }
+  },
+  {
+    "id": "nonfinite--nanbtc",
+    "args": [
+      "convert-amount",
+      "--",
+      "-nanbtc"
+    ],
+    "mode": "failure",
+    "error": "invalidNumber",
+    "result": {
+      "status": 0,
+      "stdout": "{\n  \"input\": \"-nanbtc\",\n  \"btc\": 0.0,\n  \"sats\": 0,\n  \"msats\": 0\n}",
+      "stderr": ""
+    }
+  },
+  {
+    "id": "nonfinite--nansat",
+    "args": [
+      "convert-amount",
+      "--",
+      "-nansat"
+    ],
+    "mode": "failure",
+    "error": "invalidNumber",
+    "result": {
+      "status": 0,
+      "stdout": "{\n  \"input\": \"-nansat\",\n  \"btc\": 0.0,\n  \"sats\": 0,\n  \"msats\": 0\n}",
+      "stderr": ""
+    }
+  },
+  {
+    "id": "fractional-sat-json",
+    "args": [
+      "convert-amount",
+      "1.5sat"
+    ],
+    "mode": "json",
+    "result": {
+      "status": 0,
+      "stdout": "{\n  \"input\": \"1.5sat\",\n  \"btc\": 1.5e-8,\n  \"sats\": 1,\n  \"msats\": 1500\n}",
+      "stderr": ""
+    }
+  },
+  {
+    "id": "fractional-sat-btc",
+    "args": [
+      "convert-amount",
+      "1.5sat",
+      "--as",
+      "btc"
+    ],
+    "mode": "scalar",
+    "result": {
+      "status": 0,
+      "stdout": "0.000000015\n",
+      "stderr": ""
+    }
+  },
+  {
+    "id": "fractional-sat-sats",
+    "args": [
+      "convert-amount",
+      "1.5sat",
+      "--as",
+      "sats"
+    ],
+    "mode": "scalar",
+    "result": {
+      "status": 0,
+      "stdout": "1\n",
+      "stderr": "[convert-amount] note: input has fractional satoshis (1500 msat); --as sats floors to 1 sat\n"
+    }
+  },
+  {
+    "id": "fractional-sat-msats",
+    "args": [
+      "convert-amount",
+      "1.5sat",
+      "--as",
+      "msats"
+    ],
+    "mode": "scalar",
+    "result": {
+      "status": 0,
+      "stdout": "1500\n",
+      "stderr": ""
+    }
+  },
+  {
+    "id": "fractional-1499-json",
+    "args": [
+      "convert-amount",
+      "1499msat"
+    ],
+    "mode": "json",
+    "result": {
+      "status": 0,
+      "stdout": "{\n  \"input\": \"1499msat\",\n  \"btc\": 1.499e-8,\n  \"sats\": 1,\n  \"msats\": 1499\n}",
+      "stderr": ""
+    }
+  },
+  {
+    "id": "fractional-1499-btc",
+    "args": [
+      "convert-amount",
+      "1499msat",
+      "--as",
+      "btc"
+    ],
+    "mode": "scalar",
+    "result": {
+      "status": 0,
+      "stdout": "0.00000001499\n",
+      "stderr": ""
+    }
+  },
+  {
+    "id": "fractional-1499-sats",
+    "args": [
+      "convert-amount",
+      "1499msat",
+      "--as",
+      "sats"
+    ],
+    "mode": "scalar",
+    "result": {
+      "status": 0,
+      "stdout": "1\n",
+      "stderr": "[convert-amount] note: input has fractional satoshis (1499 msat); --as sats floors to 1 sat\n"
+    }
+  },
+  {
+    "id": "fractional-1499-msats",
+    "args": [
+      "convert-amount",
+      "1499msat",
+      "--as",
+      "msats"
+    ],
+    "mode": "scalar",
+    "result": {
+      "status": 0,
+      "stdout": "1499\n",
+      "stderr": ""
+    }
+  },
+  {
+    "id": "fractional-500-json",
+    "args": [
+      "convert-amount",
+      "500msat"
+    ],
+    "mode": "json",
+    "result": {
+      "status": 0,
+      "stdout": "{\n  \"input\": \"500msat\",\n  \"btc\": 5e-9,\n  \"sats\": 0,\n  \"msats\": 500\n}",
+      "stderr": ""
+    }
+  },
+  {
+    "id": "fractional-500-btc",
+    "args": [
+      "convert-amount",
+      "500msat",
+      "--as",
+      "btc"
+    ],
+    "mode": "scalar",
+    "result": {
+      "status": 0,
+      "stdout": "0.000000005\n",
+      "stderr": ""
+    }
+  },
+  {
+    "id": "fractional-500-sats",
+    "args": [
+      "convert-amount",
+      "500msat",
+      "--as",
+      "sats"
+    ],
+    "mode": "scalar",
+    "result": {
+      "status": 0,
+      "stdout": "0\n",
+      "stderr": "[convert-amount] note: input has fractional satoshis (500 msat); --as sats floors to 0 sat\n"
+    }
+  },
+  {
+    "id": "fractional-500-msats",
+    "args": [
+      "convert-amount",
+      "500msat",
+      "--as",
+      "msats"
+    ],
+    "mode": "scalar",
+    "result": {
+      "status": 0,
+      "stdout": "500\n",
+      "stderr": ""
+    }
+  },
+  {
+    "id": "fractional-001-json",
+    "args": [
+      "convert-amount",
+      "0.001sat"
+    ],
+    "mode": "json",
+    "result": {
+      "status": 0,
+      "stdout": "{\n  \"input\": \"0.001sat\",\n  \"btc\": 1e-11,\n  \"sats\": 0,\n  \"msats\": 1\n}",
+      "stderr": ""
+    }
+  },
+  {
+    "id": "fractional-001-btc",
+    "args": [
+      "convert-amount",
+      "0.001sat",
+      "--as",
+      "btc"
+    ],
+    "mode": "scalar",
+    "result": {
+      "status": 0,
+      "stdout": "0.00000000001\n",
+      "stderr": ""
+    }
+  },
+  {
+    "id": "fractional-001-sats",
+    "args": [
+      "convert-amount",
+      "0.001sat",
+      "--as",
+      "sats"
+    ],
+    "mode": "scalar",
+    "result": {
+      "status": 0,
+      "stdout": "0\n",
+      "stderr": "[convert-amount] note: input has fractional satoshis (1 msat); --as sats floors to 0 sat\n"
+    }
+  },
+  {
+    "id": "fractional-001-msats",
+    "args": [
+      "convert-amount",
+      "0.001sat",
+      "--as",
+      "msats"
+    ],
+    "mode": "scalar",
+    "result": {
+      "status": 0,
+      "stdout": "1\n",
+      "stderr": ""
+    }
+  },
+  {
+    "id": "fractional-1-json",
+    "args": [
+      "convert-amount",
+      "1msat"
+    ],
+    "mode": "json",
+    "result": {
+      "status": 0,
+      "stdout": "{\n  \"input\": \"1msat\",\n  \"btc\": 1e-11,\n  \"sats\": 0,\n  \"msats\": 1\n}",
+      "stderr": ""
+    }
+  },
+  {
+    "id": "fractional-1-btc",
+    "args": [
+      "convert-amount",
+      "1msat",
+      "--as",
+      "btc"
+    ],
+    "mode": "scalar",
+    "result": {
+      "status": 0,
+      "stdout": "0.00000000001\n",
+      "stderr": ""
+    }
+  },
+  {
+    "id": "fractional-1-sats",
+    "args": [
+      "convert-amount",
+      "1msat",
+      "--as",
+      "sats"
+    ],
+    "mode": "scalar",
+    "result": {
+      "status": 0,
+      "stdout": "0\n",
+      "stderr": "[convert-amount] note: input has fractional satoshis (1 msat); --as sats floors to 0 sat\n"
+    }
+  },
+  {
+    "id": "fractional-1-msats",
+    "args": [
+      "convert-amount",
+      "1msat",
+      "--as",
+      "msats"
+    ],
+    "mode": "scalar",
+    "result": {
+      "status": 0,
+      "stdout": "1\n",
+      "stderr": ""
+    }
+  },
+  {
+    "id": "fractional-1999-json",
+    "args": [
+      "convert-amount",
+      "1999msat"
+    ],
+    "mode": "json",
+    "result": {
+      "status": 0,
+      "stdout": "{\n  \"input\": \"1999msat\",\n  \"btc\": 1.999e-8,\n  \"sats\": 1,\n  \"msats\": 1999\n}",
+      "stderr": ""
+    }
+  },
+  {
+    "id": "fractional-1999-btc",
+    "args": [
+      "convert-amount",
+      "1999msat",
+      "--as",
+      "btc"
+    ],
+    "mode": "scalar",
+    "result": {
+      "status": 0,
+      "stdout": "0.00000001999\n",
+      "stderr": ""
+    }
+  },
+  {
+    "id": "fractional-1999-sats",
+    "args": [
+      "convert-amount",
+      "1999msat",
+      "--as",
+      "sats"
+    ],
+    "mode": "scalar",
+    "result": {
+      "status": 0,
+      "stdout": "1\n",
+      "stderr": "[convert-amount] note: input has fractional satoshis (1999 msat); --as sats floors to 1 sat\n"
+    }
+  },
+  {
+    "id": "fractional-1999-msats",
+    "args": [
+      "convert-amount",
+      "1999msat",
+      "--as",
+      "msats"
+    ],
+    "mode": "scalar",
+    "result": {
+      "status": 0,
+      "stdout": "1999\n",
+      "stderr": ""
+    }
+  },
+  {
+    "id": "large-exact-json",
+    "args": [
+      "convert-amount",
+      "20999999.99999999999"
+    ],
+    "mode": "json",
+    "result": {
+      "status": 0,
+      "stdout": "{\n  \"input\": \"20999999.99999999999\",\n  \"btc\": 21000000.0,\n  \"sats\": 2100000000000000,\n  \"msats\": 2100000000000000000\n}",
+      "stderr": ""
+    }
+  },
+  {
+    "id": "large-exact-btc",
+    "args": [
+      "convert-amount",
+      "20999999.99999999999",
+      "--as",
+      "btc"
+    ],
+    "mode": "scalar",
+    "result": {
+      "status": 0,
+      "stdout": "21000000\n",
+      "stderr": ""
+    }
+  },
+  {
+    "id": "large-exact-sats",
+    "args": [
+      "convert-amount",
+      "20999999.99999999999",
+      "--as",
+      "sats"
+    ],
+    "mode": "scalar",
+    "result": {
+      "status": 0,
+      "stdout": "2100000000000000\n",
+      "stderr": ""
+    }
+  },
+  {
+    "id": "large-exact-msats",
+    "args": [
+      "convert-amount",
+      "20999999.99999999999",
+      "--as",
+      "msats"
+    ],
+    "mode": "scalar",
+    "result": {
+      "status": 0,
+      "stdout": "2100000000000000000\n",
+      "stderr": ""
+    }
+  },
+  {
+    "id": "parser-00",
+    "args": [
+      "convert-amount"
+    ],
+    "mode": "failure",
+    "result": {
+      "status": 2,
+      "stdout": "",
+      "stderr": "error: the following required arguments were not provided:\n  <AMOUNT>\n\nUsage: cyberkrill convert-amount <AMOUNT>\n\nFor more information, try '--help'.\n"
+    }
+  },
+  {
+    "id": "parser-01",
+    "args": [
+      "convert-amount",
+      "1",
+      "2"
+    ],
+    "mode": "failure",
+    "result": {
+      "status": 2,
+      "stdout": "",
+      "stderr": "error: unexpected argument '2' found\n\nUsage: cyberkrill convert-amount [OPTIONS] <AMOUNT>\n\nFor more information, try '--help'.\n"
+    }
+  },
+  {
+    "id": "parser-02",
+    "args": [
+      "convert-amount",
+      "1",
+      "--as",
+      "sat"
+    ],
+    "mode": "failure",
+    "result": {
+      "status": 2,
+      "stdout": "",
+      "stderr": "error: invalid value 'sat' for '--as <AS>'\n  [possible values: btc, sats, msats]\n\n  tip: a similar value exists: 'sats'\n\nFor more information, try '--help'.\n"
+    }
+  },
+  {
+    "id": "parser-03",
+    "args": [
+      "convert-amount",
+      "1",
+      "--as"
+    ],
+    "mode": "failure",
+    "result": {
+      "status": 2,
+      "stdout": "",
+      "stderr": "error: a value is required for '--as <AS>' but none was supplied\n  [possible values: btc, sats, msats]\n\nFor more information, try '--help'.\n"
+    }
+  },
+  {
+    "id": "parser-04",
+    "args": [
+      "convert-amount",
+      "1",
+      "--as",
+      "btc",
+      "--as",
+      "sats"
+    ],
+    "mode": "failure",
+    "result": {
+      "status": 2,
+      "stdout": "",
+      "stderr": "error: the argument '--as <AS>' cannot be used multiple times\n\nUsage: cyberkrill convert-amount [OPTIONS] <AMOUNT>\n\nFor more information, try '--help'.\n"
+    }
+  },
+  {
+    "id": "parser-05",
+    "args": [
+      "convert-amount",
+      "1",
+      "--output",
+      "unused"
+    ],
+    "mode": "failure",
+    "result": {
+      "status": 2,
+      "stdout": "",
+      "stderr": "error: unexpected argument '--output' found\n\n  tip: to pass '--output' as a value, use '-- --output'\n\nUsage: cyberkrill convert-amount <AMOUNT>\n\nFor more information, try '--help'.\n"
+    }
+  },
+  {
+    "id": "parser-06",
+    "args": [
+      "version",
+      "extra"
+    ],
+    "mode": "failure",
+    "result": {
+      "status": 2,
+      "stdout": "",
+      "stderr": "error: unexpected argument 'extra' found\n\nUsage: cyberkrill version\n\nFor more information, try '--help'.\n"
+    }
+  },
+  {
+    "id": "parser-07",
+    "args": [
+      "version",
+      "--output",
+      "unused"
+    ],
+    "mode": "failure",
+    "result": {
+      "status": 2,
+      "stdout": "",
+      "stderr": "error: unexpected argument '--output' found\n\nUsage: cyberkrill version\n\nFor more information, try '--help'.\n"
+    }
+  },
+  {
+    "id": "parser-08",
+    "args": [
+      "unknown"
+    ],
+    "mode": "failure",
+    "result": {
+      "status": 2,
+      "stdout": "",
+      "stderr": "error: unrecognized subcommand 'unknown'\n\nUsage: cyberkrill <COMMAND>\n\nFor more information, try '--help'.\n"
+    }
+  },
+  {
+    "id": "parser-09",
+    "args": [
+      "ln-decode-invoice"
+    ],
+    "mode": "failure",
+    "result": {
+      "status": 1,
+      "stdout": "",
+      "stderr": "Error: Failed to parse invoice: ParseError(Bech32Error(Parse(Char(MissingSeparator))))\n"
+    }
+  },
+  {
+    "id": "parser-10",
+    "args": [
+      "--electrum",
+      "unused"
+    ],
+    "mode": "failure",
+    "result": {
+      "status": 2,
+      "stdout": "",
+      "stderr": "error: unexpected argument '--electrum' found\n\nUsage: cyberkrill <COMMAND>\n\nFor more information, try '--help'.\n"
+    }
+  },
+  {
+    "id": "parser-11",
+    "args": [
+      "generate-mnemonic",
+      "-w",
+      "11"
+    ],
+    "mode": "failure",
+    "result": {
+      "status": 1,
+      "stdout": "",
+      "stderr": "Error: Invalid word count: 11. Must be 12, 15, 18, 21, or 24\n"
+    }
+  },
+  {
+    "id": "parser-12",
+    "args": [
+      "generate-mnemonic",
+      "-w",
+      "bad"
+    ],
+    "mode": "failure",
+    "result": {
+      "status": 2,
+      "stdout": "",
+      "stderr": "error: invalid value 'bad' for '--words <WORDS>': invalid digit found in string\n\nFor more information, try '--help'.\n"
+    }
+  },
+  {
+    "id": "parser-13",
+    "args": [
+      "generate-mnemonic",
+      "--seed",
+      "unused"
+    ],
+    "mode": "failure",
+    "result": {
+      "status": 2,
+      "stdout": "",
+      "stderr": "error: unexpected argument '--seed' found\n\nUsage: cyberkrill generate-mnemonic [OPTIONS]\n\nFor more information, try '--help'.\n"
+    }
+  },
+  {
+    "id": "parser-14",
+    "args": [
+      "generate-mnemonic",
+      "-w",
+      "12",
+      "--words",
+      "24"
+    ],
+    "mode": "failure",
+    "result": {
+      "status": 2,
+      "stdout": "",
+      "stderr": "error: the argument '--words <WORDS>' cannot be used multiple times\n\nUsage: cyberkrill generate-mnemonic [OPTIONS]\n\nFor more information, try '--help'.\n"
+    }
+  },
+  {
+    "id": "bare-negative-zero-0",
+    "args": [
+      "convert-amount",
+      "-0"
+    ],
+    "mode": "failure",
+    "result": {
+      "status": 2,
+      "stdout": "",
+      "stderr": "error: unexpected argument '-0' found\n\n  tip: to pass '-0' as a value, use '-- -0'\n\nUsage: cyberkrill convert-amount [OPTIONS] <AMOUNT>\n\nFor more information, try '--help'.\n"
+    }
+  },
+  {
+    "id": "bare-negative-zero-1",
+    "args": [
+      "convert-amount",
+      "-0.0btc"
+    ],
+    "mode": "failure",
+    "result": {
+      "status": 2,
+      "stdout": "",
+      "stderr": "error: unexpected argument '-0' found\n\n  tip: to pass '-0' as a value, use '-- -0'\n\nUsage: cyberkrill convert-amount [OPTIONS] <AMOUNT>\n\nFor more information, try '--help'.\n"
+    }
+  },
+  {
+    "id": "bare-negative-zero-2",
+    "args": [
+      "convert-amount",
+      "-0.000sat"
+    ],
+    "mode": "failure",
+    "result": {
+      "status": 2,
+      "stdout": "",
+      "stderr": "error: unexpected argument '-0' found\n\n  tip: to pass '-0' as a value, use '-- -0'\n\nUsage: cyberkrill convert-amount [OPTIONS] <AMOUNT>\n\nFor more information, try '--help'.\n"
+    }
+  },
+  {
+    "id": "word-count-0",
+    "args": [
+      "generate-mnemonic",
+      "-w",
+      "1_2"
+    ],
+    "mode": "failure",
+    "result": {
+      "status": 2,
+      "stdout": "",
+      "stderr": "error: invalid value '1_2' for '--words <WORDS>': invalid digit found in string\n\nFor more information, try '--help'.\n"
+    }
+  },
+  {
+    "id": "word-count-1",
+    "args": [
+      "generate-mnemonic",
+      "-w",
+      "1_5"
+    ],
+    "mode": "failure",
+    "result": {
+      "status": 2,
+      "stdout": "",
+      "stderr": "error: invalid value '1_5' for '--words <WORDS>': invalid digit found in string\n\nFor more information, try '--help'.\n"
+    }
+  },
+  {
+    "id": "word-count-2",
+    "args": [
+      "generate-mnemonic",
+      "-w",
+      "1_8"
+    ],
+    "mode": "failure",
+    "result": {
+      "status": 2,
+      "stdout": "",
+      "stderr": "error: invalid value '1_8' for '--words <WORDS>': invalid digit found in string\n\nFor more information, try '--help'.\n"
+    }
+  },
+  {
+    "id": "word-count-3",
+    "args": [
+      "generate-mnemonic",
+      "-w",
+      "2_1"
+    ],
+    "mode": "failure",
+    "result": {
+      "status": 2,
+      "stdout": "",
+      "stderr": "error: invalid value '2_1' for '--words <WORDS>': invalid digit found in string\n\nFor more information, try '--help'.\n"
+    }
+  },
+  {
+    "id": "word-count-4",
+    "args": [
+      "generate-mnemonic",
+      "-w",
+      "2_4"
+    ],
+    "mode": "failure",
+    "result": {
+      "status": 2,
+      "stdout": "",
+      "stderr": "error: invalid value '2_4' for '--words <WORDS>': invalid digit found in string\n\nFor more information, try '--help'.\n"
+    }
+  },
+  {
+    "id": "word-count-5",
+    "args": [
+      "generate-mnemonic",
+      "-w",
+      "+13"
+    ],
+    "mode": "failure",
+    "result": {
+      "status": 1,
+      "stdout": "",
+      "stderr": "Error: Invalid word count: 13. Must be 12, 15, 18, 21, or 24\n"
+    }
+  },
+  {
+    "id": "word-count-6",
+    "args": [
+      "generate-mnemonic",
+      "-w",
+      "1_3"
+    ],
+    "mode": "failure",
+    "result": {
+      "status": 2,
+      "stdout": "",
+      "stderr": "error: invalid value '1_3' for '--words <WORDS>': invalid digit found in string\n\nFor more information, try '--help'.\n"
+    }
+  },
+  {
+    "id": "word-count-7",
+    "args": [
+      "generate-mnemonic",
+      "-w",
+      "4294967296"
+    ],
+    "mode": "failure",
+    "result": {
+      "status": 2,
+      "stdout": "",
+      "stderr": "error: invalid value '4294967296' for '--words <WORDS>': 4294967296 is not in 0..=4294967295\n\nFor more information, try '--help'.\n"
+    }
+  }
+]

@@ -1,0 +1,268 @@
+{
+  "before": {
+    "tests_sha256": {
+      "CyberkrillTests/Output.lean": "9912e5c699b4fb7c07ff5eaacd2d5d821d6585118cb17a0829b224c96965a966",
+      "CyberkrillTests/Support.lean": "80dbdfd22c0478dde791bfc46ae73418a8cf838f7728bb08f248291cdb3a179c",
+      "CyberkrillTests.lean": "d18f3a7a1a8468e09727b0dae9def1ce3f67ffaa45433526ebd13279feed717f",
+      "test/attached-output-regressions.py": "5c98053295b9b26b0decee9ba538766bd431363704a57974fefc7d9d140b07db"
+    },
+    "source_sha256": {
+      "Cyberkrill/App.lean": "c8a249195dd2c92bda31b639aa8e87af78d9c333d6b99446302a36fdbdf71f25"
+    },
+    "checks": [
+      {
+        "case": 0,
+        "token": "-o-name=a",
+        "command": [
+          "timeout",
+          "--foreground",
+          "30",
+          ".lake/build/bin/CyberkrillTests",
+          "--output-equals",
+          "0"
+        ],
+        "status": 1,
+        "seconds": 0.04,
+        "detecting_assertion": "output equals 0 status"
+      },
+      {
+        "case": 1,
+        "token": "-ofoo=bar",
+        "command": [
+          "timeout",
+          "--foreground",
+          "30",
+          ".lake/build/bin/CyberkrillTests",
+          "--output-equals",
+          "1"
+        ],
+        "status": 1,
+        "seconds": 0.034,
+        "detecting_assertion": "output equals 1 status"
+      },
+      {
+        "case": 2,
+        "token": "-oordinary=name",
+        "command": [
+          "timeout",
+          "--foreground",
+          "30",
+          ".lake/build/bin/CyberkrillTests",
+          "--output-equals",
+          "2"
+        ],
+        "status": 1,
+        "seconds": 0.105,
+        "detecting_assertion": "output equals 2 status"
+      },
+      {
+        "case": 3,
+        "token": "-o-name=a=b",
+        "command": [
+          "timeout",
+          "--foreground",
+          "30",
+          ".lake/build/bin/CyberkrillTests",
+          "--output-equals",
+          "3"
+        ],
+        "status": 1,
+        "seconds": 0.033,
+        "detecting_assertion": "output equals 3 status"
+      },
+      {
+        "case": 4,
+        "token": "-o=-name=a",
+        "command": [
+          "timeout",
+          "--foreground",
+          "30",
+          ".lake/build/bin/CyberkrillTests",
+          "--output-equals",
+          "4"
+        ],
+        "status": 0,
+        "seconds": 0.038,
+        "detecting_assertion": ""
+      },
+      {
+        "case": 5,
+        "token": "--output=-name=a",
+        "command": [
+          "timeout",
+          "--foreground",
+          "30",
+          ".lake/build/bin/CyberkrillTests",
+          "--output-equals",
+          "5"
+        ],
+        "status": 0,
+        "seconds": 0.039,
+        "detecting_assertion": ""
+      },
+      {
+        "case": 6,
+        "token": "-o=foo=bar=baz",
+        "command": [
+          "timeout",
+          "--foreground",
+          "30",
+          ".lake/build/bin/CyberkrillTests",
+          "--output-equals",
+          "6"
+        ],
+        "status": 0,
+        "seconds": 0.082,
+        "detecting_assertion": ""
+      },
+      {
+        "case": 7,
+        "token": "--output=foo=bar=baz",
+        "command": [
+          "timeout",
+          "--foreground",
+          "30",
+          ".lake/build/bin/CyberkrillTests",
+          "--output-equals",
+          "7"
+        ],
+        "status": 0,
+        "seconds": 0.038,
+        "detecting_assertion": ""
+      }
+    ]
+  },
+  "after": {
+    "tests_sha256": {
+      "CyberkrillTests/Output.lean": "9912e5c699b4fb7c07ff5eaacd2d5d821d6585118cb17a0829b224c96965a966",
+      "CyberkrillTests/Support.lean": "80dbdfd22c0478dde791bfc46ae73418a8cf838f7728bb08f248291cdb3a179c",
+      "CyberkrillTests.lean": "d18f3a7a1a8468e09727b0dae9def1ce3f67ffaa45433526ebd13279feed717f",
+      "test/attached-output-regressions.py": "5c98053295b9b26b0decee9ba538766bd431363704a57974fefc7d9d140b07db"
+    },
+    "source_sha256": {
+      "Cyberkrill/App.lean": "d1e9368f956f2f06b1133d52049473da0168cac662d234db0cfcbfc3f1019651"
+    },
+    "checks": [
+      {
+        "case": 0,
+        "token": "-o-name=a",
+        "command": [
+          "timeout",
+          "--foreground",
+          "30",
+          ".lake/build/bin/CyberkrillTests",
+          "--output-equals",
+          "0"
+        ],
+        "status": 0,
+        "seconds": 0.036,
+        "detecting_assertion": ""
+      },
+      {
+        "case": 1,
+        "token": "-ofoo=bar",
+        "command": [
+          "timeout",
+          "--foreground",
+          "30",
+          ".lake/build/bin/CyberkrillTests",
+          "--output-equals",
+          "1"
+        ],
+        "status": 0,
+        "seconds": 0.035,
+        "detecting_assertion": ""
+      },
+      {
+        "case": 2,
+        "token": "-oordinary=name",
+        "command": [
+          "timeout",
+          "--foreground",
+          "30",
+          ".lake/build/bin/CyberkrillTests",
+          "--output-equals",
+          "2"
+        ],
+        "status": 0,
+        "seconds": 0.028,
+        "detecting_assertion": ""
+      },
+      {
+        "case": 3,
+        "token": "-o-name=a=b",
+        "command": [
+          "timeout",
+          "--foreground",
+          "30",
+          ".lake/build/bin/CyberkrillTests",
+          "--output-equals",
+          "3"
+        ],
+        "status": 0,
+        "seconds": 0.029,
+        "detecting_assertion": ""
+      },
+      {
+        "case": 4,
+        "token": "-o=-name=a",
+        "command": [
+          "timeout",
+          "--foreground",
+          "30",
+          ".lake/build/bin/CyberkrillTests",
+          "--output-equals",
+          "4"
+        ],
+        "status": 0,
+        "seconds": 0.027,
+        "detecting_assertion": ""
+      },
+      {
+        "case": 5,
+        "token": "--output=-name=a",
+        "command": [
+          "timeout",
+          "--foreground",
+          "30",
+          ".lake/build/bin/CyberkrillTests",
+          "--output-equals",
+          "5"
+        ],
+        "status": 0,
+        "seconds": 0.03,
+        "detecting_assertion": ""
+      },
+      {
+        "case": 6,
+        "token": "-o=foo=bar=baz",
+        "command": [
+          "timeout",
+          "--foreground",
+          "30",
+          ".lake/build/bin/CyberkrillTests",
+          "--output-equals",
+          "6"
+        ],
+        "status": 0,
+        "seconds": 0.026,
+        "detecting_assertion": ""
+      },
+      {
+        "case": 7,
+        "token": "--output=foo=bar=baz",
+        "command": [
+          "timeout",
+          "--foreground",
+          "30",
+          ".lake/build/bin/CyberkrillTests",
+          "--output-equals",
+          "7"
+        ],
+        "status": 0,
+        "seconds": 0.027,
+        "detecting_assertion": ""
+      }
+    ]
+  }
+}
