@@ -41,9 +41,9 @@ def fixtures():
     count("existing amount cases", cli, 124)
     count("existing parser-only captures", parser, 124)
     count("existing secp signatures", signatures, 16)
-    source = (APP / "Cyberkrill/App.lean").read_text()
+    source = (APP / "Cyberkrill/App.lean").read_text(encoding="utf-8")
     assert "entropy := fun n => IO.getRandomBytes n.toUSize" in source, "entropy-source-wiring"
-    assert "Cyberkrill.runWith Cyberkrill.version Cyberkrill.productionServices args" in (APP / "Main.lean").read_text(), "entropy-dispatch-wiring"
+    assert "Cyberkrill.runWith Cyberkrill.version Cyberkrill.productionServices args" in (APP / "Main.lean").read_text(encoding="utf-8"), "entropy-dispatch-wiring"
 
 
 def goldens():
@@ -149,6 +149,8 @@ def main():
         else:
             assert not sys.argv[1:]
             fixtures(); selftest(); goldens(); executable(); mnemonic()
+            from importlib import import_module
+            import_module("private-output").main()
             from regressions import main as regression_checks
             regression_checks()
     finally:

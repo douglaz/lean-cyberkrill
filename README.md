@@ -6953,6 +6953,8 @@ suffixes produce `fiatNotSupported` without HTTP/RPC initialization. Use `--` be
 that otherwise looks like an option. No command here consults wallet/node state.
 
 All errors exit 1, with a named fixed diagnostic on stderr and empty stdout.
+Mnemonic file output now follows the private, new-file-only policy described below;
+an existing destination receives `outputPathExists` and is never overwritten.
 Amount errors retain `empty`, `invalidNumber`, `negative`, `subMillisatoshi`
 and `millisatoshiOverflow`; exponent and nonfinite spellings use
 `invalidNumber`. Parser errors use `invalidArguments`, bad `--as` values use
@@ -7503,6 +7505,85 @@ all 58 unrelated issue records unchanged. Both scan wrappers required grep's
 no-match status 1. The final check/build reused the existing derivation;
 these observations do not claim a second fresh sandbox execution. A final
 app build exited 0 and its test run exited 0 in 8.292 seconds.
+
+### Phase 7a private mnemonic files
+
+Owner decision, 2026-10-28: `generate-mnemonic -o/--output FILE` creates a new
+owner-only file. It refuses an existing destination leaf, including a regular
+file, symlink, dangling symlink, hard link, device, directory or FIFO, with
+`outputPathExists: Refusing an existing output path`, exit 1 and empty stdout.
+It neither overwrites that path nor falls back to stdout. This is plan §3's
+seventh parity exception: cyberkrill at the unchanged reference pin uses
+`File::create`, which overwrites existing files and follows destination symlinks
+with default permissions.
+
+Lean 4.35.0's `IO.FS.Handle.mk` accepts a path and mode, with no creation
+permissions argument. A narrowly authorized app-local binding in
+`packages/cyberkrill/private_output.c` therefore performs a single
+`open(O_WRONLY|O_CREAT|O_EXCL|O_NOFOLLOW|O_CLOEXEC, 0600)`. Permissions are
+private from creation; no path-based chmod follows the open. A stricter caller
+umask may remove owner permissions. The binding loops over short writes,
+retries interrupted writes and checks the final close once. It has no stdio
+buffer whose delayed flush error could be dropped. Other IO errors become the
+fixed `outputFailure` diagnostic. A failed write may leave a partial private
+file; it never removes an unrelated path or prints the phrase. It does not
+promise fsync or power-loss durability. The existing crypto and HTTP shims,
+pure-package boundaries and seven-package build remain unchanged.
+
+`test/private-output.py` drives `runWith` and the actual production writer
+using published BIP39 vector 0. New files are checked for mode 0600 under umasks
+000 and 022, ownership, complete published JSON and empty stdout/stderr.
+Existing contents and link targets must remain unchanged; directory, FIFO and
+embedded-NUL paths have independent refusal checks. A bounded file-size limit
+forces a real short write and subsequent failure; its partial file remains
+private and the command reports `outputFailure`.
+
+`test/golden/private-output-reference.json` adds five reference-success/port-refusal
+goldens for regular files, symlinks, dangling symlinks, hard links and a device
+sink. Each reference outcome was captured twice from the unmodified pinned
+Nix-built executable, offline under `unshare -rn`, temporary HOME, closed stdin,
+umask 022 and a finite timeout. `test/reference-entropy.py` is a capture-only
+Linux x86-64 tracer: before the main process executes `getrandom`, it replaces
+that syscall with repeated zero bytes from published BIP39 vector 0. The pinned
+RNG derives reproducible synthetic public entropy from that input. This is not
+a public CLI entropy option, an altered reference build, an unpredictable
+mnemonic, or a claim that the resulting phrase is a published vector.
+Each case's repeated syscall-size evidence and output digest agree; no phrase
+is retained in the record. The device sink retains no output. Producer/source
+pin, script and fixture digests, licence and entropy control are recorded.
+The original 179 captures and historical regression records remain unchanged.
+
+The current mutation checker has 24 distinct production edits, adding
+`private-mode` (`0600` → `0666`, detected by `private output mode 0600`),
+`private-exclusive` (remove `O_EXCL`, detected by `private output exclusive create`),
+and `private-write-error` (ignore the saved write error, detected by
+`private output write failure`). Each must compile, produce the named runtime
+failure, then pass after exact restoration. Existing tests now use a fresh
+filename inside a temporary directory instead of requiring an overwrite.
+Current regression/attachment evidence is reintroduced and refreshed separately
+from the immutable historical observations, rather than relabeling old hashes.
+
+The one-phase `test/scope.py` audit compares against the recorded master base
+without requiring a branch name, pre-commit HEAD or unstaged tracker claim. It
+accepts the task's claim/closure fields while retaining all unrelated-record,
+path, historical-fixture and link-gate checks. It runs separately from reusable
+`test/validate.py repo`, which builds and checks the current repository without
+binding future revisions to Phase 7a's path list. Text reads in `test/gate.py`
+and the driver's Lean-source checks specify UTF-8 explicitly.
+
+Validation of this correction on 2026-10-28 completed under the full supervisor:
+app build and `lake test` exited 0; all 24 distinct mutations compiled,
+failed at the named runtime assertion and passed after restoration. The nine
+older defect reintroductions, 18 output refusals and four attached-equals
+regressions also produced their expected failures and restored successes.
+The verifier and 52 comparator self-checks exited 0. The separate scope audit
+examined 55 allowed paths and confirmed all 58 unrelated issue records unchanged.
+`nix flake check -L` exited 0 in 140.847 seconds, `nix build -L` exited 0,
+installed `cyberkrill version` exited 0, and both scan wrappers exited 0 with
+grep's no-match status distinguished from errors. Source-byte fingerprints
+confirmed exact restoration after all mutations. Earlier tables retain their
+historical counts and timings; the current inventory is 24 distinct edits and
+179 original reference captures plus five private-file outcome captures.
 
 ## Licence
 

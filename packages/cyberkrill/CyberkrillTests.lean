@@ -6,6 +6,7 @@ import CyberkrillTests.Helpers
 import CyberkrillTests.Capabilities
 import CyberkrillTests.Mnemonic
 import CyberkrillTests.Output
+import CyberkrillTests.PrivateOutput
 
 open CyberkrillTests
 
@@ -14,6 +15,8 @@ def main (args : List String) : IO UInt32 := do
     match args with
     | ["--injected"] => injected
     | ["--injected-plus"] => injected true
+    | ["--private-output", path] => privateOutput path
+    | ["--private-output-nul", path] => privateOutput path true
     | ["--word-count-rejections"] => wordCountRejections
     | ["--output-refusal", n] =>
       let some i := n.toNat? | throw (IO.userError "invalid output selector")

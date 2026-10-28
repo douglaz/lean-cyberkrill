@@ -5,6 +5,7 @@ Apache License 2.0, at your option; see LICENSE-MIT and LICENSE-APACHE.
 import Cli
 import Cyberkrill.Amounts
 import Bitcoin.Bip39
+import Cyberkrill.PrivateOutput
 
 namespace Cyberkrill
 
@@ -26,7 +27,7 @@ private def parser : Cli.Cmd :=
         (positionalArgs := #[⟨"amount", "Bitcoin amount", String⟩]) (run := fun _ => pure 0),
       Cli.Cmd.mk "generate-mnemonic" none "Generate an English BIP39 mnemonic using OS entropy"
         (flags := #[⟨some "w", "words", "12, 15, 18, 21 or 24 (default)", String⟩,
-                    ⟨some "o", "output", "Write JSON to this file instead of stdout", String⟩])
+                    ⟨some "o", "output", "Create a new owner-only JSON file instead of stdout", String⟩])
         (run := fun _ => pure 0)])
 
 -- Match the reference u32 argument grammar before semantic count validation.
@@ -103,7 +104,7 @@ def productionServices : Services where
   entropy := fun n => IO.getRandomBytes n.toUSize
   stdout := fun s => do (← IO.getStdout).putStr s
   stderr := fun s => do (← IO.getStderr).putStr s
-  writeFile := fun p s => IO.FS.writeFile p s
+  writeFile := writePrivateFile
 
 def entropyBytes : Nat → Except Error Nat
   | 12 => .ok 16 | 15 => .ok 20 | 18 => .ok 24 | 21 => .ok 28 | 24 => .ok 32
@@ -160,7 +161,9 @@ def runWith (version : String) (services : Services) (args : List String) : IO U
       if !out.stderr.isEmpty then services.stderr out.stderr
       if !out.stdout.isEmpty then services.stdout out.stdout
       return 0
-    catch _ => reportError services .outputFailure
+    catch e => reportError services (match e with
+      | .alreadyExists .. => .outputPathExists
+      | _ => .outputFailure)
 
 /-- Future fee registrations share this refusal boundary, before backend action. -/
 def runFeeWith (services : Services) (input : String)

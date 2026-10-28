@@ -1,24 +1,29 @@
 {
-  "count": 21,
+  "count": 24,
   "source_sha256": {
-    "Cyberkrill/Amounts.lean": "6dd85ef39ff48b07320256702af2f32c39ad7989d8bbec894d203573ab0bba65",
-    "Cyberkrill/App.lean": "d1e9368f956f2f06b1133d52049473da0168cac662d234db0cfcbfc3f1019651",
+    "Cyberkrill/Amounts.lean": "a197fd85527cb83df2cab48e4605739f16113dc9fa00ef9cc8ddd3f2391e0989",
+    "Cyberkrill/App.lean": "938dbb99b9e11610b345888fd1579161f4bb12cf79bafcbd5d152874645208a0",
     "Cyberkrill/Capabilities.lean": "35a0f3dc6dff6a88989c9de7665c93a117f26341f8869ba28c4c01e298d064a8",
-    "test/mutate.py": "2f2af8261e854b8db1c51c81aadeffa62bf24e06817695df1f76258ff3118189",
-    "test/driver.py": "59a23528a7f39ebc81bd6901f87cf40bb6f25bcddd4369def1a274e7c54f3cc7",
+    "private_output.c": "5facc36d82d7d8891176730557892d571ceb338eda046b1ff0a7ba49bb7a4ae3",
+    "test/mutate.py": "251c9b18479f343501dfac8524d2eb8d4ad652f7bd6fbb10d171fba6b72b9835",
+    "test/driver.py": "e78c2da1133bf6702e4a97f1e86a0756382bca36895f2696799c00bc5ff067e7",
     "test/compare.py": "65792ec70aab8f33fa83736d1fb7a9708e373d0d74712bc3ce5c3d511b64ba82",
     "test/selftest.py": "8dd5a8fc9ce3f3f9eac06b595242e88e064d628fc91898cca929a2cb3f779221",
     "test/regressions.py": "b1e757d159d3255817c8227c80b18822040ea77073f4ef2dcb8a75218fdd7787",
     "test/cases.py": "78feb1ba8266b5d1934aafa19d83e41d59b412cdb38de63da88cc367b21ac2ee",
     "Main.lean": "915167be1211cea874cd9f781d9651bc3e441b81dd9979415ba55d44e34f2eb1",
-    "lakefile.lean": "d44fd2f61f2a9c36193b512fdd7a20f8280e3625c35bffed5a0d968cf831cb7d",
+    "lakefile.lean": "091b5366403a589d69a1226b5728588a7d7b4907cbe3b32199f22d5a0ed4093d",
     "CyberkrillTests/Capabilities.lean": "50172673976ead4aef29242efa591ed2237d2db4f60a6a323c2d5f9f4555fd66",
     "CyberkrillTests/Helpers.lean": "d4484cedac1da7a20e5bc0a05080c7d6c171e7ec49f7a64e3a80ad3d075bc70a",
-    "CyberkrillTests/Mnemonic.lean": "8afa3185be3c76554509bc98dda37128d030d9a146719374b16bddab5faf9c1e",
+    "CyberkrillTests/Mnemonic.lean": "49c85bcaf2327da760e08fb7fef4ea5071c4b29160481a578caa61e36200cb0e",
     "CyberkrillTests/Output.lean": "9912e5c699b4fb7c07ff5eaacd2d5d821d6585118cb17a0829b224c96965a966",
+    "CyberkrillTests/PrivateOutput.lean": "a4412bb4cf4908cc777e39018cb2ac34fc12c697e373b90be3b6c1235514997f",
     "CyberkrillTests/Support.lean": "80dbdfd22c0478dde791bfc46ae73418a8cf838f7728bb08f248291cdb3a179c",
-    "CyberkrillTests.lean": "d18f3a7a1a8468e09727b0dae9def1ce3f67ffaa45433526ebd13279feed717f",
-    "test/output-regressions.py": "0c9c3284471ab2fde2ed27559b7a76d05a30ac8e81e1a865c3d8c4fa14d73c14"
+    "CyberkrillTests.lean": "b733a517d73dc63a6f90fab1cbba2d661e6958a98882bd069b110170babbecae",
+    "test/output-regressions.py": "0c9c3284471ab2fde2ed27559b7a76d05a30ac8e81e1a865c3d8c4fa14d73c14",
+    "test/private-output.py": "29928193a152d9bcb93988c3a89ed795fe16ff363d7cb041212d41d752ca99bc",
+    "Cyberkrill/PrivateOutput.lean": "46ecbff603563e28e27ec208a64333acc23680ac062f6d1b050c9c78cd8bf7f4",
+    "test/golden/private-output-reference.json": "678b77e14d96a8684f02cf7a6e49100fa1b15626e75375c1394732e44a9e9881"
   },
   "mutations": [
     {
@@ -47,7 +52,7 @@
       ],
       "status": 1,
       "detecting_assertion": "amount scaling",
-      "seconds": 0.943,
+      "seconds": 0.561,
       "restored_status": 0
     },
     {
@@ -76,7 +81,7 @@
       ],
       "status": 1,
       "detecting_assertion": "sats flooring",
-      "seconds": 2.385,
+      "seconds": 1.49,
       "restored_status": 0
     },
     {
@@ -105,7 +110,7 @@
       ],
       "status": 1,
       "detecting_assertion": "output refusal 0 stdout",
-      "seconds": 0.085,
+      "seconds": 0.079,
       "restored_status": 0
     },
     {
@@ -133,7 +138,7 @@
       ],
       "status": 1,
       "detecting_assertion": "wholeSat half-up",
-      "seconds": 0.036,
+      "seconds": 0.031,
       "restored_status": 0
     },
     {
@@ -161,7 +166,7 @@
       ],
       "status": 1,
       "detecting_assertion": "wholeSat tiny",
-      "seconds": 0.038,
+      "seconds": 0.029,
       "restored_status": 0
     },
     {
@@ -189,7 +194,7 @@
       ],
       "status": 1,
       "detecting_assertion": "floorSat tiny",
-      "seconds": 0.03,
+      "seconds": 0.028,
       "restored_status": 0
     },
     {
@@ -217,7 +222,7 @@
       ],
       "status": 1,
       "detecting_assertion": "exact wholeSat rejects",
-      "seconds": 0.029,
+      "seconds": 0.03,
       "restored_status": 0
     },
     {
@@ -245,7 +250,7 @@
       ],
       "status": 1,
       "detecting_assertion": "fee unit requirement",
-      "seconds": 0.032,
+      "seconds": 0.027,
       "restored_status": 0
     },
     {
@@ -274,7 +279,7 @@
       ],
       "status": 1,
       "detecting_assertion": "mnemonic entropy mapping",
-      "seconds": 0.088,
+      "seconds": 0.081,
       "restored_status": 0
     },
     {
@@ -302,7 +307,7 @@
       ],
       "status": 1,
       "detecting_assertion": "entropy production length",
-      "seconds": 0.03,
+      "seconds": 0.027,
       "restored_status": 0
     },
     {
@@ -331,7 +336,7 @@
       ],
       "status": 1,
       "detecting_assertion": "mnemonic file stdout",
-      "seconds": 0.086,
+      "seconds": 0.073,
       "restored_status": 0
     },
     {
@@ -359,7 +364,7 @@
       ],
       "status": 1,
       "detecting_assertion": "cap Bitcoin pubkey accepts",
-      "seconds": 0.032,
+      "seconds": 0.028,
       "restored_status": 0
     },
     {
@@ -387,7 +392,7 @@
       ],
       "status": 1,
       "detecting_assertion": "cap Bitcoin compression matches",
-      "seconds": 0.03,
+      "seconds": 0.029,
       "restored_status": 0
     },
     {
@@ -415,7 +420,7 @@
       ],
       "status": 1,
       "detecting_assertion": "cap Bitcoin xonly accepts",
-      "seconds": 0.032,
+      "seconds": 0.028,
       "restored_status": 0
     },
     {
@@ -443,7 +448,7 @@
       ],
       "status": 1,
       "detecting_assertion": "cap Bitcoin DER accepts",
-      "seconds": 0.029,
+      "seconds": 0.026,
       "restored_status": 0
     },
     {
@@ -499,7 +504,7 @@
       ],
       "status": 1,
       "detecting_assertion": "cap BOLT verify decode",
-      "seconds": 0.032,
+      "seconds": 0.03,
       "restored_status": 0
     },
     {
@@ -527,7 +532,7 @@
       ],
       "status": 1,
       "detecting_assertion": "cap BOLT signature exact",
-      "seconds": 0.03,
+      "seconds": 0.032,
       "restored_status": 0
     },
     {
@@ -555,7 +560,7 @@
       ],
       "status": 1,
       "detecting_assertion": "cap BOLT point accepts",
-      "seconds": 0.031,
+      "seconds": 0.027,
       "restored_status": 0
     },
     {
@@ -583,7 +588,7 @@
       ],
       "status": 1,
       "detecting_assertion": "cap RIPEMD160",
-      "seconds": 0.03,
+      "seconds": 0.027,
       "restored_status": 0
     },
     {
@@ -611,7 +616,94 @@
       ],
       "status": 1,
       "detecting_assertion": "cap HASH160",
-      "seconds": 0.03,
+      "seconds": 0.029,
+      "restored_status": 0
+    },
+    {
+      "property": "private-mode",
+      "file": "private_output.c",
+      "replace": ", 0600);",
+      "with_text": ", 0666);",
+      "build_command": [
+        "timeout",
+        "--foreground",
+        "180",
+        "lake",
+        "build",
+        "cyberkrill",
+        "CyberkrillTests"
+      ],
+      "build_status": 0,
+      "command": [
+        "timeout",
+        "--foreground",
+        "180",
+        "python3",
+        "-B",
+        "test/private-output.py",
+        "mode"
+      ],
+      "status": 1,
+      "detecting_assertion": "private output mode 0600",
+      "seconds": 0.076,
+      "restored_status": 0
+    },
+    {
+      "property": "private-exclusive",
+      "file": "private_output.c",
+      "replace": "O_CREAT | O_EXCL | O_NOFOLLOW",
+      "with_text": "O_CREAT | O_NOFOLLOW",
+      "build_command": [
+        "timeout",
+        "--foreground",
+        "180",
+        "lake",
+        "build",
+        "cyberkrill",
+        "CyberkrillTests"
+      ],
+      "build_status": 0,
+      "command": [
+        "timeout",
+        "--foreground",
+        "180",
+        "python3",
+        "-B",
+        "test/private-output.py",
+        "exclusive"
+      ],
+      "status": 1,
+      "detecting_assertion": "private output exclusive create",
+      "seconds": 0.071,
+      "restored_status": 0
+    },
+    {
+      "property": "private-write-error",
+      "file": "private_output.c",
+      "replace": "if (error != 0)",
+      "with_text": "if (0)",
+      "build_command": [
+        "timeout",
+        "--foreground",
+        "180",
+        "lake",
+        "build",
+        "cyberkrill",
+        "CyberkrillTests"
+      ],
+      "build_status": 0,
+      "command": [
+        "timeout",
+        "--foreground",
+        "180",
+        "python3",
+        "-B",
+        "test/private-output.py",
+        "write-errors"
+      ],
+      "status": 1,
+      "detecting_assertion": "private output write failure",
+      "seconds": 0.073,
       "restored_status": 0
     }
   ],
@@ -624,6 +716,6 @@
       "test"
     ],
     "status": 0,
-    "seconds": 7.965
+    "seconds": 7.149
   }
 }

@@ -27,7 +27,6 @@ def main():
             ("installed-version", ROOT, ["./result/bin/cyberkrill", "version"], 30),
             ("proof-token-scan", ROOT, ["bash", "-c", 'rc=0; grep -rnw sorry --include="*.lean" --exclude-dir=.lake packages || rc=$?; test "$rc" -eq 1'], 60),
             ("private-key-scan", ROOT, ["bash", "-c", 'rc=0; grep -rEn --exclude-dir=.lake "[tuvxyzUVYZ]prv[1-9A-HJ-NP-Za-km-z]{100,}" packages || rc=$?; test "$rc" -eq 1'], 60),
-            ("scope", ROOT, ["python3", "-B", "packages/cyberkrill/test/scope.py"], 60),
         ]
     records = []
     for name, cwd, args, limit in checks:

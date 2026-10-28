@@ -16,6 +16,7 @@ from cases import APP
 AMOUNTS = "Cyberkrill/Amounts.lean"
 APPLICATION = "Cyberkrill/App.lean"
 CAPABILITIES = "Cyberkrill/Capabilities.lean"
+PRIVATE_OUTPUT = "private_output.c"
 
 
 def mutations():
@@ -59,7 +60,14 @@ def mutations():
     # Similarly target only Bitcoin's strict field, not BOLT's point field.
     item = rows[11]
     rows[11] = (item[0], item[1], "where\n  " + item[2] + "\n  compressPubkey", "where\n  " + item[3] + "\n  compressPubkey", item[4], item[5])
-    assert len(rows) == 21
+    for name, old, new, selector, assertion in [
+        ("private-mode", ", 0600);", ", 0666);", "mode", "private output mode 0600"),
+        ("private-exclusive", "O_CREAT | O_EXCL | O_NOFOLLOW", "O_CREAT | O_NOFOLLOW", "exclusive", "private output exclusive create"),
+        ("private-write-error", "if (error != 0)", "if (0)", "write-errors", "private output write failure"),
+    ]:
+        rows.append((name, PRIVATE_OUTPUT, old, new,
+                     ["python3", "-B", "test/private-output.py", selector], assertion))
+    assert len(rows) == 24
     return rows
 
 
@@ -71,7 +79,7 @@ def main():
     os.chdir(APP)
     logs = APP / ".lake/mutations"
     logs.mkdir(parents=True, exist_ok=True)
-    paths = [Path(p) for p in [AMOUNTS, APPLICATION, CAPABILITIES]]
+    paths = [Path(p) for p in [AMOUNTS, APPLICATION, CAPABILITIES, PRIVATE_OUTPUT]]
     originals = {path: path.read_bytes() for path in paths}
     signals = (signal.SIGHUP, signal.SIGINT, signal.SIGQUIT, signal.SIGTERM)
 
@@ -107,7 +115,7 @@ def main():
     build = ["lake", "build", "cyberkrill", "CyberkrillTests"]
     records = []
     fingerprint_paths = paths + [Path("test/mutate.py"), Path("test/driver.py"), Path("test/compare.py"), Path("test/selftest.py"), Path("test/regressions.py"), Path("test/cases.py"), Path("Main.lean"), Path("lakefile.lean")]
-    fingerprint_paths += sorted(Path("CyberkrillTests").glob("*.lean")) + [Path("CyberkrillTests.lean"), Path("test/output-regressions.py")]
+    fingerprint_paths += sorted(Path("CyberkrillTests").glob("*.lean")) + [Path("CyberkrillTests.lean"), Path("test/output-regressions.py"), Path("test/private-output.py"), Path("Cyberkrill/PrivateOutput.lean"), Path("test/golden/private-output-reference.json")]
     fingerprints = {str(p): digest(p) for p in fingerprint_paths}
     try:
         for name, relative, old, new, test, assertion in mutations():
@@ -141,7 +149,7 @@ def main():
         record = dict(count=len(records), source_sha256=fingerprints, mutations=records,
                       restored_full=dict(command=["timeout", "--foreground", "180", "lake", "test"], status=0, seconds=elapsed))
         Path("test/golden/mutation-record.json").write_text(json.dumps(record, indent=2) + "\n")
-        print("independent mutations: 21/21; restored full suite: exit 0", flush=True)
+        print("independent mutations: 24/24; restored full suite: exit 0", flush=True)
     finally:
         restore()
 

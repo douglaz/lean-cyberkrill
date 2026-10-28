@@ -33,7 +33,8 @@ def injected (plus : Bool := false) : IO Unit := do
     let expectedJson := Json.mkObj [("mnemonic", toJson expected), ("words", toJson words),
       ("entropy_bits", toJson (entropy.size * 8))]
     check s!"mnemonic exact value {i}" (actual == expectedJson)
-    IO.FS.withTempFile fun _ path => do
+    IO.FS.withTempDir fun dir => do
+      let path := dir / "mnemonic.json"
       let (status, out, err) ← runCase services (args ++ ["--output", path.toString])
       check "mnemonic file stdout" (status == 0 && out.isEmpty && err.isEmpty)
       check s!"mnemonic file contents {i}" ((← IO.FS.readFile path) == stdout)
@@ -74,8 +75,8 @@ def mnemonicErrors : IO Unit := do
   counted "existing English" published.size 24
   let e ← bytes published[0]! "entropy"
   let services := { productionServices with entropy := fun _ => pure e }
-  IO.FS.withTempFile fun _ path => do
-    let (status, out, err) ← runCase services ["generate-mnemonic", "-w", "12", "-o", path.toString ++ "/child"]
+  IO.FS.withTempDir fun dir => do
+    let (status, out, err) ← runCase services ["generate-mnemonic", "-w", "12", "-o", (dir / "missing" / "child").toString]
     check "mnemonic file failure secret free" (status == 1 && out.isEmpty && err == Error.outputFailure.message ++ "\n")
   let errors ← IO.mkRef ""
   let status ← runWith version { services with

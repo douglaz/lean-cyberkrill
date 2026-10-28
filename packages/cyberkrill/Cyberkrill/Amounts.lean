@@ -10,7 +10,7 @@ inductive Error where
   | amount (cause : Bitcoin.Amount.InputError)
   | fiatNotSupported | lessThanOneSat | wholeSatRequired | feeUnitRequired
   | invalidArguments | invalidUnit | invalidWordCount
-  | entropyFailure | shortEntropy | outputFailure
+  | entropyFailure | shortEntropy | outputFailure | outputPathExists
   deriving Repr, DecidableEq
 
 def Error.message : Error → String
@@ -29,6 +29,7 @@ def Error.message : Error → String
   | .entropyFailure => "entropyFailure: Cannot acquire entropy"
   | .shortEntropy => "shortEntropy: Entropy source returned the wrong byte count"
   | .outputFailure => "outputFailure: Cannot write output"
+  | .outputPathExists => "outputPathExists: Refusing an existing output path"
 
 def parseAmount (s : String) : Except Error Bitcoin.Amount :=
   (Bitcoin.Amount.parseInput s).mapError .amount

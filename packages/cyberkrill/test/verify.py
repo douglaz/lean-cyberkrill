@@ -77,8 +77,6 @@ def main():
     attached = json.loads((APP / "test/golden/attached-output-regression-record.json").read_text())
     before_attached, after_attached = attached["before"], attached["after"]
     assert before_attached["tests_sha256"] == after_attached["tests_sha256"]
-    for relative, expected in {**after_attached["tests_sha256"], **after_attached["source_sha256"]}.items():
-        assert hashlib.sha256((APP / relative).read_bytes()).hexdigest() == expected, "stale attached output: " + relative
     attached_cases = import_module("attached-output-regressions").CASES
     assert len(before_attached["checks"]) == len(after_attached["checks"]) == len(attached_cases) == 8
     for i, (red, green, token) in enumerate(zip(before_attached["checks"], after_attached["checks"], attached_cases)):
@@ -87,17 +85,41 @@ def main():
         assert red["status"] == (1 if i < 4 else 0) and green["status"] == 0
         assert red["detecting_assertion"] == (f"output equals {i} status" if i < 4 else "")
         assert green["detecting_assertion"] == ""
-    print("attached output evidence: 4/4 runtime reds; 4/4 former controls; 8/8 final greens")
+    print("historical attached output: 4/4 runtime reds; 4/4 controls; 8/8 former greens")
+    attached_refresh = json.loads((APP / "test/golden/attached-output-refresh.json").read_bytes())
+    for relative, expected in attached_refresh["source_sha256"].items():
+        assert hashlib.sha256((APP / relative).read_bytes()).hexdigest() == expected, "stale attached refresh: " + relative
+    assert attached_refresh["build"]["status"] == attached_refresh["restore_build"]["status"] == 0
+    assert len(attached_refresh["checks"]) == 8
+    for i, row in enumerate(attached_refresh["checks"]):
+        assert row["token"] == attached_cases[i] and row["case"] == i
+        assert row["red"]["status"] == (1 if i < 4 else 0) and row["green"]["status"] == 0
+        assert row["red"]["command"] == row["green"]["command"]
+        assert row["detecting_assertion"] == (f"output equals {i} status" if i < 4 else "")
+    print("current attached output: 4/4 runtime reds; 4/4 controls; 8/8 restored greens")
+    private = json.loads((APP / "test/golden/private-output-reference.json").read_bytes())
+    provenance = private["provenance"]
+    assert provenance["commit"] == PIN and provenance["build"] == BUILD and provenance["build_status"] == 0
+    for relative, expected in provenance["script_sha256"].items():
+        assert hashlib.sha256((APP / relative).read_bytes()).hexdigest() == expected, "stale private reference: " + relative
+    assert hashlib.sha256((APP.parents[1] / provenance["fixture"]).read_bytes()).hexdigest() == provenance["fixture_sha256"]
+    assert len(private["cases"]) == 5
+    for row in private["cases"]:
+        assert row["reference"] == dict(status=0, stdout="", stderr="")
+        a, b = row["repetitions"]
+        assert a == b and a["status"] == 0 and 32 in a["getrandom_sizes"]
+    print("private output captures: 5/5, each repeated with controlled public entropy")
     record = json.loads((APP / "test/golden/mutation-record.json").read_text())
-    assert record["count"] == len(record["mutations"]) == 21
-    assert len({m["property"] for m in record["mutations"]}) == 21
+    assert record["count"] == len(record["mutations"]) == 24
+    assert len({m["property"] for m in record["mutations"]}) == 24
+    assert len({(m["file"], m["replace"], m["with_text"]) for m in record["mutations"]}) == 24
     for relative, expected in record["source_sha256"].items():
         assert hashlib.sha256((APP / relative).read_bytes()).hexdigest() == expected, "stale mutation evidence: " + relative
     for mutation in record["mutations"]:
         assert mutation["status"] == 1 and mutation["restored_status"] == mutation["build_status"] == 0
         assert mutation["replace"] != mutation["with_text"] and mutation["detecting_assertion"]
     assert record["restored_full"]["status"] == 0
-    print("bound production mutations: 21/21; restored suite: exit 0")
+    print("bound production mutations: 24/24 distinct edits; restored suite: exit 0")
     # The README must mirror every exact pin, including its output field/stream.
     readme = (APP.parents[1] / "README.md").read_text()
     section = readme.split("## Exact amounts vs cyberkrill\n", 1)[1].split("### Phase 7a checks", 1)[0]
