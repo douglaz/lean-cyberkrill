@@ -1,0 +1,49 @@
+{
+  "source": "https://github.com/douglaz/cyberkrill",
+  "commit": "27cad1faba86260b06665a89f0af5134d23525c2",
+  "paths": [
+    "cyberkrill/src/main.rs",
+    "cyberkrill-core/src/decoder.rs"
+  ],
+  "licence": "MIT OR Apache-2.0, taken under MIT",
+  "build": [
+    "nix",
+    "build",
+    "--no-link",
+    "--print-out-paths",
+    "--max-jobs",
+    "2",
+    "--cores",
+    "4",
+    "github:douglaz/cyberkrill/27cad1faba86260b06665a89f0af5134d23525c2"
+  ],
+  "build_status": 0,
+  "build_seconds": 0.13923389464616776,
+  "producer": "/nix/store/398yfkdb4dfxa3g7xf6i4sir3asagd4i-cyberkrill-0.1.0/bin/cyberkrill",
+  "execution": "unshare -rn sh -c 'ip link set lo up && exec timeout --foreground 15 \"$@\"' capture \"$PRODUCER\" ...",
+  "isolation": "temporary HOME/cwd; closed stdin except published JSON; separate streams/status",
+  "construction": "Published BOLT11 vectors with their unchanged CC-BY-4.0 provenance; authored LNURL vectors and synthetic derived builder JSON. See bound provenance sidecars.",
+  "counts": {
+    "bolt11": 57,
+    "lnurl": 92,
+    "spec": 31,
+    "encoded_spec": 17,
+    "builder": 34,
+    "json": 139,
+    "routing": 18,
+    "total": 357
+  },
+  "sha256": {
+    "packages/lightning/test-data/bolt11.json": "462044b66541fcbdc172ca737a6966ffbbee1c34191f2346b943607d4b89c7b7",
+    "packages/lightning/test-data/bolt11.json.provenance": "dd85fb34a2aacbc81b69c5e2fa6b787732ac7749f3ab7fb119d55297814f2cd3",
+    "packages/lightning/test-data/lnurl.json": "b17b2e953188915fc912bc458e545e61c282c0078d4b77829b44fe64225d37a8",
+    "packages/lightning/test-data/lnurl.json.provenance": "e4d9915c1a6fba6c05f99aa8a1767db82c26a7a90b9faa1b5e1ddcb9c86f2933",
+    "packages/lightning/test-data/lnurl-reference.json": "046cedb8f83548679049e7c6c44f9003fa7232ec01b116485ad2c7e99d8d8e54",
+    "packages/lightning/test-data/lnurl-reference.json.provenance": "cff48c24f8d678d0c9008a421300582b89d75907d981b11f42b479cdc244f768",
+    "packages/cyberkrill/test/capture-lightning.py": "70ffd4951cfd80248898729f759b60c0222ed06d5e3fc1dd20aa1a4c0cfb5f62",
+    "packages/cyberkrill/test/lightning-cases.py": "3c5baaa63ab9fd27d598128dbfb244a3c015262698f09d021d80cd57dc9ee22a",
+    "packages/cyberkrill/test/public-forms.py": "d48e83a8284d2119e420395486b8a5b8eddb21c30ab11031dea4b0af40a011d0",
+    "packages/cyberkrill/test/golden/lightning-reference.json": "e682629e8399d5da8d63b1f65ca3af92fd373ad04feab4f757e5c335671776fa",
+    "packages/cyberkrill/test/golden/lightning-routing-reference.json": "09879ec40c0b2ecaa50f9e304556b3eb9e8f816b2609f5ad9f1eb95520473962"
+  }
+}

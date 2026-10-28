@@ -11,6 +11,8 @@ inductive Error where
   | fiatNotSupported | lessThanOneSat | wholeSatRequired | feeUnitRequired
   | invalidArguments | invalidUnit | invalidWordCount
   | entropyFailure | shortEntropy | outputFailure | outputPathExists
+  | inputFailure | invalidInvoiceJson | badPublicKey | badPrivateKey
+  | lightning (code : String)
   deriving Repr, DecidableEq
 
 def Error.message : Error → String
@@ -30,6 +32,11 @@ def Error.message : Error → String
   | .shortEntropy => "shortEntropy: Entropy source returned the wrong byte count"
   | .outputFailure => "outputFailure: Cannot write output"
   | .outputPathExists => "outputPathExists: Refusing an existing output path"
+  | .inputFailure => "inputFailure: Cannot read UTF-8 input"
+  | .invalidInvoiceJson => "invalidInvoiceJson: Invalid invoice description"
+  | .badPublicKey => "badPublicKey: Invalid public key"
+  | .badPrivateKey => "badPrivateKey: Invalid signing key"
+  | .lightning code => code ++ ": Invalid Lightning input"
 
 def parseAmount (s : String) : Except Error Bitcoin.Amount :=
   (Bitcoin.Amount.parseInput s).mapError .amount

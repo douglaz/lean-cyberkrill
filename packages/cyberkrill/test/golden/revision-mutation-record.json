@@ -1,0 +1,1970 @@
+{
+  "count": 30,
+  "source_sha256": {
+    "Cyberkrill/App.lean": "16fdc8940539d0016f1c364aecce05596705baeb1f97f522df41b4bc7ef32b84",
+    "Cyberkrill/Amounts.lean": "6294e53d0becc3d3ea9dc255df5e85b07b4e2c723cd5edc636778d4eaff7fde3",
+    "Cyberkrill/Capabilities.lean": "35a0f3dc6dff6a88989c9de7665c93a117f26341f8869ba28c4c01e298d064a8",
+    "Cyberkrill/Lightning.lean": "30728c403b57686af70f6461ac2141152b7b09ae062799583129e82963e0d2b1",
+    "Cyberkrill/InvoiceJson.lean": "58f3b75378000180ad44afa24122bdcc175ce6443a397f3eaac291deb9db8d2f",
+    "Cyberkrill/PrivateOutput.lean": "46ecbff603563e28e27ec208a64333acc23680ac062f6d1b050c9c78cd8bf7f4",
+    "test/lightning-mutate.py": "52fb583118ff6b1133fa8279345628ba30456acf3e2485184a1793ea96e56692",
+    "test/lightning.py": "26d6be15bfa8d2626eccc69765e7767c6b7c8010d97672728c8381374668f5eb",
+    "test/lightning-compare.py": "95cbf350953cce472cd85b18f19ef09a311a55a5e492dbb8927e2fccb60f8bd2",
+    "test/lightning-cases.py": "3c5baaa63ab9fd27d598128dbfb244a3c015262698f09d021d80cd57dc9ee22a",
+    "test/compare.py": "65792ec70aab8f33fa83736d1fb7a9708e373d0d74712bc3ce5c3d511b64ba82",
+    "test/selftest.py": "2f8ed78c93c4c7e075630defb338d6345f5d33be8975044bcfef90b5946115e5",
+    "test/driver.py": "4129576602d3a3a80d7f37dccaf48231b286563e363992b47b5103aa23177c7e",
+    "test/verify.py": "ea7168fbe7187b9867bed992a86645f363564e507ebd95edb27b2010133a215c",
+    "Main.lean": "915167be1211cea874cd9f781d9651bc3e441b81dd9979415ba55d44e34f2eb1",
+    "CyberkrillTests.lean": "b733a517d73dc63a6f90fab1cbba2d661e6958a98882bd069b110170babbecae",
+    "lakefile.lean": "091b5366403a589d69a1226b5728588a7d7b4907cbe3b32199f22d5a0ed4093d",
+    "private_output.c": "5bf3940e88b4d8dfba6214e5e489a0c3d6dbd94e0d26f212126c8fd8ef1d3308",
+    "CyberkrillTests/Capabilities.lean": "50172673976ead4aef29242efa591ed2237d2db4f60a6a323c2d5f9f4555fd66",
+    "CyberkrillTests/Helpers.lean": "d4484cedac1da7a20e5bc0a05080c7d6c171e7ec49f7a64e3a80ad3d075bc70a",
+    "CyberkrillTests/Mnemonic.lean": "49c85bcaf2327da760e08fb7fef4ea5071c4b29160481a578caa61e36200cb0e",
+    "CyberkrillTests/Output.lean": "9912e5c699b4fb7c07ff5eaacd2d5d821d6585118cb17a0829b224c96965a966",
+    "CyberkrillTests/PrivateOutput.lean": "a4412bb4cf4908cc777e39018cb2ac34fc12c697e373b90be3b6c1235514997f",
+    "CyberkrillTests/Support.lean": "80dbdfd22c0478dde791bfc46ae73418a8cf838f7728bb08f248291cdb3a179c",
+    "test/golden/lightning-reference.json": "e682629e8399d5da8d63b1f65ca3af92fd373ad04feab4f757e5c335671776fa",
+    "test/golden/lightning-routing-reference.json": "09879ec40c0b2ecaa50f9e304556b3eb9e8f816b2609f5ad9f1eb95520473962",
+    "test/golden/lightning-provenance.json": "601dab7243d0d07467599b8f4d4ef1f5e1008dd5fe5fbde04d671f4b25e8335a",
+    "test/revisions.py": "33dd73d76cfcf51610377a4dd838db0152b06afff425cbde8058ca346fd5ede1",
+    "test/revision-cases.py": "34b9422908c0b1dbce438133de14ed5b8cb28aa3756a9132bbad021e01122491",
+    "test/capture-revisions.py": "a7dd8989f63da76fbf4011ba01c2a5e99aed4a0058f0c6222eb0993abfb04982",
+    "test/revision-mutate.py": "72adc2e8f032e58d7b3aa9223ced440d4649d91ba4b8d4a0e478318d5aeb1826",
+    "test/scope.py": "d1c54c9a2599bdf58c5b792a1d50efb8d480702c3756a75d7136cfccf197ee05",
+    "test/validate.py": "cc49777d70a9b6ba15a398eb1dadde67a6dc1f98af0cc0372eedbca6cbdf941e",
+    "test/record-revision-regressions.py": "835793fffcab60c1b7d340211788fd37b55695f86843ea7d0c5c0774df360fee",
+    "test/golden/revision-reference.json": "7e1e1f5c24c2232330f5dcc3911eaddacb2493ccc7233411ab33bd9d700d7796",
+    "test/golden/revision-provenance.json": "e41550bb991702d4bf3b03c0f4eaad8cf25deb40e0c68bf25f3e41e27312892d",
+    "test/golden/revision-regression-record.json": "60c8074b198e76e211b17deb1cfcec57fc644b0aa1f184356dd846698d135379"
+  },
+  "mutations": [
+    {
+      "property": "timestamp-compact-offset",
+      "file": "Cyberkrill/InvoiceJson.lean",
+      "replace": "rest'.length == 2 && hours < 24",
+      "with_text": "rest'.length == 2 && hours < 24 && rest'.head? == some ':'",
+      "case": "timestamp/compact-zone",
+      "assertion": "success status",
+      "failure": "AssertionError: success status: timestamp/compact-zone",
+      "build": {
+        "command": [
+          "timeout",
+          "--foreground",
+          "180",
+          "lake",
+          "build",
+          "cyberkrill",
+          "CyberkrillTests"
+        ],
+        "status": 0,
+        "seconds": 11.122
+      },
+      "red": {
+        "command": [
+          "timeout",
+          "--foreground",
+          "180",
+          "python3",
+          "-B",
+          "test/revisions.py",
+          "--case",
+          "timestamp/compact-zone"
+        ],
+        "status": 1,
+        "seconds": 0.113
+      },
+      "restore_build": {
+        "command": [
+          "timeout",
+          "--foreground",
+          "180",
+          "lake",
+          "build",
+          "cyberkrill",
+          "CyberkrillTests"
+        ],
+        "status": 0,
+        "seconds": 11.199
+      },
+      "green": {
+        "command": [
+          "timeout",
+          "--foreground",
+          "180",
+          "python3",
+          "-B",
+          "test/revisions.py",
+          "--case",
+          "timestamp/compact-zone"
+        ],
+        "status": 0,
+        "seconds": 0.104
+      }
+    },
+    {
+      "property": "timestamp-expanded-year",
+      "file": "Cyberkrill/InvoiceJson.lean",
+      "replace": "year \u2264 262142 do none",
+      "with_text": "year \u2264 9999 do none",
+      "case": "timestamp/expanded-year",
+      "assertion": "success status",
+      "failure": "AssertionError: success status: timestamp/expanded-year",
+      "build": {
+        "command": [
+          "timeout",
+          "--foreground",
+          "180",
+          "lake",
+          "build",
+          "cyberkrill",
+          "CyberkrillTests"
+        ],
+        "status": 0,
+        "seconds": 11.099
+      },
+      "red": {
+        "command": [
+          "timeout",
+          "--foreground",
+          "180",
+          "python3",
+          "-B",
+          "test/revisions.py",
+          "--case",
+          "timestamp/expanded-year"
+        ],
+        "status": 1,
+        "seconds": 0.109
+      },
+      "restore_build": {
+        "command": [
+          "timeout",
+          "--foreground",
+          "180",
+          "lake",
+          "build",
+          "cyberkrill",
+          "CyberkrillTests"
+        ],
+        "status": 0,
+        "seconds": 11.218
+      },
+      "green": {
+        "command": [
+          "timeout",
+          "--foreground",
+          "180",
+          "python3",
+          "-B",
+          "test/revisions.py",
+          "--case",
+          "timestamp/expanded-year"
+        ],
+        "status": 0,
+        "seconds": 0.1
+      }
+    },
+    {
+      "property": "timestamp-unicode-space",
+      "file": "Cyberkrill/InvoiceJson.lean",
+      "replace": "cs.dropWhile timeSpace",
+      "with_text": "cs.dropWhile (\u00b7 == ' ')",
+      "case": "timestamp/zone-nbsp",
+      "assertion": "success status",
+      "failure": "AssertionError: success status: timestamp/zone-nbsp",
+      "build": {
+        "command": [
+          "timeout",
+          "--foreground",
+          "180",
+          "lake",
+          "build",
+          "cyberkrill",
+          "CyberkrillTests"
+        ],
+        "status": 0,
+        "seconds": 11.203
+      },
+      "red": {
+        "command": [
+          "timeout",
+          "--foreground",
+          "180",
+          "python3",
+          "-B",
+          "test/revisions.py",
+          "--case",
+          "timestamp/zone-nbsp"
+        ],
+        "status": 1,
+        "seconds": 0.098
+      },
+      "restore_build": {
+        "command": [
+          "timeout",
+          "--foreground",
+          "180",
+          "lake",
+          "build",
+          "cyberkrill",
+          "CyberkrillTests"
+        ],
+        "status": 0,
+        "seconds": 11.304
+      },
+      "green": {
+        "command": [
+          "timeout",
+          "--foreground",
+          "180",
+          "python3",
+          "-B",
+          "test/revisions.py",
+          "--case",
+          "timestamp/zone-nbsp"
+        ],
+        "status": 0,
+        "seconds": 0.099
+      }
+    },
+    {
+      "property": "timestamp-utc-minimum",
+      "file": "Cyberkrill/InvoiceJson.lean",
+      "replace": "day == 1 && utc < 0",
+      "with_text": "day == 1 && utc < -86400",
+      "case": "timestamp/utc-underflow",
+      "assertion": "failure status",
+      "failure": "AssertionError: timestamp/utc-underflow failure status",
+      "build": {
+        "command": [
+          "timeout",
+          "--foreground",
+          "180",
+          "lake",
+          "build",
+          "cyberkrill",
+          "CyberkrillTests"
+        ],
+        "status": 0,
+        "seconds": 11.217
+      },
+      "red": {
+        "command": [
+          "timeout",
+          "--foreground",
+          "180",
+          "python3",
+          "-B",
+          "test/revisions.py",
+          "--case",
+          "timestamp/utc-underflow"
+        ],
+        "status": 1,
+        "seconds": 0.105
+      },
+      "restore_build": {
+        "command": [
+          "timeout",
+          "--foreground",
+          "180",
+          "lake",
+          "build",
+          "cyberkrill",
+          "CyberkrillTests"
+        ],
+        "status": 0,
+        "seconds": 11.31
+      },
+      "green": {
+        "command": [
+          "timeout",
+          "--foreground",
+          "180",
+          "python3",
+          "-B",
+          "test/revisions.py",
+          "--case",
+          "timestamp/utc-underflow"
+        ],
+        "status": 0,
+        "seconds": 0.103
+      }
+    },
+    {
+      "property": "timestamp-utc-maximum",
+      "file": "Cyberkrill/InvoiceJson.lean",
+      "replace": "day == 31 && utc \u2265 86400",
+      "with_text": "day == 31 && utc \u2265 172800",
+      "case": "timestamp/utc-overflow",
+      "assertion": "failure status",
+      "failure": "AssertionError: timestamp/utc-overflow failure status",
+      "build": {
+        "command": [
+          "timeout",
+          "--foreground",
+          "180",
+          "lake",
+          "build",
+          "cyberkrill",
+          "CyberkrillTests"
+        ],
+        "status": 0,
+        "seconds": 11.204
+      },
+      "red": {
+        "command": [
+          "timeout",
+          "--foreground",
+          "180",
+          "python3",
+          "-B",
+          "test/revisions.py",
+          "--case",
+          "timestamp/utc-overflow"
+        ],
+        "status": 1,
+        "seconds": 0.104
+      },
+      "restore_build": {
+        "command": [
+          "timeout",
+          "--foreground",
+          "180",
+          "lake",
+          "build",
+          "cyberkrill",
+          "CyberkrillTests"
+        ],
+        "status": 0,
+        "seconds": 11.206
+      },
+      "green": {
+        "command": [
+          "timeout",
+          "--foreground",
+          "180",
+          "python3",
+          "-B",
+          "test/revisions.py",
+          "--case",
+          "timestamp/utc-overflow"
+        ],
+        "status": 0,
+        "seconds": 0.102
+      }
+    },
+    {
+      "property": "timestamp-calendar",
+      "file": "Cyberkrill/InvoiceJson.lean",
+      "replace": "day \u2264 days &&",
+      "with_text": "day \u2264 days + 1 &&",
+      "case": "timestamp/date-leap-invalid",
+      "assertion": "failure status",
+      "failure": "AssertionError: timestamp/date-leap-invalid failure status",
+      "build": {
+        "command": [
+          "timeout",
+          "--foreground",
+          "180",
+          "lake",
+          "build",
+          "cyberkrill",
+          "CyberkrillTests"
+        ],
+        "status": 0,
+        "seconds": 11.311
+      },
+      "red": {
+        "command": [
+          "timeout",
+          "--foreground",
+          "180",
+          "python3",
+          "-B",
+          "test/revisions.py",
+          "--case",
+          "timestamp/date-leap-invalid"
+        ],
+        "status": 1,
+        "seconds": 0.103
+      },
+      "restore_build": {
+        "command": [
+          "timeout",
+          "--foreground",
+          "180",
+          "lake",
+          "build",
+          "cyberkrill",
+          "CyberkrillTests"
+        ],
+        "status": 0,
+        "seconds": 11.303
+      },
+      "green": {
+        "command": [
+          "timeout",
+          "--foreground",
+          "180",
+          "python3",
+          "-B",
+          "test/revisions.py",
+          "--case",
+          "timestamp/date-leap-invalid"
+        ],
+        "status": 0,
+        "seconds": 0.103
+      }
+    },
+    {
+      "property": "timestamp-separator",
+      "file": "Cyberkrill/InvoiceJson.lean",
+      "replace": "['T', 't', ' '].contains separator",
+      "with_text": "['T', 't', ' ', '\\t'].contains separator",
+      "case": "timestamp/tab-separator",
+      "assertion": "failure status",
+      "failure": "AssertionError: timestamp/tab-separator failure status",
+      "build": {
+        "command": [
+          "timeout",
+          "--foreground",
+          "180",
+          "lake",
+          "build",
+          "cyberkrill",
+          "CyberkrillTests"
+        ],
+        "status": 0,
+        "seconds": 11.301
+      },
+      "red": {
+        "command": [
+          "timeout",
+          "--foreground",
+          "180",
+          "python3",
+          "-B",
+          "test/revisions.py",
+          "--case",
+          "timestamp/tab-separator"
+        ],
+        "status": 1,
+        "seconds": 0.103
+      },
+      "restore_build": {
+        "command": [
+          "timeout",
+          "--foreground",
+          "180",
+          "lake",
+          "build",
+          "cyberkrill",
+          "CyberkrillTests"
+        ],
+        "status": 0,
+        "seconds": 11.208
+      },
+      "green": {
+        "command": [
+          "timeout",
+          "--foreground",
+          "180",
+          "python3",
+          "-B",
+          "test/revisions.py",
+          "--case",
+          "timestamp/tab-separator"
+        ],
+        "status": 0,
+        "seconds": 0.106
+      }
+    },
+    {
+      "property": "timestamp-offset-bound",
+      "file": "Cyberkrill/InvoiceJson.lean",
+      "replace": "rest'.length == 2 && hours < 24",
+      "with_text": "rest'.length == 2 && hours < 25",
+      "case": "timestamp/zone-hour-overflow",
+      "assertion": "failure status",
+      "failure": "AssertionError: timestamp/zone-hour-overflow failure status",
+      "build": {
+        "command": [
+          "timeout",
+          "--foreground",
+          "180",
+          "lake",
+          "build",
+          "cyberkrill",
+          "CyberkrillTests"
+        ],
+        "status": 0,
+        "seconds": 11.313
+      },
+      "red": {
+        "command": [
+          "timeout",
+          "--foreground",
+          "180",
+          "python3",
+          "-B",
+          "test/revisions.py",
+          "--case",
+          "timestamp/zone-hour-overflow"
+        ],
+        "status": 1,
+        "seconds": 0.111
+      },
+      "restore_build": {
+        "command": [
+          "timeout",
+          "--foreground",
+          "180",
+          "lake",
+          "build",
+          "cyberkrill",
+          "CyberkrillTests"
+        ],
+        "status": 0,
+        "seconds": 11.313
+      },
+      "green": {
+        "command": [
+          "timeout",
+          "--foreground",
+          "180",
+          "python3",
+          "-B",
+          "test/revisions.py",
+          "--case",
+          "timestamp/zone-hour-overflow"
+        ],
+        "status": 0,
+        "seconds": 0.102
+      }
+    },
+    {
+      "property": "surrogate-high-required-pair",
+      "file": "Cyberkrill/InvoiceJson.lean",
+      "replace": "| _ => false\n    else",
+      "with_text": "| _ => true\n    else",
+      "case": "unicode/known-high",
+      "assertion": "failure status",
+      "failure": "AssertionError: unicode/known-high failure status",
+      "build": {
+        "command": [
+          "timeout",
+          "--foreground",
+          "180",
+          "lake",
+          "build",
+          "cyberkrill",
+          "CyberkrillTests"
+        ],
+        "status": 0,
+        "seconds": 11.407
+      },
+      "red": {
+        "command": [
+          "timeout",
+          "--foreground",
+          "180",
+          "python3",
+          "-B",
+          "test/revisions.py",
+          "--case",
+          "unicode/known-high"
+        ],
+        "status": 1,
+        "seconds": 0.105
+      },
+      "restore_build": {
+        "command": [
+          "timeout",
+          "--foreground",
+          "180",
+          "lake",
+          "build",
+          "cyberkrill",
+          "CyberkrillTests"
+        ],
+        "status": 0,
+        "seconds": 11.413
+      },
+      "green": {
+        "command": [
+          "timeout",
+          "--foreground",
+          "180",
+          "python3",
+          "-B",
+          "test/revisions.py",
+          "--case",
+          "unicode/known-high"
+        ],
+        "status": 0,
+        "seconds": 0.112
+      }
+    },
+    {
+      "property": "surrogate-low-refusal",
+      "file": "Cyberkrill/InvoiceJson.lean",
+      "replace": "!(0xDC00 \u2264 unit && unit \u2264 0xDFFF)",
+      "with_text": "!(0xDC00 \u2264 unit && unit < 0xDC00)",
+      "case": "unicode/known-low",
+      "assertion": "failure status",
+      "failure": "AssertionError: unicode/known-low failure status",
+      "build": {
+        "command": [
+          "timeout",
+          "--foreground",
+          "180",
+          "lake",
+          "build",
+          "cyberkrill",
+          "CyberkrillTests"
+        ],
+        "status": 0,
+        "seconds": 11.411
+      },
+      "red": {
+        "command": [
+          "timeout",
+          "--foreground",
+          "180",
+          "python3",
+          "-B",
+          "test/revisions.py",
+          "--case",
+          "unicode/known-low"
+        ],
+        "status": 1,
+        "seconds": 0.106
+      },
+      "restore_build": {
+        "command": [
+          "timeout",
+          "--foreground",
+          "180",
+          "lake",
+          "build",
+          "cyberkrill",
+          "CyberkrillTests"
+        ],
+        "status": 0,
+        "seconds": 11.616
+      },
+      "green": {
+        "command": [
+          "timeout",
+          "--foreground",
+          "180",
+          "python3",
+          "-B",
+          "test/revisions.py",
+          "--case",
+          "unicode/known-low"
+        ],
+        "status": 0,
+        "seconds": 0.098
+      }
+    },
+    {
+      "property": "surrogate-pair-second-unit",
+      "file": "Cyberkrill/InvoiceJson.lean",
+      "replace": "0xDC00 \u2264 low && low \u2264 0xDFFF",
+      "with_text": "low \u2264 0xFFFF",
+      "case": "unicode/known-high-ascii",
+      "assertion": "failure status",
+      "failure": "AssertionError: unicode/known-high-ascii failure status",
+      "build": {
+        "command": [
+          "timeout",
+          "--foreground",
+          "180",
+          "lake",
+          "build",
+          "cyberkrill",
+          "CyberkrillTests"
+        ],
+        "status": 0,
+        "seconds": 11.1
+      },
+      "red": {
+        "command": [
+          "timeout",
+          "--foreground",
+          "180",
+          "python3",
+          "-B",
+          "test/revisions.py",
+          "--case",
+          "unicode/known-high-ascii"
+        ],
+        "status": 1,
+        "seconds": 0.103
+      },
+      "restore_build": {
+        "command": [
+          "timeout",
+          "--foreground",
+          "180",
+          "lake",
+          "build",
+          "cyberkrill",
+          "CyberkrillTests"
+        ],
+        "status": 0,
+        "seconds": 11.104
+      },
+      "green": {
+        "command": [
+          "timeout",
+          "--foreground",
+          "180",
+          "python3",
+          "-B",
+          "test/revisions.py",
+          "--case",
+          "unicode/known-high-ascii"
+        ],
+        "status": 0,
+        "seconds": 0.101
+      }
+    },
+    {
+      "property": "surrogate-known-field-name",
+      "file": "Cyberkrill/InvoiceJson.lean",
+      "replace": "unless validKeys do throw .invalidInvoiceJson\n    return fields",
+      "with_text": "unless validKeys || !fields.isEmpty do throw .invalidInvoiceJson\n    return fields",
+      "case": "unicode/field-name-high",
+      "assertion": "failure status",
+      "failure": "AssertionError: unicode/field-name-high failure status",
+      "build": {
+        "command": [
+          "timeout",
+          "--foreground",
+          "180",
+          "lake",
+          "build",
+          "cyberkrill",
+          "CyberkrillTests"
+        ],
+        "status": 0,
+        "seconds": 11.208
+      },
+      "red": {
+        "command": [
+          "timeout",
+          "--foreground",
+          "180",
+          "python3",
+          "-B",
+          "test/revisions.py",
+          "--case",
+          "unicode/field-name-high"
+        ],
+        "status": 1,
+        "seconds": 0.104
+      },
+      "restore_build": {
+        "command": [
+          "timeout",
+          "--foreground",
+          "180",
+          "lake",
+          "build",
+          "cyberkrill",
+          "CyberkrillTests"
+        ],
+        "status": 0,
+        "seconds": 11.001
+      },
+      "green": {
+        "command": [
+          "timeout",
+          "--foreground",
+          "180",
+          "python3",
+          "-B",
+          "test/revisions.py",
+          "--case",
+          "unicode/field-name-high"
+        ],
+        "status": 0,
+        "seconds": 0.104
+      }
+    },
+    {
+      "property": "surrogate-ignored-value",
+      "file": "Cyberkrill/InvoiceJson.lean",
+      "replace": "if known.contains key && key != \"routes\" && key != \"fees\" then checkStrings value",
+      "with_text": "if key != \"routes\" && key != \"fees\" then checkStrings value",
+      "case": "unicode/ignored-high",
+      "assertion": "success status",
+      "failure": "AssertionError: success status: unicode/ignored-high",
+      "build": {
+        "command": [
+          "timeout",
+          "--foreground",
+          "180",
+          "lake",
+          "build",
+          "cyberkrill",
+          "CyberkrillTests"
+        ],
+        "status": 0,
+        "seconds": 10.89
+      },
+      "red": {
+        "command": [
+          "timeout",
+          "--foreground",
+          "180",
+          "python3",
+          "-B",
+          "test/revisions.py",
+          "--case",
+          "unicode/ignored-high"
+        ],
+        "status": 1,
+        "seconds": 0.105
+      },
+      "restore_build": {
+        "command": [
+          "timeout",
+          "--foreground",
+          "180",
+          "lake",
+          "build",
+          "cyberkrill",
+          "CyberkrillTests"
+        ],
+        "status": 0,
+        "seconds": 11.0
+      },
+      "green": {
+        "command": [
+          "timeout",
+          "--foreground",
+          "180",
+          "python3",
+          "-B",
+          "test/revisions.py",
+          "--case",
+          "unicode/ignored-high"
+        ],
+        "status": 0,
+        "seconds": 0.103
+      }
+    },
+    {
+      "property": "sequence-root-mapping",
+      "file": "Cyberkrill/Lightning.lean",
+      "replace": "let net \u2190 InvoiceJson.enumName (\u2190 field j \"network\")",
+      "with_text": "let j \u2190 if let .arr _ := (\u2190 jsonResult (Json.parse input)) then throw Error.invalidInvoiceJson else pure j\n  let net \u2190 InvoiceJson.enumName (\u2190 field j \"network\")",
+      "case": "sequence/root-length-14",
+      "assertion": "success status",
+      "failure": "AssertionError: success status: sequence/root-length-14",
+      "build": {
+        "command": [
+          "timeout",
+          "--foreground",
+          "180",
+          "lake",
+          "build",
+          "cyberkrill",
+          "CyberkrillTests"
+        ],
+        "status": 0,
+        "seconds": 10.109
+      },
+      "red": {
+        "command": [
+          "timeout",
+          "--foreground",
+          "180",
+          "python3",
+          "-B",
+          "test/revisions.py",
+          "--case",
+          "sequence/root-length-14"
+        ],
+        "status": 1,
+        "seconds": 0.099
+      },
+      "restore_build": {
+        "command": [
+          "timeout",
+          "--foreground",
+          "180",
+          "lake",
+          "build",
+          "cyberkrill",
+          "CyberkrillTests"
+        ],
+        "status": 0,
+        "seconds": 10.092
+      },
+      "green": {
+        "command": [
+          "timeout",
+          "--foreground",
+          "180",
+          "python3",
+          "-B",
+          "test/revisions.py",
+          "--case",
+          "sequence/root-length-14"
+        ],
+        "status": 0,
+        "seconds": 0.103
+      }
+    },
+    {
+      "property": "sequence-hop-mapping",
+      "file": "Cyberkrill/Lightning.lean",
+      "replace": "let j \u2190 InvoiceJson.structObject j [\"src_node_id\"",
+      "with_text": "let j \u2190 if let .arr _ := j then throw Error.invalidInvoiceJson else InvoiceJson.structObject j [\"src_node_id\"",
+      "case": "sequence/hop-length-6",
+      "assertion": "success status",
+      "failure": "AssertionError: success status: sequence/hop-length-6",
+      "build": {
+        "command": [
+          "timeout",
+          "--foreground",
+          "180",
+          "lake",
+          "build",
+          "cyberkrill",
+          "CyberkrillTests"
+        ],
+        "status": 0,
+        "seconds": 10.094
+      },
+      "red": {
+        "command": [
+          "timeout",
+          "--foreground",
+          "180",
+          "python3",
+          "-B",
+          "test/revisions.py",
+          "--case",
+          "sequence/hop-length-6"
+        ],
+        "status": 1,
+        "seconds": 0.101
+      },
+      "restore_build": {
+        "command": [
+          "timeout",
+          "--foreground",
+          "180",
+          "lake",
+          "build",
+          "cyberkrill",
+          "CyberkrillTests"
+        ],
+        "status": 0,
+        "seconds": 10.094
+      },
+      "green": {
+        "command": [
+          "timeout",
+          "--foreground",
+          "180",
+          "python3",
+          "-B",
+          "test/revisions.py",
+          "--case",
+          "sequence/hop-length-6"
+        ],
+        "status": 0,
+        "seconds": 0.108
+      }
+    },
+    {
+      "property": "sequence-fee-mapping",
+      "file": "Cyberkrill/Lightning.lean",
+      "replace": "let fees \u2190 InvoiceJson.structObject (\u2190 field j \"fees\")",
+      "with_text": "let fees \u2190 if let .arr _ := (\u2190 field j \"fees\") then throw Error.invalidInvoiceJson else InvoiceJson.structObject (\u2190 field j \"fees\")",
+      "case": "sequence/fees-length-2",
+      "assertion": "success status",
+      "failure": "AssertionError: success status: sequence/fees-length-2",
+      "build": {
+        "command": [
+          "timeout",
+          "--foreground",
+          "180",
+          "lake",
+          "build",
+          "cyberkrill",
+          "CyberkrillTests"
+        ],
+        "status": 0,
+        "seconds": 10.512
+      },
+      "red": {
+        "command": [
+          "timeout",
+          "--foreground",
+          "180",
+          "python3",
+          "-B",
+          "test/revisions.py",
+          "--case",
+          "sequence/fees-length-2"
+        ],
+        "status": 1,
+        "seconds": 0.1
+      },
+      "restore_build": {
+        "command": [
+          "timeout",
+          "--foreground",
+          "180",
+          "lake",
+          "build",
+          "cyberkrill",
+          "CyberkrillTests"
+        ],
+        "status": 0,
+        "seconds": 10.414
+      },
+      "green": {
+        "command": [
+          "timeout",
+          "--foreground",
+          "180",
+          "python3",
+          "-B",
+          "test/revisions.py",
+          "--case",
+          "sequence/fees-length-2"
+        ],
+        "status": 0,
+        "seconds": 0.107
+      }
+    },
+    {
+      "property": "sequence-lexical-number",
+      "file": "Cyberkrill/InvoiceJson.lean",
+      "replace": "unless digits literal do throw .invalidInvoiceJson",
+      "with_text": "unless digits literal || literal.contains 'e' do throw .invalidInvoiceJson",
+      "case": "sequence/root-unsigned",
+      "assertion": "failure status",
+      "failure": "AssertionError: sequence/root-unsigned failure status",
+      "build": {
+        "command": [
+          "timeout",
+          "--foreground",
+          "180",
+          "lake",
+          "build",
+          "cyberkrill",
+          "CyberkrillTests"
+        ],
+        "status": 0,
+        "seconds": 11.197
+      },
+      "red": {
+        "command": [
+          "timeout",
+          "--foreground",
+          "180",
+          "python3",
+          "-B",
+          "test/revisions.py",
+          "--case",
+          "sequence/root-unsigned"
+        ],
+        "status": 1,
+        "seconds": 0.114
+      },
+      "restore_build": {
+        "command": [
+          "timeout",
+          "--foreground",
+          "180",
+          "lake",
+          "build",
+          "cyberkrill",
+          "CyberkrillTests"
+        ],
+        "status": 0,
+        "seconds": 11.638
+      },
+      "green": {
+        "command": [
+          "timeout",
+          "--foreground",
+          "180",
+          "python3",
+          "-B",
+          "test/revisions.py",
+          "--case",
+          "sequence/root-unsigned"
+        ],
+        "status": 0,
+        "seconds": 0.103
+      }
+    },
+    {
+      "property": "sequence-length-bound",
+      "file": "Cyberkrill/InvoiceJson.lean",
+      "replace": "actual == expected",
+      "with_text": "actual \u2265 expected",
+      "case": "sequence/root-length-15",
+      "assertion": "failure status",
+      "failure": "AssertionError: sequence/root-length-15 failure status",
+      "build": {
+        "command": [
+          "timeout",
+          "--foreground",
+          "180",
+          "lake",
+          "build",
+          "cyberkrill",
+          "CyberkrillTests"
+        ],
+        "status": 0,
+        "seconds": 11.004
+      },
+      "red": {
+        "command": [
+          "timeout",
+          "--foreground",
+          "180",
+          "python3",
+          "-B",
+          "test/revisions.py",
+          "--case",
+          "sequence/root-length-15"
+        ],
+        "status": 1,
+        "seconds": 0.11
+      },
+      "restore_build": {
+        "command": [
+          "timeout",
+          "--foreground",
+          "180",
+          "lake",
+          "build",
+          "cyberkrill",
+          "CyberkrillTests"
+        ],
+        "status": 0,
+        "seconds": 11.303
+      },
+      "green": {
+        "command": [
+          "timeout",
+          "--foreground",
+          "180",
+          "python3",
+          "-B",
+          "test/revisions.py",
+          "--case",
+          "sequence/root-length-15"
+        ],
+        "status": 0,
+        "seconds": 0.105
+      }
+    },
+    {
+      "property": "simnet-decode-network",
+      "file": "Cyberkrill/Lightning.lean",
+      "replace": "Bitcoin.Address.encodeScript parts.hrp.currency.network",
+      "with_text": "Bitcoin.Address.encodeScript (addressNetwork parts.hrp.currency)",
+      "case": "simnet/decode",
+      "assertion": "unlisted difference",
+      "failure": "AssertionError: unlisted difference: simnet/decode stdout[\"fallback_addresses\"][0]",
+      "build": {
+        "command": [
+          "timeout",
+          "--foreground",
+          "180",
+          "lake",
+          "build",
+          "cyberkrill",
+          "CyberkrillTests"
+        ],
+        "status": 0,
+        "seconds": 10.204
+      },
+      "red": {
+        "command": [
+          "timeout",
+          "--foreground",
+          "180",
+          "python3",
+          "-B",
+          "test/revisions.py",
+          "--case",
+          "simnet/decode"
+        ],
+        "status": 1,
+        "seconds": 0.108
+      },
+      "restore_build": {
+        "command": [
+          "timeout",
+          "--foreground",
+          "180",
+          "lake",
+          "build",
+          "cyberkrill",
+          "CyberkrillTests"
+        ],
+        "status": 0,
+        "seconds": 10.809
+      },
+      "green": {
+        "command": [
+          "timeout",
+          "--foreground",
+          "180",
+          "python3",
+          "-B",
+          "test/revisions.py",
+          "--case",
+          "simnet/decode"
+        ],
+        "status": 0,
+        "seconds": 0.103
+      }
+    },
+    {
+      "property": "simnet-encode-network",
+      "file": "Cyberkrill/Lightning.lean",
+      "replace": "| .bc => .mainnet | .bcrt => .regtest | .tbs => .signet | .tb | .sb => .testnet",
+      "with_text": "| .bc => .mainnet | .bcrt | .sb => .regtest | .tbs => .signet | .tb => .testnet",
+      "case": "simnet/encode",
+      "assertion": "success status",
+      "failure": "AssertionError: success status: simnet/encode",
+      "build": {
+        "command": [
+          "timeout",
+          "--foreground",
+          "180",
+          "lake",
+          "build",
+          "cyberkrill",
+          "CyberkrillTests"
+        ],
+        "status": 0,
+        "seconds": 10.521
+      },
+      "red": {
+        "command": [
+          "timeout",
+          "--foreground",
+          "180",
+          "python3",
+          "-B",
+          "test/revisions.py",
+          "--case",
+          "simnet/encode"
+        ],
+        "status": 1,
+        "seconds": 0.106
+      },
+      "restore_build": {
+        "command": [
+          "timeout",
+          "--foreground",
+          "180",
+          "lake",
+          "build",
+          "cyberkrill",
+          "CyberkrillTests"
+        ],
+        "status": 0,
+        "seconds": 10.399
+      },
+      "green": {
+        "command": [
+          "timeout",
+          "--foreground",
+          "180",
+          "python3",
+          "-B",
+          "test/revisions.py",
+          "--case",
+          "simnet/encode"
+        ],
+        "status": 0,
+        "seconds": 0.103
+      }
+    },
+    {
+      "property": "decoder-create-invoice",
+      "file": "Cyberkrill/App.lean",
+      "replace": "let .ok () \u2190 prepareDecodeOutput services path | return .error .outputFailure\n    return (LightningCli.decodeInvoice",
+      "with_text": "let .ok () \u2190 prepareDecodeOutput services none | return .error .outputFailure\n    return (LightningCli.decodeInvoice",
+      "case": "output/ln-decode-invoice-create",
+      "assertion": "failed output existence/bytes",
+      "failure": "AssertionError: output/ln-decode-invoice-create failed output existence/bytes",
+      "build": {
+        "command": [
+          "timeout",
+          "--foreground",
+          "180",
+          "lake",
+          "build",
+          "cyberkrill",
+          "CyberkrillTests"
+        ],
+        "status": 0,
+        "seconds": 9.618
+      },
+      "red": {
+        "command": [
+          "timeout",
+          "--foreground",
+          "180",
+          "python3",
+          "-B",
+          "test/revisions.py",
+          "--case",
+          "output/ln-decode-invoice-create"
+        ],
+        "status": 1,
+        "seconds": 0.102
+      },
+      "restore_build": {
+        "command": [
+          "timeout",
+          "--foreground",
+          "180",
+          "lake",
+          "build",
+          "cyberkrill",
+          "CyberkrillTests"
+        ],
+        "status": 0,
+        "seconds": 9.608
+      },
+      "green": {
+        "command": [
+          "timeout",
+          "--foreground",
+          "180",
+          "python3",
+          "-B",
+          "test/revisions.py",
+          "--case",
+          "output/ln-decode-invoice-create"
+        ],
+        "status": 0,
+        "seconds": 0.102
+      }
+    },
+    {
+      "property": "decoder-truncate-lnurl",
+      "file": "Cyberkrill/App.lean",
+      "replace": "let .ok () \u2190 prepareDecodeOutput services path | return .error .outputFailure\n    return (LightningCli.decodeLnurl",
+      "with_text": "let .ok () \u2190 prepareDecodeOutput services none | return .error .outputFailure\n    return (LightningCli.decodeLnurl",
+      "case": "output/ln-decode-lnurl-truncate",
+      "assertion": "failed output existence/bytes",
+      "failure": "AssertionError: output/ln-decode-lnurl-truncate failed output existence/bytes",
+      "build": {
+        "command": [
+          "timeout",
+          "--foreground",
+          "180",
+          "lake",
+          "build",
+          "cyberkrill",
+          "CyberkrillTests"
+        ],
+        "status": 0,
+        "seconds": 9.519
+      },
+      "red": {
+        "command": [
+          "timeout",
+          "--foreground",
+          "180",
+          "python3",
+          "-B",
+          "test/revisions.py",
+          "--case",
+          "output/ln-decode-lnurl-truncate"
+        ],
+        "status": 1,
+        "seconds": 0.105
+      },
+      "restore_build": {
+        "command": [
+          "timeout",
+          "--foreground",
+          "180",
+          "lake",
+          "build",
+          "cyberkrill",
+          "CyberkrillTests"
+        ],
+        "status": 0,
+        "seconds": 9.511
+      },
+      "green": {
+        "command": [
+          "timeout",
+          "--foreground",
+          "180",
+          "python3",
+          "-B",
+          "test/revisions.py",
+          "--case",
+          "output/ln-decode-lnurl-truncate"
+        ],
+        "status": 0,
+        "seconds": 0.104
+      }
+    },
+    {
+      "property": "decoder-open-before-decode",
+      "file": "Cyberkrill/App.lean",
+      "replace": "catch _ => return .error .outputFailure\n\ndef execute",
+      "with_text": "catch _ => return .ok ()\n\ndef execute",
+      "case": "output/ln-decode-invoice-open-error",
+      "assertion": "error ordering/identity",
+      "failure": "AssertionError: output/ln-decode-invoice-open-error error ordering/identity",
+      "build": {
+        "command": [
+          "timeout",
+          "--foreground",
+          "180",
+          "lake",
+          "build",
+          "cyberkrill",
+          "CyberkrillTests"
+        ],
+        "status": 0,
+        "seconds": 9.621
+      },
+      "red": {
+        "command": [
+          "timeout",
+          "--foreground",
+          "180",
+          "python3",
+          "-B",
+          "test/revisions.py",
+          "--case",
+          "output/ln-decode-invoice-open-error"
+        ],
+        "status": 1,
+        "seconds": 0.107
+      },
+      "restore_build": {
+        "command": [
+          "timeout",
+          "--foreground",
+          "180",
+          "lake",
+          "build",
+          "cyberkrill",
+          "CyberkrillTests"
+        ],
+        "status": 0,
+        "seconds": 10.017
+      },
+      "green": {
+        "command": [
+          "timeout",
+          "--foreground",
+          "180",
+          "python3",
+          "-B",
+          "test/revisions.py",
+          "--case",
+          "output/ln-decode-invoice-open-error"
+        ],
+        "status": 0,
+        "seconds": 0.12
+      }
+    },
+    {
+      "property": "decoder-read-before-open",
+      "file": "Cyberkrill/App.lean",
+      "replace": "let .ok text \u2190 lightningInput services input false | return .error .inputFailure\n    let .ok () \u2190 prepareDecodeOutput services path | return .error .outputFailure\n    return (LightningCli.decodeLnurl",
+      "with_text": "let .ok () \u2190 prepareDecodeOutput services path | return .error .outputFailure\n    let .ok text \u2190 lightningInput services input false | return .error .inputFailure\n    return (LightningCli.decodeLnurl",
+      "case": "output/ln-decode-lnurl-read-before-open",
+      "assertion": "error ordering/identity",
+      "failure": "AssertionError: output/ln-decode-lnurl-read-before-open error ordering/identity",
+      "build": {
+        "command": [
+          "timeout",
+          "--foreground",
+          "180",
+          "lake",
+          "build",
+          "cyberkrill",
+          "CyberkrillTests"
+        ],
+        "status": 0,
+        "seconds": 10.067
+      },
+      "red": {
+        "command": [
+          "timeout",
+          "--foreground",
+          "180",
+          "python3",
+          "-B",
+          "test/revisions.py",
+          "--case",
+          "output/ln-decode-lnurl-read-before-open"
+        ],
+        "status": 1,
+        "seconds": 0.109
+      },
+      "restore_build": {
+        "command": [
+          "timeout",
+          "--foreground",
+          "180",
+          "lake",
+          "build",
+          "cyberkrill",
+          "CyberkrillTests"
+        ],
+        "status": 0,
+        "seconds": 10.129
+      },
+      "green": {
+        "command": [
+          "timeout",
+          "--foreground",
+          "180",
+          "python3",
+          "-B",
+          "test/revisions.py",
+          "--case",
+          "output/ln-decode-lnurl-read-before-open"
+        ],
+        "status": 0,
+        "seconds": 0.107
+      }
+    },
+    {
+      "property": "encoder-late-output",
+      "file": "Cyberkrill/App.lean",
+      "replace": "let .ok text \u2190 lightningInput services input true | return .error .inputFailure",
+      "with_text": "let .ok text \u2190 lightningInput services input true | return .error .inputFailure\n    let .ok () \u2190 prepareDecodeOutput services path | return .error .outputFailure",
+      "case": "output/encode-preserve",
+      "assertion": "failed output existence/bytes",
+      "failure": "AssertionError: output/encode-preserve failed output existence/bytes",
+      "build": {
+        "command": [
+          "timeout",
+          "--foreground",
+          "180",
+          "lake",
+          "build",
+          "cyberkrill",
+          "CyberkrillTests"
+        ],
+        "status": 0,
+        "seconds": 10.124
+      },
+      "red": {
+        "command": [
+          "timeout",
+          "--foreground",
+          "180",
+          "python3",
+          "-B",
+          "test/revisions.py",
+          "--case",
+          "output/encode-preserve"
+        ],
+        "status": 1,
+        "seconds": 0.118
+      },
+      "restore_build": {
+        "command": [
+          "timeout",
+          "--foreground",
+          "180",
+          "lake",
+          "build",
+          "cyberkrill",
+          "CyberkrillTests"
+        ],
+        "status": 0,
+        "seconds": 10.261
+      },
+      "green": {
+        "command": [
+          "timeout",
+          "--foreground",
+          "180",
+          "python3",
+          "-B",
+          "test/revisions.py",
+          "--case",
+          "output/encode-preserve"
+        ],
+        "status": 0,
+        "seconds": 0.107
+      }
+    },
+    {
+      "property": "scope-accept-closed",
+      "file": "test/scope.py",
+      "replace": "current[\"status\"] in [\"in_progress\", \"closed\"]",
+      "with_text": "current[\"status\"] in [\"in_progress\"]",
+      "case": "scope/closed",
+      "assertion": "closure validation",
+      "failure": "AssertionError: scope/closed closure validation",
+      "build": {
+        "command": [
+          "timeout",
+          "--foreground",
+          "180",
+          "lake",
+          "build",
+          "cyberkrill",
+          "CyberkrillTests"
+        ],
+        "status": 0,
+        "seconds": 0.416
+      },
+      "red": {
+        "command": [
+          "timeout",
+          "--foreground",
+          "180",
+          "python3",
+          "-B",
+          "test/revisions.py",
+          "--scope",
+          "closed"
+        ],
+        "status": 1,
+        "seconds": 0.094
+      },
+      "restore_build": {
+        "command": [
+          "timeout",
+          "--foreground",
+          "180",
+          "lake",
+          "build",
+          "cyberkrill",
+          "CyberkrillTests"
+        ],
+        "status": 0,
+        "seconds": 0.413
+      },
+      "green": {
+        "command": [
+          "timeout",
+          "--foreground",
+          "180",
+          "python3",
+          "-B",
+          "test/revisions.py",
+          "--scope",
+          "closed"
+        ],
+        "status": 0,
+        "seconds": 0.483
+      }
+    },
+    {
+      "property": "scope-closure-reason",
+      "file": "test/scope.py",
+      "replace": "assert current[\"close_reason\"].strip(), \"nonempty closure reason\"",
+      "with_text": "assert isinstance(current[\"close_reason\"], str), \"closure reason type\"",
+      "case": "scope/closed-empty-reason",
+      "assertion": "closure validation",
+      "failure": "AssertionError: scope/closed-empty-reason closure validation",
+      "build": {
+        "command": [
+          "timeout",
+          "--foreground",
+          "180",
+          "lake",
+          "build",
+          "cyberkrill",
+          "CyberkrillTests"
+        ],
+        "status": 0,
+        "seconds": 0.423
+      },
+      "red": {
+        "command": [
+          "timeout",
+          "--foreground",
+          "180",
+          "python3",
+          "-B",
+          "test/revisions.py",
+          "--scope",
+          "closed-empty-reason"
+        ],
+        "status": 1,
+        "seconds": 0.475
+      },
+      "restore_build": {
+        "command": [
+          "timeout",
+          "--foreground",
+          "180",
+          "lake",
+          "build",
+          "cyberkrill",
+          "CyberkrillTests"
+        ],
+        "status": 0,
+        "seconds": 0.415
+      },
+      "green": {
+        "command": [
+          "timeout",
+          "--foreground",
+          "180",
+          "python3",
+          "-B",
+          "test/revisions.py",
+          "--scope",
+          "closed-empty-reason"
+        ],
+        "status": 0,
+        "seconds": 0.1
+      }
+    },
+    {
+      "property": "scope-closure-order",
+      "file": "test/scope.py",
+      "replace": "assert date(original[\"updated_at\"]) <= closed <= updated, \"closure timestamp order\"",
+      "with_text": "assert closed <= updated, \"closure timestamp order\"",
+      "case": "scope/closed-wrong-order",
+      "assertion": "closure validation",
+      "failure": "AssertionError: scope/closed-wrong-order closure validation",
+      "build": {
+        "command": [
+          "timeout",
+          "--foreground",
+          "180",
+          "lake",
+          "build",
+          "cyberkrill",
+          "CyberkrillTests"
+        ],
+        "status": 0,
+        "seconds": 0.418
+      },
+      "red": {
+        "command": [
+          "timeout",
+          "--foreground",
+          "180",
+          "python3",
+          "-B",
+          "test/revisions.py",
+          "--scope",
+          "closed-wrong-order"
+        ],
+        "status": 1,
+        "seconds": 0.482
+      },
+      "restore_build": {
+        "command": [
+          "timeout",
+          "--foreground",
+          "180",
+          "lake",
+          "build",
+          "cyberkrill",
+          "CyberkrillTests"
+        ],
+        "status": 0,
+        "seconds": 0.427
+      },
+      "green": {
+        "command": [
+          "timeout",
+          "--foreground",
+          "180",
+          "python3",
+          "-B",
+          "test/revisions.py",
+          "--scope",
+          "closed-wrong-order"
+        ],
+        "status": 0,
+        "seconds": 0.09
+      }
+    },
+    {
+      "property": "scope-unrelated-record",
+      "file": "test/scope.py",
+      "replace": "assert all(original[k] == current[k] for k in original if k != ISSUE)",
+      "with_text": "assert all(original[k][\"id\"] == current[k][\"id\"] for k in original if k != ISSUE)",
+      "case": "scope/unrelated",
+      "assertion": "closure validation",
+      "failure": "AssertionError: scope/unrelated closure validation",
+      "build": {
+        "command": [
+          "timeout",
+          "--foreground",
+          "180",
+          "lake",
+          "build",
+          "cyberkrill",
+          "CyberkrillTests"
+        ],
+        "status": 0,
+        "seconds": 0.446
+      },
+      "red": {
+        "command": [
+          "timeout",
+          "--foreground",
+          "180",
+          "python3",
+          "-B",
+          "test/revisions.py",
+          "--scope",
+          "unrelated"
+        ],
+        "status": 1,
+        "seconds": 0.483
+      },
+      "restore_build": {
+        "command": [
+          "timeout",
+          "--foreground",
+          "180",
+          "lake",
+          "build",
+          "cyberkrill",
+          "CyberkrillTests"
+        ],
+        "status": 0,
+        "seconds": 0.427
+      },
+      "green": {
+        "command": [
+          "timeout",
+          "--foreground",
+          "180",
+          "python3",
+          "-B",
+          "test/revisions.py",
+          "--scope",
+          "unrelated"
+        ],
+        "status": 0,
+        "seconds": 0.092
+      }
+    },
+    {
+      "property": "scope-decision-preservation",
+      "file": "test/scope.py",
+      "replace": "{\"status\", \"updated_at\", \"closed_at\", \"close_reason\"}",
+      "with_text": "{\"status\", \"updated_at\", \"closed_at\", \"close_reason\", \"description\"}",
+      "case": "scope/decision-text",
+      "assertion": "closure validation",
+      "failure": "AssertionError: scope/decision-text closure validation",
+      "build": {
+        "command": [
+          "timeout",
+          "--foreground",
+          "180",
+          "lake",
+          "build",
+          "cyberkrill",
+          "CyberkrillTests"
+        ],
+        "status": 0,
+        "seconds": 0.432
+      },
+      "red": {
+        "command": [
+          "timeout",
+          "--foreground",
+          "180",
+          "python3",
+          "-B",
+          "test/revisions.py",
+          "--scope",
+          "decision-text"
+        ],
+        "status": 1,
+        "seconds": 0.486
+      },
+      "restore_build": {
+        "command": [
+          "timeout",
+          "--foreground",
+          "180",
+          "lake",
+          "build",
+          "cyberkrill",
+          "CyberkrillTests"
+        ],
+        "status": 0,
+        "seconds": 0.537
+      },
+      "green": {
+        "command": [
+          "timeout",
+          "--foreground",
+          "180",
+          "python3",
+          "-B",
+          "test/revisions.py",
+          "--scope",
+          "decision-text"
+        ],
+        "status": 0,
+        "seconds": 0.094
+      }
+    }
+  ],
+  "restored_full": {
+    "command": [
+      "timeout",
+      "--foreground",
+      "180",
+      "lake",
+      "test"
+    ],
+    "status": 0,
+    "seconds": 24.676
+  },
+  "regressions_green": {
+    "command": [
+      "timeout",
+      "--foreground",
+      "180",
+      "python3",
+      "-B",
+      "test/revisions.py"
+    ],
+    "status": 0,
+    "seconds": 4.883
+  },
+  "scope_green": {
+    "command": [
+      "timeout",
+      "--foreground",
+      "180",
+      "python3",
+      "-B",
+      "test/revisions.py",
+      "--scope"
+    ],
+    "status": 0,
+    "seconds": 0.98
+  }
+}

@@ -1,0 +1,23 @@
+{
+  "id": "invalid/L814",
+  "args": [
+    "ln-decode-invoice",
+    "lnbc25m1pvjluezpp5qqqsyqcyq5rqwzqfqqqsyqcyq5rqwzqfqqqsyqcyq5rqwzqfqypqdq5vdhkven9v5sxyetpdeessp5zyg3zyg3zyg3zyg3zyg3zyg3zyg3zyg3zyg3zyg3zyg3zyg3zygs9q5sqqqqqqqqqqqqqqqqsgqnp5qqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqf9dt6rzhc3ynq3u7axf4xc3zaw3fy2kyqal6n86nh5j3lhgcutdjzhvswudd5l8ay9acgrrpd2e6vw9sdqxq6dzq983sgt7dpxk5wacqacdc2y"
+  ],
+  "source": "packages/lightning/test-data/bolt11.json",
+  "source_sha256": "462044b66541fcbdc172ca737a6966ffbbee1c34191f2346b943607d4b89c7b7",
+  "inventory": {
+    "valid": 16,
+    "invalid": 15,
+    "negative": 20,
+    "positive": 4,
+    "nfields": 2
+  },
+  "captures": 1,
+  "result": {
+    "status": 0,
+    "stdout": "{\n  \"network\": \"bitcoin\",\n  \"amount_msats\": 2500000000,\n  \"timestamp\": \"2017-06-01T10:57:38Z\",\n  \"timestamp_millis\": 1496314658000,\n  \"payment_hash\": \"0001020304050607080900010203040506070809000102030405060708090102\",\n  \"payment_secret\": \"1111111111111111111111111111111111111111111111111111111111111111\",\n  \"features\": [\n    {\n      \"payment_secret\": \"required\"\n    },\n    {\n      \"unknown_bits\": \"optional\"\n    },\n    {\n      \"variable_length_onion\": \"required\"\n    },\n    \"any_optional_bits\"\n  ],\n  \"description\": \"coffee beans\",\n  \"description_hash\": null,\n  \"destination\": \"03e7156ae33b0a208d0744199163177e909e80176e55d97a2f221ede0f934dd9ad\",\n  \"expiry_seconds\": 3600,\n  \"min_final_cltv_expiry\": 18,\n  \"fallback_addresses\": [],\n  \"routes\": []\n}",
+    "stderr": ""
+  },
+  "seconds": 0.02535819262266159
+}

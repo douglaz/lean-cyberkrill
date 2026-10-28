@@ -1,0 +1,4888 @@
+{
+  "count": 29,
+  "new_distinct": 28,
+  "executions": 92,
+  "source_sha256": {
+    "Cyberkrill/App.lean": "16fdc8940539d0016f1c364aecce05596705baeb1f97f522df41b4bc7ef32b84",
+    "Cyberkrill/Amounts.lean": "6294e53d0becc3d3ea9dc255df5e85b07b4e2c723cd5edc636778d4eaff7fde3",
+    "Cyberkrill/Capabilities.lean": "35a0f3dc6dff6a88989c9de7665c93a117f26341f8869ba28c4c01e298d064a8",
+    "Cyberkrill/Lightning.lean": "30728c403b57686af70f6461ac2141152b7b09ae062799583129e82963e0d2b1",
+    "Cyberkrill/InvoiceJson.lean": "58f3b75378000180ad44afa24122bdcc175ce6443a397f3eaac291deb9db8d2f",
+    "Cyberkrill/PrivateOutput.lean": "46ecbff603563e28e27ec208a64333acc23680ac062f6d1b050c9c78cd8bf7f4",
+    "test/lightning-mutate.py": "52fb583118ff6b1133fa8279345628ba30456acf3e2485184a1793ea96e56692",
+    "test/lightning.py": "26d6be15bfa8d2626eccc69765e7767c6b7c8010d97672728c8381374668f5eb",
+    "test/lightning-compare.py": "95cbf350953cce472cd85b18f19ef09a311a55a5e492dbb8927e2fccb60f8bd2",
+    "test/lightning-cases.py": "3c5baaa63ab9fd27d598128dbfb244a3c015262698f09d021d80cd57dc9ee22a",
+    "test/compare.py": "65792ec70aab8f33fa83736d1fb7a9708e373d0d74712bc3ce5c3d511b64ba82",
+    "test/selftest.py": "2f8ed78c93c4c7e075630defb338d6345f5d33be8975044bcfef90b5946115e5",
+    "test/driver.py": "4129576602d3a3a80d7f37dccaf48231b286563e363992b47b5103aa23177c7e",
+    "test/verify.py": "ea7168fbe7187b9867bed992a86645f363564e507ebd95edb27b2010133a215c",
+    "Main.lean": "915167be1211cea874cd9f781d9651bc3e441b81dd9979415ba55d44e34f2eb1",
+    "CyberkrillTests.lean": "b733a517d73dc63a6f90fab1cbba2d661e6958a98882bd069b110170babbecae",
+    "lakefile.lean": "091b5366403a589d69a1226b5728588a7d7b4907cbe3b32199f22d5a0ed4093d",
+    "private_output.c": "5bf3940e88b4d8dfba6214e5e489a0c3d6dbd94e0d26f212126c8fd8ef1d3308",
+    "CyberkrillTests/Capabilities.lean": "50172673976ead4aef29242efa591ed2237d2db4f60a6a323c2d5f9f4555fd66",
+    "CyberkrillTests/Helpers.lean": "d4484cedac1da7a20e5bc0a05080c7d6c171e7ec49f7a64e3a80ad3d075bc70a",
+    "CyberkrillTests/Mnemonic.lean": "49c85bcaf2327da760e08fb7fef4ea5071c4b29160481a578caa61e36200cb0e",
+    "CyberkrillTests/Output.lean": "9912e5c699b4fb7c07ff5eaacd2d5d821d6585118cb17a0829b224c96965a966",
+    "CyberkrillTests/PrivateOutput.lean": "a4412bb4cf4908cc777e39018cb2ac34fc12c697e373b90be3b6c1235514997f",
+    "CyberkrillTests/Support.lean": "80dbdfd22c0478dde791bfc46ae73418a8cf838f7728bb08f248291cdb3a179c",
+    "test/golden/lightning-reference.json": "e682629e8399d5da8d63b1f65ca3af92fd373ad04feab4f757e5c335671776fa",
+    "test/golden/lightning-routing-reference.json": "09879ec40c0b2ecaa50f9e304556b3eb9e8f816b2609f5ad9f1eb95520473962",
+    "test/golden/lightning-provenance.json": "601dab7243d0d07467599b8f4d4ef1f5e1008dd5fe5fbde04d671f4b25e8335a"
+  },
+  "mutations": [
+    {
+      "property": "invoice-dispatch",
+      "file": "Cyberkrill/App.lean",
+      "replace": "(LightningCli.decodeInvoice text).map",
+      "with_text": "(LightningCli.decodeLnurl text).map",
+      "build": {
+        "command": [
+          "timeout",
+          "--foreground",
+          "180",
+          "lake",
+          "build",
+          "cyberkrill",
+          "CyberkrillTests"
+        ],
+        "status": 0,
+        "seconds": 9.294
+      },
+      "restore_build": {
+        "command": [
+          "timeout",
+          "--foreground",
+          "180",
+          "lake",
+          "build",
+          "cyberkrill",
+          "CyberkrillTests"
+        ],
+        "status": 0,
+        "seconds": 9.292
+      },
+      "checks": [
+        {
+          "command": [
+            "timeout",
+            "--foreground",
+            "180",
+            "python3",
+            "-B",
+            "test/lightning.py",
+            "--case",
+            "valid/L410"
+          ],
+          "assertion": "success status",
+          "red": {
+            "command": [
+              "timeout",
+              "--foreground",
+              "180",
+              "python3",
+              "-B",
+              "test/lightning.py",
+              "--case",
+              "valid/L410"
+            ],
+            "status": 1,
+            "seconds": 0.09,
+            "failure": "AssertionError: success status: valid/L410"
+          },
+          "green": {
+            "command": [
+              "timeout",
+              "--foreground",
+              "180",
+              "python3",
+              "-B",
+              "test/lightning.py",
+              "--case",
+              "valid/L410"
+            ],
+            "status": 0,
+            "seconds": 0.069
+          }
+        }
+      ]
+    },
+    {
+      "property": "lnurl-dispatch",
+      "file": "Cyberkrill/App.lean",
+      "replace": "(LightningCli.decodeLnurl text).map",
+      "with_text": "(LightningCli.decodeInvoice text).map",
+      "build": {
+        "command": [
+          "timeout",
+          "--foreground",
+          "180",
+          "lake",
+          "build",
+          "cyberkrill",
+          "CyberkrillTests"
+        ],
+        "status": 0,
+        "seconds": 9.293
+      },
+      "restore_build": {
+        "command": [
+          "timeout",
+          "--foreground",
+          "180",
+          "lake",
+          "build",
+          "cyberkrill",
+          "CyberkrillTests"
+        ],
+        "status": 0,
+        "seconds": 9.188
+      },
+      "checks": [
+        {
+          "command": [
+            "timeout",
+            "--foreground",
+            "180",
+            "python3",
+            "-B",
+            "test/lightning.py",
+            "--case",
+            "lnurl-reference/cyberkrill"
+          ],
+          "assertion": "success status",
+          "red": {
+            "command": [
+              "timeout",
+              "--foreground",
+              "180",
+              "python3",
+              "-B",
+              "test/lightning.py",
+              "--case",
+              "lnurl-reference/cyberkrill"
+            ],
+            "status": 1,
+            "seconds": 0.077,
+            "failure": "AssertionError: success status: lnurl-reference/cyberkrill"
+          },
+          "green": {
+            "command": [
+              "timeout",
+              "--foreground",
+              "180",
+              "python3",
+              "-B",
+              "test/lightning.py",
+              "--case",
+              "lnurl-reference/cyberkrill"
+            ],
+            "status": 0,
+            "seconds": 0.067
+          }
+        }
+      ]
+    },
+    {
+      "property": "signing-dispatch",
+      "file": "Cyberkrill/App.lean",
+      "replace": "(LightningCli.encodeInvoice text key).map",
+      "with_text": "(LightningCli.decodeInvoice text).map",
+      "build": {
+        "command": [
+          "timeout",
+          "--foreground",
+          "180",
+          "lake",
+          "build",
+          "cyberkrill",
+          "CyberkrillTests"
+        ],
+        "status": 0,
+        "seconds": 9.293
+      },
+      "restore_build": {
+        "command": [
+          "timeout",
+          "--foreground",
+          "180",
+          "lake",
+          "build",
+          "cyberkrill",
+          "CyberkrillTests"
+        ],
+        "status": 0,
+        "seconds": 9.193
+      },
+      "checks": [
+        {
+          "command": [
+            "timeout",
+            "--foreground",
+            "180",
+            "python3",
+            "-B",
+            "test/lightning.py",
+            "--case",
+            "encode/valid/L410"
+          ],
+          "assertion": "success status",
+          "red": {
+            "command": [
+              "timeout",
+              "--foreground",
+              "180",
+              "python3",
+              "-B",
+              "test/lightning.py",
+              "--case",
+              "encode/valid/L410"
+            ],
+            "status": 1,
+            "seconds": 0.081,
+            "failure": "AssertionError: success status: encode/valid/L410"
+          },
+          "green": {
+            "command": [
+              "timeout",
+              "--foreground",
+              "180",
+              "python3",
+              "-B",
+              "test/lightning.py",
+              "--case",
+              "encode/valid/L410"
+            ],
+            "status": 0,
+            "seconds": 0.071
+          }
+        }
+      ]
+    },
+    {
+      "property": "literal-input",
+      "file": "Cyberkrill/App.lean",
+      "replace": "else return .ok value",
+      "with_text": "else return .ok \"\"",
+      "build": {
+        "command": [
+          "timeout",
+          "--foreground",
+          "180",
+          "lake",
+          "build",
+          "cyberkrill",
+          "CyberkrillTests"
+        ],
+        "status": 0,
+        "seconds": 9.2
+      },
+      "restore_build": {
+        "command": [
+          "timeout",
+          "--foreground",
+          "180",
+          "lake",
+          "build",
+          "cyberkrill",
+          "CyberkrillTests"
+        ],
+        "status": 0,
+        "seconds": 9.286
+      },
+      "checks": [
+        {
+          "command": [
+            "timeout",
+            "--foreground",
+            "180",
+            "python3",
+            "-B",
+            "test/lightning.py",
+            "--case",
+            "valid/L410"
+          ],
+          "assertion": "success status",
+          "red": {
+            "command": [
+              "timeout",
+              "--foreground",
+              "180",
+              "python3",
+              "-B",
+              "test/lightning.py",
+              "--case",
+              "valid/L410"
+            ],
+            "status": 1,
+            "seconds": 0.079,
+            "failure": "AssertionError: success status: valid/L410"
+          },
+          "green": {
+            "command": [
+              "timeout",
+              "--foreground",
+              "180",
+              "python3",
+              "-B",
+              "test/lightning.py",
+              "--case",
+              "valid/L410"
+            ],
+            "status": 0,
+            "seconds": 0.068
+          }
+        }
+      ]
+    },
+    {
+      "property": "file-input",
+      "file": "Cyberkrill/App.lean",
+      "replace": "else services.readFile value",
+      "with_text": "else pure value",
+      "build": {
+        "command": [
+          "timeout",
+          "--foreground",
+          "180",
+          "lake",
+          "build",
+          "cyberkrill",
+          "CyberkrillTests"
+        ],
+        "status": 0,
+        "seconds": 9.192
+      },
+      "restore_build": {
+        "command": [
+          "timeout",
+          "--foreground",
+          "180",
+          "lake",
+          "build",
+          "cyberkrill",
+          "CyberkrillTests"
+        ],
+        "status": 0,
+        "seconds": 9.193
+      },
+      "checks": [
+        {
+          "command": [
+            "timeout",
+            "--foreground",
+            "180",
+            "python3",
+            "-B",
+            "test/lightning.py",
+            "--routing"
+          ],
+          "assertion": "encoder input routing",
+          "red": {
+            "command": [
+              "timeout",
+              "--foreground",
+              "180",
+              "python3",
+              "-B",
+              "test/lightning.py",
+              "--routing"
+            ],
+            "status": 1,
+            "seconds": 0.317,
+            "failure": "AssertionError: encoder input routing"
+          },
+          "green": {
+            "command": [
+              "timeout",
+              "--foreground",
+              "180",
+              "python3",
+              "-B",
+              "test/lightning.py",
+              "--routing"
+            ],
+            "status": 0,
+            "seconds": 2.311
+          }
+        }
+      ]
+    },
+    {
+      "property": "ordinary-file-output",
+      "file": "Cyberkrill/App.lean",
+      "replace": "some p => { ordinaryFile := some (p, text) }",
+      "with_text": "some _ => { stdout := text }",
+      "build": {
+        "command": [
+          "timeout",
+          "--foreground",
+          "180",
+          "lake",
+          "build",
+          "cyberkrill",
+          "CyberkrillTests"
+        ],
+        "status": 0,
+        "seconds": 9.192
+      },
+      "restore_build": {
+        "command": [
+          "timeout",
+          "--foreground",
+          "180",
+          "lake",
+          "build",
+          "cyberkrill",
+          "CyberkrillTests"
+        ],
+        "status": 0,
+        "seconds": 9.194
+      },
+      "checks": [
+        {
+          "command": [
+            "timeout",
+            "--foreground",
+            "180",
+            "python3",
+            "-B",
+            "test/lightning.py",
+            "--routing"
+          ],
+          "assertion": "ordinary output status/streams",
+          "red": {
+            "command": [
+              "timeout",
+              "--foreground",
+              "180",
+              "python3",
+              "-B",
+              "test/lightning.py",
+              "--routing"
+            ],
+            "status": 1,
+            "seconds": 0.429,
+            "failure": "AssertionError: ordinary output status/streams"
+          },
+          "green": {
+            "command": [
+              "timeout",
+              "--foreground",
+              "180",
+              "python3",
+              "-B",
+              "test/lightning.py",
+              "--routing"
+            ],
+            "status": 0,
+            "seconds": 2.308
+          }
+        }
+      ]
+    },
+    {
+      "property": "encoded-newline",
+      "file": "Cyberkrill/App.lean",
+      "replace": "(LightningCli.encodeInvoice text key).map (lightningOutput \u00b7 path true)",
+      "with_text": "(LightningCli.encodeInvoice text key).map (lightningOutput \u00b7 path false)",
+      "build": {
+        "command": [
+          "timeout",
+          "--foreground",
+          "180",
+          "lake",
+          "build",
+          "cyberkrill",
+          "CyberkrillTests"
+        ],
+        "status": 0,
+        "seconds": 9.195
+      },
+      "restore_build": {
+        "command": [
+          "timeout",
+          "--foreground",
+          "180",
+          "lake",
+          "build",
+          "cyberkrill",
+          "CyberkrillTests"
+        ],
+        "status": 0,
+        "seconds": 9.286
+      },
+      "checks": [
+        {
+          "command": [
+            "timeout",
+            "--foreground",
+            "180",
+            "python3",
+            "-B",
+            "test/lightning.py",
+            "--case",
+            "encode/valid/L410"
+          ],
+          "assertion": "unlisted difference",
+          "red": {
+            "command": [
+              "timeout",
+              "--foreground",
+              "180",
+              "python3",
+              "-B",
+              "test/lightning.py",
+              "--case",
+              "encode/valid/L410"
+            ],
+            "status": 1,
+            "seconds": 0.08,
+            "failure": "AssertionError: unlisted difference: encode/valid/L410 stdout"
+          },
+          "green": {
+            "command": [
+              "timeout",
+              "--foreground",
+              "180",
+              "python3",
+              "-B",
+              "test/lightning.py",
+              "--case",
+              "encode/valid/L410"
+            ],
+            "status": 0,
+            "seconds": 0.07
+          }
+        }
+      ]
+    },
+    {
+      "property": "decoded-newline",
+      "file": "Cyberkrill/App.lean",
+      "replace": "(LightningCli.decodeInvoice text).map (lightningOutput \u00b7 path false)",
+      "with_text": "(LightningCli.decodeInvoice text).map (lightningOutput \u00b7 path true)",
+      "build": {
+        "command": [
+          "timeout",
+          "--foreground",
+          "180",
+          "lake",
+          "build",
+          "cyberkrill",
+          "CyberkrillTests"
+        ],
+        "status": 0,
+        "seconds": 9.286
+      },
+      "restore_build": {
+        "command": [
+          "timeout",
+          "--foreground",
+          "180",
+          "lake",
+          "build",
+          "cyberkrill",
+          "CyberkrillTests"
+        ],
+        "status": 0,
+        "seconds": 9.191
+      },
+      "checks": [
+        {
+          "command": [
+            "timeout",
+            "--foreground",
+            "180",
+            "python3",
+            "-B",
+            "test/lightning.py",
+            "--case",
+            "valid/L410"
+          ],
+          "assertion": "Lightning stdout newline",
+          "red": {
+            "command": [
+              "timeout",
+              "--foreground",
+              "180",
+              "python3",
+              "-B",
+              "test/lightning.py",
+              "--case",
+              "valid/L410"
+            ],
+            "status": 1,
+            "seconds": 0.08,
+            "failure": "AssertionError: Lightning stdout newline: valid/L410"
+          },
+          "green": {
+            "command": [
+              "timeout",
+              "--foreground",
+              "180",
+              "python3",
+              "-B",
+              "test/lightning.py",
+              "--case",
+              "valid/L410"
+            ],
+            "status": 0,
+            "seconds": 0.071
+          }
+        }
+      ]
+    },
+    {
+      "property": "builder-field-order",
+      "file": "Cyberkrill/Lightning.lean",
+      "replace": "[desc, .paymentHash paymentHash,",
+      "with_text": "[.paymentHash paymentHash, desc,",
+      "build": {
+        "command": [
+          "timeout",
+          "--foreground",
+          "180",
+          "lake",
+          "build",
+          "cyberkrill",
+          "CyberkrillTests"
+        ],
+        "status": 0,
+        "seconds": 10.492
+      },
+      "restore_build": {
+        "command": [
+          "timeout",
+          "--foreground",
+          "180",
+          "lake",
+          "build",
+          "cyberkrill",
+          "CyberkrillTests"
+        ],
+        "status": 0,
+        "seconds": 10.301
+      },
+      "checks": [
+        {
+          "command": [
+            "timeout",
+            "--foreground",
+            "180",
+            "python3",
+            "-B",
+            "test/lightning.py",
+            "--case",
+            "encode/valid/L410"
+          ],
+          "assertion": "unlisted difference",
+          "red": {
+            "command": [
+              "timeout",
+              "--foreground",
+              "180",
+              "python3",
+              "-B",
+              "test/lightning.py",
+              "--case",
+              "encode/valid/L410"
+            ],
+            "status": 1,
+            "seconds": 0.08,
+            "failure": "AssertionError: unlisted difference: encode/valid/L410 stdout"
+          },
+          "green": {
+            "command": [
+              "timeout",
+              "--foreground",
+              "180",
+              "python3",
+              "-B",
+              "test/lightning.py",
+              "--case",
+              "encode/valid/L410"
+            ],
+            "status": 0,
+            "seconds": 0.07
+          }
+        }
+      ]
+    },
+    {
+      "property": "builder-feature-default",
+      "file": "Cyberkrill/Lightning.lean",
+      "replace": ".features (2^8 + 2^14)",
+      "with_text": ".features (2^14)",
+      "build": {
+        "command": [
+          "timeout",
+          "--foreground",
+          "180",
+          "lake",
+          "build",
+          "cyberkrill",
+          "CyberkrillTests"
+        ],
+        "status": 0,
+        "seconds": 10.198
+      },
+      "restore_build": {
+        "command": [
+          "timeout",
+          "--foreground",
+          "180",
+          "lake",
+          "build",
+          "cyberkrill",
+          "CyberkrillTests"
+        ],
+        "status": 0,
+        "seconds": 10.302
+      },
+      "checks": [
+        {
+          "command": [
+            "timeout",
+            "--foreground",
+            "180",
+            "python3",
+            "-B",
+            "test/lightning.py",
+            "--case",
+            "encode/valid/L410"
+          ],
+          "assertion": "unlisted difference",
+          "red": {
+            "command": [
+              "timeout",
+              "--foreground",
+              "180",
+              "python3",
+              "-B",
+              "test/lightning.py",
+              "--case",
+              "encode/valid/L410"
+            ],
+            "status": 1,
+            "seconds": 0.084,
+            "failure": "AssertionError: unlisted difference: encode/valid/L410 stdout"
+          },
+          "green": {
+            "command": [
+              "timeout",
+              "--foreground",
+              "180",
+              "python3",
+              "-B",
+              "test/lightning.py",
+              "--case",
+              "encode/valid/L410"
+            ],
+            "status": 0,
+            "seconds": 0.072
+          }
+        }
+      ]
+    },
+    {
+      "property": "builder-hrp",
+      "file": "Cyberkrill/Lightning.lean",
+      "replace": "[(.milli, 1000000000),",
+      "with_text": "[(.micro, 1000000),",
+      "build": {
+        "command": [
+          "timeout",
+          "--foreground",
+          "180",
+          "lake",
+          "build",
+          "cyberkrill",
+          "CyberkrillTests"
+        ],
+        "status": 0,
+        "seconds": 10.201
+      },
+      "restore_build": {
+        "command": [
+          "timeout",
+          "--foreground",
+          "180",
+          "lake",
+          "build",
+          "cyberkrill",
+          "CyberkrillTests"
+        ],
+        "status": 0,
+        "seconds": 10.205
+      },
+      "checks": [
+        {
+          "command": [
+            "timeout",
+            "--foreground",
+            "180",
+            "python3",
+            "-B",
+            "test/lightning.py",
+            "--case",
+            "builder/amount-100000000000"
+          ],
+          "assertion": "unlisted difference",
+          "red": {
+            "command": [
+              "timeout",
+              "--foreground",
+              "180",
+              "python3",
+              "-B",
+              "test/lightning.py",
+              "--case",
+              "builder/amount-100000000000"
+            ],
+            "status": 1,
+            "seconds": 0.084,
+            "failure": "AssertionError: unlisted difference: builder/amount-100000000000 stdout"
+          },
+          "green": {
+            "command": [
+              "timeout",
+              "--foreground",
+              "180",
+              "python3",
+              "-B",
+              "test/lightning.py",
+              "--case",
+              "builder/amount-100000000000"
+            ],
+            "status": 0,
+            "seconds": 0.07
+          }
+        },
+        {
+          "command": [
+            "timeout",
+            "--foreground",
+            "180",
+            "python3",
+            "-B",
+            "test/lightning.py",
+            "--case",
+            "builder/amount-0"
+          ],
+          "assertion": "unlisted difference",
+          "red": {
+            "command": [
+              "timeout",
+              "--foreground",
+              "180",
+              "python3",
+              "-B",
+              "test/lightning.py",
+              "--case",
+              "builder/amount-0"
+            ],
+            "status": 1,
+            "seconds": 0.082,
+            "failure": "AssertionError: unlisted difference: builder/amount-0 stdout"
+          },
+          "green": {
+            "command": [
+              "timeout",
+              "--foreground",
+              "180",
+              "python3",
+              "-B",
+              "test/lightning.py",
+              "--case",
+              "builder/amount-0"
+            ],
+            "status": 0,
+            "seconds": 0.069
+          }
+        }
+      ]
+    },
+    {
+      "property": "timestamp-json",
+      "file": "Cyberkrill/Lightning.lean",
+      "replace": "toJson (parts.timestamp * 1000)",
+      "with_text": "toJson (parts.timestamp * 1000 + 1)",
+      "build": {
+        "command": [
+          "timeout",
+          "--foreground",
+          "180",
+          "lake",
+          "build",
+          "cyberkrill",
+          "CyberkrillTests"
+        ],
+        "status": 0,
+        "seconds": 10.296
+      },
+      "restore_build": {
+        "command": [
+          "timeout",
+          "--foreground",
+          "180",
+          "lake",
+          "build",
+          "cyberkrill",
+          "CyberkrillTests"
+        ],
+        "status": 0,
+        "seconds": 10.512
+      },
+      "checks": [
+        {
+          "command": [
+            "timeout",
+            "--foreground",
+            "180",
+            "python3",
+            "-B",
+            "test/lightning.py",
+            "--case",
+            "valid/L410"
+          ],
+          "assertion": "unlisted difference",
+          "red": {
+            "command": [
+              "timeout",
+              "--foreground",
+              "180",
+              "python3",
+              "-B",
+              "test/lightning.py",
+              "--case",
+              "valid/L410"
+            ],
+            "status": 1,
+            "seconds": 0.084,
+            "failure": "AssertionError: unlisted difference: valid/L410 stdout[\"timestamp_millis\"]"
+          },
+          "green": {
+            "command": [
+              "timeout",
+              "--foreground",
+              "180",
+              "python3",
+              "-B",
+              "test/lightning.py",
+              "--case",
+              "valid/L410"
+            ],
+            "status": 0,
+            "seconds": 0.077
+          }
+        }
+      ]
+    },
+    {
+      "property": "route-retention",
+      "file": "Cyberkrill/Lightning.lean",
+      "replace": "(routes.filter (!\u00b7.isEmpty)).map Field.route",
+      "with_text": "(routes.filter (fun _ => false)).map Field.route",
+      "build": {
+        "command": [
+          "timeout",
+          "--foreground",
+          "180",
+          "lake",
+          "build",
+          "cyberkrill",
+          "CyberkrillTests"
+        ],
+        "status": 0,
+        "seconds": 10.094
+      },
+      "restore_build": {
+        "command": [
+          "timeout",
+          "--foreground",
+          "180",
+          "lake",
+          "build",
+          "cyberkrill",
+          "CyberkrillTests"
+        ],
+        "status": 0,
+        "seconds": 10.19
+      },
+      "checks": [
+        {
+          "command": [
+            "timeout",
+            "--foreground",
+            "180",
+            "python3",
+            "-B",
+            "test/lightning.py",
+            "--case",
+            "encode/valid/L516"
+          ],
+          "assertion": "unlisted difference",
+          "red": {
+            "command": [
+              "timeout",
+              "--foreground",
+              "180",
+              "python3",
+              "-B",
+              "test/lightning.py",
+              "--case",
+              "encode/valid/L516"
+            ],
+            "status": 1,
+            "seconds": 0.08,
+            "failure": "AssertionError: unlisted difference: encode/valid/L516 stdout"
+          },
+          "green": {
+            "command": [
+              "timeout",
+              "--foreground",
+              "180",
+              "python3",
+              "-B",
+              "test/lightning.py",
+              "--case",
+              "encode/valid/L516"
+            ],
+            "status": 0,
+            "seconds": 0.07
+          }
+        }
+      ]
+    },
+    {
+      "property": "public-key-normalization",
+      "file": "Cyberkrill/Lightning.lean",
+      "replace": "Secp256k1.compressPubkey b",
+      "with_text": "if b.size == 33 then Secp256k1.compressPubkey b else none",
+      "build": {
+        "command": [
+          "timeout",
+          "--foreground",
+          "180",
+          "lake",
+          "build",
+          "cyberkrill",
+          "CyberkrillTests"
+        ],
+        "status": 0,
+        "seconds": 10.191
+      },
+      "restore_build": {
+        "command": [
+          "timeout",
+          "--foreground",
+          "180",
+          "lake",
+          "build",
+          "cyberkrill",
+          "CyberkrillTests"
+        ],
+        "status": 0,
+        "seconds": 10.196
+      },
+      "checks": [
+        {
+          "command": [
+            "timeout",
+            "--foreground",
+            "180",
+            "python3",
+            "-B",
+            "test/lightning.py",
+            "--case",
+            "builder/destination-uncompressed"
+          ],
+          "assertion": "success status",
+          "red": {
+            "command": [
+              "timeout",
+              "--foreground",
+              "180",
+              "python3",
+              "-B",
+              "test/lightning.py",
+              "--case",
+              "builder/destination-uncompressed"
+            ],
+            "status": 1,
+            "seconds": 0.084,
+            "failure": "AssertionError: success status: builder/destination-uncompressed"
+          },
+          "green": {
+            "command": [
+              "timeout",
+              "--foreground",
+              "180",
+              "python3",
+              "-B",
+              "test/lightning.py",
+              "--case",
+              "builder/destination-uncompressed"
+            ],
+            "status": 0,
+            "seconds": 0.073
+          }
+        },
+        {
+          "command": [
+            "timeout",
+            "--foreground",
+            "180",
+            "python3",
+            "-B",
+            "test/lightning.py",
+            "--case",
+            "builder/route-uncompressed"
+          ],
+          "assertion": "success status",
+          "red": {
+            "command": [
+              "timeout",
+              "--foreground",
+              "180",
+              "python3",
+              "-B",
+              "test/lightning.py",
+              "--case",
+              "builder/route-uncompressed"
+            ],
+            "status": 1,
+            "seconds": 0.079,
+            "failure": "AssertionError: success status: builder/route-uncompressed"
+          },
+          "green": {
+            "command": [
+              "timeout",
+              "--foreground",
+              "180",
+              "python3",
+              "-B",
+              "test/lightning.py",
+              "--case",
+              "builder/route-uncompressed"
+            ],
+            "status": 0,
+            "seconds": 0.073
+          }
+        },
+        {
+          "command": [
+            "timeout",
+            "--foreground",
+            "180",
+            "python3",
+            "-B",
+            "test/lightning.py",
+            "--case",
+            "builder/destination-hybrid"
+          ],
+          "assertion": "success status",
+          "red": {
+            "command": [
+              "timeout",
+              "--foreground",
+              "180",
+              "python3",
+              "-B",
+              "test/lightning.py",
+              "--case",
+              "builder/destination-hybrid"
+            ],
+            "status": 1,
+            "seconds": 0.085,
+            "failure": "AssertionError: success status: builder/destination-hybrid"
+          },
+          "green": {
+            "command": [
+              "timeout",
+              "--foreground",
+              "180",
+              "python3",
+              "-B",
+              "test/lightning.py",
+              "--case",
+              "builder/destination-hybrid"
+            ],
+            "status": 0,
+            "seconds": 0.069
+          }
+        },
+        {
+          "command": [
+            "timeout",
+            "--foreground",
+            "180",
+            "python3",
+            "-B",
+            "test/lightning.py",
+            "--case",
+            "builder/route-hybrid"
+          ],
+          "assertion": "success status",
+          "red": {
+            "command": [
+              "timeout",
+              "--foreground",
+              "180",
+              "python3",
+              "-B",
+              "test/lightning.py",
+              "--case",
+              "builder/route-hybrid"
+            ],
+            "status": 1,
+            "seconds": 0.081,
+            "failure": "AssertionError: success status: builder/route-hybrid"
+          },
+          "green": {
+            "command": [
+              "timeout",
+              "--foreground",
+              "180",
+              "python3",
+              "-B",
+              "test/lightning.py",
+              "--case",
+              "builder/route-hybrid"
+            ],
+            "status": 0,
+            "seconds": 0.069
+          }
+        }
+      ]
+    },
+    {
+      "property": "hybrid-parity",
+      "file": "Cyberkrill/Lightning.lean",
+      "replace": "Secp256k1.compressPubkey b",
+      "with_text": "Secp256k1.compressPubkey (if b.size == 65 then b.set! 0 4 else b)",
+      "build": {
+        "command": [
+          "timeout",
+          "--foreground",
+          "180",
+          "lake",
+          "build",
+          "cyberkrill",
+          "CyberkrillTests"
+        ],
+        "status": 0,
+        "seconds": 10.193
+      },
+      "restore_build": {
+        "command": [
+          "timeout",
+          "--foreground",
+          "180",
+          "lake",
+          "build",
+          "cyberkrill",
+          "CyberkrillTests"
+        ],
+        "status": 0,
+        "seconds": 10.191
+      },
+      "checks": [
+        {
+          "command": [
+            "timeout",
+            "--foreground",
+            "180",
+            "python3",
+            "-B",
+            "test/lightning.py",
+            "--case",
+            "builder/destination-mismatched"
+          ],
+          "assertion": "ordinary failure",
+          "red": {
+            "command": [
+              "timeout",
+              "--foreground",
+              "180",
+              "python3",
+              "-B",
+              "test/lightning.py",
+              "--case",
+              "builder/destination-mismatched"
+            ],
+            "status": 1,
+            "seconds": 0.079,
+            "failure": "AssertionError: ordinary failure: builder/destination-mismatched"
+          },
+          "green": {
+            "command": [
+              "timeout",
+              "--foreground",
+              "180",
+              "python3",
+              "-B",
+              "test/lightning.py",
+              "--case",
+              "builder/destination-mismatched"
+            ],
+            "status": 0,
+            "seconds": 0.071
+          }
+        },
+        {
+          "command": [
+            "timeout",
+            "--foreground",
+            "180",
+            "python3",
+            "-B",
+            "test/lightning.py",
+            "--case",
+            "builder/route-mismatched"
+          ],
+          "assertion": "ordinary failure",
+          "red": {
+            "command": [
+              "timeout",
+              "--foreground",
+              "180",
+              "python3",
+              "-B",
+              "test/lightning.py",
+              "--case",
+              "builder/route-mismatched"
+            ],
+            "status": 1,
+            "seconds": 0.078,
+            "failure": "AssertionError: ordinary failure: builder/route-mismatched"
+          },
+          "green": {
+            "command": [
+              "timeout",
+              "--foreground",
+              "180",
+              "python3",
+              "-B",
+              "test/lightning.py",
+              "--case",
+              "builder/route-mismatched"
+            ],
+            "status": 0,
+            "seconds": 0.068
+          }
+        }
+      ]
+    },
+    {
+      "property": "json-lexical-validation",
+      "file": "Cyberkrill/Lightning.lean",
+      "replace": "InvoiceJson.validateSyntax input",
+      "with_text": "pure ()",
+      "build": {
+        "command": [
+          "timeout",
+          "--foreground",
+          "180",
+          "lake",
+          "build",
+          "cyberkrill",
+          "CyberkrillTests"
+        ],
+        "status": 0,
+        "seconds": 10.287
+      },
+      "restore_build": {
+        "command": [
+          "timeout",
+          "--foreground",
+          "180",
+          "lake",
+          "build",
+          "cyberkrill",
+          "CyberkrillTests"
+        ],
+        "status": 0,
+        "seconds": 10.096
+      },
+      "checks": [
+        {
+          "command": [
+            "timeout",
+            "--foreground",
+            "180",
+            "python3",
+            "-B",
+            "test/lightning.py",
+            "--case",
+            "json/duplicate-known"
+          ],
+          "assertion": "ordinary failure",
+          "red": {
+            "command": [
+              "timeout",
+              "--foreground",
+              "180",
+              "python3",
+              "-B",
+              "test/lightning.py",
+              "--case",
+              "json/duplicate-known"
+            ],
+            "status": 1,
+            "seconds": 0.083,
+            "failure": "AssertionError: ordinary failure: json/duplicate-known"
+          },
+          "green": {
+            "command": [
+              "timeout",
+              "--foreground",
+              "180",
+              "python3",
+              "-B",
+              "test/lightning.py",
+              "--case",
+              "json/duplicate-known"
+            ],
+            "status": 0,
+            "seconds": 0.068
+          }
+        },
+        {
+          "command": [
+            "timeout",
+            "--foreground",
+            "180",
+            "python3",
+            "-B",
+            "test/lightning.py",
+            "--case",
+            "json/exponent-amount_msats"
+          ],
+          "assertion": "ordinary failure",
+          "red": {
+            "command": [
+              "timeout",
+              "--foreground",
+              "180",
+              "python3",
+              "-B",
+              "test/lightning.py",
+              "--case",
+              "json/exponent-amount_msats"
+            ],
+            "status": 1,
+            "seconds": 0.077,
+            "failure": "AssertionError: ordinary failure: json/exponent-amount_msats"
+          },
+          "green": {
+            "command": [
+              "timeout",
+              "--foreground",
+              "180",
+              "python3",
+              "-B",
+              "test/lightning.py",
+              "--case",
+              "json/exponent-amount_msats"
+            ],
+            "status": 0,
+            "seconds": 0.077
+          }
+        }
+      ]
+    },
+    {
+      "property": "json-rfc3339-validation",
+      "file": "Cyberkrill/Lightning.lean",
+      "replace": "unless InvoiceJson.timestampValid timestamp do throw .invalidInvoiceJson",
+      "with_text": "unless InvoiceJson.timestampValid timestamp || !timestamp.isEmpty do throw .invalidInvoiceJson",
+      "build": {
+        "command": [
+          "timeout",
+          "--foreground",
+          "180",
+          "lake",
+          "build",
+          "cyberkrill",
+          "CyberkrillTests"
+        ],
+        "status": 0,
+        "seconds": 10.098
+      },
+      "restore_build": {
+        "command": [
+          "timeout",
+          "--foreground",
+          "180",
+          "lake",
+          "build",
+          "cyberkrill",
+          "CyberkrillTests"
+        ],
+        "status": 0,
+        "seconds": 10.192
+      },
+      "checks": [
+        {
+          "command": [
+            "timeout",
+            "--foreground",
+            "180",
+            "python3",
+            "-B",
+            "test/lightning.py",
+            "--case",
+            "json/timestamp-6"
+          ],
+          "assertion": "ordinary failure",
+          "red": {
+            "command": [
+              "timeout",
+              "--foreground",
+              "180",
+              "python3",
+              "-B",
+              "test/lightning.py",
+              "--case",
+              "json/timestamp-6"
+            ],
+            "status": 1,
+            "seconds": 0.078,
+            "failure": "AssertionError: ordinary failure: json/timestamp-6"
+          },
+          "green": {
+            "command": [
+              "timeout",
+              "--foreground",
+              "180",
+              "python3",
+              "-B",
+              "test/lightning.py",
+              "--case",
+              "json/timestamp-6"
+            ],
+            "status": 0,
+            "seconds": 0.071
+          }
+        }
+      ]
+    },
+    {
+      "property": "json-enum-shapes",
+      "file": "Cyberkrill/Lightning.lean",
+      "replace": "let value \u2190 InvoiceJson.enumName status",
+      "with_text": "let value \u2190 text status",
+      "build": {
+        "command": [
+          "timeout",
+          "--foreground",
+          "180",
+          "lake",
+          "build",
+          "cyberkrill",
+          "CyberkrillTests"
+        ],
+        "status": 0,
+        "seconds": 10.192
+      },
+      "restore_build": {
+        "command": [
+          "timeout",
+          "--foreground",
+          "180",
+          "lake",
+          "build",
+          "cyberkrill",
+          "CyberkrillTests"
+        ],
+        "status": 0,
+        "seconds": 10.399
+      },
+      "checks": [
+        {
+          "command": [
+            "timeout",
+            "--foreground",
+            "180",
+            "python3",
+            "-B",
+            "test/lightning.py",
+            "--case",
+            "json/feature-4"
+          ],
+          "assertion": "success status",
+          "red": {
+            "command": [
+              "timeout",
+              "--foreground",
+              "180",
+              "python3",
+              "-B",
+              "test/lightning.py",
+              "--case",
+              "json/feature-4"
+            ],
+            "status": 1,
+            "seconds": 0.077,
+            "failure": "AssertionError: success status: json/feature-4"
+          },
+          "green": {
+            "command": [
+              "timeout",
+              "--foreground",
+              "180",
+              "python3",
+              "-B",
+              "test/lightning.py",
+              "--case",
+              "json/feature-4"
+            ],
+            "status": 0,
+            "seconds": 0.067
+          }
+        }
+      ]
+    },
+    {
+      "property": "route-u16-bound",
+      "file": "Cyberkrill/Lightning.lean",
+      "replace": "unsigned (\u2190 field j \"cltv_expiry_delta\") 16",
+      "with_text": "unsigned (\u2190 field j \"cltv_expiry_delta\") 32",
+      "build": {
+        "command": [
+          "timeout",
+          "--foreground",
+          "180",
+          "lake",
+          "build",
+          "cyberkrill",
+          "CyberkrillTests"
+        ],
+        "status": 0,
+        "seconds": 12.207
+      },
+      "restore_build": {
+        "command": [
+          "timeout",
+          "--foreground",
+          "180",
+          "lake",
+          "build",
+          "cyberkrill",
+          "CyberkrillTests"
+        ],
+        "status": 0,
+        "seconds": 12.814
+      },
+      "checks": [
+        {
+          "command": [
+            "timeout",
+            "--foreground",
+            "180",
+            "python3",
+            "-B",
+            "test/lightning.py",
+            "--case",
+            "json/hop-overflow-cltv_expiry_delta"
+          ],
+          "assertion": "ordinary failure",
+          "red": {
+            "command": [
+              "timeout",
+              "--foreground",
+              "180",
+              "python3",
+              "-B",
+              "test/lightning.py",
+              "--case",
+              "json/hop-overflow-cltv_expiry_delta"
+            ],
+            "status": 1,
+            "seconds": 0.089,
+            "failure": "AssertionError: ordinary failure: json/hop-overflow-cltv_expiry_delta"
+          },
+          "green": {
+            "command": [
+              "timeout",
+              "--foreground",
+              "180",
+              "python3",
+              "-B",
+              "test/lightning.py",
+              "--case",
+              "json/hop-overflow-cltv_expiry_delta"
+            ],
+            "status": 0,
+            "seconds": 0.079
+          }
+        }
+      ]
+    },
+    {
+      "property": "ordinary-write-flush",
+      "file": "Cyberkrill/App.lean",
+      "replace": "    handle.flush",
+      "with_text": "    pure ()",
+      "build": {
+        "command": [
+          "timeout",
+          "--foreground",
+          "180",
+          "lake",
+          "build",
+          "cyberkrill",
+          "CyberkrillTests"
+        ],
+        "status": 0,
+        "seconds": 10.841
+      },
+      "restore_build": {
+        "command": [
+          "timeout",
+          "--foreground",
+          "180",
+          "lake",
+          "build",
+          "cyberkrill",
+          "CyberkrillTests"
+        ],
+        "status": 0,
+        "seconds": 10.533
+      },
+      "checks": [
+        {
+          "command": [
+            "timeout",
+            "--foreground",
+            "180",
+            "python3",
+            "-B",
+            "test/lightning.py",
+            "--routing"
+          ],
+          "assertion": "ordinary write failure status",
+          "red": {
+            "command": [
+              "timeout",
+              "--foreground",
+              "180",
+              "python3",
+              "-B",
+              "test/lightning.py",
+              "--routing"
+            ],
+            "status": 1,
+            "seconds": 2.135,
+            "failure": "AssertionError: ordinary write failure status"
+          },
+          "green": {
+            "command": [
+              "timeout",
+              "--foreground",
+              "180",
+              "python3",
+              "-B",
+              "test/lightning.py",
+              "--routing"
+            ],
+            "status": 0,
+            "seconds": 2.486
+          }
+        }
+      ]
+    },
+    {
+      "property": "refusal-status",
+      "file": "Cyberkrill/App.lean",
+      "replace": "  return 1\n",
+      "with_text": "  return 0\n",
+      "build": {
+        "command": [
+          "timeout",
+          "--foreground",
+          "180",
+          "lake",
+          "build",
+          "cyberkrill",
+          "CyberkrillTests"
+        ],
+        "status": 0,
+        "seconds": 9.823
+      },
+      "restore_build": {
+        "command": [
+          "timeout",
+          "--foreground",
+          "180",
+          "lake",
+          "build",
+          "cyberkrill",
+          "CyberkrillTests"
+        ],
+        "status": 0,
+        "seconds": 10.014
+      },
+      "checks": [
+        {
+          "command": [
+            "timeout",
+            "--foreground",
+            "180",
+            "python3",
+            "-B",
+            "test/lightning.py",
+            "--case",
+            "negative/payment-hash-padding"
+          ],
+          "assertion": "refusal port status",
+          "red": {
+            "command": [
+              "timeout",
+              "--foreground",
+              "180",
+              "python3",
+              "-B",
+              "test/lightning.py",
+              "--case",
+              "negative/payment-hash-padding"
+            ],
+            "status": 1,
+            "seconds": 0.083,
+            "failure": "AssertionError: refusal port status: negative/payment-hash-padding"
+          },
+          "green": {
+            "command": [
+              "timeout",
+              "--foreground",
+              "180",
+              "python3",
+              "-B",
+              "test/lightning.py",
+              "--case",
+              "negative/payment-hash-padding"
+            ],
+            "status": 0,
+            "seconds": 0.071
+          }
+        },
+        {
+          "command": [
+            "timeout",
+            "--foreground",
+            "180",
+            "python3",
+            "-B",
+            "test/lightning.py",
+            "--case",
+            "negative/description-padding"
+          ],
+          "assertion": "refusal port status",
+          "red": {
+            "command": [
+              "timeout",
+              "--foreground",
+              "180",
+              "python3",
+              "-B",
+              "test/lightning.py",
+              "--case",
+              "negative/description-padding"
+            ],
+            "status": 1,
+            "seconds": 0.087,
+            "failure": "AssertionError: refusal port status: negative/description-padding"
+          },
+          "green": {
+            "command": [
+              "timeout",
+              "--foreground",
+              "180",
+              "python3",
+              "-B",
+              "test/lightning.py",
+              "--case",
+              "negative/description-padding"
+            ],
+            "status": 0,
+            "seconds": 0.072
+          }
+        },
+        {
+          "command": [
+            "timeout",
+            "--foreground",
+            "180",
+            "python3",
+            "-B",
+            "test/lightning.py",
+            "--case",
+            "negative/expiry-leading-zero"
+          ],
+          "assertion": "refusal port status",
+          "red": {
+            "command": [
+              "timeout",
+              "--foreground",
+              "180",
+              "python3",
+              "-B",
+              "test/lightning.py",
+              "--case",
+              "negative/expiry-leading-zero"
+            ],
+            "status": 1,
+            "seconds": 0.085,
+            "failure": "AssertionError: refusal port status: negative/expiry-leading-zero"
+          },
+          "green": {
+            "command": [
+              "timeout",
+              "--foreground",
+              "180",
+              "python3",
+              "-B",
+              "test/lightning.py",
+              "--case",
+              "negative/expiry-leading-zero"
+            ],
+            "status": 0,
+            "seconds": 0.076
+          }
+        },
+        {
+          "command": [
+            "timeout",
+            "--foreground",
+            "180",
+            "python3",
+            "-B",
+            "test/lightning.py",
+            "--case",
+            "negative/cltv-leading-zero"
+          ],
+          "assertion": "refusal port status",
+          "red": {
+            "command": [
+              "timeout",
+              "--foreground",
+              "180",
+              "python3",
+              "-B",
+              "test/lightning.py",
+              "--case",
+              "negative/cltv-leading-zero"
+            ],
+            "status": 1,
+            "seconds": 0.082,
+            "failure": "AssertionError: refusal port status: negative/cltv-leading-zero"
+          },
+          "green": {
+            "command": [
+              "timeout",
+              "--foreground",
+              "180",
+              "python3",
+              "-B",
+              "test/lightning.py",
+              "--case",
+              "negative/cltv-leading-zero"
+            ],
+            "status": 0,
+            "seconds": 0.072
+          }
+        },
+        {
+          "command": [
+            "timeout",
+            "--foreground",
+            "180",
+            "python3",
+            "-B",
+            "test/lightning.py",
+            "--case",
+            "negative/features-leading-zero"
+          ],
+          "assertion": "refusal port status",
+          "red": {
+            "command": [
+              "timeout",
+              "--foreground",
+              "180",
+              "python3",
+              "-B",
+              "test/lightning.py",
+              "--case",
+              "negative/features-leading-zero"
+            ],
+            "status": 1,
+            "seconds": 0.08,
+            "failure": "AssertionError: refusal port status: negative/features-leading-zero"
+          },
+          "green": {
+            "command": [
+              "timeout",
+              "--foreground",
+              "180",
+              "python3",
+              "-B",
+              "test/lightning.py",
+              "--case",
+              "negative/features-leading-zero"
+            ],
+            "status": 0,
+            "seconds": 0.072
+          }
+        },
+        {
+          "command": [
+            "timeout",
+            "--foreground",
+            "180",
+            "python3",
+            "-B",
+            "test/lightning.py",
+            "--case",
+            "negative/n-payment-hash-padding"
+          ],
+          "assertion": "refusal port status",
+          "red": {
+            "command": [
+              "timeout",
+              "--foreground",
+              "180",
+              "python3",
+              "-B",
+              "test/lightning.py",
+              "--case",
+              "negative/n-payment-hash-padding"
+            ],
+            "status": 1,
+            "seconds": 0.084,
+            "failure": "AssertionError: refusal port status: negative/n-payment-hash-padding"
+          },
+          "green": {
+            "command": [
+              "timeout",
+              "--foreground",
+              "180",
+              "python3",
+              "-B",
+              "test/lightning.py",
+              "--case",
+              "negative/n-payment-hash-padding"
+            ],
+            "status": 0,
+            "seconds": 0.073
+          }
+        },
+        {
+          "command": [
+            "timeout",
+            "--foreground",
+            "180",
+            "python3",
+            "-B",
+            "test/lightning.py",
+            "--case",
+            "url-refusal/userinfo"
+          ],
+          "assertion": "refusal port status",
+          "red": {
+            "command": [
+              "timeout",
+              "--foreground",
+              "180",
+              "python3",
+              "-B",
+              "test/lightning.py",
+              "--case",
+              "url-refusal/userinfo"
+            ],
+            "status": 1,
+            "seconds": 0.084,
+            "failure": "AssertionError: refusal port status: url-refusal/userinfo"
+          },
+          "green": {
+            "command": [
+              "timeout",
+              "--foreground",
+              "180",
+              "python3",
+              "-B",
+              "test/lightning.py",
+              "--case",
+              "url-refusal/userinfo"
+            ],
+            "status": 0,
+            "seconds": 0.073
+          }
+        },
+        {
+          "command": [
+            "timeout",
+            "--foreground",
+            "180",
+            "python3",
+            "-B",
+            "test/lightning.py",
+            "--case",
+            "url-refusal/userinfo-multiple"
+          ],
+          "assertion": "refusal port status",
+          "red": {
+            "command": [
+              "timeout",
+              "--foreground",
+              "180",
+              "python3",
+              "-B",
+              "test/lightning.py",
+              "--case",
+              "url-refusal/userinfo-multiple"
+            ],
+            "status": 1,
+            "seconds": 0.081,
+            "failure": "AssertionError: refusal port status: url-refusal/userinfo-multiple"
+          },
+          "green": {
+            "command": [
+              "timeout",
+              "--foreground",
+              "180",
+              "python3",
+              "-B",
+              "test/lightning.py",
+              "--case",
+              "url-refusal/userinfo-multiple"
+            ],
+            "status": 0,
+            "seconds": 0.077
+          }
+        },
+        {
+          "command": [
+            "timeout",
+            "--foreground",
+            "180",
+            "python3",
+            "-B",
+            "test/lightning.py",
+            "--case",
+            "url-refusal/ipv6"
+          ],
+          "assertion": "refusal port status",
+          "red": {
+            "command": [
+              "timeout",
+              "--foreground",
+              "180",
+              "python3",
+              "-B",
+              "test/lightning.py",
+              "--case",
+              "url-refusal/ipv6"
+            ],
+            "status": 1,
+            "seconds": 0.084,
+            "failure": "AssertionError: refusal port status: url-refusal/ipv6"
+          },
+          "green": {
+            "command": [
+              "timeout",
+              "--foreground",
+              "180",
+              "python3",
+              "-B",
+              "test/lightning.py",
+              "--case",
+              "url-refusal/ipv6"
+            ],
+            "status": 0,
+            "seconds": 0.073
+          }
+        },
+        {
+          "command": [
+            "timeout",
+            "--foreground",
+            "180",
+            "python3",
+            "-B",
+            "test/lightning.py",
+            "--case",
+            "url-refusal/ipv4-hex"
+          ],
+          "assertion": "refusal port status",
+          "red": {
+            "command": [
+              "timeout",
+              "--foreground",
+              "180",
+              "python3",
+              "-B",
+              "test/lightning.py",
+              "--case",
+              "url-refusal/ipv4-hex"
+            ],
+            "status": 1,
+            "seconds": 0.082,
+            "failure": "AssertionError: refusal port status: url-refusal/ipv4-hex"
+          },
+          "green": {
+            "command": [
+              "timeout",
+              "--foreground",
+              "180",
+              "python3",
+              "-B",
+              "test/lightning.py",
+              "--case",
+              "url-refusal/ipv4-hex"
+            ],
+            "status": 0,
+            "seconds": 0.071
+          }
+        },
+        {
+          "command": [
+            "timeout",
+            "--foreground",
+            "180",
+            "python3",
+            "-B",
+            "test/lightning.py",
+            "--case",
+            "url-refusal/ipv4-integer"
+          ],
+          "assertion": "refusal port status",
+          "red": {
+            "command": [
+              "timeout",
+              "--foreground",
+              "180",
+              "python3",
+              "-B",
+              "test/lightning.py",
+              "--case",
+              "url-refusal/ipv4-integer"
+            ],
+            "status": 1,
+            "seconds": 0.085,
+            "failure": "AssertionError: refusal port status: url-refusal/ipv4-integer"
+          },
+          "green": {
+            "command": [
+              "timeout",
+              "--foreground",
+              "180",
+              "python3",
+              "-B",
+              "test/lightning.py",
+              "--case",
+              "url-refusal/ipv4-integer"
+            ],
+            "status": 0,
+            "seconds": 0.072
+          }
+        },
+        {
+          "command": [
+            "timeout",
+            "--foreground",
+            "180",
+            "python3",
+            "-B",
+            "test/lightning.py",
+            "--case",
+            "url-refusal/ipv4-short"
+          ],
+          "assertion": "refusal port status",
+          "red": {
+            "command": [
+              "timeout",
+              "--foreground",
+              "180",
+              "python3",
+              "-B",
+              "test/lightning.py",
+              "--case",
+              "url-refusal/ipv4-short"
+            ],
+            "status": 1,
+            "seconds": 0.08,
+            "failure": "AssertionError: refusal port status: url-refusal/ipv4-short"
+          },
+          "green": {
+            "command": [
+              "timeout",
+              "--foreground",
+              "180",
+              "python3",
+              "-B",
+              "test/lightning.py",
+              "--case",
+              "url-refusal/ipv4-short"
+            ],
+            "status": 0,
+            "seconds": 0.073
+          }
+        },
+        {
+          "command": [
+            "timeout",
+            "--foreground",
+            "180",
+            "python3",
+            "-B",
+            "test/lightning.py",
+            "--case",
+            "url-refusal/ipv4-octal"
+          ],
+          "assertion": "refusal port status",
+          "red": {
+            "command": [
+              "timeout",
+              "--foreground",
+              "180",
+              "python3",
+              "-B",
+              "test/lightning.py",
+              "--case",
+              "url-refusal/ipv4-octal"
+            ],
+            "status": 1,
+            "seconds": 0.083,
+            "failure": "AssertionError: refusal port status: url-refusal/ipv4-octal"
+          },
+          "green": {
+            "command": [
+              "timeout",
+              "--foreground",
+              "180",
+              "python3",
+              "-B",
+              "test/lightning.py",
+              "--case",
+              "url-refusal/ipv4-octal"
+            ],
+            "status": 0,
+            "seconds": 0.071
+          }
+        },
+        {
+          "command": [
+            "timeout",
+            "--foreground",
+            "180",
+            "python3",
+            "-B",
+            "test/lightning.py",
+            "--case",
+            "url-refusal/ipv4-leading"
+          ],
+          "assertion": "refusal port status",
+          "red": {
+            "command": [
+              "timeout",
+              "--foreground",
+              "180",
+              "python3",
+              "-B",
+              "test/lightning.py",
+              "--case",
+              "url-refusal/ipv4-leading"
+            ],
+            "status": 1,
+            "seconds": 0.078,
+            "failure": "AssertionError: refusal port status: url-refusal/ipv4-leading"
+          },
+          "green": {
+            "command": [
+              "timeout",
+              "--foreground",
+              "180",
+              "python3",
+              "-B",
+              "test/lightning.py",
+              "--case",
+              "url-refusal/ipv4-leading"
+            ],
+            "status": 0,
+            "seconds": 0.072
+          }
+        },
+        {
+          "command": [
+            "timeout",
+            "--foreground",
+            "180",
+            "python3",
+            "-B",
+            "test/lightning.py",
+            "--case",
+            "url-refusal/ipv4-dot"
+          ],
+          "assertion": "refusal port status",
+          "red": {
+            "command": [
+              "timeout",
+              "--foreground",
+              "180",
+              "python3",
+              "-B",
+              "test/lightning.py",
+              "--case",
+              "url-refusal/ipv4-dot"
+            ],
+            "status": 1,
+            "seconds": 0.081,
+            "failure": "AssertionError: refusal port status: url-refusal/ipv4-dot"
+          },
+          "green": {
+            "command": [
+              "timeout",
+              "--foreground",
+              "180",
+              "python3",
+              "-B",
+              "test/lightning.py",
+              "--case",
+              "url-refusal/ipv4-dot"
+            ],
+            "status": 0,
+            "seconds": 0.069
+          }
+        },
+        {
+          "command": [
+            "timeout",
+            "--foreground",
+            "180",
+            "python3",
+            "-B",
+            "test/lightning.py",
+            "--case",
+            "url-refusal/unicode-host"
+          ],
+          "assertion": "refusal port status",
+          "red": {
+            "command": [
+              "timeout",
+              "--foreground",
+              "180",
+              "python3",
+              "-B",
+              "test/lightning.py",
+              "--case",
+              "url-refusal/unicode-host"
+            ],
+            "status": 1,
+            "seconds": 0.085,
+            "failure": "AssertionError: refusal port status: url-refusal/unicode-host"
+          },
+          "green": {
+            "command": [
+              "timeout",
+              "--foreground",
+              "180",
+              "python3",
+              "-B",
+              "test/lightning.py",
+              "--case",
+              "url-refusal/unicode-host"
+            ],
+            "status": 0,
+            "seconds": 0.072
+          }
+        },
+        {
+          "command": [
+            "timeout",
+            "--foreground",
+            "180",
+            "python3",
+            "-B",
+            "test/lightning.py",
+            "--case",
+            "url-refusal/encoded-unicode-host"
+          ],
+          "assertion": "refusal port status",
+          "red": {
+            "command": [
+              "timeout",
+              "--foreground",
+              "180",
+              "python3",
+              "-B",
+              "test/lightning.py",
+              "--case",
+              "url-refusal/encoded-unicode-host"
+            ],
+            "status": 1,
+            "seconds": 0.079,
+            "failure": "AssertionError: refusal port status: url-refusal/encoded-unicode-host"
+          },
+          "green": {
+            "command": [
+              "timeout",
+              "--foreground",
+              "180",
+              "python3",
+              "-B",
+              "test/lightning.py",
+              "--case",
+              "url-refusal/encoded-unicode-host"
+            ],
+            "status": 0,
+            "seconds": 0.075
+          }
+        },
+        {
+          "command": [
+            "timeout",
+            "--foreground",
+            "180",
+            "python3",
+            "-B",
+            "test/lightning.py",
+            "--case",
+            "url-refusal/punycode-host"
+          ],
+          "assertion": "refusal port status",
+          "red": {
+            "command": [
+              "timeout",
+              "--foreground",
+              "180",
+              "python3",
+              "-B",
+              "test/lightning.py",
+              "--case",
+              "url-refusal/punycode-host"
+            ],
+            "status": 1,
+            "seconds": 0.085,
+            "failure": "AssertionError: refusal port status: url-refusal/punycode-host"
+          },
+          "green": {
+            "command": [
+              "timeout",
+              "--foreground",
+              "180",
+              "python3",
+              "-B",
+              "test/lightning.py",
+              "--case",
+              "url-refusal/punycode-host"
+            ],
+            "status": 0,
+            "seconds": 0.073
+          }
+        },
+        {
+          "command": [
+            "timeout",
+            "--foreground",
+            "180",
+            "python3",
+            "-B",
+            "test/lightning.py",
+            "--case",
+            "url-refusal/punycode-upper"
+          ],
+          "assertion": "refusal port status",
+          "red": {
+            "command": [
+              "timeout",
+              "--foreground",
+              "180",
+              "python3",
+              "-B",
+              "test/lightning.py",
+              "--case",
+              "url-refusal/punycode-upper"
+            ],
+            "status": 1,
+            "seconds": 0.083,
+            "failure": "AssertionError: refusal port status: url-refusal/punycode-upper"
+          },
+          "green": {
+            "command": [
+              "timeout",
+              "--foreground",
+              "180",
+              "python3",
+              "-B",
+              "test/lightning.py",
+              "--case",
+              "url-refusal/punycode-upper"
+            ],
+            "status": 0,
+            "seconds": 0.075
+          }
+        },
+        {
+          "command": [
+            "timeout",
+            "--foreground",
+            "180",
+            "python3",
+            "-B",
+            "test/lightning.py",
+            "--case",
+            "url-error/scheme"
+          ],
+          "assertion": "refusal port status",
+          "red": {
+            "command": [
+              "timeout",
+              "--foreground",
+              "180",
+              "python3",
+              "-B",
+              "test/lightning.py",
+              "--case",
+              "url-error/scheme"
+            ],
+            "status": 1,
+            "seconds": 0.082,
+            "failure": "AssertionError: refusal port status: url-error/scheme"
+          },
+          "green": {
+            "command": [
+              "timeout",
+              "--foreground",
+              "180",
+              "python3",
+              "-B",
+              "test/lightning.py",
+              "--case",
+              "url-error/scheme"
+            ],
+            "status": 0,
+            "seconds": 0.075
+          }
+        }
+      ]
+    },
+    {
+      "property": "refusal-stream",
+      "file": "Cyberkrill/App.lean",
+      "replace": "services.stderr (error.message ++",
+      "with_text": "services.stdout (error.message ++",
+      "build": {
+        "command": [
+          "timeout",
+          "--foreground",
+          "180",
+          "lake",
+          "build",
+          "cyberkrill",
+          "CyberkrillTests"
+        ],
+        "status": 0,
+        "seconds": 9.707
+      },
+      "restore_build": {
+        "command": [
+          "timeout",
+          "--foreground",
+          "180",
+          "lake",
+          "build",
+          "cyberkrill",
+          "CyberkrillTests"
+        ],
+        "status": 0,
+        "seconds": 9.5
+      },
+      "checks": [
+        {
+          "command": [
+            "timeout",
+            "--foreground",
+            "180",
+            "python3",
+            "-B",
+            "test/lightning.py",
+            "--case",
+            "negative/payment-hash-padding"
+          ],
+          "assertion": "refusal stdout",
+          "red": {
+            "command": [
+              "timeout",
+              "--foreground",
+              "180",
+              "python3",
+              "-B",
+              "test/lightning.py",
+              "--case",
+              "negative/payment-hash-padding"
+            ],
+            "status": 1,
+            "seconds": 0.079,
+            "failure": "AssertionError: refusal stdout: negative/payment-hash-padding"
+          },
+          "green": {
+            "command": [
+              "timeout",
+              "--foreground",
+              "180",
+              "python3",
+              "-B",
+              "test/lightning.py",
+              "--case",
+              "negative/payment-hash-padding"
+            ],
+            "status": 0,
+            "seconds": 0.068
+          }
+        },
+        {
+          "command": [
+            "timeout",
+            "--foreground",
+            "180",
+            "python3",
+            "-B",
+            "test/lightning.py",
+            "--case",
+            "negative/description-padding"
+          ],
+          "assertion": "refusal stdout",
+          "red": {
+            "command": [
+              "timeout",
+              "--foreground",
+              "180",
+              "python3",
+              "-B",
+              "test/lightning.py",
+              "--case",
+              "negative/description-padding"
+            ],
+            "status": 1,
+            "seconds": 0.077,
+            "failure": "AssertionError: refusal stdout: negative/description-padding"
+          },
+          "green": {
+            "command": [
+              "timeout",
+              "--foreground",
+              "180",
+              "python3",
+              "-B",
+              "test/lightning.py",
+              "--case",
+              "negative/description-padding"
+            ],
+            "status": 0,
+            "seconds": 0.07
+          }
+        },
+        {
+          "command": [
+            "timeout",
+            "--foreground",
+            "180",
+            "python3",
+            "-B",
+            "test/lightning.py",
+            "--case",
+            "negative/expiry-leading-zero"
+          ],
+          "assertion": "refusal stdout",
+          "red": {
+            "command": [
+              "timeout",
+              "--foreground",
+              "180",
+              "python3",
+              "-B",
+              "test/lightning.py",
+              "--case",
+              "negative/expiry-leading-zero"
+            ],
+            "status": 1,
+            "seconds": 0.077,
+            "failure": "AssertionError: refusal stdout: negative/expiry-leading-zero"
+          },
+          "green": {
+            "command": [
+              "timeout",
+              "--foreground",
+              "180",
+              "python3",
+              "-B",
+              "test/lightning.py",
+              "--case",
+              "negative/expiry-leading-zero"
+            ],
+            "status": 0,
+            "seconds": 0.07
+          }
+        },
+        {
+          "command": [
+            "timeout",
+            "--foreground",
+            "180",
+            "python3",
+            "-B",
+            "test/lightning.py",
+            "--case",
+            "negative/cltv-leading-zero"
+          ],
+          "assertion": "refusal stdout",
+          "red": {
+            "command": [
+              "timeout",
+              "--foreground",
+              "180",
+              "python3",
+              "-B",
+              "test/lightning.py",
+              "--case",
+              "negative/cltv-leading-zero"
+            ],
+            "status": 1,
+            "seconds": 0.079,
+            "failure": "AssertionError: refusal stdout: negative/cltv-leading-zero"
+          },
+          "green": {
+            "command": [
+              "timeout",
+              "--foreground",
+              "180",
+              "python3",
+              "-B",
+              "test/lightning.py",
+              "--case",
+              "negative/cltv-leading-zero"
+            ],
+            "status": 0,
+            "seconds": 0.068
+          }
+        },
+        {
+          "command": [
+            "timeout",
+            "--foreground",
+            "180",
+            "python3",
+            "-B",
+            "test/lightning.py",
+            "--case",
+            "negative/features-leading-zero"
+          ],
+          "assertion": "refusal stdout",
+          "red": {
+            "command": [
+              "timeout",
+              "--foreground",
+              "180",
+              "python3",
+              "-B",
+              "test/lightning.py",
+              "--case",
+              "negative/features-leading-zero"
+            ],
+            "status": 1,
+            "seconds": 0.081,
+            "failure": "AssertionError: refusal stdout: negative/features-leading-zero"
+          },
+          "green": {
+            "command": [
+              "timeout",
+              "--foreground",
+              "180",
+              "python3",
+              "-B",
+              "test/lightning.py",
+              "--case",
+              "negative/features-leading-zero"
+            ],
+            "status": 0,
+            "seconds": 0.068
+          }
+        },
+        {
+          "command": [
+            "timeout",
+            "--foreground",
+            "180",
+            "python3",
+            "-B",
+            "test/lightning.py",
+            "--case",
+            "negative/n-payment-hash-padding"
+          ],
+          "assertion": "refusal stdout",
+          "red": {
+            "command": [
+              "timeout",
+              "--foreground",
+              "180",
+              "python3",
+              "-B",
+              "test/lightning.py",
+              "--case",
+              "negative/n-payment-hash-padding"
+            ],
+            "status": 1,
+            "seconds": 0.079,
+            "failure": "AssertionError: refusal stdout: negative/n-payment-hash-padding"
+          },
+          "green": {
+            "command": [
+              "timeout",
+              "--foreground",
+              "180",
+              "python3",
+              "-B",
+              "test/lightning.py",
+              "--case",
+              "negative/n-payment-hash-padding"
+            ],
+            "status": 0,
+            "seconds": 0.068
+          }
+        },
+        {
+          "command": [
+            "timeout",
+            "--foreground",
+            "180",
+            "python3",
+            "-B",
+            "test/lightning.py",
+            "--case",
+            "url-refusal/userinfo"
+          ],
+          "assertion": "refusal stdout",
+          "red": {
+            "command": [
+              "timeout",
+              "--foreground",
+              "180",
+              "python3",
+              "-B",
+              "test/lightning.py",
+              "--case",
+              "url-refusal/userinfo"
+            ],
+            "status": 1,
+            "seconds": 0.08,
+            "failure": "AssertionError: refusal stdout: url-refusal/userinfo"
+          },
+          "green": {
+            "command": [
+              "timeout",
+              "--foreground",
+              "180",
+              "python3",
+              "-B",
+              "test/lightning.py",
+              "--case",
+              "url-refusal/userinfo"
+            ],
+            "status": 0,
+            "seconds": 0.07
+          }
+        },
+        {
+          "command": [
+            "timeout",
+            "--foreground",
+            "180",
+            "python3",
+            "-B",
+            "test/lightning.py",
+            "--case",
+            "url-refusal/userinfo-multiple"
+          ],
+          "assertion": "refusal stdout",
+          "red": {
+            "command": [
+              "timeout",
+              "--foreground",
+              "180",
+              "python3",
+              "-B",
+              "test/lightning.py",
+              "--case",
+              "url-refusal/userinfo-multiple"
+            ],
+            "status": 1,
+            "seconds": 0.078,
+            "failure": "AssertionError: refusal stdout: url-refusal/userinfo-multiple"
+          },
+          "green": {
+            "command": [
+              "timeout",
+              "--foreground",
+              "180",
+              "python3",
+              "-B",
+              "test/lightning.py",
+              "--case",
+              "url-refusal/userinfo-multiple"
+            ],
+            "status": 0,
+            "seconds": 0.066
+          }
+        },
+        {
+          "command": [
+            "timeout",
+            "--foreground",
+            "180",
+            "python3",
+            "-B",
+            "test/lightning.py",
+            "--case",
+            "url-refusal/ipv6"
+          ],
+          "assertion": "refusal stdout",
+          "red": {
+            "command": [
+              "timeout",
+              "--foreground",
+              "180",
+              "python3",
+              "-B",
+              "test/lightning.py",
+              "--case",
+              "url-refusal/ipv6"
+            ],
+            "status": 1,
+            "seconds": 0.081,
+            "failure": "AssertionError: refusal stdout: url-refusal/ipv6"
+          },
+          "green": {
+            "command": [
+              "timeout",
+              "--foreground",
+              "180",
+              "python3",
+              "-B",
+              "test/lightning.py",
+              "--case",
+              "url-refusal/ipv6"
+            ],
+            "status": 0,
+            "seconds": 0.068
+          }
+        },
+        {
+          "command": [
+            "timeout",
+            "--foreground",
+            "180",
+            "python3",
+            "-B",
+            "test/lightning.py",
+            "--case",
+            "url-refusal/ipv4-hex"
+          ],
+          "assertion": "refusal stdout",
+          "red": {
+            "command": [
+              "timeout",
+              "--foreground",
+              "180",
+              "python3",
+              "-B",
+              "test/lightning.py",
+              "--case",
+              "url-refusal/ipv4-hex"
+            ],
+            "status": 1,
+            "seconds": 0.08,
+            "failure": "AssertionError: refusal stdout: url-refusal/ipv4-hex"
+          },
+          "green": {
+            "command": [
+              "timeout",
+              "--foreground",
+              "180",
+              "python3",
+              "-B",
+              "test/lightning.py",
+              "--case",
+              "url-refusal/ipv4-hex"
+            ],
+            "status": 0,
+            "seconds": 0.072
+          }
+        },
+        {
+          "command": [
+            "timeout",
+            "--foreground",
+            "180",
+            "python3",
+            "-B",
+            "test/lightning.py",
+            "--case",
+            "url-refusal/ipv4-integer"
+          ],
+          "assertion": "refusal stdout",
+          "red": {
+            "command": [
+              "timeout",
+              "--foreground",
+              "180",
+              "python3",
+              "-B",
+              "test/lightning.py",
+              "--case",
+              "url-refusal/ipv4-integer"
+            ],
+            "status": 1,
+            "seconds": 0.082,
+            "failure": "AssertionError: refusal stdout: url-refusal/ipv4-integer"
+          },
+          "green": {
+            "command": [
+              "timeout",
+              "--foreground",
+              "180",
+              "python3",
+              "-B",
+              "test/lightning.py",
+              "--case",
+              "url-refusal/ipv4-integer"
+            ],
+            "status": 0,
+            "seconds": 0.068
+          }
+        },
+        {
+          "command": [
+            "timeout",
+            "--foreground",
+            "180",
+            "python3",
+            "-B",
+            "test/lightning.py",
+            "--case",
+            "url-refusal/ipv4-short"
+          ],
+          "assertion": "refusal stdout",
+          "red": {
+            "command": [
+              "timeout",
+              "--foreground",
+              "180",
+              "python3",
+              "-B",
+              "test/lightning.py",
+              "--case",
+              "url-refusal/ipv4-short"
+            ],
+            "status": 1,
+            "seconds": 0.079,
+            "failure": "AssertionError: refusal stdout: url-refusal/ipv4-short"
+          },
+          "green": {
+            "command": [
+              "timeout",
+              "--foreground",
+              "180",
+              "python3",
+              "-B",
+              "test/lightning.py",
+              "--case",
+              "url-refusal/ipv4-short"
+            ],
+            "status": 0,
+            "seconds": 0.069
+          }
+        },
+        {
+          "command": [
+            "timeout",
+            "--foreground",
+            "180",
+            "python3",
+            "-B",
+            "test/lightning.py",
+            "--case",
+            "url-refusal/ipv4-octal"
+          ],
+          "assertion": "refusal stdout",
+          "red": {
+            "command": [
+              "timeout",
+              "--foreground",
+              "180",
+              "python3",
+              "-B",
+              "test/lightning.py",
+              "--case",
+              "url-refusal/ipv4-octal"
+            ],
+            "status": 1,
+            "seconds": 0.081,
+            "failure": "AssertionError: refusal stdout: url-refusal/ipv4-octal"
+          },
+          "green": {
+            "command": [
+              "timeout",
+              "--foreground",
+              "180",
+              "python3",
+              "-B",
+              "test/lightning.py",
+              "--case",
+              "url-refusal/ipv4-octal"
+            ],
+            "status": 0,
+            "seconds": 0.068
+          }
+        },
+        {
+          "command": [
+            "timeout",
+            "--foreground",
+            "180",
+            "python3",
+            "-B",
+            "test/lightning.py",
+            "--case",
+            "url-refusal/ipv4-leading"
+          ],
+          "assertion": "refusal stdout",
+          "red": {
+            "command": [
+              "timeout",
+              "--foreground",
+              "180",
+              "python3",
+              "-B",
+              "test/lightning.py",
+              "--case",
+              "url-refusal/ipv4-leading"
+            ],
+            "status": 1,
+            "seconds": 0.08,
+            "failure": "AssertionError: refusal stdout: url-refusal/ipv4-leading"
+          },
+          "green": {
+            "command": [
+              "timeout",
+              "--foreground",
+              "180",
+              "python3",
+              "-B",
+              "test/lightning.py",
+              "--case",
+              "url-refusal/ipv4-leading"
+            ],
+            "status": 0,
+            "seconds": 0.067
+          }
+        },
+        {
+          "command": [
+            "timeout",
+            "--foreground",
+            "180",
+            "python3",
+            "-B",
+            "test/lightning.py",
+            "--case",
+            "url-refusal/ipv4-dot"
+          ],
+          "assertion": "refusal stdout",
+          "red": {
+            "command": [
+              "timeout",
+              "--foreground",
+              "180",
+              "python3",
+              "-B",
+              "test/lightning.py",
+              "--case",
+              "url-refusal/ipv4-dot"
+            ],
+            "status": 1,
+            "seconds": 0.086,
+            "failure": "AssertionError: refusal stdout: url-refusal/ipv4-dot"
+          },
+          "green": {
+            "command": [
+              "timeout",
+              "--foreground",
+              "180",
+              "python3",
+              "-B",
+              "test/lightning.py",
+              "--case",
+              "url-refusal/ipv4-dot"
+            ],
+            "status": 0,
+            "seconds": 0.069
+          }
+        },
+        {
+          "command": [
+            "timeout",
+            "--foreground",
+            "180",
+            "python3",
+            "-B",
+            "test/lightning.py",
+            "--case",
+            "url-refusal/unicode-host"
+          ],
+          "assertion": "refusal stdout",
+          "red": {
+            "command": [
+              "timeout",
+              "--foreground",
+              "180",
+              "python3",
+              "-B",
+              "test/lightning.py",
+              "--case",
+              "url-refusal/unicode-host"
+            ],
+            "status": 1,
+            "seconds": 0.082,
+            "failure": "AssertionError: refusal stdout: url-refusal/unicode-host"
+          },
+          "green": {
+            "command": [
+              "timeout",
+              "--foreground",
+              "180",
+              "python3",
+              "-B",
+              "test/lightning.py",
+              "--case",
+              "url-refusal/unicode-host"
+            ],
+            "status": 0,
+            "seconds": 0.071
+          }
+        },
+        {
+          "command": [
+            "timeout",
+            "--foreground",
+            "180",
+            "python3",
+            "-B",
+            "test/lightning.py",
+            "--case",
+            "url-refusal/encoded-unicode-host"
+          ],
+          "assertion": "refusal stdout",
+          "red": {
+            "command": [
+              "timeout",
+              "--foreground",
+              "180",
+              "python3",
+              "-B",
+              "test/lightning.py",
+              "--case",
+              "url-refusal/encoded-unicode-host"
+            ],
+            "status": 1,
+            "seconds": 0.077,
+            "failure": "AssertionError: refusal stdout: url-refusal/encoded-unicode-host"
+          },
+          "green": {
+            "command": [
+              "timeout",
+              "--foreground",
+              "180",
+              "python3",
+              "-B",
+              "test/lightning.py",
+              "--case",
+              "url-refusal/encoded-unicode-host"
+            ],
+            "status": 0,
+            "seconds": 0.068
+          }
+        },
+        {
+          "command": [
+            "timeout",
+            "--foreground",
+            "180",
+            "python3",
+            "-B",
+            "test/lightning.py",
+            "--case",
+            "url-refusal/punycode-host"
+          ],
+          "assertion": "refusal stdout",
+          "red": {
+            "command": [
+              "timeout",
+              "--foreground",
+              "180",
+              "python3",
+              "-B",
+              "test/lightning.py",
+              "--case",
+              "url-refusal/punycode-host"
+            ],
+            "status": 1,
+            "seconds": 0.08,
+            "failure": "AssertionError: refusal stdout: url-refusal/punycode-host"
+          },
+          "green": {
+            "command": [
+              "timeout",
+              "--foreground",
+              "180",
+              "python3",
+              "-B",
+              "test/lightning.py",
+              "--case",
+              "url-refusal/punycode-host"
+            ],
+            "status": 0,
+            "seconds": 0.067
+          }
+        },
+        {
+          "command": [
+            "timeout",
+            "--foreground",
+            "180",
+            "python3",
+            "-B",
+            "test/lightning.py",
+            "--case",
+            "url-refusal/punycode-upper"
+          ],
+          "assertion": "refusal stdout",
+          "red": {
+            "command": [
+              "timeout",
+              "--foreground",
+              "180",
+              "python3",
+              "-B",
+              "test/lightning.py",
+              "--case",
+              "url-refusal/punycode-upper"
+            ],
+            "status": 1,
+            "seconds": 0.076,
+            "failure": "AssertionError: refusal stdout: url-refusal/punycode-upper"
+          },
+          "green": {
+            "command": [
+              "timeout",
+              "--foreground",
+              "180",
+              "python3",
+              "-B",
+              "test/lightning.py",
+              "--case",
+              "url-refusal/punycode-upper"
+            ],
+            "status": 0,
+            "seconds": 0.067
+          }
+        },
+        {
+          "command": [
+            "timeout",
+            "--foreground",
+            "180",
+            "python3",
+            "-B",
+            "test/lightning.py",
+            "--case",
+            "url-error/scheme"
+          ],
+          "assertion": "refusal stdout",
+          "red": {
+            "command": [
+              "timeout",
+              "--foreground",
+              "180",
+              "python3",
+              "-B",
+              "test/lightning.py",
+              "--case",
+              "url-error/scheme"
+            ],
+            "status": 1,
+            "seconds": 0.076,
+            "failure": "AssertionError: refusal stdout: url-error/scheme"
+          },
+          "green": {
+            "command": [
+              "timeout",
+              "--foreground",
+              "180",
+              "python3",
+              "-B",
+              "test/lightning.py",
+              "--case",
+              "url-error/scheme"
+            ],
+            "status": 0,
+            "seconds": 0.066
+          }
+        }
+      ]
+    },
+    {
+      "property": "refusal-identity",
+      "file": "Cyberkrill/Amounts.lean",
+      "replace": "code ++ \": Invalid Lightning input\"",
+      "with_text": "\"wrongLightningError: Invalid Lightning input\"",
+      "build": {
+        "command": [
+          "timeout",
+          "--foreground",
+          "180",
+          "lake",
+          "build",
+          "cyberkrill",
+          "CyberkrillTests"
+        ],
+        "status": 0,
+        "seconds": 11.891
+      },
+      "restore_build": {
+        "command": [
+          "timeout",
+          "--foreground",
+          "180",
+          "lake",
+          "build",
+          "cyberkrill",
+          "CyberkrillTests"
+        ],
+        "status": 0,
+        "seconds": 11.792
+      },
+      "checks": [
+        {
+          "command": [
+            "timeout",
+            "--foreground",
+            "180",
+            "python3",
+            "-B",
+            "test/lightning.py",
+            "--case",
+            "negative/payment-hash-padding"
+          ],
+          "assertion": "refusal error identity",
+          "red": {
+            "command": [
+              "timeout",
+              "--foreground",
+              "180",
+              "python3",
+              "-B",
+              "test/lightning.py",
+              "--case",
+              "negative/payment-hash-padding"
+            ],
+            "status": 1,
+            "seconds": 0.08,
+            "failure": "AssertionError: refusal error identity: negative/payment-hash-padding"
+          },
+          "green": {
+            "command": [
+              "timeout",
+              "--foreground",
+              "180",
+              "python3",
+              "-B",
+              "test/lightning.py",
+              "--case",
+              "negative/payment-hash-padding"
+            ],
+            "status": 0,
+            "seconds": 0.069
+          }
+        },
+        {
+          "command": [
+            "timeout",
+            "--foreground",
+            "180",
+            "python3",
+            "-B",
+            "test/lightning.py",
+            "--case",
+            "negative/description-padding"
+          ],
+          "assertion": "refusal error identity",
+          "red": {
+            "command": [
+              "timeout",
+              "--foreground",
+              "180",
+              "python3",
+              "-B",
+              "test/lightning.py",
+              "--case",
+              "negative/description-padding"
+            ],
+            "status": 1,
+            "seconds": 0.078,
+            "failure": "AssertionError: refusal error identity: negative/description-padding"
+          },
+          "green": {
+            "command": [
+              "timeout",
+              "--foreground",
+              "180",
+              "python3",
+              "-B",
+              "test/lightning.py",
+              "--case",
+              "negative/description-padding"
+            ],
+            "status": 0,
+            "seconds": 0.068
+          }
+        },
+        {
+          "command": [
+            "timeout",
+            "--foreground",
+            "180",
+            "python3",
+            "-B",
+            "test/lightning.py",
+            "--case",
+            "negative/expiry-leading-zero"
+          ],
+          "assertion": "refusal error identity",
+          "red": {
+            "command": [
+              "timeout",
+              "--foreground",
+              "180",
+              "python3",
+              "-B",
+              "test/lightning.py",
+              "--case",
+              "negative/expiry-leading-zero"
+            ],
+            "status": 1,
+            "seconds": 0.079,
+            "failure": "AssertionError: refusal error identity: negative/expiry-leading-zero"
+          },
+          "green": {
+            "command": [
+              "timeout",
+              "--foreground",
+              "180",
+              "python3",
+              "-B",
+              "test/lightning.py",
+              "--case",
+              "negative/expiry-leading-zero"
+            ],
+            "status": 0,
+            "seconds": 0.067
+          }
+        },
+        {
+          "command": [
+            "timeout",
+            "--foreground",
+            "180",
+            "python3",
+            "-B",
+            "test/lightning.py",
+            "--case",
+            "negative/cltv-leading-zero"
+          ],
+          "assertion": "refusal error identity",
+          "red": {
+            "command": [
+              "timeout",
+              "--foreground",
+              "180",
+              "python3",
+              "-B",
+              "test/lightning.py",
+              "--case",
+              "negative/cltv-leading-zero"
+            ],
+            "status": 1,
+            "seconds": 0.078,
+            "failure": "AssertionError: refusal error identity: negative/cltv-leading-zero"
+          },
+          "green": {
+            "command": [
+              "timeout",
+              "--foreground",
+              "180",
+              "python3",
+              "-B",
+              "test/lightning.py",
+              "--case",
+              "negative/cltv-leading-zero"
+            ],
+            "status": 0,
+            "seconds": 0.071
+          }
+        },
+        {
+          "command": [
+            "timeout",
+            "--foreground",
+            "180",
+            "python3",
+            "-B",
+            "test/lightning.py",
+            "--case",
+            "negative/features-leading-zero"
+          ],
+          "assertion": "refusal error identity",
+          "red": {
+            "command": [
+              "timeout",
+              "--foreground",
+              "180",
+              "python3",
+              "-B",
+              "test/lightning.py",
+              "--case",
+              "negative/features-leading-zero"
+            ],
+            "status": 1,
+            "seconds": 0.079,
+            "failure": "AssertionError: refusal error identity: negative/features-leading-zero"
+          },
+          "green": {
+            "command": [
+              "timeout",
+              "--foreground",
+              "180",
+              "python3",
+              "-B",
+              "test/lightning.py",
+              "--case",
+              "negative/features-leading-zero"
+            ],
+            "status": 0,
+            "seconds": 0.068
+          }
+        },
+        {
+          "command": [
+            "timeout",
+            "--foreground",
+            "180",
+            "python3",
+            "-B",
+            "test/lightning.py",
+            "--case",
+            "negative/n-payment-hash-padding"
+          ],
+          "assertion": "refusal error identity",
+          "red": {
+            "command": [
+              "timeout",
+              "--foreground",
+              "180",
+              "python3",
+              "-B",
+              "test/lightning.py",
+              "--case",
+              "negative/n-payment-hash-padding"
+            ],
+            "status": 1,
+            "seconds": 0.082,
+            "failure": "AssertionError: refusal error identity: negative/n-payment-hash-padding"
+          },
+          "green": {
+            "command": [
+              "timeout",
+              "--foreground",
+              "180",
+              "python3",
+              "-B",
+              "test/lightning.py",
+              "--case",
+              "negative/n-payment-hash-padding"
+            ],
+            "status": 0,
+            "seconds": 0.067
+          }
+        },
+        {
+          "command": [
+            "timeout",
+            "--foreground",
+            "180",
+            "python3",
+            "-B",
+            "test/lightning.py",
+            "--case",
+            "url-refusal/userinfo"
+          ],
+          "assertion": "refusal error identity",
+          "red": {
+            "command": [
+              "timeout",
+              "--foreground",
+              "180",
+              "python3",
+              "-B",
+              "test/lightning.py",
+              "--case",
+              "url-refusal/userinfo"
+            ],
+            "status": 1,
+            "seconds": 0.083,
+            "failure": "AssertionError: refusal error identity: url-refusal/userinfo"
+          },
+          "green": {
+            "command": [
+              "timeout",
+              "--foreground",
+              "180",
+              "python3",
+              "-B",
+              "test/lightning.py",
+              "--case",
+              "url-refusal/userinfo"
+            ],
+            "status": 0,
+            "seconds": 0.065
+          }
+        },
+        {
+          "command": [
+            "timeout",
+            "--foreground",
+            "180",
+            "python3",
+            "-B",
+            "test/lightning.py",
+            "--case",
+            "url-refusal/userinfo-multiple"
+          ],
+          "assertion": "refusal error identity",
+          "red": {
+            "command": [
+              "timeout",
+              "--foreground",
+              "180",
+              "python3",
+              "-B",
+              "test/lightning.py",
+              "--case",
+              "url-refusal/userinfo-multiple"
+            ],
+            "status": 1,
+            "seconds": 0.081,
+            "failure": "AssertionError: refusal error identity: url-refusal/userinfo-multiple"
+          },
+          "green": {
+            "command": [
+              "timeout",
+              "--foreground",
+              "180",
+              "python3",
+              "-B",
+              "test/lightning.py",
+              "--case",
+              "url-refusal/userinfo-multiple"
+            ],
+            "status": 0,
+            "seconds": 0.073
+          }
+        },
+        {
+          "command": [
+            "timeout",
+            "--foreground",
+            "180",
+            "python3",
+            "-B",
+            "test/lightning.py",
+            "--case",
+            "url-refusal/ipv6"
+          ],
+          "assertion": "refusal error identity",
+          "red": {
+            "command": [
+              "timeout",
+              "--foreground",
+              "180",
+              "python3",
+              "-B",
+              "test/lightning.py",
+              "--case",
+              "url-refusal/ipv6"
+            ],
+            "status": 1,
+            "seconds": 0.079,
+            "failure": "AssertionError: refusal error identity: url-refusal/ipv6"
+          },
+          "green": {
+            "command": [
+              "timeout",
+              "--foreground",
+              "180",
+              "python3",
+              "-B",
+              "test/lightning.py",
+              "--case",
+              "url-refusal/ipv6"
+            ],
+            "status": 0,
+            "seconds": 0.069
+          }
+        },
+        {
+          "command": [
+            "timeout",
+            "--foreground",
+            "180",
+            "python3",
+            "-B",
+            "test/lightning.py",
+            "--case",
+            "url-refusal/ipv4-hex"
+          ],
+          "assertion": "refusal error identity",
+          "red": {
+            "command": [
+              "timeout",
+              "--foreground",
+              "180",
+              "python3",
+              "-B",
+              "test/lightning.py",
+              "--case",
+              "url-refusal/ipv4-hex"
+            ],
+            "status": 1,
+            "seconds": 0.08,
+            "failure": "AssertionError: refusal error identity: url-refusal/ipv4-hex"
+          },
+          "green": {
+            "command": [
+              "timeout",
+              "--foreground",
+              "180",
+              "python3",
+              "-B",
+              "test/lightning.py",
+              "--case",
+              "url-refusal/ipv4-hex"
+            ],
+            "status": 0,
+            "seconds": 0.067
+          }
+        },
+        {
+          "command": [
+            "timeout",
+            "--foreground",
+            "180",
+            "python3",
+            "-B",
+            "test/lightning.py",
+            "--case",
+            "url-refusal/ipv4-integer"
+          ],
+          "assertion": "refusal error identity",
+          "red": {
+            "command": [
+              "timeout",
+              "--foreground",
+              "180",
+              "python3",
+              "-B",
+              "test/lightning.py",
+              "--case",
+              "url-refusal/ipv4-integer"
+            ],
+            "status": 1,
+            "seconds": 0.079,
+            "failure": "AssertionError: refusal error identity: url-refusal/ipv4-integer"
+          },
+          "green": {
+            "command": [
+              "timeout",
+              "--foreground",
+              "180",
+              "python3",
+              "-B",
+              "test/lightning.py",
+              "--case",
+              "url-refusal/ipv4-integer"
+            ],
+            "status": 0,
+            "seconds": 0.067
+          }
+        },
+        {
+          "command": [
+            "timeout",
+            "--foreground",
+            "180",
+            "python3",
+            "-B",
+            "test/lightning.py",
+            "--case",
+            "url-refusal/ipv4-short"
+          ],
+          "assertion": "refusal error identity",
+          "red": {
+            "command": [
+              "timeout",
+              "--foreground",
+              "180",
+              "python3",
+              "-B",
+              "test/lightning.py",
+              "--case",
+              "url-refusal/ipv4-short"
+            ],
+            "status": 1,
+            "seconds": 0.079,
+            "failure": "AssertionError: refusal error identity: url-refusal/ipv4-short"
+          },
+          "green": {
+            "command": [
+              "timeout",
+              "--foreground",
+              "180",
+              "python3",
+              "-B",
+              "test/lightning.py",
+              "--case",
+              "url-refusal/ipv4-short"
+            ],
+            "status": 0,
+            "seconds": 0.067
+          }
+        },
+        {
+          "command": [
+            "timeout",
+            "--foreground",
+            "180",
+            "python3",
+            "-B",
+            "test/lightning.py",
+            "--case",
+            "url-refusal/ipv4-octal"
+          ],
+          "assertion": "refusal error identity",
+          "red": {
+            "command": [
+              "timeout",
+              "--foreground",
+              "180",
+              "python3",
+              "-B",
+              "test/lightning.py",
+              "--case",
+              "url-refusal/ipv4-octal"
+            ],
+            "status": 1,
+            "seconds": 0.082,
+            "failure": "AssertionError: refusal error identity: url-refusal/ipv4-octal"
+          },
+          "green": {
+            "command": [
+              "timeout",
+              "--foreground",
+              "180",
+              "python3",
+              "-B",
+              "test/lightning.py",
+              "--case",
+              "url-refusal/ipv4-octal"
+            ],
+            "status": 0,
+            "seconds": 0.069
+          }
+        },
+        {
+          "command": [
+            "timeout",
+            "--foreground",
+            "180",
+            "python3",
+            "-B",
+            "test/lightning.py",
+            "--case",
+            "url-refusal/ipv4-leading"
+          ],
+          "assertion": "refusal error identity",
+          "red": {
+            "command": [
+              "timeout",
+              "--foreground",
+              "180",
+              "python3",
+              "-B",
+              "test/lightning.py",
+              "--case",
+              "url-refusal/ipv4-leading"
+            ],
+            "status": 1,
+            "seconds": 0.083,
+            "failure": "AssertionError: refusal error identity: url-refusal/ipv4-leading"
+          },
+          "green": {
+            "command": [
+              "timeout",
+              "--foreground",
+              "180",
+              "python3",
+              "-B",
+              "test/lightning.py",
+              "--case",
+              "url-refusal/ipv4-leading"
+            ],
+            "status": 0,
+            "seconds": 0.071
+          }
+        },
+        {
+          "command": [
+            "timeout",
+            "--foreground",
+            "180",
+            "python3",
+            "-B",
+            "test/lightning.py",
+            "--case",
+            "url-refusal/ipv4-dot"
+          ],
+          "assertion": "refusal error identity",
+          "red": {
+            "command": [
+              "timeout",
+              "--foreground",
+              "180",
+              "python3",
+              "-B",
+              "test/lightning.py",
+              "--case",
+              "url-refusal/ipv4-dot"
+            ],
+            "status": 1,
+            "seconds": 0.081,
+            "failure": "AssertionError: refusal error identity: url-refusal/ipv4-dot"
+          },
+          "green": {
+            "command": [
+              "timeout",
+              "--foreground",
+              "180",
+              "python3",
+              "-B",
+              "test/lightning.py",
+              "--case",
+              "url-refusal/ipv4-dot"
+            ],
+            "status": 0,
+            "seconds": 0.066
+          }
+        },
+        {
+          "command": [
+            "timeout",
+            "--foreground",
+            "180",
+            "python3",
+            "-B",
+            "test/lightning.py",
+            "--case",
+            "url-refusal/unicode-host"
+          ],
+          "assertion": "refusal error identity",
+          "red": {
+            "command": [
+              "timeout",
+              "--foreground",
+              "180",
+              "python3",
+              "-B",
+              "test/lightning.py",
+              "--case",
+              "url-refusal/unicode-host"
+            ],
+            "status": 1,
+            "seconds": 0.08,
+            "failure": "AssertionError: refusal error identity: url-refusal/unicode-host"
+          },
+          "green": {
+            "command": [
+              "timeout",
+              "--foreground",
+              "180",
+              "python3",
+              "-B",
+              "test/lightning.py",
+              "--case",
+              "url-refusal/unicode-host"
+            ],
+            "status": 0,
+            "seconds": 0.067
+          }
+        },
+        {
+          "command": [
+            "timeout",
+            "--foreground",
+            "180",
+            "python3",
+            "-B",
+            "test/lightning.py",
+            "--case",
+            "url-refusal/encoded-unicode-host"
+          ],
+          "assertion": "refusal error identity",
+          "red": {
+            "command": [
+              "timeout",
+              "--foreground",
+              "180",
+              "python3",
+              "-B",
+              "test/lightning.py",
+              "--case",
+              "url-refusal/encoded-unicode-host"
+            ],
+            "status": 1,
+            "seconds": 0.079,
+            "failure": "AssertionError: refusal error identity: url-refusal/encoded-unicode-host"
+          },
+          "green": {
+            "command": [
+              "timeout",
+              "--foreground",
+              "180",
+              "python3",
+              "-B",
+              "test/lightning.py",
+              "--case",
+              "url-refusal/encoded-unicode-host"
+            ],
+            "status": 0,
+            "seconds": 0.066
+          }
+        },
+        {
+          "command": [
+            "timeout",
+            "--foreground",
+            "180",
+            "python3",
+            "-B",
+            "test/lightning.py",
+            "--case",
+            "url-refusal/punycode-host"
+          ],
+          "assertion": "refusal error identity",
+          "red": {
+            "command": [
+              "timeout",
+              "--foreground",
+              "180",
+              "python3",
+              "-B",
+              "test/lightning.py",
+              "--case",
+              "url-refusal/punycode-host"
+            ],
+            "status": 1,
+            "seconds": 0.078,
+            "failure": "AssertionError: refusal error identity: url-refusal/punycode-host"
+          },
+          "green": {
+            "command": [
+              "timeout",
+              "--foreground",
+              "180",
+              "python3",
+              "-B",
+              "test/lightning.py",
+              "--case",
+              "url-refusal/punycode-host"
+            ],
+            "status": 0,
+            "seconds": 0.066
+          }
+        },
+        {
+          "command": [
+            "timeout",
+            "--foreground",
+            "180",
+            "python3",
+            "-B",
+            "test/lightning.py",
+            "--case",
+            "url-refusal/punycode-upper"
+          ],
+          "assertion": "refusal error identity",
+          "red": {
+            "command": [
+              "timeout",
+              "--foreground",
+              "180",
+              "python3",
+              "-B",
+              "test/lightning.py",
+              "--case",
+              "url-refusal/punycode-upper"
+            ],
+            "status": 1,
+            "seconds": 0.085,
+            "failure": "AssertionError: refusal error identity: url-refusal/punycode-upper"
+          },
+          "green": {
+            "command": [
+              "timeout",
+              "--foreground",
+              "180",
+              "python3",
+              "-B",
+              "test/lightning.py",
+              "--case",
+              "url-refusal/punycode-upper"
+            ],
+            "status": 0,
+            "seconds": 0.069
+          }
+        },
+        {
+          "command": [
+            "timeout",
+            "--foreground",
+            "180",
+            "python3",
+            "-B",
+            "test/lightning.py",
+            "--case",
+            "url-error/scheme"
+          ],
+          "assertion": "refusal error identity",
+          "red": {
+            "command": [
+              "timeout",
+              "--foreground",
+              "180",
+              "python3",
+              "-B",
+              "test/lightning.py",
+              "--case",
+              "url-error/scheme"
+            ],
+            "status": 1,
+            "seconds": 0.08,
+            "failure": "AssertionError: refusal error identity: url-error/scheme"
+          },
+          "green": {
+            "command": [
+              "timeout",
+              "--foreground",
+              "180",
+              "python3",
+              "-B",
+              "test/lightning.py",
+              "--case",
+              "url-error/scheme"
+            ],
+            "status": 0,
+            "seconds": 0.068
+          }
+        }
+      ]
+    },
+    {
+      "property": "signing-hash-payee-output",
+      "file": "Cyberkrill/Lightning.lean",
+      "replace": "Bitcoin.Hex.encode inv.payeeKey",
+      "with_text": "Bitcoin.Hex.encode (parts.payeePubkey.getD ByteArray.empty)",
+      "build": {
+        "command": [
+          "timeout",
+          "--foreground",
+          "180",
+          "lake",
+          "build",
+          "cyberkrill",
+          "CyberkrillTests"
+        ],
+        "status": 0,
+        "seconds": 10.184
+      },
+      "restore_build": {
+        "command": [
+          "timeout",
+          "--foreground",
+          "180",
+          "lake",
+          "build",
+          "cyberkrill",
+          "CyberkrillTests"
+        ],
+        "status": 0,
+        "seconds": 10.195
+      },
+      "checks": [
+        {
+          "command": [
+            "timeout",
+            "--foreground",
+            "180",
+            "python3",
+            "-B",
+            "test/lightning.py",
+            "--case",
+            "positive/amount-leading-zero"
+          ],
+          "assertion": "wrong pinned values",
+          "red": {
+            "command": [
+              "timeout",
+              "--foreground",
+              "180",
+              "python3",
+              "-B",
+              "test/lightning.py",
+              "--case",
+              "positive/amount-leading-zero"
+            ],
+            "status": 1,
+            "seconds": 0.081,
+            "failure": "AssertionError: wrong pinned values: positive/amount-leading-zero stdout[\"destination\"]"
+          },
+          "green": {
+            "command": [
+              "timeout",
+              "--foreground",
+              "180",
+              "python3",
+              "-B",
+              "test/lightning.py",
+              "--case",
+              "positive/amount-leading-zero"
+            ],
+            "status": 0,
+            "seconds": 0.071
+          }
+        }
+      ]
+    },
+    {
+      "property": "explicit-n-verification",
+      "file": "Cyberkrill/Lightning.lean",
+      "replace": "decode (bolt11Curve ByteArray.empty) input",
+      "with_text": "decode { (bolt11Curve ByteArray.empty) with verify := fun _ _ _ => false } input",
+      "build": {
+        "command": [
+          "timeout",
+          "--foreground",
+          "180",
+          "lake",
+          "build",
+          "cyberkrill",
+          "CyberkrillTests"
+        ],
+        "status": 0,
+        "seconds": 10.298
+      },
+      "restore_build": {
+        "command": [
+          "timeout",
+          "--foreground",
+          "180",
+          "lake",
+          "build",
+          "cyberkrill",
+          "CyberkrillTests"
+        ],
+        "status": 0,
+        "seconds": 10.309
+      },
+      "checks": [
+        {
+          "command": [
+            "timeout",
+            "--foreground",
+            "180",
+            "python3",
+            "-B",
+            "test/lightning.py",
+            "--case",
+            "positive/n-amount-leading-zero"
+          ],
+          "assertion": "leading-zero port status/stderr",
+          "red": {
+            "command": [
+              "timeout",
+              "--foreground",
+              "180",
+              "python3",
+              "-B",
+              "test/lightning.py",
+              "--case",
+              "positive/n-amount-leading-zero"
+            ],
+            "status": 1,
+            "seconds": 0.083,
+            "failure": "AssertionError: leading-zero port status/stderr"
+          },
+          "green": {
+            "command": [
+              "timeout",
+              "--foreground",
+              "180",
+              "python3",
+              "-B",
+              "test/lightning.py",
+              "--case",
+              "positive/n-amount-leading-zero"
+            ],
+            "status": 0,
+            "seconds": 0.069
+          }
+        }
+      ]
+    },
+    {
+      "property": "route-fee-json",
+      "file": "Cyberkrill/Lightning.lean",
+      "replace": "toJson hop.feeBaseMsat.toNat",
+      "with_text": "toJson (hop.feeBaseMsat.toNat + 1)",
+      "build": {
+        "command": [
+          "timeout",
+          "--foreground",
+          "180",
+          "lake",
+          "build",
+          "cyberkrill",
+          "CyberkrillTests"
+        ],
+        "status": 0,
+        "seconds": 10.399
+      },
+      "restore_build": {
+        "command": [
+          "timeout",
+          "--foreground",
+          "180",
+          "lake",
+          "build",
+          "cyberkrill",
+          "CyberkrillTests"
+        ],
+        "status": 0,
+        "seconds": 10.194
+      },
+      "checks": [
+        {
+          "command": [
+            "timeout",
+            "--foreground",
+            "180",
+            "python3",
+            "-B",
+            "test/lightning.py",
+            "--case",
+            "valid/L516"
+          ],
+          "assertion": "unlisted difference",
+          "red": {
+            "command": [
+              "timeout",
+              "--foreground",
+              "180",
+              "python3",
+              "-B",
+              "test/lightning.py",
+              "--case",
+              "valid/L516"
+            ],
+            "status": 1,
+            "seconds": 0.084,
+            "failure": "AssertionError: unlisted difference: valid/L516 stdout[\"routes\"][0][0][\"fees\"][\"base_msat\"]"
+          },
+          "green": {
+            "command": [
+              "timeout",
+              "--foreground",
+              "180",
+              "python3",
+              "-B",
+              "test/lightning.py",
+              "--case",
+              "valid/L516"
+            ],
+            "status": 0,
+            "seconds": 0.07
+          }
+        }
+      ]
+    },
+    {
+      "property": "lnurl-query-json",
+      "file": "Cyberkrill/Lightning.lean",
+      "replace": "(k, toJson v)",
+      "with_text": "(k, toJson (v ++ k))",
+      "build": {
+        "command": [
+          "timeout",
+          "--foreground",
+          "180",
+          "lake",
+          "build",
+          "cyberkrill",
+          "CyberkrillTests"
+        ],
+        "status": 0,
+        "seconds": 10.185
+      },
+      "restore_build": {
+        "command": [
+          "timeout",
+          "--foreground",
+          "180",
+          "lake",
+          "build",
+          "cyberkrill",
+          "CyberkrillTests"
+        ],
+        "status": 0,
+        "seconds": 10.493
+      },
+      "checks": [
+        {
+          "command": [
+            "timeout",
+            "--foreground",
+            "180",
+            "python3",
+            "-B",
+            "test/lightning.py",
+            "--case",
+            "lnurl-reference/cyberkrill"
+          ],
+          "assertion": "unlisted difference",
+          "red": {
+            "command": [
+              "timeout",
+              "--foreground",
+              "180",
+              "python3",
+              "-B",
+              "test/lightning.py",
+              "--case",
+              "lnurl-reference/cyberkrill"
+            ],
+            "status": 1,
+            "seconds": 0.076,
+            "failure": "AssertionError: unlisted difference: lnurl-reference/cyberkrill stdout[\"query_params\"][\"q\"]"
+          },
+          "green": {
+            "command": [
+              "timeout",
+              "--foreground",
+              "180",
+              "python3",
+              "-B",
+              "test/lightning.py",
+              "--case",
+              "lnurl-reference/cyberkrill"
+            ],
+            "status": 0,
+            "seconds": 0.072
+          }
+        }
+      ]
+    },
+    {
+      "property": "explicit-n-signing-policy",
+      "file": "Cyberkrill/Lightning.lean",
+      "replace": "  (sign (bolt11Curve key) parts).mapError fun e =>\n    .lightning ((reprStr e).replace \"Lightning.Bolt11.EncodeError.\" \"\")",
+      "with_text": "  let result \u2190 (sign (bolt11Curve key) parts).mapError fun e =>\n    Error.lightning ((reprStr e).replace \"Lightning.Bolt11.EncodeError.\" \"\")\n  let _ \u2190 (decode (bolt11Curve key) result).mapError invoiceError\n  return result",
+      "build": {
+        "command": [
+          "timeout",
+          "--foreground",
+          "180",
+          "lake",
+          "build",
+          "cyberkrill",
+          "CyberkrillTests"
+        ],
+        "status": 0,
+        "seconds": 11.02
+      },
+      "restore_build": {
+        "command": [
+          "timeout",
+          "--foreground",
+          "180",
+          "lake",
+          "build",
+          "cyberkrill",
+          "CyberkrillTests"
+        ],
+        "status": 0,
+        "seconds": 10.924
+      },
+      "checks": [
+        {
+          "command": [
+            "timeout",
+            "--foreground",
+            "180",
+            "python3",
+            "-B",
+            "test/lightning.py",
+            "--case",
+            "builder/explicit-n-mismatch"
+          ],
+          "assertion": "success status",
+          "red": {
+            "command": [
+              "timeout",
+              "--foreground",
+              "180",
+              "python3",
+              "-B",
+              "test/lightning.py",
+              "--case",
+              "builder/explicit-n-mismatch"
+            ],
+            "status": 1,
+            "seconds": 0.083,
+            "failure": "AssertionError: success status: builder/explicit-n-mismatch"
+          },
+          "green": {
+            "command": [
+              "timeout",
+              "--foreground",
+              "180",
+              "python3",
+              "-B",
+              "test/lightning.py",
+              "--case",
+              "builder/explicit-n-mismatch"
+            ],
+            "status": 0,
+            "seconds": 0.101
+          }
+        }
+      ]
+    },
+    {
+      "property": "json-enum-duplicate",
+      "file": "Cyberkrill/InvoiceJson.lean",
+      "replace": "if key == \"network\" then checkEnumSyntax value",
+      "with_text": "if key == \"network\" then pure ()",
+      "build": {
+        "command": [
+          "timeout",
+          "--foreground",
+          "180",
+          "lake",
+          "build",
+          "cyberkrill",
+          "CyberkrillTests"
+        ],
+        "status": 0,
+        "seconds": 11.716
+      },
+      "restore_build": {
+        "command": [
+          "timeout",
+          "--foreground",
+          "180",
+          "lake",
+          "build",
+          "cyberkrill",
+          "CyberkrillTests"
+        ],
+        "status": 0,
+        "seconds": 11.721
+      },
+      "checks": [
+        {
+          "command": [
+            "timeout",
+            "--foreground",
+            "180",
+            "python3",
+            "-B",
+            "test/lightning.py",
+            "--case",
+            "json/duplicate-network-enum"
+          ],
+          "assertion": "ordinary failure",
+          "red": {
+            "command": [
+              "timeout",
+              "--foreground",
+              "180",
+              "python3",
+              "-B",
+              "test/lightning.py",
+              "--case",
+              "json/duplicate-network-enum"
+            ],
+            "status": 1,
+            "seconds": 0.082,
+            "failure": "AssertionError: ordinary failure: json/duplicate-network-enum"
+          },
+          "green": {
+            "command": [
+              "timeout",
+              "--foreground",
+              "180",
+              "python3",
+              "-B",
+              "test/lightning.py",
+              "--case",
+              "json/duplicate-network-enum"
+            ],
+            "status": 0,
+            "seconds": 0.071
+          }
+        }
+      ]
+    }
+  ],
+  "restored_full": {
+    "command": [
+      "timeout",
+      "--foreground",
+      "180",
+      "lake",
+      "test"
+    ],
+    "status": 0,
+    "seconds": 23.602
+  }
+}

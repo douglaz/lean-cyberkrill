@@ -1,0 +1,36 @@
+{
+  "source": "https://github.com/douglaz/cyberkrill",
+  "commit": "27cad1faba86260b06665a89f0af5134d23525c2",
+  "paths": [
+    "cyberkrill/src/main.rs",
+    "cyberkrill-core/src/decoder.rs"
+  ],
+  "licence": "MIT OR Apache-2.0, taken under MIT",
+  "build": [
+    "nix",
+    "build",
+    "--no-link",
+    "--print-out-paths",
+    "--max-jobs",
+    "2",
+    "--cores",
+    "4",
+    "github:douglaz/cyberkrill/27cad1faba86260b06665a89f0af5134d23525c2"
+  ],
+  "build_status": 0,
+  "build_seconds": 0.142,
+  "producer": "/nix/store/398yfkdb4dfxa3g7xf6i4sir3asagd4i-cyberkrill-0.1.0/bin/cyberkrill",
+  "count": 174,
+  "construction": "Synthetic JSON substitutions and disposable files derived from the published L410/L516 captures; decompression-only public key forms. Existing BOLT11 CC-BY-4.0 provenance retained.",
+  "execution": "unshare -rn sh -c 'ip link set lo up && exec timeout --foreground 15 \"$@\"' capture \"$PRODUCER\" ...",
+  "isolation": "Temporary HOME/cwd; separate stdout/stderr/status and output existence/bytes; deterministic supplied input or closed stdin; finite foreground processes.",
+  "parser_source": "https://docs.rs/crate/chrono/0.4.42/source/src/format/parse.rs; scan.rs; parsed.rs; datetime/serde.rs",
+  "sha256": {
+    "packages/cyberkrill/test/golden/revision-reference.json": "7e1e1f5c24c2232330f5dcc3911eaddacb2493ccc7233411ab33bd9d700d7796",
+    "packages/cyberkrill/test/capture-revisions.py": "a7dd8989f63da76fbf4011ba01c2a5e99aed4a0058f0c6222eb0993abfb04982",
+    "packages/cyberkrill/test/revision-cases.py": "34b9422908c0b1dbce438133de14ed5b8cb28aa3756a9132bbad021e01122491",
+    "packages/cyberkrill/test/revisions.py": "33dd73d76cfcf51610377a4dd838db0152b06afff425cbde8058ca346fd5ede1",
+    "packages/cyberkrill/test/golden/lightning-reference.json": "e682629e8399d5da8d63b1f65ca3af92fd373ad04feab4f757e5c335671776fa",
+    "packages/cyberkrill/test/public-forms.py": "d48e83a8284d2119e420395486b8a5b8eddb21c30ab11031dea4b0af40a011d0"
+  }
+}

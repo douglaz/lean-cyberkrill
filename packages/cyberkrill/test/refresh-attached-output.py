@@ -17,7 +17,7 @@ def main():
     os.chdir(APP)
     path = Path("Cyberkrill/App.lean")
     original = path.read_bytes()
-    old, new = '"generate-mnemonic" :: outputParserArgs args.tail else args', '"generate-mnemonic" :: args.tail else args'
+    old, new = '(args.head?.getD "") :: outputParserArgs args.tail else args', '(args.head?.getD "") :: args.tail else args'
     assert original.decode().count(old) == 1
     bound = [path, Path(__file__).relative_to(APP), Path("CyberkrillTests.lean"),
         Path("test/attached-output-regressions.py"), *sorted(Path("CyberkrillTests").glob("*.lean"))]

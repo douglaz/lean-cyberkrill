@@ -112,3 +112,7 @@ def assert_paths():
 
 if __name__ == "__main__":
     selftest()
+    from importlib import import_module
+    lightning = import_module("lightning")
+    lightning.COMPARE.selftest(lightning.captures())
+    import_module("revisions").selftest()
