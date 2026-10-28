@@ -144,8 +144,8 @@ def main():
     assert l814["source_sha256"] == hashlib.sha256((APP.parents[1] / l814["source"]).read_bytes()).hexdigest()
     assert json.loads(l814["result"]["stdout"])["destination"] == lightning.COMPARE.PAYEE
     planned = [r for module in ["mutate", "lightning-mutate", "revision-mutate"] for r in import_module(module).mutations()]
-    assert len({tuple(r[1:4]) for r in planned}) == 84, "combined distinct production edits"
-    print("L814 early stop gate: observed acceptance, exit 0, empty stderr; production edits: 84 distinct including historical 26")
+    assert len({tuple(r[1:4]) for r in planned}) == 85, "combined distinct production edits"
+    print("L814 early stop gate: observed acceptance, exit 0, empty stderr; production edits: 85 distinct including historical 26")
     # The README must mirror every exact pin, including its output field/stream.
     readme = (APP.parents[1] / "README.md").read_text()
     section = readme.split("## Exact amounts vs cyberkrill\n", 1)[1].split("### Phase 7a checks", 1)[0]

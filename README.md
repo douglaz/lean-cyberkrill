@@ -64,7 +64,7 @@ exercised through the actual executable. Repeated/conflicting options, extra
 operands, missing signing keys and unknown flags are errors.
 
 Lightning file output overwrites ordinary existing files through its own
-`Services.writeOrdinaryFile` capability. The mnemonic's `Services.writeFile`
+`Services.openOrdinaryFile` capability. The mnemonic's `Services.writeFile`
 remains the private, exclusive-create writer described below. Neither route
 falls back to stdout after a file error. Input, JSON, key, signature, parser
 and output errors have fixed named diagnostics, exit 1 and empty success
@@ -74,6 +74,10 @@ Each decoder acquires its input, then creates/truncates an ordinary output
 file before decoding. Invalid invoices and LNURLs therefore leave a new empty
 file or truncate an existing file; an output-open error precedes a decode
 error. Input acquisition errors take precedence over opening output.
+Each decoder retains its opened writer through the final JSON write. A single
+FIFO consumer therefore receives the complete JSON before EOF, without a second
+open of the path. `test/fifo.py` checks both decoder commands with actual FIFOs;
+both failed with empty output before the fix and pass with the retained writer.
 Encoding parses and signs before creating output, preserving existing output
 on invalid JSON. These rules do not alter mnemonic file creation.
 
@@ -258,11 +262,13 @@ fixed in `test/golden/revision-regression-record.json`; they are historical,
 not substituted final source bindings. Raw streams remain separate in ignored
 local logs. Current restoration and mutation evidence is kept separately.
 
-The completed `test/lightning-mutate.py` run compiled **29 distinct
-production edits**, observed **92 runtime assertion failures**, restored
+The completed `test/lightning-mutate.py` run compiled **30 distinct
+production edits**, observed **94 runtime assertion failures**, restored
 each exact source, rebuilt and passed each selected check, and finished
 with a restored full `lake test` exit 0. One stream-routing edit is shared
-with the retained 26-edit set, so this adds **28 new distinct edits**.
+with the retained 26-edit set, so this adds **29 new distinct edits**.
+The additional edit reintroduces the decoder's close-and-reopen behavior and
+fails both FIFO consumers before exact restoration and passing checks.
 Concrete replacements, bounded commands, separate statuses/timings and
 detecting assertions are in `test/golden/lightning-mutation-record.json`.
 Its verification binds the final restored production, tests and checker
@@ -275,7 +281,7 @@ positional mappings and numeric/length guards, both simnet mappings,
 decoder creation/truncation/error ordering, late encoder output and scope
 closure/decision preservation. Its records bind the final production,
 capture construction, tests and checker. Across the three main sets there
-are 84 distinct production edits: 26 retained, 28 additional Lightning edits,
+are 85 distinct production edits: 26 retained, 29 additional Lightning edits,
 and these 30; repeated executions are counted separately.
 
 Run these foreground gates from the repository root:
@@ -368,8 +374,8 @@ the phase scope and its nine synthetic claim/closure shapes.
 | `nix build -L` / installed version / five installed Lightning commands | 0 / 0 / 0 | 0.576 s / 0.028 s / 0.186 s |
 | Native-library scan / proof-placeholder scan / extended-private-key scan | 0 / 0 / 0 | 0.035 s / 0.008 s / 0.010 s |
 
-The three current mutation records cover **84 distinct production edits**
-and **148 selected red executions**, with exact restoration and selected
+The three current mutation records cover **85 distinct production edits**
+and **150 selected red executions**, with exact restoration and selected
 greens. The current historical refresh drivers also exited 0 after nine
 regression reds, 18 output-option reds, and four attachment reds with four
 passing controls; all restored checks passed. These executions remain

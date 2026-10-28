@@ -123,7 +123,7 @@ structure Output where
   stdout : String := ""
   stderr : String := ""
   file : Option (String × String) := none
-  ordinaryFile : Option (String × String) := none
+  ordinaryFile : Option ((String → IO Unit) × String) := none
 
 /-- Internal injection is intentionally absent from CLI flags and environment. -/
 structure Services where
@@ -133,10 +133,11 @@ structure Services where
   writeFile : String → String → IO Unit
   readStdin : IO String := do (← IO.getStdin).readToEnd
   readFile : String → IO String := fun path => IO.FS.readFile path
-  writeOrdinaryFile : String → String → IO Unit := fun path text => do
+  openOrdinaryFile : String → IO (String → IO Unit) := fun path => do
     let handle ← IO.FS.Handle.mk path .write
-    handle.putStr text
-    handle.flush
+    return fun text => do
+      handle.putStr text
+      handle.flush
 
 def productionServices : Services where
   entropy := fun n => IO.getRandomBytes n.toUSize
@@ -167,10 +168,10 @@ def conversion (input : String) (unit : Option String) : Except Error Output := 
       ",\"msats\":" ++ toString a.msat ++ "}\n"
     return { stdout := text }
 
-private def lightningOutput (text : String) (path : Option String) (newline : Bool) : Output :=
-  match path with
+private def lightningOutput (text : String) (writer : Option (String → IO Unit)) (newline : Bool) : Output :=
+  match writer with
   | none => { stdout := text ++ if newline then "\n" else "" }
-  | some p => { ordinaryFile := some (p, text) }
+  | some write => { ordinaryFile := some (write, text) }
 
 private def lightningInput (services : Services) (input : Option String) (fromFile : Bool) :
     IO (Except Error String) := do
@@ -184,12 +185,14 @@ private def lightningInput (services : Services) (input : Option String) (fromFi
   catch _ => return .error .inputFailure
 
 -- Decoder writers are created after input acquisition and before decoding,
--- including on invalid input. Encoding opens its writer only after signing.
+-- including on invalid input, and retained until the JSON write completes.
+-- Encoding opens its writer only after signing.
 private def prepareDecodeOutput (services : Services) (path : Option String) :
-    IO (Except Error Unit) := do
+    IO (Except Error (Option (String → IO Unit))) := do
   try
-    if let some path := path then services.writeOrdinaryFile path ""
-    return .ok ()
+    match path with
+    | none => return .ok none
+    | some path => return .ok (some (← services.openOrdinaryFile path))
   catch _ => return .error .outputFailure
 
 def execute (version : String) (services : Services) : Command → IO (Except Error Output)
@@ -198,15 +201,19 @@ def execute (version : String) (services : Services) : Command → IO (Except Er
   | .convert input unit => pure (conversion input unit)
   | .decodeInvoice input path => do
     let .ok text ← lightningInput services input false | return .error .inputFailure
-    let .ok () ← prepareDecodeOutput services path | return .error .outputFailure
-    return (LightningCli.decodeInvoice text).map (lightningOutput · path false)
+    let .ok writer ← prepareDecodeOutput services path | return .error .outputFailure
+    return (LightningCli.decodeInvoice text).map (lightningOutput · writer false)
   | .decodeLnurl input path => do
     let .ok text ← lightningInput services input false | return .error .inputFailure
-    let .ok () ← prepareDecodeOutput services path | return .error .outputFailure
-    return (LightningCli.decodeLnurl text).map (lightningOutput · path false)
+    let .ok writer ← prepareDecodeOutput services path | return .error .outputFailure
+    return (LightningCli.decodeLnurl text).map (lightningOutput · writer false)
   | .encodeInvoice input key path => do
     let .ok text ← lightningInput services input true | return .error .inputFailure
-    return (LightningCli.encodeInvoice text key).map (lightningOutput · path true)
+    let invoice ← match LightningCli.encodeInvoice text key with
+      | .ok invoice => pure invoice
+      | .error e => return .error e
+    let .ok writer ← prepareDecodeOutput services path | return .error .outputFailure
+    return .ok (lightningOutput invoice writer true)
   | .mnemonic words path => do
     let .ok size := entropyBytes words | return .error .invalidWordCount
     let entropy ← try services.entropy size catch _ => return .error .entropyFailure
@@ -232,7 +239,7 @@ def runWith (version : String) (services : Services) (args : List String) : IO U
   | .ok out =>
     try
       if let some (path, text) := out.file then services.writeFile path text
-      if let some (path, text) := out.ordinaryFile then services.writeOrdinaryFile path text
+      if let some (write, text) := out.ordinaryFile then write text
       if !out.stderr.isEmpty then services.stderr out.stderr
       if !out.stdout.isEmpty then services.stdout out.stdout
       return 0

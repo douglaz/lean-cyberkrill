@@ -26,16 +26,16 @@ def mutations():
          [case("valid/L410", "success status")]),
         ("lnurl-dispatch", app, "(LightningCli.decodeLnurl text).map", "(LightningCli.decodeInvoice text).map",
          [case("lnurl-reference/cyberkrill", "success status")]),
-        ("signing-dispatch", app, "(LightningCli.encodeInvoice text key).map", "(LightningCli.decodeInvoice text).map",
+        ("signing-dispatch", app, "LightningCli.encodeInvoice text key", "LightningCli.decodeInvoice text",
          [case("encode/valid/L410", "success status")]),
         ("literal-input", app, "else return .ok value", 'else return .ok ""', [case("valid/L410", "success status")]),
         ("file-input", app, "else services.readFile value", "else pure value", [(["--routing"], "encoder input routing")]),
-        ("ordinary-file-output", app, "some p => { ordinaryFile := some (p, text) }", "some _ => { stdout := text }",
+        ("ordinary-file-output", app, "some write => { ordinaryFile := some (write, text) }", "some _ => { stdout := text }",
          [(["--routing"], "ordinary output status/streams")]),
-        ("encoded-newline", app, "(LightningCli.encodeInvoice text key).map (lightningOutput · path true)",
-         "(LightningCli.encodeInvoice text key).map (lightningOutput · path false)", [case("encode/valid/L410", "unlisted difference")]),
-        ("decoded-newline", app, "(LightningCli.decodeInvoice text).map (lightningOutput · path false)",
-         "(LightningCli.decodeInvoice text).map (lightningOutput · path true)", [case("valid/L410", "Lightning stdout newline")]),
+        ("encoded-newline", app, "lightningOutput invoice writer true",
+         "lightningOutput invoice writer false", [case("encode/valid/L410", "unlisted difference")]),
+        ("decoded-newline", app, "(LightningCli.decodeInvoice text).map (lightningOutput · writer false)",
+         "(LightningCli.decodeInvoice text).map (lightningOutput · writer true)", [case("valid/L410", "Lightning stdout newline")]),
         ("builder-field-order", adapter, "[desc, .paymentHash paymentHash,", "[.paymentHash paymentHash, desc,",
          [case("encode/valid/L410", "unlisted difference")]),
         ("builder-feature-default", adapter, ".features (2^8 + 2^14)", ".features (2^14)",
@@ -87,7 +87,15 @@ def mutations():
     rows.append(("json-enum-duplicate", "Cyberkrill/InvoiceJson.lean",
                  'if key == "network" then checkEnumSyntax value', 'if key == "network" then pure ()',
                  [case("json/duplicate-network-enum", "ordinary failure")]))
-    assert len(rows) == 29
+    rows.append(("decoder-output-handle", app,
+                 '| some path => return .ok (some (← services.openOrdinaryFile path))',
+                 '''| some path =>
+      let write ← services.openOrdinaryFile path
+      write ""
+      return .ok (some (fun text => do (← services.openOrdinaryFile path) text))''',
+                 [(["--fifo", command], "FIFO output bytes before EOF")
+                  for command in ["ln-decode-invoice", "ln-decode-lnurl"]]))
+    assert len(rows) == 30
     return rows
 
 
@@ -95,7 +103,7 @@ def bound_paths():
     paths = [APP / "Cyberkrill" / name for name in
              ["App.lean", "Amounts.lean", "Capabilities.lean", "Lightning.lean", "InvoiceJson.lean", "PrivateOutput.lean"]]
     paths += [APP / "test" / name for name in ["lightning-mutate.py", "lightning.py", "lightning-compare.py",
-              "lightning-cases.py", "compare.py", "selftest.py", "driver.py", "verify.py"]]
+              "lightning-cases.py", "compare.py", "selftest.py", "driver.py", "verify.py", "fifo.py"]]
     paths += [APP / name for name in ["Main.lean", "CyberkrillTests.lean", "lakefile.lean", "private_output.c"]]
     paths += sorted((APP / "CyberkrillTests").glob("*.lean"))
     paths += [APP / "test/golden" / name for name in ["lightning-reference.json", "lightning-routing-reference.json", "lightning-provenance.json"]]
@@ -110,10 +118,10 @@ def verify():
     data = json.loads((APP / "test/golden/lightning-mutation-record.json").read_bytes())
     assert data["source_sha256"] == fingerprints(), "stale Lightning mutation evidence"
     planned = mutations()
-    assert data["count"] == len(data["mutations"]) == len(planned) == 29
+    assert data["count"] == len(data["mutations"]) == len(planned) == 30
     edits = {(r[1], r[2], r[3]) for r in planned}
     old_edits = {(r[1], r[2], r[3]) for r in importlib.import_module("mutate").mutations()}
-    assert len(edits) == 29 and len(edits - old_edits) == data["new_distinct"] == 28
+    assert len(edits) == 30 and len(edits - old_edits) == data["new_distinct"] == 29
     executions = 0
     for record, (name, path, old, new, tests) in zip(data["mutations"], planned):
         assert (record["property"], record["file"], record["replace"], record["with_text"]) == (name, path, old, new)
@@ -124,9 +132,9 @@ def verify():
             assert check["assertion"] == assertion and check["red"]["status"] == 1 and check["green"]["status"] == 0
             assert assertion in check["red"]["failure"] and "AssertionError:" in check["red"]["failure"]
             executions += 1
-    assert executions == data["executions"] == 92
+    assert executions == data["executions"] == 94
     assert data["restored_full"]["status"] == 0
-    print("Lightning mutation evidence: 29 distinct edits (28 new), 92 runtime reds, restored full suite exit 0")
+    print("Lightning mutation evidence: 30 distinct edits (29 new), 94 runtime reds, restored full suite exit 0")
 
 
 def main():
@@ -200,8 +208,8 @@ def main():
         assert proc.returncode == 0, "restored full suite"
         assert fingerprints() == hashes, "final production/test/checker bytes restored"
         executions = sum(len(r["checks"]) for r in records)
-        assert executions == 92
-        record = dict(count=29, new_distinct=28, executions=executions,
+        assert executions == 94
+        record = dict(count=30, new_distinct=29, executions=executions,
                       source_sha256=hashes, mutations=records, restored_full=full)
         Path("test/golden/lightning-mutation-record.json").write_text(json.dumps(record, indent=2) + "\n")
     finally:

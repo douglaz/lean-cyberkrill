@@ -220,6 +220,9 @@ def routing_goldens(rows):
 
 def main():
     global EXE
+    if len(sys.argv) == 3 and sys.argv[1] == "--fifo":
+        importlib.import_module("fifo").main([sys.argv[2]])
+        return
     if sys.argv[1:] == ["--installed"]:
         EXE = ROOT / "result/bin/cyberkrill"
         rows = captures()
@@ -234,6 +237,7 @@ def main():
     else:
         assert not sys.argv[1:]
         COMPARE.selftest(rows); goldens(rows); routing(rows); routing_goldens(rows)
+        importlib.import_module("fifo").main()
 
 
 if __name__ == "__main__":
