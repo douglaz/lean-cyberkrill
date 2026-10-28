@@ -62,6 +62,17 @@ def main(only="all"):
             assert result == dict(status=1, stdout="", stderr=FAILURE), "private output write failure"
             assert target.stat().st_size == 1 and stat.S_IMODE(target.stat().st_mode) == 0o600, "private output partial file remains private"
             print("private output write failures: 1/1; partial file stays private")
+        if only in ["all", "trailing-existing"]:
+            target = root / "existing-directory"
+            target.mkdir()
+            assert run(str(target) + "/") == dict(status=1, stdout="", stderr=EXISTS), "private output existing trailing slash"
+            assert list(target.iterdir()) == [], "private output trailing directory untouched"
+            print("private output existing trailing slash: 1/1")
+        if only in ["all", "trailing-missing"]:
+            target = root / "missing-directory"
+            assert run(str(target) + "/") == dict(status=1, stdout="", stderr=FAILURE), "private output missing trailing slash"
+            assert not target.exists(), "private output missing trailing path untouched"
+            print("private output missing trailing slash: 1/1")
         if only == "all":
             refs = json.loads((APP / "test/golden/private-output-reference.json").read_bytes())
             kinds = [row["kind"] for row in refs["cases"]]
@@ -98,5 +109,5 @@ def main(only="all"):
 
 if __name__ == "__main__":
     name = sys.argv[1] if len(sys.argv) == 2 else "all"
-    assert name in ["all", "mode", "exclusive", "write-errors"] and len(sys.argv) <= 2
+    assert name in ["all", "mode", "exclusive", "write-errors", "trailing-existing", "trailing-missing"] and len(sys.argv) <= 2
     main(name)

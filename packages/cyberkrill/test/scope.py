@@ -3,6 +3,7 @@
 # Apache License 2.0, at your option; see LICENSE-MIT and LICENSE-APACHE.
 """Assert the accepted implementation scope and unchanged unrelated issue records."""
 import json
+import hashlib
 from pathlib import Path
 import re
 import subprocess
@@ -11,6 +12,17 @@ from cases import APP, ROOT
 
 BASE = "fc8ded46acc899c6b94a88bc27fa824f0b61dd13"
 ISSUE = "lck-phase-7a-app-skeleton-yx7"
+# Fixed observations for fixtures first introduced by this phase. Never derive
+# these expected values from HEAD, the index, or the current fixture bytes.
+HISTORICAL_DIGESTS = {
+    "regression-record.json": "679f3cb08ecb804ea9b46572254c56a22e766599fc8c650b780eb7e125bdf336",
+    "output-regression-record.json": "c0fa1d361be244360425341420975fab01e8f013198dfa59f48b41f5db7a930f",
+    "attached-output-regression-record.json": "451f10beafae7da7bce1c83d3e09f7181567dbc6389e409e79a1229b723483ca",
+    "reference.json": "1e7958dae384cc6811f6ab42d2b7b1a8549a0abee4ae441017b104e89d2004b0",
+    "provenance.json": "a1632beec123567b9af6f4835038e8e20598055bfa27f0fdbb167e2f0524dcc3",
+    "capture-digests.json": "df828cadece40a7a6a028863660384548de4efa488198373e3076c343e431bf6",
+    "fixture-digests.json": "789f783531c438c3934468497016c1e930e699c162e1851ede23561b1377dbbb",
+}
 
 
 def git(*args):
@@ -43,11 +55,14 @@ def main():
     if current[ISSUE]["status"] == "closed":
         assert current[ISSUE].get("closed_at") and current[ISSUE].get("close_reason"), "closure evidence missing"
     # These files must retain the original observations, not refreshed hashes.
-    head_paths = set(git("ls-tree", "-r", "--name-only", "HEAD").decode().splitlines())
-    for path in ["regression-record.json", "output-regression-record.json", "attached-output-regression-record.json", "reference.json", "provenance.json", "capture-digests.json", "fixture-digests.json"]:
+    base_paths = set(git("ls-tree", "-r", "--name-only", BASE).decode().splitlines())
+    for path, expected in HISTORICAL_DIGESTS.items():
         relative = "packages/cyberkrill/test/golden/" + path
-        anchor = "HEAD:" if relative in head_paths else ":"
-        assert (ROOT / relative).read_bytes() == git("show", anchor + relative), "historical fixture changed: " + path
+        data = (ROOT / relative).read_bytes()
+        if relative in base_paths:
+            assert data == git("show", BASE + ":" + relative), "historical fixture changed: " + path
+        else:
+            assert hashlib.sha256(data).hexdigest() == expected, "historical fixture digest changed: " + path
     flake = (ROOT / "flake.nix").read_text(encoding="utf-8")
     assert 'lakePackages = [ "sha256" "secp256k1" "bitcoin" "lightning" "fedimint-invite" "http-curl" "cyberkrill" ];' in flake
     assert 'lake build && lake test' in flake and 'bash scripts/check-link-spike.sh' in flake

@@ -7553,7 +7553,7 @@ is retained in the record. The device sink retains no output. Producer/source
 pin, script and fixture digests, licence and entropy control are recorded.
 The original 179 captures and historical regression records remain unchanged.
 
-The current mutation checker has 24 distinct production edits, adding
+The private-file correction initially added three mutations to the earlier 21:
 `private-mode` (`0600` → `0666`, detected by `private output mode 0600`),
 `private-exclusive` (remove `O_EXCL`, detected by `private output exclusive create`),
 and `private-write-error` (ignore the saved write error, detected by
@@ -7582,8 +7582,19 @@ examined 55 allowed paths and confirmed all 58 unrelated issue records unchanged
 installed `cyberkrill version` exited 0, and both scan wrappers exited 0 with
 grep's no-match status distinguished from errors. Source-byte fingerprints
 confirmed exact restoration after all mutations. Earlier tables retain their
-historical counts and timings; the current inventory is 24 distinct edits and
+historical counts and timings; that validation covered 24 distinct edits and
 179 original reference captures plus five private-file outcome captures.
+
+An existing directory with a trailing slash also receives `outputPathExists`.
+Linux can return `EISDIR` from exclusive open for either an existing or a missing
+slash-terminated path. After that open fails, the binding uses `lstat` only to
+classify the diagnostic: an existing resolved path maps to `outputPathExists`,
+while a missing one keeps `outputFailure`. This metadata check never permits an
+open or write. Two independent tests and mutations distinguish the existing and
+missing cases; the current checker has 26 distinct production edits.
+Historical fixtures now compare with the recorded master base if present there,
+or with seven fixed SHA-256 constants for observations introduced by this phase.
+They never use the current HEAD or index bytes as their preservation baseline.
 
 ## Licence
 

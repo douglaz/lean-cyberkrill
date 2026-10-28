@@ -110,16 +110,16 @@ def main():
         assert a == b and a["status"] == 0 and 32 in a["getrandom_sizes"]
     print("private output captures: 5/5, each repeated with controlled public entropy")
     record = json.loads((APP / "test/golden/mutation-record.json").read_text())
-    assert record["count"] == len(record["mutations"]) == 24
-    assert len({m["property"] for m in record["mutations"]}) == 24
-    assert len({(m["file"], m["replace"], m["with_text"]) for m in record["mutations"]}) == 24
+    assert record["count"] == len(record["mutations"]) == 26
+    assert len({m["property"] for m in record["mutations"]}) == 26
+    assert len({(m["file"], m["replace"], m["with_text"]) for m in record["mutations"]}) == 26
     for relative, expected in record["source_sha256"].items():
         assert hashlib.sha256((APP / relative).read_bytes()).hexdigest() == expected, "stale mutation evidence: " + relative
     for mutation in record["mutations"]:
         assert mutation["status"] == 1 and mutation["restored_status"] == mutation["build_status"] == 0
         assert mutation["replace"] != mutation["with_text"] and mutation["detecting_assertion"]
     assert record["restored_full"]["status"] == 0
-    print("bound production mutations: 24/24 distinct edits; restored suite: exit 0")
+    print("bound production mutations: 26/26 distinct edits; restored suite: exit 0")
     # The README must mirror every exact pin, including its output field/stream.
     readme = (APP.parents[1] / "README.md").read_text()
     section = readme.split("## Exact amounts vs cyberkrill\n", 1)[1].split("### Phase 7a checks", 1)[0]

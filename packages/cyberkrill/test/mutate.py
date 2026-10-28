@@ -64,10 +64,14 @@ def mutations():
         ("private-mode", ", 0600);", ", 0666);", "mode", "private output mode 0600"),
         ("private-exclusive", "O_CREAT | O_EXCL | O_NOFOLLOW", "O_CREAT | O_NOFOLLOW", "exclusive", "private output exclusive create"),
         ("private-write-error", "if (error != 0)", "if (0)", "write-errors", "private output write failure"),
+        ("private-trailing-existing", "if (error == EISDIR && lstat(name, &status) == 0) error = EEXIST;",
+         "if (error == EISDIR && lstat(name, &status) == 0) error = EISDIR;", "trailing-existing", "private output existing trailing slash"),
+        ("private-trailing-missing", "lstat(name, &status) == 0", "lstat(name, &status) <= 0",
+         "trailing-missing", "private output missing trailing slash"),
     ]:
         rows.append((name, PRIVATE_OUTPUT, old, new,
                      ["python3", "-B", "test/private-output.py", selector], assertion))
-    assert len(rows) == 24
+    assert len(rows) == 26
     return rows
 
 
@@ -149,7 +153,7 @@ def main():
         record = dict(count=len(records), source_sha256=fingerprints, mutations=records,
                       restored_full=dict(command=["timeout", "--foreground", "180", "lake", "test"], status=0, seconds=elapsed))
         Path("test/golden/mutation-record.json").write_text(json.dumps(record, indent=2) + "\n")
-        print("independent mutations: 24/24; restored full suite: exit 0", flush=True)
+        print("independent mutations: 26/26; restored full suite: exit 0", flush=True)
     finally:
         restore()
 
