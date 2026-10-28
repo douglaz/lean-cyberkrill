@@ -1,0 +1,22 @@
+{
+  "source": "https://github.com/douglaz/cyberkrill",
+  "commit": "27cad1faba86260b06665a89f0af5134d23525c2",
+  "path": "cyberkrill/src/main.rs",
+  "licence": "MIT OR Apache-2.0, taken under MIT",
+  "build": [
+    "nix",
+    "build",
+    "--no-link",
+    "--print-out-paths",
+    "--max-jobs",
+    "2",
+    "--cores",
+    "4",
+    "github:douglaz/cyberkrill/27cad1faba86260b06665a89f0af5134d23525c2"
+  ],
+  "build_status": 0,
+  "producer": "/nix/store/398yfkdb4dfxa3g7xf6i4sir3asagd4i-cyberkrill-0.1.0/bin/cyberkrill",
+  "cases": 179,
+  "construction": "Authored synthetic inputs from cases.py, including the 124 existing amount grammar cases; not published vectors",
+  "execution": "unshare -rn sh -c 'ip link set lo up && exec timeout --foreground 15 \"$@\"' capture \"$PRODUCER\" ...; temporary HOME; closed stdin; separate streams/status"
+}

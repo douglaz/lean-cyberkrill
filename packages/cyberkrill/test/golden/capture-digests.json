@@ -1,0 +1,6 @@
+{
+  "test/golden/reference.json": "1e7958dae384cc6811f6ab42d2b7b1a8549a0abee4ae441017b104e89d2004b0",
+  "test/golden/provenance.json": "a1632beec123567b9af6f4835038e8e20598055bfa27f0fdbb167e2f0524dcc3",
+  "test/capture.py": "b3999297de0e3c148193d65f3b89e9f4830ae9800ccfc9d7b4dc84716b70a888",
+  "test/cases.py": "78feb1ba8266b5d1934aafa19d83e41d59b412cdb38de63da88cc367b21ac2ee"
+}

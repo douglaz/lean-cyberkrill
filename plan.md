@@ -88,7 +88,8 @@ v1 commands (from the `Commands` enum in `cyberkrill/src/main.rs`): `ln-decode-i
   offline `onchain-decode-psbt` capture while the port's decoder rejects all 16; the capture and
   tests are recorded in Phase 4a's PSBT field-parity follow-up). The LNURL URL subset below is a
   fifth exception (owner decision, 2026-10-25), and the explicit fee-unit rule below is a sixth
-  (owner decision, 2026-10-26); otherwise the port exits non-zero wherever cyberkrill does.
+  (owner decision, 2026-10-26). Private, new-file-only mnemonic output below is a seventh
+  (owner decision, 2026-10-28); otherwise the port exits non-zero wherever cyberkrill does.
   Goldens cover v0; v2 gets its own tests from the BIP370 vectors; the README lists each delta.
 - **BOLT11 signing hash.** The port hashes the invoice's own lower-cased hrp and its data part as
   written (BOLT #11 L117-119; owner decision, 2026-10-21), as LND and Core Lightning do.
@@ -135,6 +136,22 @@ v1 commands (from the `Commands` enum in `cyberkrill/src/main.rs`): `ln-decode-i
   when fee commands land, goldens on safe offline fixtures assert the reference's zero exit and
   the port's named refusal instead of matching output. Tests never contact a real node to obtain
   those goldens. README lists the delta; the parity reference remains pinned.
+- **Private mnemonic output.** `generate-mnemonic -o/--output FILE` creates a new file with mode
+  `0600` at creation (a stricter caller umask may remove owner permissions). An existing destination
+  leaf, including a regular file, symlink, device, directory or FIFO, is refused with the named
+  `outputPathExists` error, non-zero exit and empty stdout (owner decision, 2026-10-28). There is no
+  overwrite, symlink following at the destination leaf, or stdout fallback. cyberkrill @ `27cad1f`
+  instead uses `File::create`, overwriting/following the destination with default permissions.
+  This is a documented, tested parity exception. Offline goldens assert its zero exit and the
+  port's named refusal on regular-file, symlink, dangling-symlink, hard-link and device fixtures;
+  controlled public entropy prevents unpredictable mnemonic capture. Tests assert new-file mode
+  `0600` under umasks `000` and `022`, unchanged existing contents, and independent mode and
+  exclusivity mutation failures. Lean 4.35.0's file-open API cannot specify a creation mode, so one
+  minimal app-local C binding is permitted as a narrow exception to the two-shim boundary. It uses
+  `O_CREAT|O_EXCL|O_NOFOLLOW` and mode `0600` atomically, checks every write and final close, and
+  reports other IO failures as `outputFailure`. No chmod-after-create security step, new package or
+  crypto/network FFI change is involved. A failed write can leave a partial private file; no fsync
+  durability guarantee is made. README records the behavior and fixture provenance.
 - **Hybrid public keys.** rust-bitcoin 0.32.8's `PublicKey::from_slice` rejects a 65-byte hybrid key
   (prefix 06/07), but cyberkrill parses two v1 inputs with libsecp256k1's own `ec_pubkey_parse`,
   which accepts one whose prefix matches y's parity: PSBT `bip32_derivation` keys (input and output

@@ -17,8 +17,15 @@ require bitcoin from ".." / "bitcoin"
 require lightning from ".." / "lightning"
 require «fedimint-invite» from ".." / "fedimint-invite"
 require «http-curl» from ".." / "http-curl"
+require Cli from ".lake" / "packages" / "Cli"
 
-lean_lib Cyberkrill
+target privateOutputShim (pkg) : System.FilePath := do
+  let src ← inputFile (pkg.dir / "private_output.c") true
+  buildO (pkg.buildDir / "c" / "private_output.o") src
+    #["-I", (← getLeanIncludeDir).toString] #["-fPIC", "-Wall", "-Wextra", "-Werror"] (← getLeanCc)
+
+lean_lib Cyberkrill where
+  moreLinkObjs := #[privateOutputShim]
 
 @[default_target]
 lean_exe cyberkrill where
@@ -27,5 +34,9 @@ lean_exe cyberkrill where
 lean_exe linkspike where
   root := `LinkSpike
 
+lean_lib CyberkrillTestSupport where
+  globs := #[.submodules `CyberkrillTests]
+
 @[test_driver]
-lean_lib CyberkrillTests
+lean_exe CyberkrillTests where
+  extraDepTargets := #[`cyberkrill]

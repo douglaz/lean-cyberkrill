@@ -1,0 +1,648 @@
+{
+  "source_sha256": {
+    "CyberkrillTests/Output.lean": "9912e5c699b4fb7c07ff5eaacd2d5d821d6585118cb17a0829b224c96965a966",
+    "CyberkrillTests/Mnemonic.lean": "49c85bcaf2327da760e08fb7fef4ea5071c4b29160481a578caa61e36200cb0e",
+    "CyberkrillTests.lean": "b733a517d73dc63a6f90fab1cbba2d661e6958a98882bd069b110170babbecae",
+    "test/output-regressions.py": "0c9c3284471ab2fde2ed27559b7a76d05a30ac8e81e1a865c3d8c4fa14d73c14",
+    "test/driver.py": "e78c2da1133bf6702e4a97f1e86a0756382bca36895f2696799c00bc5ff067e7",
+    "CyberkrillTests/Support.lean": "80dbdfd22c0478dde791bfc46ae73418a8cf838f7728bb08f248291cdb3a179c",
+    "Cyberkrill/App.lean": "938dbb99b9e11610b345888fd1579161f4bb12cf79bafcbd5d152874645208a0",
+    "test/golden/output-regression-record.json": "c0fa1d361be244360425341420975fab01e8f013198dfa59f48b41f5db7a930f"
+  },
+  "file": "Cyberkrill/App.lean",
+  "replace": "unless outputArgsValid args.tail do throw .invalidArguments",
+  "with_text": "pure ()",
+  "build": {
+    "command": [
+      "timeout",
+      "--foreground",
+      "180",
+      "lake",
+      "build",
+      "cyberkrill",
+      "CyberkrillTests"
+    ],
+    "status": 0,
+    "seconds": 13.925
+  },
+  "restore_build": {
+    "command": [
+      "timeout",
+      "--foreground",
+      "180",
+      "lake",
+      "build",
+      "cyberkrill",
+      "CyberkrillTests"
+    ],
+    "status": 0,
+    "seconds": 13.21
+  },
+  "checks": [
+    {
+      "case": 0,
+      "args": [
+        "generate-mnemonic",
+        "-o",
+        "-w"
+      ],
+      "red": {
+        "command": [
+          "timeout",
+          "--foreground",
+          "180",
+          ".lake/build/bin/CyberkrillTests",
+          "--output-refusal",
+          "0"
+        ],
+        "status": 1,
+        "seconds": 0.032
+      },
+      "detecting_assertion": "output refusal 0 status",
+      "green": {
+        "command": [
+          "timeout",
+          "--foreground",
+          "180",
+          ".lake/build/bin/CyberkrillTests",
+          "--output-refusal",
+          "0"
+        ],
+        "status": 0,
+        "seconds": 0.029
+      }
+    },
+    {
+      "case": 1,
+      "args": [
+        "generate-mnemonic",
+        "-o",
+        "--words"
+      ],
+      "red": {
+        "command": [
+          "timeout",
+          "--foreground",
+          "180",
+          ".lake/build/bin/CyberkrillTests",
+          "--output-refusal",
+          "1"
+        ],
+        "status": 1,
+        "seconds": 0.032
+      },
+      "detecting_assertion": "output refusal 1 status",
+      "green": {
+        "command": [
+          "timeout",
+          "--foreground",
+          "180",
+          ".lake/build/bin/CyberkrillTests",
+          "--output-refusal",
+          "1"
+        ],
+        "status": 0,
+        "seconds": 0.031
+      }
+    },
+    {
+      "case": 2,
+      "args": [
+        "generate-mnemonic",
+        "-o",
+        "--seed"
+      ],
+      "red": {
+        "command": [
+          "timeout",
+          "--foreground",
+          "180",
+          ".lake/build/bin/CyberkrillTests",
+          "--output-refusal",
+          "2"
+        ],
+        "status": 1,
+        "seconds": 0.031
+      },
+      "detecting_assertion": "output refusal 2 status",
+      "green": {
+        "command": [
+          "timeout",
+          "--foreground",
+          "180",
+          ".lake/build/bin/CyberkrillTests",
+          "--output-refusal",
+          "2"
+        ],
+        "status": 0,
+        "seconds": 0.029
+      }
+    },
+    {
+      "case": 3,
+      "args": [
+        "generate-mnemonic",
+        "-o",
+        "-name"
+      ],
+      "red": {
+        "command": [
+          "timeout",
+          "--foreground",
+          "180",
+          ".lake/build/bin/CyberkrillTests",
+          "--output-refusal",
+          "3"
+        ],
+        "status": 1,
+        "seconds": 0.031
+      },
+      "detecting_assertion": "output refusal 3 status",
+      "green": {
+        "command": [
+          "timeout",
+          "--foreground",
+          "180",
+          ".lake/build/bin/CyberkrillTests",
+          "--output-refusal",
+          "3"
+        ],
+        "status": 0,
+        "seconds": 0.029
+      }
+    },
+    {
+      "case": 4,
+      "args": [
+        "generate-mnemonic",
+        "-o",
+        "-h"
+      ],
+      "red": {
+        "command": [
+          "timeout",
+          "--foreground",
+          "180",
+          ".lake/build/bin/CyberkrillTests",
+          "--output-refusal",
+          "4"
+        ],
+        "status": 1,
+        "seconds": 0.033
+      },
+      "detecting_assertion": "output refusal 4 status",
+      "green": {
+        "command": [
+          "timeout",
+          "--foreground",
+          "180",
+          ".lake/build/bin/CyberkrillTests",
+          "--output-refusal",
+          "4"
+        ],
+        "status": 0,
+        "seconds": 0.028
+      }
+    },
+    {
+      "case": 5,
+      "args": [
+        "generate-mnemonic",
+        "-o",
+        "--help"
+      ],
+      "red": {
+        "command": [
+          "timeout",
+          "--foreground",
+          "180",
+          ".lake/build/bin/CyberkrillTests",
+          "--output-refusal",
+          "5"
+        ],
+        "status": 1,
+        "seconds": 0.03
+      },
+      "detecting_assertion": "output refusal 5 status",
+      "green": {
+        "command": [
+          "timeout",
+          "--foreground",
+          "180",
+          ".lake/build/bin/CyberkrillTests",
+          "--output-refusal",
+          "5"
+        ],
+        "status": 0,
+        "seconds": 0.028
+      }
+    },
+    {
+      "case": 6,
+      "args": [
+        "generate-mnemonic",
+        "-o",
+        "--output"
+      ],
+      "red": {
+        "command": [
+          "timeout",
+          "--foreground",
+          "180",
+          ".lake/build/bin/CyberkrillTests",
+          "--output-refusal",
+          "6"
+        ],
+        "status": 1,
+        "seconds": 0.031
+      },
+      "detecting_assertion": "output refusal 6 status",
+      "green": {
+        "command": [
+          "timeout",
+          "--foreground",
+          "180",
+          ".lake/build/bin/CyberkrillTests",
+          "--output-refusal",
+          "6"
+        ],
+        "status": 0,
+        "seconds": 0.027
+      }
+    },
+    {
+      "case": 7,
+      "args": [
+        "generate-mnemonic",
+        "-o",
+        "-o"
+      ],
+      "red": {
+        "command": [
+          "timeout",
+          "--foreground",
+          "180",
+          ".lake/build/bin/CyberkrillTests",
+          "--output-refusal",
+          "7"
+        ],
+        "status": 1,
+        "seconds": 0.036
+      },
+      "detecting_assertion": "output refusal 7 status",
+      "green": {
+        "command": [
+          "timeout",
+          "--foreground",
+          "180",
+          ".lake/build/bin/CyberkrillTests",
+          "--output-refusal",
+          "7"
+        ],
+        "status": 0,
+        "seconds": 0.029
+      }
+    },
+    {
+      "case": 8,
+      "args": [
+        "generate-mnemonic",
+        "-o",
+        "--"
+      ],
+      "red": {
+        "command": [
+          "timeout",
+          "--foreground",
+          "180",
+          ".lake/build/bin/CyberkrillTests",
+          "--output-refusal",
+          "8"
+        ],
+        "status": 1,
+        "seconds": 0.033
+      },
+      "detecting_assertion": "output refusal 8 status",
+      "green": {
+        "command": [
+          "timeout",
+          "--foreground",
+          "180",
+          ".lake/build/bin/CyberkrillTests",
+          "--output-refusal",
+          "8"
+        ],
+        "status": 0,
+        "seconds": 0.031
+      }
+    },
+    {
+      "case": 9,
+      "args": [
+        "generate-mnemonic",
+        "--output",
+        "-w"
+      ],
+      "red": {
+        "command": [
+          "timeout",
+          "--foreground",
+          "180",
+          ".lake/build/bin/CyberkrillTests",
+          "--output-refusal",
+          "9"
+        ],
+        "status": 1,
+        "seconds": 0.031
+      },
+      "detecting_assertion": "output refusal 9 status",
+      "green": {
+        "command": [
+          "timeout",
+          "--foreground",
+          "180",
+          ".lake/build/bin/CyberkrillTests",
+          "--output-refusal",
+          "9"
+        ],
+        "status": 0,
+        "seconds": 0.031
+      }
+    },
+    {
+      "case": 10,
+      "args": [
+        "generate-mnemonic",
+        "--output",
+        "--words"
+      ],
+      "red": {
+        "command": [
+          "timeout",
+          "--foreground",
+          "180",
+          ".lake/build/bin/CyberkrillTests",
+          "--output-refusal",
+          "10"
+        ],
+        "status": 1,
+        "seconds": 0.031
+      },
+      "detecting_assertion": "output refusal 10 status",
+      "green": {
+        "command": [
+          "timeout",
+          "--foreground",
+          "180",
+          ".lake/build/bin/CyberkrillTests",
+          "--output-refusal",
+          "10"
+        ],
+        "status": 0,
+        "seconds": 0.027
+      }
+    },
+    {
+      "case": 11,
+      "args": [
+        "generate-mnemonic",
+        "--output",
+        "--seed"
+      ],
+      "red": {
+        "command": [
+          "timeout",
+          "--foreground",
+          "180",
+          ".lake/build/bin/CyberkrillTests",
+          "--output-refusal",
+          "11"
+        ],
+        "status": 1,
+        "seconds": 0.037
+      },
+      "detecting_assertion": "output refusal 11 status",
+      "green": {
+        "command": [
+          "timeout",
+          "--foreground",
+          "180",
+          ".lake/build/bin/CyberkrillTests",
+          "--output-refusal",
+          "11"
+        ],
+        "status": 0,
+        "seconds": 0.029
+      }
+    },
+    {
+      "case": 12,
+      "args": [
+        "generate-mnemonic",
+        "--output",
+        "-name"
+      ],
+      "red": {
+        "command": [
+          "timeout",
+          "--foreground",
+          "180",
+          ".lake/build/bin/CyberkrillTests",
+          "--output-refusal",
+          "12"
+        ],
+        "status": 1,
+        "seconds": 0.03
+      },
+      "detecting_assertion": "output refusal 12 status",
+      "green": {
+        "command": [
+          "timeout",
+          "--foreground",
+          "180",
+          ".lake/build/bin/CyberkrillTests",
+          "--output-refusal",
+          "12"
+        ],
+        "status": 0,
+        "seconds": 0.027
+      }
+    },
+    {
+      "case": 13,
+      "args": [
+        "generate-mnemonic",
+        "--output",
+        "-h"
+      ],
+      "red": {
+        "command": [
+          "timeout",
+          "--foreground",
+          "180",
+          ".lake/build/bin/CyberkrillTests",
+          "--output-refusal",
+          "13"
+        ],
+        "status": 1,
+        "seconds": 0.03
+      },
+      "detecting_assertion": "output refusal 13 status",
+      "green": {
+        "command": [
+          "timeout",
+          "--foreground",
+          "180",
+          ".lake/build/bin/CyberkrillTests",
+          "--output-refusal",
+          "13"
+        ],
+        "status": 0,
+        "seconds": 0.036
+      }
+    },
+    {
+      "case": 14,
+      "args": [
+        "generate-mnemonic",
+        "--output",
+        "--help"
+      ],
+      "red": {
+        "command": [
+          "timeout",
+          "--foreground",
+          "180",
+          ".lake/build/bin/CyberkrillTests",
+          "--output-refusal",
+          "14"
+        ],
+        "status": 1,
+        "seconds": 0.035
+      },
+      "detecting_assertion": "output refusal 14 status",
+      "green": {
+        "command": [
+          "timeout",
+          "--foreground",
+          "180",
+          ".lake/build/bin/CyberkrillTests",
+          "--output-refusal",
+          "14"
+        ],
+        "status": 0,
+        "seconds": 0.03
+      }
+    },
+    {
+      "case": 15,
+      "args": [
+        "generate-mnemonic",
+        "--output",
+        "--output"
+      ],
+      "red": {
+        "command": [
+          "timeout",
+          "--foreground",
+          "180",
+          ".lake/build/bin/CyberkrillTests",
+          "--output-refusal",
+          "15"
+        ],
+        "status": 1,
+        "seconds": 0.031
+      },
+      "detecting_assertion": "output refusal 15 status",
+      "green": {
+        "command": [
+          "timeout",
+          "--foreground",
+          "180",
+          ".lake/build/bin/CyberkrillTests",
+          "--output-refusal",
+          "15"
+        ],
+        "status": 0,
+        "seconds": 0.029
+      }
+    },
+    {
+      "case": 16,
+      "args": [
+        "generate-mnemonic",
+        "--output",
+        "-o"
+      ],
+      "red": {
+        "command": [
+          "timeout",
+          "--foreground",
+          "180",
+          ".lake/build/bin/CyberkrillTests",
+          "--output-refusal",
+          "16"
+        ],
+        "status": 1,
+        "seconds": 0.03
+      },
+      "detecting_assertion": "output refusal 16 status",
+      "green": {
+        "command": [
+          "timeout",
+          "--foreground",
+          "180",
+          ".lake/build/bin/CyberkrillTests",
+          "--output-refusal",
+          "16"
+        ],
+        "status": 0,
+        "seconds": 0.027
+      }
+    },
+    {
+      "case": 17,
+      "args": [
+        "generate-mnemonic",
+        "--output",
+        "--"
+      ],
+      "red": {
+        "command": [
+          "timeout",
+          "--foreground",
+          "180",
+          ".lake/build/bin/CyberkrillTests",
+          "--output-refusal",
+          "17"
+        ],
+        "status": 1,
+        "seconds": 0.031
+      },
+      "detecting_assertion": "output refusal 17 status",
+      "green": {
+        "command": [
+          "timeout",
+          "--foreground",
+          "180",
+          ".lake/build/bin/CyberkrillTests",
+          "--output-refusal",
+          "17"
+        ],
+        "status": 0,
+        "seconds": 0.028
+      }
+    }
+  ],
+  "restored_all": {
+    "command": [
+      "timeout",
+      "--foreground",
+      "180",
+      ".lake/build/bin/CyberkrillTests",
+      "--output-boundaries"
+    ],
+    "status": 0,
+    "seconds": 0.029
+  }
+}

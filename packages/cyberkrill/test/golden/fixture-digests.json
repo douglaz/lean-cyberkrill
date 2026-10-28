@@ -1,0 +1,7 @@
+{
+  "packages/bitcoin/test-data/cli.json": "0d46cc9ab499e0af75a49a438fc0657f0f5703c3dcc41edc1dddd16553462aa1",
+  "packages/bitcoin/test-data/cyberkrill-amounts.json": "58c39d5c5c7327e65ec954199eb9721467b50f8225d22b35016c56394d552a10",
+  "packages/bitcoin/test-data/bip39-english-vectors.json": "f33a092cb70e915205d960a5b9bc517396a9589846f646f32e44c195cc8a3165",
+  "packages/secp256k1/bolt11.json": "dedc45490d3169c1ae4b58c34a77ebc48144f7af2ae69b56f1eec1519af4127c",
+  "packages/lightning/test-data/bolt11.json": "462044b66541fcbdc172ca737a6966ffbbee1c34191f2346b943607d4b89c7b7"
+}

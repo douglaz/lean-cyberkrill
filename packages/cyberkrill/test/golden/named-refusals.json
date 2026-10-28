@@ -1,0 +1,292 @@
+[
+  {
+    "case": "sub-msat-btc",
+    "reference_status": 0,
+    "port_status": 1,
+    "error": "subMillisatoshi",
+    "reference_stdout": "{\n  \"input\": \"0.000000000001\",\n  \"btc\": 0.0,\n  \"sats\": 0,\n  \"msats\": 0\n}",
+    "reference_stderr": "",
+    "port_stderr": "subMillisatoshi: Amount has sub-msat precision\n",
+    "rationale": "Documented sub-msat rejection class"
+  },
+  {
+    "case": "sub-msat-sats",
+    "reference_status": 0,
+    "port_status": 1,
+    "error": "subMillisatoshi",
+    "reference_stdout": "{\n  \"input\": \"0.0001sat\",\n  \"btc\": 0.0,\n  \"sats\": 0,\n  \"msats\": 0\n}",
+    "reference_stderr": "",
+    "port_stderr": "subMillisatoshi: Amount has sub-msat precision\n",
+    "rationale": "Documented sub-msat rejection class"
+  },
+  {
+    "case": "exponent-1e-3",
+    "reference_status": 0,
+    "port_status": 1,
+    "error": "invalidNumber",
+    "reference_stdout": "{\n  \"input\": \"1e-3\",\n  \"btc\": 0.001,\n  \"sats\": 100000,\n  \"msats\": 100000000\n}",
+    "reference_stderr": "",
+    "port_stderr": "invalidNumber: Expected a finite decimal without exponent syntax\n",
+    "rationale": "Documented exponent rejection class"
+  },
+  {
+    "case": "exponent-1E-3",
+    "reference_status": 0,
+    "port_status": 1,
+    "error": "invalidNumber",
+    "reference_stdout": "{\n  \"input\": \"1E-3\",\n  \"btc\": 0.001,\n  \"sats\": 100000,\n  \"msats\": 100000000\n}",
+    "reference_stderr": "",
+    "port_stderr": "invalidNumber: Expected a finite decimal without exponent syntax\n",
+    "rationale": "Documented exponent rejection class"
+  },
+  {
+    "case": "exponent-1e3",
+    "reference_status": 0,
+    "port_status": 1,
+    "error": "invalidNumber",
+    "reference_stdout": "{\n  \"input\": \"1e3\",\n  \"btc\": 1000.0,\n  \"sats\": 100000000000,\n  \"msats\": 100000000000000\n}",
+    "reference_stderr": "",
+    "port_stderr": "invalidNumber: Expected a finite decimal without exponent syntax\n",
+    "rationale": "Documented exponent rejection class"
+  },
+  {
+    "case": "exponent-1e-3sat",
+    "reference_status": 0,
+    "port_status": 1,
+    "error": "invalidNumber",
+    "reference_stdout": "{\n  \"input\": \"1e-3sat\",\n  \"btc\": 1e-11,\n  \"sats\": 0,\n  \"msats\": 1\n}",
+    "reference_stderr": "",
+    "port_stderr": "invalidNumber: Expected a finite decimal without exponent syntax\n",
+    "rationale": "Documented exponent rejection class"
+  },
+  {
+    "case": "exponent-+1e0btc",
+    "reference_status": 0,
+    "port_status": 1,
+    "error": "invalidNumber",
+    "reference_stdout": "{\n  \"input\": \"+1e0btc\",\n  \"btc\": 1.0,\n  \"sats\": 100000000,\n  \"msats\": 100000000000\n}",
+    "reference_stderr": "",
+    "port_stderr": "invalidNumber: Expected a finite decimal without exponent syntax\n",
+    "rationale": "Documented exponent rejection class"
+  },
+  {
+    "case": "exponent--0e3",
+    "reference_status": 0,
+    "port_status": 1,
+    "error": "invalidNumber",
+    "reference_stdout": "{\n  \"input\": \"-0e3\",\n  \"btc\": 0.0,\n  \"sats\": 0,\n  \"msats\": 0\n}",
+    "reference_stderr": "",
+    "port_stderr": "invalidNumber: Expected a finite decimal without exponent syntax\n",
+    "rationale": "Documented exponent rejection class"
+  },
+  {
+    "case": "nonfinite-inf",
+    "reference_status": 0,
+    "port_status": 1,
+    "error": "invalidNumber",
+    "reference_stdout": "{\n  \"input\": \"inf\",\n  \"btc\": 184467440.7370955,\n  \"sats\": 18446744073709551,\n  \"msats\": 18446744073709551615\n}",
+    "reference_stderr": "",
+    "port_stderr": "invalidNumber: Expected a finite decimal without exponent syntax\n",
+    "rationale": "Documented nonfinite rejection class"
+  },
+  {
+    "case": "nonfinite-infbtc",
+    "reference_status": 0,
+    "port_status": 1,
+    "error": "invalidNumber",
+    "reference_stdout": "{\n  \"input\": \"infbtc\",\n  \"btc\": 184467440.7370955,\n  \"sats\": 18446744073709551,\n  \"msats\": 18446744073709551615\n}",
+    "reference_stderr": "",
+    "port_stderr": "invalidNumber: Expected a finite decimal without exponent syntax\n",
+    "rationale": "Documented nonfinite rejection class"
+  },
+  {
+    "case": "nonfinite-infsat",
+    "reference_status": 0,
+    "port_status": 1,
+    "error": "invalidNumber",
+    "reference_stdout": "{\n  \"input\": \"infsat\",\n  \"btc\": 184467440.7370955,\n  \"sats\": 18446744073709551,\n  \"msats\": 18446744073709551615\n}",
+    "reference_stderr": "",
+    "port_stderr": "invalidNumber: Expected a finite decimal without exponent syntax\n",
+    "rationale": "Documented nonfinite rejection class"
+  },
+  {
+    "case": "nonfinite-+inf",
+    "reference_status": 0,
+    "port_status": 1,
+    "error": "invalidNumber",
+    "reference_stdout": "{\n  \"input\": \"+inf\",\n  \"btc\": 184467440.7370955,\n  \"sats\": 18446744073709551,\n  \"msats\": 18446744073709551615\n}",
+    "reference_stderr": "",
+    "port_stderr": "invalidNumber: Expected a finite decimal without exponent syntax\n",
+    "rationale": "Documented nonfinite rejection class"
+  },
+  {
+    "case": "nonfinite-+infbtc",
+    "reference_status": 0,
+    "port_status": 1,
+    "error": "invalidNumber",
+    "reference_stdout": "{\n  \"input\": \"+infbtc\",\n  \"btc\": 184467440.7370955,\n  \"sats\": 18446744073709551,\n  \"msats\": 18446744073709551615\n}",
+    "reference_stderr": "",
+    "port_stderr": "invalidNumber: Expected a finite decimal without exponent syntax\n",
+    "rationale": "Documented nonfinite rejection class"
+  },
+  {
+    "case": "nonfinite-+infsat",
+    "reference_status": 0,
+    "port_status": 1,
+    "error": "invalidNumber",
+    "reference_stdout": "{\n  \"input\": \"+infsat\",\n  \"btc\": 184467440.7370955,\n  \"sats\": 18446744073709551,\n  \"msats\": 18446744073709551615\n}",
+    "reference_stderr": "",
+    "port_stderr": "invalidNumber: Expected a finite decimal without exponent syntax\n",
+    "rationale": "Documented nonfinite rejection class"
+  },
+  {
+    "case": "nonfinite-infinity",
+    "reference_status": 0,
+    "port_status": 1,
+    "error": "invalidNumber",
+    "reference_stdout": "{\n  \"input\": \"infinity\",\n  \"btc\": 184467440.7370955,\n  \"sats\": 18446744073709551,\n  \"msats\": 18446744073709551615\n}",
+    "reference_stderr": "",
+    "port_stderr": "invalidNumber: Expected a finite decimal without exponent syntax\n",
+    "rationale": "Documented nonfinite rejection class"
+  },
+  {
+    "case": "nonfinite-infinitybtc",
+    "reference_status": 0,
+    "port_status": 1,
+    "error": "invalidNumber",
+    "reference_stdout": "{\n  \"input\": \"infinitybtc\",\n  \"btc\": 184467440.7370955,\n  \"sats\": 18446744073709551,\n  \"msats\": 18446744073709551615\n}",
+    "reference_stderr": "",
+    "port_stderr": "invalidNumber: Expected a finite decimal without exponent syntax\n",
+    "rationale": "Documented nonfinite rejection class"
+  },
+  {
+    "case": "nonfinite-infinitysat",
+    "reference_status": 0,
+    "port_status": 1,
+    "error": "invalidNumber",
+    "reference_stdout": "{\n  \"input\": \"infinitysat\",\n  \"btc\": 184467440.7370955,\n  \"sats\": 18446744073709551,\n  \"msats\": 18446744073709551615\n}",
+    "reference_stderr": "",
+    "port_stderr": "invalidNumber: Expected a finite decimal without exponent syntax\n",
+    "rationale": "Documented nonfinite rejection class"
+  },
+  {
+    "case": "nonfinite-+infinity",
+    "reference_status": 0,
+    "port_status": 1,
+    "error": "invalidNumber",
+    "reference_stdout": "{\n  \"input\": \"+infinity\",\n  \"btc\": 184467440.7370955,\n  \"sats\": 18446744073709551,\n  \"msats\": 18446744073709551615\n}",
+    "reference_stderr": "",
+    "port_stderr": "invalidNumber: Expected a finite decimal without exponent syntax\n",
+    "rationale": "Documented nonfinite rejection class"
+  },
+  {
+    "case": "nonfinite-+infinitybtc",
+    "reference_status": 0,
+    "port_status": 1,
+    "error": "invalidNumber",
+    "reference_stdout": "{\n  \"input\": \"+infinitybtc\",\n  \"btc\": 184467440.7370955,\n  \"sats\": 18446744073709551,\n  \"msats\": 18446744073709551615\n}",
+    "reference_stderr": "",
+    "port_stderr": "invalidNumber: Expected a finite decimal without exponent syntax\n",
+    "rationale": "Documented nonfinite rejection class"
+  },
+  {
+    "case": "nonfinite-+infinitysat",
+    "reference_status": 0,
+    "port_status": 1,
+    "error": "invalidNumber",
+    "reference_stdout": "{\n  \"input\": \"+infinitysat\",\n  \"btc\": 184467440.7370955,\n  \"sats\": 18446744073709551,\n  \"msats\": 18446744073709551615\n}",
+    "reference_stderr": "",
+    "port_stderr": "invalidNumber: Expected a finite decimal without exponent syntax\n",
+    "rationale": "Documented nonfinite rejection class"
+  },
+  {
+    "case": "nonfinite-nan",
+    "reference_status": 0,
+    "port_status": 1,
+    "error": "invalidNumber",
+    "reference_stdout": "{\n  \"input\": \"nan\",\n  \"btc\": 0.0,\n  \"sats\": 0,\n  \"msats\": 0\n}",
+    "reference_stderr": "",
+    "port_stderr": "invalidNumber: Expected a finite decimal without exponent syntax\n",
+    "rationale": "Documented nonfinite rejection class"
+  },
+  {
+    "case": "nonfinite-nanbtc",
+    "reference_status": 0,
+    "port_status": 1,
+    "error": "invalidNumber",
+    "reference_stdout": "{\n  \"input\": \"nanbtc\",\n  \"btc\": 0.0,\n  \"sats\": 0,\n  \"msats\": 0\n}",
+    "reference_stderr": "",
+    "port_stderr": "invalidNumber: Expected a finite decimal without exponent syntax\n",
+    "rationale": "Documented nonfinite rejection class"
+  },
+  {
+    "case": "nonfinite-nansat",
+    "reference_status": 0,
+    "port_status": 1,
+    "error": "invalidNumber",
+    "reference_stdout": "{\n  \"input\": \"nansat\",\n  \"btc\": 0.0,\n  \"sats\": 0,\n  \"msats\": 0\n}",
+    "reference_stderr": "",
+    "port_stderr": "invalidNumber: Expected a finite decimal without exponent syntax\n",
+    "rationale": "Documented nonfinite rejection class"
+  },
+  {
+    "case": "nonfinite-+nan",
+    "reference_status": 0,
+    "port_status": 1,
+    "error": "invalidNumber",
+    "reference_stdout": "{\n  \"input\": \"+nan\",\n  \"btc\": 0.0,\n  \"sats\": 0,\n  \"msats\": 0\n}",
+    "reference_stderr": "",
+    "port_stderr": "invalidNumber: Expected a finite decimal without exponent syntax\n",
+    "rationale": "Documented nonfinite rejection class"
+  },
+  {
+    "case": "nonfinite-+nanbtc",
+    "reference_status": 0,
+    "port_status": 1,
+    "error": "invalidNumber",
+    "reference_stdout": "{\n  \"input\": \"+nanbtc\",\n  \"btc\": 0.0,\n  \"sats\": 0,\n  \"msats\": 0\n}",
+    "reference_stderr": "",
+    "port_stderr": "invalidNumber: Expected a finite decimal without exponent syntax\n",
+    "rationale": "Documented nonfinite rejection class"
+  },
+  {
+    "case": "nonfinite-+nansat",
+    "reference_status": 0,
+    "port_status": 1,
+    "error": "invalidNumber",
+    "reference_stdout": "{\n  \"input\": \"+nansat\",\n  \"btc\": 0.0,\n  \"sats\": 0,\n  \"msats\": 0\n}",
+    "reference_stderr": "",
+    "port_stderr": "invalidNumber: Expected a finite decimal without exponent syntax\n",
+    "rationale": "Documented nonfinite rejection class"
+  },
+  {
+    "case": "nonfinite--nan",
+    "reference_status": 0,
+    "port_status": 1,
+    "error": "invalidNumber",
+    "reference_stdout": "{\n  \"input\": \"-nan\",\n  \"btc\": 0.0,\n  \"sats\": 0,\n  \"msats\": 0\n}",
+    "reference_stderr": "",
+    "port_stderr": "invalidNumber: Expected a finite decimal without exponent syntax\n",
+    "rationale": "Documented nonfinite rejection class"
+  },
+  {
+    "case": "nonfinite--nanbtc",
+    "reference_status": 0,
+    "port_status": 1,
+    "error": "invalidNumber",
+    "reference_stdout": "{\n  \"input\": \"-nanbtc\",\n  \"btc\": 0.0,\n  \"sats\": 0,\n  \"msats\": 0\n}",
+    "reference_stderr": "",
+    "port_stderr": "invalidNumber: Expected a finite decimal without exponent syntax\n",
+    "rationale": "Documented nonfinite rejection class"
+  },
+  {
+    "case": "nonfinite--nansat",
+    "reference_status": 0,
+    "port_status": 1,
+    "error": "invalidNumber",
+    "reference_stdout": "{\n  \"input\": \"-nansat\",\n  \"btc\": 0.0,\n  \"sats\": 0,\n  \"msats\": 0\n}",
+    "reference_stderr": "",
+    "port_stderr": "invalidNumber: Expected a finite decimal without exponent syntax\n",
+    "rationale": "Documented nonfinite rejection class"
+  }
+]

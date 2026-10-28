@@ -1,0 +1,184 @@
+{
+  "provenance": {
+    "source": "https://github.com/douglaz/cyberkrill",
+    "commit": "27cad1faba86260b06665a89f0af5134d23525c2",
+    "path": "cyberkrill/src/main.rs:2649-2697",
+    "licence": "MIT OR Apache-2.0, taken under MIT",
+    "build": [
+      "nix",
+      "build",
+      "--no-link",
+      "--print-out-paths",
+      "--max-jobs",
+      "2",
+      "--cores",
+      "4",
+      "github:douglaz/cyberkrill/27cad1faba86260b06665a89f0af5134d23525c2"
+    ],
+    "build_status": 0,
+    "producer": "/nix/store/398yfkdb4dfxa3g7xf6i4sir3asagd4i-cyberkrill-0.1.0/bin/cyberkrill",
+    "execution": "unshare -rn; loopback only; temporary HOME; closed stdin; timeout; umask 022; two executions per case",
+    "entropy": "Capture-only ptrace replaces main-thread getrandom before kernel execution with repeated published BIP39 vector 0 bytes. The pinned RNG derives synthetic public entropy; no unpredictable phrase is drawn or retained.",
+    "fixture": "packages/bitcoin/test-data/bip39-english-vectors.json",
+    "fixture_sha256": "f33a092cb70e915205d960a5b9bc517396a9589846f646f32e44c195cc8a3165",
+    "script_sha256": {
+      "test/capture-private-output.py": "68cbb6d82e5713b6483535f0074fb6a45b11a0126eacc6b51c22472cf13f4744",
+      "test/reference-entropy.py": "20d65a17b612cafd57f086ff7c366cb23f36fd2249052aae997258f9db78dc14"
+    }
+  },
+  "cases": [
+    {
+      "id": "mnemonic-output-regular",
+      "kind": "regular",
+      "reference": {
+        "status": 0,
+        "stdout": "",
+        "stderr": ""
+      },
+      "repetitions": [
+        {
+          "status": 0,
+          "getrandom_sizes": [
+            16,
+            0,
+            32
+          ],
+          "seed_source": "published BIP39 English vector 0; repeated zero bytes",
+          "output_sha256": "9602037f7a11082a641ca0cd2ed104233a9feb545beac8d404b5708a8f66c8fc"
+        },
+        {
+          "status": 0,
+          "getrandom_sizes": [
+            16,
+            0,
+            32
+          ],
+          "seed_source": "published BIP39 English vector 0; repeated zero bytes",
+          "output_sha256": "9602037f7a11082a641ca0cd2ed104233a9feb545beac8d404b5708a8f66c8fc"
+        }
+      ]
+    },
+    {
+      "id": "mnemonic-output-symlink",
+      "kind": "symlink",
+      "reference": {
+        "status": 0,
+        "stdout": "",
+        "stderr": ""
+      },
+      "repetitions": [
+        {
+          "status": 0,
+          "getrandom_sizes": [
+            16,
+            0,
+            32
+          ],
+          "seed_source": "published BIP39 English vector 0; repeated zero bytes",
+          "output_sha256": "9602037f7a11082a641ca0cd2ed104233a9feb545beac8d404b5708a8f66c8fc"
+        },
+        {
+          "status": 0,
+          "getrandom_sizes": [
+            16,
+            0,
+            32
+          ],
+          "seed_source": "published BIP39 English vector 0; repeated zero bytes",
+          "output_sha256": "9602037f7a11082a641ca0cd2ed104233a9feb545beac8d404b5708a8f66c8fc"
+        }
+      ]
+    },
+    {
+      "id": "mnemonic-output-dangling-symlink",
+      "kind": "dangling-symlink",
+      "reference": {
+        "status": 0,
+        "stdout": "",
+        "stderr": ""
+      },
+      "repetitions": [
+        {
+          "status": 0,
+          "getrandom_sizes": [
+            16,
+            0,
+            32
+          ],
+          "seed_source": "published BIP39 English vector 0; repeated zero bytes",
+          "output_sha256": "9602037f7a11082a641ca0cd2ed104233a9feb545beac8d404b5708a8f66c8fc"
+        },
+        {
+          "status": 0,
+          "getrandom_sizes": [
+            16,
+            0,
+            32
+          ],
+          "seed_source": "published BIP39 English vector 0; repeated zero bytes",
+          "output_sha256": "9602037f7a11082a641ca0cd2ed104233a9feb545beac8d404b5708a8f66c8fc"
+        }
+      ]
+    },
+    {
+      "id": "mnemonic-output-hardlink",
+      "kind": "hardlink",
+      "reference": {
+        "status": 0,
+        "stdout": "",
+        "stderr": ""
+      },
+      "repetitions": [
+        {
+          "status": 0,
+          "getrandom_sizes": [
+            16,
+            0,
+            32
+          ],
+          "seed_source": "published BIP39 English vector 0; repeated zero bytes",
+          "output_sha256": "9602037f7a11082a641ca0cd2ed104233a9feb545beac8d404b5708a8f66c8fc"
+        },
+        {
+          "status": 0,
+          "getrandom_sizes": [
+            16,
+            0,
+            32
+          ],
+          "seed_source": "published BIP39 English vector 0; repeated zero bytes",
+          "output_sha256": "9602037f7a11082a641ca0cd2ed104233a9feb545beac8d404b5708a8f66c8fc"
+        }
+      ]
+    },
+    {
+      "id": "mnemonic-output-device",
+      "kind": "device",
+      "reference": {
+        "status": 0,
+        "stdout": "",
+        "stderr": ""
+      },
+      "repetitions": [
+        {
+          "status": 0,
+          "getrandom_sizes": [
+            16,
+            0,
+            32
+          ],
+          "seed_source": "published BIP39 English vector 0; repeated zero bytes"
+        },
+        {
+          "status": 0,
+          "getrandom_sizes": [
+            16,
+            0,
+            32
+          ],
+          "seed_source": "published BIP39 English vector 0; repeated zero bytes"
+        }
+      ]
+    }
+  ]
+}

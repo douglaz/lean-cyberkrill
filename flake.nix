@@ -2,12 +2,16 @@
   description = "lean-cyberkrill: Bitcoin, Lightning and Fedimint libraries for Lean 4, and the cyberkrill CLI";
 
   inputs.nixpkgs.url = "github:NixOS/nixpkgs/nixos-unstable";
+  inputs.lean4-cli = {
+    url = "github:leanprover/lean4-cli/c24fe6078c630e89b489bffe59b3e20ac30d12c8";
+    flake = false;
+  };
   inputs.wycheproof = {
     url = "github:C2SP/wycheproof/7a325932231bd7a724c791c8b0d65ea4d6d2f435";
     flake = false;
   };
 
-  outputs = { self, nixpkgs, wycheproof }:
+  outputs = { self, nixpkgs, wycheproof, lean4-cli }:
     let
       system = "x86_64-linux";
       pkgs = nixpkgs.legacyPackages.${system};
@@ -78,6 +82,7 @@
       '';
 
       ffiEnvironment = {
+        LEAN4_CLI_DIR = "${lean4-cli}";
         WYCHEPROOF_JSON = wycheproofJson;
         WYCHEPROOF_DER_JSON = "${wycheproof}/testvectors_v1/ecdsa_secp256k1_sha256_test.json";
         WYCHEPROOF_DIGESTS = "${wycheproofDigests}";
@@ -98,6 +103,9 @@
         buildInputs = [ pkgs.secp256k1 pkgs.curl pkgs.openssl ];
         buildPhase = ''
           export HOME=$TMPDIR
+          mkdir -p packages/cyberkrill/.lake/packages
+          cp -r ${lean4-cli} packages/cyberkrill/.lake/packages/Cli
+          chmod -R u+w packages/cyberkrill/.lake/packages/Cli
           for p in ${pkgs.lib.concatStringsSep " " lakePackages}; do
             (cd packages/$p && lake build && lake test)
           done
@@ -105,7 +113,7 @@
         '';
         installPhase = ''
           install -Dm755 packages/cyberkrill/.lake/build/bin/cyberkrill $out/bin/cyberkrill
-          $out/bin/cyberkrill
+          $out/bin/cyberkrill version
         '';
       });
     in
@@ -119,6 +127,14 @@
 
       devShells.${system} = {
         default = pkgs.mkShell (ffiEnvironment // {
+          shellHook = ''
+            _cli_root=$(git rev-parse --show-toplevel)
+            if [ ! -d "$_cli_root/packages/cyberkrill/.lake/packages/Cli" ]; then
+              mkdir -p "$_cli_root/packages/cyberkrill/.lake/packages"
+              cp -r ${lean4-cli} "$_cli_root/packages/cyberkrill/.lake/packages/Cli"
+              chmod -R u+w "$_cli_root/packages/cyberkrill/.lake/packages/Cli"
+            fi
+          '';
           packages = [ lean pkgs.glibc.bin pkgs.binutils pkgs.python3 pkgs.openssl ];
           buildInputs = [ pkgs.secp256k1 pkgs.curl pkgs.openssl ];
         });

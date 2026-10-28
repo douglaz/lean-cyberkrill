@@ -38,8 +38,10 @@ as-written signing hashes for decoding and both writers, and invoice-length
 bech32 round-trip and checksum soundness.
 Phase 6 adds pure Fedimint invite consensus and bech32m codecs, general
 round-trip proofs and checksum soundness, with published and synthetic vectors.
-Other packages remain skeletons;
-`plan.md` is the plan for v1.
+Phase 7a adds the `version`, `convert-amount` and `generate-mnemonic` CLI
+commands, shared whole-sat/explicit-fee helpers, real curve capability wiring,
+and an offline exact-decimal golden comparator. Later CLI and network commands
+remain unregistered; `plan.md` is the plan for v1.
 
 ## Packages
 
@@ -64,7 +66,7 @@ The flake packages the official Lean v4.35.0 release for `x86_64-linux`.
 nix develop -c lean --version                # Lean (version 4.35.0, ...)
 cd packages/bitcoin && nix develop -c lake build && nix develop -c lake test
 nix flake check                              # lake build + lake test for every package, in the sandbox
-nix build && ./result/bin/cyberkrill
+nix build && ./result/bin/cyberkrill version
 ```
 
 `nix/musl/` holds the recipe for building the toolchain against musl, for the static v1 release.
@@ -6923,6 +6925,676 @@ plan §3. Select each with `lake test -- --psbt 'parity NAME'`.
 | No v2-only fields in v0 | `bip370-invalid-10` (`PSBT_IN_REQUIRED_HEIGHT_LOCKTIME`) | 0 |
 | No v2-only fields in v0 | `bip370-invalid-11` (`PSBT_OUT_AMOUNT`) | 0 |
 | No v2-only fields in v0 | `bip370-invalid-12` (`PSBT_OUT_SCRIPT`) | 0 |
+
+## Phase 7a: offline CLI foundation
+
+The executable registers exactly three commands:
+
+```bash
+cyberkrill version
+cyberkrill convert-amount '1.5sat'
+cyberkrill convert-amount '1499msat' --as sats
+cyberkrill generate-mnemonic --words 24 --output "$OUTPUT_PATH"
+```
+
+`version` prints `{"version":"0.1.0"}`, using `Cyberkrill.version`.
+Conversion preserves the original `input` string and emits numeric, exact
+`btc`, integer floored `sats`, and integer `msats`; `fiat_source` is absent.
+BTC JSON numbers and BTC scalars come directly from `Amount.printBtc`, without
+binary64 or quoted decimal numbers. Scalars include a final newline. Only
+`--as sats` emits the reference fractional-sat warning, on stderr, when the
+exact msat remainder is nonzero. Bare ordinary amounts remain BTC. The existing
+suffix order, case folding, Rust Unicode whitespace, trailing-zero precision
+by value, leading/trailing dots, plus signs and decimal negative zero remain
+accepted; unsigned `-0msat` remains rejected. Option-looking negative operands
+require `--`, including decimal negative zero; bare `-0` and `-0.0btc` fail
+argument parsing, matching the reference. Recognizable three-letter fiat
+suffixes produce `fiatNotSupported` without HTTP/RPC initialization. Use `--` before an operand
+that otherwise looks like an option. No command here consults wallet/node state.
+
+All errors exit 1, with a named fixed diagnostic on stderr and empty stdout.
+Mnemonic file output now follows the private, new-file-only policy described below;
+an existing destination receives `outputPathExists` and is never overwritten.
+Amount errors retain `empty`, `invalidNumber`, `negative`, `subMillisatoshi`
+and `millisatoshiOverflow`; exponent and nonfinite spellings use
+`invalidNumber`. Parser errors use `invalidArguments`, bad `--as` values use
+`invalidUnit`, and unsupported mnemonic counts use `invalidWordCount`.
+Missing/extra operands, unknown flags, conflicting duplicate options and
+unsupported commands are refused. `version` and conversion have no output-file
+option. Help describes only this subset. `--electrum` and `--esplora` are
+omitted entirely, as are hardware and other out-of-scope registrations.
+
+The parser is [leanprover/lean4-cli v4.35.0](https://github.com/leanprover/lean4-cli/tree/c24fe6078c630e89b489bffe59b3e20ac30d12c8),
+commit `c24fe6078c630e89b489bffe59b3e20ac30d12c8` (MIT), with upstream
+toolchain `leanprover/lean4:v4.35.0`. The compatibility attempt from
+`packages/cyberkrill` was `nix develop -c lake update` (exit 4 on its first
+toolchain selection), repeated unchanged (exit 0), followed by
+`nix develop -c lake build Cli` (exit 0, 5 jobs). No parser fallback was needed.
+The non-flake input is copied to the ignored `.lake/packages/Cli` by the dev
+shell and sandbox setup; Lake's committed manifest uses that relative path.
+No sandbox Lake git fetch or vendored parser source is required.
+
+`Cyberkrill.App` separates `parseCommand`, `execute` and `runWith`. Its
+`Services` parameter injects entropy and output internally; the public
+executable always supplies `productionServices`. There is no public seed or
+entropy flag or environment override. The production source is
+`IO.getRandomBytes`, declared at
+[Lean v4.35.0, Init/System/IO.lean:428](https://github.com/leanprover/lean4/blob/eb6cafb7290e8bd5f2937522d8d804f58f02bafc/src/Init/System/IO.lean#L428).
+Its pinned [Linux implementation, runtime/io.cpp:872–933](https://github.com/leanprover/lean4/blob/eb6cafb7290e8bd5f2937522d8d804f58f02bafc/src/runtime/io.cpp#L872)
+reads `/dev/urandom`, retries EINTR, fills the request and propagates other
+read failures. The executable validates the word count before requesting
+entropy and rejects short reads. Counts 12/15/18/21/24 request 16/20/24/28/32
+bytes and report 128/160/192/224/256 `entropy_bits`; 24 words is the default.
+Word counts use unsigned ASCII decimal syntax with an optional leading `+`,
+bounded to u32 before count validation. Underscores, whitespace, malformed
+signs and overflow are refused before entropy acquisition. The pinned
+reference's `GenerateMnemonicArgs.words` is u32 (`main.rs:646–649`);
+safe `1_3` and `+13` probes exit 2 and 1 respectively, establishing the numeric
+parser versus semantic count boundary without generating a phrase.
+The existing BIP39 codec supplies `mnemonic`. JSON goes to stdout or, with
+`-o/--output`, exclusively to the file. Entropy and output IO exceptions become
+fixed diagnostics that contain neither the phrase nor the exception text.
+
+`Cyberkrill.Amounts` exports reusable `wholeSat`, `floorSat`,
+`exactWholeSat` and `parseFee`; `Cyberkrill.App` exports `runFeeWith`.
+WholeSat computes
+`(msat + 500) / 1000` sats, half up; FloorSat computes `msat / 1000`.
+Both return whole-sat amounts, preserve zero and reject nonzero-to-zero results
+with `lessThanOneSat`. Exact validation refuses a remainder with
+`wholeSatRequired`. Arithmetic is unbounded; future wire consumers own their
+range checks. These helpers are for reuse in Phases 8/9 and are not applied
+to the three commands above. Fee input requires an explicit Bitcoin suffix,
+with the same whitespace/case and exact-precision rules as ordinary amounts.
+Bare `15`, zero and signed numeric spellings give `feeUnitRequired`; the
+production refusal boundary asks for a unit, for example `15sats`, before
+calling the supplied consumer. Ordinary conversion and future `--outputs`
+grammar retain bare BTC. Future fee help examples must include units. This is
+the merged exception to the pinned reference, whose bare fees mean BTC;
+upstream #154's subsequent fix does not change the parity pin. Prior fee
+evidence remains parser-only; Phase 8 owns actual offline fee-command goldens.
+
+`Cyberkrill.Capabilities` supplies the actual four Bitcoin curve functions,
+RIPEMD-160/HASH160 values and `bolt11Curve secret`. The signer closes over
+the explicitly supplied key; there is no default secret. Strict SEC1 validation
+rejects hybrids, while compression accepts matching hybrid parity. Verification
+requires low-S, while recovery preserves the original S. Pure packages still
+have no FFI imports. Tests call these production values through libsecp256k1,
+including all 16 published recoveries, L762's expected
+`02d0139ce7427d6dfffd26a326c18be754ef1e64672b42694ba5b23ef6e6e7803d`,
+the low-S `n` invoice and its high-S/tampered failures, L858's direct raw-high-S
+failure and normalized verification against its published payee, strict and
+hybrid-aware keys, x-only/DER checks, both hashes and deterministic signing
+with only BOLT #11's published example key. Hybrid handling is reference
+parity, not a new delta.
+
+### Captures, comparator and future exceptions
+
+`packages/cyberkrill/test/capture.py` resolves its producer using exactly:
+
+```bash
+nix build --no-link --print-out-paths --max-jobs 2 --cores 4 github:douglaz/cyberkrill/27cad1faba86260b06665a89f0af5134d23525c2
+```
+
+This build exited 0. `test/golden/provenance.json` records the resulting
+producer path, full source pin, upstream `cyberkrill/src/main.rs` path,
+licence (MIT OR Apache-2.0, taken under MIT), command and synthetic-input
+construction. Every capture ran under `unshare -rn`, enabling only loopback,
+with a temporary HOME, closed stdin and a finite timeout. Captures never
+include fiat conversion or successful random mnemonic generation. The 179 raw
+process results in `reference.json` retain stdout, stderr and status separately:
+one version, all 124 existing amount-grammar inputs, 28 conversion cases
+(seven amounts in four output modes) and 26 safe parser/error cases. The added
+11 captures cover three bare negative-zero refusals, five underscore spellings
+that Lean's natural scanner would accept, invalid `1_3`, semantic `+13` and u32
+overflow. Mnemonic capture safety checks whitelist exact failing argument
+vectors; valid plus-prefixed counts are tested only with injected entropy.
+`cases.py` is the deterministic input inventory; these are authored synthetic
+inputs, not published vectors. Existing external fixtures and their notices
+are untouched, including BOLT11's CC-BY-4.0 attribution and modification notes.
+
+The reusable `test/compare.py` parses JSON numbers as exact decimals, never
+binary64. Objects compare by fields/values, regardless of whitespace/order.
+Scalar and non-JSON output compares as exact strings, including newlines;
+subprocess capture reads bytes and decodes UTF-8 without universal-newline
+translation on either stream. JSON retains its structural whitespace policy.
+Streams and statuses are independent. Version alone has a shape-only reference
+comparison, plus an exact assertion against the port's package constant.
+Ordinary reference failures require a nonzero port exit, stderr and no success
+JSON. Reference streams remain intact when diagnostic wording is not compared.
+
+The 20 exact amount entries below are mirrored in
+`test/golden/exact-amount-diffs.json`. Each applies to one case and one field
+or scalar only when **both** observed values match its exact pins. The 29
+documented reference-success/port-refusal cases are separately enumerated in
+`named-refusals.json`: two sub-msat cases, six exponent cases and 21 nonfinite
+cases. Each pins reference exit 0, port exit 1, exact named error/diagnostic,
+and the retained reference streams. A wrong identity fails. Future changes
+append precise entries and README rows; unused entries, unlisted differences,
+changed unrelated fields, wrong streams and wrong statuses fail the suite.
+Leaf paths start with the stream and use JSON-quoted object keys and numeric
+array indices: `stdout["a.b"]`, `stdout["a"]["b"]`, `stdout["a[0]"]` and
+`stdout["a"][0]` are distinct. Scalar streams remain `stdout` and `stderr`.
+Quoting escapes quotes, backslashes and control characters in object keys.
+
+Fifty-two synthetic comparator self-tests exercise exact numbers beyond
+binary64 precision, order/whitespace, scalar newlines, exact pins, missing and
+unused entries, unrelated fields, wrong types/statuses/streams/error identities,
+and named `feeUnitRequired`, `unsupportedUrlForm` and `unsupportedScheme`
+refusals, dotted/bracketed leaf collisions, quoted keys and array indices,
+stderr pins, and actual subprocess CRLF/bare-CR capture on both streams.
+These are **harness self-tests on synthetic process results**, not
+captures of later commands. Their negative checks alter actual results rather
+than expected fixtures.
+
+Future phases preserve all existing parity decisions: BIP370 v2 acceptance;
+the full selected-total-minus-fee move-utxos output; BOLT11's as-written
+signing hash, leading-zero HRP behavior and strict padding/`x`/`c`/`9`
+rejections; the kept PSBT canonical CompactSize key types, xpub path/depth
+agreement and rejection of v2-only fields in v0; narrow URL refusals; explicit
+fee units; and exact amounts/rejection classes. None registers a later command
+here. The wrong-length BOLT11-field decision remains deferred. Outcomes still
+described elsewhere as derived/predicted await their actual later CLI captures;
+historical evidence above remains historical.
+
+## Exact amounts vs cyberkrill
+
+These pins come from the new executable captures, not the older pure-parser
+capture. Numeric rows compare exact values. Scalar strings below include
+`\n` literally denoting the required final newline. Every row's rationale is
+exact integer msat arithmetic replacing reference binary64 rounding or u64
+saturation, except the warning row, which follows the retained fractional sat.
+
+| Case | Field | Reference | Exact port |
+|---|---|---|---|
+| max-cli-msat | stdout["btc"] | 184467440.7370955 | 184467440.73709551615 |
+| large-exact-msat | stdout["btc"] | 90071.99254740991 | 90071.99254740993 |
+| saturated-btc | stdout["btc"] | 184467440.7370955 | 200000000 |
+| saturated-btc | stdout["sats"] | 18446744073709551 | 20000000000000000 |
+| saturated-btc | stdout["msats"] | 18446744073709551615 | 20000000000000000000 |
+| saturated-sats | stdout["btc"] | 184467440.7370955 | 200000000 |
+| saturated-sats | stdout["sats"] | 18446744073709551 | 20000000000000000 |
+| saturated-sats | stdout["msats"] | 18446744073709551615 | 20000000000000000000 |
+| rounded-btc | stdout["btc"] | 90071992.54740994 | 90071992.54740993 |
+| rounded-btc | stdout["sats"] | 9007199254740994 | 9007199254740993 |
+| rounded-btc | stdout["msats"] | 9007199254740994048 | 9007199254740993000 |
+| rounded-sats | stdout["btc"] | 90071.99254740991 | 90071.99254740993 |
+| rounded-sats | stdout["msats"] | 9007199254740992 | 9007199254740993 |
+| large-exact-json | stdout["btc"] | 21000000.0 | 20999999.99999999999 |
+| large-exact-json | stdout["sats"] | 2100000000000000 | 2099999999999999 |
+| large-exact-json | stdout["msats"] | 2100000000000000000 | 2099999999999999999 |
+| large-exact-btc | stdout | `21000000\n` | `20999999.99999999999\n` |
+| large-exact-sats | stdout | `2100000000000000\n` | `2099999999999999\n` |
+| large-exact-sats | stderr | empty | `[convert-amount] note: input has fractional satoshis (2099999999999999999 msat); --as sats floors to 2099999999999999 sat\n` |
+| large-exact-msats | stdout | `2100000000000000000\n` | `2099999999999999999\n` |
+
+The large input is exactly `20999999.99999999999` BTC, 21 million BTC less
+1 msat. Its warning difference is pinned on stderr only; a warning on stdout
+still fails. A documented rejection class accepted by the reference is a named
+refusal, never ordinary parity or a blanket nonzero allowance.
+
+### Phase 7a checks
+
+`lake test` builds and runs a real executable test driver, including the real
+CLI executable. Every collection pins and prints its count before comparisons.
+External fixture SHA-256 pins cover five unchanged files: the two 124-row
+amount/parser-only collections, 24 English BIP39 vectors, 16 secp signatures
+and the complete BOLT fixture (16 valid, 15 invalid, 2 nfields, 20 negative,
+4 positive, 3 outside, 3 small, 23 table rows/22 distinct pairs and 4 keys).
+
+The deterministic mnemonic oracle independently constructs BIP39 indices using
+Python `hashlib` and the existing 2048-word list, first checks all 24 published
+exact phrases, then uses the first 20/28 bytes of each of the eight published
+32-byte entropies for 8 exact 15-word and 8 exact 21-word results. All 40 exact
+values pass through the same production dispatch/output path using internal
+entropy injection twice: ordinary and plus-prefixed counts, each with eight
+per word count, 40 stdout values, 40 real file contents and eight default-24
+checks (80 stdout values, 80 file comparisons and 16 defaults in total). Seventeen malformed,
+overflowing or disallowed word-count spellings assert empty stdout, the named
+error and zero entropy calls. Derived phrases remain in memory. No
+fresh phrase is printed, recorded or compared. Six boundary checks cover
+validation before entropy, entropy IO failure, short reads, file failure and
+stdout failure with fixed secret-free diagnostics, plus preservation of a
+literal output path beginning with `-` through attached `--output=-name`
+syntax. Space-separated option tokens after `-o` or `--output` are refused
+before entropy acquisition or file operations. The lone `-` remains a literal
+filename; it has no special output meaning. Attached `--output=--words`,
+`-o=-name` and `-o-name` preserve their exact filename bytes. Short attachments
+also preserve literal equals bytes: `-o-name=a`, `-ofoo=bar` and
+`-o-name=a=b` name exactly `-name=a`, `foo=bar` and `-name=a=b`. Eight
+additional injected controls check these combined forms and explicit-equals
+short/long alternatives, with exact JSON, streams and entropy calls.
+A production-source test
+obtains 32 random bytes privately to check length; source/dispatch assertions
+pin the `IO.getRandomBytes` route. A length test does not establish statistical
+security.
+
+Other exact counts are: WholeSat rounding 2, WholeSat tiny/zero 2, FloorSat
+tiny/zero/value 3, exact whole-sat 2, unitless fee refusals 7, valid fees 6,
+invalid explicit fees 3, Bitcoin strict points 3, compression 3, x-only 2,
+DER 2, BOLT point validation 2, recoveries 16, signature checks 5, signer checks
+3 and preimage hashes 2. Executable checks add 9 direct accepted spellings,
+10 named rejection cases, 5 port-only fiat refusals, 5 help cases and 6 further
+unsupported-option cases to the 179 reference cases. Separate executable
+checks pin three bare negative-zero refusals and three exact `--` successes.
+
+Run foreground validation from the repository root using the complete
+repository supervisor:
+
+```bash
+python3 packages/cyberkrill/test/gate.py timeout --foreground 600 bash -c 'cd packages/cyberkrill && nix develop -c lake build && nix develop -c lake test'
+python3 packages/cyberkrill/test/gate.py timeout --foreground 300 python3 -B packages/cyberkrill/test/capture.py
+python3 packages/cyberkrill/test/gate.py timeout --foreground 2700 bash -c 'cd packages/cyberkrill && nix develop -c python3 -B test/mutate.py'
+```
+
+`test/mutate.py` changes one production behavior per run, requires successful
+compilation followed by a real exit 1 at the named detecting assertion, then
+restores the original source bytes and requires the selected test to pass.
+It handles HUP/INT/QUIT/TERM by restoring before child cleanup, keeps separate
+raw logs in ignored `.lake/mutations`, and writes records separately from its
+script. Records bind the production source, tests and checker by SHA-256;
+changed sources require a new run. The committed record and final gate
+evidence describe observed outcomes, not proposed mutations.
+
+The completed mutation run observed **21/21 runtime reds**, each exit 1,
+**21/21 restored selected greens**, each exit 0, and a restored full
+`lake test` exit 0. `test/golden/mutation-record.json` pins each exact source
+replacement, bounded build/test command, detecting assertion and source digest.
+The detecting assertions were:
+
+| Independent production edit | Runtime detecting assertion |
+|---|---|
+| Amount scaling multiplied by ten | `amount scaling` |
+| Sats output rounded instead of floored | `sats flooring` |
+| Error sent to stdout | `output refusal 0 stdout` |
+| WholeSat half-up offset reduced to 499 | `wholeSat half-up` |
+| WholeSat tiny rejection bypassed | `wholeSat tiny` |
+| FloorSat tiny rejection bypassed | `floorSat tiny` |
+| Exact whole-sat remainder predicate inverted | `exact wholeSat rejects` |
+| Fee suffix requirement bypassed | `fee unit requirement` |
+| 15-word entropy request changed to 21 bytes | `mnemonic entropy mapping` |
+| Production entropy request changed to n+1 | `entropy production length` |
+| File output redirected to stdout | `mnemonic file stdout` |
+| Bitcoin strict pubkey field replaced by false | `cap Bitcoin pubkey accepts` |
+| Bitcoin compression field replaced by none | `cap Bitcoin compression matches` |
+| Bitcoin x-only field replaced by false | `cap Bitcoin xonly accepts` |
+| Bitcoin DER field replaced by false | `cap Bitcoin DER accepts` |
+| BOLT recovery field replaced by none | `cap BOLT recover L382` |
+| BOLT verification field replaced by false | `cap BOLT verify decode` |
+| BOLT signer replaced by none | `cap BOLT signature exact` |
+| BOLT point validation replaced by false | `cap BOLT point accepts` |
+| RIPEMD-160 field changed to HASH160 | `cap RIPEMD160` |
+| HASH160 field changed to RIPEMD-160 | `cap HASH160` |
+
+The first flooring experiment at 1499 msat did not fail: half-up rounding and
+flooring agree there. The final assertion uses 1500 msat, where they differ;
+the recorded rerun observed its runtime exit 1. No compilation failure or
+changed expectation is counted as a runtime red. The entropy mutation proves
+request wiring/length detection, not statistical security.
+
+The earlier output-path regression also ran red before its correction:
+`cd packages/cyberkrill && nix develop -c lake test` exited 1 at
+`mnemonic output path preservation`. Its published-entropy injected command
+observed the actual file path passed by production dispatch, with no random
+generation. That earlier correction limited negative-operand protection to
+conversion. The parser correction below removed protection entirely. That
+historical check used an ambiguous space-separated hyphen path; the current
+test uses attached syntax. The output-value boundary evidence below covers
+the required refusal of space-separated option tokens.
+
+Run `python3 -B packages/cyberkrill/test/verify.py` after recording to reject
+stale capture/mutation sources and mismatched README pins. Ordinary `lake test`
+uses committed local fixtures only and performs no dependency fetch.
+
+The initial validation, before the later parser/comparator corrections below,
+used the full repository supervisor. These timings are historical:
+
+| Command | Working directory | Exit | Wall time |
+|---|---|---:|---:|
+| `nix develop -c lake build` | `packages/cyberkrill` | 0 | 8.673 s |
+| `nix develop -c lake test` | `packages/cyberkrill` | 0 | 16.940 s |
+| `nix flake check -L` | root | 0 | 149.387 s |
+| `nix build -L` | root | 0 | 0.478 s |
+| `./result/bin/cyberkrill version` | root | 0 | 0.029 s |
+| No-proof-placeholder scan from AGENTS.md | root | 0 | 0.009 s |
+| Extended-private-key scan from AGENTS.md | root | 0 | 0.010 s |
+
+The scan wrappers require grep's no-match status 1 and refuse an execution
+error. The installed executable returned `{"version":"0.1.0"}`. The sandbox
+run retained all seven package build/test pairs and the existing link/OpenSSL
+checks. Capture verification, all 41 comparator self-tests and source-bound
+verification of the then-current 21 mutation records also exited 0. The scope
+remains the three-command foundation; later commands and their actual captures
+are deferred to their assigned phases.
+
+### Parser and comparator correction evidence
+
+`test/regressions.py` exposes ten independently selectable checks. Before
+changing production, the bounded command
+`timeout --foreground 60 python3 -B test/regressions.py PROPERTY` ran separately
+for each property, under the full supervisor from `packages/cyberkrill`.
+Nine exited 1 at these detecting assertions; the delimited-negative-zero
+control already exited 0. No expectation or setup was changed to cause a red:
+
+| Property | Observed assertion before correction |
+|---|---|
+| `word-count-rejections` | `word-count rejection before entropy` |
+| `word-count-plus` | `mnemonic exact status 0` |
+| `bare-negative-zero` | `bare negative-zero refused 0` |
+| `stdout-crlf` | `subprocess stdout CRLF preserved` |
+| `stdout-cr` | `subprocess stdout CR preserved` |
+| `stderr-crlf` | `subprocess stderr CRLF preserved` |
+| `stderr-cr` | `subprocess stderr CR preserved` |
+| `dotted-collision` | `dotted leaf collision refused` |
+| `bracket-collision` | `bracket leaf collision refused` |
+
+After correction all ten commands exited 0 with unchanged regression tests.
+`test/record-regressions.py` saves commands, statuses, assertion identities,
+wall times and source/test digests separately in
+`test/golden/regression-record.json`; separate raw streams/statuses stay in
+ignored `.lake/regressions`. At that time `test/verify.py` checked the final
+fingerprints, the nine reds, all ten final greens, capture inventory/digests
+and README pins. This record is now historical; current detection evidence
+is separately refreshed below without rewriting those original observations.
+The ordinary `lake test` also executes these properties. The subprocess tests
+write explicit synthetic bytes; they prove CRLF and bare CR cannot match LF
+for scalar output and that stderr retains its own line endings. The collision
+tests first apply one exception successfully, then require a second changed
+leaf to fail with `unlisted difference`.
+
+That corrected source was validated on 2026-10-27 using the complete repository
+supervisor. The command
+`nix develop -c bash -c 'lean --version && lake --version && python3 --version'`
+exited 0 and reported Lean 4.35.0 (`eb6cafb7290e8bd5f2937522d8d804f58f02bafc`),
+Lake 5.0.0-src+eb6cafb and Python 3.14.7. These observations precede the
+output-value correction:
+
+| Command | Working directory | Exit | Wall time |
+|---|---|---:|---:|
+| `nix develop -c lake build` | `packages/cyberkrill` | 0 | 1.134 s |
+| `nix develop -c lake test` | `packages/cyberkrill` | 0 | 10.565 s |
+| `nix flake check -L` | root | 0 | 166.830 s |
+| `nix build -L` | root | 0 | 0.438 s |
+| `./result/bin/cyberkrill version` | root | 0 | 0.028 s |
+| No-proof-placeholder scan from AGENTS.md | root | 0 | 0.008 s |
+| Extended-private-key scan from AGENTS.md | root | 0 | 0.009 s |
+
+`test/validate.py app` and `test/validate.py repo` retain the bounded commands,
+separate raw streams/statuses and wall times in ignored `.lake/validation`.
+The scans require grep's no-match exit 1 and reject execution errors. The
+installed artifact printed `{"version":"0.1.0"}` with empty stderr. The fresh
+sandbox build executed all seven packages and retained the link-spike and
+one-OpenSSL checks. The refreshed `test/mutate.py` run exited 0 with 21/21
+compiled runtime reds, 21/21 restored selected greens and a restored full
+`lake test` exit 0. `test/verify.py` and `test/selftest.py` also exited 0,
+checking 179 captures, unchanged external fixtures, nine regression reds,
+ten final regression greens, all 21 current mutation records, 20 README
+pins and 52 harness checks. Source/test fingerprints include the new
+regression checks; those were refreshed observations for that earlier source.
+
+### Output-value boundary correction evidence
+
+The mnemonic parser checks space-separated output operands before passing
+arguments to lean4-cli. A following option token gives the fixed
+`invalidArguments` diagnostic on stderr and exit 1, with empty stdout and no
+entropy or file calls. The check leaves attached operands and literal `-`
+intact; duplicate flags and genuinely missing values still reach ordinary
+argument refusal. No command or public entropy injection option was added.
+
+`CyberkrillTests/Output.lean` runs 18 independently selectable refusal cases:
+each output alias followed by each of `-w`, `--words`, `--seed`, `-name`,
+`-h`, `--help`, `--output`, `-o` and `--`. Each verifies status, exact named
+stderr, empty stdout, zero entropy calls and zero file writes. Two missing
+values and four duplicate/conflicting forms have the same checks. Twelve
+positive controls cover both aliases, ordinary filenames, literal `-`, short
+and long attached hyphen paths (including the filename `--words`) and exact
+whitespace/equals bytes. They compare the complete deterministic JSON and
+forwarded filename, using the existing published 128-bit entropy/phrase in
+memory, and require exactly one correctly sized entropy call.
+
+Before changing production, this supervised command ran each new refusal in
+its own bounded subprocess from `packages/cyberkrill`:
+
+```bash
+python3 -B test/output-regressions.py before
+```
+
+All 18 runtime tests exited 1 at their own `output refusal N status`
+assertions. After the correction, `python3 -B test/output-regressions.py after`
+ran the same selected tests, all exit 0. The recorder checks identical test
+fingerprints across the red/green runs; it saves actual commands, modes,
+statuses, times and assertion identities in
+`test/golden/output-regression-record.json`, separately from its script.
+Raw streams and statuses remain in ignored `.lake/output-regressions`.
+`lake test` runs the complete injected boundary suite and then 18 exact public
+executable refusals. Even the standalone public checker first establishes the
+injected zero-entropy/zero-write boundary. No successful random mnemonic is
+executed or captured. The 179 reference captures and external fixtures remain
+unchanged; this correction adds no reference captures.
+
+The original `regression-record.json` remains byte-for-byte historical.
+Correcting its ambiguous output-path success test changes whole-file hashes,
+so `test/refresh-regressions.py` instead reintroduces each of the nine older
+production defects independently against the final tests. Its supervised run
+exited 0: nine compiled runtime reds at the same named detecting assertions,
+nine restored selected greens, and all ten final regression properties green.
+`test/golden/regression-refresh.json` records each concrete production edit,
+bounded command, status and assertion; fingerprints bind current sources,
+tests, the checker and the untouched historical record. Sources restore byte
+for byte after each edit and on handled exits. `test/verify.py` checks both
+historical consistency and these current fingerprints; it refuses stale
+current evidence. The 52 synthetic harness self-tests remain unchanged.
+
+The refreshed `nix develop -c python3 -B test/mutate.py` run exited 0 with
+21/21 compiled runtime reds (exit 1), 21/21 restored selected greens (exit 0)
+and a restored full `lake test` exit 0. The stderr-routing mutation now fails
+at `output refusal 0 stdout`: the new injected boundary detects the diagnostic
+on the wrong stream before public invocation. The other twenty detecting
+assertions in the mutation table are unchanged. The record fingerprints also
+include the new output tests and their public-check driver. No compilation
+failure or changed expectation is counted as a runtime red.
+
+The output-value correction's source/test validation on 2026-10-27 used the complete repository
+supervisor. From the root, `python3 -B packages/cyberkrill/test/validate.py app`
+and then `python3 -B packages/cyberkrill/test/validate.py repo` both exited 0;
+the latter ran after explicitly staging all implementation paths. These
+observations precede the short-attached equals correction below:
+
+| Command | Working directory | Exit | Wall time |
+|---|---|---:|---:|
+| `nix develop -c lake build` | `packages/cyberkrill` | 0 | 0.891 s |
+| `nix develop -c lake test` | `packages/cyberkrill` | 0 | 7.673 s |
+| `nix flake check -L` | root | 0 | 213.853 s |
+| `nix build -L` | root | 0 | 0.806 s |
+| `./result/bin/cyberkrill version` | root | 0 | 0.257 s |
+| No-proof-placeholder scan from AGENTS.md | root | 0 | 0.015 s |
+| Extended-private-key scan from AGENTS.md | root | 0 | 0.015 s |
+| `python3 -B packages/cyberkrill/test/scope.py` | root | 0 | 0.128 s |
+
+Separate raw streams/statuses and wall times remain in ignored
+`.lake/validation`. Both grep wrappers require no-match status 1 and reject
+execution errors. The installed artifact printed `{"version":"0.1.0"}` with
+empty stderr. The sandbox ran all seven package build/test pairs, their axiom
+gates, the link-spike/green-twin/forced-static checks and the one-OpenSSL checks.
+`test/verify.py` and `test/selftest.py` also exited 0 after the final
+recording: 179 captures, five external fixture digests, 20 exact amount pins,
+29 named refusals, 18 new regression red/green pairs, nine reintroduced older
+reds, ten final older greens, 21 production mutations and 52 harness checks.
+A separate supervised scan of the 82 tracked library/proof Lean files found
+zero native-decision uses (exit 0). The scope audit against the recorded
+base examined 42 allowed paths and all 59 issue records: the 58 unrelated
+records and unrelated paths are unchanged, with only the existing claim in
+the remaining record. Whitespace and added-public-text scans exited 0.
+
+### Short-attached equals correction evidence
+
+The app inserts an explicit option separator before handing short attached
+output filenames containing equals to the pinned parser. That parser reads
+equals-style options before short-prefix values (`Cli/Basic.lean`,
+`readEqFlag?` and `readPrefixFlag?`, at the lean4-cli pin above). The
+integration preserves the complete filename after `-o`, including later
+equals, and leaves explicit-equals forms, consumed whitespace operands and
+arguments after `--` untouched. The preceding output-token guard remains in
+place. No dependency or command registration changed.
+
+Eight injected cases exercise the actual production parser, dispatch and
+recording file writer: `-o-name=a`, `-ofoo=bar`, `-oordinary=name`,
+`-o-name=a=b`, `-o=-name=a`, `--output=-name=a`, `-o=foo=bar=baz`
+and `--output=foo=bar=baz`. Each compares the exact forwarded filename and
+complete deterministic JSON from the first existing published BIP39 vector,
+requires empty stdout/stderr and exactly one 16-byte entropy request.
+The 12 earlier literal-path controls, 18 token refusals, two missing-value
+checks and four duplicate checks remain in the ordinary test suite.
+
+Before editing production, the supervised command below built the new tests
+and ran each independently from `packages/cyberkrill`:
+
+```bash
+nix develop -c lake build CyberkrillTests
+nix develop -c python3 -B test/attached-output-regressions.py before
+```
+
+The four short attachments exited 1 at `output equals N status` for N=0–3;
+the four explicit-equals controls exited 0. After the production edit, the
+same build and `nix develop -c python3 -B test/attached-output-regressions.py after`
+observed all eight exit 0 with identical test fingerprints. The separate
+`test/golden/attached-output-regression-record.json` stores commands, modes,
+statuses, assertion identities, wall times and source/test fingerprints.
+Raw streams/statuses stay in ignored `.lake/attached-output-regressions`.
+No real file or random mnemonic was generated by these checks.
+
+The original `output-regression-record.json` and `regression-record.json`
+remain byte-identical historical observations. The new tests change their
+whole-file fingerprints. Current output-boundary evidence therefore comes
+from `nix develop -c python3 -B test/output-regressions.py refresh`, which
+temporarily replaces only the production guard with `pure ()`. It builds the
+changed source and runs each of the 18 selected injected refusals separately,
+requires exit 1 at that case's `output refusal N status`, restores the exact
+source bytes, rebuilds and requires all selected cases and the complete
+boundary suite to pass. Its observed run exited 0 with 18 runtime reds and
+18 restored greens. `test/golden/output-regression-refresh.json` records the
+concrete edit, commands, statuses and assertions, binding the final sources,
+tests, checker and untouched original record by SHA-256. Separate raw logs
+stay in ignored `.lake/output-regression-refresh`. Source restoration also
+runs on handled signals/errors. Verification rejects stale current evidence.
+
+On the corrected source, the complete-supervisor runs of
+`nix develop -c python3 -B test/refresh-regressions.py` and
+`nix develop -c python3 -B test/mutate.py` both exited 0: nine older
+reintroduced defects produced their named runtime reds and ten final
+regression properties passed; all 21 production mutations produced their
+named runtime reds, all 21 restored selected checks passed, and the restored
+full `lake test` exited 0. The detecting assertions remain those listed
+above. The refreshed records bind the new output tests and final app source.
+`python3 -B packages/cyberkrill/test/verify.py` and
+`python3 -B packages/cyberkrill/test/selftest.py` then exited 0, checking
+179 unchanged captures, five external fixture digests, 20 amount pins,
+the historical and current regression records, and 52 synthetic harness
+checks. Fresh `test/validate.py app` ran `nix develop -c lake build`
+(exit 0, 0.879 s) and `nix develop -c lake test` (exit 0, 7.740 s)
+from `packages/cyberkrill`. Separate streams, statuses and timings remain in
+ignored `.lake/validation`. These observations are from 2026-10-27;
+the earlier validation tables retain their original historical timings.
+
+Final repository validation of the corrected source also ran
+`nix flake check -L`, `nix build -L`, the installed
+`./result/bin/cyberkrill version`, both repository scans and
+`python3 -B packages/cyberkrill/test/scope.py`, each with exit 0 under the
+complete supervisor. The installed command printed `{"version":"0.1.0"}`
+with empty stderr. The scope audit examined 45 allowed paths and confirmed
+all 58 unrelated issue records unchanged. Both scan wrappers required grep's
+no-match status 1. The final check/build reused the existing derivation;
+these observations do not claim a second fresh sandbox execution. A final
+app build exited 0 and its test run exited 0 in 8.292 seconds.
+
+### Phase 7a private mnemonic files
+
+Owner decision, 2026-10-28: `generate-mnemonic -o/--output FILE` creates a new
+owner-only file. It refuses an existing destination leaf, including a regular
+file, symlink, dangling symlink, hard link, device, directory or FIFO, with
+`outputPathExists: Refusing an existing output path`, exit 1 and empty stdout.
+It neither overwrites that path nor falls back to stdout. This is plan §3's
+seventh parity exception: cyberkrill at the unchanged reference pin uses
+`File::create`, which overwrites existing files and follows destination symlinks
+with default permissions.
+
+Lean 4.35.0's `IO.FS.Handle.mk` accepts a path and mode, with no creation
+permissions argument. A narrowly authorized app-local binding in
+`packages/cyberkrill/private_output.c` therefore performs a single
+`open(O_WRONLY|O_CREAT|O_EXCL|O_NOFOLLOW|O_CLOEXEC, 0600)`. Permissions are
+private from creation; no path-based chmod follows the open. A stricter caller
+umask may remove owner permissions. The binding loops over short writes,
+retries interrupted writes and checks the final close once. It has no stdio
+buffer whose delayed flush error could be dropped. Other IO errors become the
+fixed `outputFailure` diagnostic. A failed write may leave a partial private
+file; it never removes an unrelated path or prints the phrase. It does not
+promise fsync or power-loss durability. The existing crypto and HTTP shims,
+pure-package boundaries and seven-package build remain unchanged.
+
+`test/private-output.py` drives `runWith` and the actual production writer
+using published BIP39 vector 0. New files are checked for mode 0600 under umasks
+000 and 022, ownership, complete published JSON and empty stdout/stderr.
+Existing contents and link targets must remain unchanged; directory, FIFO and
+embedded-NUL paths have independent refusal checks. A bounded file-size limit
+forces a real short write and subsequent failure; its partial file remains
+private and the command reports `outputFailure`.
+
+`test/golden/private-output-reference.json` adds five reference-success/port-refusal
+goldens for regular files, symlinks, dangling symlinks, hard links and a device
+sink. Each reference outcome was captured twice from the unmodified pinned
+Nix-built executable, offline under `unshare -rn`, temporary HOME, closed stdin,
+umask 022 and a finite timeout. `test/reference-entropy.py` is a capture-only
+Linux x86-64 tracer: before the main process executes `getrandom`, it replaces
+that syscall with repeated zero bytes from published BIP39 vector 0. The pinned
+RNG derives reproducible synthetic public entropy from that input. This is not
+a public CLI entropy option, an altered reference build, an unpredictable
+mnemonic, or a claim that the resulting phrase is a published vector.
+Each case's repeated syscall-size evidence and output digest agree; no phrase
+is retained in the record. The device sink retains no output. Producer/source
+pin, script and fixture digests, licence and entropy control are recorded.
+The original 179 captures and historical regression records remain unchanged.
+
+The private-file correction initially added three mutations to the earlier 21:
+`private-mode` (`0600` → `0666`, detected by `private output mode 0600`),
+`private-exclusive` (remove `O_EXCL`, detected by `private output exclusive create`),
+and `private-write-error` (ignore the saved write error, detected by
+`private output write failure`). Each must compile, produce the named runtime
+failure, then pass after exact restoration. Existing tests now use a fresh
+filename inside a temporary directory instead of requiring an overwrite.
+Current regression/attachment evidence is reintroduced and refreshed separately
+from the immutable historical observations, rather than relabeling old hashes.
+
+The one-phase `test/scope.py` audit compares against the recorded master base
+without requiring a branch name, pre-commit HEAD or unstaged tracker claim. It
+accepts the task's claim/closure fields while retaining all unrelated-record,
+path, historical-fixture and link-gate checks. It runs separately from reusable
+`test/validate.py repo`, which builds and checks the current repository without
+binding future revisions to Phase 7a's path list. Text reads in `test/gate.py`
+and the driver's Lean-source checks specify UTF-8 explicitly.
+
+Validation of this correction on 2026-10-28 completed under the full supervisor:
+app build and `lake test` exited 0; all 24 distinct mutations compiled,
+failed at the named runtime assertion and passed after restoration. The nine
+older defect reintroductions, 18 output refusals and four attached-equals
+regressions also produced their expected failures and restored successes.
+The verifier and 52 comparator self-checks exited 0. The separate scope audit
+examined 55 allowed paths and confirmed all 58 unrelated issue records unchanged.
+`nix flake check -L` exited 0 in 140.847 seconds, `nix build -L` exited 0,
+installed `cyberkrill version` exited 0, and both scan wrappers exited 0 with
+grep's no-match status distinguished from errors. Source-byte fingerprints
+confirmed exact restoration after all mutations. Earlier tables retain their
+historical counts and timings; that validation covered 24 distinct edits and
+179 original reference captures plus five private-file outcome captures.
+
+An existing directory with a trailing slash also receives `outputPathExists`.
+Linux can return `EISDIR` from exclusive open for either an existing or a missing
+slash-terminated path. After that open fails, the binding uses `lstat` only to
+classify the diagnostic: an existing resolved path maps to `outputPathExists`,
+while a missing one keeps `outputFailure`. This metadata check never permits an
+open or write. Two independent tests and mutations distinguish the existing and
+missing cases; the current checker has 26 distinct production edits.
+Historical fixtures now compare with the recorded master base if present there,
+or with seven fixed SHA-256 constants for observations introduced by this phase.
+They never use the current HEAD or index bytes as their preservation baseline.
 
 ## Licence
 
