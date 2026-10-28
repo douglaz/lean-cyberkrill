@@ -20,7 +20,7 @@
       "stdout": "{\n  \"network\": \"bitcoin\",\n  \"amount_msats\": null,\n  \"timestamp\": \"2017-06-01T10:57:38Z\",\n  \"timestamp_millis\": 1496314658000,\n  \"payment_hash\": \"0001020304050607080900010203040506070809000102030405060708090102\",\n  \"payment_secret\": \"1111111111111111111111111111111111111111111111111111111111111111\",\n  \"features\": [\n    {\n      \"payment_secret\": \"required\"\n    },\n    {\n      \"variable_length_onion\": \"required\"\n    }\n  ],\n  \"description\": \"Please consider supporting this project\",\n  \"description_hash\": null,\n  \"destination\": \"03e7156ae33b0a208d0744199163177e909e80176e55d97a2f221ede0f934dd9ad\",\n  \"expiry_seconds\": 3600,\n  \"min_final_cltv_expiry\": 18,\n  \"fallback_addresses\": [],\n  \"routes\": []\n}",
       "stderr": ""
     },
-    "seconds": 0.010584235191345215,
+    "seconds": 0.010540589690208435,
     "encoding_applicability": "decoded reference JSON"
   },
   {
@@ -44,7 +44,7 @@
       "stdout": "{\n  \"network\": \"bitcoin\",\n  \"amount_msats\": 250000000,\n  \"timestamp\": \"2017-06-01T10:57:38Z\",\n  \"timestamp_millis\": 1496314658000,\n  \"payment_hash\": \"0001020304050607080900010203040506070809000102030405060708090102\",\n  \"payment_secret\": \"1111111111111111111111111111111111111111111111111111111111111111\",\n  \"features\": [\n    {\n      \"payment_secret\": \"required\"\n    },\n    {\n      \"variable_length_onion\": \"required\"\n    }\n  ],\n  \"description\": \"1 cup coffee\",\n  \"description_hash\": null,\n  \"destination\": \"03e7156ae33b0a208d0744199163177e909e80176e55d97a2f221ede0f934dd9ad\",\n  \"expiry_seconds\": 60,\n  \"min_final_cltv_expiry\": 18,\n  \"fallback_addresses\": [],\n  \"routes\": []\n}",
       "stderr": ""
     },
-    "seconds": 0.009079940617084503,
+    "seconds": 0.01068127155303955,
     "encoding_applicability": "decoded reference JSON"
   },
   {
@@ -68,7 +68,7 @@
       "stdout": "{\n  \"network\": \"bitcoin\",\n  \"amount_msats\": 250000000,\n  \"timestamp\": \"2017-06-01T10:57:38Z\",\n  \"timestamp_millis\": 1496314658000,\n  \"payment_hash\": \"0001020304050607080900010203040506070809000102030405060708090102\",\n  \"payment_secret\": \"1111111111111111111111111111111111111111111111111111111111111111\",\n  \"features\": [\n    {\n      \"payment_secret\": \"required\"\n    },\n    {\n      \"variable_length_onion\": \"required\"\n    }\n  ],\n  \"description\": \"\u30ca\u30f3\u30bb\u30f3\u30b9 1\u676f\",\n  \"description_hash\": null,\n  \"destination\": \"03e7156ae33b0a208d0744199163177e909e80176e55d97a2f221ede0f934dd9ad\",\n  \"expiry_seconds\": 60,\n  \"min_final_cltv_expiry\": 18,\n  \"fallback_addresses\": [],\n  \"routes\": []\n}",
       "stderr": ""
     },
-    "seconds": 0.009132489562034607,
+    "seconds": 0.009901173412799835,
     "encoding_applicability": "decoded reference JSON"
   },
   {
@@ -92,7 +92,7 @@
       "stdout": "{\n  \"network\": \"bitcoin\",\n  \"amount_msats\": 2000000000,\n  \"timestamp\": \"2017-06-01T10:57:38Z\",\n  \"timestamp_millis\": 1496314658000,\n  \"payment_hash\": \"0001020304050607080900010203040506070809000102030405060708090102\",\n  \"payment_secret\": \"1111111111111111111111111111111111111111111111111111111111111111\",\n  \"features\": [\n    {\n      \"payment_secret\": \"required\"\n    },\n    {\n      \"variable_length_onion\": \"required\"\n    }\n  ],\n  \"description\": null,\n  \"description_hash\": \"3925b6f67e2c340036ed12093dd44e0368df1b6ea26c53dbe4811f58fd5db8c1\",\n  \"destination\": \"03e7156ae33b0a208d0744199163177e909e80176e55d97a2f221ede0f934dd9ad\",\n  \"expiry_seconds\": 3600,\n  \"min_final_cltv_expiry\": 18,\n  \"fallback_addresses\": [],\n  \"routes\": []\n}",
       "stderr": ""
     },
-    "seconds": 0.009247489273548126,
+    "seconds": 0.00945262610912323,
     "encoding_applicability": "decoded reference JSON"
   },
   {
@@ -116,7 +116,7 @@
       "stdout": "{\n  \"network\": \"testnet\",\n  \"amount_msats\": 2000000000,\n  \"timestamp\": \"2017-06-01T10:57:38Z\",\n  \"timestamp_millis\": 1496314658000,\n  \"payment_hash\": \"0001020304050607080900010203040506070809000102030405060708090102\",\n  \"payment_secret\": \"1111111111111111111111111111111111111111111111111111111111111111\",\n  \"features\": [\n    {\n      \"payment_secret\": \"required\"\n    },\n    {\n      \"variable_length_onion\": \"required\"\n    }\n  ],\n  \"description\": null,\n  \"description_hash\": \"3925b6f67e2c340036ed12093dd44e0368df1b6ea26c53dbe4811f58fd5db8c1\",\n  \"destination\": \"03e7156ae33b0a208d0744199163177e909e80176e55d97a2f221ede0f934dd9ad\",\n  \"expiry_seconds\": 3600,\n  \"min_final_cltv_expiry\": 18,\n  \"fallback_addresses\": [\n    \"mk2QpYatsKicvFVuTAQLBryyccRXMUaGHP\"\n  ],\n  \"routes\": []\n}",
       "stderr": ""
     },
-    "seconds": 0.009454719722270966,
+    "seconds": 0.009122505784034729,
     "encoding_applicability": "decoded reference JSON"
   },
   {
@@ -140,7 +140,7 @@
       "stdout": "{\n  \"network\": \"bitcoin\",\n  \"amount_msats\": 2000000000,\n  \"timestamp\": \"2017-06-01T10:57:38Z\",\n  \"timestamp_millis\": 1496314658000,\n  \"payment_hash\": \"0001020304050607080900010203040506070809000102030405060708090102\",\n  \"payment_secret\": \"1111111111111111111111111111111111111111111111111111111111111111\",\n  \"features\": [\n    {\n      \"payment_secret\": \"required\"\n    },\n    {\n      \"variable_length_onion\": \"required\"\n    }\n  ],\n  \"description\": null,\n  \"description_hash\": \"3925b6f67e2c340036ed12093dd44e0368df1b6ea26c53dbe4811f58fd5db8c1\",\n  \"destination\": \"03e7156ae33b0a208d0744199163177e909e80176e55d97a2f221ede0f934dd9ad\",\n  \"expiry_seconds\": 3600,\n  \"min_final_cltv_expiry\": 18,\n  \"fallback_addresses\": [\n    \"1RustyRX2oai4EYYDpQGWvEL62BBGqN9T\"\n  ],\n  \"routes\": [\n    [\n      {\n        \"src_node_id\": \"029e03a901b85534ff1e92c43c74431f7ce72046060fcf7a95c37e148f78c77255\",\n        \"short_channel_id\": 72623859790382856,\n        \"fees\": {\n          \"base_msat\": 1,\n          \"proportional_millionths\": 20\n        },\n        \"cltv_expiry_delta\": 3,\n        \"htlc_minimum_msat\": null,\n        \"htlc_maximum_msat\": null\n      },\n      {\n        \"src_node_id\": \"039e03a901b85534ff1e92c43c74431f7ce72046060fcf7a95c37e148f78c77255\",\n        \"short_channel_id\": 217304205466536202,\n        \"fees\": {\n          \"base_msat\": 2,\n          \"proportional_millionths\": 30\n        },\n        \"cltv_expiry_delta\": 4,\n        \"htlc_minimum_msat\": null,\n        \"htlc_maximum_msat\": null\n      }\n    ]\n  ]\n}",
       "stderr": ""
     },
-    "seconds": 0.008883476257324219,
+    "seconds": 0.009795397520065308,
     "encoding_applicability": "decoded reference JSON"
   },
   {
@@ -164,7 +164,7 @@
       "stdout": "{\n  \"network\": \"bitcoin\",\n  \"amount_msats\": 2000000000,\n  \"timestamp\": \"2017-06-01T10:57:38Z\",\n  \"timestamp_millis\": 1496314658000,\n  \"payment_hash\": \"0001020304050607080900010203040506070809000102030405060708090102\",\n  \"payment_secret\": \"1111111111111111111111111111111111111111111111111111111111111111\",\n  \"features\": [\n    {\n      \"payment_secret\": \"required\"\n    },\n    {\n      \"variable_length_onion\": \"required\"\n    }\n  ],\n  \"description\": null,\n  \"description_hash\": \"3925b6f67e2c340036ed12093dd44e0368df1b6ea26c53dbe4811f58fd5db8c1\",\n  \"destination\": \"03e7156ae33b0a208d0744199163177e909e80176e55d97a2f221ede0f934dd9ad\",\n  \"expiry_seconds\": 3600,\n  \"min_final_cltv_expiry\": 18,\n  \"fallback_addresses\": [\n    \"3EktnHQD7RiAE6uzMj2ZifT9YgRrkSgzQX\"\n  ],\n  \"routes\": []\n}",
       "stderr": ""
     },
-    "seconds": 0.009089276194572449,
+    "seconds": 0.00927722454071045,
     "encoding_applicability": "decoded reference JSON"
   },
   {
@@ -188,7 +188,7 @@
       "stdout": "{\n  \"network\": \"bitcoin\",\n  \"amount_msats\": 2000000000,\n  \"timestamp\": \"2017-06-01T10:57:38Z\",\n  \"timestamp_millis\": 1496314658000,\n  \"payment_hash\": \"0001020304050607080900010203040506070809000102030405060708090102\",\n  \"payment_secret\": \"1111111111111111111111111111111111111111111111111111111111111111\",\n  \"features\": [\n    {\n      \"payment_secret\": \"required\"\n    },\n    {\n      \"variable_length_onion\": \"required\"\n    }\n  ],\n  \"description\": null,\n  \"description_hash\": \"3925b6f67e2c340036ed12093dd44e0368df1b6ea26c53dbe4811f58fd5db8c1\",\n  \"destination\": \"03e7156ae33b0a208d0744199163177e909e80176e55d97a2f221ede0f934dd9ad\",\n  \"expiry_seconds\": 3600,\n  \"min_final_cltv_expiry\": 18,\n  \"fallback_addresses\": [\n    \"bc1qw508d6qejxtdg4y5r3zarvary0c5xw7kv8f3t4\"\n  ],\n  \"routes\": []\n}",
       "stderr": ""
     },
-    "seconds": 0.009163811802864075,
+    "seconds": 0.009845569729804993,
     "encoding_applicability": "decoded reference JSON"
   },
   {
@@ -212,7 +212,7 @@
       "stdout": "{\n  \"network\": \"bitcoin\",\n  \"amount_msats\": 2000000000,\n  \"timestamp\": \"2017-06-01T10:57:38Z\",\n  \"timestamp_millis\": 1496314658000,\n  \"payment_hash\": \"0001020304050607080900010203040506070809000102030405060708090102\",\n  \"payment_secret\": \"1111111111111111111111111111111111111111111111111111111111111111\",\n  \"features\": [\n    {\n      \"payment_secret\": \"required\"\n    },\n    {\n      \"variable_length_onion\": \"required\"\n    }\n  ],\n  \"description\": null,\n  \"description_hash\": \"3925b6f67e2c340036ed12093dd44e0368df1b6ea26c53dbe4811f58fd5db8c1\",\n  \"destination\": \"03e7156ae33b0a208d0744199163177e909e80176e55d97a2f221ede0f934dd9ad\",\n  \"expiry_seconds\": 3600,\n  \"min_final_cltv_expiry\": 18,\n  \"fallback_addresses\": [\n    \"bc1qrp33g0q5c5txsp9arysrx4k6zdkfs4nce4xj0gdcccefvpysxf3qccfmv3\"\n  ],\n  \"routes\": []\n}",
       "stderr": ""
     },
-    "seconds": 0.009062506258487701,
+    "seconds": 0.010232284665107727,
     "encoding_applicability": "decoded reference JSON"
   },
   {
@@ -236,7 +236,7 @@
       "stdout": "{\n  \"network\": \"bitcoin\",\n  \"amount_msats\": 2000000000,\n  \"timestamp\": \"2017-06-01T10:57:38Z\",\n  \"timestamp_millis\": 1496314658000,\n  \"payment_hash\": \"0001020304050607080900010203040506070809000102030405060708090102\",\n  \"payment_secret\": \"1111111111111111111111111111111111111111111111111111111111111111\",\n  \"features\": [\n    {\n      \"payment_secret\": \"required\"\n    },\n    {\n      \"variable_length_onion\": \"required\"\n    }\n  ],\n  \"description\": null,\n  \"description_hash\": \"3925b6f67e2c340036ed12093dd44e0368df1b6ea26c53dbe4811f58fd5db8c1\",\n  \"destination\": \"03e7156ae33b0a208d0744199163177e909e80176e55d97a2f221ede0f934dd9ad\",\n  \"expiry_seconds\": 3600,\n  \"min_final_cltv_expiry\": 18,\n  \"fallback_addresses\": [\n    \"bc1pptdvg0d2nj99568qn6ssdy4cygnwuxgw2ukmnwgwz7jpqjz2kszse2s3lm\"\n  ],\n  \"routes\": []\n}",
       "stderr": ""
     },
-    "seconds": 0.00941823422908783,
+    "seconds": 0.010003723204135895,
     "encoding_applicability": "decoded reference JSON"
   },
   {
@@ -260,7 +260,7 @@
       "stdout": "{\n  \"network\": \"bitcoin\",\n  \"amount_msats\": 967878534,\n  \"timestamp\": \"2019-10-30T20:51:43Z\",\n  \"timestamp_millis\": 1572468703000,\n  \"payment_hash\": \"462264ede7e14047e9b249da94fefc47f41f7d02ee9b091815a5506bc8abf75f\",\n  \"payment_secret\": \"1111111111111111111111111111111111111111111111111111111111111111\",\n  \"features\": [\n    {\n      \"payment_secret\": \"required\"\n    },\n    {\n      \"variable_length_onion\": \"required\"\n    }\n  ],\n  \"description\": \"Blockstream Store: 88.85 USD for Blockstream Ledger Nano S x 1, \\\"Back In My Day\\\" Sticker x 2, \\\"I Got Lightning Working\\\" Sticker x 2 and 1 more items\",\n  \"description_hash\": null,\n  \"destination\": \"03e7156ae33b0a208d0744199163177e909e80176e55d97a2f221ede0f934dd9ad\",\n  \"expiry_seconds\": 604800,\n  \"min_final_cltv_expiry\": 10,\n  \"fallback_addresses\": [],\n  \"routes\": [\n    [\n      {\n        \"src_node_id\": \"03d06758583bb5154774a6eb221b1276c9e82d65bbaceca806d90e20c108f4b1c7\",\n        \"short_channel_id\": 648041158511951873,\n        \"fees\": {\n          \"base_msat\": 1000,\n          \"proportional_millionths\": 2500\n        },\n        \"cltv_expiry_delta\": 40,\n        \"htlc_minimum_msat\": null,\n        \"htlc_maximum_msat\": null\n      }\n    ]\n  ]\n}",
       "stderr": ""
     },
-    "seconds": 0.009327776730060577,
+    "seconds": 0.00981973111629486,
     "encoding_applicability": "decoded reference JSON"
   },
   {
@@ -284,7 +284,7 @@
       "stdout": "{\n  \"network\": \"bitcoin\",\n  \"amount_msats\": 2500000000,\n  \"timestamp\": \"2017-06-01T10:57:38Z\",\n  \"timestamp_millis\": 1496314658000,\n  \"payment_hash\": \"0001020304050607080900010203040506070809000102030405060708090102\",\n  \"payment_secret\": \"1111111111111111111111111111111111111111111111111111111111111111\",\n  \"features\": [\n    {\n      \"payment_secret\": \"required\"\n    },\n    {\n      \"unknown_bits\": \"optional\"\n    },\n    {\n      \"variable_length_onion\": \"required\"\n    },\n    \"any_optional_bits\"\n  ],\n  \"description\": \"coffee beans\",\n  \"description_hash\": null,\n  \"destination\": \"03e7156ae33b0a208d0744199163177e909e80176e55d97a2f221ede0f934dd9ad\",\n  \"expiry_seconds\": 3600,\n  \"min_final_cltv_expiry\": 18,\n  \"fallback_addresses\": [],\n  \"routes\": []\n}",
       "stderr": ""
     },
-    "seconds": 0.00908101350069046,
+    "seconds": 0.009359456598758698,
     "encoding_applicability": "decoded reference JSON"
   },
   {
@@ -308,7 +308,7 @@
       "stdout": "{\n  \"network\": \"bitcoin\",\n  \"amount_msats\": 2500000000,\n  \"timestamp\": \"2017-06-01T10:57:38Z\",\n  \"timestamp_millis\": 1496314658000,\n  \"payment_hash\": \"0001020304050607080900010203040506070809000102030405060708090102\",\n  \"payment_secret\": \"1111111111111111111111111111111111111111111111111111111111111111\",\n  \"features\": [\n    {\n      \"payment_secret\": \"required\"\n    },\n    {\n      \"unknown_bits\": \"optional\"\n    },\n    {\n      \"variable_length_onion\": \"required\"\n    },\n    \"any_optional_bits\"\n  ],\n  \"description\": \"coffee beans\",\n  \"description_hash\": null,\n  \"destination\": \"03e7156ae33b0a208d0744199163177e909e80176e55d97a2f221ede0f934dd9ad\",\n  \"expiry_seconds\": 3600,\n  \"min_final_cltv_expiry\": 18,\n  \"fallback_addresses\": [],\n  \"routes\": []\n}",
       "stderr": ""
     },
-    "seconds": 0.00859544426202774,
+    "seconds": 0.009520202875137329,
     "encoding_applicability": "decoded reference JSON"
   },
   {
@@ -332,7 +332,7 @@
       "stdout": "{\n  \"network\": \"bitcoin\",\n  \"amount_msats\": 2500000000,\n  \"timestamp\": \"2017-06-01T10:57:38Z\",\n  \"timestamp_millis\": 1496314658000,\n  \"payment_hash\": \"0001020304050607080900010203040506070809000102030405060708090102\",\n  \"payment_secret\": \"1111111111111111111111111111111111111111111111111111111111111111\",\n  \"features\": [\n    {\n      \"payment_secret\": \"required\"\n    },\n    {\n      \"unknown_bits\": \"optional\"\n    },\n    {\n      \"variable_length_onion\": \"required\"\n    },\n    \"any_optional_bits\"\n  ],\n  \"description\": \"coffee beans\",\n  \"description_hash\": null,\n  \"destination\": \"03e7156ae33b0a208d0744199163177e909e80176e55d97a2f221ede0f934dd9ad\",\n  \"expiry_seconds\": 3600,\n  \"min_final_cltv_expiry\": 18,\n  \"fallback_addresses\": [],\n  \"routes\": []\n}",
       "stderr": ""
     },
-    "seconds": 0.009229496121406555,
+    "seconds": 0.009371571242809296,
     "encoding_applicability": "decoded reference JSON"
   },
   {
@@ -356,7 +356,7 @@
       "stdout": "{\n  \"network\": \"bitcoin\",\n  \"amount_msats\": 1000000000,\n  \"timestamp\": \"2017-06-01T10:57:38Z\",\n  \"timestamp_millis\": 1496314658000,\n  \"payment_hash\": \"0001020304050607080900010203040506070809000102030405060708090102\",\n  \"payment_secret\": \"1111111111111111111111111111111111111111111111111111111111111111\",\n  \"features\": [\n    {\n      \"payment_metadata\": \"required\"\n    },\n    {\n      \"payment_secret\": \"required\"\n    },\n    {\n      \"variable_length_onion\": \"required\"\n    }\n  ],\n  \"description\": \"payment metadata inside\",\n  \"description_hash\": null,\n  \"destination\": \"03e7156ae33b0a208d0744199163177e909e80176e55d97a2f221ede0f934dd9ad\",\n  \"expiry_seconds\": 3600,\n  \"min_final_cltv_expiry\": 18,\n  \"fallback_addresses\": [],\n  \"routes\": []\n}",
       "stderr": ""
     },
-    "seconds": 0.009400621056556702,
+    "seconds": 0.009218722581863403,
     "encoding_applicability": "decoded reference JSON"
   },
   {
@@ -380,7 +380,7 @@
       "stdout": "{\n  \"network\": \"bitcoin\",\n  \"amount_msats\": null,\n  \"timestamp\": \"2017-06-01T10:57:38Z\",\n  \"timestamp_millis\": 1496314658000,\n  \"payment_hash\": \"0001020304050607080900010203040506070809000102030405060708090102\",\n  \"payment_secret\": \"1111111111111111111111111111111111111111111111111111111111111111\",\n  \"features\": [\n    {\n      \"payment_secret\": \"required\"\n    },\n    {\n      \"variable_length_onion\": \"required\"\n    }\n  ],\n  \"description\": \"Please consider supporting this project\",\n  \"description_hash\": null,\n  \"destination\": \"02d0139ce7427d6dfffd26a326c18be754ef1e64672b42694ba5b23ef6e6e7803d\",\n  \"expiry_seconds\": 3600,\n  \"min_final_cltv_expiry\": 18,\n  \"fallback_addresses\": [],\n  \"routes\": []\n}",
       "stderr": ""
     },
-    "seconds": 0.009698383510112762,
+    "seconds": 0.0098886638879776,
     "encoding_applicability": "decoded reference JSON"
   },
   {
@@ -403,7 +403,7 @@
       "stdout": "",
       "stderr": "Error: Failed to parse invoice: SemanticError(InvalidFeatures)\n"
     },
-    "seconds": 0.008812345564365387,
+    "seconds": 0.009901002049446106,
     "encoding_applicability": "reference decode failed; no JSON"
   },
   {
@@ -426,7 +426,7 @@
       "stdout": "{\n  \"network\": \"bitcoin\",\n  \"amount_msats\": 2500000000,\n  \"timestamp\": \"2017-06-01T10:57:38Z\",\n  \"timestamp_millis\": 1496314658000,\n  \"payment_hash\": \"0001020304050607080900010203040506070809000102030405060708090102\",\n  \"payment_secret\": \"1111111111111111111111111111111111111111111111111111111111111111\",\n  \"features\": [\n    {\n      \"payment_secret\": \"required\"\n    },\n    {\n      \"unknown_bits\": \"optional\"\n    },\n    {\n      \"variable_length_onion\": \"required\"\n    },\n    \"any_optional_bits\"\n  ],\n  \"description\": \"coffee beans\",\n  \"description_hash\": null,\n  \"destination\": \"03e7156ae33b0a208d0744199163177e909e80176e55d97a2f221ede0f934dd9ad\",\n  \"expiry_seconds\": 3600,\n  \"min_final_cltv_expiry\": 18,\n  \"fallback_addresses\": [],\n  \"routes\": []\n}",
       "stderr": ""
     },
-    "seconds": 0.008527912199497223,
+    "seconds": 0.009922266006469727,
     "encoding_applicability": "decoded reference JSON"
   },
   {
@@ -449,7 +449,7 @@
       "stdout": "",
       "stderr": "Error: Failed to parse invoice: SemanticError(NoPaymentHash)\n"
     },
-    "seconds": 0.00880555808544159,
+    "seconds": 0.009281113743782043,
     "encoding_applicability": "reference decode failed; no JSON"
   },
   {
@@ -472,7 +472,7 @@
       "stdout": "",
       "stderr": "Error: Failed to parse invoice: SemanticError(MultiplePaymentHashes)\n"
     },
-    "seconds": 0.008787102997303009,
+    "seconds": 0.009520232677459717,
     "encoding_applicability": "reference decode failed; no JSON"
   },
   {
@@ -495,7 +495,7 @@
       "stdout": "",
       "stderr": "Error: Failed to parse invoice: SemanticError(MultiplePaymentHashes)\n"
     },
-    "seconds": 0.009262189269065857,
+    "seconds": 0.008890725672245026,
     "encoding_applicability": "reference decode failed; no JSON"
   },
   {
@@ -518,7 +518,7 @@
       "stdout": "",
       "stderr": "Error: Failed to parse invoice: SemanticError(MultiplePaymentSecrets)\n"
     },
-    "seconds": 0.009903959929943085,
+    "seconds": 0.009480535984039307,
     "encoding_applicability": "reference decode failed; no JSON"
   },
   {
@@ -541,7 +541,7 @@
       "stdout": "",
       "stderr": "Error: Failed to parse invoice: ParseError(Bech32Error(Checksum(InvalidResidue)))\n"
     },
-    "seconds": 0.00946333259344101,
+    "seconds": 0.009617812931537628,
     "encoding_applicability": "reference decode failed; no JSON"
   },
   {
@@ -562,7 +562,7 @@
       "stdout": "",
       "stderr": "Error: Failed to parse invoice: ParseError(Bech32Error(Parse(Char(MissingSeparator))))\n"
     },
-    "seconds": 0.00890401005744934,
+    "seconds": 0.008941948413848877,
     "encoding_applicability": "reference decode failed; no JSON"
   },
   {
@@ -585,7 +585,7 @@
       "stdout": "",
       "stderr": "Error: Failed to parse invoice: ParseError(Bech32Error(Parse(Char(MixedCase))))\n"
     },
-    "seconds": 0.009490452706813812,
+    "seconds": 0.008778631687164307,
     "encoding_applicability": "reference decode failed; no JSON"
   },
   {
@@ -608,7 +608,7 @@
       "stdout": "",
       "stderr": "Error: Failed to parse invoice: SemanticError(InvalidSignature)\n"
     },
-    "seconds": 0.009223535656929016,
+    "seconds": 0.009667083621025085,
     "encoding_applicability": "reference decode failed; no JSON"
   },
   {
@@ -629,7 +629,7 @@
       "stdout": "",
       "stderr": "Error: Failed to parse invoice: ParseError(TooShortDataPart)\n"
     },
-    "seconds": 0.008939437568187714,
+    "seconds": 0.00895567238330841,
     "encoding_applicability": "reference decode failed; no JSON"
   },
   {
@@ -652,7 +652,7 @@
       "stdout": "",
       "stderr": "Error: Failed to parse invoice: ParseError(UnknownSiPrefix)\n"
     },
-    "seconds": 0.009484551846981049,
+    "seconds": 0.010367296636104584,
     "encoding_applicability": "reference decode failed; no JSON"
   },
   {
@@ -675,7 +675,7 @@
       "stdout": "",
       "stderr": "Error: Failed to parse invoice: SemanticError(ImpreciseAmount)\n"
     },
-    "seconds": 0.009768523275852203,
+    "seconds": 0.009816721081733704,
     "encoding_applicability": "reference decode failed; no JSON"
   },
   {
@@ -698,7 +698,7 @@
       "stdout": "",
       "stderr": "Error: Failed to parse invoice: SemanticError(NoPaymentSecret)\n"
     },
-    "seconds": 0.00850251317024231,
+    "seconds": 0.008897252380847931,
     "encoding_applicability": "reference decode failed; no JSON"
   },
   {
@@ -721,7 +721,7 @@
       "stdout": "",
       "stderr": "Error: Failed to parse invoice: SemanticError(MultiplePaymentSecrets)\n"
     },
-    "seconds": 0.008726611733436584,
+    "seconds": 0.009808659553527832,
     "encoding_applicability": "reference decode failed; no JSON"
   },
   {
@@ -745,7 +745,7 @@
       "stdout": "",
       "stderr": "Error: Failed to parse invoice: SemanticError(InvalidFeatures)\n"
     },
-    "seconds": 0.008705869317054749
+    "seconds": 0.00920126587152481
   },
   {
     "id": "negative/no-payment-secret-bit",
@@ -768,7 +768,7 @@
       "stdout": "",
       "stderr": "Error: Failed to parse invoice: SemanticError(InvalidFeatures)\n"
     },
-    "seconds": 0.00847424566745758
+    "seconds": 0.01017170399427414
   },
   {
     "id": "negative/unknown-even-feature",
@@ -791,7 +791,7 @@
       "stdout": "",
       "stderr": "Error: Failed to parse invoice: SemanticError(InvalidFeatures)\n"
     },
-    "seconds": 0.008611612021923065
+    "seconds": 0.009315945208072662
   },
   {
     "id": "negative/no-description",
@@ -814,7 +814,7 @@
       "stdout": "",
       "stderr": "Error: Failed to parse invoice: SemanticError(NoDescription)\n"
     },
-    "seconds": 0.008909165859222412
+    "seconds": 0.008788630366325378
   },
   {
     "id": "negative/two-descriptions",
@@ -837,7 +837,7 @@
       "stdout": "",
       "stderr": "Error: Failed to parse invoice: SemanticError(MultipleDescriptions)\n"
     },
-    "seconds": 0.008977636694908142
+    "seconds": 0.009101033210754395
   },
   {
     "id": "negative/description-utf8",
@@ -861,7 +861,7 @@
       "stdout": "",
       "stderr": "Error: Failed to parse invoice: ParseError(DescriptionDecodeError(FromUtf8Error { bytes: [255], error: Utf8Error { valid_up_to: 0, error_len: Some(1) } }))\n"
     },
-    "seconds": 0.009917408227920532
+    "seconds": 0.009320683777332306
   },
   {
     "id": "negative/expiry-overflow",
@@ -885,7 +885,7 @@
       "stdout": "",
       "stderr": "Error: Failed to parse invoice: ParseError(IntegerOverflowError)\n"
     },
-    "seconds": 0.009321153163909912
+    "seconds": 0.009007982909679413
   },
   {
     "id": "negative/fallback-short",
@@ -909,7 +909,7 @@
       "stdout": "",
       "stderr": "Error: Failed to parse invoice: ParseError(InvalidSegWitProgramLength)\n"
     },
-    "seconds": 0.008713401854038239
+    "seconds": 0.00974348932504654
   },
   {
     "id": "negative/route-length",
@@ -933,7 +933,7 @@
       "stdout": "",
       "stderr": "Error: Failed to parse invoice: ParseError(UnexpectedEndOfTaggedFields)\n"
     },
-    "seconds": 0.009340889751911163
+    "seconds": 0.009040482342243195
   },
   {
     "id": "negative/route-point",
@@ -957,7 +957,7 @@
       "stdout": "",
       "stderr": "Error: Failed to parse invoice: ParseError(MalformedSignature(InvalidPublicKey))\n"
     },
-    "seconds": 0.00870320200920105
+    "seconds": 0.00878780335187912
   },
   {
     "id": "negative/payee-point",
@@ -981,7 +981,7 @@
       "stdout": "",
       "stderr": "Error: Failed to parse invoice: ParseError(MalformedSignature(InvalidPublicKey))\n"
     },
-    "seconds": 0.008821703493595123
+    "seconds": 0.010384239256381989
   },
   {
     "id": "negative/amount-overflow",
@@ -1004,7 +1004,7 @@
       "stdout": "",
       "stderr": "Error: Failed to parse invoice: ParseError(IntegerOverflowError)\n"
     },
-    "seconds": 0.009481847286224365
+    "seconds": 0.009337708353996277
   },
   {
     "id": "negative/recovery-byte",
@@ -1027,7 +1027,7 @@
       "stdout": "",
       "stderr": "Error: Failed to parse invoice: ParseError(MalformedSignature(InvalidRecoveryId))\n"
     },
-    "seconds": 0.009152695536613464
+    "seconds": 0.009454607963562012
   },
   {
     "id": "negative/payment-hash-padding",
@@ -1051,7 +1051,7 @@
       "stdout": "{\n  \"network\": \"bitcoin\",\n  \"amount_msats\": null,\n  \"timestamp\": \"2017-06-01T10:57:38Z\",\n  \"timestamp_millis\": 1496314658000,\n  \"payment_hash\": \"0001020304050607080900010203040506070809000102030405060708090102\",\n  \"payment_secret\": \"1111111111111111111111111111111111111111111111111111111111111111\",\n  \"features\": [\n    {\n      \"payment_secret\": \"required\"\n    },\n    {\n      \"variable_length_onion\": \"required\"\n    }\n  ],\n  \"description\": \"Please consider supporting this project\",\n  \"description_hash\": null,\n  \"destination\": \"03e7156ae33b0a208d0744199163177e909e80176e55d97a2f221ede0f934dd9ad\",\n  \"expiry_seconds\": 3600,\n  \"min_final_cltv_expiry\": 18,\n  \"fallback_addresses\": [],\n  \"routes\": []\n}",
       "stderr": ""
     },
-    "seconds": 0.009004928171634674
+    "seconds": 0.00962492823600769
   },
   {
     "id": "negative/description-padding",
@@ -1075,7 +1075,7 @@
       "stdout": "{\n  \"network\": \"bitcoin\",\n  \"amount_msats\": 250000000,\n  \"timestamp\": \"2017-06-01T10:57:38Z\",\n  \"timestamp_millis\": 1496314658000,\n  \"payment_hash\": \"0001020304050607080900010203040506070809000102030405060708090102\",\n  \"payment_secret\": \"1111111111111111111111111111111111111111111111111111111111111111\",\n  \"features\": [\n    {\n      \"payment_secret\": \"required\"\n    },\n    {\n      \"variable_length_onion\": \"required\"\n    }\n  ],\n  \"description\": \"\u30ca\u30f3\u30bb\u30f3\u30b9 1\u676f\",\n  \"description_hash\": null,\n  \"destination\": \"03e7156ae33b0a208d0744199163177e909e80176e55d97a2f221ede0f934dd9ad\",\n  \"expiry_seconds\": 60,\n  \"min_final_cltv_expiry\": 18,\n  \"fallback_addresses\": [],\n  \"routes\": []\n}",
       "stderr": ""
     },
-    "seconds": 0.008604384958744049
+    "seconds": 0.009534686803817749
   },
   {
     "id": "negative/expiry-leading-zero",
@@ -1099,7 +1099,7 @@
       "stdout": "{\n  \"network\": \"bitcoin\",\n  \"amount_msats\": 250000000,\n  \"timestamp\": \"2017-06-01T10:57:38Z\",\n  \"timestamp_millis\": 1496314658000,\n  \"payment_hash\": \"0001020304050607080900010203040506070809000102030405060708090102\",\n  \"payment_secret\": \"1111111111111111111111111111111111111111111111111111111111111111\",\n  \"features\": [\n    {\n      \"payment_secret\": \"required\"\n    },\n    {\n      \"variable_length_onion\": \"required\"\n    }\n  ],\n  \"description\": \"1 cup coffee\",\n  \"description_hash\": null,\n  \"destination\": \"03e7156ae33b0a208d0744199163177e909e80176e55d97a2f221ede0f934dd9ad\",\n  \"expiry_seconds\": 60,\n  \"min_final_cltv_expiry\": 18,\n  \"fallback_addresses\": [],\n  \"routes\": []\n}",
       "stderr": ""
     },
-    "seconds": 0.009135052561759949
+    "seconds": 0.009407266974449158
   },
   {
     "id": "negative/cltv-leading-zero",
@@ -1123,7 +1123,7 @@
       "stdout": "{\n  \"network\": \"bitcoin\",\n  \"amount_msats\": 967878534,\n  \"timestamp\": \"2019-10-30T20:51:43Z\",\n  \"timestamp_millis\": 1572468703000,\n  \"payment_hash\": \"462264ede7e14047e9b249da94fefc47f41f7d02ee9b091815a5506bc8abf75f\",\n  \"payment_secret\": \"1111111111111111111111111111111111111111111111111111111111111111\",\n  \"features\": [\n    {\n      \"payment_secret\": \"required\"\n    },\n    {\n      \"variable_length_onion\": \"required\"\n    }\n  ],\n  \"description\": \"Blockstream Store: 88.85 USD for Blockstream Ledger Nano S x 1, \\\"Back In My Day\\\" Sticker x 2, \\\"I Got Lightning Working\\\" Sticker x 2 and 1 more items\",\n  \"description_hash\": null,\n  \"destination\": \"03e7156ae33b0a208d0744199163177e909e80176e55d97a2f221ede0f934dd9ad\",\n  \"expiry_seconds\": 604800,\n  \"min_final_cltv_expiry\": 10,\n  \"fallback_addresses\": [],\n  \"routes\": [\n    [\n      {\n        \"src_node_id\": \"03d06758583bb5154774a6eb221b1276c9e82d65bbaceca806d90e20c108f4b1c7\",\n        \"short_channel_id\": 648041158511951873,\n        \"fees\": {\n          \"base_msat\": 1000,\n          \"proportional_millionths\": 2500\n        },\n        \"cltv_expiry_delta\": 40,\n        \"htlc_minimum_msat\": null,\n        \"htlc_maximum_msat\": null\n      }\n    ]\n  ]\n}",
       "stderr": ""
     },
-    "seconds": 0.009015314280986786
+    "seconds": 0.00930216908454895
   },
   {
     "id": "negative/features-leading-zero",
@@ -1147,7 +1147,7 @@
       "stdout": "{\n  \"network\": \"bitcoin\",\n  \"amount_msats\": null,\n  \"timestamp\": \"2017-06-01T10:57:38Z\",\n  \"timestamp_millis\": 1496314658000,\n  \"payment_hash\": \"0001020304050607080900010203040506070809000102030405060708090102\",\n  \"payment_secret\": \"1111111111111111111111111111111111111111111111111111111111111111\",\n  \"features\": [\n    {\n      \"payment_secret\": \"required\"\n    },\n    {\n      \"variable_length_onion\": \"required\"\n    }\n  ],\n  \"description\": \"Please consider supporting this project\",\n  \"description_hash\": null,\n  \"destination\": \"03e7156ae33b0a208d0744199163177e909e80176e55d97a2f221ede0f934dd9ad\",\n  \"expiry_seconds\": 3600,\n  \"min_final_cltv_expiry\": 18,\n  \"fallback_addresses\": [],\n  \"routes\": []\n}",
       "stderr": ""
     },
-    "seconds": 0.009600847959518433
+    "seconds": 0.010099157691001892
   },
   {
     "id": "negative/n-payment-hash-padding",
@@ -1171,7 +1171,7 @@
       "stdout": "{\n  \"network\": \"bitcoin\",\n  \"amount_msats\": 2500000000,\n  \"timestamp\": \"2036-06-05T21:37:38Z\",\n  \"timestamp_millis\": 2096314658000,\n  \"payment_hash\": \"0001020304050607080900010203040506070809000102030405060708090102\",\n  \"payment_secret\": \"1111111111111111111111111111111111111111111111111111111111111111\",\n  \"features\": [\n    {\n      \"payment_secret\": \"required\"\n    },\n    {\n      \"variable_length_onion\": \"required\"\n    }\n  ],\n  \"description\": \"Please consider supporting this project\",\n  \"description_hash\": null,\n  \"destination\": \"03e7156ae33b0a208d0744199163177e909e80176e55d97a2f221ede0f934dd9ad\",\n  \"expiry_seconds\": 3600,\n  \"min_final_cltv_expiry\": 18,\n  \"fallback_addresses\": [],\n  \"routes\": []\n}",
       "stderr": ""
     },
-    "seconds": 0.00887937843799591
+    "seconds": 0.009432278573513031
   },
   {
     "id": "negative/bech32m",
@@ -1194,7 +1194,7 @@
       "stdout": "",
       "stderr": "Error: Failed to parse invoice: ParseError(Bech32Error(Checksum(InvalidResidue)))\n"
     },
-    "seconds": 0.009259045124053955
+    "seconds": 0.00977259874343872
   },
   {
     "id": "positive/fallback-25",
@@ -1217,7 +1217,7 @@
       "stdout": "{\n  \"network\": \"testnet\",\n  \"amount_msats\": 2000000000,\n  \"timestamp\": \"2017-06-01T10:57:38Z\",\n  \"timestamp_millis\": 1496314658000,\n  \"payment_hash\": \"0001020304050607080900010203040506070809000102030405060708090102\",\n  \"payment_secret\": \"1111111111111111111111111111111111111111111111111111111111111111\",\n  \"features\": [\n    {\n      \"payment_secret\": \"required\"\n    },\n    {\n      \"variable_length_onion\": \"required\"\n    }\n  ],\n  \"description\": null,\n  \"description_hash\": \"3925b6f67e2c340036ed12093dd44e0368df1b6ea26c53dbe4811f58fd5db8c1\",\n  \"destination\": \"03e7156ae33b0a208d0744199163177e909e80176e55d97a2f221ede0f934dd9ad\",\n  \"expiry_seconds\": 3600,\n  \"min_final_cltv_expiry\": 18,\n  \"fallback_addresses\": [],\n  \"routes\": []\n}",
       "stderr": ""
     },
-    "seconds": 0.008637726306915283
+    "seconds": 0.010229051113128662
   },
   {
     "id": "positive/amount-none",
@@ -1240,7 +1240,7 @@
       "stdout": "{\n  \"network\": \"bitcoin\",\n  \"amount_msats\": null,\n  \"timestamp\": \"2017-06-01T10:57:38Z\",\n  \"timestamp_millis\": 1496314658000,\n  \"payment_hash\": \"0001020304050607080900010203040506070809000102030405060708090102\",\n  \"payment_secret\": \"1111111111111111111111111111111111111111111111111111111111111111\",\n  \"features\": [\n    {\n      \"payment_secret\": \"required\"\n    },\n    {\n      \"variable_length_onion\": \"required\"\n    }\n  ],\n  \"description\": \"Please consider supporting this project\",\n  \"description_hash\": null,\n  \"destination\": \"03e7156ae33b0a208d0744199163177e909e80176e55d97a2f221ede0f934dd9ad\",\n  \"expiry_seconds\": 3600,\n  \"min_final_cltv_expiry\": 18,\n  \"fallback_addresses\": [],\n  \"routes\": []\n}",
       "stderr": ""
     },
-    "seconds": 0.009142011404037476
+    "seconds": 0.009828530251979828
   },
   {
     "id": "positive/amount-leading-zero",
@@ -1263,7 +1263,7 @@
       "stdout": "{\n  \"network\": \"bitcoin\",\n  \"amount_msats\": 250000000,\n  \"timestamp\": \"2017-06-01T10:57:38Z\",\n  \"timestamp_millis\": 1496314658000,\n  \"payment_hash\": \"0001020304050607080900010203040506070809000102030405060708090102\",\n  \"payment_secret\": \"1111111111111111111111111111111111111111111111111111111111111111\",\n  \"features\": [\n    {\n      \"payment_secret\": \"required\"\n    },\n    {\n      \"variable_length_onion\": \"required\"\n    }\n  ],\n  \"description\": \"1 cup coffee\",\n  \"description_hash\": null,\n  \"destination\": \"031b52bd31cb3ca5037014c137fb61ce7f05b32a690dc06bfffb6e490fcc610362\",\n  \"expiry_seconds\": 60,\n  \"min_final_cltv_expiry\": 18,\n  \"fallback_addresses\": [],\n  \"routes\": []\n}",
       "stderr": ""
     },
-    "seconds": 0.009536214172840118
+    "seconds": 0.009213156998157501
   },
   {
     "id": "positive/n-amount-leading-zero",
@@ -1286,7 +1286,7 @@
       "stdout": "",
       "stderr": "Error: Failed to parse invoice: SemanticError(InvalidSignature)\n"
     },
-    "seconds": 0.00869324803352356
+    "seconds": 0.009819291532039642
   },
   {
     "id": "nfields/n-low",
@@ -1308,7 +1308,7 @@
       "stdout": "{\n  \"network\": \"bitcoin\",\n  \"amount_msats\": 2500000000,\n  \"timestamp\": \"2036-06-05T21:37:38Z\",\n  \"timestamp_millis\": 2096314658000,\n  \"payment_hash\": \"0001020304050607080900010203040506070809000102030405060708090102\",\n  \"payment_secret\": \"1111111111111111111111111111111111111111111111111111111111111111\",\n  \"features\": [\n    {\n      \"payment_secret\": \"required\"\n    },\n    {\n      \"variable_length_onion\": \"required\"\n    }\n  ],\n  \"description\": \"Please consider supporting this project\",\n  \"description_hash\": null,\n  \"destination\": \"03e7156ae33b0a208d0744199163177e909e80176e55d97a2f221ede0f934dd9ad\",\n  \"expiry_seconds\": 3600,\n  \"min_final_cltv_expiry\": 18,\n  \"fallback_addresses\": [],\n  \"routes\": []\n}",
       "stderr": ""
     },
-    "seconds": 0.00879119336605072
+    "seconds": 0.008997052907943726
   },
   {
     "id": "nfields/n-high",
@@ -1330,7 +1330,7 @@
       "stdout": "",
       "stderr": "Error: Failed to parse invoice: SemanticError(InvalidSignature)\n"
     },
-    "seconds": 0.009205929934978485
+    "seconds": 0.00892273336648941
   },
   {
     "id": "url-supported/case-duplicates",
@@ -1362,7 +1362,7 @@
       "stdout": "{\n  \"bech32\": \"lnurl1fp29g5zn8ghj732cg9x4qnz99ep57nf6xqcrgdpn9acr7ufavy4kyf39xccn6enfwfehgfnp84kxzum5ydn8yct8erpsqy\",\n  \"url\": \"HTTPS://EXAMPLE.COM:00443/p?q=a+b&%61=first&a=last#frag\",\n  \"host\": \"example.com\",\n  \"base\": \"https://example.com/\",\n  \"query\": \"q=a+b&%61=first&a=last\",\n  \"query_params\": {\n    \"a\": \"last\",\n    \"q\": \"a b\"\n  }\n}",
       "stderr": ""
     },
-    "seconds": 0.00912204384803772
+    "seconds": 0.00888679176568985
   },
   {
     "id": "url-supported/form-pieces",
@@ -1399,10 +1399,10 @@
     },
     "result": {
       "status": 0,
-      "stdout": "{\n  \"bech32\": \"lnurl1dp68gurn8ghj7etcv9khqmr99e3k7mf08acn6ffjgg4j2v3syejk6ur50y7jvenvv9njvfnc84sn6cs2d68l4\",\n  \"url\": \"https://example.com/?q=%2B+%20&empty=&flag&&x=a=b\",\n  \"host\": \"example.com\",\n  \"base\": \"https://example.com/\",\n  \"query\": \"q=%2B+%20&empty=&flag&&x=a=b\",\n  \"query_params\": {\n    \"empty\": \"\",\n    \"flag\": \"\",\n    \"q\": \"+  \",\n    \"x\": \"a=b\"\n  }\n}",
+      "stdout": "{\n  \"bech32\": \"lnurl1dp68gurn8ghj7etcv9khqmr99e3k7mf08acn6ffjgg4j2v3syejk6ur50y7jvenvv9njvfnc84sn6cs2d68l4\",\n  \"url\": \"https://example.com/?q=%2B+%20&empty=&flag&&x=a=b\",\n  \"host\": \"example.com\",\n  \"base\": \"https://example.com/\",\n  \"query\": \"q=%2B+%20&empty=&flag&&x=a=b\",\n  \"query_params\": {\n    \"x\": \"a=b\",\n    \"empty\": \"\",\n    \"flag\": \"\",\n    \"q\": \"+  \"\n  }\n}",
       "stderr": ""
     },
-    "seconds": 0.008411601185798645
+    "seconds": 0.009328685700893402
   },
   {
     "id": "url-supported/malformed-query",
@@ -1435,10 +1435,10 @@
     },
     "result": {
       "status": 0,
-      "stdout": "{\n  \"bech32\": \"lnurl1dp68gurn8ghj7etcv9khqmr99e3k7mf08acn6f26tgn8s0f9gerzv7fay4znyffcxgs0gl6r\",\n  \"url\": \"https://example.com/?q=%ZZ&x=%FF&y=%E2%82\",\n  \"host\": \"example.com\",\n  \"base\": \"https://example.com/\",\n  \"query\": \"q=%ZZ&x=%FF&y=%E2%82\",\n  \"query_params\": {\n    \"q\": \"%ZZ\",\n    \"y\": \"\ufffd\",\n    \"x\": \"\ufffd\"\n  }\n}",
+      "stdout": "{\n  \"bech32\": \"lnurl1dp68gurn8ghj7etcv9khqmr99e3k7mf08acn6f26tgn8s0f9gerzv7fay4znyffcxgs0gl6r\",\n  \"url\": \"https://example.com/?q=%ZZ&x=%FF&y=%E2%82\",\n  \"host\": \"example.com\",\n  \"base\": \"https://example.com/\",\n  \"query\": \"q=%ZZ&x=%FF&y=%E2%82\",\n  \"query_params\": {\n    \"x\": \"\ufffd\",\n    \"q\": \"%ZZ\",\n    \"y\": \"\ufffd\"\n  }\n}",
       "stderr": ""
     },
-    "seconds": 0.008613906800746918
+    "seconds": 0.009111806750297546
   },
   {
     "id": "url-supported/special-query",
@@ -1466,7 +1466,7 @@
       "stdout": "{\n  \"bech32\": \"lnurl1dp68gurn8ghj7etcv9khqmr99e3k7mf08acn6cfqvgnkxctxcw5sdsx6t5\",\n  \"url\": \"https://example.com/?q=a b'caf\u00e9\",\n  \"host\": \"example.com\",\n  \"base\": \"https://example.com/\",\n  \"query\": \"q=a%20b%27caf%C3%A9\",\n  \"query_params\": {\n    \"q\": \"a b'caf\u00e9\"\n  }\n}",
       "stderr": ""
     },
-    "seconds": 0.008912548422813416
+    "seconds": 0.009226858615875244
   },
   {
     "id": "url-supported/query-encode-set",
@@ -1494,7 +1494,7 @@
       "stdout": "{\n  \"bech32\": \"lnurl1dp68gurn8ghj7etcv9khqmr99e3k7mf08acn6g3u8cqj2vnx0u4cg42z\",\n  \"url\": \"https://example.com/?q=\\\"<>\\u0001%2f\u007f\",\n  \"host\": \"example.com\",\n  \"base\": \"https://example.com/\",\n  \"query\": \"q=%22%3C%3E%01%2f%7F\",\n  \"query_params\": {\n    \"q\": \"\\\"<>\\u0001/\u007f\"\n  }\n}",
       "stderr": ""
     },
-    "seconds": 0.009147301316261292
+    "seconds": 0.009605549275875092
   },
   {
     "id": "url-supported/no-query",
@@ -1517,7 +1517,7 @@
       "stdout": "{\n  \"bech32\": \"lnurl1dp68gurn8ghj7etcv9khqmr99e3k7mf047kw9w\",\n  \"url\": \"https://example.com/\",\n  \"host\": \"example.com\",\n  \"base\": \"https://example.com/\",\n  \"query\": null,\n  \"query_params\": {}\n}",
       "stderr": ""
     },
-    "seconds": 0.008931778371334076
+    "seconds": 0.009423092007637024
   },
   {
     "id": "url-supported/empty-query",
@@ -1540,7 +1540,7 @@
       "stdout": "{\n  \"bech32\": \"lnurl1dp68gurn8ghj7etcv9khqmr99e3k7mf08uadu03m\",\n  \"url\": \"https://example.com/?\",\n  \"host\": \"example.com\",\n  \"base\": \"https://example.com/\",\n  \"query\": \"\",\n  \"query_params\": {}\n}",
       "stderr": ""
     },
-    "seconds": 0.010038986802101135
+    "seconds": 0.009031616151332855
   },
   {
     "id": "url-supported/empty-query-fragment",
@@ -1563,7 +1563,7 @@
       "stdout": "{\n  \"bech32\": \"lnurl1dp68gurn8ghj7etcv9khqmr99e3k7mf08u3kvunpvakk2mn5qfdds8\",\n  \"url\": \"https://example.com/?#fragment\",\n  \"host\": \"example.com\",\n  \"base\": \"https://example.com/\",\n  \"query\": \"\",\n  \"query_params\": {}\n}",
       "stderr": ""
     },
-    "seconds": 0.008417092263698578
+    "seconds": 0.009342238306999207
   },
   {
     "id": "url-supported/encoded-fragment",
@@ -1591,7 +1591,7 @@
       "stdout": "{\n  \"bech32\": \"lnurl1dp68gurn8ghj7etcv9khqmr99e3k7mf08acn6ffjxv3kvunpvakk2mn568g9mv\",\n  \"url\": \"https://example.com/?q=%23#fragment\",\n  \"host\": \"example.com\",\n  \"base\": \"https://example.com/\",\n  \"query\": \"q=%23\",\n  \"query_params\": {\n    \"q\": \"#\"\n  }\n}",
       "stderr": ""
     },
-    "seconds": 0.008583895862102509
+    "seconds": 0.00930563360452652
   },
   {
     "id": "url-supported/url-cleanup",
@@ -1619,7 +1619,7 @@
       "stdout": "{\n  \"bech32\": \"lnurl1qqsp76r5w3c8xw309ajhsztpd4cxcefwvdhk6tmsvyxhg6pl0q7kzznzyqqq8jmqtl\",\n  \"url\": \"\\u0000 \\u001fhttps://ex\\tample.com/pa\\rth?x=a\\nb \\u0000\",\n  \"host\": \"example.com\",\n  \"base\": \"https://example.com/\",\n  \"query\": \"x=ab\",\n  \"query_params\": {\n    \"x\": \"ab\"\n  }\n}",
       "stderr": ""
     },
-    "seconds": 0.00884634256362915
+    "seconds": 0.009402506053447723
   },
   {
     "id": "url-supported/no-slashes",
@@ -1642,7 +1642,7 @@
       "stdout": "{\n  \"bech32\": \"lnurl1dp68gurn8fjhsctdwpkx2tnrdaks6ns2e4\",\n  \"url\": \"https:example.com\",\n  \"host\": \"example.com\",\n  \"base\": \"https://example.com/\",\n  \"query\": null,\n  \"query_params\": {}\n}",
       "stderr": ""
     },
-    "seconds": 0.009099259972572327
+    "seconds": 0.009952940046787262
   },
   {
     "id": "url-supported/one-slash",
@@ -1665,7 +1665,7 @@
       "stdout": "{\n  \"bech32\": \"lnurl1dp68gurn8ghk27rpd4cxcefwvdhk66t6nwe\",\n  \"url\": \"https:/example.com\",\n  \"host\": \"example.com\",\n  \"base\": \"https://example.com/\",\n  \"query\": null,\n  \"query_params\": {}\n}",
       "stderr": ""
     },
-    "seconds": 0.009107008576393127
+    "seconds": 0.009380534291267395
   },
   {
     "id": "url-supported/backslashes",
@@ -1688,7 +1688,7 @@
       "stdout": "{\n  \"bech32\": \"lnurl1dp68gurn8fw9ct6uv4uxzmtsd3jjucm0d5hhqct5dq089kl7\",\n  \"url\": \"https:\\\\\\\\/\\\\example.com/path\",\n  \"host\": \"example.com\",\n  \"base\": \"https://example.com/\",\n  \"query\": null,\n  \"query_params\": {}\n}",
       "stderr": ""
     },
-    "seconds": 0.008709065616130829
+    "seconds": 0.009428247809410095
   },
   {
     "id": "url-supported/domain-dot",
@@ -1711,7 +1711,7 @@
       "stdout": "{\n  \"bech32\": \"lnurl1dp68gurn8ghj7etcv9khqmr99e3k7mfwggzmcu\",\n  \"url\": \"https://example.com.\",\n  \"host\": \"example.com.\",\n  \"base\": \"https://example.com./\",\n  \"query\": null,\n  \"query_params\": {}\n}",
       "stderr": ""
     },
-    "seconds": 0.008776538074016571
+    "seconds": 0.00929126888513565
   },
   {
     "id": "url-supported/encoded-host",
@@ -1734,7 +1734,7 @@
       "stdout": "{\n  \"bech32\": \"lnurl1dp68gurn8ghj7ffkx4vyzn2sf3zjucm0d5j5lusj\",\n  \"url\": \"https://%65XAMPLE.com\",\n  \"host\": \"example.com\",\n  \"base\": \"https://example.com/\",\n  \"query\": null,\n  \"query_params\": {}\n}",
       "stderr": ""
     },
-    "seconds": 0.008541248738765717
+    "seconds": 0.009625867009162903
   },
   {
     "id": "url-supported/port-zero",
@@ -1757,7 +1757,7 @@
       "stdout": "{\n  \"bech32\": \"lnurl1dp68gurn8ghj7etcv9khqmr99e3k7mf6xqhs7r0nje\",\n  \"url\": \"https://example.com:0/\",\n  \"host\": \"example.com\",\n  \"base\": \"https://example.com/\",\n  \"query\": null,\n  \"query_params\": {}\n}",
       "stderr": ""
     },
-    "seconds": 0.008228763937950134
+    "seconds": 0.009001553058624268
   },
   {
     "id": "url-supported/port-max",
@@ -1780,7 +1780,7 @@
       "stdout": "{\n  \"bech32\": \"lnurl1dp68gurn8ghj7etcv9khqmr99e3k7mf6xc6n2ve49ucu29e0\",\n  \"url\": \"https://example.com:65535/\",\n  \"host\": \"example.com\",\n  \"base\": \"https://example.com/\",\n  \"query\": null,\n  \"query_params\": {}\n}",
       "stderr": ""
     },
-    "seconds": 0.008920319378376007
+    "seconds": 0.009039528667926788
   },
   {
     "id": "url-supported/port-leading",
@@ -1803,7 +1803,7 @@
       "stdout": "{\n  \"bech32\": \"lnurl1dp68gurn8ghj7etcv9khqmr99e3k7mf6xqcrqwps9u9l66dj\",\n  \"url\": \"https://example.com:00080/\",\n  \"host\": \"example.com\",\n  \"base\": \"https://example.com/\",\n  \"query\": null,\n  \"query_params\": {}\n}",
       "stderr": ""
     },
-    "seconds": 0.009072460234165192
+    "seconds": 0.009542703628540039
   },
   {
     "id": "url-supported/port-empty",
@@ -1826,7 +1826,7 @@
       "stdout": "{\n  \"bech32\": \"lnurl1dp68gurn8ghj7etcv9khqmr99e3k7mf69uqam6xr\",\n  \"url\": \"https://example.com:/\",\n  \"host\": \"example.com\",\n  \"base\": \"https://example.com/\",\n  \"query\": null,\n  \"query_params\": {}\n}",
       "stderr": ""
     },
-    "seconds": 0.008483104407787323
+    "seconds": 0.009496547281742096
   },
   {
     "id": "url-supported/loopback",
@@ -1849,7 +1849,7 @@
       "stdout": "{\n  \"bech32\": \"lnurl1dp68gurn8ghj7vfjxuhrqt3s9ccn5wps8qcz7qpq3un\",\n  \"url\": \"https://127.0.0.1:8080/\",\n  \"host\": \"127.0.0.1\",\n  \"base\": \"https://127.0.0.1/\",\n  \"query\": null,\n  \"query_params\": {}\n}",
       "stderr": ""
     },
-    "seconds": 0.009050056338310242
+    "seconds": 0.01008480042219162
   },
   {
     "id": "url-supported/ipv4-zero",
@@ -1872,7 +1872,7 @@
       "stdout": "{\n  \"bech32\": \"lnurl1dp68gup69uhnqt3s9cczuvp0u3pcyy\",\n  \"url\": \"http://0.0.0.0/\",\n  \"host\": \"0.0.0.0\",\n  \"base\": \"http://0.0.0.0/\",\n  \"query\": null,\n  \"query_params\": {}\n}",
       "stderr": ""
     },
-    "seconds": 0.00932784378528595
+    "seconds": 0.009760178625583649
   },
   {
     "id": "url-supported/ipv4-max",
@@ -1895,7 +1895,7 @@
       "stdout": "{\n  \"bech32\": \"lnurl1dp68gurn8ghj7v34x5hrydf49cer2dfwxg6n2tcqcexvk\",\n  \"url\": \"https://255.255.255.255/\",\n  \"host\": \"255.255.255.255\",\n  \"base\": \"https://255.255.255.255/\",\n  \"query\": null,\n  \"query_params\": {}\n}",
       "stderr": ""
     },
-    "seconds": 0.008832857012748718
+    "seconds": 0.008847683668136597
   },
   {
     "id": "url-supported/encoded-ipv4",
@@ -1918,7 +1918,7 @@
       "stdout": "{\n  \"bech32\": \"lnurl1dp68gurn8ghj7vf9xfjnyffjv5ej2vn9xshs86yvt2\",\n  \"url\": \"https://1%2e2%2e3%2e4/\",\n  \"host\": \"1.2.3.4\",\n  \"base\": \"https://1.2.3.4/\",\n  \"query\": null,\n  \"query_params\": {}\n}",
       "stderr": ""
     },
-    "seconds": 0.008648820221424103
+    "seconds": 0.009496785700321198
   },
   {
     "id": "url-supported/backslash-at",
@@ -1941,7 +1941,7 @@
       "stdout": "{\n  \"bech32\": \"lnurl1dp68gurn8ghj7etcv9khqmr99e3k7m2ugpjhv6tv9e5kuanpd35kgtc0q88st\",\n  \"url\": \"https://example.com\\\\@evil.invalid/\",\n  \"host\": \"example.com\",\n  \"base\": \"https://example.com/\",\n  \"query\": null,\n  \"query_params\": {}\n}",
       "stderr": ""
     },
-    "seconds": 0.009362183511257172
+    "seconds": 0.009224586188793182
   },
   {
     "id": "url-supported/path-at",
@@ -1969,7 +1969,7 @@
       "stdout": "{\n  \"bech32\": \"lnurl1dp68gurn8ghj7etcv9khqmr99e3k7mf0wpshg6zqdesk6efl0q75q7g3p4flp\",\n  \"url\": \"https://example.com/path@name?x=@y\",\n  \"host\": \"example.com\",\n  \"base\": \"https://example.com/\",\n  \"query\": \"x=@y\",\n  \"query_params\": {\n    \"x\": \"@y\"\n  }\n}",
       "stderr": ""
     },
-    "seconds": 0.00832703709602356
+    "seconds": 0.009845815598964691
   },
   {
     "id": "url-supported/underscore",
@@ -1992,7 +1992,7 @@
       "stdout": "{\n  \"bech32\": \"lnurl1dp68gurn8ghj7hmnv4e8v6trv5hx27rpd4cxcefwvdhk6tcmmhmpj\",\n  \"url\": \"https://_service.example.com/\",\n  \"host\": \"_service.example.com\",\n  \"base\": \"https://_service.example.com/\",\n  \"query\": null,\n  \"query_params\": {}\n}",
       "stderr": ""
     },
-    "seconds": 0.009168870747089386
+    "seconds": 0.009496927261352539
   },
   {
     "id": "url-supported/hyphens",
@@ -2015,7 +2015,7 @@
       "stdout": "{\n  \"bech32\": \"lnurl1dp68gurn8ghj7ttp95hx27rpd4cxcefwvdhk6tclp6czg\",\n  \"url\": \"https://-a-.example.com/\",\n  \"host\": \"-a-.example.com\",\n  \"base\": \"https://-a-.example.com/\",\n  \"query\": null,\n  \"query_params\": {}\n}",
       "stderr": ""
     },
-    "seconds": 0.008927799761295319
+    "seconds": 0.008755974471569061
   },
   {
     "id": "url-supported/empty-label",
@@ -2038,7 +2038,7 @@
       "stdout": "{\n  \"bech32\": \"lnurl1dp68gurn8ghj7cfw9ejhsctdwpkx2tnrdakj7hug7l5\",\n  \"url\": \"https://a..example.com/\",\n  \"host\": \"a..example.com\",\n  \"base\": \"https://a..example.com/\",\n  \"query\": null,\n  \"query_params\": {}\n}",
       "stderr": ""
     },
-    "seconds": 0.009098388254642487
+    "seconds": 0.00929480791091919
   },
   {
     "id": "url-supported/ascii-punctuation",
@@ -2061,7 +2061,7 @@
       "stdout": "{\n  \"bech32\": \"lnurl1dp68gurn8ghj7cfpysnzw2pf9g4jcweatuhx27rpd4cxcefwvdhk6tcealfl7\",\n  \"url\": \"https://a!$&'()*+,;=_.example.com/\",\n  \"host\": \"a!$&'()*+,;=_.example.com\",\n  \"base\": \"https://a!$&'()*+,;=_.example.com/\",\n  \"query\": null,\n  \"query_params\": {}\n}",
       "stderr": ""
     },
-    "seconds": 0.009866073727607727
+    "seconds": 0.009804554283618927
   },
   {
     "id": "url-supported/long-label",
@@ -2084,7 +2084,7 @@
       "stdout": "{\n  \"bech32\": \"lnurl1dp68gurn8ghj7ctpv9skzctpv9skzctpv9skzctpv9skzctpv9skzctpv9skzctpv9skzctpv9skzctpv9skzctpv9skzctpv9skzctpv9skzctpv9sjuetcv9khqmr99e3k7mf0jqje7r\",\n  \"url\": \"https://aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa.example.com/\",\n  \"host\": \"aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa.example.com\",\n  \"base\": \"https://aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa.example.com/\",\n  \"query\": null,\n  \"query_params\": {}\n}",
       "stderr": ""
     },
-    "seconds": 0.00920034945011139
+    "seconds": 0.009609706699848175
   },
   {
     "id": "url-supported/http-case",
@@ -2107,7 +2107,7 @@
       "stdout": "{\n  \"bech32\": \"lnurl1fp29g5p69uh52kzpf4gyc3fwfafywtmsv96xs7xrjdy\",\n  \"url\": \"HTTP://EXAMPLE.ORG/path\",\n  \"host\": \"example.org\",\n  \"base\": \"http://example.org/\",\n  \"query\": null,\n  \"query_params\": {}\n}",
       "stderr": ""
     },
-    "seconds": 0.009705975651741028
+    "seconds": 0.009446017444133759
   },
   {
     "id": "url-supported/query-keys",
@@ -2144,10 +2144,10 @@
     },
     "result": {
       "status": 0,
-      "stdout": "{\n  \"bech32\": \"lnurl1dp68gurn8ghj7etcv9khqmr99e3k7mf08ujnvvfadahx2fnp8468wmex84jk6ur50ynz2vjz84cxcatnyc4n6umsv93k2kujqyr\",\n  \"url\": \"https://example.com/?%61=one&a=two&=empty&%2B=plus&+=space\",\n  \"host\": \"example.com\",\n  \"base\": \"https://example.com/\",\n  \"query\": \"%61=one&a=two&=empty&%2B=plus&+=space\",\n  \"query_params\": {\n    \"+\": \"plus\",\n    \"a\": \"two\",\n    \"\": \"empty\",\n    \" \": \"space\"\n  }\n}",
+      "stdout": "{\n  \"bech32\": \"lnurl1dp68gurn8ghj7etcv9khqmr99e3k7mf08ujnvvfadahx2fnp8468wmex84jk6ur50ynz2vjz84cxcatnyc4n6umsv93k2kujqyr\",\n  \"url\": \"https://example.com/?%61=one&a=two&=empty&%2B=plus&+=space\",\n  \"host\": \"example.com\",\n  \"base\": \"https://example.com/\",\n  \"query\": \"%61=one&a=two&=empty&%2B=plus&+=space\",\n  \"query_params\": {\n    \"\": \"empty\",\n    \" \": \"space\",\n    \"+\": \"plus\",\n    \"a\": \"two\"\n  }\n}",
       "stderr": ""
     },
-    "seconds": 0.008646070957183838
+    "seconds": 0.00935383141040802
   },
   {
     "id": "url-supported/query-utf8-subparts",
@@ -2188,10 +2188,10 @@
     },
     "result": {
       "status": 0,
-      "stdout": "{\n  \"bech32\": \"lnurl1dp68gurn8ghj7etcv9khqmr99e3k7mf08asn6f29xqjnsvp98qczvc3ay4rrqffexqjnsvpxvv7j232yy4qnqffcxqnxg0f9gvej2sfeyejn6f29xgjnsvnc4tarnz\",\n  \"url\": \"https://example.com/?a=%E0%80%80&b=%F0%90%80&c=%ED%A0%80&d=%C3%A9&e=%E2%82x\",\n  \"host\": \"example.com\",\n  \"base\": \"https://example.com/\",\n  \"query\": \"a=%E0%80%80&b=%F0%90%80&c=%ED%A0%80&d=%C3%A9&e=%E2%82x\",\n  \"query_params\": {\n    \"a\": \"\ufffd\ufffd\ufffd\",\n    \"b\": \"\ufffd\",\n    \"c\": \"\ufffd\ufffd\ufffd\",\n    \"d\": \"\u00e9\",\n    \"e\": \"\ufffdx\"\n  }\n}",
+      "stdout": "{\n  \"bech32\": \"lnurl1dp68gurn8ghj7etcv9khqmr99e3k7mf08asn6f29xqjnsvp98qczvc3ay4rrqffexqjnsvpxvv7j232yy4qnqffcxqnxg0f9gvej2sfeyejn6f29xgjnsvnc4tarnz\",\n  \"url\": \"https://example.com/?a=%E0%80%80&b=%F0%90%80&c=%ED%A0%80&d=%C3%A9&e=%E2%82x\",\n  \"host\": \"example.com\",\n  \"base\": \"https://example.com/\",\n  \"query\": \"a=%E0%80%80&b=%F0%90%80&c=%ED%A0%80&d=%C3%A9&e=%E2%82x\",\n  \"query_params\": {\n    \"d\": \"\u00e9\",\n    \"e\": \"\ufffdx\",\n    \"b\": \"\ufffd\",\n    \"c\": \"\ufffd\ufffd\ufffd\",\n    \"a\": \"\ufffd\ufffd\ufffd\"\n  }\n}",
       "stderr": ""
     },
-    "seconds": 0.009075090289115906
+    "seconds": 0.009697608649730682
   },
   {
     "id": "url-supported/percent-once",
@@ -2220,10 +2220,10 @@
     },
     "result": {
       "status": 0,
-      "stdout": "{\n  \"bech32\": \"lnurl1dp68gurn8ghj7etcv9khqmr99e3k7mf08acn6ffjx5exvfnc85jnyes4y6ses\",\n  \"url\": \"https://example.com/?q=%252f&x=%2f\",\n  \"host\": \"example.com\",\n  \"base\": \"https://example.com/\",\n  \"query\": \"q=%252f&x=%2f\",\n  \"query_params\": {\n    \"x\": \"/\",\n    \"q\": \"%2f\"\n  }\n}",
+      "stdout": "{\n  \"bech32\": \"lnurl1dp68gurn8ghj7etcv9khqmr99e3k7mf08acn6ffjx5exvfnc85jnyes4y6ses\",\n  \"url\": \"https://example.com/?q=%252f&x=%2f\",\n  \"host\": \"example.com\",\n  \"base\": \"https://example.com/\",\n  \"query\": \"q=%252f&x=%2f\",\n  \"query_params\": {\n    \"q\": \"%2f\",\n    \"x\": \"/\"\n  }\n}",
       "stderr": ""
     },
-    "seconds": 0.008510380983352661
+    "seconds": 0.00910378247499466
   },
   {
     "id": "url-supported/fragment-no-query",
@@ -2246,7 +2246,7 @@
       "stdout": "{\n  \"bech32\": \"lnurl1dp68gurn8ghj7etcv9khqmr99e3k7mf0yvlkjemwdaex2eq9jcc3h\",\n  \"url\": \"https://example.com/#?ignored\",\n  \"host\": \"example.com\",\n  \"base\": \"https://example.com/\",\n  \"query\": null,\n  \"query_params\": {}\n}",
       "stderr": ""
     },
-    "seconds": 0.008418120443820953
+    "seconds": 0.008801653981208801
   },
   {
     "id": "url-refusal/userinfo",
@@ -2265,7 +2265,7 @@
       "stdout": "{\n  \"bech32\": \"lnurl1dp68gurn8ghj7atnv4eyqetcv9khqmr99e3k7mf08vejrg\",\n  \"url\": \"https://user@example.com/\",\n  \"host\": \"example.com\",\n  \"base\": \"https://example.com/\",\n  \"query\": null,\n  \"query_params\": {}\n}",
       "stderr": ""
     },
-    "seconds": 0.008905366063117981
+    "seconds": 0.010268673300743103
   },
   {
     "id": "url-refusal/userinfo-multiple",
@@ -2284,7 +2284,7 @@
       "stdout": "{\n  \"bech32\": \"lnurl1dp68gurn8ghj7c2qvfqx27rpd4cxcefwvdhk6tcjswjnv\",\n  \"url\": \"https://a@b@example.com/\",\n  \"host\": \"example.com\",\n  \"base\": \"https://example.com/\",\n  \"query\": null,\n  \"query_params\": {}\n}",
       "stderr": ""
     },
-    "seconds": 0.00893053412437439
+    "seconds": 0.009293176233768463
   },
   {
     "id": "url-refusal/ipv6",
@@ -2303,7 +2303,7 @@
       "stdout": "{\n  \"bech32\": \"lnurl1dp68gurn8ghj7ke68gc46tcmvcjht\",\n  \"url\": \"https://[::1]/\",\n  \"host\": \"[::1]\",\n  \"base\": \"https://[::1]/\",\n  \"query\": null,\n  \"query_params\": {}\n}",
       "stderr": ""
     },
-    "seconds": 0.008717969059944153
+    "seconds": 0.009556353092193604
   },
   {
     "id": "url-refusal/ipv4-hex",
@@ -2322,7 +2322,7 @@
       "stdout": "{\n  \"bech32\": \"lnurl1dp68gurn8ghj7vrcxanrqvpsxqcrztcc6lxus\",\n  \"url\": \"https://0x7f000001/\",\n  \"host\": \"127.0.0.1\",\n  \"base\": \"https://127.0.0.1/\",\n  \"query\": null,\n  \"query_params\": {}\n}",
       "stderr": ""
     },
-    "seconds": 0.009034007787704468
+    "seconds": 0.009820818901062012
   },
   {
     "id": "url-refusal/ipv4-integer",
@@ -2341,7 +2341,7 @@
       "stdout": "{\n  \"bech32\": \"lnurl1dp68gurn8ghj7v33xvcrwvpkxsenxtckmtvx6\",\n  \"url\": \"https://2130706433/\",\n  \"host\": \"127.0.0.1\",\n  \"base\": \"https://127.0.0.1/\",\n  \"query\": null,\n  \"query_params\": {}\n}",
       "stderr": ""
     },
-    "seconds": 0.009245447814464569
+    "seconds": 0.00984317809343338
   },
   {
     "id": "url-refusal/ipv4-short",
@@ -2360,7 +2360,7 @@
       "stdout": "{\n  \"bech32\": \"lnurl1dp68gurn8ghj7vfjxuhrztcma59cs\",\n  \"url\": \"https://127.1/\",\n  \"host\": \"127.0.0.1\",\n  \"base\": \"https://127.0.0.1/\",\n  \"query\": null,\n  \"query_params\": {}\n}",
       "stderr": ""
     },
-    "seconds": 0.00905156135559082
+    "seconds": 0.01128213107585907
   },
   {
     "id": "url-refusal/ipv4-octal",
@@ -2379,7 +2379,7 @@
       "stdout": "{\n  \"bech32\": \"lnurl1dp68gurn8ghj7vp3xumjuvpwxqhrztcruyes8\",\n  \"url\": \"https://0177.0.0.1/\",\n  \"host\": \"127.0.0.1\",\n  \"base\": \"https://127.0.0.1/\",\n  \"query\": null,\n  \"query_params\": {}\n}",
       "stderr": ""
     },
-    "seconds": 0.00848175585269928
+    "seconds": 0.010465703904628754
   },
   {
     "id": "url-refusal/ipv4-leading",
@@ -2398,7 +2398,7 @@
       "stdout": "{\n  \"bech32\": \"lnurl1dp68gurn8ghj7vfjxuhrqt3s9ccrzvp0pp04l2\",\n  \"url\": \"https://127.0.0.010/\",\n  \"host\": \"127.0.0.8\",\n  \"base\": \"https://127.0.0.8/\",\n  \"query\": null,\n  \"query_params\": {}\n}",
       "stderr": ""
     },
-    "seconds": 0.0087222158908844
+    "seconds": 0.010327063500881195
   },
   {
     "id": "url-refusal/ipv4-dot",
@@ -2417,7 +2417,7 @@
       "stdout": "{\n  \"bech32\": \"lnurl1dp68gurn8ghj7vfjxuhrqt3s9ccjutcv07p5j\",\n  \"url\": \"https://127.0.0.1./\",\n  \"host\": \"127.0.0.1\",\n  \"base\": \"https://127.0.0.1/\",\n  \"query\": null,\n  \"query_params\": {}\n}",
       "stderr": ""
     },
-    "seconds": 0.008495829999446869
+    "seconds": 0.009356066584587097
   },
   {
     "id": "url-refusal/unicode-host",
@@ -2436,7 +2436,7 @@
       "stdout": "{\n  \"bech32\": \"lnurl1dp68gurn8ghj7ckrh33ksetj9e5kuanpd35kgtcn42d9m\",\n  \"url\": \"https://b\u00fccher.invalid/\",\n  \"host\": \"xn--bcher-kva.invalid\",\n  \"base\": \"https://xn--bcher-kva.invalid/\",\n  \"query\": null,\n  \"query_params\": {}\n}",
       "stderr": ""
     },
-    "seconds": 0.00902462750673294
+    "seconds": 0.009342268109321594
   },
   {
     "id": "url-refusal/encoded-unicode-host",
@@ -2455,7 +2455,7 @@
       "stdout": "{\n  \"bech32\": \"lnurl1dp68gurn8ghj7f2rxvj5ysewd9h8vctvd9jz7zudhpv\",\n  \"url\": \"https://%C3%BC.invalid/\",\n  \"host\": \"xn--tda.invalid\",\n  \"base\": \"https://xn--tda.invalid/\",\n  \"query\": null,\n  \"query_params\": {}\n}",
       "stderr": ""
     },
-    "seconds": 0.009180299937725067
+    "seconds": 0.009045861661434174
   },
   {
     "id": "url-refusal/punycode-host",
@@ -2474,7 +2474,7 @@
       "stdout": "{\n  \"bech32\": \"lnurl1dp68gurn8ghj77rw95kkycmgv4ez66mkvyhxjmnkv9kxjep0zd5uhj\",\n  \"url\": \"https://xn--bcher-kva.invalid/\",\n  \"host\": \"xn--bcher-kva.invalid\",\n  \"base\": \"https://xn--bcher-kva.invalid/\",\n  \"query\": null,\n  \"query_params\": {}\n}",
       "stderr": ""
     },
-    "seconds": 0.008452124893665314
+    "seconds": 0.009780250489711761
   },
   {
     "id": "url-refusal/punycode-upper",
@@ -2493,7 +2493,7 @@
       "stdout": "{\n  \"bech32\": \"lnurl1dp68gurn8ghj7kzw95k5ys6gg4fz6j6kgyhxjmnkv9kxjep0ct0lwx\",\n  \"url\": \"https://XN--BCHER-KVA.invalid/\",\n  \"host\": \"xn--bcher-kva.invalid\",\n  \"base\": \"https://xn--bcher-kva.invalid/\",\n  \"query\": null,\n  \"query_params\": {}\n}",
       "stderr": ""
     },
-    "seconds": 0.008401013910770416
+    "seconds": 0.009564287960529327
   },
   {
     "id": "url-error/missing-host",
@@ -2512,7 +2512,7 @@
       "stdout": "",
       "stderr": "Error: empty host\n"
     },
-    "seconds": 0.008394353091716766
+    "seconds": 0.009853117167949677
   },
   {
     "id": "url-error/missing-host-query",
@@ -2531,7 +2531,7 @@
       "stdout": "",
       "stderr": "Error: empty host\n"
     },
-    "seconds": 0.008369863033294678
+    "seconds": 0.009648576378822327
   },
   {
     "id": "url-error/encoded-hash",
@@ -2550,7 +2550,7 @@
       "stdout": "",
       "stderr": "Error: invalid international domain name\n"
     },
-    "seconds": 0.008159041404724121
+    "seconds": 0.009553864598274231
   },
   {
     "id": "url-error/encoded-slash",
@@ -2569,7 +2569,7 @@
       "stdout": "",
       "stderr": "Error: invalid international domain name\n"
     },
-    "seconds": 0.008713401854038239
+    "seconds": 0.009133443236351013
   },
   {
     "id": "url-error/encoded-at",
@@ -2588,7 +2588,7 @@
       "stdout": "",
       "stderr": "Error: invalid international domain name\n"
     },
-    "seconds": 0.008542872965335846
+    "seconds": 0.009094387292861938
   },
   {
     "id": "url-error/encoded-null",
@@ -2607,7 +2607,7 @@
       "stdout": "",
       "stderr": "Error: invalid international domain name\n"
     },
-    "seconds": 0.009449049830436707
+    "seconds": 0.009090729057788849
   },
   {
     "id": "url-error/malformed-host",
@@ -2626,7 +2626,7 @@
       "stdout": "",
       "stderr": "Error: invalid international domain name\n"
     },
-    "seconds": 0.008940890431404114
+    "seconds": 0.009394623339176178
   },
   {
     "id": "url-error/truncated-host",
@@ -2645,7 +2645,7 @@
       "stdout": "",
       "stderr": "Error: invalid international domain name\n"
     },
-    "seconds": 0.008599966764450073
+    "seconds": 0.009788759052753448
   },
   {
     "id": "url-error/host-invalid-utf8",
@@ -2664,7 +2664,7 @@
       "stdout": "",
       "stderr": "Error: invalid international domain name\n"
     },
-    "seconds": 0.008518211543560028
+    "seconds": 0.009381592273712158
   },
   {
     "id": "url-error/host-truncated-utf8",
@@ -2683,7 +2683,7 @@
       "stdout": "",
       "stderr": "Error: invalid international domain name\n"
     },
-    "seconds": 0.008862867951393127
+    "seconds": 0.008651837706565857
   },
   {
     "id": "url-error/numeric-domain",
@@ -2702,7 +2702,7 @@
       "stdout": "",
       "stderr": "Error: invalid IPv4 address\n"
     },
-    "seconds": 0.00870145857334137
+    "seconds": 0.00890766829252243
   },
   {
     "id": "url-error/ipv4-overflow",
@@ -2721,7 +2721,7 @@
       "stdout": "",
       "stderr": "Error: invalid IPv4 address\n"
     },
-    "seconds": 0.00939428061246872
+    "seconds": 0.009375527501106262
   },
   {
     "id": "url-error/port-overflow",
@@ -2740,7 +2740,7 @@
       "stdout": "",
       "stderr": "Error: invalid port number\n"
     },
-    "seconds": 0.009168639779090881
+    "seconds": 0.008685506880283356
   },
   {
     "id": "url-error/port-negative",
@@ -2759,7 +2759,7 @@
       "stdout": "",
       "stderr": "Error: invalid port number\n"
     },
-    "seconds": 0.008710436522960663
+    "seconds": 0.009483687579631805
   },
   {
     "id": "url-error/port-letters",
@@ -2778,7 +2778,7 @@
       "stdout": "",
       "stderr": "Error: invalid port number\n"
     },
-    "seconds": 0.00909363478422165
+    "seconds": 0.009470075368881226
   },
   {
     "id": "url-error/port-sign",
@@ -2797,7 +2797,7 @@
       "stdout": "",
       "stderr": "Error: invalid port number\n"
     },
-    "seconds": 0.008783459663391113
+    "seconds": 0.008918754756450653
   },
   {
     "id": "url-error/port-colon",
@@ -2816,7 +2816,7 @@
       "stdout": "",
       "stderr": "Error: invalid port number\n"
     },
-    "seconds": 0.008193053305149078
+    "seconds": 0.008915342390537262
   },
   {
     "id": "url-error/relative",
@@ -2835,7 +2835,7 @@
       "stdout": "",
       "stderr": "Error: relative URL without a base\n"
     },
-    "seconds": 0.008038327097892761
+    "seconds": 0.009148083627223969
   },
   {
     "id": "url-error/scheme",
@@ -2854,7 +2854,7 @@
       "stdout": "{\n  \"bech32\": \"lnurl1ve68qw309ajhsctdwpkx2tnrdakj765qxrg\",\n  \"url\": \"ftp://example.com/\",\n  \"host\": \"example.com\",\n  \"base\": \"ftp://example.com/\",\n  \"query\": null,\n  \"query_params\": {}\n}",
       "stderr": ""
     },
-    "seconds": 0.008654370903968811
+    "seconds": 0.009813562035560608
   },
   {
     "id": "url-error/host-space",
@@ -2873,7 +2873,7 @@
       "stdout": "",
       "stderr": "Error: invalid international domain name\n"
     },
-    "seconds": 0.008157007396221161
+    "seconds": 0.00941687822341919
   },
   {
     "id": "url-error/host-del",
@@ -2892,7 +2892,7 @@
       "stdout": "",
       "stderr": "Error: invalid international domain name\n"
     },
-    "seconds": 0.008210539817810059
+    "seconds": 0.009661369025707245
   },
   {
     "id": "url-error/host-double-percent",
@@ -2911,7 +2911,7 @@
       "stdout": "",
       "stderr": "Error: invalid international domain name\n"
     },
-    "seconds": 0.008609727025032043
+    "seconds": 0.009314171969890594
   },
   {
     "id": "url-error/host-caret",
@@ -2930,7 +2930,7 @@
       "stdout": "",
       "stderr": "Error: invalid international domain name\n"
     },
-    "seconds": 0.008530274033546448
+    "seconds": 0.009296178817749023
   },
   {
     "id": "lnurl-positive/lowercase",
@@ -2953,7 +2953,7 @@
       "stdout": "{\n  \"bech32\": \"lnurl1dp68gurn8ghj7etcv9khqmr99e3k7mf047kw9w\",\n  \"url\": \"https://example.com/\",\n  \"host\": \"example.com\",\n  \"base\": \"https://example.com/\",\n  \"query\": null,\n  \"query_params\": {}\n}",
       "stderr": ""
     },
-    "seconds": 0.008542530238628387
+    "seconds": 0.009704582393169403
   },
   {
     "id": "lnurl-positive/uppercase",
@@ -2976,7 +2976,7 @@
       "stdout": "{\n  \"bech32\": \"LNURL1DP68GURN8GHJ7ETCV9KHQMR99EHHYEE06NVH29\",\n  \"url\": \"https://example.org/\",\n  \"host\": \"example.org\",\n  \"base\": \"https://example.org/\",\n  \"query\": null,\n  \"query_params\": {}\n}",
       "stderr": ""
     },
-    "seconds": 0.008439064025878906
+    "seconds": 0.009085655212402344
   },
   {
     "id": "lnurl-positive/unicode-trim",
@@ -2999,7 +2999,7 @@
       "stdout": "{\n  \"bech32\": \"lnurl1dp68gurn8ghj7etcv9khqmr99e3k7mf047kw9w\",\n  \"url\": \"https://example.com/\",\n  \"host\": \"example.com\",\n  \"base\": \"https://example.com/\",\n  \"query\": null,\n  \"query_params\": {}\n}",
       "stderr": ""
     },
-    "seconds": 0.00840865820646286
+    "seconds": 0.00935768336057663
   },
   {
     "id": "lnurl-positive/all-whitespace",
@@ -3022,7 +3022,7 @@
       "stdout": "{\n  \"bech32\": \"lnurl1dp68gurn8ghj7etcv9khqmr99e3k7mf047kw9w\",\n  \"url\": \"https://example.com/\",\n  \"host\": \"example.com\",\n  \"base\": \"https://example.com/\",\n  \"query\": null,\n  \"query_params\": {}\n}",
       "stderr": ""
     },
-    "seconds": 0.008050762116909027
+    "seconds": 0.009216956794261932
   },
   {
     "id": "lnurl-positive/long",
@@ -3045,7 +3045,7 @@
       "stdout": "{\n  \"bech32\": \"lnurl1dp68gurn8ghj7etcv9khqmr99e3k7mf0v9skzctpv9skzctpv9skzctpv9skzctpv9skzctpv9skzctpv9skzctpv9skzctpv9skzctpv9skzctpv9skzctpv9skzctpv9skzctpv9skzctpv9skzctpv9skzctpv9skzctpv9skzctpv9skzctpv9skzctpr856xg\",\n  \"url\": \"https://example.com/aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa\",\n  \"host\": \"example.com\",\n  \"base\": \"https://example.com/\",\n  \"query\": null,\n  \"query_params\": {}\n}",
       "stderr": ""
     },
-    "seconds": 0.009385116398334503
+    "seconds": 0.009177245199680328
   },
   {
     "id": "lnurl-positive/limit-1022",
@@ -3068,7 +3068,7 @@
       "stdout": "{\n  \"bech32\": \"lnurl1dp68gurn8ghj7etcv9khqmr99e3k7mf0v9skzctpv9skzctpv9skzctpv9skzctpv9skzctpv9skzctpv9skzctpv9skzctpv9skzctpv9skzctpv9skzctpv9skzctpv9skzctpv9skzctpv9skzctpv9skzctpv9skzctpv9skzctpv9skzctpv9skzctpv9skzctpv9skzctpv9skzctpv9skzctpv9skzctpv9skzctpv9skzctpv9skzctpv9skzctpv9skzctpv9skzctpv9skzctpv9skzctpv9skzctpv9skzctpv9skzctpv9skzctpv9skzctpv9skzctpv9skzctpv9skzctpv9skzctpv9skzctpv9skzctpv9skzctpv9skzctpv9skzctpv9skzctpv9skzctpv9skzctpv9skzctpv9skzctpv9skzctpv9skzctpv9skzctpv9skzctpv9skzctpv9skzctpv9skzctpv9skzctpv9skzctpv9skzctpv9skzctpv9skzctpv9skzctpv9skzctpv9skzctpv9skzctpv9skzctpv9skzctpv9skzctpv9skzctpv9skzctpv9skzctpv9skzctpv9skzctpv9skzctpv9skzctpv9skzctpv9skzctpv9skzctpv9skzctpv9skzctpv9skzctpv9skzctpv9skzctpv9skzctpv9skzctpv9skzctpv9skzctpv9skzctpv9skzctpv9skzctpv9skzctpv9skzctpv9skzctpv9skzctpv9skzctpv9skzctpv9skzctpv9skzctpv9skzctpv9skzctpv9skzctpv9skzctpv9skzctpv9skzctpv9skzctpv9skzctpv9skzctpv9skzctpv9skzctpv9skzctpv9skzctpv9skzctpv9skzctpv9skzctpv9skzctpv9skzctpv9skzctpv9skzctpv9skzctpvy00hajg\",\n  \"url\": \"https://example.com/aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa\",\n  \"host\": \"example.com\",\n  \"base\": \"https://example.com/\",\n  \"query\": null,\n  \"query_params\": {}\n}",
       "stderr": ""
     },
-    "seconds": 0.009036548435688019
+    "seconds": 0.0101248100399971
   },
   {
     "id": "lnurl-positive/bech32m",
@@ -3091,7 +3091,7 @@
       "stdout": "{\n  \"bech32\": \"lnurl1dp68gurn8ghj7etcv9khqmr99e3k7mf0qzxzqv\",\n  \"url\": \"https://example.com/\",\n  \"host\": \"example.com\",\n  \"base\": \"https://example.com/\",\n  \"query\": null,\n  \"query_params\": {}\n}",
       "stderr": ""
     },
-    "seconds": 0.008632726967334747
+    "seconds": 0.009062319993972778
   },
   {
     "id": "lnurl-positive/nonzero-padding",
@@ -3119,7 +3119,7 @@
       "stdout": "{\n  \"bech32\": \"lnurl1dp68gurn8ghj7etcv9khqmr99e3k7mf08acn67pzf7huf\",\n  \"url\": \"https://example.com/?q=x\",\n  \"host\": \"example.com\",\n  \"base\": \"https://example.com/\",\n  \"query\": \"q=x\",\n  \"query_params\": {\n    \"q\": \"x\"\n  }\n}",
       "stderr": ""
     },
-    "seconds": 0.008458457887172699
+    "seconds": 0.012345120310783386
   },
   {
     "id": "lnurl-negative/prefix",
@@ -3137,7 +3137,7 @@
       "stdout": "",
       "stderr": "Error: Input must start with 'LNURL'\n"
     },
-    "seconds": 0.009312853217124939
+    "seconds": 0.009119689464569092
   },
   {
     "id": "lnurl-negative/prefix-valid-codec",
@@ -3155,7 +3155,7 @@
       "stdout": "",
       "stderr": "Error: Input must start with 'LNURL'\n"
     },
-    "seconds": 0.008784584701061249
+    "seconds": 0.008958235383033752
   },
   {
     "id": "lnurl-negative/hrp",
@@ -3173,7 +3173,7 @@
       "stdout": "",
       "stderr": "Error: Invalid HRP (human-readable part): expected 'lnurl', got 'lnurlx'\n"
     },
-    "seconds": 0.008792638778686523
+    "seconds": 0.009699322283267975
   },
   {
     "id": "lnurl-negative/invalid-utf8",
@@ -3191,7 +3191,7 @@
       "stdout": "",
       "stderr": "Error: invalid utf-8 sequence of 1 bytes from index 20\n"
     },
-    "seconds": 0.00848919153213501
+    "seconds": 0.009056232869625092
   },
   {
     "id": "lnurl-negative/missing-separator",
@@ -3209,7 +3209,7 @@
       "stdout": "",
       "stderr": "Error: parsing failed\n\nCaused by:\n    0: character error\n    1: missing human-readable separator, \"1\"\n"
     },
-    "seconds": 0.008900448679924011
+    "seconds": 0.009171955287456512
   },
   {
     "id": "lnurl-negative/short-checksum",
@@ -3227,7 +3227,7 @@
       "stdout": "",
       "stderr": "Error: no valid bech32 or bech32m checksum\n\nCaused by:\n    the checksummed string is not a valid length\n"
     },
-    "seconds": 0.0084577277302742
+    "seconds": 0.009649038314819336
   },
   {
     "id": "lnurl-negative/checksum",
@@ -3245,7 +3245,7 @@
       "stdout": "",
       "stderr": "Error: no valid bech32 or bech32m checksum\n\nCaused by:\n    the checksum residue is not valid for the data\n"
     },
-    "seconds": 0.008558765053749084
+    "seconds": 0.009541496634483337
   },
   {
     "id": "lnurl-negative/character",
@@ -3263,7 +3263,7 @@
       "stdout": "",
       "stderr": "Error: parsing failed\n\nCaused by:\n    0: character error\n    1: invalid character (code=i)\n"
     },
-    "seconds": 0.009443998336791992
+    "seconds": 0.009911075234413147
   },
   {
     "id": "lnurl-negative/mixed-case",
@@ -3281,7 +3281,7 @@
       "stdout": "",
       "stderr": "Error: parsing failed\n\nCaused by:\n    0: character error\n    1: mixed-case strings not allowed\n"
     },
-    "seconds": 0.008686542510986328
+    "seconds": 0.010193154215812683
   },
   {
     "id": "lnurl-negative/hrp-long",
@@ -3299,7 +3299,7 @@
       "stdout": "",
       "stderr": "Error: parsing failed\n\nCaused by:\n    0: invalid human-readable part\n    1: hrp is too long, found 84 characters, must be <= 126\n"
     },
-    "seconds": 0.008501023054122925
+    "seconds": 0.00999721884727478
   },
   {
     "id": "lnurl-negative/hrp-character",
@@ -3317,7 +3317,7 @@
       "stdout": "",
       "stderr": "Error: parsing failed\n\nCaused by:\n    0: invalid human-readable part\n    1: byte value is not valid US-ASCII: '20'\n"
     },
-    "seconds": 0.008195042610168457
+    "seconds": 0.009650863707065582
   },
   {
     "id": "lnurl-negative/limit-1024",
@@ -3336,7 +3336,7 @@
       "stdout": "",
       "stderr": "Error: no valid bech32 or bech32m checksum\n\nCaused by:\n    0: string exceeds maximum allowed length\n    1: encoded length 1024 exceeds maximum (code length) 1023\n"
     },
-    "seconds": 0.008600890636444092
+    "seconds": 0.009596206247806549
   },
   {
     "id": "lnurl-reference/cyberkrill",
@@ -3364,7 +3364,7 @@
       "stdout": "{\n  \"bech32\": \"LNURL1DP68GURN8GHJ7UM9WFMXJCM99E5K7TELWY7NXENRXVMRGDTZXSENJCM98PJNWXQ96S9\",\n  \"url\": \"https://service.io/?q=3fc3645b439ce8e7\",\n  \"host\": \"service.io\",\n  \"base\": \"https://service.io/\",\n  \"query\": \"q=3fc3645b439ce8e7\",\n  \"query_params\": {\n    \"q\": \"3fc3645b439ce8e7\"\n  }\n}",
       "stderr": ""
     },
-    "seconds": 0.00874791294336319
+    "seconds": 0.008871674537658691
   },
   {
     "id": "encode/valid/L382",
@@ -3380,7 +3380,7 @@
       "stdout": "lnbc1pvjluezdpl2pkx2ctnv5sxxmmwwd5kgetjypeh2ursdae8g6twvus8g6rfwvs8qun0dfjkxaqpp5qqqsyqcyq5rqwzqfqqqsyqcyq5rqwzqfqqqsyqcyq5rqwzqfqypqsp5zyg3zyg3zyg3zyg3zyg3zyg3zyg3zyg3zyg3zyg3zyg3zyg3zygs9qrsgqcqpjxqrrssnp4q0n326hr8v9zprg8gsvezcch06gfaqqhde2aj730yg0durunfhv66djgj2lvqsnywx0eza6ueqe6ex7al4q9su5snkz9d42ge7ft32kf35wrznv667ul94nexvcdjqpj4rstgxvhd36vz47eyds5d2rfdrrqprzgph3\n",
       "stderr": ""
     },
-    "seconds": 0.00864989310503006
+    "seconds": 0.009404465556144714
   },
   {
     "id": "encode/valid/L410",
@@ -3396,7 +3396,7 @@
       "stdout": "lnbc2500u1pvjluezdq5xysxxatsyp3k7enxv4jspp5qqqsyqcyq5rqwzqfqqqsyqcyq5rqwzqfqqqsyqcyq5rqwzqfqypqsp5zyg3zyg3zyg3zyg3zyg3zyg3zyg3zyg3zyg3zyg3zyg3zyg3zygs9qrsgqcqpjxqzpunp4q0n326hr8v9zprg8gsvezcch06gfaqqhde2aj730yg0durunfhv66nldsnx6kp5he0qkulcaa240hn9m5q9tgmcakuc3zw2lk80sdcm6n4nluwmcdc7rlmlmz45qklmfkdx4gtfyqg26yzrv6cteqep2eyzcpgwl0ht\n",
       "stderr": ""
     },
-    "seconds": 0.009139478206634521
+    "seconds": 0.010202281177043915
   },
   {
     "id": "encode/valid/L438",
@@ -3412,7 +3412,7 @@
       "stdout": "lnbc2500u1pvjluezdpquwpc4curk03c9wlrswe78q4eyqc7d8d0pp5qqqsyqcyq5rqwzqfqqqsyqcyq5rqwzqfqqqsyqcyq5rqwzqfqypqsp5zyg3zyg3zyg3zyg3zyg3zyg3zyg3zyg3zyg3zyg3zyg3zyg3zygs9qrsgqcqpjxqzpunp4q0n326hr8v9zprg8gsvezcch06gfaqqhde2aj730yg0durunfhv66xp80ydklge5x3k2k6dgqhjghnyc85vnc50zhxtn4hrtldsgm4wsnz37ts7kv4vmzkn2ap7p379wgmktxm3mckr8l9tpcafk277dphhcp0e0npy\n",
       "stderr": ""
     },
-    "seconds": 0.008934803307056427
+    "seconds": 0.00975896418094635
   },
   {
     "id": "encode/valid/L466",
@@ -3428,7 +3428,7 @@
       "stdout": "lnbc20m1pvjluezhp58yjmdan79s6qqdhdzgynm4zwqd5d7xmw5fk98klysy043l2ahrqspp5qqqsyqcyq5rqwzqfqqqsyqcyq5rqwzqfqqqsyqcyq5rqwzqfqypqsp5zyg3zyg3zyg3zyg3zyg3zyg3zyg3zyg3zyg3zyg3zyg3zyg3zygs9qrsgqcqpjxqrrssnp4q0n326hr8v9zprg8gsvezcch06gfaqqhde2aj730yg0durunfhv66zyw2xgseyrzdwcr4mhkzjtq99czsluy9wkm0qg9ys3uwvartvgsqaekty4zz44axt6fj0t5c6clxgyuge68uf9lpw6ytmvqzrfjnnlsp6agkan\n",
       "stderr": ""
     },
-    "seconds": 0.00857948511838913
+    "seconds": 0.009345874190330505
   },
   {
     "id": "encode/valid/L491",
@@ -3444,7 +3444,7 @@
       "stdout": "lntb20m1pvjluezhp58yjmdan79s6qqdhdzgynm4zwqd5d7xmw5fk98klysy043l2ahrqspp5qqqsyqcyq5rqwzqfqqqsyqcyq5rqwzqfqqqsyqcyq5rqwzqfqypqsp5zyg3zyg3zyg3zyg3zyg3zyg3zyg3zyg3zyg3zyg3zyg3zyg3zygs9qrsgqcqpjxqrrssnp4q0n326hr8v9zprg8gsvezcch06gfaqqhde2aj730yg0durunfhv66fpp3x9et2e20v6pu37c5d9vax37wxq72un98lc5kspy6lhpn8d9rlcd5jqf3gque90ya6mmuhd720zvjw6z7h47525wlf6vvpcqkxmchp8z2ylfcdzdvjczjspwenss45fhp6uduh7cqyt592t\n",
       "stderr": ""
     },
-    "seconds": 0.008860088884830475
+    "seconds": 0.010134592652320862
   },
   {
     "id": "encode/valid/L516",
@@ -3460,7 +3460,7 @@
       "stdout": "lnbc20m1pvjluezhp58yjmdan79s6qqdhdzgynm4zwqd5d7xmw5fk98klysy043l2ahrqspp5qqqsyqcyq5rqwzqfqqqsyqcyq5rqwzqfqqqsyqcyq5rqwzqfqypqsp5zyg3zyg3zyg3zyg3zyg3zyg3zyg3zyg3zyg3zyg3zyg3zyg3zygs9qrsgqcqpjxqrrssnp4q0n326hr8v9zprg8gsvezcch06gfaqqhde2aj730yg0durunfhv66fpp3qjmp7lwpagxun9pygexvgpjdc4jdj85fr9yq20q82gphp2nflc7jtzrcazrra7wwgzxqc8u7754cdlpfrmccae92qgzqvzq2ps8pqqqqqqpqqqqq9qqqvpeuqafqxu92d8lr6fvg0r5gv0heeeqgcrqlnm6jhphu9y00rrhy4grqszsvpcgpy9qqqqqqgqqqqq7qqzqcg62tjjdhvf5a47um744nckya3lnqthegpf6dft2eud0vga3druq7dclu07vd9mhuww4ran69elsljvghxe6n5xvpu4rlcuxyvjtp2cp09gdvp\n",
       "stderr": ""
     },
-    "seconds": 0.008703425526618958
+    "seconds": 0.009782671928405762
   },
   {
     "id": "encode/valid/L554",
@@ -3476,7 +3476,7 @@
       "stdout": "lnbc20m1pvjluezhp58yjmdan79s6qqdhdzgynm4zwqd5d7xmw5fk98klysy043l2ahrqspp5qqqsyqcyq5rqwzqfqqqsyqcyq5rqwzqfqqqsyqcyq5rqwzqfqypqsp5zyg3zyg3zyg3zyg3zyg3zyg3zyg3zyg3zyg3zyg3zyg3zyg3zygs9qrsgqcqpjxqrrssnp4q0n326hr8v9zprg8gsvezcch06gfaqqhde2aj730yg0durunfhv66fppj3a24vwu6r8ejrss3axul8rxldph2q7z9j83fx5a37tr5rm3s04hsmfzsawf8fpdxmhkp78t93qa5ux8kyr6yqt7xgjuxzckaz7t2kzj5l9xrh4dzdhm3uganazvdaxyxqv9sprsqd6gdfe\n",
       "stderr": ""
     },
-    "seconds": 0.008911974728107452
+    "seconds": 0.00959138572216034
   },
   {
     "id": "encode/valid/L579",
@@ -3492,7 +3492,7 @@
       "stdout": "lnbc20m1pvjluezhp58yjmdan79s6qqdhdzgynm4zwqd5d7xmw5fk98klysy043l2ahrqspp5qqqsyqcyq5rqwzqfqqqsyqcyq5rqwzqfqqqsyqcyq5rqwzqfqypqsp5zyg3zyg3zyg3zyg3zyg3zyg3zyg3zyg3zyg3zyg3zyg3zyg3zygs9qrsgqcqpjxqrrssnp4q0n326hr8v9zprg8gsvezcch06gfaqqhde2aj730yg0durunfhv66fppqw508d6qejxtdg4y5r3zarvary0c5xw7kmnj5n29cf6z85nzq624kd80ju397tqge890dsv0fw9d89lzatkwxjzahpu9np3jqeh39xzcgy48u9ywm8sg4tqm2x754gg43yeytqnqqh7p7ux\n",
       "stderr": ""
     },
-    "seconds": 0.008827105164527893
+    "seconds": 0.00998234748840332
   },
   {
     "id": "encode/valid/L602",
@@ -3508,7 +3508,7 @@
       "stdout": "lnbc20m1pvjluezhp58yjmdan79s6qqdhdzgynm4zwqd5d7xmw5fk98klysy043l2ahrqspp5qqqsyqcyq5rqwzqfqqqsyqcyq5rqwzqfqqqsyqcyq5rqwzqfqypqsp5zyg3zyg3zyg3zyg3zyg3zyg3zyg3zyg3zyg3zyg3zyg3zyg3zygs9qrsgqcqpjxqrrssnp4q0n326hr8v9zprg8gsvezcch06gfaqqhde2aj730yg0durunfhv66fp4qrp33g0q5c5txsp9arysrx4k6zdkfs4nce4xj0gdcccefvpysxf3qrvpe879wmc3u4zgdk95ss6t3psu6m3ulsc7yk93xp4eammlvu9nshtu8fep8z0z40ma4laaz8l0h7kzt60lss2ldtkztnjppjktw2nqp6nxghc\n",
       "stderr": ""
     },
-    "seconds": 0.008863106369972229
+    "seconds": 0.00985889881849289
   },
   {
     "id": "encode/valid/L625",
@@ -3524,7 +3524,7 @@
       "stdout": "lnbc20m1pvjluezhp58yjmdan79s6qqdhdzgynm4zwqd5d7xmw5fk98klysy043l2ahrqspp5qqqsyqcyq5rqwzqfqqqsyqcyq5rqwzqfqqqsyqcyq5rqwzqfqypqsp5zyg3zyg3zyg3zyg3zyg3zyg3zyg3zyg3zyg3zyg3zyg3zyg3zygs9qrsgqcqpjxqrrssnp4q0n326hr8v9zprg8gsvezcch06gfaqqhde2aj730yg0durunfhv66fp4pptdvg0d2nj99568qn6ssdy4cygnwuxgw2ukmnwgwz7jpqjz2kszsy3m68t6ew3p5wqrk77x0sg3fjxa8e6acxcaq4xe4skjlzwdnvj04zejc4huu8vegrmwt3vau0vwuwtfg6gsl56x7ye454hlrjkjayggpaf85nw\n",
       "stderr": ""
     },
-    "seconds": 0.009526006877422333
+    "seconds": 0.009624622762203217
   },
   {
     "id": "encode/valid/L648",
@@ -3540,7 +3540,7 @@
       "stdout": "lnbc9678785340p1pwmna7ld8dgfkx7cmtwd68yetpd5s9xar0wfjn5gpc8qhrsdfq24f5ggrxdaezqsnvda3kkum5wfjkzmfqf3jkgem9wgsyuctwdus9xgrcyqcjcgpzgfskx6eqf9hzqnteypzxz7fzypfhg6trddjhygrcyqezcgpzfysywmm5ypxxjemgw3hxjmn8yptk7untd9hxwg3q2d6xjcmtv4ezq7pqxgsxzmnyyqcjqmt0wfjjq6t5v4khxpp5gc3xfm08u9qy06djf8dfflhugl6p7lgza6dsjxq454gxhj9t7a0ssp5zyg3zyg3zyg3zyg3zyg3zyg3zyg3zyg3zyg3zyg3zyg3zyg3zygs9qrsgqcqp2xqyjw5qnp4q0n326hr8v9zprg8gsvezcch06gfaqqhde2aj730yg0durunfhv66rzjq0gxwkzc8w6323m55m4jyxcjwmy7stt9hwkwe2qxmy8zpsgg7jcuwz87fcqqeuqqqyqqqqlgqqqqn3qq9qyy05yvltl9nkw0c6prjtv9zhhj5eaamrzwz97t9jgnlur3ypeavnkm2glrkutn83a4h98u55smcjs2lny9ncckugtpfxv363ynn92qgqa9tvq7\n",
       "stderr": ""
     },
-    "seconds": 0.008554674685001373
+    "seconds": 0.009688355028629303
   },
   {
     "id": "encode/valid/L682",
@@ -3556,7 +3556,7 @@
       "stdout": "lnbc25m1pvjluezdq5vdhkven9v5sxyetpdeespp5qqqsyqcyq5rqwzqfqqqsyqcyq5rqwzqfqqqsyqcyq5rqwzqfqypqsp5zyg3zyg3zyg3zyg3zyg3zyg3zyg3zyg3zyg3zyg3zyg3zyg3zygs9qrsgqcqpjxqrrssnp4q0n326hr8v9zprg8gsvezcch06gfaqqhde2aj730yg0durunfhv66wxxfwj40qpv0xkl42m6pkgqyghsttmpvjl3ya53ep8lgdkk2kjwz60sxp76nrng8vd4qk378rw0un986mjdztlxh2cfma50xxkqy6rgpdtfmj9\n",
       "stderr": ""
     },
-    "seconds": 0.01092974841594696
+    "seconds": 0.009383946657180786
   },
   {
     "id": "encode/valid/L704",
@@ -3572,7 +3572,7 @@
       "stdout": "lnbc25m1pvjluezdq5vdhkven9v5sxyetpdeespp5qqqsyqcyq5rqwzqfqqqsyqcyq5rqwzqfqqqsyqcyq5rqwzqfqypqsp5zyg3zyg3zyg3zyg3zyg3zyg3zyg3zyg3zyg3zyg3zyg3zyg3zygs9qrsgqcqpjxqrrssnp4q0n326hr8v9zprg8gsvezcch06gfaqqhde2aj730yg0durunfhv66wxxfwj40qpv0xkl42m6pkgqyghsttmpvjl3ya53ep8lgdkk2kjwz60sxp76nrng8vd4qk378rw0un986mjdztlxh2cfma50xxkqy6rgpdtfmj9\n",
       "stderr": ""
     },
-    "seconds": 0.009180478751659393
+    "seconds": 0.009718529880046844
   },
   {
     "id": "encode/valid/L707",
@@ -3588,7 +3588,7 @@
       "stdout": "lnbc25m1pvjluezdq5vdhkven9v5sxyetpdeespp5qqqsyqcyq5rqwzqfqqqsyqcyq5rqwzqfqqqsyqcyq5rqwzqfqypqsp5zyg3zyg3zyg3zyg3zyg3zyg3zyg3zyg3zyg3zyg3zyg3zyg3zygs9qrsgqcqpjxqrrssnp4q0n326hr8v9zprg8gsvezcch06gfaqqhde2aj730yg0durunfhv66wxxfwj40qpv0xkl42m6pkgqyghsttmpvjl3ya53ep8lgdkk2kjwz60sxp76nrng8vd4qk378rw0un986mjdztlxh2cfma50xxkqy6rgpdtfmj9\n",
       "stderr": ""
     },
-    "seconds": 0.009381972253322601
+    "seconds": 0.010090164840221405
   },
   {
     "id": "encode/valid/L735",
@@ -3604,7 +3604,7 @@
       "stdout": "lnbc10m1pvjluezdp9wpshjmt9de6zqmt9w3skgct5vysxjmnnd9jx2pp5qqqsyqcyq5rqwzqfqqqsyqcyq5rqwzqfqqqsyqcyq5rqwzqfqypqsp5zyg3zyg3zyg3zyg3zyg3zyg3zyg3zyg3zyg3zyg3zyg3zyg3zygs9qrsgqcqpjxqrrssnp4q0n326hr8v9zprg8gsvezcch06gfaqqhde2aj730yg0durunfhv66l5k0wan83fw2nrc8v6ywa66e3acq8360dvd6v3dxj0ahe9arjd6ht452lufhm4ckvurw5e6arcdpgdquuyurzrdmkdw3rkfg6rf6f8gpnxdcpp\n",
       "stderr": ""
     },
-    "seconds": 0.008779540657997131
+    "seconds": 0.010214470326900482
   },
   {
     "id": "encode/valid/L762",
@@ -3620,7 +3620,7 @@
       "stdout": "lnbc1pvjluezdpl2pkx2ctnv5sxxmmwwd5kgetjypeh2ursdae8g6twvus8g6rfwvs8qun0dfjkxaqpp5qqqsyqcyq5rqwzqfqqqsyqcyq5rqwzqfqqqsyqcyq5rqwzqfqypqsp5zyg3zyg3zyg3zyg3zyg3zyg3zyg3zyg3zyg3zyg3zyg3zyg3zygs9qrsgqcqpjxqrrssnp4qtgp8888gf7kmllay63jdsvtua2w78nyvu45y62t5keraahxu7qr6mk6yvghlles7t4xu5875zl6z566kdsfs0r0ehtfrck4zd83ysh38as0nmz87cl38c6zmtkwlsx58yshhz4cmzvv6nnm8j97dcp24chgqr5gckj\n",
       "stderr": ""
     },
-    "seconds": 0.009501241147518158
+    "seconds": 0.009431526064872742
   },
   {
     "id": "encode/invalid/L814",
@@ -3636,7 +3636,7 @@
       "stdout": "lnbc25m1pvjluezdq5vdhkven9v5sxyetpdeespp5qqqsyqcyq5rqwzqfqqqsyqcyq5rqwzqfqqqsyqcyq5rqwzqfqypqsp5zyg3zyg3zyg3zyg3zyg3zyg3zyg3zyg3zyg3zyg3zyg3zyg3zygs9qrsgqcqpjxqrrssnp4q0n326hr8v9zprg8gsvezcch06gfaqqhde2aj730yg0durunfhv66wxxfwj40qpv0xkl42m6pkgqyghsttmpvjl3ya53ep8lgdkk2kjwz60sxp76nrng8vd4qk378rw0un986mjdztlxh2cfma50xxkqy6rgpdtfmj9\n",
       "stderr": ""
     },
-    "seconds": 0.009077906608581543
+    "seconds": 0.00962655246257782
   },
   {
     "id": "builder/destination-compressed",
@@ -3652,7 +3652,7 @@
       "stdout": "lnbc2500u1pvjluezdq5xysxxatsyp3k7enxv4jspp5qqqsyqcyq5rqwzqfqqqsyqcyq5rqwzqfqqqsyqcyq5rqwzqfqypqsp5zyg3zyg3zyg3zyg3zyg3zyg3zyg3zyg3zyg3zyg3zyg3zyg3zygs9qrsgqcqpjxqzpunp4q0n326hr8v9zprg8gsvezcch06gfaqqhde2aj730yg0durunfhv66nldsnx6kp5he0qkulcaa240hn9m5q9tgmcakuc3zw2lk80sdcm6n4nluwmcdc7rlmlmz45qklmfkdx4gtfyqg26yzrv6cteqep2eyzcpgwl0ht\n",
       "stderr": ""
     },
-    "seconds": 0.0090814009308815
+    "seconds": 0.009258568286895752
   },
   {
     "id": "builder/destination-uncompressed",
@@ -3668,7 +3668,7 @@
       "stdout": "lnbc2500u1pvjluezdq5xysxxatsyp3k7enxv4jspp5qqqsyqcyq5rqwzqfqqqsyqcyq5rqwzqfqqqsyqcyq5rqwzqfqypqsp5zyg3zyg3zyg3zyg3zyg3zyg3zyg3zyg3zyg3zyg3zyg3zyg3zygs9qrsgqcqpjxqzpunp4q0n326hr8v9zprg8gsvezcch06gfaqqhde2aj730yg0durunfhv66nldsnx6kp5he0qkulcaa240hn9m5q9tgmcakuc3zw2lk80sdcm6n4nluwmcdc7rlmlmz45qklmfkdx4gtfyqg26yzrv6cteqep2eyzcpgwl0ht\n",
       "stderr": ""
     },
-    "seconds": 0.009551264345645905
+    "seconds": 0.009579651057720184
   },
   {
     "id": "builder/destination-hybrid",
@@ -3684,7 +3684,7 @@
       "stdout": "lnbc2500u1pvjluezdq5xysxxatsyp3k7enxv4jspp5qqqsyqcyq5rqwzqfqqqsyqcyq5rqwzqfqqqsyqcyq5rqwzqfqypqsp5zyg3zyg3zyg3zyg3zyg3zyg3zyg3zyg3zyg3zyg3zyg3zyg3zygs9qrsgqcqpjxqzpunp4q0n326hr8v9zprg8gsvezcch06gfaqqhde2aj730yg0durunfhv66nldsnx6kp5he0qkulcaa240hn9m5q9tgmcakuc3zw2lk80sdcm6n4nluwmcdc7rlmlmz45qklmfkdx4gtfyqg26yzrv6cteqep2eyzcpgwl0ht\n",
       "stderr": ""
     },
-    "seconds": 0.008769378066062927
+    "seconds": 0.00955759733915329
   },
   {
     "id": "builder/destination-mismatched",
@@ -3700,7 +3700,7 @@
       "stdout": "",
       "stderr": "Error: Invalid public key bytes at line 1 column 581\n"
     },
-    "seconds": 0.00978647917509079
+    "seconds": 0.009640969336032867
   },
   {
     "id": "builder/route-compressed",
@@ -3716,7 +3716,7 @@
       "stdout": "lnbc20m1pvjluezhp58yjmdan79s6qqdhdzgynm4zwqd5d7xmw5fk98klysy043l2ahrqspp5qqqsyqcyq5rqwzqfqqqsyqcyq5rqwzqfqqqsyqcyq5rqwzqfqypqsp5zyg3zyg3zyg3zyg3zyg3zyg3zyg3zyg3zyg3zyg3zyg3zyg3zygs9qrsgqcqpjxqrrssnp4q0n326hr8v9zprg8gsvezcch06gfaqqhde2aj730yg0durunfhv66fpp3qjmp7lwpagxun9pygexvgpjdc4jdj85fr9yq20q82gphp2nflc7jtzrcazrra7wwgzxqc8u7754cdlpfrmccae92qgzqvzq2ps8pqqqqqqpqqqqq9qqqvpeuqafqxu92d8lr6fvg0r5gv0heeeqgcrqlnm6jhphu9y00rrhy4grqszsvpcgpy9qqqqqqgqqqqq7qqzqcg62tjjdhvf5a47um744nckya3lnqthegpf6dft2eud0vga3druq7dclu07vd9mhuww4ran69elsljvghxe6n5xvpu4rlcuxyvjtp2cp09gdvp\n",
       "stderr": ""
     },
-    "seconds": 0.008976131677627563
+    "seconds": 0.009387634694576263
   },
   {
     "id": "builder/route-uncompressed",
@@ -3732,7 +3732,7 @@
       "stdout": "lnbc20m1pvjluezhp58yjmdan79s6qqdhdzgynm4zwqd5d7xmw5fk98klysy043l2ahrqspp5qqqsyqcyq5rqwzqfqqqsyqcyq5rqwzqfqqqsyqcyq5rqwzqfqypqsp5zyg3zyg3zyg3zyg3zyg3zyg3zyg3zyg3zyg3zyg3zyg3zyg3zygs9qrsgqcqpjxqrrssnp4q0n326hr8v9zprg8gsvezcch06gfaqqhde2aj730yg0durunfhv66fpp3qjmp7lwpagxun9pygexvgpjdc4jdj85fr9yq20q82gphp2nflc7jtzrcazrra7wwgzxqc8u7754cdlpfrmccae92qgzqvzq2ps8pqqqqqqpqqqqq9qqqvpeuqafqxu92d8lr6fvg0r5gv0heeeqgcrqlnm6jhphu9y00rrhy4grqszsvpcgpy9qqqqqqgqqqqq7qqzqcg62tjjdhvf5a47um744nckya3lnqthegpf6dft2eud0vga3druq7dclu07vd9mhuww4ran69elsljvghxe6n5xvpu4rlcuxyvjtp2cp09gdvp\n",
       "stderr": ""
     },
-    "seconds": 0.009471230208873749
+    "seconds": 0.008571147918701172
   },
   {
     "id": "builder/route-hybrid",
@@ -3748,7 +3748,7 @@
       "stdout": "lnbc20m1pvjluezhp58yjmdan79s6qqdhdzgynm4zwqd5d7xmw5fk98klysy043l2ahrqspp5qqqsyqcyq5rqwzqfqqqsyqcyq5rqwzqfqqqsyqcyq5rqwzqfqypqsp5zyg3zyg3zyg3zyg3zyg3zyg3zyg3zyg3zyg3zyg3zyg3zyg3zygs9qrsgqcqpjxqrrssnp4q0n326hr8v9zprg8gsvezcch06gfaqqhde2aj730yg0durunfhv66fpp3qjmp7lwpagxun9pygexvgpjdc4jdj85fr9yq20q82gphp2nflc7jtzrcazrra7wwgzxqc8u7754cdlpfrmccae92qgzqvzq2ps8pqqqqqqpqqqqq9qqqvpeuqafqxu92d8lr6fvg0r5gv0heeeqgcrqlnm6jhphu9y00rrhy4grqszsvpcgpy9qqqqqqgqqqqq7qqzqcg62tjjdhvf5a47um744nckya3lnqthegpf6dft2eud0vga3druq7dclu07vd9mhuww4ran69elsljvghxe6n5xvpu4rlcuxyvjtp2cp09gdvp\n",
       "stderr": ""
     },
-    "seconds": 0.008905455470085144
+    "seconds": 0.008954085409641266
   },
   {
     "id": "builder/route-mismatched",
@@ -3764,7 +3764,7 @@
       "stdout": "",
       "stderr": "Error: Invalid public key bytes at line 1 column 846\n"
     },
-    "seconds": 0.008901327848434448
+    "seconds": 0.009250499308109283
   },
   {
     "id": "builder/amount-None",
@@ -3780,7 +3780,7 @@
       "stdout": "lnbc1pvjluezdq5xysxxatsyp3k7enxv4jspp5qqqsyqcyq5rqwzqfqqqsyqcyq5rqwzqfqqqsyqcyq5rqwzqfqypqsp5zyg3zyg3zyg3zyg3zyg3zyg3zyg3zyg3zyg3zyg3zyg3zyg3zygs9qrsgqcqpjxqzpunp4q0n326hr8v9zprg8gsvezcch06gfaqqhde2aj730yg0durunfhv66alfcs4yrrhmxwu8vxzc4jzqge0nszzgzal5vgq09eyqzy5rzukcnxfjnf45g0wej5q87m0mzdnzjtxq2q5wjay2g69elhjvx4mrqy9spt7zw5z\n",
       "stderr": ""
     },
-    "seconds": 0.008736871182918549
+    "seconds": 0.008527405560016632
   },
   {
     "id": "builder/amount-0",
@@ -3796,7 +3796,7 @@
       "stdout": "lnbc0m1pvjluezdq5xysxxatsyp3k7enxv4jspp5qqqsyqcyq5rqwzqfqqqsyqcyq5rqwzqfqqqsyqcyq5rqwzqfqypqsp5zyg3zyg3zyg3zyg3zyg3zyg3zyg3zyg3zyg3zyg3zyg3zyg3zygs9qrsgqcqpjxqzpunp4q0n326hr8v9zprg8gsvezcch06gfaqqhde2aj730yg0durunfhv66nl3lw2sgsq6n70qhn8x46nkv7lpqcecgevc0pyaqpat8h8drwqlk0tmsw9sdcll37efhw9xzhpcf5qfg3huvudavp23r37x8uj6rcjspcwdvcy\n",
       "stderr": ""
     },
-    "seconds": 0.008755095303058624
+    "seconds": 0.008702270686626434
   },
   {
     "id": "builder/amount-1",
@@ -3812,7 +3812,7 @@
       "stdout": "lnbc10p1pvjluezdq5xysxxatsyp3k7enxv4jspp5qqqsyqcyq5rqwzqfqqqsyqcyq5rqwzqfqqqsyqcyq5rqwzqfqypqsp5zyg3zyg3zyg3zyg3zyg3zyg3zyg3zyg3zyg3zyg3zyg3zyg3zygs9qrsgqcqpjxqzpunp4q0n326hr8v9zprg8gsvezcch06gfaqqhde2aj730yg0durunfhv667vp9rkurx9mw6su7rjf296uex63dtk0x7rjjt85xdln827kjzryxgndzw4p4zuu7vdk34m2aehzfm6lzkhccqcktmmargnde7fle4ugprwd4ss\n",
       "stderr": ""
     },
-    "seconds": 0.00901687890291214
+    "seconds": 0.00923970341682434
   },
   {
     "id": "builder/amount-99",
@@ -3828,7 +3828,7 @@
       "stdout": "lnbc990p1pvjluezdq5xysxxatsyp3k7enxv4jspp5qqqsyqcyq5rqwzqfqqqsyqcyq5rqwzqfqqqsyqcyq5rqwzqfqypqsp5zyg3zyg3zyg3zyg3zyg3zyg3zyg3zyg3zyg3zyg3zyg3zyg3zygs9qrsgqcqpjxqzpunp4q0n326hr8v9zprg8gsvezcch06gfaqqhde2aj730yg0durunfhv660myw5psxp0zg4dvwh88lahc3vlmr2wtfykcqmaqm2eppyygnndqkwq9a82vt3mg407gg54vzzppug0maksc926xphl3yzfgel7sl3rspez6trg\n",
       "stderr": ""
     },
-    "seconds": 0.008557617664337158
+    "seconds": 0.009404070675373077
   },
   {
     "id": "builder/amount-100",
@@ -3844,7 +3844,7 @@
       "stdout": "lnbc1n1pvjluezdq5xysxxatsyp3k7enxv4jspp5qqqsyqcyq5rqwzqfqqqsyqcyq5rqwzqfqqqsyqcyq5rqwzqfqypqsp5zyg3zyg3zyg3zyg3zyg3zyg3zyg3zyg3zyg3zyg3zyg3zyg3zygs9qrsgqcqpjxqzpunp4q0n326hr8v9zprg8gsvezcch06gfaqqhde2aj730yg0durunfhv66ugj460rd02updq6pwahreykd2704ne2mwpvfh4anez8xxgnffgcn6khyxgcc7auvjf6xuum3agxzcl7kc7zv36nv36tjchvpc8j0tzqqsh2q5s\n",
       "stderr": ""
     },
-    "seconds": 0.008144989609718323
+    "seconds": 0.00899188220500946
   },
   {
     "id": "builder/amount-99999",
@@ -3860,7 +3860,7 @@
       "stdout": "lnbc999990p1pvjluezdq5xysxxatsyp3k7enxv4jspp5qqqsyqcyq5rqwzqfqqqsyqcyq5rqwzqfqqqsyqcyq5rqwzqfqypqsp5zyg3zyg3zyg3zyg3zyg3zyg3zyg3zyg3zyg3zyg3zyg3zyg3zygs9qrsgqcqpjxqzpunp4q0n326hr8v9zprg8gsvezcch06gfaqqhde2aj730yg0durunfhv660ch6ynd7qstg3luhluy788dajsvjyfjf53m9gch5c0n6d848vjtpcjutnk3jpqfv49zwehpw4h8gtd6rcafj6cw9gu5vrlsnq7cr24sphag58f\n",
       "stderr": ""
     },
-    "seconds": 0.009046263992786407
+    "seconds": 0.00868941843509674
   },
   {
     "id": "builder/amount-100000",
@@ -3876,7 +3876,7 @@
       "stdout": "lnbc1u1pvjluezdq5xysxxatsyp3k7enxv4jspp5qqqsyqcyq5rqwzqfqqqsyqcyq5rqwzqfqqqsyqcyq5rqwzqfqypqsp5zyg3zyg3zyg3zyg3zyg3zyg3zyg3zyg3zyg3zyg3zyg3zyg3zygs9qrsgqcqpjxqzpunp4q0n326hr8v9zprg8gsvezcch06gfaqqhde2aj730yg0durunfhv66thx295h29ws3v9d022ajr5t6q6v3gggvcracvvyk8wra2p8f2fj5qgdmf8gfshpyhfafhxfgvyxy0qz9yvxqc0hs3qnu8fsjzq2p9ucp77stgt\n",
       "stderr": ""
     },
-    "seconds": 0.008883215487003326
+    "seconds": 0.009517505764961243
   },
   {
     "id": "builder/amount-100000000",
@@ -3892,7 +3892,7 @@
       "stdout": "lnbc1m1pvjluezdq5xysxxatsyp3k7enxv4jspp5qqqsyqcyq5rqwzqfqqqsyqcyq5rqwzqfqqqsyqcyq5rqwzqfqypqsp5zyg3zyg3zyg3zyg3zyg3zyg3zyg3zyg3zyg3zyg3zyg3zyg3zygs9qrsgqcqpjxqzpunp4q0n326hr8v9zprg8gsvezcch06gfaqqhde2aj730yg0durunfhv66jrvjgvklwskcsq6dqjq7y66llq2c66zslndf35rw723qpg0lsurr73xehwuwvwcsvqcjzy83llz6xeajj37fhu3njzkzsw4yspvc6gqqqqgnkn\n",
       "stderr": ""
     },
-    "seconds": 0.008479297161102295
+    "seconds": 0.00861327350139618
   },
   {
     "id": "builder/amount-100000000000",
@@ -3908,7 +3908,7 @@
       "stdout": "lnbc1000m1pvjluezdq5xysxxatsyp3k7enxv4jspp5qqqsyqcyq5rqwzqfqqqsyqcyq5rqwzqfqqqsyqcyq5rqwzqfqypqsp5zyg3zyg3zyg3zyg3zyg3zyg3zyg3zyg3zyg3zyg3zyg3zyg3zygs9qrsgqcqpjxqzpunp4q0n326hr8v9zprg8gsvezcch06gfaqqhde2aj730yg0durunfhv66zzmms4mj2eyuz3n0sm44qwsd3ptyfj0s996cj4uwkf0t5zdkp4z8r64s96jpjsstmgl99fr79ntwg4f49l2cw54rkctxgp7kqqrnc0gqzj53py\n",
       "stderr": ""
     },
-    "seconds": 0.009310282766819
+    "seconds": 0.009231291711330414
   },
   {
     "id": "builder/amount-1844674407370955161",
@@ -3924,7 +3924,7 @@
       "stdout": "lnbc18446744073709551610p1pvjluezdq5xysxxatsyp3k7enxv4jspp5qqqsyqcyq5rqwzqfqqqsyqcyq5rqwzqfqqqsyqcyq5rqwzqfqypqsp5zyg3zyg3zyg3zyg3zyg3zyg3zyg3zyg3zyg3zyg3zyg3zyg3zygs9qrsgqcqpjxqzpunp4q0n326hr8v9zprg8gsvezcch06gfaqqhde2aj730yg0durunfhv662m9xgw603v5y4r0d04lxhaszjmlye34l72d2e6vv2yp65wksm6l9cc4r5yrg5t0j7q7ygvy8dr9j83mlq73k3lxjf055l43c5n58sjsqm23klm\n",
       "stderr": ""
     },
-    "seconds": 0.009013377130031586
+    "seconds": 0.0094815194606781
   },
   {
     "id": "builder/amount-1844674407370955162",
@@ -3940,7 +3940,7 @@
       "stdout": "",
       "stderr": "Error: Failed to build and sign invoice: InvalidAmount\n"
     },
-    "seconds": 0.008873842656612396
+    "seconds": 0.008772313594818115
   },
   {
     "id": "builder/amount-18446744073709551615",
@@ -3956,7 +3956,7 @@
       "stdout": "",
       "stderr": "Error: Failed to build and sign invoice: InvalidAmount\n"
     },
-    "seconds": 0.008897140622138977
+    "seconds": 0.00905529409646988
   },
   {
     "id": "builder/network-bitcoin",
@@ -3972,7 +3972,7 @@
       "stdout": "lnbc2500u1pvjluezdq5xysxxatsyp3k7enxv4jspp5qqqsyqcyq5rqwzqfqqqsyqcyq5rqwzqfqqqsyqcyq5rqwzqfqypqsp5zyg3zyg3zyg3zyg3zyg3zyg3zyg3zyg3zyg3zyg3zyg3zyg3zygs9qrsgqcqpjxqzpunp4q0n326hr8v9zprg8gsvezcch06gfaqqhde2aj730yg0durunfhv66nldsnx6kp5he0qkulcaa240hn9m5q9tgmcakuc3zw2lk80sdcm6n4nluwmcdc7rlmlmz45qklmfkdx4gtfyqg26yzrv6cteqep2eyzcpgwl0ht\n",
       "stderr": ""
     },
-    "seconds": 0.009026318788528442
+    "seconds": 0.009157747030258179
   },
   {
     "id": "builder/network-mainnet",
@@ -3988,7 +3988,7 @@
       "stdout": "lnbc2500u1pvjluezdq5xysxxatsyp3k7enxv4jspp5qqqsyqcyq5rqwzqfqqqsyqcyq5rqwzqfqqqsyqcyq5rqwzqfqypqsp5zyg3zyg3zyg3zyg3zyg3zyg3zyg3zyg3zyg3zyg3zyg3zyg3zygs9qrsgqcqpjxqzpunp4q0n326hr8v9zprg8gsvezcch06gfaqqhde2aj730yg0durunfhv66nldsnx6kp5he0qkulcaa240hn9m5q9tgmcakuc3zw2lk80sdcm6n4nluwmcdc7rlmlmz45qklmfkdx4gtfyqg26yzrv6cteqep2eyzcpgwl0ht\n",
       "stderr": ""
     },
-    "seconds": 0.00834587961435318
+    "seconds": 0.009300582110881805
   },
   {
     "id": "builder/network-testnet",
@@ -4004,7 +4004,7 @@
       "stdout": "lntb2500u1pvjluezdq5xysxxatsyp3k7enxv4jspp5qqqsyqcyq5rqwzqfqqqsyqcyq5rqwzqfqqqsyqcyq5rqwzqfqypqsp5zyg3zyg3zyg3zyg3zyg3zyg3zyg3zyg3zyg3zyg3zyg3zyg3zygs9qrsgqcqpjxqzpunp4q0n326hr8v9zprg8gsvezcch06gfaqqhde2aj730yg0durunfhv662nk5nrvtsxmlddy5xdjecrwhw9qx5229hhkn0vprdfhstm9afq4hhv3gm3le8vx4tdqm89lxvc272g3e4dt2jgr2vf5fkfqx5uykzdsqy2tvmz\n",
       "stderr": ""
     },
-    "seconds": 0.009241923689842224
+    "seconds": 0.00909440964460373
   },
   {
     "id": "builder/network-regtest",
@@ -4020,7 +4020,7 @@
       "stdout": "lnbcrt2500u1pvjluezdq5xysxxatsyp3k7enxv4jspp5qqqsyqcyq5rqwzqfqqqsyqcyq5rqwzqfqqqsyqcyq5rqwzqfqypqsp5zyg3zyg3zyg3zyg3zyg3zyg3zyg3zyg3zyg3zyg3zyg3zyg3zygs9qrsgqcqpjxqzpunp4q0n326hr8v9zprg8gsvezcch06gfaqqhde2aj730yg0durunfhv66q23njng6jcf0x5wraunea290up6rwyjtm79uhmnj3n0jzc0u23hk7knqkjkzw5u3lmg64dcnr4qgzwuf7jzsxz04rvz6rzv9kkhkqaspltnzj7\n",
       "stderr": ""
     },
-    "seconds": 0.008542247116565704
+    "seconds": 0.00909470021724701
   },
   {
     "id": "builder/network-signet",
@@ -4036,7 +4036,7 @@
       "stdout": "lntbs2500u1pvjluezdq5xysxxatsyp3k7enxv4jspp5qqqsyqcyq5rqwzqfqqqsyqcyq5rqwzqfqqqsyqcyq5rqwzqfqypqsp5zyg3zyg3zyg3zyg3zyg3zyg3zyg3zyg3zyg3zyg3zyg3zyg3zygs9qrsgqcqpjxqzpunp4q0n326hr8v9zprg8gsvezcch06gfaqqhde2aj730yg0durunfhv66e3a0yq0vku7ej3lkpatdux0mrt8s7qp5a258sqr08uez4hg5a5f9l7nwx72gqjenh9u5adp33u0x5777d7zfrfpjqfux054lzsr652spg04lsw\n",
       "stderr": ""
     },
-    "seconds": 0.008658073842525482
+    "seconds": 0.009507112205028534
   },
   {
     "id": "builder/network-simnet",
@@ -4052,7 +4052,7 @@
       "stdout": "lnsb2500u1pvjluezdq5xysxxatsyp3k7enxv4jspp5qqqsyqcyq5rqwzqfqqqsyqcyq5rqwzqfqqqsyqcyq5rqwzqfqypqsp5zyg3zyg3zyg3zyg3zyg3zyg3zyg3zyg3zyg3zyg3zyg3zyg3zygs9qrsgqcqpjxqzpunp4q0n326hr8v9zprg8gsvezcch06gfaqqhde2aj730yg0durunfhv6677s7hxuevqzx46e2asmp448qltpkugwv3nhcy7hfd7gllrdfx4v8mxjkjz0yghul8c2csj9y7pyeqarpvjh4tnce5yx3222qwkgd2ncp8rumx3\n",
       "stderr": ""
     },
-    "seconds": 0.00897948443889618
+    "seconds": 0.008951209485530853
   },
   {
     "id": "builder/empty-description",
@@ -4068,7 +4068,7 @@
       "stdout": "lnbc2500u1pvjluezdqqpp5qqqsyqcyq5rqwzqfqqqsyqcyq5rqwzqfqqqsyqcyq5rqwzqfqypqsp5zyg3zyg3zyg3zyg3zyg3zyg3zyg3zyg3zyg3zyg3zyg3zyg3zygs9qrsgqcqpjxqzpunp4q0n326hr8v9zprg8gsvezcch06gfaqqhde2aj730yg0durunfhv66rq7fqva82ufj3k6s2yt2c57lc35rgtxx720hfpvc7qgf97la5eyqenvjq7c4q638m4q26q93dgezk44kgfuwyvz0wkprl03pxxlf6fcq98lylt\n",
       "stderr": ""
     },
-    "seconds": 0.008547477424144745
+    "seconds": 0.00848454236984253
   },
   {
     "id": "builder/description-first",
@@ -4084,7 +4084,7 @@
       "stdout": "lnbc2500u1pvjluezdq0cw5jqcm0venx2egpp5qqqsyqcyq5rqwzqfqqqsyqcyq5rqwzqfqqqsyqcyq5rqwzqfqypqsp5zyg3zyg3zyg3zyg3zyg3zyg3zyg3zyg3zyg3zyg3zyg3zyg3zygs9qrsgqcqpjxqzpunp4q0n326hr8v9zprg8gsvezcch06gfaqqhde2aj730yg0durunfhv660hqxzgq74rg8f74zjy7pk0yndrql4y530mtda0lrg3f2s6zuus43q3p4jjrgna84jln55yzs8gcfwzgglknnp5g5ly7hyunn3quut3gqzeyekd\n",
       "stderr": ""
     },
-    "seconds": 0.009162619709968567
+    "seconds": 0.00869307667016983
   },
   {
     "id": "builder/features-ignored",
@@ -4100,7 +4100,7 @@
       "stdout": "lnbc2500u1pvjluezdq5xysxxatsyp3k7enxv4jspp5qqqsyqcyq5rqwzqfqqqsyqcyq5rqwzqfqqqsyqcyq5rqwzqfqypqsp5zyg3zyg3zyg3zyg3zyg3zyg3zyg3zyg3zyg3zyg3zyg3zyg3zygs9qrsgqcqpjxqzpunp4q0n326hr8v9zprg8gsvezcch06gfaqqhde2aj730yg0durunfhv66nldsnx6kp5he0qkulcaa240hn9m5q9tgmcakuc3zw2lk80sdcm6n4nluwmcdc7rlmlmz45qklmfkdx4gtfyqg26yzrv6cteqep2eyzcpgwl0ht\n",
       "stderr": ""
     },
-    "seconds": 0.008572973310947418
+    "seconds": 0.00875064730644226
   },
   {
     "id": "builder/empty-route",
@@ -4116,7 +4116,7 @@
       "stdout": "lnbc2500u1pvjluezdq5xysxxatsyp3k7enxv4jspp5qqqsyqcyq5rqwzqfqqqsyqcyq5rqwzqfqqqsyqcyq5rqwzqfqypqsp5zyg3zyg3zyg3zyg3zyg3zyg3zyg3zyg3zyg3zyg3zyg3zyg3zygs9qrsgqcqpjxqzpunp4q0n326hr8v9zprg8gsvezcch06gfaqqhde2aj730yg0durunfhv66nldsnx6kp5he0qkulcaa240hn9m5q9tgmcakuc3zw2lk80sdcm6n4nluwmcdc7rlmlmz45qklmfkdx4gtfyqg26yzrv6cteqep2eyzcpgwl0ht\n",
       "stderr": ""
     },
-    "seconds": 0.009281337261199951
+    "seconds": 0.008927620947360992
   },
   {
     "id": "builder/explicit-n-mismatch",
@@ -4132,7 +4132,7 @@
       "stdout": "lnbc2500u1pvjluezdq5xysxxatsyp3k7enxv4jspp5qqqsyqcyq5rqwzqfqqqsyqcyq5rqwzqfqqqsyqcyq5rqwzqfqypqsp5zyg3zyg3zyg3zyg3zyg3zyg3zyg3zyg3zyg3zyg3zyg3zyg3zygs9qrsgqcqpjxqzpunp4q20q82gphp2nflc7jtzrcazrra7wwgzxqc8u7754cdlpfrmccae92vwtyjjy6axxsrjpvlull4p3ephvk3wnndteppttpgmddrcdn5v840lkpk633v7wgp4u4qxnz8l3yzx05yes6g4ulzz48cd6ua84aynspe5jq3j\n",
       "stderr": ""
     },
-    "seconds": 0.009373195469379425
+    "seconds": 0.008601263165473938
   },
   {
     "id": "builder/timestamp-max",
@@ -4148,7 +4148,7 @@
       "stdout": "lnbc2500u1llllllldq5xysxxatsyp3k7enxv4jspp5qqqsyqcyq5rqwzqfqqqsyqcyq5rqwzqfqqqsyqcyq5rqwzqfqypqsp5zyg3zyg3zyg3zyg3zyg3zyg3zyg3zyg3zyg3zyg3zyg3zyg3zygs9qrsgqcqpjxqzpunp4q0n326hr8v9zprg8gsvezcch06gfaqqhde2aj730yg0durunfhv66gfkf9wnrtm6za7ehm8ah78wmzrnp9ewwgy8xvqxvpl4c2zzdp4hnxw985ecgzaca3cx89r28vqscvkuxypuep8f7sg22ga0nuz4m8dqqa22rs7\n",
       "stderr": ""
     },
-    "seconds": 0.009165294468402863
+    "seconds": 0.009030565619468689
   },
   {
     "id": "builder/timestamp-overflow",
@@ -4164,7 +4164,7 @@
       "stdout": "",
       "stderr": "Error: Failed to build and sign invoice: TimestampOutOfBounds\n"
     },
-    "seconds": 0.008482858538627625
+    "seconds": 0.009483590722084045
   },
   {
     "id": "builder/timestamp-cast",
@@ -4180,7 +4180,7 @@
       "stdout": "lnbc2500u1qqqqqqqdq5xysxxatsyp3k7enxv4jspp5qqqsyqcyq5rqwzqfqqqsyqcyq5rqwzqfqqqsyqcyq5rqwzqfqypqsp5zyg3zyg3zyg3zyg3zyg3zyg3zyg3zyg3zyg3zyg3zyg3zyg3zygs9qrsgqcqpjxqzpunp4q0n326hr8v9zprg8gsvezcch06gfaqqhde2aj730yg0durunfhv66tldqhrpeyxwqeh905zmv377ak062am2psgj3expp27rja7pyhlzk383ywnsudu0pkgrhmgek0xtvz5um75qkqamxg4jw5s3qnujk5xspf66g7p\n",
       "stderr": ""
     },
-    "seconds": 0.008786141872406006
+    "seconds": 0.00956641137599945
   },
   {
     "id": "json/missing-network",
@@ -4196,7 +4196,7 @@
       "stdout": "",
       "stderr": "Error: missing field `network` at line 1 column 587\n"
     },
-    "seconds": 0.008709907531738281
+    "seconds": 0.009279116988182068
   },
   {
     "id": "json/null-network",
@@ -4212,7 +4212,7 @@
       "stdout": "",
       "stderr": "Error: expected value at line 1 column 13\n"
     },
-    "seconds": 0.008799836039543152
+    "seconds": 0.008797705173492432
   },
   {
     "id": "json/type-network",
@@ -4228,7 +4228,7 @@
       "stdout": "",
       "stderr": "Error: expected value at line 1 column 14\n"
     },
-    "seconds": 0.008393466472625732
+    "seconds": 0.009185627102851868
   },
   {
     "id": "json/missing-amount_msats",
@@ -4244,7 +4244,7 @@
       "stdout": "lnbc1pvjluezdq5xysxxatsyp3k7enxv4jspp5qqqsyqcyq5rqwzqfqqqsyqcyq5rqwzqfqqqsyqcyq5rqwzqfqypqsp5zyg3zyg3zyg3zyg3zyg3zyg3zyg3zyg3zyg3zyg3zyg3zyg3zygs9qrsgqcqpjxqzpunp4q0n326hr8v9zprg8gsvezcch06gfaqqhde2aj730yg0durunfhv66alfcs4yrrhmxwu8vxzc4jzqge0nszzgzal5vgq09eyqzy5rzukcnxfjnf45g0wej5q87m0mzdnzjtxq2q5wjay2g69elhjvx4mrqy9spt7zw5z\n",
       "stderr": ""
     },
-    "seconds": 0.009158439934253693
+    "seconds": 0.009263552725315094
   },
   {
     "id": "json/null-amount_msats",
@@ -4260,7 +4260,7 @@
       "stdout": "lnbc1pvjluezdq5xysxxatsyp3k7enxv4jspp5qqqsyqcyq5rqwzqfqqqsyqcyq5rqwzqfqqqsyqcyq5rqwzqfqypqsp5zyg3zyg3zyg3zyg3zyg3zyg3zyg3zyg3zyg3zyg3zyg3zyg3zygs9qrsgqcqpjxqzpunp4q0n326hr8v9zprg8gsvezcch06gfaqqhde2aj730yg0durunfhv66alfcs4yrrhmxwu8vxzc4jzqge0nszzgzal5vgq09eyqzy5rzukcnxfjnf45g0wej5q87m0mzdnzjtxq2q5wjay2g69elhjvx4mrqy9spt7zw5z\n",
       "stderr": ""
     },
-    "seconds": 0.009261853992938995
+    "seconds": 0.009395107626914978
   },
   {
     "id": "json/type-amount_msats",
@@ -4276,7 +4276,7 @@
       "stdout": "",
       "stderr": "Error: invalid type: map, expected u64 at line 1 column 39\n"
     },
-    "seconds": 0.00880005955696106
+    "seconds": 0.008703798055648804
   },
   {
     "id": "json/missing-timestamp",
@@ -4292,7 +4292,7 @@
       "stdout": "",
       "stderr": "Error: missing field `timestamp` at line 1 column 572\n"
     },
-    "seconds": 0.008902646601200104
+    "seconds": 0.008994877338409424
   },
   {
     "id": "json/null-timestamp",
@@ -4308,7 +4308,7 @@
       "stdout": "",
       "stderr": "Error: invalid type: null, expected an RFC 3339 formatted date and time string at line 1 column 67\n"
     },
-    "seconds": 0.008582435548305511
+    "seconds": 0.009130381047725677
   },
   {
     "id": "json/type-timestamp",
@@ -4324,7 +4324,7 @@
       "stdout": "",
       "stderr": "Error: invalid type: map, expected an RFC 3339 formatted date and time string at line 1 column 63\n"
     },
-    "seconds": 0.008702196180820465
+    "seconds": 0.008791700005531311
   },
   {
     "id": "json/missing-timestamp_millis",
@@ -4340,7 +4340,7 @@
       "stdout": "",
       "stderr": "Error: missing field `timestamp_millis` at line 1 column 574\n"
     },
-    "seconds": 0.009308837354183197
+    "seconds": 0.009509295225143433
   },
   {
     "id": "json/null-timestamp_millis",
@@ -4356,7 +4356,7 @@
       "stdout": "",
       "stderr": "Error: invalid number at line 1 column 108\n"
     },
-    "seconds": 0.009108774363994598
+    "seconds": 0.009433239698410034
   },
   {
     "id": "json/type-timestamp_millis",
@@ -4372,7 +4372,7 @@
       "stdout": "",
       "stderr": "Error: invalid number at line 1 column 108\n"
     },
-    "seconds": 0.008653335273265839
+    "seconds": 0.009452365338802338
   },
   {
     "id": "json/missing-payment_hash",
@@ -4388,7 +4388,7 @@
       "stdout": "",
       "stderr": "Error: missing field `payment_hash` at line 1 column 525\n"
     },
-    "seconds": 0.00841262936592102
+    "seconds": 0.009271584451198578
   },
   {
     "id": "json/null-payment_hash",
@@ -4404,7 +4404,7 @@
       "stdout": "",
       "stderr": "Error: invalid type: null, expected a string at line 1 column 142\n"
     },
-    "seconds": 0.008749902248382568
+    "seconds": 0.009200528264045715
   },
   {
     "id": "json/type-payment_hash",
@@ -4420,7 +4420,7 @@
       "stdout": "",
       "stderr": "Error: invalid type: map, expected a string at line 1 column 138\n"
     },
-    "seconds": 0.008913055062294006
+    "seconds": 0.00907045602798462
   },
   {
     "id": "json/missing-payment_secret",
@@ -4436,7 +4436,7 @@
       "stdout": "",
       "stderr": "Error: missing field `payment_secret` at line 1 column 523\n"
     },
-    "seconds": 0.009015500545501709
+    "seconds": 0.009192422032356262
   },
   {
     "id": "json/null-payment_secret",
@@ -4452,7 +4452,7 @@
       "stdout": "",
       "stderr": "Error: invalid type: null, expected a string at line 1 column 228\n"
     },
-    "seconds": 0.008816339075565338
+    "seconds": 0.009679913520812988
   },
   {
     "id": "json/type-payment_secret",
@@ -4468,7 +4468,7 @@
       "stdout": "",
       "stderr": "Error: invalid type: map, expected a string at line 1 column 224\n"
     },
-    "seconds": 0.00909392535686493
+    "seconds": 0.008836150169372559
   },
   {
     "id": "json/missing-features",
@@ -4484,7 +4484,7 @@
       "stdout": "",
       "stderr": "Error: missing field `features` at line 1 column 524\n"
     },
-    "seconds": 0.009052306413650513
+    "seconds": 0.00922798365354538
   },
   {
     "id": "json/null-features",
@@ -4500,7 +4500,7 @@
       "stdout": "",
       "stderr": "Error: invalid type: null, expected a sequence at line 1 column 308\n"
     },
-    "seconds": 0.009285680949687958
+    "seconds": 0.009038515388965607
   },
   {
     "id": "json/type-features",
@@ -4516,7 +4516,7 @@
       "stdout": "",
       "stderr": "Error: invalid type: map, expected a sequence at line 1 column 304\n"
     },
-    "seconds": 0.008665546774864197
+    "seconds": 0.008766084909439087
   },
   {
     "id": "json/missing-description",
@@ -4532,7 +4532,7 @@
       "stdout": "lnbc2500u1pvjluezdqqpp5qqqsyqcyq5rqwzqfqqqsyqcyq5rqwzqfqqqsyqcyq5rqwzqfqypqsp5zyg3zyg3zyg3zyg3zyg3zyg3zyg3zyg3zyg3zyg3zyg3zyg3zygs9qrsgqcqpjxqzpunp4q0n326hr8v9zprg8gsvezcch06gfaqqhde2aj730yg0durunfhv66rq7fqva82ufj3k6s2yt2c57lc35rgtxx720hfpvc7qgf97la5eyqenvjq7c4q638m4q26q93dgezk44kgfuwyvz0wkprl03pxxlf6fcq98lylt\n",
       "stderr": ""
     },
-    "seconds": 0.008917100727558136
+    "seconds": 0.008530199527740479
   },
   {
     "id": "json/null-description",
@@ -4548,7 +4548,7 @@
       "stdout": "lnbc2500u1pvjluezdqqpp5qqqsyqcyq5rqwzqfqqqsyqcyq5rqwzqfqqqsyqcyq5rqwzqfqypqsp5zyg3zyg3zyg3zyg3zyg3zyg3zyg3zyg3zyg3zyg3zyg3zyg3zygs9qrsgqcqpjxqzpunp4q0n326hr8v9zprg8gsvezcch06gfaqqhde2aj730yg0durunfhv66rq7fqva82ufj3k6s2yt2c57lc35rgtxx720hfpvc7qgf97la5eyqenvjq7c4q638m4q26q93dgezk44kgfuwyvz0wkprl03pxxlf6fcq98lylt\n",
       "stderr": ""
     },
-    "seconds": 0.008699126541614532
+    "seconds": 0.009389877319335938
   },
   {
     "id": "json/type-description",
@@ -4564,7 +4564,7 @@
       "stdout": "",
       "stderr": "Error: invalid type: map, expected a string at line 1 column 392\n"
     },
-    "seconds": 0.008549459278583527
+    "seconds": 0.008504524827003479
   },
   {
     "id": "json/missing-description_hash",
@@ -4580,7 +4580,7 @@
       "stdout": "lnbc2500u1pvjluezdq5xysxxatsyp3k7enxv4jspp5qqqsyqcyq5rqwzqfqqqsyqcyq5rqwzqfqqqsyqcyq5rqwzqfqypqsp5zyg3zyg3zyg3zyg3zyg3zyg3zyg3zyg3zyg3zyg3zyg3zyg3zygs9qrsgqcqpjxqzpunp4q0n326hr8v9zprg8gsvezcch06gfaqqhde2aj730yg0durunfhv66nldsnx6kp5he0qkulcaa240hn9m5q9tgmcakuc3zw2lk80sdcm6n4nluwmcdc7rlmlmz45qklmfkdx4gtfyqg26yzrv6cteqep2eyzcpgwl0ht\n",
       "stderr": ""
     },
-    "seconds": 0.008966565132141113
+    "seconds": 0.009105771780014038
   },
   {
     "id": "json/null-description_hash",
@@ -4596,7 +4596,7 @@
       "stdout": "lnbc2500u1pvjluezdq5xysxxatsyp3k7enxv4jspp5qqqsyqcyq5rqwzqfqqqsyqcyq5rqwzqfqqqsyqcyq5rqwzqfqypqsp5zyg3zyg3zyg3zyg3zyg3zyg3zyg3zyg3zyg3zyg3zyg3zyg3zygs9qrsgqcqpjxqzpunp4q0n326hr8v9zprg8gsvezcch06gfaqqhde2aj730yg0durunfhv66nldsnx6kp5he0qkulcaa240hn9m5q9tgmcakuc3zw2lk80sdcm6n4nluwmcdc7rlmlmz45qklmfkdx4gtfyqg26yzrv6cteqep2eyzcpgwl0ht\n",
       "stderr": ""
     },
-    "seconds": 0.00957486778497696
+    "seconds": 0.009335033595561981
   },
   {
     "id": "json/type-description_hash",
@@ -4612,7 +4612,7 @@
       "stdout": "",
       "stderr": "Error: invalid type: map, expected a string at line 1 column 428\n"
     },
-    "seconds": 0.00852222740650177
+    "seconds": 0.009043142199516296
   },
   {
     "id": "json/missing-destination",
@@ -4628,7 +4628,7 @@
       "stdout": "",
       "stderr": "Error: missing field `destination` at line 1 column 524\n"
     },
-    "seconds": 0.008172750473022461
+    "seconds": 0.008397005498409271
   },
   {
     "id": "json/null-destination",
@@ -4644,7 +4644,7 @@
       "stdout": "",
       "stderr": "Error: invalid type: null, expected a string at line 1 column 453\n"
     },
-    "seconds": 0.008941121399402618
+    "seconds": 0.010396398603916168
   },
   {
     "id": "json/type-destination",
@@ -4660,7 +4660,7 @@
       "stdout": "",
       "stderr": "Error: invalid type: map, expected a string at line 1 column 449\n"
     },
-    "seconds": 0.008880198001861572
+    "seconds": 0.009705670177936554
   },
   {
     "id": "json/missing-expiry_seconds",
@@ -4676,7 +4676,7 @@
       "stdout": "",
       "stderr": "Error: missing field `expiry_seconds` at line 1 column 587\n"
     },
-    "seconds": 0.008635535836219788
+    "seconds": 0.009159937500953674
   },
   {
     "id": "json/null-expiry_seconds",
@@ -4692,7 +4692,7 @@
       "stdout": "",
       "stderr": "Error: invalid type: null, expected u64 at line 1 column 541\n"
     },
-    "seconds": 0.008933626115322113
+    "seconds": 0.009322799742221832
   },
   {
     "id": "json/type-expiry_seconds",
@@ -4708,7 +4708,7 @@
       "stdout": "",
       "stderr": "Error: invalid type: map, expected u64 at line 1 column 537\n"
     },
-    "seconds": 0.009154699742794037
+    "seconds": 0.009043306112289429
   },
   {
     "id": "json/missing-min_final_cltv_expiry",
@@ -4724,7 +4724,7 @@
       "stdout": "",
       "stderr": "Error: missing field `min_final_cltv_expiry` at line 1 column 580\n"
     },
-    "seconds": 0.00909026712179184
+    "seconds": 0.009220696985721588
   },
   {
     "id": "json/null-min_final_cltv_expiry",
@@ -4740,7 +4740,7 @@
       "stdout": "",
       "stderr": "Error: invalid type: null, expected u64 at line 1 column 570\n"
     },
-    "seconds": 0.009381867945194244
+    "seconds": 0.009069710969924927
   },
   {
     "id": "json/type-min_final_cltv_expiry",
@@ -4756,7 +4756,7 @@
       "stdout": "",
       "stderr": "Error: invalid type: map, expected u64 at line 1 column 566\n"
     },
-    "seconds": 0.008724696934223175
+    "seconds": 0.009775057435035706
   },
   {
     "id": "json/missing-fallback_addresses",
@@ -4772,7 +4772,7 @@
       "stdout": "",
       "stderr": "Error: missing field `fallback_addresses` at line 1 column 583\n"
     },
-    "seconds": 0.009011141955852509
+    "seconds": 0.009047478437423706
   },
   {
     "id": "json/null-fallback_addresses",
@@ -4788,7 +4788,7 @@
       "stdout": "",
       "stderr": "Error: invalid type: null, expected a sequence at line 1 column 596\n"
     },
-    "seconds": 0.009150832891464233
+    "seconds": 0.009521104395389557
   },
   {
     "id": "json/type-fallback_addresses",
@@ -4804,7 +4804,7 @@
       "stdout": "",
       "stderr": "Error: invalid type: map, expected a sequence at line 1 column 592\n"
     },
-    "seconds": 0.008792966604232788
+    "seconds": 0.00875633955001831
   },
   {
     "id": "json/missing-routes",
@@ -4820,7 +4820,7 @@
       "stdout": "",
       "stderr": "Error: missing field `routes` at line 1 column 595\n"
     },
-    "seconds": 0.008795827627182007
+    "seconds": 0.008801132440567017
   },
   {
     "id": "json/null-routes",
@@ -4836,7 +4836,7 @@
       "stdout": "",
       "stderr": "Error: invalid type: null, expected a sequence at line 1 column 610\n"
     },
-    "seconds": 0.00794343650341034
+    "seconds": 0.009272389113903046
   },
   {
     "id": "json/type-routes",
@@ -4852,7 +4852,7 @@
       "stdout": "",
       "stderr": "Error: invalid type: map, expected a sequence at line 1 column 606\n"
     },
-    "seconds": 0.008656010031700134
+    "seconds": 0.008775748312473297
   },
   {
     "id": "json/negative-amount_msats",
@@ -4868,7 +4868,7 @@
       "stdout": "",
       "stderr": "Error: invalid value: integer `-1`, expected u64 at line 1 column 41\n"
     },
-    "seconds": 0.00845007598400116
+    "seconds": 0.008896075189113617
   },
   {
     "id": "json/fraction-amount_msats",
@@ -4884,7 +4884,7 @@
       "stdout": "",
       "stderr": "Error: invalid type: floating point `1.5`, expected u64 at line 1 column 42\n"
     },
-    "seconds": 0.00890050083398819
+    "seconds": 0.009477965533733368
   },
   {
     "id": "json/string-amount_msats",
@@ -4900,7 +4900,7 @@
       "stdout": "",
       "stderr": "Error: invalid type: string \"1\", expected u64 at line 1 column 42\n"
     },
-    "seconds": 0.00854077935218811
+    "seconds": 0.00892581045627594
   },
   {
     "id": "json/bool-amount_msats",
@@ -4916,7 +4916,7 @@
       "stdout": "",
       "stderr": "Error: invalid type: boolean `true`, expected u64 at line 1 column 43\n"
     },
-    "seconds": 0.009002774953842163
+    "seconds": 0.00901157408952713
   },
   {
     "id": "json/overflow-amount_msats",
@@ -4932,7 +4932,7 @@
       "stdout": "",
       "stderr": "Error: invalid type: floating point `1.8446744073709552e+19`, expected u64 at line 1 column 59\n"
     },
-    "seconds": 0.008254781365394592
+    "seconds": 0.009083911776542664
   },
   {
     "id": "json/float-amount_msats",
@@ -4948,7 +4948,7 @@
       "stdout": "",
       "stderr": "Error: invalid type: floating point `1.0`, expected u64 at line 1 column 42\n"
     },
-    "seconds": 0.008190974593162537
+    "seconds": 0.008938319981098175
   },
   {
     "id": "json/exponent-amount_msats",
@@ -4964,7 +4964,7 @@
       "stdout": "",
       "stderr": "Error: invalid type: floating point `100.0`, expected u64 at line 1 column 42\n"
     },
-    "seconds": 0.00891491025686264
+    "seconds": 0.009225502610206604
   },
   {
     "id": "json/negative-timestamp_millis",
@@ -4980,7 +4980,7 @@
       "stdout": "",
       "stderr": "Error: number out of range at line 1 column 108\n"
     },
-    "seconds": 0.009534671902656555
+    "seconds": 0.008980810642242432
   },
   {
     "id": "json/fraction-timestamp_millis",
@@ -4996,7 +4996,7 @@
       "stdout": "",
       "stderr": "Error: expected `,` or `}` at line 1 column 109\n"
     },
-    "seconds": 0.009198993444442749
+    "seconds": 0.008762307465076447
   },
   {
     "id": "json/string-timestamp_millis",
@@ -5012,7 +5012,7 @@
       "stdout": "",
       "stderr": "Error: invalid number at line 1 column 108\n"
     },
-    "seconds": 0.00884576141834259
+    "seconds": 0.009060472249984741
   },
   {
     "id": "json/bool-timestamp_millis",
@@ -5028,7 +5028,7 @@
       "stdout": "",
       "stderr": "Error: invalid number at line 1 column 108\n"
     },
-    "seconds": 0.008123651146888733
+    "seconds": 0.009163297712802887
   },
   {
     "id": "json/overflow-timestamp_millis",
@@ -5044,7 +5044,7 @@
       "stdout": "",
       "stderr": "Error: number out of range at line 1 column 146\n"
     },
-    "seconds": 0.00886574387550354
+    "seconds": 0.008820340037345886
   },
   {
     "id": "json/float-timestamp_millis",
@@ -5060,7 +5060,7 @@
       "stdout": "",
       "stderr": "Error: expected `,` or `}` at line 1 column 109\n"
     },
-    "seconds": 0.008811891078948975
+    "seconds": 0.008532442152500153
   },
   {
     "id": "json/exponent-timestamp_millis",
@@ -5076,7 +5076,7 @@
       "stdout": "",
       "stderr": "Error: expected `,` or `}` at line 1 column 109\n"
     },
-    "seconds": 0.009116165339946747
+    "seconds": 0.00930040329694748
   },
   {
     "id": "json/negative-expiry_seconds",
@@ -5092,7 +5092,7 @@
       "stdout": "",
       "stderr": "Error: invalid value: integer `-1`, expected u64 at line 1 column 539\n"
     },
-    "seconds": 0.008774034678936005
+    "seconds": 0.008611001074314117
   },
   {
     "id": "json/fraction-expiry_seconds",
@@ -5108,7 +5108,7 @@
       "stdout": "",
       "stderr": "Error: invalid type: floating point `1.5`, expected u64 at line 1 column 540\n"
     },
-    "seconds": 0.00891585648059845
+    "seconds": 0.008223578333854675
   },
   {
     "id": "json/string-expiry_seconds",
@@ -5124,7 +5124,7 @@
       "stdout": "",
       "stderr": "Error: invalid type: string \"1\", expected u64 at line 1 column 540\n"
     },
-    "seconds": 0.008388027548789978
+    "seconds": 0.008762069046497345
   },
   {
     "id": "json/bool-expiry_seconds",
@@ -5140,7 +5140,7 @@
       "stdout": "",
       "stderr": "Error: invalid type: boolean `true`, expected u64 at line 1 column 541\n"
     },
-    "seconds": 0.008615054190158844
+    "seconds": 0.008773624897003174
   },
   {
     "id": "json/overflow-expiry_seconds",
@@ -5156,7 +5156,7 @@
       "stdout": "",
       "stderr": "Error: invalid type: floating point `1.8446744073709552e+19`, expected u64 at line 1 column 557\n"
     },
-    "seconds": 0.009078875184059143
+    "seconds": 0.00901763141155243
   },
   {
     "id": "json/float-expiry_seconds",
@@ -5172,7 +5172,7 @@
       "stdout": "",
       "stderr": "Error: invalid type: floating point `1.0`, expected u64 at line 1 column 540\n"
     },
-    "seconds": 0.00919865071773529
+    "seconds": 0.009489066898822784
   },
   {
     "id": "json/exponent-expiry_seconds",
@@ -5188,7 +5188,7 @@
       "stdout": "",
       "stderr": "Error: invalid type: floating point `100.0`, expected u64 at line 1 column 540\n"
     },
-    "seconds": 0.008635923266410828
+    "seconds": 0.009102270007133484
   },
   {
     "id": "json/negative-min_final_cltv_expiry",
@@ -5204,7 +5204,7 @@
       "stdout": "",
       "stderr": "Error: invalid value: integer `-1`, expected u64 at line 1 column 568\n"
     },
-    "seconds": 0.008609965443611145
+    "seconds": 0.008786618709564209
   },
   {
     "id": "json/fraction-min_final_cltv_expiry",
@@ -5220,7 +5220,7 @@
       "stdout": "",
       "stderr": "Error: invalid type: floating point `1.5`, expected u64 at line 1 column 569\n"
     },
-    "seconds": 0.008931420743465424
+    "seconds": 0.008941896259784698
   },
   {
     "id": "json/string-min_final_cltv_expiry",
@@ -5236,7 +5236,7 @@
       "stdout": "",
       "stderr": "Error: invalid type: string \"1\", expected u64 at line 1 column 569\n"
     },
-    "seconds": 0.009071864187717438
+    "seconds": 0.00895613431930542
   },
   {
     "id": "json/bool-min_final_cltv_expiry",
@@ -5252,7 +5252,7 @@
       "stdout": "",
       "stderr": "Error: invalid type: boolean `true`, expected u64 at line 1 column 570\n"
     },
-    "seconds": 0.00876571238040924
+    "seconds": 0.009248211979866028
   },
   {
     "id": "json/overflow-min_final_cltv_expiry",
@@ -5268,7 +5268,7 @@
       "stdout": "",
       "stderr": "Error: invalid type: floating point `1.8446744073709552e+19`, expected u64 at line 1 column 586\n"
     },
-    "seconds": 0.008757330477237701
+    "seconds": 0.009093917906284332
   },
   {
     "id": "json/float-min_final_cltv_expiry",
@@ -5284,7 +5284,7 @@
       "stdout": "",
       "stderr": "Error: invalid type: floating point `1.0`, expected u64 at line 1 column 569\n"
     },
-    "seconds": 0.008884966373443604
+    "seconds": 0.008621267974376678
   },
   {
     "id": "json/exponent-min_final_cltv_expiry",
@@ -5300,7 +5300,7 @@
       "stdout": "",
       "stderr": "Error: invalid type: floating point `100.0`, expected u64 at line 1 column 569\n"
     },
-    "seconds": 0.008256077766418457
+    "seconds": 0.008927017450332642
   },
   {
     "id": "json/hex-payment_hash",
@@ -5316,7 +5316,7 @@
       "stdout": "",
       "stderr": "Error: Invalid character 'z' at position 0 at line 1 column 142\n"
     },
-    "seconds": 0.008485004305839539
+    "seconds": 0.008730106055736542
   },
   {
     "id": "json/odd-payment_hash",
@@ -5332,7 +5332,7 @@
       "stdout": "",
       "stderr": "Error: Odd number of digits at line 1 column 141\n"
     },
-    "seconds": 0.009016647934913635
+    "seconds": 0.008866503834724426
   },
   {
     "id": "json/short-payment_hash",
@@ -5348,7 +5348,7 @@
       "stdout": "",
       "stderr": "Error: Payment hash must be exactly 32 bytes at line 1 column 142\n"
     },
-    "seconds": 0.008798681199550629
+    "seconds": 0.009402371942996979
   },
   {
     "id": "json/empty-payment_hash",
@@ -5364,7 +5364,7 @@
       "stdout": "",
       "stderr": "Error: Payment hash must be exactly 32 bytes at line 1 column 140\n"
     },
-    "seconds": 0.009287767112255096
+    "seconds": 0.008844703435897827
   },
   {
     "id": "json/hex-payment_secret",
@@ -5380,7 +5380,7 @@
       "stdout": "",
       "stderr": "Error: Invalid character 'z' at position 0 at line 1 column 228\n"
     },
-    "seconds": 0.008886255323886871
+    "seconds": 0.008573062717914581
   },
   {
     "id": "json/odd-payment_secret",
@@ -5396,7 +5396,7 @@
       "stdout": "",
       "stderr": "Error: Odd number of digits at line 1 column 227\n"
     },
-    "seconds": 0.00796731561422348
+    "seconds": 0.008918680250644684
   },
   {
     "id": "json/short-payment_secret",
@@ -5412,7 +5412,7 @@
       "stdout": "",
       "stderr": "Error: Payment secret must be exactly 32 bytes at line 1 column 228\n"
     },
-    "seconds": 0.009367667138576508
+    "seconds": 0.00892631709575653
   },
   {
     "id": "json/empty-payment_secret",
@@ -5428,7 +5428,7 @@
       "stdout": "",
       "stderr": "Error: Payment secret must be exactly 32 bytes at line 1 column 226\n"
     },
-    "seconds": 0.008820220828056335
+    "seconds": 0.008774787187576294
   },
   {
     "id": "json/hex-description_hash",
@@ -5444,7 +5444,7 @@
       "stdout": "",
       "stderr": "Error: Invalid character 'z' at position 0 at line 1 column 432\n"
     },
-    "seconds": 0.009154051542282104
+    "seconds": 0.00835040956735611
   },
   {
     "id": "json/odd-description_hash",
@@ -5460,7 +5460,7 @@
       "stdout": "",
       "stderr": "Error: Odd number of digits at line 1 column 431\n"
     },
-    "seconds": 0.008568167686462402
+    "seconds": 0.008359499275684357
   },
   {
     "id": "json/short-description_hash",
@@ -5476,7 +5476,7 @@
       "stdout": "",
       "stderr": "Error: SHA256 hash must be exactly 32 bytes at line 1 column 432\n"
     },
-    "seconds": 0.009157948195934296
+    "seconds": 0.009462624788284302
   },
   {
     "id": "json/empty-description_hash",
@@ -5492,7 +5492,7 @@
       "stdout": "",
       "stderr": "Error: SHA256 hash must be exactly 32 bytes at line 1 column 430\n"
     },
-    "seconds": 0.009374275803565979
+    "seconds": 0.00839041918516159
   },
   {
     "id": "json/hex-destination",
@@ -5508,7 +5508,7 @@
       "stdout": "",
       "stderr": "Error: Invalid hex string at line 1 column 453\n"
     },
-    "seconds": 0.009126387536525726
+    "seconds": 0.008415594696998596
   },
   {
     "id": "json/odd-destination",
@@ -5524,7 +5524,7 @@
       "stdout": "",
       "stderr": "Error: Invalid hex string at line 1 column 452\n"
     },
-    "seconds": 0.009262651205062866
+    "seconds": 0.008826196193695068
   },
   {
     "id": "json/short-destination",
@@ -5540,7 +5540,7 @@
       "stdout": "",
       "stderr": "Error: Invalid public key bytes at line 1 column 453\n"
     },
-    "seconds": 0.009175017476081848
+    "seconds": 0.009045213460922241
   },
   {
     "id": "json/empty-destination",
@@ -5556,7 +5556,7 @@
       "stdout": "",
       "stderr": "Error: Invalid public key bytes at line 1 column 451\n"
     },
-    "seconds": 0.008963145315647125
+    "seconds": 0.008596710860729218
   },
   {
     "id": "json/feature-0",
@@ -5572,7 +5572,7 @@
       "stdout": "lnbc2500u1pvjluezdq5xysxxatsyp3k7enxv4jspp5qqqsyqcyq5rqwzqfqqqsyqcyq5rqwzqfqqqsyqcyq5rqwzqfqypqsp5zyg3zyg3zyg3zyg3zyg3zyg3zyg3zyg3zyg3zyg3zyg3zyg3zygs9qrsgqcqpjxqzpunp4q0n326hr8v9zprg8gsvezcch06gfaqqhde2aj730yg0durunfhv66nldsnx6kp5he0qkulcaa240hn9m5q9tgmcakuc3zw2lk80sdcm6n4nluwmcdc7rlmlmz45qklmfkdx4gtfyqg26yzrv6cteqep2eyzcpgwl0ht\n",
       "stderr": ""
     },
-    "seconds": 0.008916094899177551
+    "seconds": 0.008914723992347717
   },
   {
     "id": "json/feature-1",
@@ -5588,7 +5588,7 @@
       "stdout": "lnbc2500u1pvjluezdq5xysxxatsyp3k7enxv4jspp5qqqsyqcyq5rqwzqfqqqsyqcyq5rqwzqfqqqsyqcyq5rqwzqfqypqsp5zyg3zyg3zyg3zyg3zyg3zyg3zyg3zyg3zyg3zyg3zyg3zyg3zygs9qrsgqcqpjxqzpunp4q0n326hr8v9zprg8gsvezcch06gfaqqhde2aj730yg0durunfhv66nldsnx6kp5he0qkulcaa240hn9m5q9tgmcakuc3zw2lk80sdcm6n4nluwmcdc7rlmlmz45qklmfkdx4gtfyqg26yzrv6cteqep2eyzcpgwl0ht\n",
       "stderr": ""
     },
-    "seconds": 0.008603535592556
+    "seconds": 0.00931885838508606
   },
   {
     "id": "json/feature-2",
@@ -5604,7 +5604,7 @@
       "stdout": "lnbc2500u1pvjluezdq5xysxxatsyp3k7enxv4jspp5qqqsyqcyq5rqwzqfqqqsyqcyq5rqwzqfqqqsyqcyq5rqwzqfqypqsp5zyg3zyg3zyg3zyg3zyg3zyg3zyg3zyg3zyg3zyg3zyg3zyg3zygs9qrsgqcqpjxqzpunp4q0n326hr8v9zprg8gsvezcch06gfaqqhde2aj730yg0durunfhv66nldsnx6kp5he0qkulcaa240hn9m5q9tgmcakuc3zw2lk80sdcm6n4nluwmcdc7rlmlmz45qklmfkdx4gtfyqg26yzrv6cteqep2eyzcpgwl0ht\n",
       "stderr": ""
     },
-    "seconds": 0.008799366652965546
+    "seconds": 0.00914762169122696
   },
   {
     "id": "json/feature-3",
@@ -5620,7 +5620,7 @@
       "stdout": "lnbc2500u1pvjluezdq5xysxxatsyp3k7enxv4jspp5qqqsyqcyq5rqwzqfqqqsyqcyq5rqwzqfqqqsyqcyq5rqwzqfqypqsp5zyg3zyg3zyg3zyg3zyg3zyg3zyg3zyg3zyg3zyg3zyg3zyg3zygs9qrsgqcqpjxqzpunp4q0n326hr8v9zprg8gsvezcch06gfaqqhde2aj730yg0durunfhv66nldsnx6kp5he0qkulcaa240hn9m5q9tgmcakuc3zw2lk80sdcm6n4nluwmcdc7rlmlmz45qklmfkdx4gtfyqg26yzrv6cteqep2eyzcpgwl0ht\n",
       "stderr": ""
     },
-    "seconds": 0.008926130831241608
+    "seconds": 0.0086989626288414
   },
   {
     "id": "json/feature-4",
@@ -5636,7 +5636,7 @@
       "stdout": "lnbc2500u1pvjluezdq5xysxxatsyp3k7enxv4jspp5qqqsyqcyq5rqwzqfqqqsyqcyq5rqwzqfqqqsyqcyq5rqwzqfqypqsp5zyg3zyg3zyg3zyg3zyg3zyg3zyg3zyg3zyg3zyg3zyg3zyg3zygs9qrsgqcqpjxqzpunp4q0n326hr8v9zprg8gsvezcch06gfaqqhde2aj730yg0durunfhv66nldsnx6kp5he0qkulcaa240hn9m5q9tgmcakuc3zw2lk80sdcm6n4nluwmcdc7rlmlmz45qklmfkdx4gtfyqg26yzrv6cteqep2eyzcpgwl0ht\n",
       "stderr": ""
     },
-    "seconds": 0.008318684995174408
+    "seconds": 0.009089700877666473
   },
   {
     "id": "json/feature-5",
@@ -5652,7 +5652,7 @@
       "stdout": "",
       "stderr": "Error: invalid type: unit variant, expected newtype variant at line 1 column 317\n"
     },
-    "seconds": 0.009211443364620209
+    "seconds": 0.009027965366840363
   },
   {
     "id": "json/feature-6",
@@ -5668,7 +5668,7 @@
       "stdout": "",
       "stderr": "Error: unknown variant `bad`, expected `required` or `optional` at line 1 column 324\n"
     },
-    "seconds": 0.008967600762844086
+    "seconds": 0.008486300706863403
   },
   {
     "id": "json/feature-7",
@@ -5684,7 +5684,7 @@
       "stdout": "",
       "stderr": "Error: expected value at line 1 column 320\n"
     },
-    "seconds": 0.008562326431274414
+    "seconds": 0.008389733731746674
   },
   {
     "id": "json/feature-8",
@@ -5700,7 +5700,7 @@
       "stdout": "",
       "stderr": "Error: unknown variant `unknown`, expected one of `basic_mpp`, `payment_metadata`, `payment_secret`, `trampoline_routing`, `unknown_bits`, `variable_length_onion`, `any_optional_bits` at line 1 column 315\n"
     },
-    "seconds": 0.008668117225170135
+    "seconds": 0.009207397699356079
   },
   {
     "id": "json/feature-9",
@@ -5716,7 +5716,7 @@
       "stdout": "",
       "stderr": "Error: expected value at line 1 column 329\n"
     },
-    "seconds": 0.008652590215206146
+    "seconds": 0.009148448705673218
   },
   {
     "id": "json/timestamp-0",
@@ -5732,7 +5732,7 @@
       "stdout": "lnbc2500u1pvjluezdq5xysxxatsyp3k7enxv4jspp5qqqsyqcyq5rqwzqfqqqsyqcyq5rqwzqfqqqsyqcyq5rqwzqfqypqsp5zyg3zyg3zyg3zyg3zyg3zyg3zyg3zyg3zyg3zyg3zyg3zyg3zygs9qrsgqcqpjxqzpunp4q0n326hr8v9zprg8gsvezcch06gfaqqhde2aj730yg0durunfhv66nldsnx6kp5he0qkulcaa240hn9m5q9tgmcakuc3zw2lk80sdcm6n4nluwmcdc7rlmlmz45qklmfkdx4gtfyqg26yzrv6cteqep2eyzcpgwl0ht\n",
       "stderr": ""
     },
-    "seconds": 0.009445108473300934
+    "seconds": 0.009528666734695435
   },
   {
     "id": "json/timestamp-1",
@@ -5748,7 +5748,7 @@
       "stdout": "lnbc2500u1pvjluezdq5xysxxatsyp3k7enxv4jspp5qqqsyqcyq5rqwzqfqqqsyqcyq5rqwzqfqqqsyqcyq5rqwzqfqypqsp5zyg3zyg3zyg3zyg3zyg3zyg3zyg3zyg3zyg3zyg3zyg3zyg3zygs9qrsgqcqpjxqzpunp4q0n326hr8v9zprg8gsvezcch06gfaqqhde2aj730yg0durunfhv66nldsnx6kp5he0qkulcaa240hn9m5q9tgmcakuc3zw2lk80sdcm6n4nluwmcdc7rlmlmz45qklmfkdx4gtfyqg26yzrv6cteqep2eyzcpgwl0ht\n",
       "stderr": ""
     },
-    "seconds": 0.008751831948757172
+    "seconds": 0.00906563550233841
   },
   {
     "id": "json/timestamp-2",
@@ -5764,7 +5764,7 @@
       "stdout": "lnbc2500u1pvjluezdq5xysxxatsyp3k7enxv4jspp5qqqsyqcyq5rqwzqfqqqsyqcyq5rqwzqfqqqsyqcyq5rqwzqfqypqsp5zyg3zyg3zyg3zyg3zyg3zyg3zyg3zyg3zyg3zyg3zyg3zyg3zygs9qrsgqcqpjxqzpunp4q0n326hr8v9zprg8gsvezcch06gfaqqhde2aj730yg0durunfhv66nldsnx6kp5he0qkulcaa240hn9m5q9tgmcakuc3zw2lk80sdcm6n4nluwmcdc7rlmlmz45qklmfkdx4gtfyqg26yzrv6cteqep2eyzcpgwl0ht\n",
       "stderr": ""
     },
-    "seconds": 0.009119726717472076
+    "seconds": 0.00883164256811142
   },
   {
     "id": "json/timestamp-3",
@@ -5780,7 +5780,7 @@
       "stdout": "lnbc2500u1pvjluezdq5xysxxatsyp3k7enxv4jspp5qqqsyqcyq5rqwzqfqqqsyqcyq5rqwzqfqqqsyqcyq5rqwzqfqypqsp5zyg3zyg3zyg3zyg3zyg3zyg3zyg3zyg3zyg3zyg3zyg3zyg3zygs9qrsgqcqpjxqzpunp4q0n326hr8v9zprg8gsvezcch06gfaqqhde2aj730yg0durunfhv66nldsnx6kp5he0qkulcaa240hn9m5q9tgmcakuc3zw2lk80sdcm6n4nluwmcdc7rlmlmz45qklmfkdx4gtfyqg26yzrv6cteqep2eyzcpgwl0ht\n",
       "stderr": ""
     },
-    "seconds": 0.00877407193183899
+    "seconds": 0.009357050061225891
   },
   {
     "id": "json/timestamp-4",
@@ -5796,7 +5796,7 @@
       "stdout": "lnbc2500u1pvjluezdq5xysxxatsyp3k7enxv4jspp5qqqsyqcyq5rqwzqfqqqsyqcyq5rqwzqfqqqsyqcyq5rqwzqfqypqsp5zyg3zyg3zyg3zyg3zyg3zyg3zyg3zyg3zyg3zyg3zyg3zyg3zygs9qrsgqcqpjxqzpunp4q0n326hr8v9zprg8gsvezcch06gfaqqhde2aj730yg0durunfhv66nldsnx6kp5he0qkulcaa240hn9m5q9tgmcakuc3zw2lk80sdcm6n4nluwmcdc7rlmlmz45qklmfkdx4gtfyqg26yzrv6cteqep2eyzcpgwl0ht\n",
       "stderr": ""
     },
-    "seconds": 0.00856667011976242
+    "seconds": 0.009043648838996887
   },
   {
     "id": "json/timestamp-5",
@@ -5812,7 +5812,7 @@
       "stdout": "lnbc2500u1pvjluezdq5xysxxatsyp3k7enxv4jspp5qqqsyqcyq5rqwzqfqqqsyqcyq5rqwzqfqqqsyqcyq5rqwzqfqypqsp5zyg3zyg3zyg3zyg3zyg3zyg3zyg3zyg3zyg3zyg3zyg3zyg3zygs9qrsgqcqpjxqzpunp4q0n326hr8v9zprg8gsvezcch06gfaqqhde2aj730yg0durunfhv66nldsnx6kp5he0qkulcaa240hn9m5q9tgmcakuc3zw2lk80sdcm6n4nluwmcdc7rlmlmz45qklmfkdx4gtfyqg26yzrv6cteqep2eyzcpgwl0ht\n",
       "stderr": ""
     },
-    "seconds": 0.008525848388671875
+    "seconds": 0.008633054792881012
   },
   {
     "id": "json/timestamp-6",
@@ -5828,7 +5828,7 @@
       "stdout": "",
       "stderr": "Error: input is out of range at line 1 column 85\n"
     },
-    "seconds": 0.008248381316661835
+    "seconds": 0.008805684745311737
   },
   {
     "id": "json/timestamp-7",
@@ -5844,7 +5844,7 @@
       "stdout": "",
       "stderr": "Error: input is out of range at line 1 column 85\n"
     },
-    "seconds": 0.009409025311470032
+    "seconds": 0.008680537343025208
   },
   {
     "id": "json/timestamp-8",
@@ -5860,7 +5860,7 @@
       "stdout": "lnbc2500u1pvjluezdq5xysxxatsyp3k7enxv4jspp5qqqsyqcyq5rqwzqfqqqsyqcyq5rqwzqfqqqsyqcyq5rqwzqfqypqsp5zyg3zyg3zyg3zyg3zyg3zyg3zyg3zyg3zyg3zyg3zyg3zyg3zygs9qrsgqcqpjxqzpunp4q0n326hr8v9zprg8gsvezcch06gfaqqhde2aj730yg0durunfhv66nldsnx6kp5he0qkulcaa240hn9m5q9tgmcakuc3zw2lk80sdcm6n4nluwmcdc7rlmlmz45qklmfkdx4gtfyqg26yzrv6cteqep2eyzcpgwl0ht\n",
       "stderr": ""
     },
-    "seconds": 0.008529812097549438
+    "seconds": 0.00838308036327362
   },
   {
     "id": "json/timestamp-9",
@@ -5876,7 +5876,7 @@
       "stdout": "",
       "stderr": "Error: premature end of input at line 1 column 84\n"
     },
-    "seconds": 0.008713431656360626
+    "seconds": 0.00825084000825882
   },
   {
     "id": "json/timestamp-10",
@@ -5892,7 +5892,7 @@
       "stdout": "",
       "stderr": "Error: input contains invalid characters at line 1 column 68\n"
     },
-    "seconds": 0.008597560226917267
+    "seconds": 0.009695231914520264
   },
   {
     "id": "json/network-object",
@@ -5908,7 +5908,7 @@
       "stdout": "lnbc2500u1pvjluezdq5xysxxatsyp3k7enxv4jspp5qqqsyqcyq5rqwzqfqqqsyqcyq5rqwzqfqqqsyqcyq5rqwzqfqypqsp5zyg3zyg3zyg3zyg3zyg3zyg3zyg3zyg3zyg3zyg3zyg3zyg3zygs9qrsgqcqpjxqzpunp4q0n326hr8v9zprg8gsvezcch06gfaqqhde2aj730yg0durunfhv66nldsnx6kp5he0qkulcaa240hn9m5q9tgmcakuc3zw2lk80sdcm6n4nluwmcdc7rlmlmz45qklmfkdx4gtfyqg26yzrv6cteqep2eyzcpgwl0ht\n",
       "stderr": ""
     },
-    "seconds": 0.00927320122718811
+    "seconds": 0.009424746036529541
   },
   {
     "id": "json/network-upper",
@@ -5924,7 +5924,7 @@
       "stdout": "",
       "stderr": "Error: unknown variant `Bitcoin`, expected one of `bitcoin`, `mainnet`, `testnet`, `regtest`, `signet`, `simnet` at line 1 column 21\n"
     },
-    "seconds": 0.009051769971847534
+    "seconds": 0.009206980466842651
   },
   {
     "id": "json/hop-overflow-short_channel_id",
@@ -5940,7 +5940,7 @@
       "stdout": "",
       "stderr": "Error: invalid type: floating point `1.8446744073709552e+19`, expected u64 at line 1 column 824\n"
     },
-    "seconds": 0.008963577449321747
+    "seconds": 0.009231440722942352
   },
   {
     "id": "json/hop-type-short_channel_id",
@@ -5956,7 +5956,7 @@
       "stdout": "",
       "stderr": "Error: invalid type: string \"1\", expected u64 at line 1 column 807\n"
     },
-    "seconds": 0.009132422506809235
+    "seconds": 0.008833460509777069
   },
   {
     "id": "json/hop-overflow-cltv_expiry_delta",
@@ -5972,7 +5972,7 @@
       "stdout": "",
       "stderr": "Error: invalid value: integer `65536`, expected u16 at line 1 column 906\n"
     },
-    "seconds": 0.008548088371753693
+    "seconds": 0.008940063416957855
   },
   {
     "id": "json/hop-type-cltv_expiry_delta",
@@ -5988,7 +5988,7 @@
       "stdout": "",
       "stderr": "Error: invalid type: string \"1\", expected u16 at line 1 column 904\n"
     },
-    "seconds": 0.008778855204582214
+    "seconds": 0.00919225811958313
   },
   {
     "id": "json/hop-overflow-htlc_minimum_msat",
@@ -6004,7 +6004,7 @@
       "stdout": "",
       "stderr": "Error: invalid type: floating point `1.8446744073709552e+19`, expected u64 at line 1 column 945\n"
     },
-    "seconds": 0.008462056517601013
+    "seconds": 0.008844800293445587
   },
   {
     "id": "json/hop-type-htlc_minimum_msat",
@@ -6020,7 +6020,7 @@
       "stdout": "",
       "stderr": "Error: invalid type: string \"1\", expected u64 at line 1 column 928\n"
     },
-    "seconds": 0.00919128954410553
+    "seconds": 0.009037546813488007
   },
   {
     "id": "json/hop-overflow-htlc_maximum_msat",
@@ -6036,7 +6036,7 @@
       "stdout": "",
       "stderr": "Error: invalid type: floating point `1.8446744073709552e+19`, expected u64 at line 1 column 972\n"
     },
-    "seconds": 0.009014368057250977
+    "seconds": 0.008692681789398193
   },
   {
     "id": "json/hop-type-htlc_maximum_msat",
@@ -6052,7 +6052,7 @@
       "stdout": "",
       "stderr": "Error: invalid type: string \"1\", expected u64 at line 1 column 955\n"
     },
-    "seconds": 0.010092496871948242
+    "seconds": 0.008327454328536987
   },
   {
     "id": "json/fee-overflow-base_msat",
@@ -6068,7 +6068,7 @@
       "stdout": "",
       "stderr": "Error: invalid value: integer `4294967296`, expected u32 at line 1 column 855\n"
     },
-    "seconds": 0.008964277803897858
+    "seconds": 0.008418262004852295
   },
   {
     "id": "json/fee-overflow-proportional_millionths",
@@ -6084,7 +6084,7 @@
       "stdout": "",
       "stderr": "Error: invalid value: integer `4294967296`, expected u32 at line 1 column 885\n"
     },
-    "seconds": 0.0095539391040802
+    "seconds": 0.008721649646759033
   },
   {
     "id": "json/hop-missing-src_node_id",
@@ -6100,7 +6100,7 @@
       "stdout": "",
       "stderr": "Error: missing field `src_node_id` at line 1 column 872\n"
     },
-    "seconds": 0.009033046662807465
+    "seconds": 0.009661182761192322
   },
   {
     "id": "json/hop-missing-short_channel_id",
@@ -6116,7 +6116,7 @@
       "stdout": "",
       "stderr": "Error: missing field `short_channel_id` at line 1 column 918\n"
     },
-    "seconds": 0.009937502443790436
+    "seconds": 0.009630471467971802
   },
   {
     "id": "json/hop-missing-fees",
@@ -6132,7 +6132,7 @@
       "stdout": "",
       "stderr": "Error: missing field `fees` at line 1 column 900\n"
     },
-    "seconds": 0.009323343634605408
+    "seconds": 0.009763412177562714
   },
   {
     "id": "json/hop-missing-cltv_expiry_delta",
@@ -6148,7 +6148,7 @@
       "stdout": "",
       "stderr": "Error: missing field `cltv_expiry_delta` at line 1 column 933\n"
     },
-    "seconds": 0.009223125874996185
+    "seconds": 0.009466700255870819
   },
   {
     "id": "json/route-shape-0",
@@ -6164,7 +6164,7 @@
       "stdout": "",
       "stderr": "Error: invalid type: map, expected a sequence at line 1 column 607\n"
     },
-    "seconds": 0.009073100984096527
+    "seconds": 0.008611500263214111
   },
   {
     "id": "json/route-shape-1",
@@ -6180,7 +6180,7 @@
       "stdout": "",
       "stderr": "Error: missing field `src_node_id` at line 1 column 610\n"
     },
-    "seconds": 0.00922868400812149
+    "seconds": 0.009037747979164124
   },
   {
     "id": "json/route-shape-2",
@@ -6196,7 +6196,7 @@
       "stdout": "",
       "stderr": "Error: invalid type: string \"bad\", expected a sequence at line 1 column 611\n"
     },
-    "seconds": 0.008661516010761261
+    "seconds": 0.008432604372501373
   },
   {
     "id": "json/route-shape-3",
@@ -6212,7 +6212,7 @@
       "stdout": "",
       "stderr": "Error: invalid type: null, expected a sequence at line 1 column 611\n"
     },
-    "seconds": 0.009508416056632996
+    "seconds": 0.009060993790626526
   },
   {
     "id": "json/fallback-0",
@@ -6228,7 +6228,7 @@
       "stdout": "",
       "stderr": "Error: Invalid fallback address\n\nCaused by:\n    0: base58 error\n    1: too short\n    2: base58 decoded data was not long enough, must be at least 4 byte: 3\n"
     },
-    "seconds": 0.008473768830299377
+    "seconds": 0.008732892572879791
   },
   {
     "id": "json/fallback-1",
@@ -6244,7 +6244,7 @@
       "stdout": "",
       "stderr": "Error: invalid type: integer `1`, expected a string at line 1 column 594\n"
     },
-    "seconds": 0.008912131190299988
+    "seconds": 0.008725881576538086
   },
   {
     "id": "json/fallback-2",
@@ -6260,7 +6260,7 @@
       "stdout": "",
       "stderr": "Error: invalid type: string \"bad\", expected a sequence at line 1 column 597\n"
     },
-    "seconds": 0.009500190615653992
+    "seconds": 0.00876646488904953
   },
   {
     "id": "json/unknown-fields",
@@ -6276,7 +6276,7 @@
       "stdout": "lnbc2500u1pvjluezdq5xysxxatsyp3k7enxv4jspp5qqqsyqcyq5rqwzqfqqqsyqcyq5rqwzqfqqqsyqcyq5rqwzqfqypqsp5zyg3zyg3zyg3zyg3zyg3zyg3zyg3zyg3zyg3zyg3zyg3zyg3zygs9qrsgqcqpjxqzpunp4q0n326hr8v9zprg8gsvezcch06gfaqqhde2aj730yg0durunfhv66nldsnx6kp5he0qkulcaa240hn9m5q9tgmcakuc3zw2lk80sdcm6n4nluwmcdc7rlmlmz45qklmfkdx4gtfyqg26yzrv6cteqep2eyzcpgwl0ht\n",
       "stderr": ""
     },
-    "seconds": 0.009092628955841064
+    "seconds": 0.009435713291168213
   },
   {
     "id": "json/duplicate-known",
@@ -6292,7 +6292,7 @@
       "stdout": "",
       "stderr": "Error: duplicate field `network` at line 1 column 618\n"
     },
-    "seconds": 0.009213127195835114
+    "seconds": 0.008804239332675934
   },
   {
     "id": "json/duplicate-unknown",
@@ -6308,7 +6308,7 @@
       "stdout": "lnbc2500u1pvjluezdq5xysxxatsyp3k7enxv4jspp5qqqsyqcyq5rqwzqfqqqsyqcyq5rqwzqfqqqsyqcyq5rqwzqfqypqsp5zyg3zyg3zyg3zyg3zyg3zyg3zyg3zyg3zyg3zyg3zyg3zyg3zygs9qrsgqcqpjxqzpunp4q0n326hr8v9zprg8gsvezcch06gfaqqhde2aj730yg0durunfhv66nldsnx6kp5he0qkulcaa240hn9m5q9tgmcakuc3zw2lk80sdcm6n4nluwmcdc7rlmlmz45qklmfkdx4gtfyqg26yzrv6cteqep2eyzcpgwl0ht\n",
       "stderr": ""
     },
-    "seconds": 0.009427160024642944
+    "seconds": 0.008978143334388733
   },
   {
     "id": "json/malformed",
@@ -6324,7 +6324,7 @@
       "stdout": "",
       "stderr": "Error: EOF while parsing an object at line 1 column 1\n"
     },
-    "seconds": 0.00810849666595459
+    "seconds": 0.008452534675598145
   },
   {
     "id": "json/trailing",
@@ -6340,7 +6340,7 @@
       "stdout": "",
       "stderr": "Error: trailing characters at line 1 column 611\n"
     },
-    "seconds": 0.008846797049045563
+    "seconds": 0.008907675743103027
   },
   {
     "id": "json/duplicate-network-enum",
@@ -6356,7 +6356,7 @@
       "stdout": "",
       "stderr": "Error: expected value at line 1 column 27\n"
     },
-    "seconds": 0.008622050285339355
+    "seconds": 0.008804380893707275
   },
   {
     "id": "json/duplicate-feature-enum",
@@ -6372,7 +6372,7 @@
       "stdout": "",
       "stderr": "Error: expected value at line 1 column 328\n"
     },
-    "seconds": 0.008360512554645538
+    "seconds": 0.009481161832809448
   },
   {
     "id": "json/duplicate-status-enum",
@@ -6388,7 +6388,7 @@
       "stdout": "",
       "stderr": "Error: expected value at line 1 column 334\n"
     },
-    "seconds": 0.009178057312965393
+    "seconds": 0.008791863918304443
   },
   {
     "id": "json/duplicate-unit-enum",
@@ -6404,6 +6404,6 @@
       "stdout": "",
       "stderr": "Error: expected value at line 1 column 330\n"
     },
-    "seconds": 0.008492708206176758
+    "seconds": 0.008999079465866089
   }
 ]

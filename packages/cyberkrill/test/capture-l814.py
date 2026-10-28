@@ -68,7 +68,7 @@ def main():
         "paths": ["cyberkrill/src/main.rs", "cyberkrill-core/src/decoder.rs"],
         "licence": "MIT OR Apache-2.0, taken under MIT",
         "build": BUILD, "build_status": build.returncode, "build_seconds": build_seconds,
-        "producer": str(producer),
+        "producer": "$PRODUCER",
         "execution": 'unshare -rn sh -c \'ip link set lo up && exec timeout --foreground 15 "$@"\' capture "$PRODUCER" ln-decode-invoice "$INVOICE"',
         "isolation": "temporary HOME and cwd; closed stdin; separate byte-preserving streams and status",
         "input_provenance": {

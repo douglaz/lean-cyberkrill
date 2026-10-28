@@ -98,7 +98,7 @@ def main():
     assert git("diff", "--check", BASE) == b""
     assert git("diff", "--cached", "--check") == b""
     public_paths = (changed | new) - {".beads/issues.jsonl"}
-    prohibited = re.compile(r"/(?:home|tmp)/|/run/(?:user)/")
+    prohibited = re.compile(r"/(?:home|tmp|var/tmp|nix/store)/|/run/(?:user)/")
     header = "Copyright (c) 2026 lean-cyberkrill developers. Released under the MIT License or the"
     for relative in public_paths:
         text = (ROOT / relative).read_text(encoding="utf-8")

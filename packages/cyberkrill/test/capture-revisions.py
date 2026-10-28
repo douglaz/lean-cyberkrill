@@ -37,7 +37,7 @@ def main():
     provenance = dict(source="https://github.com/douglaz/cyberkrill", commit=PIN,
                       paths=["cyberkrill/src/main.rs", "cyberkrill-core/src/decoder.rs"],
                       licence="MIT OR Apache-2.0, taken under MIT", build=BUILD, build_status=0,
-                      build_seconds=seconds, producer=str(producer), count=len(rows),
+                      build_seconds=seconds, producer="$PRODUCER", count=len(rows),
                       construction="Synthetic JSON substitutions and disposable files derived from the published L410/L516 captures; decompression-only public key forms. Existing BOLT11 CC-BY-4.0 provenance retained.",
                       execution='unshare -rn sh -c \'ip link set lo up && exec timeout --foreground 15 "$@"\' capture "$PRODUCER" ...',
                       isolation="Temporary HOME/cwd; separate stdout/stderr/status and output existence/bytes; deterministic supplied input or closed stdin; finite foreground processes.",

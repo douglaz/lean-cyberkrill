@@ -19,5 +19,5 @@
     "stdout": "{\n  \"network\": \"bitcoin\",\n  \"amount_msats\": 2500000000,\n  \"timestamp\": \"2017-06-01T10:57:38Z\",\n  \"timestamp_millis\": 1496314658000,\n  \"payment_hash\": \"0001020304050607080900010203040506070809000102030405060708090102\",\n  \"payment_secret\": \"1111111111111111111111111111111111111111111111111111111111111111\",\n  \"features\": [\n    {\n      \"payment_secret\": \"required\"\n    },\n    {\n      \"unknown_bits\": \"optional\"\n    },\n    {\n      \"variable_length_onion\": \"required\"\n    },\n    \"any_optional_bits\"\n  ],\n  \"description\": \"coffee beans\",\n  \"description_hash\": null,\n  \"destination\": \"03e7156ae33b0a208d0744199163177e909e80176e55d97a2f221ede0f934dd9ad\",\n  \"expiry_seconds\": 3600,\n  \"min_final_cltv_expiry\": 18,\n  \"fallback_addresses\": [],\n  \"routes\": []\n}",
     "stderr": ""
   },
-  "seconds": 0.02535819262266159
+  "seconds": 0.010458767414093018
 }

@@ -86,7 +86,7 @@ def main():
     provenance = dict(source="https://github.com/douglaz/cyberkrill", commit=PIN,
                       paths=["cyberkrill/src/main.rs", "cyberkrill-core/src/decoder.rs"],
                       licence="MIT OR Apache-2.0, taken under MIT", build=BUILD, build_status=build.returncode,
-                      build_seconds=build_seconds, producer=str(producer),
+                      build_seconds=build_seconds, producer="$PRODUCER",
                       execution='unshare -rn sh -c \'ip link set lo up && exec timeout --foreground 15 "$@"\' capture "$PRODUCER" ...',
                       isolation="temporary HOME/cwd; closed stdin except published JSON; separate streams/status",
                       construction="Published BOLT11 vectors with their unchanged CC-BY-4.0 provenance; authored LNURL vectors and synthetic derived builder JSON. See bound provenance sidecars.",

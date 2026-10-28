@@ -18,8 +18,8 @@
     "github:douglaz/cyberkrill/27cad1faba86260b06665a89f0af5134d23525c2"
   ],
   "build_status": 0,
-  "build_seconds": 0.6093384921550751,
-  "producer": "/nix/store/398yfkdb4dfxa3g7xf6i4sir3asagd4i-cyberkrill-0.1.0/bin/cyberkrill",
+  "build_seconds": 0.137418232858181,
+  "producer": "$PRODUCER",
   "execution": "unshare -rn sh -c 'ip link set lo up && exec timeout --foreground 15 \"$@\"' capture \"$PRODUCER\" ln-decode-invoice \"$INVOICE\"",
   "isolation": "temporary HOME and cwd; closed stdin; separate byte-preserving streams and status",
   "input_provenance": {
@@ -31,6 +31,6 @@
     "licence": "CC-BY-4.0",
     "changes": "extracted and reformatted; invoice bytes unchanged"
   },
-  "script_sha256": "c625e6f1977ed9040c9fb5e218beedcf7ce6039a7252089a92ac3b9fe01e0a54",
-  "record_sha256": "2a3f1495aef14eaa1b2b927453b0373aec26a4d5e455ad8a3299a5829d98691a"
+  "script_sha256": "241bd7c970966bde461ed46e867066efea12da147329ef4cec7cad2113b475bf",
+  "record_sha256": "4135f155863786213656f662b7acbd4188acb1e808402ae919600491db79e26f"
 }
