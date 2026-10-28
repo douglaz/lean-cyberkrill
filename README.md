@@ -40,8 +40,350 @@ Phase 6 adds pure Fedimint invite consensus and bech32m codecs, general
 round-trip proofs and checksum soundness, with published and synthetic vectors.
 Phase 7a adds the `version`, `convert-amount` and `generate-mnemonic` CLI
 commands, shared whole-sat/explicit-fee helpers, real curve capability wiring,
-and an offline exact-decimal golden comparator. Later CLI and network commands
+and an offline exact-decimal golden comparator. Phase 7b adds offline BOLT11
+invoice decoding/signing and LNURL decoding. Phase 7c and network commands
 remain unregistered; `plan.md` is the plan for v1.
+
+## Phase 7b: offline Lightning commands
+
+The app now registers six commands: the three introduced in Phase 7a and
+`ln-decode-invoice`, `ln-decode-lnurl`, and `ln-encode-invoice`.
+Phase 7c and network commands remain unregistered.
+
+| Command | Input | Successful output |
+|---|---|---|
+| `ln-decode-invoice [INPUT] [-o FILE]` | Literal invoice, or all EOF-terminated stdin when omitted | Invoice JSON, without a final newline |
+| `ln-decode-lnurl [INPUT] [-o FILE]` | Literal LNURL, or all EOF-terminated stdin when omitted | LNURL JSON, without a final newline; no HTTP request |
+| `ln-encode-invoice [INPUT] -k KEY [-o FILE]` | UTF-8 JSON file; omitted input or `-` reads all stdin | Bare signed BOLT11; one newline on stdout, none in a file |
+
+For either decoder, a literal `-` is the input itself. Invoice bytes are not
+trimmed; LNURL retains the library's Rust-compatible whitespace trimming.
+`--output` and `--private-key` are the long option names. Short attachments,
+long attachments, `--`, UTF-8 filenames, and filenames containing `=` are
+exercised through the actual executable. Repeated/conflicting options, extra
+operands, missing signing keys and unknown flags are errors.
+
+Lightning file output overwrites ordinary existing files through its own
+`Services.openOrdinaryFile` capability. The mnemonic's `Services.writeFile`
+remains the private, exclusive-create writer described below. Neither route
+falls back to stdout after a file error. Input, JSON, key, signature, parser
+and output errors have fixed named diagnostics, exit 1 and empty success
+stdout. Diagnostics do not include supplied keys, JSON or IO exception text.
+The executable tests include real file read/write and stdout failures.
+Each decoder acquires its input, then creates/truncates an ordinary output
+file before decoding. Invalid invoices and LNURLs therefore leave a new empty
+file or truncate an existing file; an output-open error precedes a decode
+error. Input acquisition errors take precedence over opening output.
+Each decoder retains its opened writer through the final JSON write. A single
+FIFO consumer therefore receives the complete JSON before EOF, without a second
+open of the path. `test/fifo.py` checks both decoder commands with actual FIFOs;
+both failed with empty output before the fix and pass with the retained writer.
+Encoding parses and signs before creating output, preserving existing output
+on invalid JSON. These rules do not alter mnemonic file creation.
+
+`Cyberkrill/Lightning.lean` adapts the pure Lightning types to the reference
+JSON. Invoice output includes the required payment secret, exact integer
+amount/timestamp/route fields, UTC timestamps, ordered feature enums,
+nullable description/hash and nested route arrays. There is no metadata
+field. LNURL output includes `query_params` as an object, preserving the
+library's normalized URL parts and last-value-wins query handling.
+`Cyberkrill/InvoiceJson.lean` retains lexical numbers and duplicate keys
+while validating typed input: unsigned fields reject floats, exponent syntax
+and overflow; known struct fields and enum objects reject duplicate keys.
+Ignored builder fields, including timestamps, features and HTLC bounds,
+still undergo their reference type/range/shape validation.
+Invoice, route-hop and fee structs also accept positional JSON arrays in
+declaration order, with exactly 14, 6 and 2 slots respectively. Optional slots
+must be present in arrays and may be null; object optional fields may be
+absent. Arrays retain numeric lexical, range, key and timestamp validation.
+Known string values and struct field names reject unpaired UTF-16 surrogate
+escapes before replacement or signing. Valid pairs and literal escaped
+backslashes remain accepted. Ignored values retain the reference's skip
+behavior, including unpaired escapes inside ignored nested values or keys.
+
+Timestamp text follows [Chrono 0.4.42's relaxed parser](https://docs.rs/crate/chrono/0.4.42/source/src/format/parse.rs)
+even though the builder uses `timestamp_millis`. Captures cover unpadded
+components, signed expanded years, UTC/Z and numeric zones with optional
+colons, Unicode whitespace at permitted boundaries, fractional and leap
+seconds, invalid dates, and both UTC range boundaries after offset conversion.
+The valid local and UTC year range is −262143 through +262142.
+Simnet fallback rendering on decode uses regtest (`bcrt`); encoding validates
+testnet (`tb`) fallbacks, matching the reference's two directional mappings.
+
+Signing uses `Lightning.Bolt11.sign` with the production secp256k1 capability.
+The builder orders description/hash, `p`, `s`, `9`, `c`, `x`, `n`, fallbacks
+and nonempty routes, supplies the reference feature defaults, and drops
+metadata and unknown fields. Description takes precedence over a valid
+description hash; neither supplied means an empty description. Public keys
+in `destination` and every route hop are compressed with
+`Secp256k1.compressPubkey`, accepting compressed, uncompressed and
+matching-parity hybrid forms. The published odd-y payee accepts tags
+03/04/07; mismatched 06 fails. Route-hop tags follow that point's own parity.
+`test/public-forms.py` derives the public forms by decompression only.
+Eight captured key-form cases pin normalization and both parity refusals.
+
+The app builder selects m/u/n/p HRPs. In particular, zero is `lnbc0m`,
+one BTC is `lnbc1000m`, and a null amount has no amount component. Captures
+also cover p/n/u/m boundaries, the u64 pico-amount overflow boundary and
+timestamp division/casting. The library's no-multiplier-first chooser and
+all library/proof code remain unchanged. Signing with an explicit `n` that
+differs from the signing key succeeds; a paired actual decode then fails
+`verifyFailed`. No post-sign decode check is imposed.
+
+All 17 applicable specification re-encodings differ from their source strings:
+valid L382, L410, L438, L466, L491, L516, L554, L579, L602, L625, L648,
+L682, L704, L707, L735 and L762, and invalid L814. Their exact new strings
+are in `test/golden/lightning-reference.json`, under `encode/SET/NAME`.
+The remaining 14 specification rows have reference decode failures and no
+invented JSON input; each row records encoding applicability explicitly.
+
+### Lightning sources, inventories and captures
+
+The reference is [cyberkrill at
+27cad1faba86260b06665a89f0af5134d23525c2](https://github.com/douglaz/cyberkrill/tree/27cad1faba86260b06665a89f0af5134d23525c2),
+particularly `cyberkrill/src/main.rs:549–573,1191–1264` and
+`cyberkrill-core/src/decoder.rs:133–147,242–433,604–777`, taken under MIT.
+The unchanged BOLT11 corpus derives from [BOLT #11 at
+191462825ae341f0a27098765c075f01ca9bc6c2](https://github.com/lightning/bolts/blob/191462825ae341f0a27098765c075f01ca9bc6c2/11-payment-encoding.md),
+CC-BY-4.0, attribution to lightning/bolts contributors, extracted and
+reformatted with the modifications stated in its existing provenance.
+The LNURL inputs are the existing authored synthetic URL/encoding vectors
+and the pinned cyberkrill example; no unlicensed LUD text is copied.
+
+| Source inventory | Pinned counts |
+|---|---|
+| BOLT11 | valid 16, invalid 15, negative 20, positive 4, nfields 2: **57** |
+| LNURL | supported URLs 35, refused forms 13, URL errors 23, positive encodings 8, negative encodings 12, reference 1: **92** |
+| Main reference captures | 149 decodes, 17 specification encodes, 34 builder cases, 139 JSON cases, 18 routing/file cases: **357** |
+| Additional regression captures | timestamps 58, Unicode escapes 34, positional structs 68, simnet 2, failed output/ordering 12: **174** |
+| Total Lightning captures | **531**, plus the separate early L814 observation |
+
+`test/capture-lightning.py` resolves the producer with exactly:
+
+```bash
+nix build --no-link --print-out-paths --max-jobs 2 --cores 4 github:douglaz/cyberkrill/27cad1faba86260b06665a89f0af5134d23525c2
+```
+
+Every producer execution uses `unshare -rn`, loopback only, a temporary
+HOME/cwd, a finite foreground timeout, and closed stdin except explicit
+published/synthetic payloads. Separate byte-preserving stdout, stderr,
+status and applicable file bytes are captured. Signing uses only the
+BOLT #11 published example key. The input construction, main/routing
+captures, provenance and SHA-256 bindings are committed together; ordinary
+tests replay them without a fetch.
+`test/capture-revisions.py` uses the same pinned producer and isolation to
+capture the additional 174 synthetic substitutions derived from L410/L516.
+Their construction, exact results, file existence/bytes on failure and
+provenance are in `test/revision-cases.py` and `test/golden/revision-*.json`.
+
+The independent early L814 capture in `test/golden/l814-reference.json`
+observed reference **exit 0**, complete JSON and empty stderr. It cleared
+the required stop gate; it is one additional capture of a row also present
+in the main 357, not another source identity. No deferred library decision
+was changed. The original 179 Phase 7a captures and five controlled-public-
+entropy mnemonic captures remain separate, unchanged evidence.
+
+### Observed Lightning parity exceptions
+
+The six strictness rows retain their original signed bytes. Each reference
+result is exit 0, JSON stdout and empty stderr; each port result is exit 1,
+empty stdout and the exact tag-bearing diagnostic below.
+
+| Negative row | Port diagnostic identity |
+|---|---|
+| `payment-hash-padding` | `nonCanonicalPadding: tag=1` |
+| `description-padding` | `nonCanonicalPadding: tag=13` |
+| `expiry-leading-zero` | `leadingZero: tag=6` |
+| `cltv-leading-zero` | `leadingZero: tag=24` |
+| `features-leading-zero` | `leadingZero: tag=5` |
+| `n-payment-hash-padding` | `nonCanonicalPadding: tag=1` |
+
+For `positive/amount-leading-zero`, both decoders exit 0 with empty stderr.
+Only `destination` differs: the reference recovers
+`031b52bd31cb3ca5037014c137fb61ce7f05b32a690dc06bfffb6e490fcc610362`,
+while the port recovers the published
+`03e7156ae33b0a208d0744199163177e909e80176e55d97a2f221ede0f934dd9ad`.
+For `positive/n-amount-leading-zero`, the reference exits 1 with empty
+stdout and `SemanticError(InvalidSignature)` on stderr; the port exits 0,
+empty stderr, and the complete verified JSON pinned against `nfields/n-low`.
+These are the settled as-written signing-hash differences. The fallback-25
+capture omits its 25-byte fallback address, and amount-none emits a null
+amount; both match the port. Low-S explicit-n verification and high-S
+refusal remain covered through the production FFI.
+
+Every reference-accepted URL outside the supported subset is individually
+pinned to reference exit 0/JSON/empty stderr and port exit 1/empty stdout/
+the named stderr refusal:
+
+| Refusal | Captured rows |
+|---|---|
+| `unsupportedUrlForm:userinfo` | userinfo, userinfo-multiple |
+| `unsupportedUrlForm:ipv6` | ipv6 |
+| `unsupportedUrlForm:ipv4Form` | ipv4-hex, ipv4-integer, ipv4-short, ipv4-octal, ipv4-leading, ipv4-dot |
+| `unsupportedUrlForm:idnaRequired` | unicode-host, encoded-unicode-host, punycode-host, punycode-upper |
+| `unsupportedScheme` | url-error/scheme |
+
+Malformed URL forms rejected by the reference remain ordinary failures.
+The supported http/https ASCII-domain/plain-dotted-IPv4 subset is unchanged;
+there is no IDNA implementation, URL fetch or generic output waiver.
+
+`test/lightning-compare.py` admits exactly 20 named refusals, one destination
+leaf difference and one status/value exception. Its 161 negative boundary
+checks and 22 positive controls reject wrong streams/statuses, wrong error
+identities, unrelated fields, changed numeric/key values, unlisted case
+identities and unused exceptions. The original 20 exact-amount entries are
+unchanged. JSON comparisons preserve exact decimals and ignore only object
+order/pretty spacing; bare invoices, newline policy and output bytes are
+checked separately.
+
+### Lightning verification
+
+`test/lightning.py` exercises all 357 captures and 72 additional actual
+argv/stdin/file/parser/IO checks. The latter include EOF stdin with and
+without a newline, literal decoder `-`, encoder stdin markers and UTF-8
+files, overwrites with exact file bytes, equals-containing attachments,
+option terminators, help, invalid/duplicate/missing options, malformed and
+out-of-range signing keys, read failures and file/stdout write failures.
+The existing mnemonic privacy, fee/amount helpers and capability suites
+remain in `lake test`.
+`test/revisions.py` runs the additional 174 captures; its explicit `--scope`
+mode runs nine synthetic scope shapes in the evidence gate. The package suite
+stays independent of tracker files and Git history, including in the Nix sandbox.
+The scope checks accept an in-progress claim or a populated accepted
+closure, reject malformed closures and unrelated changes, and never close or
+reopen a real issue for testing. The comparator's 812 controls/falsifications
+pin success/failure streams, diagnostic ordering, exact signed strings,
+JSON fields/numbers, and failed-output existence/bytes without a new exception.
+
+Before the corrections, the independently selected regression checks recorded
+61 runtime assertion failures and 122 passing controls. Their original source
+hashes, commands, statuses, failure assertions and separate stderr digests stay
+fixed in `test/golden/revision-regression-record.json`; they are historical,
+not substituted final source bindings. Raw streams remain separate in ignored
+local logs. Current restoration and mutation evidence is kept separately.
+
+The completed `test/lightning-mutate.py` run compiled **30 distinct
+production edits**, observed **94 runtime assertion failures**, restored
+each exact source, rebuilt and passed each selected check, and finished
+with a restored full `lake test` exit 0. One stream-routing edit is shared
+with the retained 26-edit set, so this adds **29 new distinct edits**.
+The additional edit reintroduces the decoder's close-and-reopen behavior and
+fails both FIFO consumers before exact restoration and passing checks.
+Concrete replacements, bounded commands, separate statuses/timings and
+detecting assertions are in `test/golden/lightning-mutation-record.json`.
+Its verification binds the final restored production, tests and checker
+and rejects stale bytes. Compilation failures are not runtime reds.
+The older regression/output/attachment observations retain their historical
+digests; their current refresh scripts rerun the actual reintroductions.
+`test/revision-mutate.py` defines another 30 distinct edits covering timestamp
+grammar and both UTC limits, surrogate validation and ignored content,
+positional mappings and numeric/length guards, both simnet mappings,
+decoder creation/truncation/error ordering, late encoder output and scope
+closure/decision preservation. Its records bind the final production,
+capture construction, tests and checker. Across the three main sets there
+are 85 distinct production edits: 26 retained, 29 additional Lightning edits,
+and these 30; repeated executions are counted separately.
+
+Run these foreground gates from the repository root:
+
+```bash
+python3 -B packages/cyberkrill/test/gate.py timeout --foreground 1900 python3 -B packages/cyberkrill/test/capture-lightning.py
+python3 -B packages/cyberkrill/test/gate.py timeout --foreground 1900 python3 -B packages/cyberkrill/test/capture-l814.py
+python3 -B packages/cyberkrill/test/gate.py timeout --foreground 1900 python3 -B packages/cyberkrill/test/capture-revisions.py
+python3 -B packages/cyberkrill/test/gate.py timeout --foreground 180 python3 -B packages/cyberkrill/test/lightning.py
+python3 -B packages/cyberkrill/test/gate.py timeout --foreground 180 python3 -B packages/cyberkrill/test/revisions.py
+python3 -B packages/cyberkrill/test/gate.py timeout --foreground 120 python3 -B packages/cyberkrill/test/revisions.py --scope
+python3 -B packages/cyberkrill/test/gate.py timeout --foreground 3000 nix develop -c python3 -B packages/cyberkrill/test/lightning-mutate.py
+python3 -B packages/cyberkrill/test/gate.py timeout --foreground 3000 nix develop -c python3 -B packages/cyberkrill/test/revision-mutate.py
+python3 -B packages/cyberkrill/test/gate.py timeout --foreground 1800 python3 -B packages/cyberkrill/test/validate.py app
+python3 -B packages/cyberkrill/test/gate.py timeout --foreground 300 python3 -B packages/cyberkrill/test/verify.py
+python3 -B packages/cyberkrill/test/gate.py timeout --foreground 300 python3 -B packages/cyberkrill/test/selftest.py
+python3 -B packages/cyberkrill/test/gate.py timeout --foreground 120 python3 -B packages/cyberkrill/test/scope.py
+python3 -B packages/cyberkrill/test/gate.py timeout --foreground 900 python3 -B packages/cyberkrill/test/validate.py evidence
+python3 -B packages/cyberkrill/test/gate.py timeout --foreground 7500 python3 -B packages/cyberkrill/test/validate.py repo
+```
+
+The last command requires the new files to be staged first. It runs all
+seven package checks, link/OpenSSL checks, the installed version and five
+representative installed Lightning commands, and both repository scans.
+It also checks all 74 tracked library/proof Lean files for native-decision
+uses, pinning coverage of all seven library roots.
+Historical validation tables later in this README retain their original
+dates and results; they do not stand in for this phase's current gates.
+
+The initial 2026-10-28 observations below predate the parser, simnet and
+failed-output corrections and remain historical. They used the complete
+supervisor. Current raw streams/statuses and per-command wall times are in
+ignored `.lake/validation` and the mutation/capture log directories. Current
+public capture/mutation records preserve their individual subprocess times;
+they do not substitute current timings for these initial observations.
+
+| Check | Exit | Measured wall time |
+|---|---:|---:|
+| Required pinned producer build for the main capture | 0 | 0.151 s |
+| 357 isolated producer executions | all captured | 3.072 s summed subprocess time, excluding the build |
+| 29 Lightning mutations / 92 selected runtime reds and restored greens | 0 | 2157.580 s summed recorded subprocess time; restored full test 19.335 s |
+| Retained 26 mutations / restored full test | 0 | restored full test 18.630 s |
+| `nix develop -c lake build` in the app | 0 | 0.872 s |
+| `nix develop -c lake test` in the app | 0 | 19.135 s |
+| `test/verify.py` | 0 | 0.061 s |
+| `test/selftest.py` | 0 | 0.105 s |
+| `test/scope.py` | 0 | 0.430 s |
+| `test/lightning.py` | 0 | 11.338 s |
+| Fresh staged `nix flake check -L` | 0 | 143.666 s |
+| `nix build -L` | 0 | 0.403 s |
+| Installed `cyberkrill version` | 0 | 0.027 s |
+| Five installed Lightning commands with exact output/stream checks | 0 | 0.173 s |
+| Tracked library/proof native-decision scan, 74 files / zero offenders | 0 | 0.031 s |
+| No-proof-placeholder scan | 0 | 0.009 s |
+| Extended-private-key scan | 0 | 0.010 s |
+
+The retained refreshes also exited 0: nine selected older regressions went
+red and all ten restored properties passed; the output guard produced 18
+independent selected reds and greens; the attachment reintroduction produced
+four reds, four passing controls and eight restored greens. Those run counts
+are separate from the main mutation sets' **54 distinct edits** (26 retained
+plus 28 new), and do not turn repeated executions into additional edits.
+All 59 tracker identities and 58 unrelated records remain unchanged; only
+the current task's existing in-progress claim is retained. All forbidden
+paths, historical records and seven package/link/OpenSSL gates are preserved.
+The implementation remains staged for acceptance, without closing the task.
+
+The completed correction checks on 2026-10-28 have their own observations
+below. They supersede the initial timings above. All commands used the
+complete supervisor, finite foreground timeouts and separate raw streams/statuses.
+The rebuilding repository check's logs and per-command timings are retained
+separately in ignored `.lake/correction-acceptance`, so a later cached check
+does not replace evidence for this build. Ordinary package validation does
+not depend on tracker files or Git history; the explicit evidence gate runs
+the phase scope and its nine synthetic claim/closure shapes.
+
+| Correction check | Exit | Measured wall time |
+|---|---:|---:|
+| Required producer build / 357 isolated main and routing captures | 0 / expected captured statuses | 0.139 s / 3.178 s summed capture time |
+| Required producer build / 174 isolated regression captures | 0 / expected captured statuses | 0.142 s / 1.581 s summed capture time |
+| Retained 26 mutations / restored full test | 0 | restored full test 25.945 s |
+| 29 Lightning edits / 92 runtime reds and restored greens | 0 | 612.816 s summed recorded commands; restored full test 23.602 s |
+| 30 correction edits / 30 runtime reds and restored greens | 0 | 551.336 s summed recorded commands; restored full test 24.676 s |
+| Restored correction captures / synthetic scope shapes | 0 / 0 | 4.883 s / 0.980 s |
+| App `nix develop -c lake build` / `lake test` | 0 / 0 | 0.841 s / 23.982 s |
+| Evidence verifier / comparator self-tests | 0 / 0 | 0.109 s / 0.153 s |
+| Phase scope / nine synthetic scope shapes | 0 / 0 | 0.407 s / 0.941 s |
+| 357 retained / 174 additional executable Lightning captures | 0 / 0 | 14.386 s / 4.925 s |
+| Rebuilding staged `nix flake check -L`, seven packages and link/OpenSSL checks | 0 | 168.266 s |
+| `nix build -L` / installed version / five installed Lightning commands | 0 / 0 / 0 | 0.576 s / 0.028 s / 0.186 s |
+| Native-library scan / proof-placeholder scan / extended-private-key scan | 0 / 0 / 0 | 0.035 s / 0.008 s / 0.010 s |
+
+The three current mutation records cover **85 distinct production edits**
+and **150 selected red executions**, with exact restoration and selected
+greens. The current historical refresh drivers also exited 0 after nine
+regression reds, 18 output-option reds, and four attachment reds with four
+passing controls; all restored checks passed. These executions remain
+separate from the 61 unfixed correction failures and 122 original controls.
+The final verifier checks current source bindings and fixed historical
+digests. All 531 Lightning captures pass without adding a parity exception;
+the L814 and hybrid-key stop observations remain unchanged. Phase 7c and
+network work remain outside this implementation.
 
 ## Packages
 
@@ -6928,7 +7270,7 @@ plan §3. Select each with `lake test -- --psbt 'parity NAME'`.
 
 ## Phase 7a: offline CLI foundation
 
-The executable registers exactly three commands:
+Phase 7a introduced these three commands:
 
 ```bash
 cyberkrill version
@@ -7195,7 +7537,7 @@ script. Records bind the production source, tests and checker by SHA-256;
 changed sources require a new run. The committed record and final gate
 evidence describe observed outcomes, not proposed mutations.
 
-The completed mutation run observed **21/21 runtime reds**, each exit 1,
+The initial Phase 7a mutation run observed **21/21 runtime reds**, each exit 1,
 **21/21 restored selected greens**, each exit 0, and a restored full
 `lake test` exit 0. `test/golden/mutation-record.json` pins each exact source
 replacement, bounded build/test command, detecting assertion and source digest.

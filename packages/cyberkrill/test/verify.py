@@ -120,6 +120,32 @@ def main():
         assert mutation["replace"] != mutation["with_text"] and mutation["detecting_assertion"]
     assert record["restored_full"]["status"] == 0
     print("bound production mutations: 26/26 distinct edits; restored suite: exit 0")
+    lightning = import_module("lightning")
+    lightning.captures()
+    import_module("lightning-mutate").verify()
+    revision = import_module("revisions")
+    revision.captures()
+    baseline_path = APP / "test/golden/revision-regression-record.json"
+    assert hashlib.sha256(baseline_path.read_bytes()).hexdigest() == "60c8074b198e76e211b17deb1cfcec57fc644b0aa1f184356dd846698d135379", "historical revision observations changed"
+    baseline = json.loads(baseline_path.read_bytes())
+    assert baseline["count"] == len(baseline["checks"]) == 183 and baseline["reds"] == 61
+    assert sum(r["status"] == 1 for r in baseline["checks"]) == 61
+    for row in baseline["checks"]:
+        assert row["status"] in [0, 1] and len(row["stderr_sha256"]) == 64
+        assert row["status"] == 0 or row["assertion"].startswith("AssertionError:")
+    print("historical revision regressions: 61 assertion failures; 122 passing controls; fixed digest retained")
+    import_module("revision-mutate").verify()
+    l814 = json.loads((APP / "test/golden/l814-reference.json").read_bytes())
+    l814_provenance = json.loads((APP / "test/golden/l814-provenance.json").read_bytes())
+    assert l814["id"] == "invalid/L814" and l814["result"]["status"] == 0 and l814["result"]["stderr"] == ""
+    assert l814_provenance["commit"] == PIN and l814_provenance["build"] == BUILD and l814_provenance["build_status"] == 0
+    assert l814_provenance["script_sha256"] == hashlib.sha256((APP / "test/capture-l814.py").read_bytes()).hexdigest()
+    assert l814_provenance["record_sha256"] == hashlib.sha256((APP / "test/golden/l814-reference.json").read_bytes()).hexdigest()
+    assert l814["source_sha256"] == hashlib.sha256((APP.parents[1] / l814["source"]).read_bytes()).hexdigest()
+    assert json.loads(l814["result"]["stdout"])["destination"] == lightning.COMPARE.PAYEE
+    planned = [r for module in ["mutate", "lightning-mutate", "revision-mutate"] for r in import_module(module).mutations()]
+    assert len({tuple(r[1:4]) for r in planned}) == 85, "combined distinct production edits"
+    print("L814 early stop gate: observed acceptance, exit 0, empty stderr; production edits: 85 distinct including historical 26")
     # The README must mirror every exact pin, including its output field/stream.
     readme = (APP.parents[1] / "README.md").read_text()
     section = readme.split("## Exact amounts vs cyberkrill\n", 1)[1].split("### Phase 7a checks", 1)[0]

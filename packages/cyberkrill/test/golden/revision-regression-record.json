@@ -1,0 +1,3311 @@
+{
+  "count": 183,
+  "reds": 61,
+  "source_sha256": {
+    "Cyberkrill/App.lean": "f3e29707b8eecce43a75b08e8eab854a1720fa4e71c68051a0d8812166be5a17",
+    "Cyberkrill/Lightning.lean": "b3d89eea1338f940ec3f613f6830096a8eadccaa084801707752edb24976c296",
+    "Cyberkrill/InvoiceJson.lean": "183902d40a699c02b57850d25e1277d7c40d2ced3d01799cc8569d817fd613a9",
+    "test/scope.py": "0ce436c1a80668f31ba9d0a7a2b3096428ef75cfbfe93e286e8071e698fceb96",
+    "test/revisions.py": "c1be9b61db4075c6e882d85cb91630acd0a9150b0ebfefc85decceb8c419641a",
+    "test/revision-cases.py": "34b9422908c0b1dbce438133de14ed5b8cb28aa3756a9132bbad021e01122491",
+    "test/record-revision-regressions.py": "a46026872a436cea98f924079f778ee36ea6ca8c0fd52a6a5cc8a4bb8b83cea5",
+    "test/golden/revision-reference.json": "5801a97edd277c54ffc2f0af1b1458ca8a8b18aad0455983a2711b9cc8877275",
+    "test/golden/revision-provenance.json": "57bcdaa32f1df604c15d83a9587be804445729ced0677778896b4dae1d71fdbd"
+  },
+  "checks": [
+    {
+      "property": "timestamp/compact-zone",
+      "command": [
+        "timeout",
+        "--foreground",
+        "30",
+        "python3",
+        "-B",
+        "test/revisions.py",
+        "--case",
+        "timestamp/compact-zone"
+      ],
+      "status": 1,
+      "stdout": "",
+      "assertion": "AssertionError: success status: timestamp/compact-zone",
+      "seconds": 0.109,
+      "stderr_sha256": "6240569e41fb68e09b1f076467a8fb92f35e54a52bb732a05432e746709eff3d"
+    },
+    {
+      "property": "timestamp/unpadded-date",
+      "command": [
+        "timeout",
+        "--foreground",
+        "30",
+        "python3",
+        "-B",
+        "test/revisions.py",
+        "--case",
+        "timestamp/unpadded-date"
+      ],
+      "status": 1,
+      "stdout": "",
+      "assertion": "AssertionError: success status: timestamp/unpadded-date",
+      "seconds": 0.106,
+      "stderr_sha256": "111a28f529589d62ca881c4a7156e3768669518083fa5e59242e7a700819a321"
+    },
+    {
+      "property": "timestamp/expanded-year",
+      "command": [
+        "timeout",
+        "--foreground",
+        "30",
+        "python3",
+        "-B",
+        "test/revisions.py",
+        "--case",
+        "timestamp/expanded-year"
+      ],
+      "status": 1,
+      "stdout": "",
+      "assertion": "AssertionError: success status: timestamp/expanded-year",
+      "seconds": 0.106,
+      "stderr_sha256": "2958480c27e5588d6908a66576024e44d297c2d0667ce16000d1a084a934bee6"
+    },
+    {
+      "property": "timestamp/utc-underflow",
+      "command": [
+        "timeout",
+        "--foreground",
+        "30",
+        "python3",
+        "-B",
+        "test/revisions.py",
+        "--case",
+        "timestamp/utc-underflow"
+      ],
+      "status": 1,
+      "stdout": "",
+      "assertion": "AssertionError: timestamp/utc-underflow failure status",
+      "seconds": 0.109,
+      "stderr_sha256": "e88099bc052095165cc8aeb1ed8db1494b241108665756973efe0fea5b088d35"
+    },
+    {
+      "property": "timestamp/utc-name",
+      "command": [
+        "timeout",
+        "--foreground",
+        "30",
+        "python3",
+        "-B",
+        "test/revisions.py",
+        "--case",
+        "timestamp/utc-name"
+      ],
+      "status": 1,
+      "stdout": "",
+      "assertion": "AssertionError: success status: timestamp/utc-name",
+      "seconds": 0.104,
+      "stderr_sha256": "353c14989514d806702c2b206309fc75c897412d2ecb697464d6aeb980f1a098"
+    },
+    {
+      "property": "timestamp/utc-name-case",
+      "command": [
+        "timeout",
+        "--foreground",
+        "30",
+        "python3",
+        "-B",
+        "test/revisions.py",
+        "--case",
+        "timestamp/utc-name-case"
+      ],
+      "status": 1,
+      "stdout": "",
+      "assertion": "AssertionError: success status: timestamp/utc-name-case",
+      "seconds": 0.104,
+      "stderr_sha256": "9c1e3a1dbfa40e5c7383b08cc46301c7083d6cfda3844bfb21d9433766598a18"
+    },
+    {
+      "property": "timestamp/zone-space",
+      "command": [
+        "timeout",
+        "--foreground",
+        "30",
+        "python3",
+        "-B",
+        "test/revisions.py",
+        "--case",
+        "timestamp/zone-space"
+      ],
+      "status": 1,
+      "stdout": "",
+      "assertion": "AssertionError: success status: timestamp/zone-space",
+      "seconds": 0.105,
+      "stderr_sha256": "068854b0aa95df1dbbef200e35b9e18d11da1c7131870b030f944d8821248e61"
+    },
+    {
+      "property": "timestamp/numeric-zone-space",
+      "command": [
+        "timeout",
+        "--foreground",
+        "30",
+        "python3",
+        "-B",
+        "test/revisions.py",
+        "--case",
+        "timestamp/numeric-zone-space"
+      ],
+      "status": 1,
+      "stdout": "",
+      "assertion": "AssertionError: success status: timestamp/numeric-zone-space",
+      "seconds": 0.099,
+      "stderr_sha256": "d544ea48ea851003544bd0a995dd69d40df2662493022b11e819c6447407d2de"
+    },
+    {
+      "property": "timestamp/unpadded-time",
+      "command": [
+        "timeout",
+        "--foreground",
+        "30",
+        "python3",
+        "-B",
+        "test/revisions.py",
+        "--case",
+        "timestamp/unpadded-time"
+      ],
+      "status": 1,
+      "stdout": "",
+      "assertion": "AssertionError: success status: timestamp/unpadded-time",
+      "seconds": 0.104,
+      "stderr_sha256": "ffe75f3de453d94133445d9c888cfdd9e47bc5ebdb6a9bf46cb1760ca34407ea"
+    },
+    {
+      "property": "timestamp/zone-tab",
+      "command": [
+        "timeout",
+        "--foreground",
+        "30",
+        "python3",
+        "-B",
+        "test/revisions.py",
+        "--case",
+        "timestamp/zone-tab"
+      ],
+      "status": 1,
+      "stdout": "",
+      "assertion": "AssertionError: success status: timestamp/zone-tab",
+      "seconds": 0.104,
+      "stderr_sha256": "6fadb44a19210348ee210c5a661ef2402ee66517514a83d26cf181343f8e6947"
+    },
+    {
+      "property": "timestamp/zone-nbsp",
+      "command": [
+        "timeout",
+        "--foreground",
+        "30",
+        "python3",
+        "-B",
+        "test/revisions.py",
+        "--case",
+        "timestamp/zone-nbsp"
+      ],
+      "status": 1,
+      "stdout": "",
+      "assertion": "AssertionError: success status: timestamp/zone-nbsp",
+      "seconds": 0.108,
+      "stderr_sha256": "0cae68e734f1590e777d7e19bf18cb7008f97117af7e1dd15f1e677fb0fccf72"
+    },
+    {
+      "property": "timestamp/surrounding-space",
+      "command": [
+        "timeout",
+        "--foreground",
+        "30",
+        "python3",
+        "-B",
+        "test/revisions.py",
+        "--case",
+        "timestamp/surrounding-space"
+      ],
+      "status": 1,
+      "stdout": "",
+      "assertion": "AssertionError: success status: timestamp/surrounding-space",
+      "seconds": 0.104,
+      "stderr_sha256": "661537769ab96a9234970698beaf1ea9db06e8e2519443ac50dbd507fa8c3aa5"
+    },
+    {
+      "property": "timestamp/component-space",
+      "command": [
+        "timeout",
+        "--foreground",
+        "30",
+        "python3",
+        "-B",
+        "test/revisions.py",
+        "--case",
+        "timestamp/component-space"
+      ],
+      "status": 1,
+      "stdout": "",
+      "assertion": "AssertionError: success status: timestamp/component-space",
+      "seconds": 0.103,
+      "stderr_sha256": "4036ca341fe00a5c8b81b621ea279220d83cc59e7abce41afcfed1fc03962942"
+    },
+    {
+      "property": "timestamp/component-unicode-space",
+      "command": [
+        "timeout",
+        "--foreground",
+        "30",
+        "python3",
+        "-B",
+        "test/revisions.py",
+        "--case",
+        "timestamp/component-unicode-space"
+      ],
+      "status": 1,
+      "stdout": "",
+      "assertion": "AssertionError: success status: timestamp/component-unicode-space",
+      "seconds": 0.103,
+      "stderr_sha256": "9d15f3686d590660673dfe00e8d427a66f811879c1446fddad452d0655b6c4f8"
+    },
+    {
+      "property": "timestamp/upper-year",
+      "command": [
+        "timeout",
+        "--foreground",
+        "30",
+        "python3",
+        "-B",
+        "test/revisions.py",
+        "--case",
+        "timestamp/upper-year"
+      ],
+      "status": 1,
+      "stdout": "",
+      "assertion": "AssertionError: success status: timestamp/upper-year",
+      "seconds": 0.101,
+      "stderr_sha256": "f95c06969c1c9c657f73289e2797db592265b678cd1a893bc5660c01ecf859b7"
+    },
+    {
+      "property": "timestamp/max-date",
+      "command": [
+        "timeout",
+        "--foreground",
+        "30",
+        "python3",
+        "-B",
+        "test/revisions.py",
+        "--case",
+        "timestamp/max-date"
+      ],
+      "status": 1,
+      "stdout": "",
+      "assertion": "AssertionError: success status: timestamp/max-date",
+      "seconds": 0.102,
+      "stderr_sha256": "849e96f40450ab1822103e24e39b9f5890e6bd7794db6d39ee7935f7c44c74bb"
+    },
+    {
+      "property": "timestamp/utc-overflow",
+      "command": [
+        "timeout",
+        "--foreground",
+        "30",
+        "python3",
+        "-B",
+        "test/revisions.py",
+        "--case",
+        "timestamp/utc-overflow"
+      ],
+      "status": 0,
+      "stdout": "revision executable captures: 1/1\n",
+      "assertion": "",
+      "seconds": 0.106,
+      "stderr_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "property": "timestamp/utc-max-inward",
+      "command": [
+        "timeout",
+        "--foreground",
+        "30",
+        "python3",
+        "-B",
+        "test/revisions.py",
+        "--case",
+        "timestamp/utc-max-inward"
+      ],
+      "status": 1,
+      "stdout": "",
+      "assertion": "AssertionError: success status: timestamp/utc-max-inward",
+      "seconds": 0.101,
+      "stderr_sha256": "29badd9c073c038ece19e224b9d90e345f94c709f4d5404734338c734ef98977"
+    },
+    {
+      "property": "timestamp/min-date",
+      "command": [
+        "timeout",
+        "--foreground",
+        "30",
+        "python3",
+        "-B",
+        "test/revisions.py",
+        "--case",
+        "timestamp/min-date"
+      ],
+      "status": 0,
+      "stdout": "revision executable captures: 1/1\n",
+      "assertion": "",
+      "seconds": 0.104,
+      "stderr_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "property": "timestamp/utc-min-inward",
+      "command": [
+        "timeout",
+        "--foreground",
+        "30",
+        "python3",
+        "-B",
+        "test/revisions.py",
+        "--case",
+        "timestamp/utc-min-inward"
+      ],
+      "status": 0,
+      "stdout": "revision executable captures: 1/1\n",
+      "assertion": "",
+      "seconds": 0.103,
+      "stderr_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "property": "timestamp/utc-min-exact",
+      "command": [
+        "timeout",
+        "--foreground",
+        "30",
+        "python3",
+        "-B",
+        "test/revisions.py",
+        "--case",
+        "timestamp/utc-min-exact"
+      ],
+      "status": 0,
+      "stdout": "revision executable captures: 1/1\n",
+      "assertion": "",
+      "seconds": 0.1,
+      "stderr_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "property": "timestamp/utc-min-second",
+      "command": [
+        "timeout",
+        "--foreground",
+        "30",
+        "python3",
+        "-B",
+        "test/revisions.py",
+        "--case",
+        "timestamp/utc-min-second"
+      ],
+      "status": 1,
+      "stdout": "",
+      "assertion": "AssertionError: timestamp/utc-min-second failure status",
+      "seconds": 0.097,
+      "stderr_sha256": "8be7095eb1b4180a74885eee3e343096ab44578dbf7c662601c0ce77ddb98c41"
+    },
+    {
+      "property": "timestamp/utc-max-exact",
+      "command": [
+        "timeout",
+        "--foreground",
+        "30",
+        "python3",
+        "-B",
+        "test/revisions.py",
+        "--case",
+        "timestamp/utc-max-exact"
+      ],
+      "status": 1,
+      "stdout": "",
+      "assertion": "AssertionError: success status: timestamp/utc-max-exact",
+      "seconds": 0.101,
+      "stderr_sha256": "90152ee41bba166f4f30e6463734bc719fd30bf58f74f27db885bd10a242a68c"
+    },
+    {
+      "property": "timestamp/utc-max-second",
+      "command": [
+        "timeout",
+        "--foreground",
+        "30",
+        "python3",
+        "-B",
+        "test/revisions.py",
+        "--case",
+        "timestamp/utc-max-second"
+      ],
+      "status": 0,
+      "stdout": "revision executable captures: 1/1\n",
+      "assertion": "",
+      "seconds": 0.099,
+      "stderr_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "property": "timestamp/negative-year",
+      "command": [
+        "timeout",
+        "--foreground",
+        "30",
+        "python3",
+        "-B",
+        "test/revisions.py",
+        "--case",
+        "timestamp/negative-year"
+      ],
+      "status": 0,
+      "stdout": "revision executable captures: 1/1\n",
+      "assertion": "",
+      "seconds": 0.101,
+      "stderr_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "property": "timestamp/unsigned-short-year",
+      "command": [
+        "timeout",
+        "--foreground",
+        "30",
+        "python3",
+        "-B",
+        "test/revisions.py",
+        "--case",
+        "timestamp/unsigned-short-year"
+      ],
+      "status": 1,
+      "stdout": "",
+      "assertion": "AssertionError: success status: timestamp/unsigned-short-year",
+      "seconds": 0.101,
+      "stderr_sha256": "44fb68d0e1d8b6ae2721d440851ba998f61da4f30cc2453a756550bacd34b12b"
+    },
+    {
+      "property": "timestamp/signed-short-year",
+      "command": [
+        "timeout",
+        "--foreground",
+        "30",
+        "python3",
+        "-B",
+        "test/revisions.py",
+        "--case",
+        "timestamp/signed-short-year"
+      ],
+      "status": 1,
+      "stdout": "",
+      "assertion": "AssertionError: success status: timestamp/signed-short-year",
+      "seconds": 0.102,
+      "stderr_sha256": "29e2c77f126407718a7f81cace3ec3900ddd1d60c642d6a54cb7d30816680f4c"
+    },
+    {
+      "property": "timestamp/signed-leading-zeros",
+      "command": [
+        "timeout",
+        "--foreground",
+        "30",
+        "python3",
+        "-B",
+        "test/revisions.py",
+        "--case",
+        "timestamp/signed-leading-zeros"
+      ],
+      "status": 1,
+      "stdout": "",
+      "assertion": "AssertionError: success status: timestamp/signed-leading-zeros",
+      "seconds": 0.11,
+      "stderr_sha256": "d003074cc29e58cd4b1e71c40b0db2d42cf32e9c8732152e0fe5801c77f0e0bf"
+    },
+    {
+      "property": "timestamp/unsigned-expanded",
+      "command": [
+        "timeout",
+        "--foreground",
+        "30",
+        "python3",
+        "-B",
+        "test/revisions.py",
+        "--case",
+        "timestamp/unsigned-expanded"
+      ],
+      "status": 0,
+      "stdout": "revision executable captures: 1/1\n",
+      "assertion": "",
+      "seconds": 0.109,
+      "stderr_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "property": "timestamp/year-overflow",
+      "command": [
+        "timeout",
+        "--foreground",
+        "30",
+        "python3",
+        "-B",
+        "test/revisions.py",
+        "--case",
+        "timestamp/year-overflow"
+      ],
+      "status": 0,
+      "stdout": "revision executable captures: 1/1\n",
+      "assertion": "",
+      "seconds": 0.1,
+      "stderr_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "property": "timestamp/year-underflow",
+      "command": [
+        "timeout",
+        "--foreground",
+        "30",
+        "python3",
+        "-B",
+        "test/revisions.py",
+        "--case",
+        "timestamp/year-underflow"
+      ],
+      "status": 0,
+      "stdout": "revision executable captures: 1/1\n",
+      "assertion": "",
+      "seconds": 0.1,
+      "stderr_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "property": "timestamp/year-i64-overflow",
+      "command": [
+        "timeout",
+        "--foreground",
+        "30",
+        "python3",
+        "-B",
+        "test/revisions.py",
+        "--case",
+        "timestamp/year-i64-overflow"
+      ],
+      "status": 0,
+      "stdout": "revision executable captures: 1/1\n",
+      "assertion": "",
+      "seconds": 0.11,
+      "stderr_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "property": "timestamp/year-empty-sign",
+      "command": [
+        "timeout",
+        "--foreground",
+        "30",
+        "python3",
+        "-B",
+        "test/revisions.py",
+        "--case",
+        "timestamp/year-empty-sign"
+      ],
+      "status": 0,
+      "stdout": "revision executable captures: 1/1\n",
+      "assertion": "",
+      "seconds": 0.095,
+      "stderr_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "property": "timestamp/year-sign-space",
+      "command": [
+        "timeout",
+        "--foreground",
+        "30",
+        "python3",
+        "-B",
+        "test/revisions.py",
+        "--case",
+        "timestamp/year-sign-space"
+      ],
+      "status": 0,
+      "stdout": "revision executable captures: 1/1\n",
+      "assertion": "",
+      "seconds": 0.095,
+      "stderr_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "property": "timestamp/fraction-long",
+      "command": [
+        "timeout",
+        "--foreground",
+        "30",
+        "python3",
+        "-B",
+        "test/revisions.py",
+        "--case",
+        "timestamp/fraction-long"
+      ],
+      "status": 0,
+      "stdout": "revision executable captures: 1/1\n",
+      "assertion": "",
+      "seconds": 0.1,
+      "stderr_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "property": "timestamp/fraction-empty",
+      "command": [
+        "timeout",
+        "--foreground",
+        "30",
+        "python3",
+        "-B",
+        "test/revisions.py",
+        "--case",
+        "timestamp/fraction-empty"
+      ],
+      "status": 0,
+      "stdout": "revision executable captures: 1/1\n",
+      "assertion": "",
+      "seconds": 0.1,
+      "stderr_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "property": "timestamp/fraction-space",
+      "command": [
+        "timeout",
+        "--foreground",
+        "30",
+        "python3",
+        "-B",
+        "test/revisions.py",
+        "--case",
+        "timestamp/fraction-space"
+      ],
+      "status": 0,
+      "stdout": "revision executable captures: 1/1\n",
+      "assertion": "",
+      "seconds": 0.101,
+      "stderr_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "property": "timestamp/leap-second",
+      "command": [
+        "timeout",
+        "--foreground",
+        "30",
+        "python3",
+        "-B",
+        "test/revisions.py",
+        "--case",
+        "timestamp/leap-second"
+      ],
+      "status": 0,
+      "stdout": "revision executable captures: 1/1\n",
+      "assertion": "",
+      "seconds": 0.104,
+      "stderr_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "property": "timestamp/second-overflow",
+      "command": [
+        "timeout",
+        "--foreground",
+        "30",
+        "python3",
+        "-B",
+        "test/revisions.py",
+        "--case",
+        "timestamp/second-overflow"
+      ],
+      "status": 0,
+      "stdout": "revision executable captures: 1/1\n",
+      "assertion": "",
+      "seconds": 0.102,
+      "stderr_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "property": "timestamp/lower-case",
+      "command": [
+        "timeout",
+        "--foreground",
+        "30",
+        "python3",
+        "-B",
+        "test/revisions.py",
+        "--case",
+        "timestamp/lower-case"
+      ],
+      "status": 0,
+      "stdout": "revision executable captures: 1/1\n",
+      "assertion": "",
+      "seconds": 0.098,
+      "stderr_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "property": "timestamp/space-separator",
+      "command": [
+        "timeout",
+        "--foreground",
+        "30",
+        "python3",
+        "-B",
+        "test/revisions.py",
+        "--case",
+        "timestamp/space-separator"
+      ],
+      "status": 0,
+      "stdout": "revision executable captures: 1/1\n",
+      "assertion": "",
+      "seconds": 0.102,
+      "stderr_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "property": "timestamp/tab-separator",
+      "command": [
+        "timeout",
+        "--foreground",
+        "30",
+        "python3",
+        "-B",
+        "test/revisions.py",
+        "--case",
+        "timestamp/tab-separator"
+      ],
+      "status": 0,
+      "stdout": "revision executable captures: 1/1\n",
+      "assertion": "",
+      "seconds": 0.101,
+      "stderr_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "property": "timestamp/space-before-t",
+      "command": [
+        "timeout",
+        "--foreground",
+        "30",
+        "python3",
+        "-B",
+        "test/revisions.py",
+        "--case",
+        "timestamp/space-before-t"
+      ],
+      "status": 0,
+      "stdout": "revision executable captures: 1/1\n",
+      "assertion": "",
+      "seconds": 0.098,
+      "stderr_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "property": "timestamp/zone-colons",
+      "command": [
+        "timeout",
+        "--foreground",
+        "30",
+        "python3",
+        "-B",
+        "test/revisions.py",
+        "--case",
+        "timestamp/zone-colons"
+      ],
+      "status": 1,
+      "stdout": "",
+      "assertion": "AssertionError: success status: timestamp/zone-colons",
+      "seconds": 0.096,
+      "stderr_sha256": "ddd6fe8fb15af0ead1d8840876a0252a0e11ec852554930082fb24735f19b48b"
+    },
+    {
+      "property": "timestamp/zone-unicode-minus",
+      "command": [
+        "timeout",
+        "--foreground",
+        "30",
+        "python3",
+        "-B",
+        "test/revisions.py",
+        "--case",
+        "timestamp/zone-unicode-minus"
+      ],
+      "status": 1,
+      "stdout": "",
+      "assertion": "AssertionError: success status: timestamp/zone-unicode-minus",
+      "seconds": 0.097,
+      "stderr_sha256": "db412e195d7d428bfcc1575d2a542d9e22e68e6cc67c69696a0f7523143d7141"
+    },
+    {
+      "property": "timestamp/zone-hour-short",
+      "command": [
+        "timeout",
+        "--foreground",
+        "30",
+        "python3",
+        "-B",
+        "test/revisions.py",
+        "--case",
+        "timestamp/zone-hour-short"
+      ],
+      "status": 0,
+      "stdout": "revision executable captures: 1/1\n",
+      "assertion": "",
+      "seconds": 0.093,
+      "stderr_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "property": "timestamp/zone-minute-short",
+      "command": [
+        "timeout",
+        "--foreground",
+        "30",
+        "python3",
+        "-B",
+        "test/revisions.py",
+        "--case",
+        "timestamp/zone-minute-short"
+      ],
+      "status": 0,
+      "stdout": "revision executable captures: 1/1\n",
+      "assertion": "",
+      "seconds": 0.096,
+      "stderr_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "property": "timestamp/zone-hour-overflow",
+      "command": [
+        "timeout",
+        "--foreground",
+        "30",
+        "python3",
+        "-B",
+        "test/revisions.py",
+        "--case",
+        "timestamp/zone-hour-overflow"
+      ],
+      "status": 0,
+      "stdout": "revision executable captures: 1/1\n",
+      "assertion": "",
+      "seconds": 0.095,
+      "stderr_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "property": "timestamp/zone-minute-overflow",
+      "command": [
+        "timeout",
+        "--foreground",
+        "30",
+        "python3",
+        "-B",
+        "test/revisions.py",
+        "--case",
+        "timestamp/zone-minute-overflow"
+      ],
+      "status": 0,
+      "stdout": "revision executable captures: 1/1\n",
+      "assertion": "",
+      "seconds": 0.101,
+      "stderr_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "property": "timestamp/zone-no-minute",
+      "command": [
+        "timeout",
+        "--foreground",
+        "30",
+        "python3",
+        "-B",
+        "test/revisions.py",
+        "--case",
+        "timestamp/zone-no-minute"
+      ],
+      "status": 0,
+      "stdout": "revision executable captures: 1/1\n",
+      "assertion": "",
+      "seconds": 0.095,
+      "stderr_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "property": "timestamp/zone-trailing",
+      "command": [
+        "timeout",
+        "--foreground",
+        "30",
+        "python3",
+        "-B",
+        "test/revisions.py",
+        "--case",
+        "timestamp/zone-trailing"
+      ],
+      "status": 0,
+      "stdout": "revision executable captures: 1/1\n",
+      "assertion": "",
+      "seconds": 0.102,
+      "stderr_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "property": "timestamp/date-leap-valid",
+      "command": [
+        "timeout",
+        "--foreground",
+        "30",
+        "python3",
+        "-B",
+        "test/revisions.py",
+        "--case",
+        "timestamp/date-leap-valid"
+      ],
+      "status": 0,
+      "stdout": "revision executable captures: 1/1\n",
+      "assertion": "",
+      "seconds": 0.095,
+      "stderr_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "property": "timestamp/date-leap-invalid",
+      "command": [
+        "timeout",
+        "--foreground",
+        "30",
+        "python3",
+        "-B",
+        "test/revisions.py",
+        "--case",
+        "timestamp/date-leap-invalid"
+      ],
+      "status": 0,
+      "stdout": "revision executable captures: 1/1\n",
+      "assertion": "",
+      "seconds": 0.104,
+      "stderr_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "property": "timestamp/date-day-zero",
+      "command": [
+        "timeout",
+        "--foreground",
+        "30",
+        "python3",
+        "-B",
+        "test/revisions.py",
+        "--case",
+        "timestamp/date-day-zero"
+      ],
+      "status": 0,
+      "stdout": "revision executable captures: 1/1\n",
+      "assertion": "",
+      "seconds": 0.112,
+      "stderr_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "property": "timestamp/date-month-zero",
+      "command": [
+        "timeout",
+        "--foreground",
+        "30",
+        "python3",
+        "-B",
+        "test/revisions.py",
+        "--case",
+        "timestamp/date-month-zero"
+      ],
+      "status": 0,
+      "stdout": "revision executable captures: 1/1\n",
+      "assertion": "",
+      "seconds": 0.102,
+      "stderr_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "property": "timestamp/date-month-long",
+      "command": [
+        "timeout",
+        "--foreground",
+        "30",
+        "python3",
+        "-B",
+        "test/revisions.py",
+        "--case",
+        "timestamp/date-month-long"
+      ],
+      "status": 0,
+      "stdout": "revision executable captures: 1/1\n",
+      "assertion": "",
+      "seconds": 0.102,
+      "stderr_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "property": "timestamp/hour-overflow",
+      "command": [
+        "timeout",
+        "--foreground",
+        "30",
+        "python3",
+        "-B",
+        "test/revisions.py",
+        "--case",
+        "timestamp/hour-overflow"
+      ],
+      "status": 0,
+      "stdout": "revision executable captures: 1/1\n",
+      "assertion": "",
+      "seconds": 0.108,
+      "stderr_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "property": "timestamp/minute-overflow",
+      "command": [
+        "timeout",
+        "--foreground",
+        "30",
+        "python3",
+        "-B",
+        "test/revisions.py",
+        "--case",
+        "timestamp/minute-overflow"
+      ],
+      "status": 0,
+      "stdout": "revision executable captures: 1/1\n",
+      "assertion": "",
+      "seconds": 0.108,
+      "stderr_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "property": "unicode/known-high",
+      "command": [
+        "timeout",
+        "--foreground",
+        "30",
+        "python3",
+        "-B",
+        "test/revisions.py",
+        "--case",
+        "unicode/known-high"
+      ],
+      "status": 1,
+      "stdout": "",
+      "assertion": "AssertionError: unicode/known-high failure status",
+      "seconds": 0.107,
+      "stderr_sha256": "02e1551fc68c19cc8c680d710f8293d57ec7c7df53b89c63ed05146df666b8ff"
+    },
+    {
+      "property": "unicode/ignored-high",
+      "command": [
+        "timeout",
+        "--foreground",
+        "30",
+        "python3",
+        "-B",
+        "test/revisions.py",
+        "--case",
+        "unicode/ignored-high"
+      ],
+      "status": 0,
+      "stdout": "revision executable captures: 1/1\n",
+      "assertion": "",
+      "seconds": 0.108,
+      "stderr_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "property": "unicode/field-name-high",
+      "command": [
+        "timeout",
+        "--foreground",
+        "30",
+        "python3",
+        "-B",
+        "test/revisions.py",
+        "--case",
+        "unicode/field-name-high"
+      ],
+      "status": 1,
+      "stdout": "",
+      "assertion": "AssertionError: unicode/field-name-high failure status",
+      "seconds": 0.105,
+      "stderr_sha256": "c098b377b9925122ae9990d6886be96e13b0680d96eaa5ed91d64b320f88b015"
+    },
+    {
+      "property": "unicode/nested-ignored-high",
+      "command": [
+        "timeout",
+        "--foreground",
+        "30",
+        "python3",
+        "-B",
+        "test/revisions.py",
+        "--case",
+        "unicode/nested-ignored-high"
+      ],
+      "status": 0,
+      "stdout": "revision executable captures: 1/1\n",
+      "assertion": "",
+      "seconds": 0.102,
+      "stderr_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "property": "unicode/known-low",
+      "command": [
+        "timeout",
+        "--foreground",
+        "30",
+        "python3",
+        "-B",
+        "test/revisions.py",
+        "--case",
+        "unicode/known-low"
+      ],
+      "status": 1,
+      "stdout": "",
+      "assertion": "AssertionError: unicode/known-low failure status",
+      "seconds": 0.108,
+      "stderr_sha256": "d2b1b11622082d2257447ad41f8ef17688ac173061b7b85f6b7f5bdd1e5e0f5f"
+    },
+    {
+      "property": "unicode/ignored-low",
+      "command": [
+        "timeout",
+        "--foreground",
+        "30",
+        "python3",
+        "-B",
+        "test/revisions.py",
+        "--case",
+        "unicode/ignored-low"
+      ],
+      "status": 0,
+      "stdout": "revision executable captures: 1/1\n",
+      "assertion": "",
+      "seconds": 0.104,
+      "stderr_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "property": "unicode/field-name-low",
+      "command": [
+        "timeout",
+        "--foreground",
+        "30",
+        "python3",
+        "-B",
+        "test/revisions.py",
+        "--case",
+        "unicode/field-name-low"
+      ],
+      "status": 1,
+      "stdout": "",
+      "assertion": "AssertionError: unicode/field-name-low failure status",
+      "seconds": 0.107,
+      "stderr_sha256": "0740f2c35f277af42126620458df8f933682ac45358a5085b4c605fee117dfa8"
+    },
+    {
+      "property": "unicode/nested-ignored-low",
+      "command": [
+        "timeout",
+        "--foreground",
+        "30",
+        "python3",
+        "-B",
+        "test/revisions.py",
+        "--case",
+        "unicode/nested-ignored-low"
+      ],
+      "status": 0,
+      "stdout": "revision executable captures: 1/1\n",
+      "assertion": "",
+      "seconds": 0.101,
+      "stderr_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "property": "unicode/known-high-ascii",
+      "command": [
+        "timeout",
+        "--foreground",
+        "30",
+        "python3",
+        "-B",
+        "test/revisions.py",
+        "--case",
+        "unicode/known-high-ascii"
+      ],
+      "status": 1,
+      "stdout": "",
+      "assertion": "AssertionError: unicode/known-high-ascii failure status",
+      "seconds": 0.111,
+      "stderr_sha256": "9ecf31e8cf46941e96b2e6a848e4d996cfadfe62027ef1927685fdb8e0ca5547"
+    },
+    {
+      "property": "unicode/ignored-high-ascii",
+      "command": [
+        "timeout",
+        "--foreground",
+        "30",
+        "python3",
+        "-B",
+        "test/revisions.py",
+        "--case",
+        "unicode/ignored-high-ascii"
+      ],
+      "status": 0,
+      "stdout": "revision executable captures: 1/1\n",
+      "assertion": "",
+      "seconds": 0.1,
+      "stderr_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "property": "unicode/field-name-high-ascii",
+      "command": [
+        "timeout",
+        "--foreground",
+        "30",
+        "python3",
+        "-B",
+        "test/revisions.py",
+        "--case",
+        "unicode/field-name-high-ascii"
+      ],
+      "status": 1,
+      "stdout": "",
+      "assertion": "AssertionError: unicode/field-name-high-ascii failure status",
+      "seconds": 0.109,
+      "stderr_sha256": "831bccfedffe84ddc7d24682edc066a59dcd5dfacc789cba679be2de97948b5c"
+    },
+    {
+      "property": "unicode/nested-ignored-high-ascii",
+      "command": [
+        "timeout",
+        "--foreground",
+        "30",
+        "python3",
+        "-B",
+        "test/revisions.py",
+        "--case",
+        "unicode/nested-ignored-high-ascii"
+      ],
+      "status": 0,
+      "stdout": "revision executable captures: 1/1\n",
+      "assertion": "",
+      "seconds": 0.103,
+      "stderr_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "property": "unicode/known-high-high",
+      "command": [
+        "timeout",
+        "--foreground",
+        "30",
+        "python3",
+        "-B",
+        "test/revisions.py",
+        "--case",
+        "unicode/known-high-high"
+      ],
+      "status": 1,
+      "stdout": "",
+      "assertion": "AssertionError: unicode/known-high-high failure status",
+      "seconds": 0.1,
+      "stderr_sha256": "f076de55af2dd3797c644c77488a09ce4a78a14dfc3a7d406b2a6dba01361454"
+    },
+    {
+      "property": "unicode/ignored-high-high",
+      "command": [
+        "timeout",
+        "--foreground",
+        "30",
+        "python3",
+        "-B",
+        "test/revisions.py",
+        "--case",
+        "unicode/ignored-high-high"
+      ],
+      "status": 0,
+      "stdout": "revision executable captures: 1/1\n",
+      "assertion": "",
+      "seconds": 0.111,
+      "stderr_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "property": "unicode/field-name-high-high",
+      "command": [
+        "timeout",
+        "--foreground",
+        "30",
+        "python3",
+        "-B",
+        "test/revisions.py",
+        "--case",
+        "unicode/field-name-high-high"
+      ],
+      "status": 1,
+      "stdout": "",
+      "assertion": "AssertionError: unicode/field-name-high-high failure status",
+      "seconds": 0.103,
+      "stderr_sha256": "d3e9dc75f60f9e42bc06457ea04c9bf79e0d48ce572dfe0ad07549cc3734dcfb"
+    },
+    {
+      "property": "unicode/nested-ignored-high-high",
+      "command": [
+        "timeout",
+        "--foreground",
+        "30",
+        "python3",
+        "-B",
+        "test/revisions.py",
+        "--case",
+        "unicode/nested-ignored-high-high"
+      ],
+      "status": 0,
+      "stdout": "revision executable captures: 1/1\n",
+      "assertion": "",
+      "seconds": 0.101,
+      "stderr_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "property": "unicode/known-pair",
+      "command": [
+        "timeout",
+        "--foreground",
+        "30",
+        "python3",
+        "-B",
+        "test/revisions.py",
+        "--case",
+        "unicode/known-pair"
+      ],
+      "status": 0,
+      "stdout": "revision executable captures: 1/1\n",
+      "assertion": "",
+      "seconds": 0.102,
+      "stderr_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "property": "unicode/ignored-pair",
+      "command": [
+        "timeout",
+        "--foreground",
+        "30",
+        "python3",
+        "-B",
+        "test/revisions.py",
+        "--case",
+        "unicode/ignored-pair"
+      ],
+      "status": 0,
+      "stdout": "revision executable captures: 1/1\n",
+      "assertion": "",
+      "seconds": 0.102,
+      "stderr_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "property": "unicode/field-name-pair",
+      "command": [
+        "timeout",
+        "--foreground",
+        "30",
+        "python3",
+        "-B",
+        "test/revisions.py",
+        "--case",
+        "unicode/field-name-pair"
+      ],
+      "status": 0,
+      "stdout": "revision executable captures: 1/1\n",
+      "assertion": "",
+      "seconds": 0.097,
+      "stderr_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "property": "unicode/nested-ignored-pair",
+      "command": [
+        "timeout",
+        "--foreground",
+        "30",
+        "python3",
+        "-B",
+        "test/revisions.py",
+        "--case",
+        "unicode/nested-ignored-pair"
+      ],
+      "status": 0,
+      "stdout": "revision executable captures: 1/1\n",
+      "assertion": "",
+      "seconds": 0.099,
+      "stderr_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "property": "unicode/known-pair-upper",
+      "command": [
+        "timeout",
+        "--foreground",
+        "30",
+        "python3",
+        "-B",
+        "test/revisions.py",
+        "--case",
+        "unicode/known-pair-upper"
+      ],
+      "status": 0,
+      "stdout": "revision executable captures: 1/1\n",
+      "assertion": "",
+      "seconds": 0.115,
+      "stderr_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "property": "unicode/ignored-pair-upper",
+      "command": [
+        "timeout",
+        "--foreground",
+        "30",
+        "python3",
+        "-B",
+        "test/revisions.py",
+        "--case",
+        "unicode/ignored-pair-upper"
+      ],
+      "status": 0,
+      "stdout": "revision executable captures: 1/1\n",
+      "assertion": "",
+      "seconds": 0.101,
+      "stderr_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "property": "unicode/field-name-pair-upper",
+      "command": [
+        "timeout",
+        "--foreground",
+        "30",
+        "python3",
+        "-B",
+        "test/revisions.py",
+        "--case",
+        "unicode/field-name-pair-upper"
+      ],
+      "status": 0,
+      "stdout": "revision executable captures: 1/1\n",
+      "assertion": "",
+      "seconds": 0.098,
+      "stderr_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "property": "unicode/nested-ignored-pair-upper",
+      "command": [
+        "timeout",
+        "--foreground",
+        "30",
+        "python3",
+        "-B",
+        "test/revisions.py",
+        "--case",
+        "unicode/nested-ignored-pair-upper"
+      ],
+      "status": 0,
+      "stdout": "revision executable captures: 1/1\n",
+      "assertion": "",
+      "seconds": 0.109,
+      "stderr_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "property": "unicode/known-literal-backslash",
+      "command": [
+        "timeout",
+        "--foreground",
+        "30",
+        "python3",
+        "-B",
+        "test/revisions.py",
+        "--case",
+        "unicode/known-literal-backslash"
+      ],
+      "status": 0,
+      "stdout": "revision executable captures: 1/1\n",
+      "assertion": "",
+      "seconds": 0.097,
+      "stderr_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "property": "unicode/ignored-literal-backslash",
+      "command": [
+        "timeout",
+        "--foreground",
+        "30",
+        "python3",
+        "-B",
+        "test/revisions.py",
+        "--case",
+        "unicode/ignored-literal-backslash"
+      ],
+      "status": 0,
+      "stdout": "revision executable captures: 1/1\n",
+      "assertion": "",
+      "seconds": 0.101,
+      "stderr_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "property": "unicode/field-name-literal-backslash",
+      "command": [
+        "timeout",
+        "--foreground",
+        "30",
+        "python3",
+        "-B",
+        "test/revisions.py",
+        "--case",
+        "unicode/field-name-literal-backslash"
+      ],
+      "status": 0,
+      "stdout": "revision executable captures: 1/1\n",
+      "assertion": "",
+      "seconds": 0.102,
+      "stderr_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "property": "unicode/nested-ignored-literal-backslash",
+      "command": [
+        "timeout",
+        "--foreground",
+        "30",
+        "python3",
+        "-B",
+        "test/revisions.py",
+        "--case",
+        "unicode/nested-ignored-literal-backslash"
+      ],
+      "status": 0,
+      "stdout": "revision executable captures: 1/1\n",
+      "assertion": "",
+      "seconds": 0.099,
+      "stderr_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "property": "unicode/known-pair-then-low",
+      "command": [
+        "timeout",
+        "--foreground",
+        "30",
+        "python3",
+        "-B",
+        "test/revisions.py",
+        "--case",
+        "unicode/known-pair-then-low"
+      ],
+      "status": 1,
+      "stdout": "",
+      "assertion": "AssertionError: unicode/known-pair-then-low failure status",
+      "seconds": 0.096,
+      "stderr_sha256": "c22f1b75487080e2981a4dbeda60de6ae2b05b5ced57b69f274882c7a6a1f7a3"
+    },
+    {
+      "property": "unicode/ignored-pair-then-low",
+      "command": [
+        "timeout",
+        "--foreground",
+        "30",
+        "python3",
+        "-B",
+        "test/revisions.py",
+        "--case",
+        "unicode/ignored-pair-then-low"
+      ],
+      "status": 0,
+      "stdout": "revision executable captures: 1/1\n",
+      "assertion": "",
+      "seconds": 0.097,
+      "stderr_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "property": "unicode/field-name-pair-then-low",
+      "command": [
+        "timeout",
+        "--foreground",
+        "30",
+        "python3",
+        "-B",
+        "test/revisions.py",
+        "--case",
+        "unicode/field-name-pair-then-low"
+      ],
+      "status": 1,
+      "stdout": "",
+      "assertion": "AssertionError: unicode/field-name-pair-then-low failure status",
+      "seconds": 0.103,
+      "stderr_sha256": "5f3e3194bedfcb823cbdc357c54bf258f0e06bb9dc2d267187b4065a65d52935"
+    },
+    {
+      "property": "unicode/nested-ignored-pair-then-low",
+      "command": [
+        "timeout",
+        "--foreground",
+        "30",
+        "python3",
+        "-B",
+        "test/revisions.py",
+        "--case",
+        "unicode/nested-ignored-pair-then-low"
+      ],
+      "status": 0,
+      "stdout": "revision executable captures: 1/1\n",
+      "assertion": "",
+      "seconds": 0.098,
+      "stderr_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "property": "unicode/ignored-nested-key-high",
+      "command": [
+        "timeout",
+        "--foreground",
+        "30",
+        "python3",
+        "-B",
+        "test/revisions.py",
+        "--case",
+        "unicode/ignored-nested-key-high"
+      ],
+      "status": 0,
+      "stdout": "revision executable captures: 1/1\n",
+      "assertion": "",
+      "seconds": 0.099,
+      "stderr_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "property": "unicode/escaped-known-field",
+      "command": [
+        "timeout",
+        "--foreground",
+        "30",
+        "python3",
+        "-B",
+        "test/revisions.py",
+        "--case",
+        "unicode/escaped-known-field"
+      ],
+      "status": 0,
+      "stdout": "revision executable captures: 1/1\n",
+      "assertion": "",
+      "seconds": 0.1,
+      "stderr_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "property": "sequence/root-length-0",
+      "command": [
+        "timeout",
+        "--foreground",
+        "30",
+        "python3",
+        "-B",
+        "test/revisions.py",
+        "--case",
+        "sequence/root-length-0"
+      ],
+      "status": 0,
+      "stdout": "revision executable captures: 1/1\n",
+      "assertion": "",
+      "seconds": 0.096,
+      "stderr_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "property": "sequence/root-length-1",
+      "command": [
+        "timeout",
+        "--foreground",
+        "30",
+        "python3",
+        "-B",
+        "test/revisions.py",
+        "--case",
+        "sequence/root-length-1"
+      ],
+      "status": 0,
+      "stdout": "revision executable captures: 1/1\n",
+      "assertion": "",
+      "seconds": 0.097,
+      "stderr_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "property": "sequence/root-length-2",
+      "command": [
+        "timeout",
+        "--foreground",
+        "30",
+        "python3",
+        "-B",
+        "test/revisions.py",
+        "--case",
+        "sequence/root-length-2"
+      ],
+      "status": 0,
+      "stdout": "revision executable captures: 1/1\n",
+      "assertion": "",
+      "seconds": 0.098,
+      "stderr_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "property": "sequence/root-length-3",
+      "command": [
+        "timeout",
+        "--foreground",
+        "30",
+        "python3",
+        "-B",
+        "test/revisions.py",
+        "--case",
+        "sequence/root-length-3"
+      ],
+      "status": 0,
+      "stdout": "revision executable captures: 1/1\n",
+      "assertion": "",
+      "seconds": 0.095,
+      "stderr_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "property": "sequence/root-length-4",
+      "command": [
+        "timeout",
+        "--foreground",
+        "30",
+        "python3",
+        "-B",
+        "test/revisions.py",
+        "--case",
+        "sequence/root-length-4"
+      ],
+      "status": 0,
+      "stdout": "revision executable captures: 1/1\n",
+      "assertion": "",
+      "seconds": 0.11,
+      "stderr_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "property": "sequence/root-length-5",
+      "command": [
+        "timeout",
+        "--foreground",
+        "30",
+        "python3",
+        "-B",
+        "test/revisions.py",
+        "--case",
+        "sequence/root-length-5"
+      ],
+      "status": 0,
+      "stdout": "revision executable captures: 1/1\n",
+      "assertion": "",
+      "seconds": 0.109,
+      "stderr_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "property": "sequence/root-length-6",
+      "command": [
+        "timeout",
+        "--foreground",
+        "30",
+        "python3",
+        "-B",
+        "test/revisions.py",
+        "--case",
+        "sequence/root-length-6"
+      ],
+      "status": 0,
+      "stdout": "revision executable captures: 1/1\n",
+      "assertion": "",
+      "seconds": 0.103,
+      "stderr_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "property": "sequence/root-length-7",
+      "command": [
+        "timeout",
+        "--foreground",
+        "30",
+        "python3",
+        "-B",
+        "test/revisions.py",
+        "--case",
+        "sequence/root-length-7"
+      ],
+      "status": 0,
+      "stdout": "revision executable captures: 1/1\n",
+      "assertion": "",
+      "seconds": 0.104,
+      "stderr_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "property": "sequence/root-length-8",
+      "command": [
+        "timeout",
+        "--foreground",
+        "30",
+        "python3",
+        "-B",
+        "test/revisions.py",
+        "--case",
+        "sequence/root-length-8"
+      ],
+      "status": 0,
+      "stdout": "revision executable captures: 1/1\n",
+      "assertion": "",
+      "seconds": 0.108,
+      "stderr_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "property": "sequence/root-length-9",
+      "command": [
+        "timeout",
+        "--foreground",
+        "30",
+        "python3",
+        "-B",
+        "test/revisions.py",
+        "--case",
+        "sequence/root-length-9"
+      ],
+      "status": 0,
+      "stdout": "revision executable captures: 1/1\n",
+      "assertion": "",
+      "seconds": 0.113,
+      "stderr_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "property": "sequence/root-length-10",
+      "command": [
+        "timeout",
+        "--foreground",
+        "30",
+        "python3",
+        "-B",
+        "test/revisions.py",
+        "--case",
+        "sequence/root-length-10"
+      ],
+      "status": 0,
+      "stdout": "revision executable captures: 1/1\n",
+      "assertion": "",
+      "seconds": 0.105,
+      "stderr_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "property": "sequence/root-length-11",
+      "command": [
+        "timeout",
+        "--foreground",
+        "30",
+        "python3",
+        "-B",
+        "test/revisions.py",
+        "--case",
+        "sequence/root-length-11"
+      ],
+      "status": 0,
+      "stdout": "revision executable captures: 1/1\n",
+      "assertion": "",
+      "seconds": 0.099,
+      "stderr_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "property": "sequence/root-length-12",
+      "command": [
+        "timeout",
+        "--foreground",
+        "30",
+        "python3",
+        "-B",
+        "test/revisions.py",
+        "--case",
+        "sequence/root-length-12"
+      ],
+      "status": 0,
+      "stdout": "revision executable captures: 1/1\n",
+      "assertion": "",
+      "seconds": 0.106,
+      "stderr_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "property": "sequence/root-length-13",
+      "command": [
+        "timeout",
+        "--foreground",
+        "30",
+        "python3",
+        "-B",
+        "test/revisions.py",
+        "--case",
+        "sequence/root-length-13"
+      ],
+      "status": 0,
+      "stdout": "revision executable captures: 1/1\n",
+      "assertion": "",
+      "seconds": 0.101,
+      "stderr_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "property": "sequence/root-length-14",
+      "command": [
+        "timeout",
+        "--foreground",
+        "30",
+        "python3",
+        "-B",
+        "test/revisions.py",
+        "--case",
+        "sequence/root-length-14"
+      ],
+      "status": 1,
+      "stdout": "",
+      "assertion": "AssertionError: success status: sequence/root-length-14",
+      "seconds": 0.1,
+      "stderr_sha256": "5132fbc0d9764ea2ea7fdd57330c195537f72e4989ed74cc32ac0d4c7530f3ba"
+    },
+    {
+      "property": "sequence/root-length-15",
+      "command": [
+        "timeout",
+        "--foreground",
+        "30",
+        "python3",
+        "-B",
+        "test/revisions.py",
+        "--case",
+        "sequence/root-length-15"
+      ],
+      "status": 0,
+      "stdout": "revision executable captures: 1/1\n",
+      "assertion": "",
+      "seconds": 0.105,
+      "stderr_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "property": "sequence/hop-length-0",
+      "command": [
+        "timeout",
+        "--foreground",
+        "30",
+        "python3",
+        "-B",
+        "test/revisions.py",
+        "--case",
+        "sequence/hop-length-0"
+      ],
+      "status": 0,
+      "stdout": "revision executable captures: 1/1\n",
+      "assertion": "",
+      "seconds": 0.105,
+      "stderr_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "property": "sequence/hop-length-1",
+      "command": [
+        "timeout",
+        "--foreground",
+        "30",
+        "python3",
+        "-B",
+        "test/revisions.py",
+        "--case",
+        "sequence/hop-length-1"
+      ],
+      "status": 0,
+      "stdout": "revision executable captures: 1/1\n",
+      "assertion": "",
+      "seconds": 0.098,
+      "stderr_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "property": "sequence/hop-length-2",
+      "command": [
+        "timeout",
+        "--foreground",
+        "30",
+        "python3",
+        "-B",
+        "test/revisions.py",
+        "--case",
+        "sequence/hop-length-2"
+      ],
+      "status": 0,
+      "stdout": "revision executable captures: 1/1\n",
+      "assertion": "",
+      "seconds": 0.108,
+      "stderr_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "property": "sequence/hop-length-3",
+      "command": [
+        "timeout",
+        "--foreground",
+        "30",
+        "python3",
+        "-B",
+        "test/revisions.py",
+        "--case",
+        "sequence/hop-length-3"
+      ],
+      "status": 0,
+      "stdout": "revision executable captures: 1/1\n",
+      "assertion": "",
+      "seconds": 0.098,
+      "stderr_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "property": "sequence/hop-length-4",
+      "command": [
+        "timeout",
+        "--foreground",
+        "30",
+        "python3",
+        "-B",
+        "test/revisions.py",
+        "--case",
+        "sequence/hop-length-4"
+      ],
+      "status": 0,
+      "stdout": "revision executable captures: 1/1\n",
+      "assertion": "",
+      "seconds": 0.1,
+      "stderr_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "property": "sequence/hop-length-5",
+      "command": [
+        "timeout",
+        "--foreground",
+        "30",
+        "python3",
+        "-B",
+        "test/revisions.py",
+        "--case",
+        "sequence/hop-length-5"
+      ],
+      "status": 0,
+      "stdout": "revision executable captures: 1/1\n",
+      "assertion": "",
+      "seconds": 0.11,
+      "stderr_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "property": "sequence/hop-length-6",
+      "command": [
+        "timeout",
+        "--foreground",
+        "30",
+        "python3",
+        "-B",
+        "test/revisions.py",
+        "--case",
+        "sequence/hop-length-6"
+      ],
+      "status": 1,
+      "stdout": "",
+      "assertion": "AssertionError: success status: sequence/hop-length-6",
+      "seconds": 0.105,
+      "stderr_sha256": "b0f7fa13d33fe33e81acd5652144d2f600b41b802a431a4cbd6e3076805f4251"
+    },
+    {
+      "property": "sequence/hop-length-7",
+      "command": [
+        "timeout",
+        "--foreground",
+        "30",
+        "python3",
+        "-B",
+        "test/revisions.py",
+        "--case",
+        "sequence/hop-length-7"
+      ],
+      "status": 0,
+      "stdout": "revision executable captures: 1/1\n",
+      "assertion": "",
+      "seconds": 0.108,
+      "stderr_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "property": "sequence/fees-length-0",
+      "command": [
+        "timeout",
+        "--foreground",
+        "30",
+        "python3",
+        "-B",
+        "test/revisions.py",
+        "--case",
+        "sequence/fees-length-0"
+      ],
+      "status": 0,
+      "stdout": "revision executable captures: 1/1\n",
+      "assertion": "",
+      "seconds": 0.105,
+      "stderr_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "property": "sequence/fees-length-1",
+      "command": [
+        "timeout",
+        "--foreground",
+        "30",
+        "python3",
+        "-B",
+        "test/revisions.py",
+        "--case",
+        "sequence/fees-length-1"
+      ],
+      "status": 0,
+      "stdout": "revision executable captures: 1/1\n",
+      "assertion": "",
+      "seconds": 0.104,
+      "stderr_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "property": "sequence/fees-length-2",
+      "command": [
+        "timeout",
+        "--foreground",
+        "30",
+        "python3",
+        "-B",
+        "test/revisions.py",
+        "--case",
+        "sequence/fees-length-2"
+      ],
+      "status": 1,
+      "stdout": "",
+      "assertion": "AssertionError: success status: sequence/fees-length-2",
+      "seconds": 0.1,
+      "stderr_sha256": "bc655be411eac0f6da15f5b2675136c3dc48204afa6a6e27f4b8ae80093246b3"
+    },
+    {
+      "property": "sequence/fees-length-3",
+      "command": [
+        "timeout",
+        "--foreground",
+        "30",
+        "python3",
+        "-B",
+        "test/revisions.py",
+        "--case",
+        "sequence/fees-length-3"
+      ],
+      "status": 0,
+      "stdout": "revision executable captures: 1/1\n",
+      "assertion": "",
+      "seconds": 0.104,
+      "stderr_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "property": "sequence/root-null-0",
+      "command": [
+        "timeout",
+        "--foreground",
+        "30",
+        "python3",
+        "-B",
+        "test/revisions.py",
+        "--case",
+        "sequence/root-null-0"
+      ],
+      "status": 0,
+      "stdout": "revision executable captures: 1/1\n",
+      "assertion": "",
+      "seconds": 0.101,
+      "stderr_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "property": "sequence/root-null-1",
+      "command": [
+        "timeout",
+        "--foreground",
+        "30",
+        "python3",
+        "-B",
+        "test/revisions.py",
+        "--case",
+        "sequence/root-null-1"
+      ],
+      "status": 1,
+      "stdout": "",
+      "assertion": "AssertionError: success status: sequence/root-null-1",
+      "seconds": 0.1,
+      "stderr_sha256": "b47ba85318aca503c722f009682217de8155eb2cc9db87bec75c74a39c20ff87"
+    },
+    {
+      "property": "sequence/root-null-2",
+      "command": [
+        "timeout",
+        "--foreground",
+        "30",
+        "python3",
+        "-B",
+        "test/revisions.py",
+        "--case",
+        "sequence/root-null-2"
+      ],
+      "status": 0,
+      "stdout": "revision executable captures: 1/1\n",
+      "assertion": "",
+      "seconds": 0.105,
+      "stderr_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "property": "sequence/root-null-3",
+      "command": [
+        "timeout",
+        "--foreground",
+        "30",
+        "python3",
+        "-B",
+        "test/revisions.py",
+        "--case",
+        "sequence/root-null-3"
+      ],
+      "status": 0,
+      "stdout": "revision executable captures: 1/1\n",
+      "assertion": "",
+      "seconds": 0.103,
+      "stderr_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "property": "sequence/root-null-4",
+      "command": [
+        "timeout",
+        "--foreground",
+        "30",
+        "python3",
+        "-B",
+        "test/revisions.py",
+        "--case",
+        "sequence/root-null-4"
+      ],
+      "status": 0,
+      "stdout": "revision executable captures: 1/1\n",
+      "assertion": "",
+      "seconds": 0.1,
+      "stderr_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "property": "sequence/root-null-5",
+      "command": [
+        "timeout",
+        "--foreground",
+        "30",
+        "python3",
+        "-B",
+        "test/revisions.py",
+        "--case",
+        "sequence/root-null-5"
+      ],
+      "status": 0,
+      "stdout": "revision executable captures: 1/1\n",
+      "assertion": "",
+      "seconds": 0.105,
+      "stderr_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "property": "sequence/root-null-6",
+      "command": [
+        "timeout",
+        "--foreground",
+        "30",
+        "python3",
+        "-B",
+        "test/revisions.py",
+        "--case",
+        "sequence/root-null-6"
+      ],
+      "status": 0,
+      "stdout": "revision executable captures: 1/1\n",
+      "assertion": "",
+      "seconds": 0.098,
+      "stderr_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "property": "sequence/root-null-7",
+      "command": [
+        "timeout",
+        "--foreground",
+        "30",
+        "python3",
+        "-B",
+        "test/revisions.py",
+        "--case",
+        "sequence/root-null-7"
+      ],
+      "status": 1,
+      "stdout": "",
+      "assertion": "AssertionError: success status: sequence/root-null-7",
+      "seconds": 0.1,
+      "stderr_sha256": "8a99b14c7e89f78583510b479587ec2ca7cde2c2603678630bbb9c0eccfc3442"
+    },
+    {
+      "property": "sequence/root-null-8",
+      "command": [
+        "timeout",
+        "--foreground",
+        "30",
+        "python3",
+        "-B",
+        "test/revisions.py",
+        "--case",
+        "sequence/root-null-8"
+      ],
+      "status": 1,
+      "stdout": "",
+      "assertion": "AssertionError: success status: sequence/root-null-8",
+      "seconds": 0.106,
+      "stderr_sha256": "ef0afd38264c97c7b933c7bb6858556b68692be476e634b4bf9dde6154177d39"
+    },
+    {
+      "property": "sequence/root-null-9",
+      "command": [
+        "timeout",
+        "--foreground",
+        "30",
+        "python3",
+        "-B",
+        "test/revisions.py",
+        "--case",
+        "sequence/root-null-9"
+      ],
+      "status": 0,
+      "stdout": "revision executable captures: 1/1\n",
+      "assertion": "",
+      "seconds": 0.102,
+      "stderr_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "property": "sequence/root-null-10",
+      "command": [
+        "timeout",
+        "--foreground",
+        "30",
+        "python3",
+        "-B",
+        "test/revisions.py",
+        "--case",
+        "sequence/root-null-10"
+      ],
+      "status": 0,
+      "stdout": "revision executable captures: 1/1\n",
+      "assertion": "",
+      "seconds": 0.099,
+      "stderr_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "property": "sequence/root-null-11",
+      "command": [
+        "timeout",
+        "--foreground",
+        "30",
+        "python3",
+        "-B",
+        "test/revisions.py",
+        "--case",
+        "sequence/root-null-11"
+      ],
+      "status": 0,
+      "stdout": "revision executable captures: 1/1\n",
+      "assertion": "",
+      "seconds": 0.101,
+      "stderr_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "property": "sequence/root-null-12",
+      "command": [
+        "timeout",
+        "--foreground",
+        "30",
+        "python3",
+        "-B",
+        "test/revisions.py",
+        "--case",
+        "sequence/root-null-12"
+      ],
+      "status": 0,
+      "stdout": "revision executable captures: 1/1\n",
+      "assertion": "",
+      "seconds": 0.105,
+      "stderr_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "property": "sequence/root-null-13",
+      "command": [
+        "timeout",
+        "--foreground",
+        "30",
+        "python3",
+        "-B",
+        "test/revisions.py",
+        "--case",
+        "sequence/root-null-13"
+      ],
+      "status": 0,
+      "stdout": "revision executable captures: 1/1\n",
+      "assertion": "",
+      "seconds": 0.099,
+      "stderr_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "property": "sequence/hop-null-0",
+      "command": [
+        "timeout",
+        "--foreground",
+        "30",
+        "python3",
+        "-B",
+        "test/revisions.py",
+        "--case",
+        "sequence/hop-null-0"
+      ],
+      "status": 0,
+      "stdout": "revision executable captures: 1/1\n",
+      "assertion": "",
+      "seconds": 0.101,
+      "stderr_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "property": "sequence/hop-null-1",
+      "command": [
+        "timeout",
+        "--foreground",
+        "30",
+        "python3",
+        "-B",
+        "test/revisions.py",
+        "--case",
+        "sequence/hop-null-1"
+      ],
+      "status": 0,
+      "stdout": "revision executable captures: 1/1\n",
+      "assertion": "",
+      "seconds": 0.104,
+      "stderr_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "property": "sequence/hop-null-2",
+      "command": [
+        "timeout",
+        "--foreground",
+        "30",
+        "python3",
+        "-B",
+        "test/revisions.py",
+        "--case",
+        "sequence/hop-null-2"
+      ],
+      "status": 0,
+      "stdout": "revision executable captures: 1/1\n",
+      "assertion": "",
+      "seconds": 0.107,
+      "stderr_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "property": "sequence/hop-null-3",
+      "command": [
+        "timeout",
+        "--foreground",
+        "30",
+        "python3",
+        "-B",
+        "test/revisions.py",
+        "--case",
+        "sequence/hop-null-3"
+      ],
+      "status": 0,
+      "stdout": "revision executable captures: 1/1\n",
+      "assertion": "",
+      "seconds": 0.103,
+      "stderr_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "property": "sequence/hop-null-4",
+      "command": [
+        "timeout",
+        "--foreground",
+        "30",
+        "python3",
+        "-B",
+        "test/revisions.py",
+        "--case",
+        "sequence/hop-null-4"
+      ],
+      "status": 1,
+      "stdout": "",
+      "assertion": "AssertionError: success status: sequence/hop-null-4",
+      "seconds": 0.101,
+      "stderr_sha256": "24ea55afbfcd4def20706766ba20c8dfbf0201d3487a405f61a6f6f6e2c6aca5"
+    },
+    {
+      "property": "sequence/hop-null-5",
+      "command": [
+        "timeout",
+        "--foreground",
+        "30",
+        "python3",
+        "-B",
+        "test/revisions.py",
+        "--case",
+        "sequence/hop-null-5"
+      ],
+      "status": 1,
+      "stdout": "",
+      "assertion": "AssertionError: success status: sequence/hop-null-5",
+      "seconds": 0.103,
+      "stderr_sha256": "f6b1c03d39ee9e62d5c6514141247994ae1de8bc9eb8a4e7a6442080b6de0368"
+    },
+    {
+      "property": "sequence/fees-null-0",
+      "command": [
+        "timeout",
+        "--foreground",
+        "30",
+        "python3",
+        "-B",
+        "test/revisions.py",
+        "--case",
+        "sequence/fees-null-0"
+      ],
+      "status": 0,
+      "stdout": "revision executable captures: 1/1\n",
+      "assertion": "",
+      "seconds": 0.103,
+      "stderr_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "property": "sequence/fees-null-1",
+      "command": [
+        "timeout",
+        "--foreground",
+        "30",
+        "python3",
+        "-B",
+        "test/revisions.py",
+        "--case",
+        "sequence/fees-null-1"
+      ],
+      "status": 0,
+      "stdout": "revision executable captures: 1/1\n",
+      "assertion": "",
+      "seconds": 0.098,
+      "stderr_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "property": "sequence/combined-0-0",
+      "command": [
+        "timeout",
+        "--foreground",
+        "30",
+        "python3",
+        "-B",
+        "test/revisions.py",
+        "--case",
+        "sequence/combined-0-0"
+      ],
+      "status": 1,
+      "stdout": "",
+      "assertion": "AssertionError: success status: sequence/combined-0-0",
+      "seconds": 0.108,
+      "stderr_sha256": "aacb550acd82aa00d6c23afac2cf4d808f8860b544c25ba378a5582877ff1ed9"
+    },
+    {
+      "property": "sequence/combined-0-1",
+      "command": [
+        "timeout",
+        "--foreground",
+        "30",
+        "python3",
+        "-B",
+        "test/revisions.py",
+        "--case",
+        "sequence/combined-0-1"
+      ],
+      "status": 1,
+      "stdout": "",
+      "assertion": "AssertionError: success status: sequence/combined-0-1",
+      "seconds": 0.102,
+      "stderr_sha256": "541766ae91fb4820168082cdd6b52d2a71660789f97c3484746e930aa4da9e9d"
+    },
+    {
+      "property": "sequence/combined-1-0",
+      "command": [
+        "timeout",
+        "--foreground",
+        "30",
+        "python3",
+        "-B",
+        "test/revisions.py",
+        "--case",
+        "sequence/combined-1-0"
+      ],
+      "status": 1,
+      "stdout": "",
+      "assertion": "AssertionError: success status: sequence/combined-1-0",
+      "seconds": 0.113,
+      "stderr_sha256": "817854fa6e0e376a6c5bbff8fe6a5821ec362a48ad86257f5271eda06efc0817"
+    },
+    {
+      "property": "sequence/combined-1-1",
+      "command": [
+        "timeout",
+        "--foreground",
+        "30",
+        "python3",
+        "-B",
+        "test/revisions.py",
+        "--case",
+        "sequence/combined-1-1"
+      ],
+      "status": 1,
+      "stdout": "",
+      "assertion": "AssertionError: success status: sequence/combined-1-1",
+      "seconds": 0.112,
+      "stderr_sha256": "3cec06b1f56243f0b9fa8b4f331520ef36349b5a2897de3704a60b3e626b184c"
+    },
+    {
+      "property": "sequence/root-unsigned",
+      "command": [
+        "timeout",
+        "--foreground",
+        "30",
+        "python3",
+        "-B",
+        "test/revisions.py",
+        "--case",
+        "sequence/root-unsigned"
+      ],
+      "status": 0,
+      "stdout": "revision executable captures: 1/1\n",
+      "assertion": "",
+      "seconds": 0.106,
+      "stderr_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "property": "sequence/root-millis",
+      "command": [
+        "timeout",
+        "--foreground",
+        "30",
+        "python3",
+        "-B",
+        "test/revisions.py",
+        "--case",
+        "sequence/root-millis"
+      ],
+      "status": 0,
+      "stdout": "revision executable captures: 1/1\n",
+      "assertion": "",
+      "seconds": 0.102,
+      "stderr_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "property": "sequence/root-timestamp",
+      "command": [
+        "timeout",
+        "--foreground",
+        "30",
+        "python3",
+        "-B",
+        "test/revisions.py",
+        "--case",
+        "sequence/root-timestamp"
+      ],
+      "status": 0,
+      "stdout": "revision executable captures: 1/1\n",
+      "assertion": "",
+      "seconds": 0.1,
+      "stderr_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "property": "sequence/root-overflow",
+      "command": [
+        "timeout",
+        "--foreground",
+        "30",
+        "python3",
+        "-B",
+        "test/revisions.py",
+        "--case",
+        "sequence/root-overflow"
+      ],
+      "status": 0,
+      "stdout": "revision executable captures: 1/1\n",
+      "assertion": "",
+      "seconds": 0.1,
+      "stderr_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "property": "sequence/hop-unsigned",
+      "command": [
+        "timeout",
+        "--foreground",
+        "30",
+        "python3",
+        "-B",
+        "test/revisions.py",
+        "--case",
+        "sequence/hop-unsigned"
+      ],
+      "status": 0,
+      "stdout": "revision executable captures: 1/1\n",
+      "assertion": "",
+      "seconds": 0.106,
+      "stderr_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "property": "sequence/hop-delta-overflow",
+      "command": [
+        "timeout",
+        "--foreground",
+        "30",
+        "python3",
+        "-B",
+        "test/revisions.py",
+        "--case",
+        "sequence/hop-delta-overflow"
+      ],
+      "status": 0,
+      "stdout": "revision executable captures: 1/1\n",
+      "assertion": "",
+      "seconds": 0.101,
+      "stderr_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "property": "sequence/hop-minimum-overflow",
+      "command": [
+        "timeout",
+        "--foreground",
+        "30",
+        "python3",
+        "-B",
+        "test/revisions.py",
+        "--case",
+        "sequence/hop-minimum-overflow"
+      ],
+      "status": 0,
+      "stdout": "revision executable captures: 1/1\n",
+      "assertion": "",
+      "seconds": 0.102,
+      "stderr_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "property": "sequence/hop-key",
+      "command": [
+        "timeout",
+        "--foreground",
+        "30",
+        "python3",
+        "-B",
+        "test/revisions.py",
+        "--case",
+        "sequence/hop-key"
+      ],
+      "status": 1,
+      "stdout": "",
+      "assertion": "AssertionError: sequence/hop-key error ordering/identity",
+      "seconds": 0.107,
+      "stderr_sha256": "f25564971d16cae41f3a357d86d5d52e1396efaab47760c2bb1cab3034516eef"
+    },
+    {
+      "property": "sequence/fees-overflow-0",
+      "command": [
+        "timeout",
+        "--foreground",
+        "30",
+        "python3",
+        "-B",
+        "test/revisions.py",
+        "--case",
+        "sequence/fees-overflow-0"
+      ],
+      "status": 0,
+      "stdout": "revision executable captures: 1/1\n",
+      "assertion": "",
+      "seconds": 0.106,
+      "stderr_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "property": "sequence/fees-overflow-1",
+      "command": [
+        "timeout",
+        "--foreground",
+        "30",
+        "python3",
+        "-B",
+        "test/revisions.py",
+        "--case",
+        "sequence/fees-overflow-1"
+      ],
+      "status": 0,
+      "stdout": "revision executable captures: 1/1\n",
+      "assertion": "",
+      "seconds": 0.1,
+      "stderr_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "property": "sequence/root-hybrid",
+      "command": [
+        "timeout",
+        "--foreground",
+        "30",
+        "python3",
+        "-B",
+        "test/revisions.py",
+        "--case",
+        "sequence/root-hybrid"
+      ],
+      "status": 1,
+      "stdout": "",
+      "assertion": "AssertionError: success status: sequence/root-hybrid",
+      "seconds": 0.108,
+      "stderr_sha256": "379e2c1fd58b524ccfd9c2870acfe08f28be64c1ea144fe0b155a11bd860f217"
+    },
+    {
+      "property": "sequence/root-mismatched",
+      "command": [
+        "timeout",
+        "--foreground",
+        "30",
+        "python3",
+        "-B",
+        "test/revisions.py",
+        "--case",
+        "sequence/root-mismatched"
+      ],
+      "status": 1,
+      "stdout": "",
+      "assertion": "AssertionError: sequence/root-mismatched error ordering/identity",
+      "seconds": 0.103,
+      "stderr_sha256": "e651a9d8cf21ac355da7ff70fe0edce5104f65f2079c285b8ad81dd4284f5a4a"
+    },
+    {
+      "property": "sequence/hop-hybrid",
+      "command": [
+        "timeout",
+        "--foreground",
+        "30",
+        "python3",
+        "-B",
+        "test/revisions.py",
+        "--case",
+        "sequence/hop-hybrid"
+      ],
+      "status": 1,
+      "stdout": "",
+      "assertion": "AssertionError: success status: sequence/hop-hybrid",
+      "seconds": 0.097,
+      "stderr_sha256": "fc82cfb03127d33f72f8a20c52bab518c08993d09b5ea6e00640a32bb042dbe2"
+    },
+    {
+      "property": "sequence/hop-mismatched",
+      "command": [
+        "timeout",
+        "--foreground",
+        "30",
+        "python3",
+        "-B",
+        "test/revisions.py",
+        "--case",
+        "sequence/hop-mismatched"
+      ],
+      "status": 1,
+      "stdout": "",
+      "assertion": "AssertionError: sequence/hop-mismatched error ordering/identity",
+      "seconds": 0.1,
+      "stderr_sha256": "f625f83a364d617ea37f5bc0f5f6ca2b4081d268ecb8f33ba085bfebcd149ffe"
+    },
+    {
+      "property": "simnet/encode",
+      "command": [
+        "timeout",
+        "--foreground",
+        "30",
+        "python3",
+        "-B",
+        "test/revisions.py",
+        "--case",
+        "simnet/encode"
+      ],
+      "status": 0,
+      "stdout": "revision executable captures: 1/1\n",
+      "assertion": "",
+      "seconds": 0.101,
+      "stderr_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "property": "output/ln-decode-invoice-create",
+      "command": [
+        "timeout",
+        "--foreground",
+        "30",
+        "python3",
+        "-B",
+        "test/revisions.py",
+        "--case",
+        "output/ln-decode-invoice-create"
+      ],
+      "status": 1,
+      "stdout": "",
+      "assertion": "AssertionError: output/ln-decode-invoice-create failed output existence/bytes",
+      "seconds": 0.104,
+      "stderr_sha256": "0a5fb9f698356069f916b51fb66280d8a352fbf5ea9bf9a31ed62dcaefa214e5"
+    },
+    {
+      "property": "output/ln-decode-invoice-truncate",
+      "command": [
+        "timeout",
+        "--foreground",
+        "30",
+        "python3",
+        "-B",
+        "test/revisions.py",
+        "--case",
+        "output/ln-decode-invoice-truncate"
+      ],
+      "status": 1,
+      "stdout": "",
+      "assertion": "AssertionError: output/ln-decode-invoice-truncate failed output existence/bytes",
+      "seconds": 0.109,
+      "stderr_sha256": "1afe8885323628d3d916f4ba14e974b70dbfbe0beeda526c6905b8d1cbda219c"
+    },
+    {
+      "property": "output/ln-decode-invoice-open-error",
+      "command": [
+        "timeout",
+        "--foreground",
+        "30",
+        "python3",
+        "-B",
+        "test/revisions.py",
+        "--case",
+        "output/ln-decode-invoice-open-error"
+      ],
+      "status": 1,
+      "stdout": "",
+      "assertion": "AssertionError: output/ln-decode-invoice-open-error error ordering/identity",
+      "seconds": 0.103,
+      "stderr_sha256": "4ae603ad4ada6e94b67468568ef9735743a755226d014b670662bc854946bcf5"
+    },
+    {
+      "property": "output/ln-decode-invoice-missing-parent",
+      "command": [
+        "timeout",
+        "--foreground",
+        "30",
+        "python3",
+        "-B",
+        "test/revisions.py",
+        "--case",
+        "output/ln-decode-invoice-missing-parent"
+      ],
+      "status": 1,
+      "stdout": "",
+      "assertion": "AssertionError: output/ln-decode-invoice-missing-parent error ordering/identity",
+      "seconds": 0.102,
+      "stderr_sha256": "4ea7a84a2134a9e68d981afc2b94ccfc0a327ee0c3e9470d1347c0a17ed6b43f"
+    },
+    {
+      "property": "output/ln-decode-invoice-read-before-open",
+      "command": [
+        "timeout",
+        "--foreground",
+        "30",
+        "python3",
+        "-B",
+        "test/revisions.py",
+        "--case",
+        "output/ln-decode-invoice-read-before-open"
+      ],
+      "status": 0,
+      "stdout": "revision executable captures: 1/1\n",
+      "assertion": "",
+      "seconds": 0.107,
+      "stderr_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "property": "output/ln-decode-lnurl-create",
+      "command": [
+        "timeout",
+        "--foreground",
+        "30",
+        "python3",
+        "-B",
+        "test/revisions.py",
+        "--case",
+        "output/ln-decode-lnurl-create"
+      ],
+      "status": 1,
+      "stdout": "",
+      "assertion": "AssertionError: output/ln-decode-lnurl-create failed output existence/bytes",
+      "seconds": 0.099,
+      "stderr_sha256": "dfc241ff0a11ae523e1743b310bfc3ad2660b8c110d6b4d2b414d1bb9f7adc04"
+    },
+    {
+      "property": "output/ln-decode-lnurl-truncate",
+      "command": [
+        "timeout",
+        "--foreground",
+        "30",
+        "python3",
+        "-B",
+        "test/revisions.py",
+        "--case",
+        "output/ln-decode-lnurl-truncate"
+      ],
+      "status": 1,
+      "stdout": "",
+      "assertion": "AssertionError: output/ln-decode-lnurl-truncate failed output existence/bytes",
+      "seconds": 0.104,
+      "stderr_sha256": "e22a442e6c5916d5474ffd917133a029c386a688971f46f4da18e39929a05e28"
+    },
+    {
+      "property": "output/ln-decode-lnurl-open-error",
+      "command": [
+        "timeout",
+        "--foreground",
+        "30",
+        "python3",
+        "-B",
+        "test/revisions.py",
+        "--case",
+        "output/ln-decode-lnurl-open-error"
+      ],
+      "status": 1,
+      "stdout": "",
+      "assertion": "AssertionError: output/ln-decode-lnurl-open-error error ordering/identity",
+      "seconds": 0.104,
+      "stderr_sha256": "dd6028883cc8dc0e033d3ade8ea407e75e267893382a6d2af2e1c519fd5c371f"
+    },
+    {
+      "property": "output/ln-decode-lnurl-missing-parent",
+      "command": [
+        "timeout",
+        "--foreground",
+        "30",
+        "python3",
+        "-B",
+        "test/revisions.py",
+        "--case",
+        "output/ln-decode-lnurl-missing-parent"
+      ],
+      "status": 1,
+      "stdout": "",
+      "assertion": "AssertionError: output/ln-decode-lnurl-missing-parent error ordering/identity",
+      "seconds": 0.098,
+      "stderr_sha256": "137343eea407bbf47819be5859d3907227c7c523a6431e03f01434e305c6c16a"
+    },
+    {
+      "property": "output/ln-decode-lnurl-read-before-open",
+      "command": [
+        "timeout",
+        "--foreground",
+        "30",
+        "python3",
+        "-B",
+        "test/revisions.py",
+        "--case",
+        "output/ln-decode-lnurl-read-before-open"
+      ],
+      "status": 0,
+      "stdout": "revision executable captures: 1/1\n",
+      "assertion": "",
+      "seconds": 0.102,
+      "stderr_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "property": "output/encode-create",
+      "command": [
+        "timeout",
+        "--foreground",
+        "30",
+        "python3",
+        "-B",
+        "test/revisions.py",
+        "--case",
+        "output/encode-create"
+      ],
+      "status": 0,
+      "stdout": "revision executable captures: 1/1\n",
+      "assertion": "",
+      "seconds": 0.1,
+      "stderr_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "property": "output/encode-preserve",
+      "command": [
+        "timeout",
+        "--foreground",
+        "30",
+        "python3",
+        "-B",
+        "test/revisions.py",
+        "--case",
+        "output/encode-preserve"
+      ],
+      "status": 0,
+      "stdout": "revision executable captures: 1/1\n",
+      "assertion": "",
+      "seconds": 0.102,
+      "stderr_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "property": "simnet/decode",
+      "command": [
+        "timeout",
+        "--foreground",
+        "30",
+        "python3",
+        "-B",
+        "test/revisions.py",
+        "--case",
+        "simnet/decode"
+      ],
+      "status": 1,
+      "stdout": "",
+      "assertion": "AssertionError: unlisted difference: simnet/decode stdout[\"fallback_addresses\"][0]",
+      "seconds": 0.11,
+      "stderr_sha256": "cc46ff92fa5eccfdf19ca76050c1314b1d9f0815a5767a064b10be0b93c670f9"
+    },
+    {
+      "property": "scope/claim",
+      "command": [
+        "timeout",
+        "--foreground",
+        "30",
+        "python3",
+        "-B",
+        "test/revisions.py",
+        "--scope",
+        "claim"
+      ],
+      "status": 0,
+      "stdout": "synthetic scope shapes checked\n",
+      "assertion": "",
+      "seconds": 0.428,
+      "stderr_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "property": "scope/closed",
+      "command": [
+        "timeout",
+        "--foreground",
+        "30",
+        "python3",
+        "-B",
+        "test/revisions.py",
+        "--scope",
+        "closed"
+      ],
+      "status": 1,
+      "stdout": "",
+      "assertion": "AssertionError: scope/closed closure validation",
+      "seconds": 0.086,
+      "stderr_sha256": "3d7444dbe845bd05592b3902433d765ee0d9d2b19c7016d8cdc7aabe726e404f"
+    },
+    {
+      "property": "scope/closed-missing-time",
+      "command": [
+        "timeout",
+        "--foreground",
+        "30",
+        "python3",
+        "-B",
+        "test/revisions.py",
+        "--scope",
+        "closed-missing-time"
+      ],
+      "status": 0,
+      "stdout": "synthetic scope shapes checked\n",
+      "assertion": "",
+      "seconds": 0.087,
+      "stderr_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "property": "scope/closed-empty-reason",
+      "command": [
+        "timeout",
+        "--foreground",
+        "30",
+        "python3",
+        "-B",
+        "test/revisions.py",
+        "--scope",
+        "closed-empty-reason"
+      ],
+      "status": 0,
+      "stdout": "synthetic scope shapes checked\n",
+      "assertion": "",
+      "seconds": 0.091,
+      "stderr_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "property": "scope/closed-bad-time",
+      "command": [
+        "timeout",
+        "--foreground",
+        "30",
+        "python3",
+        "-B",
+        "test/revisions.py",
+        "--scope",
+        "closed-bad-time"
+      ],
+      "status": 0,
+      "stdout": "synthetic scope shapes checked\n",
+      "assertion": "",
+      "seconds": 0.085,
+      "stderr_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "property": "scope/closed-wrong-order",
+      "command": [
+        "timeout",
+        "--foreground",
+        "30",
+        "python3",
+        "-B",
+        "test/revisions.py",
+        "--scope",
+        "closed-wrong-order"
+      ],
+      "status": 0,
+      "stdout": "synthetic scope shapes checked\n",
+      "assertion": "",
+      "seconds": 0.082,
+      "stderr_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "property": "scope/claim-with-closure",
+      "command": [
+        "timeout",
+        "--foreground",
+        "30",
+        "python3",
+        "-B",
+        "test/revisions.py",
+        "--scope",
+        "claim-with-closure"
+      ],
+      "status": 0,
+      "stdout": "synthetic scope shapes checked\n",
+      "assertion": "",
+      "seconds": 0.087,
+      "stderr_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "property": "scope/decision-text",
+      "command": [
+        "timeout",
+        "--foreground",
+        "30",
+        "python3",
+        "-B",
+        "test/revisions.py",
+        "--scope",
+        "decision-text"
+      ],
+      "status": 0,
+      "stdout": "synthetic scope shapes checked\n",
+      "assertion": "",
+      "seconds": 0.084,
+      "stderr_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "property": "scope/unrelated",
+      "command": [
+        "timeout",
+        "--foreground",
+        "30",
+        "python3",
+        "-B",
+        "test/revisions.py",
+        "--scope",
+        "unrelated"
+      ],
+      "status": 0,
+      "stdout": "synthetic scope shapes checked\n",
+      "assertion": "",
+      "seconds": 0.083,
+      "stderr_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    }
+  ]
+}

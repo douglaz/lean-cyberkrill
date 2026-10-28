@@ -1,7 +1,7 @@
 {
   "source_sha256": {
-    "Cyberkrill/App.lean": "938dbb99b9e11610b345888fd1579161f4bb12cf79bafcbd5d152874645208a0",
-    "test/refresh-attached-output.py": "1ee56f6e300889c934c073ee1035cdd31461d38e81193b626cdd2ae267e61b30",
+    "Cyberkrill/App.lean": "feb908bcf41e9af761142c6cfc236934e0facd996afbc86d639deef40ad78728",
+    "test/refresh-attached-output.py": "d2fbf51f11c6b17a92d10b95dd7a0ef26157093cb2ba6b7664b4af580c4321cd",
     "CyberkrillTests.lean": "b733a517d73dc63a6f90fab1cbba2d661e6958a98882bd069b110170babbecae",
     "test/attached-output-regressions.py": "5c98053295b9b26b0decee9ba538766bd431363704a57974fefc7d9d140b07db",
     "CyberkrillTests/Capabilities.lean": "50172673976ead4aef29242efa591ed2237d2db4f60a6a323c2d5f9f4555fd66",
@@ -11,8 +11,8 @@
     "CyberkrillTests/PrivateOutput.lean": "a4412bb4cf4908cc777e39018cb2ac34fc12c697e373b90be3b6c1235514997f",
     "CyberkrillTests/Support.lean": "80dbdfd22c0478dde791bfc46ae73418a8cf838f7728bb08f248291cdb3a179c"
   },
-  "replace": "\"generate-mnemonic\" :: outputParserArgs args.tail else args",
-  "with_text": "\"generate-mnemonic\" :: args.tail else args",
+  "replace": "(args.head?.getD \"\") :: outputParserArgs args.tail else args",
+  "with_text": "(args.head?.getD \"\") :: args.tail else args",
   "build": {
     "command": [
       "lake",

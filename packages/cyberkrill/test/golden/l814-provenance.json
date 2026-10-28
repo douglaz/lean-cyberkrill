@@ -1,0 +1,36 @@
+{
+  "source": "https://github.com/douglaz/cyberkrill",
+  "commit": "27cad1faba86260b06665a89f0af5134d23525c2",
+  "paths": [
+    "cyberkrill/src/main.rs",
+    "cyberkrill-core/src/decoder.rs"
+  ],
+  "licence": "MIT OR Apache-2.0, taken under MIT",
+  "build": [
+    "nix",
+    "build",
+    "--no-link",
+    "--print-out-paths",
+    "--max-jobs",
+    "2",
+    "--cores",
+    "4",
+    "github:douglaz/cyberkrill/27cad1faba86260b06665a89f0af5134d23525c2"
+  ],
+  "build_status": 0,
+  "build_seconds": 0.137418232858181,
+  "producer": "$PRODUCER",
+  "execution": "unshare -rn sh -c 'ip link set lo up && exec timeout --foreground 15 \"$@\"' capture \"$PRODUCER\" ln-decode-invoice \"$INVOICE\"",
+  "isolation": "temporary HOME and cwd; closed stdin; separate byte-preserving streams and status",
+  "input_provenance": {
+    "source": "https://github.com/lightning/bolts",
+    "commit": "191462825ae341f0a27098765c075f01ca9bc6c2",
+    "path": "11-payment-encoding.md",
+    "line": 814,
+    "attribution": "lightning/bolts contributors",
+    "licence": "CC-BY-4.0",
+    "changes": "extracted and reformatted; invoice bytes unchanged"
+  },
+  "script_sha256": "241bd7c970966bde461ed46e867066efea12da147329ef4cec7cad2113b475bf",
+  "record_sha256": "4135f155863786213656f662b7acbd4188acb1e808402ae919600491db79e26f"
+}

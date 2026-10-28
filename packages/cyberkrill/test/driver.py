@@ -153,6 +153,9 @@ def main():
             import_module("private-output").main()
             from regressions import main as regression_checks
             regression_checks()
+            from importlib import import_module
+            import_module("lightning").main()
+            import_module("revisions").main()
     finally:
         if old_home is not None: os.environ["HOME"] = old_home
         else: os.environ.pop("HOME", None)
