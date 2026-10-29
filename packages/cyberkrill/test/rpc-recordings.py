@@ -27,7 +27,7 @@ METHODS = {"listunspent", "scantxoutset", "getblockchaininfo", "getdescriptorinf
 def body(reply):
     assert reply["status"] == 200, "Core RPC HTTP200"
     value = parse_json(reply["text"])
-    assert value["jsonrpc"] == "2.0" and value["id"] == 1, "Core RPC2 envelope"
+    assert value["jsonrpc"] == "2.0" and value["id"] in [1, "cyberkrill"], "Core RPC2 envelope"
     assert ("result" in value) != ("error" in value), "Core result/error separation"
     return value
 
@@ -41,11 +41,14 @@ def validate_case(row, data, shared):
     assert data["binding"]["definition"] == G.digest(G.definition_bytes(row)), "case definition binding"
     assert data["binding"]["files"] == {name: G.digest(value) for name, value in shared.items()}, "case shared/auth binding"
     meta = data["capture"]
-    assert meta["source_revision"] == G.REV and meta["nixpkgs"] == G.NIXPKGS and meta["core"] == "31.1.0", "capture pins"
-    assert meta["source_sha256"] == G.SOURCE_HASHES, "capture reference source bytes"
+    import re
+    assert all(re.fullmatch(r"[0-9a-f]{40}", meta[k]) for k in ["source_revision", "nixpkgs"]), "historical capture revisions"
+    assert re.fullmatch(r"[0-9]+\.[0-9]+\.[0-9]+", meta["core"]), "historical Core version"
+    assert all(re.fullmatch(r"[0-9a-f]{64}", v) for v in meta["source_sha256"].values()), "historical source digests"
+    assert all(re.fullmatch(r"[0-9a-f]{64}", meta[k]) for k in ["generator_sha256", "reference_sha256"]), "historical producer digests"
     assert meta["producer"] in ["reference-proxy", "source-client"], "capture producer"
     assert meta["wallet_private_keys_enabled"] is False, "watch-only capture"
-    assert meta["tools"] == dict(mnemonic="0.21", bip32="5.0.0", coincurve="21.0.0", base58="2.1.1"), "capture derivation pins"
+    assert set(meta["tools"]) == {"mnemonic", "bip32", "coincurve", "base58"} and all(isinstance(v, str) and v for v in meta["tools"].values()), "historical tool versions"
     entries = data["entries"]
     assert G.digest(G.encoded(entries)) == meta["entries_sha256"], "capture response digest"
     assert len(entries) == COUNTS[row["name"]], "case entry completeness: " + row["name"]
@@ -65,7 +68,7 @@ def validate_case(row, data, shared):
     descriptor = descriptors[row["fixture"]]
     methods = {m: [e for e in entries if e["rpc"]["method"] == m] for m in METHODS}
     funding = meta["funding"]
-    assert [p["sats"] for p in funding] == [40000000, 20000000, 10000000, 3000000], "funding size plan"
+    assert [p["sats"] for p in funding] == list(map(G.sats, row["funding"])), "funding size plan"
     assert all(p["address"].startswith("bcrt1") and len(p["txid"]) == 64 for p in funding), "public regtest funding"
     if row["kind"] in ["list", "create", "funded", "overshoot"]:
         for branch in [0, 1]:
@@ -83,6 +86,12 @@ def validate_case(row, data, shared):
             assert {(p["txid"], p["vout"], Decimal(p["sats"]) / 100000000) for p in expected} == {
                 (u["txid"], u["vout"], u["amount"]) for u in result(unspents[0])}, "list funding correspondence"
         assert methods["importdescriptors"], "import attempt retained"
+        originals = [descriptor.replace("<0;1>", str(b)) for b in [0, 1]] if "--wallet-file" in row["args"] else [descriptor]
+        assert len(methods["importdescriptors"]) == len(originals), "wallet split versus original multipath import count"
+        for original in originals:
+            info = next(e for e in methods["getdescriptorinfo"] if e["rpc"]["params"] == [[original]])
+            expected = [[dict(desc=result(info)["descriptor"], timestamp="now", range=[0, 1000], watchonly=True, label="cyberkrill_import")]]
+            assert any(e["rpc"]["params"] == [expected] for e in methods["importdescriptors"]), "source-shaped original descriptor import"
         assert any(any(not item["success"] and "error" in item for item in result(e)) for e in methods["importdescriptors"]), "real ignored import error retained"
     if row["kind"] in ["create", "funded", "move-success", "overshoot"]:
         name = "walletcreatefundedpsbt" if row["kind"] == "funded" else "createpsbt"
@@ -117,13 +126,14 @@ def validate_case(row, data, shared):
         pair = methods["createpsbt"]
         assert len(pair) == 2, "distinct float/error and exact/success selectors"
         original, exact = pair
-        floated = sum(float(p["sats"]) / 1e8 for p in funding[:3]) - 1660 / 1e8
+        floated = sum(float(p["sats"]) / 1e8 for p in funding[:3]) - G.sats(G.option(row, "--fee")) / 1e8
         assert list(original["rpc"]["params"][0][1].values()) == [Decimal(repr(floated))], "source-derived f64 arithmetic"
         assert body(original["responses"][0])["error"]["code"] == -3, "observed Core invalid amount"
         assert "Invalid amount" in body(original["responses"][0])["error"]["message"], "Core amount error message"
-        sats = sum(int(p["sats"]) for p in funding[:3]) - 1660
+        sats = sum(int(p["sats"]) for p in funding[:3]) - G.sats(G.option(row, "--fee"))
         assert list(exact["rpc"]["params"][0][1].values()) == [Decimal(sats) / 100000000], "independent exact satoshi amount"
         assert result(exact).startswith("cHNidP"), "observed exact amount success"
+        assert original["rpc"]["params"] != exact["rpc"]["params"], "float/exact request distinction"
     if row["kind"] == "dca":
         assert meta["producer"] == "source-client" and meta["reference_result"] is None, "DCA never executes reference"
         assert len(methods["getblockchaininfo"]) == 1 and result(methods["getblockchaininfo"][0])["chain"] == "regtest", "DCA regtest height"

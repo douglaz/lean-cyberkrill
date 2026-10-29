@@ -25,14 +25,16 @@ def portable(name, data):
         assert data == G.COOKIE, "fixed disposable cookie"
         return
     value = json.loads(text)
-    def visit(obj):
+    def visit(obj, trail=()):
         if isinstance(obj, dict):
-            assert not ({"seed", "seed_bytes", "private_key", "privatekey", "mnemonic", "rpcpassword", "password"} & obj.keys()) or name == "shared/provenance.json", "private field in recording"
             for key, item in obj.items():
+                if key.lower() in {"seed", "seed_bytes", "private_key", "privatekey", "mnemonic", "rpcpassword", "password", "wif", "xprv", "tprv"}:
+                    allowed = name == "shared/provenance.json" and trail in [("derivation",), ("derivation", "versions")] and key == "mnemonic"
+                    assert allowed, "private field in recording"
                 if key == "authorization": assert item == G.AUTH, "unexpected recording credentials"
-                visit(item)
+                visit(item, trail + (key,))
         elif isinstance(obj, list):
-            for item in obj: visit(item)
+            for item in obj: visit(item, trail)
         elif isinstance(obj, str):
             assert not obj.startswith("Basic ") or obj == G.AUTH, "unexpected Basic credentials"
             if obj.lstrip().startswith(('{', '[')):

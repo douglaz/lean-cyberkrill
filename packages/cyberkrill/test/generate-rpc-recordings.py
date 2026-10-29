@@ -22,6 +22,7 @@ import sys
 import tempfile
 import threading
 import time
+from datetime import datetime, timezone
 
 HERE = Path(__file__).resolve().parent
 ROOT = HERE.parents[2]
@@ -61,6 +62,21 @@ def encoded(value):
     return (json_text(value) + "\n").encode("utf-8")
 
 
+def selector(value):
+    # Match the responder's parsed exact JSON boundary, including bool tags.
+    return canonical(parse_json(json_text(value)))
+
+
+def sats(text):
+    import re
+    assert re.fullmatch(r"[0-9]+sat", text), "explicit integer satoshi units"
+    return int(text[:-3])
+
+
+def option(row, flag):
+    return row["args"][row["args"].index(flag) + 1]
+
+
 def inventory(path=HERE / "rpc-recording-cases.json"):
     import re
     rows = json.loads(path.read_bytes())
@@ -75,8 +91,9 @@ def inventory(path=HERE / "rpc-recording-cases.json"):
         assert row["command"] in {"onchain-list-utxos", "onchain-create-psbt",
                                    "onchain-create-funded-psbt", "onchain-move-utxos", "onchain-dca-report"}
         assert all(isinstance(a, str) for a in row["args"]), "case args"
-        assert row["funding"] == ["40000000sat", "20000000sat", "10000000sat", "3000000sat"], "funding units"
-        assert row["dates"] == ["2026-01-01", "2026-01-02"], "DCA dates"
+        assert len(row["funding"]) == 4 and all(sats(v) > 0 for v in row["funding"]), "funding units"
+        assert len(row["dates"]) == 2 and row["dates"][0] < row["dates"][1], "ordered funding dates"
+        for date in row["dates"]: datetime.strptime(date, "%Y-%m-%d")
         names.add(name)
     return rows
 
@@ -92,6 +109,10 @@ def guards(args):
     passwd = run(["getent", "passwd", user]).stdout.decode().strip().split(":")
     assert len(passwd) == 7 and passwd[5].startswith("/"), "real passwd home"
     home = run(["realpath", "-m", passwd[5] + "/.bitcoin"]).stdout.decode().strip()
+    temp = os.environ.get("TMPDIR")
+    assert temp and os.path.isabs(temp), "explicit absolute TMPDIR required"
+    temp = run(["realpath", "-m", temp]).stdout.decode().strip()
+    assert temp != home and not temp.startswith(home + "/"), "refused real-home bitcoin TMPDIR"
     if args.datadir:
         candidate = run(["realpath", "-m", args.datadir]).stdout.decode().strip()
         assert candidate != home and not candidate.startswith(home + "/"), "refused real-home bitcoin datadir"
@@ -223,7 +244,7 @@ class Capture:
     def entries(self):
         entries = {}
         for method, params, wallet, reply in self.calls:
-            key = (method, wallet, canonical(params))
+            key = (method, wallet, selector(params))
             if key not in entries:
                 unauthorized = self.call(method, params, wallet, authorized=False)
                 assert unauthorized["status"] == 401, "real unauthorized response"
@@ -265,34 +286,45 @@ def fallback(capture, row, descriptors, addresses, outpoints):
     def rpc(method, params): return capture.record(method, params, wallet)
     if row["kind"] in ["list", "create", "funded", "overshoot"]:
         # list_unspent_for_descriptor, bitcoin_rpc.rs:735-841. Import errors are retained.
-        for branch in [0, 1]:
-            expanded = desc.replace("<0;1>", str(branch))
-            checked = rpc("getdescriptorinfo", [expanded])["descriptor"]
+        imports = [desc.replace("<0;1>", str(b)) for b in [0, 1]] if "--wallet-file" in row["args"] else [desc]
+        for original in imports:
+            checked = rpc("getdescriptorinfo", [original])["descriptor"]
             rpc("importdescriptors", [[dict(desc=checked, timestamp="now", range=[0, 1000], watchonly=True, label="cyberkrill_import")]])
-            rpc("getdescriptorinfo", [expanded])
-            addrs = rpc("deriveaddresses", [checked, [0, 99]])
-            rpc("listunspent", [0, 9999999, addrs])
-    inputs = [dict(txid=p["txid"], vout=p["vout"]) for p in outpoints]
+            branches = [original.replace("<0;1>", str(b)) for b in [0, 1]] if "<0;1>" in original else [original]
+            for expanded in branches:
+                checked = rpc("getdescriptorinfo", [expanded])["descriptor"]
+                addrs = rpc("deriveaddresses", [checked, [0, 99]])
+                rpc("listunspent", [0, 9999999, addrs])
+    selected = outpoints if "{descriptor}" in row["args"] else [outpoints[["{first}", "{second}", "{third}"].index(a)] for a in row["args"] if a in ["{first}", "{second}", "{third}"]]
+    inputs = [dict(txid=p["txid"], vout=p["vout"]) for p in selected]
     destination = addresses["single"][0][5]
-    if row["kind"] == "create": rpc("createpsbt", [inputs, {destination: Decimal("0.01")}, 0, False])
+    output = sats(option(row, "--outputs").split(':')[-1]) if "--outputs" in row["args"] else None
+    if row["kind"] == "create": rpc("createpsbt", [inputs, {destination: output / 1e8}, 0, False])
     if row["kind"] == "funded":
         for index in [0, 1]:
             checked = rpc("getdescriptorinfo", [desc.replace("<0;1>", "1").replace('*', str(index))])["descriptor"]
             addr = rpc("deriveaddresses", [checked])[0]
             used = rpc("getreceivedbyaddress", [addr, 0])
             if used == 0: break
-        rpc("walletcreatefundedpsbt", [inputs, {destination: Decimal("0.01")}, 0, dict(changeAddress=addr, fee_rate=1)])
+        rpc("walletcreatefundedpsbt", [inputs, {destination: output / 1e8}, 0, dict(changeAddress=addr, fee_rate=float(sats(option(row, "--fee-rate"))))])
     if row["kind"] in ["overshoot", "move-f64", "move-success"]:
-        chosen = outpoints if row["kind"] == "overshoot" else outpoints[:3] if row["kind"] == "move-f64" else outpoints[:1]
+        chosen = selected
         for p in chosen: rpc("getrawtransaction", [p["txid"], True])
-        if row["kind"] == "overshoot": chosen = sorted(chosen, key=lambda p: p["sats"], reverse=True)[:2]
-        total = min(sum(p["sats"] for p in chosen), 50000000) if row["kind"] == "overshoot" else sum(p["sats"] for p in chosen)
-        fee = 1000 if row["kind"] == "move-success" else 1660
-        floating = (sum(p["sats"] / 1e8 for p in chosen) if row["kind"] == "move-f64" else total / 1e8) - fee / 1e8
+        total = 0.0
+        if "--max-amount" in row["args"]:
+            cap = sats(option(row, "--max-amount")) / 1e8
+            chosen = []
+            for p in sorted(selected, key=lambda p: p["sats"], reverse=True):
+                if total >= cap: break
+                chosen.append(p); total += p["sats"] / 1e8
+            total = min(total, cap)
+        else: total = sum(p["sats"] / 1e8 for p in chosen)
+        fee = sats(option(row, "--fee"))
+        floating = total - fee / 1e8
         rpc("createpsbt", [[dict(txid=p["txid"], vout=p["vout"]) for p in chosen], {destination: Decimal(repr(floating))}, 0, False])
 
 
-def inside(job):
+def capture_case(job):
     root = Path(job["datadir"])
     # Worker is private to the fresh namespace; no network or owner defaults are reachable.
     assert os.readlink("/proc/self/ns/net") != job["outer_net"], "new network namespace"
@@ -306,7 +338,7 @@ def inside(job):
         if key.lower().endswith("_proxy") or key in ["BITCOIN_ARGS", "BITCOIN_DATADIR"]: os.environ.pop(key)
     (root / "bitcoin.conf").write_text("")
     ports = job["ports"]
-    common = ["-regtest", f"-datadir={root}", f"-conf={root / 'bitcoin.conf'}", f"-rpcport={ports[0]}", f"-port={ports[1]}"]
+    common = ["-regtest", f"-datadir={root}", f"-conf={root / 'bitcoin.conf'}", f"-rpcport={ports[0]}"]
     cli_base = ["bitcoin-cli", *common, "-rpcconnect=127.0.0.1", "-rpcuser=lck", "-rpcpassword=lck-throwaway", "-rpcclienttimeout=30"]
     def cli(method, params=None, wallet=None):
         args = cli_base + (["-rpcwallet=" + wallet] if wallet else []) + [method]
@@ -321,7 +353,9 @@ def inside(job):
     def cancelled(signum, _frame): raise InterruptedError(f"terminated by signal {signum}")
     for sig in [signal.SIGTERM, signal.SIGINT, signal.SIGHUP]: signal.signal(sig, cancelled)
     try:
-        node = subprocess.Popen(["bitcoind", *common, "-daemon=0", "-txindex=1", "-listen=0", "-connect=0", "-dnsseed=0", "-fixedseeds=0", "-discover=0", "-onion=0", "-listenonion=0", "-rpcbind=127.0.0.1", "-rpcallowip=127.0.0.1", "-rpcauth=" + RPCAUTH, "-printtoconsole=1"], stdin=subprocess.DEVNULL, stdout=node_log, stderr=node_log)
+        for binary, extra in [("bitcoind", [f"-port={ports[1]}"]), ("bitcoin-cli", cli_base[len(common)+1:])]:
+            assert "v31.1.0" in run([binary, *common, *extra, "-version"], cwd=root).stdout.decode(), "isolated Core version pin"
+        node = subprocess.Popen(["bitcoind", *common, f"-port={ports[1]}", "-daemon=0", "-txindex=1", "-listen=0", "-connect=0", "-dnsseed=0", "-fixedseeds=0", "-discover=0", "-onion=0", "-listenonion=0", "-rpcbind=127.0.0.1", "-rpcallowip=127.0.0.1", "-rpcauth=" + RPCAUTH, "-printtoconsole=1"], stdin=subprocess.DEVNULL, stdout=node_log, stderr=node_log)
         print(f"owned node pid={node.pid}", file=sys.stderr, flush=True)
         deadline = time.monotonic() + 45
         while True:
@@ -341,7 +375,9 @@ def inside(job):
             path = root / name
             path.parent.mkdir(parents=True, exist_ok=True)
             path.write_text(job["shared"][name])
-        cli("setmocktime", [1767225600])
+        row = job["cases"][0]
+        mocktimes = [int(datetime.strptime(d, "%Y-%m-%d").replace(tzinfo=timezone.utc).timestamp()) for d in row["dates"]]
+        cli("setmocktime", [mocktimes[0]])
         cli("createwallet", ["miner", False, False])
         miner = cli("getnewaddress", wallet="miner")
         cli("generatetoaddress", [101, miner], wallet="miner")
@@ -359,12 +395,12 @@ def inside(job):
         singlesig = json.loads(job["shared"]["shared/frozenkrill-single.json"])
         assert singlesig["receiving_addresses"][0]["address"] == addresses["single"][0][0], "independent Core public address"
         funding = {w: [] for w in addresses}
-        for index, sats in enumerate([40000000, 20000000, 10000000, 3000000]):
+        for index, amount in enumerate(map(sats, row["funding"])):
             for wallet in addresses:
                 addr = addresses[wallet][0][index] if index < 3 else addresses[wallet][1][0]
-                txid = cli("sendtoaddress", [addr, Decimal(sats) / Decimal(100000000)], "miner")
-                funding[wallet].append(dict(txid=txid, sats=sats, address=addr))
-            if index == 1: cli("generatetoaddress", [1, miner], "miner"); cli("setmocktime", [1767312000])
+                txid = cli("sendtoaddress", [addr, Decimal(amount) / Decimal(100000000)], "miner")
+                funding[wallet].append(dict(txid=txid, sats=amount, address=addr))
+            if index == 1: cli("generatetoaddress", [1, miner], "miner"); cli("setmocktime", [mocktimes[1]])
         cli("generatetoaddress", [1, miner], "miner")
         deadline = time.monotonic() + 30
         while not cli("getindexinfo")["txindex"]["synced"]:
@@ -380,8 +416,8 @@ def inside(job):
         thread = threading.Thread(target=server.serve_forever)
         thread.start()
         captures = {}
-        producer = None
-        attempts = []
+        producer = job.get("producer")
+        attempts = job.get("attempts", [])
         for row in job["cases"]:
             capture.calls = []
             wallet = row["fixture"]
@@ -395,17 +431,21 @@ def inside(job):
                 for attempt in range(2 if producer is None else 1):
                     capture.calls = []
                     args = [a.format(**substitutions) for a in row["args"]]
-                    proc = subprocess.run([job["reference"], row["command"], *args,
-                        "--network", "regtest", "--rpc-url", f"http://127.0.0.1:{ports[2]}/wallet/{wallet}",
-                        "--rpc-user", "lck", "--rpc-password", "lck-throwaway"], stdin=subprocess.DEVNULL, capture_output=True, timeout=45)
-                    result = dict(status=proc.returncode, stdout=proc.stdout.decode().replace(str(root), "$TMP_ROOT"), stderr=proc.stderr.decode().replace(str(root), "$TMP_ROOT"))
+                    try:
+                        proc = subprocess.run([job["reference"], row["command"], *args,
+                            "--network", "regtest", "--rpc-url", f"http://127.0.0.1:{ports[2]}/wallet/{wallet}",
+                            "--rpc-user", "lck", "--rpc-password", "lck-throwaway"], stdin=subprocess.DEVNULL, capture_output=True, timeout=45)
+                        result = dict(status=proc.returncode, stdout=proc.stdout.decode().replace(str(root), "$TMP_ROOT"), stderr=proc.stderr.decode().replace(str(root), "$TMP_ROOT"))
+                    except subprocess.TimeoutExpired as error:
+                        result = dict(status=124, stdout=(error.stdout or b"").decode().replace(str(root), "$TMP_ROOT"), stderr=(error.stderr or b"").decode().replace(str(root), "$TMP_ROOT"))
                     if producer is None: attempts.append(result)
-                    if capture.calls:
+                    if capture.calls and result["status"] != 124:
                         producer = "reference-proxy"
                         break
-                if not capture.calls:
+                if producer is None:
                     assert producer is None, "reference stopped producing after first case"
                     producer = "source-client"
+                    capture.calls = []
             if row["kind"] != "dca" and producer == "source-client":
                 fallback(capture, row, descriptors, addresses, funding[wallet])
             if row["kind"] == "dca":
@@ -421,13 +461,13 @@ def inside(job):
                 if method not in ["createpsbt", "walletcreatefundedpsbt"]: continue
                 exact = parse_json(json_text(params))
                 if row["kind"] == "move-f64":
-                    sats = sum(p["sats"] for p in funding[wallet][:3]) - 1660
-                    exact[1] = {addresses["single"][0][5]: Decimal(sats) / Decimal(100000000)}
+                    amount = sum(p["sats"] for p in funding[wallet][:3]) - sats(option(row, "--fee"))
+                    exact[1] = {addresses["single"][0][5]: Decimal(amount) / Decimal(100000000)}
                     capture.record(method, exact, target)
-                    numeric.append(dict(reference=params[1], exact=exact[1], integer_sats=sats))
+                    numeric.append(dict(reference=params[1], exact=exact[1], integer_sats=amount))
                 elif row["kind"] in ["create", "funded"]:
-                    exact[1] = {addresses["single"][0][5]: Decimal(1000000) / Decimal(100000000)}
-                    if canonical(exact) != canonical(params): capture.record(method, exact, target)
+                    exact[1] = {addresses["single"][0][5]: Decimal(sats(option(row, "--outputs").split(':')[-1])) / Decimal(100000000)}
+                    if selector(exact) != selector(params): capture.record(method, exact, target)
             entries = capture.entries()
             assert entries, "nonempty capture"
             captures[row["name"]] = dict(schema=1, case=row["name"],
@@ -440,6 +480,7 @@ def inside(job):
             print(f"captured {row['name']}: {len(entries)} entries", file=sys.stderr, flush=True)
         return captures
     finally:
+        for sig in [signal.SIGTERM, signal.SIGINT, signal.SIGHUP]: signal.signal(sig, signal.SIG_IGN)
         if server:
             server.shutdown()
             server.server_close()
@@ -452,10 +493,23 @@ def inside(job):
                 except subprocess.TimeoutExpired: node.kill(); node.wait(timeout=5)
             assert node.poll() is not None, "node reaped"
             print(f"reaped node pid={node.pid} status={node.returncode}", file=sys.stderr, flush=True)
-            if node.returncode:
-                node_log.flush()
-                print((root / "node.log").read_text(), file=sys.stderr)
         node_log.close()
+
+
+def inside(job):
+    captures = {}
+    producer = None
+    attempts = []
+    for row in job["cases"]:
+        root = Path(job["datadir"]) / row["name"]
+        root.mkdir(mode=0o700)
+        (root / "owned").write_text(job["token"])
+        result = capture_case({**job, "datadir": str(root), "cases": [row], "producer": producer, "attempts": attempts})
+        captures.update(result)
+        if row["kind"] != "dca":
+            producer = result[row["name"]]["capture"]["producer"]
+            attempts = result[row["name"]]["capture"]["first_case_attempts"]
+    return captures
 
 
 def main():
@@ -488,15 +542,17 @@ def main():
     assert args.reference and args.reference_source, "explicit pinned reference executable and immutable source required"
     source_files = ["cyberkrill-core/src/bitcoin_rpc.rs", "cyberkrill-core/src/frozenkrill.rs", "cyberkrill-core/src/dca_report.rs", "cyberkrill/src/main.rs"]
     assert {p: digest((args.reference_source / p).read_bytes()) for p in source_files} == SOURCE_HASHES, "pinned reference source bytes"
-    for executable in ["bitcoind", "bitcoin-cli"]:
-        assert "v31.1.0" in run([executable, "--version"]).stdout.decode(), "Core version pin"
     ports = free_ports([args.rpcport, args.port, args.proxyport])
     root = Path(candidate) if candidate else Path(tempfile.mkdtemp(prefix="rpc-recording-", dir=os.environ["TMPDIR"]))
     if candidate: root.mkdir(mode=0o700)
     token = os.urandom(24).hex()
     worker = None
     old_signals = {}
+    interrupted = False
     def cancelled(signum, _frame):
+        nonlocal interrupted
+        if interrupted: return
+        interrupted = True
         if worker and worker.poll() is None: worker.send_signal(signum)
         raise InterruptedError(f"terminated by signal {signum}")
     try:
@@ -510,6 +566,7 @@ def main():
         for sig in [signal.SIGTERM, signal.SIGINT, signal.SIGHUP]: old_signals[sig] = signal.signal(sig, cancelled)
         worker = subprocess.Popen(["unshare", "-rn", "sh", "-c", 'ip link set lo up && exec "$@"', "capture", sys.executable, "-B", str(Path(__file__).resolve()), "--inside"],
                                   stdin=subprocess.PIPE, stdout=subprocess.PIPE, stderr=None)
+        print(f"owned worker pid={worker.pid}", file=sys.stderr, flush=True)
         output, _ = worker.communicate(json.dumps(job).encode(), timeout=600)
         assert worker.returncode == 0, "isolated capture failed"
         captures = parse_json(output)
@@ -534,14 +591,16 @@ def main():
                 if temporary.exists(): temporary.unlink()
         print(f"published {len(blobs)} case recordings")
     finally:
-        for sig, handler in old_signals.items(): signal.signal(sig, handler)
+        for sig in old_signals: signal.signal(sig, signal.SIG_IGN)
         if worker and worker.poll() is None:
-            worker.terminate()
+            if not interrupted: worker.terminate()
             try: worker.wait(timeout=25)
             except subprocess.TimeoutExpired: worker.kill(); worker.wait(timeout=5)
+        if worker: print(f"reaped worker pid={worker.pid} status={worker.returncode}", file=sys.stderr, flush=True)
         shutil.rmtree(root)
         assert not root.exists(), "owned datadir removed"
         print("removed owned datadir=" + str(root), file=sys.stderr, flush=True)
+        for sig, handler in old_signals.items(): signal.signal(sig, handler)
 
 
 if __name__ == "__main__":
