@@ -9,9 +9,16 @@ This sidecar applies to `hybrid-inputs.json`, `hybrid-reference.json`,
 `offline-validation.json`.
 
 Reference output source: https://github.com/douglaz/cyberkrill at
-`27cad1faba86260b06665a89f0af5134d23525c2`, `cyberkrill/src/main.rs`
-and `fedimint-lite/src/lib.rs`. MIT OR Apache-2.0, taken under MIT;
-the Phase 6 fixture README retains the input attribution and licence source.
+`27cad1faba86260b06665a89f0af5134d23525c2`. Captured material is taken under MIT.
+The upstream declarations are recorded separately for each source path:
+
+| Source path | Declared upstream licence | Selected licence |
+|---|---|---|
+| `cyberkrill/src/main.rs` | MIT (`cyberkrill/Cargo.toml`) | MIT |
+| `fedimint-lite/src/lib.rs` | MIT OR Apache-2.0 (`fedimint-lite/Cargo.toml`) | MIT |
+
+`offline-provenance.json` retains these per-source details alongside the selected
+capture licence. The Phase 6 fixture README retains the input attribution and licence source.
 Outputs are extracted into separate status/stdout/stderr/file records, with
 JSON escaped and reformatted. Commands use only deterministic offline inputs.
 

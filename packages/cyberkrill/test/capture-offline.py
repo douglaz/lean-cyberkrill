@@ -104,7 +104,9 @@ def main():
     if not check:
         destination.write_text(json.dumps(records,ensure_ascii=True,indent=2)+"\n")
         provenance = dict(source="https://github.com/douglaz/cyberkrill",commit=PIN,
-            paths=["cyberkrill/src/main.rs","fedimint-lite/src/lib.rs"],licence="MIT OR Apache-2.0, taken under MIT",
+            paths=["cyberkrill/src/main.rs","fedimint-lite/src/lib.rs"],licence="MIT",
+            source_licences={"cyberkrill/src/main.rs":"MIT",
+                "fedimint-lite/src/lib.rs":"MIT OR Apache-2.0, taken under MIT"},
             build=BUILD,build_status=0,build_seconds=build_seconds,
             execution='unshare -rn sh -c \'ip link set lo up && exec timeout --foreground 15 "$@"\' capture "$PRODUCER" ...',
             environment='fresh temporary HOME and cwd "$TMP_ROOT", closed stdin unless the record specifies input',

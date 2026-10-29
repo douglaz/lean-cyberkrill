@@ -5,7 +5,11 @@
     "cyberkrill/src/main.rs",
     "fedimint-lite/src/lib.rs"
   ],
-  "licence": "MIT OR Apache-2.0, taken under MIT",
+  "licence": "MIT",
+  "source_licences": {
+    "cyberkrill/src/main.rs": "MIT",
+    "fedimint-lite/src/lib.rs": "MIT OR Apache-2.0, taken under MIT"
+  },
   "build": [
     "nix",
     "build",
@@ -18,7 +22,7 @@
     "github:douglaz/cyberkrill/27cad1faba86260b06665a89f0af5134d23525c2"
   ],
   "build_status": 0,
-  "build_seconds": 0.3912,
+  "build_seconds": 0.134464,
   "execution": "unshare -rn sh -c 'ip link set lo up && exec timeout --foreground 15 \"$@\"' capture \"$PRODUCER\" ...",
   "environment": "fresh temporary HOME and cwd \"$TMP_ROOT\", closed stdin unless the record specifies input",
   "records": 616,
@@ -40,7 +44,7 @@
     "packages/fedimint-invite/test-data/primary.json": "2be3d34fea2d2f3f421953c173099a1fcff72ef9ace1d6913c91290933debae6"
   },
   "scripts_sha256": {
-    "capture-offline.py": "c398812d1f4a22e9bed7ee19b1b5847f7a830dcc77afb5fbd88e06340752d62a",
+    "capture-offline.py": "a158f3b3e9ef331de40e240397f6d56a9ba0f7f4d52985b9d7eff1bfefc4927f",
     "offline-inputs.py": "5656df09559f08b2ae33340416e80edbd49a799b60057af5a3c48dbed1e66ef1",
     "hybrid-inputs.py": "f76ccf8aff8482a995e9f3235e4dc666425af33e2b84c66e9072bfad7b1a7609"
   }

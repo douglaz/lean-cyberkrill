@@ -36,6 +36,11 @@ def records():
 
 def provenance():
     source=json.loads((APP/"test/golden/offline-provenance.json").read_bytes())
+    assert source["licence"] == "MIT", "offline selected capture licence"
+    assert source.get("source_licences") == {
+        "cyberkrill/src/main.rs": "MIT",
+        "fedimint-lite/src/lib.rs": "MIT OR Apache-2.0, taken under MIT",
+    }, "offline per-source licences"
     assert source["commit"] == PIN and source["build"] == BUILD and source["build_status"] == 0 and source["records"] == 616
     assert source["record_sha256"] == hashlib.sha256((APP/"test/golden/offline-reference.json").read_bytes()).hexdigest()
     for path,digest in source["input_sha256"].items(): assert hashlib.sha256((ROOT/path).read_bytes()).hexdigest() == digest, "offline input digest: "+path
