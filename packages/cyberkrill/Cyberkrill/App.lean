@@ -7,6 +7,8 @@ import Cyberkrill.Amounts
 import Bitcoin.Bip39
 import Cyberkrill.PrivateOutput
 import Cyberkrill.Lightning
+import Cyberkrill.Invite
+import Cyberkrill.Psbt
 
 namespace Cyberkrill
 
@@ -19,6 +21,9 @@ inductive Command where
   | decodeInvoice (input output : Option String)
   | decodeLnurl (input output : Option String)
   | encodeInvoice (input : Option String) (key : String) (output : Option String)
+  | decodeInvite (input output : Option String)
+  | encodeInvite (input : String) (skipSecret : Bool) (output : Option String)
+  | decodePsbt (input : Option String) (network : String) (output : Option String)
   | help (text : String)
 
 private def parser : Cli.Cmd :=
@@ -45,6 +50,20 @@ private def parser : Cli.Cmd :=
         (flags := #[⟨some "k", "private-key", "Signing key in hex", String⟩,
                     ⟨some "o", "output", "Write the invoice to a file", String⟩])
         (variableArg? := some ⟨"input", "Optional UTF-8 JSON file or '-'", String⟩)
+        (run := fun _ => pure 0),
+      Cli.Cmd.mk "fm-decode-invite" none "Decode a literal invite or all stdin"
+        (flags := #[⟨some "o", "output", "Write JSON to a file", String⟩])
+        (variableArg? := some ⟨"input", "Optional literal invite", String⟩)
+        (run := fun _ => pure 0),
+      Cli.Cmd.mk "fm-encode-invite" none "Encode a JSON file, or '-' for all stdin"
+        (flags := #[⟨none, "skip-api-secret", "Omit the API secret", Unit⟩,
+                    ⟨some "o", "output", "Write the invite and newline to a file", String⟩])
+        (positionalArgs := #[⟨"input", "UTF-8 JSON file or '-'", String⟩])
+        (run := fun _ => pure 0),
+      Cli.Cmd.mk "onchain-decode-psbt" none "Decode Base64, an existing file, or all stdin"
+        (flags := #[⟨none, "network", "mainnet (default), bitcoin, testnet, signet or regtest", String⟩,
+                    ⟨some "o", "output", "Write JSON and newline to a file", String⟩])
+        (variableArg? := some ⟨"input", "Optional Base64 or existing UTF-8 filename", String⟩)
         (run := fun _ => pure 0)])
 
 -- Match the reference u32 argument grammar before semantic count validation.
@@ -67,6 +86,8 @@ private def outputArgsValid : List String → Bool
     else if flag == "-w" || flag == "--words" then outputArgsValid rest
     else if flag == "-k" || flag == "--private-key" then
       (!(value.startsWith "-") || value == "-") && outputArgsValid rest
+    else if flag == "--network" then
+      (!(value.startsWith "-") || value == "-") && outputArgsValid rest
     else outputArgsValid (value :: rest)
   | _ => true
 
@@ -77,7 +98,7 @@ private def outputParserArgs : List String → List String
   | "--" :: rest => "--" :: rest
   | flag :: rest =>
     if flag == "-o" || flag == "--output" || flag == "-w" || flag == "--words" ||
-        flag == "-k" || flag == "--private-key" then
+        flag == "-k" || flag == "--private-key" || flag == "--network" then
       match rest with
       | value :: tail => flag :: value :: outputParserArgs tail
       | [] => [flag]
@@ -88,13 +109,62 @@ private def outputParserArgs : List String → List String
       flag :: outputParserArgs rest
   | [] => []
 
+-- Help ends parsing at its position. Whitespace option operands and the
+-- terminator shield help-looking filenames; output attachments remain data.
+-- Short help ends its cluster immediately, ignoring the remaining bytes.
+private def throughHelp : List String → List String
+  | "--" :: rest => "--" :: rest
+  | flag :: rest =>
+    if flag == "--help" || flag.startsWith "-h" then ["-h"]
+    else if ["-o", "--output", "-w", "--words", "-k", "--private-key", "--network", "--as"].contains flag then
+      match rest with
+      | value :: tail => flag :: value :: throughHelp tail
+      | [] => [flag]
+    else flag :: throughHelp rest
+  | [] => []
+
+-- These two flags are strings in the dependency parser, but their reference
+-- types are an enum and u32. Check their parse-time values in argv order,
+-- before a later help return. Mnemonic count semantics stay in execution.
+private def validateTypedArgs (command : String) (args : List String) : Except Error Unit := do
+  unless command == "convert-amount" || command == "generate-mnemonic" do return
+  let check := fun value => do
+    if command == "convert-amount" then
+      unless ["btc", "sats", "msats"].contains value do throw .invalidUnit
+    else
+      unless (wordCount? value).isSome do throw .invalidWordCount
+  let mut pending := false
+  let mut shield := false
+  for flag in args do
+    if pending then
+      check flag
+      pending := false
+    else if shield then shield := false
+    else if flag == "--" || flag == "-h" then return
+    else if command == "convert-amount" && flag == "--as" then pending := true
+    else if command == "convert-amount" && flag.startsWith "--as=" then
+      check (flag.drop 5).toString
+    else if command == "generate-mnemonic" && (flag == "-w" || flag == "--words") then
+      pending := true
+    else if command == "generate-mnemonic" && flag.startsWith "--words=" then
+      check (flag.drop 8).toString
+    else if command == "generate-mnemonic" && flag.startsWith "-w" then
+      check (flag.drop (if flag.startsWith "-w=" then 3 else 2)).toString
+    else if ["-o", "--output", "-k", "--private-key", "--network"].contains flag then
+      shield := true
+  if pending then throw .invalidArguments
+
 def parseCommand (args : List String) : Except Error Command := do
-  let routed := ["generate-mnemonic", "ln-decode-invoice", "ln-decode-lnurl", "ln-encode-invoice"].contains
+  let args := throughHelp args
+  validateTypedArgs (args.head?.getD "") args.tail
+  let routed := ["generate-mnemonic", "ln-decode-invoice", "ln-decode-lnurl", "ln-encode-invoice",
+    "fm-decode-invite", "fm-encode-invite", "onchain-decode-psbt"].contains
     (args.head?.getD "")
   if routed then
     unless outputArgsValid args.tail do throw .invalidArguments
   let args := if routed then (args.head?.getD "") :: outputParserArgs args.tail else args
   let (cmd, p) ← (parser.parse args).mapError fun _ => Error.invalidArguments
+  if p.variableArgs.size > 1 then throw .invalidArguments
   if p.hasFlag "help" || args.isEmpty then return .help cmd.help
   let flag := fun name => (p.flag? name).map (·.value)
   match cmd.meta.name with
@@ -108,12 +178,18 @@ def parseCommand (args : List String) : Except Error Command := do
   | "generate-mnemonic" =>
     let some words := wordCount? ((flag "words").getD "24") | throw .invalidWordCount
     return .mnemonic words (flag "output")
-  | "ln-decode-invoice" | "ln-decode-lnurl" | "ln-encode-invoice" =>
+  | "fm-encode-invite" =>
+    let some input := p.positionalArg? "input" | throw .invalidArguments
+    return .encodeInvite input.value (p.hasFlag "skip-api-secret") (flag "output")
+  | "ln-decode-invoice" | "ln-decode-lnurl" | "ln-encode-invoice" |
+      "fm-decode-invite" | "onchain-decode-psbt" =>
     if p.variableArgs.size > 1 then throw .invalidArguments
     let input := p.variableArgs[0]?.map (·.value)
     match cmd.meta.name with
     | "ln-decode-invoice" => return .decodeInvoice input (flag "output")
     | "ln-decode-lnurl" => return .decodeLnurl input (flag "output")
+    | "fm-decode-invite" => return .decodeInvite input (flag "output")
+    | "onchain-decode-psbt" => return .decodePsbt input ((flag "network").getD "mainnet") (flag "output")
     | _ =>
       let some key := flag "private-key" | throw .invalidArguments
       return .encodeInvoice input key (flag "output")
@@ -133,6 +209,7 @@ structure Services where
   writeFile : String → String → IO Unit
   readStdin : IO String := do (← IO.getStdin).readToEnd
   readFile : String → IO String := fun path => IO.FS.readFile path
+  pathExists : String → IO Bool := fun path => System.FilePath.pathExists path
   openOrdinaryFile : String → IO (String → IO Unit) := fun path => do
     let handle ← IO.FS.Handle.mk path .write
     return fun text => do
@@ -199,6 +276,36 @@ def execute (version : String) (services : Services) : Command → IO (Except Er
   | .version => pure (.ok { stdout := (Lean.Json.mkObj [("version", .str version)]).compress ++ "\n" })
   | .help text => pure (.ok { stdout := text ++ "\n" })
   | .convert input unit => pure (conversion input unit)
+  | .decodeInvite input path => do
+    let .ok text ← lightningInput services input false | return .error .inputFailure
+    let .ok writer ← prepareDecodeOutput services path | return .error .outputFailure
+    return (InviteCli.decode text).map (fun invite => lightningOutput (InviteCli.render invite) writer false)
+  | .encodeInvite input skipSecret path => do
+    let .ok text ← lightningInput services (some input) true | return .error .inputFailure
+    let invite ← match InviteCli.encode text skipSecret with
+      | .ok invite => pure invite
+      | .error e => return .error e
+    let .ok writer ← prepareDecodeOutput services path | return .error .outputFailure
+    return .ok (match writer with
+      | none => { stdout := invite ++ "\n" }
+      | some write => { ordinaryFile := some (write, invite ++ "\n") })
+  | .decodePsbt input net path => do
+    let net ← match PsbtCli.network net with
+      | .ok net => pure net
+      | .error e => return .error e
+    let text ← try
+      match input with
+      | none => pure (← services.readStdin)
+      | some value =>
+        if ← services.pathExists value then services.readFile value else pure value
+      catch _ => return .error .inputFailure
+    let text ← match PsbtCli.decode text net with
+      | .ok text => pure text
+      | .error e => return .error e
+    let .ok writer ← prepareDecodeOutput services path | return .error .outputFailure
+    return .ok (match writer with
+      | none => { stdout := text ++ "\n" }
+      | some write => { ordinaryFile := some (write, text ++ "\n") })
   | .decodeInvoice input path => do
     let .ok text ← lightningInput services input false | return .error .inputFailure
     let .ok writer ← prepareDecodeOutput services path | return .error .outputFailure
@@ -244,7 +351,7 @@ def runWith (version : String) (services : Services) (args : List String) : IO U
       if !out.stdout.isEmpty then services.stdout out.stdout
       return 0
     catch e => reportError services (match e with
-      | .alreadyExists .. => .outputPathExists
+      | .alreadyExists .. => if out.file.isSome then .outputPathExists else .outputFailure
       | _ => .outputFailure)
 
 /-- Future fee registrations share this refusal boundary, before backend action. -/

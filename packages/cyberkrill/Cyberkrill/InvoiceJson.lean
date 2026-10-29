@@ -166,6 +166,24 @@ def structObject (value : Json) (fields : List String) : Except Error Json := do
   | .obj _ => return value
   | _ => throw .invalidInvoiceJson
 
+/-- Preserve serde's duplicate-field, integer-token and struct-sequence rules
+before the value parser discards lexical spelling and repeated object keys. -/
+def validateInviteSyntax (input : String) : Except Error Unit := do
+  let (root, rest) ← parseSyntax input.toList
+  unless (skip rest).isEmpty do throw .invalidInvoiceJson
+  let known := ["federation_id", "guardians", "api_secret"]
+  let fields ← structFields root known
+  let names := fields.map (·.1) |>.filter (known.contains ·)
+  unless names.eraseDups.length == names.length do throw .invalidInvoiceJson
+  if let .object _ validKeys := root then
+    unless validKeys do throw .invalidInvoiceJson
+  for (key, value) in fields do
+    if key == "federation_id" || key == "api_secret" then checkStrings value
+    if key == "guardians" then
+      if let .array guardians := value then
+        for guardian in guardians do
+          let _ ← checkObject guardian ["peer_id", "url"] ["peer_id"]
+
 /-- Serde unit enums accept a string or a single-key object with null content. -/
 def enumName (value : Json) : Except Error String := do
   if let .str s := value then return s

@@ -1,0 +1,630 @@
+{
+  "before": {
+    "tests_sha256": {
+      "test/ordered-help.py": "9f23fc18a7a656ff1bae6b4263ae503cd7b1fe00748cf7bfcb86ed706cb3ca20",
+      "test/file-observation.py": "62480b3825ba44d700b5c50421e69266fb3be6447e65c10d85e5456bc34e6946",
+      "test/boundary-regressions.py": "04648931d69a8382f3b489308830c42d9768dda8e1656d436844269150c70a7c"
+    },
+    "source_sha256": {
+      "Cyberkrill/App.lean": "f054fa8e35071be0fa9fb3a429a0f9fa5edfb18a09bd7fcf4aa73666371c05ba",
+      "test/capture-offline.py": "236f9bac5722f0aa86380a86e0f74be370b2a09e9d54a5206fd89e4daeb55a86",
+      "test/offline-compare.py": "abd0aaac6bdc6f27e48470eeafa2eb7218dd2745b10a0eb0b3dfbd19bfc3bc63"
+    },
+    "checks": [
+      {
+        "command": [
+          "timeout",
+          "--foreground",
+          "30",
+          "python3",
+          "-B",
+          "packages/cyberkrill/test/ordered-help.py",
+          "ordered-help/fm-decode-invite/help-unknown"
+        ],
+        "case": "ordered-help/fm-decode-invite/help-unknown",
+        "status": 1,
+        "seconds": 0.074816,
+        "failure": "AssertionError: ordered help short circuit: ordered-help/fm-decode-invite/help-unknown"
+      },
+      {
+        "command": [
+          "timeout",
+          "--foreground",
+          "30",
+          "python3",
+          "-B",
+          "packages/cyberkrill/test/ordered-help.py",
+          "ordered-help/fm-decode-invite/help-missing-output"
+        ],
+        "case": "ordered-help/fm-decode-invite/help-missing-output",
+        "status": 1,
+        "seconds": 0.073854,
+        "failure": "AssertionError: ordered help short circuit: ordered-help/fm-decode-invite/help-missing-output"
+      },
+      {
+        "command": [
+          "timeout",
+          "--foreground",
+          "30",
+          "python3",
+          "-B",
+          "packages/cyberkrill/test/ordered-help.py",
+          "ordered-help/fm-decode-invite/short-help-unknown"
+        ],
+        "case": "ordered-help/fm-decode-invite/short-help-unknown",
+        "status": 1,
+        "seconds": 0.074908,
+        "failure": "AssertionError: ordered help short circuit: ordered-help/fm-decode-invite/short-help-unknown"
+      },
+      {
+        "command": [
+          "timeout",
+          "--foreground",
+          "30",
+          "python3",
+          "-B",
+          "packages/cyberkrill/test/ordered-help.py",
+          "ordered-help/fm-decode-invite/unknown-help"
+        ],
+        "case": "ordered-help/fm-decode-invite/unknown-help",
+        "status": 0,
+        "seconds": 0.071071,
+        "failure": ""
+      },
+      {
+        "command": [
+          "timeout",
+          "--foreground",
+          "30",
+          "python3",
+          "-B",
+          "packages/cyberkrill/test/ordered-help.py",
+          "ordered-help/fm-encode-invite/help-unknown"
+        ],
+        "case": "ordered-help/fm-encode-invite/help-unknown",
+        "status": 1,
+        "seconds": 0.073016,
+        "failure": "AssertionError: ordered help short circuit: ordered-help/fm-encode-invite/help-unknown"
+      },
+      {
+        "command": [
+          "timeout",
+          "--foreground",
+          "30",
+          "python3",
+          "-B",
+          "packages/cyberkrill/test/ordered-help.py",
+          "ordered-help/fm-encode-invite/help-missing-output"
+        ],
+        "case": "ordered-help/fm-encode-invite/help-missing-output",
+        "status": 1,
+        "seconds": 0.076765,
+        "failure": "AssertionError: ordered help short circuit: ordered-help/fm-encode-invite/help-missing-output"
+      },
+      {
+        "command": [
+          "timeout",
+          "--foreground",
+          "30",
+          "python3",
+          "-B",
+          "packages/cyberkrill/test/ordered-help.py",
+          "ordered-help/fm-encode-invite/short-help-unknown"
+        ],
+        "case": "ordered-help/fm-encode-invite/short-help-unknown",
+        "status": 1,
+        "seconds": 0.076609,
+        "failure": "AssertionError: ordered help short circuit: ordered-help/fm-encode-invite/short-help-unknown"
+      },
+      {
+        "command": [
+          "timeout",
+          "--foreground",
+          "30",
+          "python3",
+          "-B",
+          "packages/cyberkrill/test/ordered-help.py",
+          "ordered-help/fm-encode-invite/unknown-help"
+        ],
+        "case": "ordered-help/fm-encode-invite/unknown-help",
+        "status": 0,
+        "seconds": 0.06746,
+        "failure": ""
+      },
+      {
+        "command": [
+          "timeout",
+          "--foreground",
+          "30",
+          "python3",
+          "-B",
+          "packages/cyberkrill/test/ordered-help.py",
+          "ordered-help/onchain-decode-psbt/help-unknown"
+        ],
+        "case": "ordered-help/onchain-decode-psbt/help-unknown",
+        "status": 1,
+        "seconds": 0.071399,
+        "failure": "AssertionError: ordered help short circuit: ordered-help/onchain-decode-psbt/help-unknown"
+      },
+      {
+        "command": [
+          "timeout",
+          "--foreground",
+          "30",
+          "python3",
+          "-B",
+          "packages/cyberkrill/test/ordered-help.py",
+          "ordered-help/onchain-decode-psbt/help-missing-output"
+        ],
+        "case": "ordered-help/onchain-decode-psbt/help-missing-output",
+        "status": 1,
+        "seconds": 0.074135,
+        "failure": "AssertionError: ordered help short circuit: ordered-help/onchain-decode-psbt/help-missing-output"
+      },
+      {
+        "command": [
+          "timeout",
+          "--foreground",
+          "30",
+          "python3",
+          "-B",
+          "packages/cyberkrill/test/ordered-help.py",
+          "ordered-help/onchain-decode-psbt/short-help-unknown"
+        ],
+        "case": "ordered-help/onchain-decode-psbt/short-help-unknown",
+        "status": 1,
+        "seconds": 0.072736,
+        "failure": "AssertionError: ordered help short circuit: ordered-help/onchain-decode-psbt/short-help-unknown"
+      },
+      {
+        "command": [
+          "timeout",
+          "--foreground",
+          "30",
+          "python3",
+          "-B",
+          "packages/cyberkrill/test/ordered-help.py",
+          "ordered-help/onchain-decode-psbt/unknown-help"
+        ],
+        "case": "ordered-help/onchain-decode-psbt/unknown-help",
+        "status": 0,
+        "seconds": 0.075183,
+        "failure": ""
+      },
+      {
+        "command": [
+          "timeout",
+          "--foreground",
+          "30",
+          "python3",
+          "-B",
+          "packages/cyberkrill/test/ordered-help.py",
+          "ordered-help/onchain-decode-psbt/help-missing-network"
+        ],
+        "case": "ordered-help/onchain-decode-psbt/help-missing-network",
+        "status": 1,
+        "seconds": 0.072426,
+        "failure": "AssertionError: ordered help short circuit: ordered-help/onchain-decode-psbt/help-missing-network"
+      },
+      {
+        "command": [
+          "timeout",
+          "--foreground",
+          "30",
+          "python3",
+          "-B",
+          "packages/cyberkrill/test/file-observation.py",
+          "fm-encode-invite/crlf"
+        ],
+        "case": "fm-encode-invite/crlf",
+        "status": 1,
+        "seconds": 0.065123,
+        "failure": "AssertionError: file comparator accepted newline/field: fm-encode-invite/crlf"
+      },
+      {
+        "command": [
+          "timeout",
+          "--foreground",
+          "30",
+          "python3",
+          "-B",
+          "packages/cyberkrill/test/file-observation.py",
+          "fm-encode-invite/cr"
+        ],
+        "case": "fm-encode-invite/cr",
+        "status": 1,
+        "seconds": 0.074214,
+        "failure": "AssertionError: file comparator accepted newline/field: fm-encode-invite/cr"
+      },
+      {
+        "command": [
+          "timeout",
+          "--foreground",
+          "30",
+          "python3",
+          "-B",
+          "packages/cyberkrill/test/file-observation.py",
+          "fm-encode-invite/control"
+        ],
+        "case": "fm-encode-invite/control",
+        "status": 0,
+        "seconds": 0.061503,
+        "failure": ""
+      },
+      {
+        "command": [
+          "timeout",
+          "--foreground",
+          "30",
+          "python3",
+          "-B",
+          "packages/cyberkrill/test/file-observation.py",
+          "onchain-decode-psbt/crlf"
+        ],
+        "case": "onchain-decode-psbt/crlf",
+        "status": 1,
+        "seconds": 0.067175,
+        "failure": "AssertionError: file comparator accepted newline/field: onchain-decode-psbt/crlf"
+      },
+      {
+        "command": [
+          "timeout",
+          "--foreground",
+          "30",
+          "python3",
+          "-B",
+          "packages/cyberkrill/test/file-observation.py",
+          "onchain-decode-psbt/cr"
+        ],
+        "case": "onchain-decode-psbt/cr",
+        "status": 1,
+        "seconds": 0.066201,
+        "failure": "AssertionError: file comparator accepted newline/field: onchain-decode-psbt/cr"
+      },
+      {
+        "command": [
+          "timeout",
+          "--foreground",
+          "30",
+          "python3",
+          "-B",
+          "packages/cyberkrill/test/file-observation.py",
+          "onchain-decode-psbt/control"
+        ],
+        "case": "onchain-decode-psbt/control",
+        "status": 0,
+        "seconds": 0.063055,
+        "failure": ""
+      },
+      {
+        "command": [
+          "timeout",
+          "--foreground",
+          "30",
+          "python3",
+          "-B",
+          "packages/cyberkrill/test/file-observation.py",
+          "fm-decode-invite/control"
+        ],
+        "case": "fm-decode-invite/control",
+        "status": 0,
+        "seconds": 0.064853,
+        "failure": ""
+      }
+    ]
+  },
+  "after": {
+    "tests_sha256": {
+      "test/ordered-help.py": "9f23fc18a7a656ff1bae6b4263ae503cd7b1fe00748cf7bfcb86ed706cb3ca20",
+      "test/file-observation.py": "62480b3825ba44d700b5c50421e69266fb3be6447e65c10d85e5456bc34e6946",
+      "test/boundary-regressions.py": "04648931d69a8382f3b489308830c42d9768dda8e1656d436844269150c70a7c"
+    },
+    "source_sha256": {
+      "Cyberkrill/App.lean": "8d4f918b65c5f66b0808cb6d050023406ea3d56b3fcc208fc3541d511269a2ff",
+      "test/capture-offline.py": "691dff9640d49424f70a345cbeb09741540600b0d7758ba8f65d83c4312f056c",
+      "test/offline-compare.py": "a7407fdc0e84c33d483effd755f74663b344015d862fc9cecf64d56dd2b3eb73"
+    },
+    "checks": [
+      {
+        "command": [
+          "timeout",
+          "--foreground",
+          "30",
+          "python3",
+          "-B",
+          "packages/cyberkrill/test/ordered-help.py",
+          "ordered-help/fm-decode-invite/help-unknown"
+        ],
+        "case": "ordered-help/fm-decode-invite/help-unknown",
+        "status": 0,
+        "seconds": 0.073359,
+        "failure": ""
+      },
+      {
+        "command": [
+          "timeout",
+          "--foreground",
+          "30",
+          "python3",
+          "-B",
+          "packages/cyberkrill/test/ordered-help.py",
+          "ordered-help/fm-decode-invite/help-missing-output"
+        ],
+        "case": "ordered-help/fm-decode-invite/help-missing-output",
+        "status": 0,
+        "seconds": 0.07072,
+        "failure": ""
+      },
+      {
+        "command": [
+          "timeout",
+          "--foreground",
+          "30",
+          "python3",
+          "-B",
+          "packages/cyberkrill/test/ordered-help.py",
+          "ordered-help/fm-decode-invite/short-help-unknown"
+        ],
+        "case": "ordered-help/fm-decode-invite/short-help-unknown",
+        "status": 0,
+        "seconds": 0.074225,
+        "failure": ""
+      },
+      {
+        "command": [
+          "timeout",
+          "--foreground",
+          "30",
+          "python3",
+          "-B",
+          "packages/cyberkrill/test/ordered-help.py",
+          "ordered-help/fm-decode-invite/unknown-help"
+        ],
+        "case": "ordered-help/fm-decode-invite/unknown-help",
+        "status": 0,
+        "seconds": 0.068474,
+        "failure": ""
+      },
+      {
+        "command": [
+          "timeout",
+          "--foreground",
+          "30",
+          "python3",
+          "-B",
+          "packages/cyberkrill/test/ordered-help.py",
+          "ordered-help/fm-encode-invite/help-unknown"
+        ],
+        "case": "ordered-help/fm-encode-invite/help-unknown",
+        "status": 0,
+        "seconds": 0.072153,
+        "failure": ""
+      },
+      {
+        "command": [
+          "timeout",
+          "--foreground",
+          "30",
+          "python3",
+          "-B",
+          "packages/cyberkrill/test/ordered-help.py",
+          "ordered-help/fm-encode-invite/help-missing-output"
+        ],
+        "case": "ordered-help/fm-encode-invite/help-missing-output",
+        "status": 0,
+        "seconds": 0.069643,
+        "failure": ""
+      },
+      {
+        "command": [
+          "timeout",
+          "--foreground",
+          "30",
+          "python3",
+          "-B",
+          "packages/cyberkrill/test/ordered-help.py",
+          "ordered-help/fm-encode-invite/short-help-unknown"
+        ],
+        "case": "ordered-help/fm-encode-invite/short-help-unknown",
+        "status": 0,
+        "seconds": 0.074309,
+        "failure": ""
+      },
+      {
+        "command": [
+          "timeout",
+          "--foreground",
+          "30",
+          "python3",
+          "-B",
+          "packages/cyberkrill/test/ordered-help.py",
+          "ordered-help/fm-encode-invite/unknown-help"
+        ],
+        "case": "ordered-help/fm-encode-invite/unknown-help",
+        "status": 0,
+        "seconds": 0.070285,
+        "failure": ""
+      },
+      {
+        "command": [
+          "timeout",
+          "--foreground",
+          "30",
+          "python3",
+          "-B",
+          "packages/cyberkrill/test/ordered-help.py",
+          "ordered-help/onchain-decode-psbt/help-unknown"
+        ],
+        "case": "ordered-help/onchain-decode-psbt/help-unknown",
+        "status": 0,
+        "seconds": 0.072591,
+        "failure": ""
+      },
+      {
+        "command": [
+          "timeout",
+          "--foreground",
+          "30",
+          "python3",
+          "-B",
+          "packages/cyberkrill/test/ordered-help.py",
+          "ordered-help/onchain-decode-psbt/help-missing-output"
+        ],
+        "case": "ordered-help/onchain-decode-psbt/help-missing-output",
+        "status": 0,
+        "seconds": 0.068056,
+        "failure": ""
+      },
+      {
+        "command": [
+          "timeout",
+          "--foreground",
+          "30",
+          "python3",
+          "-B",
+          "packages/cyberkrill/test/ordered-help.py",
+          "ordered-help/onchain-decode-psbt/short-help-unknown"
+        ],
+        "case": "ordered-help/onchain-decode-psbt/short-help-unknown",
+        "status": 0,
+        "seconds": 0.068835,
+        "failure": ""
+      },
+      {
+        "command": [
+          "timeout",
+          "--foreground",
+          "30",
+          "python3",
+          "-B",
+          "packages/cyberkrill/test/ordered-help.py",
+          "ordered-help/onchain-decode-psbt/unknown-help"
+        ],
+        "case": "ordered-help/onchain-decode-psbt/unknown-help",
+        "status": 0,
+        "seconds": 0.06954,
+        "failure": ""
+      },
+      {
+        "command": [
+          "timeout",
+          "--foreground",
+          "30",
+          "python3",
+          "-B",
+          "packages/cyberkrill/test/ordered-help.py",
+          "ordered-help/onchain-decode-psbt/help-missing-network"
+        ],
+        "case": "ordered-help/onchain-decode-psbt/help-missing-network",
+        "status": 0,
+        "seconds": 0.070988,
+        "failure": ""
+      },
+      {
+        "command": [
+          "timeout",
+          "--foreground",
+          "30",
+          "python3",
+          "-B",
+          "packages/cyberkrill/test/file-observation.py",
+          "fm-encode-invite/crlf"
+        ],
+        "case": "fm-encode-invite/crlf",
+        "status": 0,
+        "seconds": 0.062624,
+        "failure": ""
+      },
+      {
+        "command": [
+          "timeout",
+          "--foreground",
+          "30",
+          "python3",
+          "-B",
+          "packages/cyberkrill/test/file-observation.py",
+          "fm-encode-invite/cr"
+        ],
+        "case": "fm-encode-invite/cr",
+        "status": 0,
+        "seconds": 0.065994,
+        "failure": ""
+      },
+      {
+        "command": [
+          "timeout",
+          "--foreground",
+          "30",
+          "python3",
+          "-B",
+          "packages/cyberkrill/test/file-observation.py",
+          "fm-encode-invite/control"
+        ],
+        "case": "fm-encode-invite/control",
+        "status": 0,
+        "seconds": 0.062046,
+        "failure": ""
+      },
+      {
+        "command": [
+          "timeout",
+          "--foreground",
+          "30",
+          "python3",
+          "-B",
+          "packages/cyberkrill/test/file-observation.py",
+          "onchain-decode-psbt/crlf"
+        ],
+        "case": "onchain-decode-psbt/crlf",
+        "status": 0,
+        "seconds": 0.062046,
+        "failure": ""
+      },
+      {
+        "command": [
+          "timeout",
+          "--foreground",
+          "30",
+          "python3",
+          "-B",
+          "packages/cyberkrill/test/file-observation.py",
+          "onchain-decode-psbt/cr"
+        ],
+        "case": "onchain-decode-psbt/cr",
+        "status": 0,
+        "seconds": 0.067079,
+        "failure": ""
+      },
+      {
+        "command": [
+          "timeout",
+          "--foreground",
+          "30",
+          "python3",
+          "-B",
+          "packages/cyberkrill/test/file-observation.py",
+          "onchain-decode-psbt/control"
+        ],
+        "case": "onchain-decode-psbt/control",
+        "status": 0,
+        "seconds": 0.063805,
+        "failure": ""
+      },
+      {
+        "command": [
+          "timeout",
+          "--foreground",
+          "30",
+          "python3",
+          "-B",
+          "packages/cyberkrill/test/file-observation.py",
+          "fm-decode-invite/control"
+        ],
+        "case": "fm-decode-invite/control",
+        "status": 0,
+        "seconds": 0.066498,
+        "failure": ""
+      }
+    ]
+  }
+}

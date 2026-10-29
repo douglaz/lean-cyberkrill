@@ -16,17 +16,17 @@ roots = {'Sha256', 'Secp256k1', 'Bitcoin', 'Lightning', 'FedimintInvite', 'HttpC
 tracked = subprocess.check_output(['git', 'ls-files', '-z', '--', 'packages']).decode().split(chr(0))
 paths = [pathlib.Path(p) for p in tracked if p and pathlib.Path(p).suffix == '.lean']
 paths = [p for p in paths if len(p.parts) >= 3 and (p.parts[2] in roots or p.parts[2].removesuffix('.lean') in roots)]
-assert len(paths) == 74, 'library/proof source inventory'
+assert len(paths) == 76, 'library/proof source inventory'
 assert {p.parts[2].removesuffix('.lean') for p in paths} == roots, 'library root inventory'
 bad = [str(p) for p in paths if re.search(r'\\b(?:native_decide|bv_decide)\\b', p.read_text())]
 assert not bad, 'native decision in library: ' + ', '.join(bad)
-print(f'library/proof native-decision scan: {len(paths)}/74 tracked files; zero offenders')
+print(f'library/proof native-decision scan: {len(paths)}/76 tracked files; zero offenders')
 """
 
 
 def main():
     mode, = sys.argv[1:]
-    assert mode in ["app", "repo", "evidence"]
+    assert mode in ["app", "repo", "evidence", "refresh"]
     directory = APP / ".lake/validation"
     directory.mkdir(parents=True, exist_ok=True)
     if mode == "app":
@@ -40,6 +40,30 @@ def main():
             ("scope-shapes", ROOT, ["python3", "-B", "packages/cyberkrill/test/revisions.py", "--scope"], 120),
             ("lightning", ROOT, ["python3", "-B", "packages/cyberkrill/test/lightning.py"], 180),
             ("revisions", ROOT, ["python3", "-B", "packages/cyberkrill/test/revisions.py"], 180),
+            ("offline-evidence", ROOT, ["python3", "-B", "packages/cyberkrill/test/offline.py", "--evidence"], 120),
+            ("offline-mutations", ROOT, ["python3", "-B", "packages/cyberkrill/test/offline-mutate.py", "--verify"], 120),
+            ("history-recapture", ROOT, ["python3", "-B", "packages/cyberkrill/test/recapture-history.py", "--verify"], 120),
+            ("exact-comparator", ROOT, ["python3", "-B", "packages/cyberkrill/test/offline-exact-selftest.py", "--verify"], 120),
+            ("ordered-help", ROOT, ["python3", "-B", "packages/cyberkrill/test/ordered-help.py"], 120),
+            ("cluster-help", ROOT, ["python3", "-B", "packages/cyberkrill/test/cluster-help.py"], 120),
+            ("cluster-regressions", ROOT, ["python3", "-B", "packages/cyberkrill/test/cluster-regressions.py", "--verify"], 120),
+            ("carried-help", ROOT, ["python3", "-B", "packages/cyberkrill/test/carried-help.py"], 120),
+            ("carried-regressions", ROOT, ["python3", "-B", "packages/cyberkrill/test/carried-regressions.py", "--verify"], 120),
+            ("file-observation", ROOT, ["python3", "-B", "packages/cyberkrill/test/file-observation.py"], 120),
+            ("ordered-boundary-regressions", ROOT, ["python3", "-B", "packages/cyberkrill/test/boundary-regressions.py", "--verify"], 120),
+        ]
+    elif mode == "refresh":
+        checks = [
+            ("retained-mutations", ROOT, ["python3", "-B", "packages/cyberkrill/test/mutate.py"], 3000),
+            ("lightning-mutations", ROOT, ["python3", "-B", "packages/cyberkrill/test/lightning-mutate.py"], 3000),
+            ("revision-mutations", ROOT, ["python3", "-B", "packages/cyberkrill/test/revision-mutate.py"], 3000),
+            ("regression-refresh", ROOT, ["python3", "-B", "packages/cyberkrill/test/refresh-regressions.py"], 1800),
+            ("output-refresh", ROOT, ["python3", "-B", "packages/cyberkrill/test/output-regressions.py", "refresh"], 600),
+            ("attached-refresh", ROOT, ["python3", "-B", "packages/cyberkrill/test/refresh-attached-output.py"], 600),
+            ("history-recapture", ROOT, ["python3", "-B", "packages/cyberkrill/test/recapture-history.py"], 1900),
+            ("capture-check", ROOT, ["python3", "-B", "packages/cyberkrill/test/capture-offline.py", "--check"], 1900),
+            ("port-check", ROOT, ["python3", "-B", "packages/cyberkrill/test/record-offline.py", "--check"], 180),
+            ("offline-mutations", ROOT, ["python3", "-B", "packages/cyberkrill/test/offline-mutate.py"], 6000),
         ]
     else:
         checks = [
@@ -47,6 +71,7 @@ def main():
             ("nix-build", ROOT, ["nix", "build", "-L"], 3600),
             ("installed-version", ROOT, ["./result/bin/cyberkrill", "version"], 30),
             ("installed-lightning", ROOT, ["python3", "-B", "packages/cyberkrill/test/lightning.py", "--installed"], 90),
+            ("installed-offline", ROOT, ["python3", "-B", "packages/cyberkrill/test/offline.py", "--installed"], 90),
             ("native-library-scan", ROOT, ["python3", "-B", "-c", NATIVE_SCAN], 60),
             ("proof-token-scan", ROOT, ["bash", "-c", 'rc=0; grep -rnw sorry --include="*.lean" --exclude-dir=.lake packages || rc=$?; test "$rc" -eq 1'], 60),
             ("private-key-scan", ROOT, ["bash", "-c", 'rc=0; grep -rEn --exclude-dir=.lake "[tuvxyzUVYZ]prv[1-9A-HJ-NP-Za-km-z]{100,}" packages || rc=$?; test "$rc" -eq 1'], 60),

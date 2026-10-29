@@ -1,0 +1,47 @@
+{
+  "source": "https://github.com/douglaz/cyberkrill",
+  "commit": "27cad1faba86260b06665a89f0af5134d23525c2",
+  "paths": [
+    "cyberkrill/src/main.rs",
+    "fedimint-lite/src/lib.rs"
+  ],
+  "licence": "MIT OR Apache-2.0, taken under MIT",
+  "build": [
+    "nix",
+    "build",
+    "--no-link",
+    "--print-out-paths",
+    "--max-jobs",
+    "2",
+    "--cores",
+    "4",
+    "github:douglaz/cyberkrill/27cad1faba86260b06665a89f0af5134d23525c2"
+  ],
+  "build_status": 0,
+  "build_seconds": 0.3912,
+  "execution": "unshare -rn sh -c 'ip link set lo up && exec timeout --foreground 15 \"$@\"' capture \"$PRODUCER\" ...",
+  "environment": "fresh temporary HOME and cwd \"$TMP_ROOT\", closed stdin unless the record specifies input",
+  "records": 616,
+  "published_counts": {
+    "bip174Valid": 10,
+    "bip174SignerFailures": 4,
+    "bip174Roles": 14,
+    "bip174Invalid": 20,
+    "bip370Valid": 14,
+    "bip370Invalid": 24,
+    "bip370Locktimes": 10,
+    "bip371Valid": 6,
+    "bip371Invalid": 11
+  },
+  "record_sha256": "75b7fe1f5468c7b9b0160086a942e27ef5f6e3598cf2f0110c468623b89dfa61",
+  "input_sha256": {
+    "packages/bitcoin/Bitcoin/PsbtVectors.lean": "e27fc447b79011733380eb8bd338206b83da2c17ea45e959982b2dc578e20051",
+    "packages/bitcoin/test-data/cyberkrill-psbt-capture.json": "771491779cdb1cf599075c892673bec7db7d112347b47c20de8a7986695e6eaa",
+    "packages/fedimint-invite/test-data/primary.json": "2be3d34fea2d2f3f421953c173099a1fcff72ef9ace1d6913c91290933debae6"
+  },
+  "scripts_sha256": {
+    "capture-offline.py": "c398812d1f4a22e9bed7ee19b1b5847f7a830dcc77afb5fbd88e06340752d62a",
+    "offline-inputs.py": "5656df09559f08b2ae33340416e80edbd49a799b60057af5a3c48dbed1e66ef1",
+    "hybrid-inputs.py": "f76ccf8aff8482a995e9f3235e4dc666425af33e2b84c66e9072bfad7b1a7609"
+  }
+}

@@ -1,0 +1,3492 @@
+{
+  "before": {
+    "source_sha256": {
+      "Cyberkrill/App.lean": "8d4f918b65c5f66b0808cb6d050023406ea3d56b3fcc208fc3541d511269a2ff",
+      "test/cluster-help.py": "5c92aff1c9b8b40870e2ec067487a2c99549061da2f8e02d363a1e6a06d4a238",
+      "test/cluster-regressions.py": "f6f60b898c02af961dd2904483cb1cc45ee450cc6dd0786fa5c84dc8f5e7fbee",
+      "test/offline-inputs.py": "bfa086b444ebcf98063e0e186196b1ca9dbd7b5622250b08051bdfb849a3c670",
+      "test/golden/offline-reference.json": "59c0d1f8603315986317591022b32b78375667075fde12021d0befdd5f2108d5"
+    },
+    "checks": [
+      {
+        "command": [
+          "timeout",
+          "--foreground",
+          "30",
+          "python3",
+          "-B",
+          "packages/cyberkrill/test/cluster-help.py",
+          "cluster-help/fm-decode-invite/hx"
+        ],
+        "case": "cluster-help/fm-decode-invite/hx",
+        "status": 1,
+        "seconds": 0.085323,
+        "failure": "AssertionError: cluster help short circuit: cluster-help/fm-decode-invite/hx",
+        "stdout_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+        "stderr_sha256": "a9fd6c7218fdb823736d1e2fe9525881124da36724fec98edf3cb9ebf2d7dd57"
+      },
+      {
+        "command": [
+          "timeout",
+          "--foreground",
+          "30",
+          "python3",
+          "-B",
+          "packages/cyberkrill/test/cluster-help.py",
+          "cluster-help/fm-decode-invite/hh"
+        ],
+        "case": "cluster-help/fm-decode-invite/hh",
+        "status": 1,
+        "seconds": 0.082676,
+        "failure": "AssertionError: cluster help short circuit: cluster-help/fm-decode-invite/hh",
+        "stdout_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+        "stderr_sha256": "ef643bf9e474e4c57c7c7da4836435e2888d72723dd5d7cb439a0a4a0e4486fc"
+      },
+      {
+        "command": [
+          "timeout",
+          "--foreground",
+          "30",
+          "python3",
+          "-B",
+          "packages/cyberkrill/test/cluster-help.py",
+          "cluster-help/fm-decode-invite/ho"
+        ],
+        "case": "cluster-help/fm-decode-invite/ho",
+        "status": 1,
+        "seconds": 0.081471,
+        "failure": "AssertionError: cluster help short circuit: cluster-help/fm-decode-invite/ho",
+        "stdout_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+        "stderr_sha256": "1ebf0c98e47ca65cced2ad431de0cf9cc3affec4869557ca50acb411ac5e015a"
+      },
+      {
+        "command": [
+          "timeout",
+          "--foreground",
+          "30",
+          "python3",
+          "-B",
+          "packages/cyberkrill/test/cluster-help.py",
+          "cluster-help/fm-decode-invite/ho-unknown"
+        ],
+        "case": "cluster-help/fm-decode-invite/ho-unknown",
+        "status": 1,
+        "seconds": 0.081627,
+        "failure": "AssertionError: cluster help short circuit: cluster-help/fm-decode-invite/ho-unknown",
+        "stdout_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+        "stderr_sha256": "035f04b9a88cfdafd744ed3a702b4c502abda95ccf0f16534e8f6ac1314d39b7"
+      },
+      {
+        "command": [
+          "timeout",
+          "--foreground",
+          "30",
+          "python3",
+          "-B",
+          "packages/cyberkrill/test/cluster-help.py",
+          "cluster-help/fm-decode-invite/h-equals-one"
+        ],
+        "case": "cluster-help/fm-decode-invite/h-equals-one",
+        "status": 1,
+        "seconds": 0.080334,
+        "failure": "AssertionError: cluster help short circuit: cluster-help/fm-decode-invite/h-equals-one",
+        "stdout_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+        "stderr_sha256": "a3ff29bd1f3f40756cc06078a2222af4023ae69149f879656addccc2cb2f55a0"
+      },
+      {
+        "command": [
+          "timeout",
+          "--foreground",
+          "30",
+          "python3",
+          "-B",
+          "packages/cyberkrill/test/cluster-help.py",
+          "cluster-help/fm-decode-invite/h-dashes"
+        ],
+        "case": "cluster-help/fm-decode-invite/h-dashes",
+        "status": 1,
+        "seconds": 0.081926,
+        "failure": "AssertionError: cluster help short circuit: cluster-help/fm-decode-invite/h-dashes",
+        "stdout_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+        "stderr_sha256": "7f5b8f66707767c3884f9b00565438fa4c9d140558b49895f0343fe2d8bfe7f8"
+      },
+      {
+        "command": [
+          "timeout",
+          "--foreground",
+          "30",
+          "python3",
+          "-B",
+          "packages/cyberkrill/test/cluster-help.py",
+          "cluster-help/fm-decode-invite/hq-unknown"
+        ],
+        "case": "cluster-help/fm-decode-invite/hq-unknown",
+        "status": 1,
+        "seconds": 0.079975,
+        "failure": "AssertionError: cluster help short circuit: cluster-help/fm-decode-invite/hq-unknown",
+        "stdout_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+        "stderr_sha256": "eeecfb428398791fc1738d13113ec0966b88de738a99ee34d86278179f843654"
+      },
+      {
+        "command": [
+          "timeout",
+          "--foreground",
+          "30",
+          "python3",
+          "-B",
+          "packages/cyberkrill/test/cluster-help.py",
+          "cluster-help/fm-decode-invite/ho-value"
+        ],
+        "case": "cluster-help/fm-decode-invite/ho-value",
+        "status": 1,
+        "seconds": 0.079488,
+        "failure": "AssertionError: cluster help short circuit: cluster-help/fm-decode-invite/ho-value",
+        "stdout_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+        "stderr_sha256": "f156539e803aad85056aaf3f6491edf5366d5a6257aceb574a3107c5fef7c694"
+      },
+      {
+        "command": [
+          "timeout",
+          "--foreground",
+          "30",
+          "python3",
+          "-B",
+          "packages/cyberkrill/test/cluster-help.py",
+          "cluster-help/fm-decode-invite/h-equals-x"
+        ],
+        "case": "cluster-help/fm-decode-invite/h-equals-x",
+        "status": 1,
+        "seconds": 0.081117,
+        "failure": "AssertionError: cluster help short circuit: cluster-help/fm-decode-invite/h-equals-x",
+        "stdout_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+        "stderr_sha256": "49a70320d6cbd7221ba719f3bb7c0145b5d614c53c9fbe3042e42962400aafea"
+      },
+      {
+        "command": [
+          "timeout",
+          "--foreground",
+          "30",
+          "python3",
+          "-B",
+          "packages/cyberkrill/test/cluster-help.py",
+          "cluster-help/fm-decode-invite/h-filename"
+        ],
+        "case": "cluster-help/fm-decode-invite/h-filename",
+        "status": 1,
+        "seconds": 0.078928,
+        "failure": "AssertionError: cluster help short circuit: cluster-help/fm-decode-invite/h-filename",
+        "stdout_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+        "stderr_sha256": "7346021917224eed53c3f955b33e76f6d6721968eb2a3fd58f8ebd91c37f1ada"
+      },
+      {
+        "command": [
+          "timeout",
+          "--foreground",
+          "30",
+          "python3",
+          "-B",
+          "packages/cyberkrill/test/cluster-help.py",
+          "cluster-help/fm-decode-invite/hx-long-help"
+        ],
+        "case": "cluster-help/fm-decode-invite/hx-long-help",
+        "status": 1,
+        "seconds": 0.083369,
+        "failure": "AssertionError: cluster help short circuit: cluster-help/fm-decode-invite/hx-long-help",
+        "stdout_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+        "stderr_sha256": "a3459cce0ab4e05cbd4e4fc1ae4fe206fed4d620ab45a05a201f3c14562fb32a"
+      },
+      {
+        "command": [
+          "timeout",
+          "--foreground",
+          "30",
+          "python3",
+          "-B",
+          "packages/cyberkrill/test/cluster-help.py",
+          "cluster-help/fm-decode-invite/repeat-cluster"
+        ],
+        "case": "cluster-help/fm-decode-invite/repeat-cluster",
+        "status": 1,
+        "seconds": 0.078564,
+        "failure": "AssertionError: cluster help short circuit: cluster-help/fm-decode-invite/repeat-cluster",
+        "stdout_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+        "stderr_sha256": "c11ebaef81fbbe424c98b9536a271fbd08bd527859f745a6df08587a8fabd81e"
+      },
+      {
+        "command": [
+          "timeout",
+          "--foreground",
+          "30",
+          "python3",
+          "-B",
+          "packages/cyberkrill/test/cluster-help.py",
+          "cluster-help/fm-decode-invite/unknown-hh"
+        ],
+        "case": "cluster-help/fm-decode-invite/unknown-hh",
+        "status": 0,
+        "seconds": 0.076615,
+        "failure": "",
+        "stdout_sha256": "62bd5270357535df68273fa9b655dea0b2f0238563b2f1bd7bdc538dd2796860",
+        "stderr_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+      },
+      {
+        "command": [
+          "timeout",
+          "--foreground",
+          "30",
+          "python3",
+          "-B",
+          "packages/cyberkrill/test/cluster-help.py",
+          "cluster-help/fm-decode-invite/unknown-short-hh"
+        ],
+        "case": "cluster-help/fm-decode-invite/unknown-short-hh",
+        "status": 0,
+        "seconds": 0.07403,
+        "failure": "",
+        "stdout_sha256": "62bd5270357535df68273fa9b655dea0b2f0238563b2f1bd7bdc538dd2796860",
+        "stderr_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+      },
+      {
+        "command": [
+          "timeout",
+          "--foreground",
+          "30",
+          "python3",
+          "-B",
+          "packages/cyberkrill/test/cluster-help.py",
+          "cluster-help/fm-decode-invite/output-missing-cluster"
+        ],
+        "case": "cluster-help/fm-decode-invite/output-missing-cluster",
+        "status": 0,
+        "seconds": 0.082178,
+        "failure": "",
+        "stdout_sha256": "62bd5270357535df68273fa9b655dea0b2f0238563b2f1bd7bdc538dd2796860",
+        "stderr_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+      },
+      {
+        "command": [
+          "timeout",
+          "--foreground",
+          "30",
+          "python3",
+          "-B",
+          "packages/cyberkrill/test/cluster-help.py",
+          "cluster-help/fm-decode-invite/terminator-cluster"
+        ],
+        "case": "cluster-help/fm-decode-invite/terminator-cluster",
+        "status": 0,
+        "seconds": 0.075657,
+        "failure": "",
+        "stdout_sha256": "62bd5270357535df68273fa9b655dea0b2f0238563b2f1bd7bdc538dd2796860",
+        "stderr_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+      },
+      {
+        "command": [
+          "timeout",
+          "--foreground",
+          "30",
+          "python3",
+          "-B",
+          "packages/cyberkrill/test/cluster-help.py",
+          "cluster-help/fm-decode-invite/long-help-value"
+        ],
+        "case": "cluster-help/fm-decode-invite/long-help-value",
+        "status": 0,
+        "seconds": 0.075707,
+        "failure": "",
+        "stdout_sha256": "62bd5270357535df68273fa9b655dea0b2f0238563b2f1bd7bdc538dd2796860",
+        "stderr_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+      },
+      {
+        "command": [
+          "timeout",
+          "--foreground",
+          "30",
+          "python3",
+          "-B",
+          "packages/cyberkrill/test/cluster-help.py",
+          "cluster-help/fm-decode-invite/invalid-long-cluster"
+        ],
+        "case": "cluster-help/fm-decode-invite/invalid-long-cluster",
+        "status": 0,
+        "seconds": 0.073949,
+        "failure": "",
+        "stdout_sha256": "62bd5270357535df68273fa9b655dea0b2f0238563b2f1bd7bdc538dd2796860",
+        "stderr_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+      },
+      {
+        "command": [
+          "timeout",
+          "--foreground",
+          "30",
+          "python3",
+          "-B",
+          "packages/cyberkrill/test/cluster-help.py",
+          "cluster-help/fm-decode-invite/repeat-output-cluster"
+        ],
+        "case": "cluster-help/fm-decode-invite/repeat-output-cluster",
+        "status": 0,
+        "seconds": 0.077336,
+        "failure": "",
+        "stdout_sha256": "62bd5270357535df68273fa9b655dea0b2f0238563b2f1bd7bdc538dd2796860",
+        "stderr_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+      },
+      {
+        "command": [
+          "timeout",
+          "--foreground",
+          "30",
+          "python3",
+          "-B",
+          "packages/cyberkrill/test/cluster-help.py",
+          "cluster-help/fm-decode-invite/extra-before-cluster"
+        ],
+        "case": "cluster-help/fm-decode-invite/extra-before-cluster",
+        "status": 0,
+        "seconds": 0.077448,
+        "failure": "",
+        "stdout_sha256": "62bd5270357535df68273fa9b655dea0b2f0238563b2f1bd7bdc538dd2796860",
+        "stderr_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+      },
+      {
+        "command": [
+          "timeout",
+          "--foreground",
+          "30",
+          "python3",
+          "-B",
+          "packages/cyberkrill/test/cluster-help.py",
+          "cluster-help/fm-decode-invite/output-short-h"
+        ],
+        "case": "cluster-help/fm-decode-invite/output-short-h",
+        "status": 0,
+        "seconds": 0.076422,
+        "failure": "",
+        "stdout_sha256": "62bd5270357535df68273fa9b655dea0b2f0238563b2f1bd7bdc538dd2796860",
+        "stderr_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+      },
+      {
+        "command": [
+          "timeout",
+          "--foreground",
+          "30",
+          "python3",
+          "-B",
+          "packages/cyberkrill/test/cluster-help.py",
+          "cluster-help/fm-decode-invite/output-short-hyphen"
+        ],
+        "case": "cluster-help/fm-decode-invite/output-short-hyphen",
+        "status": 0,
+        "seconds": 0.073437,
+        "failure": "",
+        "stdout_sha256": "62bd5270357535df68273fa9b655dea0b2f0238563b2f1bd7bdc538dd2796860",
+        "stderr_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+      },
+      {
+        "command": [
+          "timeout",
+          "--foreground",
+          "30",
+          "python3",
+          "-B",
+          "packages/cyberkrill/test/cluster-help.py",
+          "cluster-help/fm-decode-invite/output-long-hyphen"
+        ],
+        "case": "cluster-help/fm-decode-invite/output-long-hyphen",
+        "status": 0,
+        "seconds": 0.076364,
+        "failure": "",
+        "stdout_sha256": "62bd5270357535df68273fa9b655dea0b2f0238563b2f1bd7bdc538dd2796860",
+        "stderr_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+      },
+      {
+        "command": [
+          "timeout",
+          "--foreground",
+          "30",
+          "python3",
+          "-B",
+          "packages/cyberkrill/test/cluster-help.py",
+          "cluster-help/fm-decode-invite/output-short-equals"
+        ],
+        "case": "cluster-help/fm-decode-invite/output-short-equals",
+        "status": 0,
+        "seconds": 0.076195,
+        "failure": "",
+        "stdout_sha256": "62bd5270357535df68273fa9b655dea0b2f0238563b2f1bd7bdc538dd2796860",
+        "stderr_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+      },
+      {
+        "command": [
+          "timeout",
+          "--foreground",
+          "30",
+          "python3",
+          "-B",
+          "packages/cyberkrill/test/cluster-help.py",
+          "cluster-help/fm-decode-invite/output-utf8"
+        ],
+        "case": "cluster-help/fm-decode-invite/output-utf8",
+        "status": 0,
+        "seconds": 0.07554,
+        "failure": "",
+        "stdout_sha256": "62bd5270357535df68273fa9b655dea0b2f0238563b2f1bd7bdc538dd2796860",
+        "stderr_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+      },
+      {
+        "command": [
+          "timeout",
+          "--foreground",
+          "30",
+          "python3",
+          "-B",
+          "packages/cyberkrill/test/cluster-help.py",
+          "cluster-help/fm-decode-invite/whitespace-value"
+        ],
+        "case": "cluster-help/fm-decode-invite/whitespace-value",
+        "status": 0,
+        "seconds": 0.077053,
+        "failure": "",
+        "stdout_sha256": "62bd5270357535df68273fa9b655dea0b2f0238563b2f1bd7bdc538dd2796860",
+        "stderr_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+      },
+      {
+        "command": [
+          "timeout",
+          "--foreground",
+          "30",
+          "python3",
+          "-B",
+          "packages/cyberkrill/test/cluster-help.py",
+          "cluster-help/fm-decode-invite/filename"
+        ],
+        "case": "cluster-help/fm-decode-invite/filename",
+        "status": 0,
+        "seconds": 0.076881,
+        "failure": "",
+        "stdout_sha256": "62bd5270357535df68273fa9b655dea0b2f0238563b2f1bd7bdc538dd2796860",
+        "stderr_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+      },
+      {
+        "command": [
+          "timeout",
+          "--foreground",
+          "30",
+          "python3",
+          "-B",
+          "packages/cyberkrill/test/cluster-help.py",
+          "cluster-help/fm-decode-invite/output-cluster-help"
+        ],
+        "case": "cluster-help/fm-decode-invite/output-cluster-help",
+        "status": 1,
+        "seconds": 0.078783,
+        "failure": "AssertionError: cluster help short circuit: cluster-help/fm-decode-invite/output-cluster-help",
+        "stdout_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+        "stderr_sha256": "4b43c52953133532225f961d0059c122935771c26299a7d2595c434cd210827b"
+      },
+      {
+        "command": [
+          "timeout",
+          "--foreground",
+          "30",
+          "python3",
+          "-B",
+          "packages/cyberkrill/test/cluster-help.py",
+          "cluster-help/fm-decode-invite/long-output-cluster-help"
+        ],
+        "case": "cluster-help/fm-decode-invite/long-output-cluster-help",
+        "status": 1,
+        "seconds": 0.081265,
+        "failure": "AssertionError: cluster help short circuit: cluster-help/fm-decode-invite/long-output-cluster-help",
+        "stdout_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+        "stderr_sha256": "5457f125e16f90f32dfa2782cbbcef51b7ed0a8f62208682d5d5eedb331eefa8"
+      },
+      {
+        "command": [
+          "timeout",
+          "--foreground",
+          "30",
+          "python3",
+          "-B",
+          "packages/cyberkrill/test/cluster-help.py",
+          "cluster-help/fm-decode-invite/value-missing-then-help"
+        ],
+        "case": "cluster-help/fm-decode-invite/value-missing-then-help",
+        "status": 0,
+        "seconds": 0.077022,
+        "failure": "",
+        "stdout_sha256": "62bd5270357535df68273fa9b655dea0b2f0238563b2f1bd7bdc538dd2796860",
+        "stderr_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+      },
+      {
+        "command": [
+          "timeout",
+          "--foreground",
+          "30",
+          "python3",
+          "-B",
+          "packages/cyberkrill/test/cluster-help.py",
+          "cluster-help/fm-decode-invite/terminator-long-help"
+        ],
+        "case": "cluster-help/fm-decode-invite/terminator-long-help",
+        "status": 0,
+        "seconds": 0.076076,
+        "failure": "",
+        "stdout_sha256": "62bd5270357535df68273fa9b655dea0b2f0238563b2f1bd7bdc538dd2796860",
+        "stderr_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+      },
+      {
+        "command": [
+          "timeout",
+          "--foreground",
+          "30",
+          "python3",
+          "-B",
+          "packages/cyberkrill/test/cluster-help.py",
+          "cluster-help/fm-decode-invite/prior-output-value"
+        ],
+        "case": "cluster-help/fm-decode-invite/prior-output-value",
+        "status": 0,
+        "seconds": 0.073793,
+        "failure": "",
+        "stdout_sha256": "62bd5270357535df68273fa9b655dea0b2f0238563b2f1bd7bdc538dd2796860",
+        "stderr_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+      },
+      {
+        "command": [
+          "timeout",
+          "--foreground",
+          "30",
+          "python3",
+          "-B",
+          "packages/cyberkrill/test/cluster-help.py",
+          "cluster-help/fm-encode-invite/hx"
+        ],
+        "case": "cluster-help/fm-encode-invite/hx",
+        "status": 1,
+        "seconds": 0.080278,
+        "failure": "AssertionError: cluster help short circuit: cluster-help/fm-encode-invite/hx",
+        "stdout_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+        "stderr_sha256": "ca9da4d26af2db6b296af4a8185e38809d1385e7d2d13c9cb0824adb6e992fa9"
+      },
+      {
+        "command": [
+          "timeout",
+          "--foreground",
+          "30",
+          "python3",
+          "-B",
+          "packages/cyberkrill/test/cluster-help.py",
+          "cluster-help/fm-encode-invite/hh"
+        ],
+        "case": "cluster-help/fm-encode-invite/hh",
+        "status": 1,
+        "seconds": 0.082507,
+        "failure": "AssertionError: cluster help short circuit: cluster-help/fm-encode-invite/hh",
+        "stdout_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+        "stderr_sha256": "0f9baa142bef9a57ff3ccc164f3fe59f4332051178d595deeb214a38a6c09a64"
+      },
+      {
+        "command": [
+          "timeout",
+          "--foreground",
+          "30",
+          "python3",
+          "-B",
+          "packages/cyberkrill/test/cluster-help.py",
+          "cluster-help/fm-encode-invite/ho"
+        ],
+        "case": "cluster-help/fm-encode-invite/ho",
+        "status": 1,
+        "seconds": 0.080205,
+        "failure": "AssertionError: cluster help short circuit: cluster-help/fm-encode-invite/ho",
+        "stdout_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+        "stderr_sha256": "ec41563f284dd8c8431295187c720b8831abd6835ce805508fae669f3b961624"
+      },
+      {
+        "command": [
+          "timeout",
+          "--foreground",
+          "30",
+          "python3",
+          "-B",
+          "packages/cyberkrill/test/cluster-help.py",
+          "cluster-help/fm-encode-invite/ho-unknown"
+        ],
+        "case": "cluster-help/fm-encode-invite/ho-unknown",
+        "status": 1,
+        "seconds": 0.079285,
+        "failure": "AssertionError: cluster help short circuit: cluster-help/fm-encode-invite/ho-unknown",
+        "stdout_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+        "stderr_sha256": "06ef2c1a88a275c2510da1f6f56bb6059a40ca7be1a4501371a7d1f32301769d"
+      },
+      {
+        "command": [
+          "timeout",
+          "--foreground",
+          "30",
+          "python3",
+          "-B",
+          "packages/cyberkrill/test/cluster-help.py",
+          "cluster-help/fm-encode-invite/h-equals-one"
+        ],
+        "case": "cluster-help/fm-encode-invite/h-equals-one",
+        "status": 1,
+        "seconds": 0.079133,
+        "failure": "AssertionError: cluster help short circuit: cluster-help/fm-encode-invite/h-equals-one",
+        "stdout_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+        "stderr_sha256": "b3ce76dcff067d5ef76d9bb8b744449d8256a3a9f1fe3a2e04ac73f3a8041529"
+      },
+      {
+        "command": [
+          "timeout",
+          "--foreground",
+          "30",
+          "python3",
+          "-B",
+          "packages/cyberkrill/test/cluster-help.py",
+          "cluster-help/fm-encode-invite/h-dashes"
+        ],
+        "case": "cluster-help/fm-encode-invite/h-dashes",
+        "status": 1,
+        "seconds": 0.079261,
+        "failure": "AssertionError: cluster help short circuit: cluster-help/fm-encode-invite/h-dashes",
+        "stdout_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+        "stderr_sha256": "8e5b0df8ed0e025a5cdd984d5d4ce1b2677e0f56401d63cf2dbc4121e5dbe716"
+      },
+      {
+        "command": [
+          "timeout",
+          "--foreground",
+          "30",
+          "python3",
+          "-B",
+          "packages/cyberkrill/test/cluster-help.py",
+          "cluster-help/fm-encode-invite/hq-unknown"
+        ],
+        "case": "cluster-help/fm-encode-invite/hq-unknown",
+        "status": 1,
+        "seconds": 0.082225,
+        "failure": "AssertionError: cluster help short circuit: cluster-help/fm-encode-invite/hq-unknown",
+        "stdout_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+        "stderr_sha256": "bc9e69265ad662bec2ab9bb900abaac737bafdf916630361ba1b4d2b999a6988"
+      },
+      {
+        "command": [
+          "timeout",
+          "--foreground",
+          "30",
+          "python3",
+          "-B",
+          "packages/cyberkrill/test/cluster-help.py",
+          "cluster-help/fm-encode-invite/ho-value"
+        ],
+        "case": "cluster-help/fm-encode-invite/ho-value",
+        "status": 1,
+        "seconds": 0.080259,
+        "failure": "AssertionError: cluster help short circuit: cluster-help/fm-encode-invite/ho-value",
+        "stdout_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+        "stderr_sha256": "a800d3d704d9708770d5e40353f263352405940153cf6b1640a2a0fac820f1fc"
+      },
+      {
+        "command": [
+          "timeout",
+          "--foreground",
+          "30",
+          "python3",
+          "-B",
+          "packages/cyberkrill/test/cluster-help.py",
+          "cluster-help/fm-encode-invite/h-equals-x"
+        ],
+        "case": "cluster-help/fm-encode-invite/h-equals-x",
+        "status": 1,
+        "seconds": 0.085525,
+        "failure": "AssertionError: cluster help short circuit: cluster-help/fm-encode-invite/h-equals-x",
+        "stdout_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+        "stderr_sha256": "cf0702708f4549c5f0fbc0012ad4a56f954f0eba775856a16fc5705764d73054"
+      },
+      {
+        "command": [
+          "timeout",
+          "--foreground",
+          "30",
+          "python3",
+          "-B",
+          "packages/cyberkrill/test/cluster-help.py",
+          "cluster-help/fm-encode-invite/h-filename"
+        ],
+        "case": "cluster-help/fm-encode-invite/h-filename",
+        "status": 1,
+        "seconds": 0.077102,
+        "failure": "AssertionError: cluster help short circuit: cluster-help/fm-encode-invite/h-filename",
+        "stdout_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+        "stderr_sha256": "2a99d69ad948ec4af92387b2343711bbade46862740212e2eb60457523e8f70d"
+      },
+      {
+        "command": [
+          "timeout",
+          "--foreground",
+          "30",
+          "python3",
+          "-B",
+          "packages/cyberkrill/test/cluster-help.py",
+          "cluster-help/fm-encode-invite/hx-long-help"
+        ],
+        "case": "cluster-help/fm-encode-invite/hx-long-help",
+        "status": 1,
+        "seconds": 0.078718,
+        "failure": "AssertionError: cluster help short circuit: cluster-help/fm-encode-invite/hx-long-help",
+        "stdout_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+        "stderr_sha256": "41d478f8f97b48c0d46fdbcc418a349bd93fb04f650caca8882f5efacdeae6b6"
+      },
+      {
+        "command": [
+          "timeout",
+          "--foreground",
+          "30",
+          "python3",
+          "-B",
+          "packages/cyberkrill/test/cluster-help.py",
+          "cluster-help/fm-encode-invite/repeat-cluster"
+        ],
+        "case": "cluster-help/fm-encode-invite/repeat-cluster",
+        "status": 1,
+        "seconds": 0.082558,
+        "failure": "AssertionError: cluster help short circuit: cluster-help/fm-encode-invite/repeat-cluster",
+        "stdout_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+        "stderr_sha256": "1ee368d65e6c8842b54ee13b61004ebd8bc7851297738ff52f1ededf6f5140a2"
+      },
+      {
+        "command": [
+          "timeout",
+          "--foreground",
+          "30",
+          "python3",
+          "-B",
+          "packages/cyberkrill/test/cluster-help.py",
+          "cluster-help/fm-encode-invite/unknown-hh"
+        ],
+        "case": "cluster-help/fm-encode-invite/unknown-hh",
+        "status": 0,
+        "seconds": 0.077813,
+        "failure": "",
+        "stdout_sha256": "62bd5270357535df68273fa9b655dea0b2f0238563b2f1bd7bdc538dd2796860",
+        "stderr_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+      },
+      {
+        "command": [
+          "timeout",
+          "--foreground",
+          "30",
+          "python3",
+          "-B",
+          "packages/cyberkrill/test/cluster-help.py",
+          "cluster-help/fm-encode-invite/unknown-short-hh"
+        ],
+        "case": "cluster-help/fm-encode-invite/unknown-short-hh",
+        "status": 0,
+        "seconds": 0.07834,
+        "failure": "",
+        "stdout_sha256": "62bd5270357535df68273fa9b655dea0b2f0238563b2f1bd7bdc538dd2796860",
+        "stderr_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+      },
+      {
+        "command": [
+          "timeout",
+          "--foreground",
+          "30",
+          "python3",
+          "-B",
+          "packages/cyberkrill/test/cluster-help.py",
+          "cluster-help/fm-encode-invite/output-missing-cluster"
+        ],
+        "case": "cluster-help/fm-encode-invite/output-missing-cluster",
+        "status": 0,
+        "seconds": 0.076013,
+        "failure": "",
+        "stdout_sha256": "62bd5270357535df68273fa9b655dea0b2f0238563b2f1bd7bdc538dd2796860",
+        "stderr_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+      },
+      {
+        "command": [
+          "timeout",
+          "--foreground",
+          "30",
+          "python3",
+          "-B",
+          "packages/cyberkrill/test/cluster-help.py",
+          "cluster-help/fm-encode-invite/terminator-cluster"
+        ],
+        "case": "cluster-help/fm-encode-invite/terminator-cluster",
+        "status": 0,
+        "seconds": 0.076455,
+        "failure": "",
+        "stdout_sha256": "62bd5270357535df68273fa9b655dea0b2f0238563b2f1bd7bdc538dd2796860",
+        "stderr_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+      },
+      {
+        "command": [
+          "timeout",
+          "--foreground",
+          "30",
+          "python3",
+          "-B",
+          "packages/cyberkrill/test/cluster-help.py",
+          "cluster-help/fm-encode-invite/long-help-value"
+        ],
+        "case": "cluster-help/fm-encode-invite/long-help-value",
+        "status": 0,
+        "seconds": 0.075178,
+        "failure": "",
+        "stdout_sha256": "62bd5270357535df68273fa9b655dea0b2f0238563b2f1bd7bdc538dd2796860",
+        "stderr_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+      },
+      {
+        "command": [
+          "timeout",
+          "--foreground",
+          "30",
+          "python3",
+          "-B",
+          "packages/cyberkrill/test/cluster-help.py",
+          "cluster-help/fm-encode-invite/invalid-long-cluster"
+        ],
+        "case": "cluster-help/fm-encode-invite/invalid-long-cluster",
+        "status": 0,
+        "seconds": 0.076827,
+        "failure": "",
+        "stdout_sha256": "62bd5270357535df68273fa9b655dea0b2f0238563b2f1bd7bdc538dd2796860",
+        "stderr_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+      },
+      {
+        "command": [
+          "timeout",
+          "--foreground",
+          "30",
+          "python3",
+          "-B",
+          "packages/cyberkrill/test/cluster-help.py",
+          "cluster-help/fm-encode-invite/repeat-output-cluster"
+        ],
+        "case": "cluster-help/fm-encode-invite/repeat-output-cluster",
+        "status": 0,
+        "seconds": 0.080004,
+        "failure": "",
+        "stdout_sha256": "62bd5270357535df68273fa9b655dea0b2f0238563b2f1bd7bdc538dd2796860",
+        "stderr_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+      },
+      {
+        "command": [
+          "timeout",
+          "--foreground",
+          "30",
+          "python3",
+          "-B",
+          "packages/cyberkrill/test/cluster-help.py",
+          "cluster-help/fm-encode-invite/extra-before-cluster"
+        ],
+        "case": "cluster-help/fm-encode-invite/extra-before-cluster",
+        "status": 0,
+        "seconds": 0.075507,
+        "failure": "",
+        "stdout_sha256": "62bd5270357535df68273fa9b655dea0b2f0238563b2f1bd7bdc538dd2796860",
+        "stderr_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+      },
+      {
+        "command": [
+          "timeout",
+          "--foreground",
+          "30",
+          "python3",
+          "-B",
+          "packages/cyberkrill/test/cluster-help.py",
+          "cluster-help/fm-encode-invite/output-short-h"
+        ],
+        "case": "cluster-help/fm-encode-invite/output-short-h",
+        "status": 0,
+        "seconds": 0.075359,
+        "failure": "",
+        "stdout_sha256": "62bd5270357535df68273fa9b655dea0b2f0238563b2f1bd7bdc538dd2796860",
+        "stderr_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+      },
+      {
+        "command": [
+          "timeout",
+          "--foreground",
+          "30",
+          "python3",
+          "-B",
+          "packages/cyberkrill/test/cluster-help.py",
+          "cluster-help/fm-encode-invite/output-short-hyphen"
+        ],
+        "case": "cluster-help/fm-encode-invite/output-short-hyphen",
+        "status": 0,
+        "seconds": 0.074652,
+        "failure": "",
+        "stdout_sha256": "62bd5270357535df68273fa9b655dea0b2f0238563b2f1bd7bdc538dd2796860",
+        "stderr_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+      },
+      {
+        "command": [
+          "timeout",
+          "--foreground",
+          "30",
+          "python3",
+          "-B",
+          "packages/cyberkrill/test/cluster-help.py",
+          "cluster-help/fm-encode-invite/output-long-hyphen"
+        ],
+        "case": "cluster-help/fm-encode-invite/output-long-hyphen",
+        "status": 0,
+        "seconds": 0.077408,
+        "failure": "",
+        "stdout_sha256": "62bd5270357535df68273fa9b655dea0b2f0238563b2f1bd7bdc538dd2796860",
+        "stderr_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+      },
+      {
+        "command": [
+          "timeout",
+          "--foreground",
+          "30",
+          "python3",
+          "-B",
+          "packages/cyberkrill/test/cluster-help.py",
+          "cluster-help/fm-encode-invite/output-short-equals"
+        ],
+        "case": "cluster-help/fm-encode-invite/output-short-equals",
+        "status": 0,
+        "seconds": 0.075109,
+        "failure": "",
+        "stdout_sha256": "62bd5270357535df68273fa9b655dea0b2f0238563b2f1bd7bdc538dd2796860",
+        "stderr_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+      },
+      {
+        "command": [
+          "timeout",
+          "--foreground",
+          "30",
+          "python3",
+          "-B",
+          "packages/cyberkrill/test/cluster-help.py",
+          "cluster-help/fm-encode-invite/output-utf8"
+        ],
+        "case": "cluster-help/fm-encode-invite/output-utf8",
+        "status": 0,
+        "seconds": 0.075328,
+        "failure": "",
+        "stdout_sha256": "62bd5270357535df68273fa9b655dea0b2f0238563b2f1bd7bdc538dd2796860",
+        "stderr_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+      },
+      {
+        "command": [
+          "timeout",
+          "--foreground",
+          "30",
+          "python3",
+          "-B",
+          "packages/cyberkrill/test/cluster-help.py",
+          "cluster-help/fm-encode-invite/whitespace-value"
+        ],
+        "case": "cluster-help/fm-encode-invite/whitespace-value",
+        "status": 0,
+        "seconds": 0.083793,
+        "failure": "",
+        "stdout_sha256": "62bd5270357535df68273fa9b655dea0b2f0238563b2f1bd7bdc538dd2796860",
+        "stderr_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+      },
+      {
+        "command": [
+          "timeout",
+          "--foreground",
+          "30",
+          "python3",
+          "-B",
+          "packages/cyberkrill/test/cluster-help.py",
+          "cluster-help/fm-encode-invite/filename"
+        ],
+        "case": "cluster-help/fm-encode-invite/filename",
+        "status": 0,
+        "seconds": 0.077534,
+        "failure": "",
+        "stdout_sha256": "62bd5270357535df68273fa9b655dea0b2f0238563b2f1bd7bdc538dd2796860",
+        "stderr_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+      },
+      {
+        "command": [
+          "timeout",
+          "--foreground",
+          "30",
+          "python3",
+          "-B",
+          "packages/cyberkrill/test/cluster-help.py",
+          "cluster-help/fm-encode-invite/output-cluster-help"
+        ],
+        "case": "cluster-help/fm-encode-invite/output-cluster-help",
+        "status": 1,
+        "seconds": 0.079228,
+        "failure": "AssertionError: cluster help short circuit: cluster-help/fm-encode-invite/output-cluster-help",
+        "stdout_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+        "stderr_sha256": "50931448db9e791d152ec739fdc3e19d3d7a78211f8e584453374fd090525ed3"
+      },
+      {
+        "command": [
+          "timeout",
+          "--foreground",
+          "30",
+          "python3",
+          "-B",
+          "packages/cyberkrill/test/cluster-help.py",
+          "cluster-help/fm-encode-invite/long-output-cluster-help"
+        ],
+        "case": "cluster-help/fm-encode-invite/long-output-cluster-help",
+        "status": 1,
+        "seconds": 0.079662,
+        "failure": "AssertionError: cluster help short circuit: cluster-help/fm-encode-invite/long-output-cluster-help",
+        "stdout_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+        "stderr_sha256": "da5eab0fa63eeac85c5dbc9cf66dedc7dcac47ae5a1d9af610d152d7b198ed1c"
+      },
+      {
+        "command": [
+          "timeout",
+          "--foreground",
+          "30",
+          "python3",
+          "-B",
+          "packages/cyberkrill/test/cluster-help.py",
+          "cluster-help/fm-encode-invite/value-missing-then-help"
+        ],
+        "case": "cluster-help/fm-encode-invite/value-missing-then-help",
+        "status": 0,
+        "seconds": 0.084098,
+        "failure": "",
+        "stdout_sha256": "62bd5270357535df68273fa9b655dea0b2f0238563b2f1bd7bdc538dd2796860",
+        "stderr_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+      },
+      {
+        "command": [
+          "timeout",
+          "--foreground",
+          "30",
+          "python3",
+          "-B",
+          "packages/cyberkrill/test/cluster-help.py",
+          "cluster-help/fm-encode-invite/terminator-long-help"
+        ],
+        "case": "cluster-help/fm-encode-invite/terminator-long-help",
+        "status": 0,
+        "seconds": 0.075994,
+        "failure": "",
+        "stdout_sha256": "62bd5270357535df68273fa9b655dea0b2f0238563b2f1bd7bdc538dd2796860",
+        "stderr_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+      },
+      {
+        "command": [
+          "timeout",
+          "--foreground",
+          "30",
+          "python3",
+          "-B",
+          "packages/cyberkrill/test/cluster-help.py",
+          "cluster-help/fm-encode-invite/prior-output-value"
+        ],
+        "case": "cluster-help/fm-encode-invite/prior-output-value",
+        "status": 0,
+        "seconds": 0.076094,
+        "failure": "",
+        "stdout_sha256": "62bd5270357535df68273fa9b655dea0b2f0238563b2f1bd7bdc538dd2796860",
+        "stderr_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+      },
+      {
+        "command": [
+          "timeout",
+          "--foreground",
+          "30",
+          "python3",
+          "-B",
+          "packages/cyberkrill/test/cluster-help.py",
+          "cluster-help/fm-encode-invite/repeat-skip-cluster"
+        ],
+        "case": "cluster-help/fm-encode-invite/repeat-skip-cluster",
+        "status": 0,
+        "seconds": 0.075074,
+        "failure": "",
+        "stdout_sha256": "62bd5270357535df68273fa9b655dea0b2f0238563b2f1bd7bdc538dd2796860",
+        "stderr_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+      },
+      {
+        "command": [
+          "timeout",
+          "--foreground",
+          "30",
+          "python3",
+          "-B",
+          "packages/cyberkrill/test/cluster-help.py",
+          "cluster-help/fm-encode-invite/skip-value-cluster"
+        ],
+        "case": "cluster-help/fm-encode-invite/skip-value-cluster",
+        "status": 0,
+        "seconds": 0.073724,
+        "failure": "",
+        "stdout_sha256": "62bd5270357535df68273fa9b655dea0b2f0238563b2f1bd7bdc538dd2796860",
+        "stderr_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+      },
+      {
+        "command": [
+          "timeout",
+          "--foreground",
+          "30",
+          "python3",
+          "-B",
+          "packages/cyberkrill/test/cluster-help.py",
+          "cluster-help/onchain-decode-psbt/hx"
+        ],
+        "case": "cluster-help/onchain-decode-psbt/hx",
+        "status": 1,
+        "seconds": 0.079931,
+        "failure": "AssertionError: cluster help short circuit: cluster-help/onchain-decode-psbt/hx",
+        "stdout_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+        "stderr_sha256": "d3ab6fb6ed38adc00a156ab91adacbaddbf2b1504fff5b562015f1116366ddb8"
+      },
+      {
+        "command": [
+          "timeout",
+          "--foreground",
+          "30",
+          "python3",
+          "-B",
+          "packages/cyberkrill/test/cluster-help.py",
+          "cluster-help/onchain-decode-psbt/hh"
+        ],
+        "case": "cluster-help/onchain-decode-psbt/hh",
+        "status": 1,
+        "seconds": 0.082865,
+        "failure": "AssertionError: cluster help short circuit: cluster-help/onchain-decode-psbt/hh",
+        "stdout_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+        "stderr_sha256": "85f2d5b56e64d179ea123b5ad2d2efb7abe651bb3cae172e84c5bbe9d9a8d4f5"
+      },
+      {
+        "command": [
+          "timeout",
+          "--foreground",
+          "30",
+          "python3",
+          "-B",
+          "packages/cyberkrill/test/cluster-help.py",
+          "cluster-help/onchain-decode-psbt/ho"
+        ],
+        "case": "cluster-help/onchain-decode-psbt/ho",
+        "status": 1,
+        "seconds": 0.079376,
+        "failure": "AssertionError: cluster help short circuit: cluster-help/onchain-decode-psbt/ho",
+        "stdout_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+        "stderr_sha256": "eff14227a8f0fa786b0a0c7f0148ff1599eba11262dafdad64c3e3987f5fd426"
+      },
+      {
+        "command": [
+          "timeout",
+          "--foreground",
+          "30",
+          "python3",
+          "-B",
+          "packages/cyberkrill/test/cluster-help.py",
+          "cluster-help/onchain-decode-psbt/ho-unknown"
+        ],
+        "case": "cluster-help/onchain-decode-psbt/ho-unknown",
+        "status": 1,
+        "seconds": 0.079579,
+        "failure": "AssertionError: cluster help short circuit: cluster-help/onchain-decode-psbt/ho-unknown",
+        "stdout_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+        "stderr_sha256": "8f09a68ef23c7a9fd43b9766259e97268ea8703d0fa51683f488840687e7468a"
+      },
+      {
+        "command": [
+          "timeout",
+          "--foreground",
+          "30",
+          "python3",
+          "-B",
+          "packages/cyberkrill/test/cluster-help.py",
+          "cluster-help/onchain-decode-psbt/h-equals-one"
+        ],
+        "case": "cluster-help/onchain-decode-psbt/h-equals-one",
+        "status": 1,
+        "seconds": 0.079178,
+        "failure": "AssertionError: cluster help short circuit: cluster-help/onchain-decode-psbt/h-equals-one",
+        "stdout_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+        "stderr_sha256": "847a58cd150cf53f8b7ba1a28a33ceae7840e9856aca622cb9bd2eb34e5adad0"
+      },
+      {
+        "command": [
+          "timeout",
+          "--foreground",
+          "30",
+          "python3",
+          "-B",
+          "packages/cyberkrill/test/cluster-help.py",
+          "cluster-help/onchain-decode-psbt/h-dashes"
+        ],
+        "case": "cluster-help/onchain-decode-psbt/h-dashes",
+        "status": 1,
+        "seconds": 0.084269,
+        "failure": "AssertionError: cluster help short circuit: cluster-help/onchain-decode-psbt/h-dashes",
+        "stdout_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+        "stderr_sha256": "480f53c1823ce72eadf26eb2da8ab64da55d0afb3a0dfe8184ab3574cae7c896"
+      },
+      {
+        "command": [
+          "timeout",
+          "--foreground",
+          "30",
+          "python3",
+          "-B",
+          "packages/cyberkrill/test/cluster-help.py",
+          "cluster-help/onchain-decode-psbt/hq-unknown"
+        ],
+        "case": "cluster-help/onchain-decode-psbt/hq-unknown",
+        "status": 1,
+        "seconds": 0.079662,
+        "failure": "AssertionError: cluster help short circuit: cluster-help/onchain-decode-psbt/hq-unknown",
+        "stdout_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+        "stderr_sha256": "209e6f3c168a5e9bb0f54470a4088b5443e190b0097226f5dcc3c61f96f166e4"
+      },
+      {
+        "command": [
+          "timeout",
+          "--foreground",
+          "30",
+          "python3",
+          "-B",
+          "packages/cyberkrill/test/cluster-help.py",
+          "cluster-help/onchain-decode-psbt/ho-value"
+        ],
+        "case": "cluster-help/onchain-decode-psbt/ho-value",
+        "status": 1,
+        "seconds": 0.0782,
+        "failure": "AssertionError: cluster help short circuit: cluster-help/onchain-decode-psbt/ho-value",
+        "stdout_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+        "stderr_sha256": "a38bbe2c49be8c5f2ed9440d821a566535dfe447c9935aac99aa79b008703099"
+      },
+      {
+        "command": [
+          "timeout",
+          "--foreground",
+          "30",
+          "python3",
+          "-B",
+          "packages/cyberkrill/test/cluster-help.py",
+          "cluster-help/onchain-decode-psbt/h-equals-x"
+        ],
+        "case": "cluster-help/onchain-decode-psbt/h-equals-x",
+        "status": 1,
+        "seconds": 0.081827,
+        "failure": "AssertionError: cluster help short circuit: cluster-help/onchain-decode-psbt/h-equals-x",
+        "stdout_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+        "stderr_sha256": "20a9e97dcbc45684d1b00c4f21a34c43014307cb34345101cbc1855d51369e92"
+      },
+      {
+        "command": [
+          "timeout",
+          "--foreground",
+          "30",
+          "python3",
+          "-B",
+          "packages/cyberkrill/test/cluster-help.py",
+          "cluster-help/onchain-decode-psbt/h-filename"
+        ],
+        "case": "cluster-help/onchain-decode-psbt/h-filename",
+        "status": 1,
+        "seconds": 0.077597,
+        "failure": "AssertionError: cluster help short circuit: cluster-help/onchain-decode-psbt/h-filename",
+        "stdout_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+        "stderr_sha256": "85ecfdd3308ee7b713ad005ab310e82885214b3d047b073e4d42eae4fac8c022"
+      },
+      {
+        "command": [
+          "timeout",
+          "--foreground",
+          "30",
+          "python3",
+          "-B",
+          "packages/cyberkrill/test/cluster-help.py",
+          "cluster-help/onchain-decode-psbt/hx-long-help"
+        ],
+        "case": "cluster-help/onchain-decode-psbt/hx-long-help",
+        "status": 1,
+        "seconds": 0.08036,
+        "failure": "AssertionError: cluster help short circuit: cluster-help/onchain-decode-psbt/hx-long-help",
+        "stdout_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+        "stderr_sha256": "94df37fc32afeb4c6a38a0b3a16eebb97d722b221242f39368835bc948608b54"
+      },
+      {
+        "command": [
+          "timeout",
+          "--foreground",
+          "30",
+          "python3",
+          "-B",
+          "packages/cyberkrill/test/cluster-help.py",
+          "cluster-help/onchain-decode-psbt/repeat-cluster"
+        ],
+        "case": "cluster-help/onchain-decode-psbt/repeat-cluster",
+        "status": 1,
+        "seconds": 0.07725,
+        "failure": "AssertionError: cluster help short circuit: cluster-help/onchain-decode-psbt/repeat-cluster",
+        "stdout_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+        "stderr_sha256": "32dd45fb2129cbcbff67e0a453165d5ecd04ab26909f3f9af0bb67bed1103091"
+      },
+      {
+        "command": [
+          "timeout",
+          "--foreground",
+          "30",
+          "python3",
+          "-B",
+          "packages/cyberkrill/test/cluster-help.py",
+          "cluster-help/onchain-decode-psbt/unknown-hh"
+        ],
+        "case": "cluster-help/onchain-decode-psbt/unknown-hh",
+        "status": 0,
+        "seconds": 0.078008,
+        "failure": "",
+        "stdout_sha256": "62bd5270357535df68273fa9b655dea0b2f0238563b2f1bd7bdc538dd2796860",
+        "stderr_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+      },
+      {
+        "command": [
+          "timeout",
+          "--foreground",
+          "30",
+          "python3",
+          "-B",
+          "packages/cyberkrill/test/cluster-help.py",
+          "cluster-help/onchain-decode-psbt/unknown-short-hh"
+        ],
+        "case": "cluster-help/onchain-decode-psbt/unknown-short-hh",
+        "status": 0,
+        "seconds": 0.076659,
+        "failure": "",
+        "stdout_sha256": "62bd5270357535df68273fa9b655dea0b2f0238563b2f1bd7bdc538dd2796860",
+        "stderr_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+      },
+      {
+        "command": [
+          "timeout",
+          "--foreground",
+          "30",
+          "python3",
+          "-B",
+          "packages/cyberkrill/test/cluster-help.py",
+          "cluster-help/onchain-decode-psbt/output-missing-cluster"
+        ],
+        "case": "cluster-help/onchain-decode-psbt/output-missing-cluster",
+        "status": 0,
+        "seconds": 0.076091,
+        "failure": "",
+        "stdout_sha256": "62bd5270357535df68273fa9b655dea0b2f0238563b2f1bd7bdc538dd2796860",
+        "stderr_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+      },
+      {
+        "command": [
+          "timeout",
+          "--foreground",
+          "30",
+          "python3",
+          "-B",
+          "packages/cyberkrill/test/cluster-help.py",
+          "cluster-help/onchain-decode-psbt/terminator-cluster"
+        ],
+        "case": "cluster-help/onchain-decode-psbt/terminator-cluster",
+        "status": 0,
+        "seconds": 0.073709,
+        "failure": "",
+        "stdout_sha256": "62bd5270357535df68273fa9b655dea0b2f0238563b2f1bd7bdc538dd2796860",
+        "stderr_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+      },
+      {
+        "command": [
+          "timeout",
+          "--foreground",
+          "30",
+          "python3",
+          "-B",
+          "packages/cyberkrill/test/cluster-help.py",
+          "cluster-help/onchain-decode-psbt/long-help-value"
+        ],
+        "case": "cluster-help/onchain-decode-psbt/long-help-value",
+        "status": 0,
+        "seconds": 0.075316,
+        "failure": "",
+        "stdout_sha256": "62bd5270357535df68273fa9b655dea0b2f0238563b2f1bd7bdc538dd2796860",
+        "stderr_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+      },
+      {
+        "command": [
+          "timeout",
+          "--foreground",
+          "30",
+          "python3",
+          "-B",
+          "packages/cyberkrill/test/cluster-help.py",
+          "cluster-help/onchain-decode-psbt/invalid-long-cluster"
+        ],
+        "case": "cluster-help/onchain-decode-psbt/invalid-long-cluster",
+        "status": 0,
+        "seconds": 0.081738,
+        "failure": "",
+        "stdout_sha256": "62bd5270357535df68273fa9b655dea0b2f0238563b2f1bd7bdc538dd2796860",
+        "stderr_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+      },
+      {
+        "command": [
+          "timeout",
+          "--foreground",
+          "30",
+          "python3",
+          "-B",
+          "packages/cyberkrill/test/cluster-help.py",
+          "cluster-help/onchain-decode-psbt/repeat-output-cluster"
+        ],
+        "case": "cluster-help/onchain-decode-psbt/repeat-output-cluster",
+        "status": 0,
+        "seconds": 0.074498,
+        "failure": "",
+        "stdout_sha256": "62bd5270357535df68273fa9b655dea0b2f0238563b2f1bd7bdc538dd2796860",
+        "stderr_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+      },
+      {
+        "command": [
+          "timeout",
+          "--foreground",
+          "30",
+          "python3",
+          "-B",
+          "packages/cyberkrill/test/cluster-help.py",
+          "cluster-help/onchain-decode-psbt/extra-before-cluster"
+        ],
+        "case": "cluster-help/onchain-decode-psbt/extra-before-cluster",
+        "status": 0,
+        "seconds": 0.076436,
+        "failure": "",
+        "stdout_sha256": "62bd5270357535df68273fa9b655dea0b2f0238563b2f1bd7bdc538dd2796860",
+        "stderr_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+      },
+      {
+        "command": [
+          "timeout",
+          "--foreground",
+          "30",
+          "python3",
+          "-B",
+          "packages/cyberkrill/test/cluster-help.py",
+          "cluster-help/onchain-decode-psbt/output-short-h"
+        ],
+        "case": "cluster-help/onchain-decode-psbt/output-short-h",
+        "status": 0,
+        "seconds": 0.075205,
+        "failure": "",
+        "stdout_sha256": "62bd5270357535df68273fa9b655dea0b2f0238563b2f1bd7bdc538dd2796860",
+        "stderr_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+      },
+      {
+        "command": [
+          "timeout",
+          "--foreground",
+          "30",
+          "python3",
+          "-B",
+          "packages/cyberkrill/test/cluster-help.py",
+          "cluster-help/onchain-decode-psbt/output-short-hyphen"
+        ],
+        "case": "cluster-help/onchain-decode-psbt/output-short-hyphen",
+        "status": 0,
+        "seconds": 0.077558,
+        "failure": "",
+        "stdout_sha256": "62bd5270357535df68273fa9b655dea0b2f0238563b2f1bd7bdc538dd2796860",
+        "stderr_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+      },
+      {
+        "command": [
+          "timeout",
+          "--foreground",
+          "30",
+          "python3",
+          "-B",
+          "packages/cyberkrill/test/cluster-help.py",
+          "cluster-help/onchain-decode-psbt/output-long-hyphen"
+        ],
+        "case": "cluster-help/onchain-decode-psbt/output-long-hyphen",
+        "status": 0,
+        "seconds": 0.07617,
+        "failure": "",
+        "stdout_sha256": "62bd5270357535df68273fa9b655dea0b2f0238563b2f1bd7bdc538dd2796860",
+        "stderr_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+      },
+      {
+        "command": [
+          "timeout",
+          "--foreground",
+          "30",
+          "python3",
+          "-B",
+          "packages/cyberkrill/test/cluster-help.py",
+          "cluster-help/onchain-decode-psbt/output-short-equals"
+        ],
+        "case": "cluster-help/onchain-decode-psbt/output-short-equals",
+        "status": 0,
+        "seconds": 0.075644,
+        "failure": "",
+        "stdout_sha256": "62bd5270357535df68273fa9b655dea0b2f0238563b2f1bd7bdc538dd2796860",
+        "stderr_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+      },
+      {
+        "command": [
+          "timeout",
+          "--foreground",
+          "30",
+          "python3",
+          "-B",
+          "packages/cyberkrill/test/cluster-help.py",
+          "cluster-help/onchain-decode-psbt/output-utf8"
+        ],
+        "case": "cluster-help/onchain-decode-psbt/output-utf8",
+        "status": 0,
+        "seconds": 0.077829,
+        "failure": "",
+        "stdout_sha256": "62bd5270357535df68273fa9b655dea0b2f0238563b2f1bd7bdc538dd2796860",
+        "stderr_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+      },
+      {
+        "command": [
+          "timeout",
+          "--foreground",
+          "30",
+          "python3",
+          "-B",
+          "packages/cyberkrill/test/cluster-help.py",
+          "cluster-help/onchain-decode-psbt/whitespace-value"
+        ],
+        "case": "cluster-help/onchain-decode-psbt/whitespace-value",
+        "status": 0,
+        "seconds": 0.07584,
+        "failure": "",
+        "stdout_sha256": "62bd5270357535df68273fa9b655dea0b2f0238563b2f1bd7bdc538dd2796860",
+        "stderr_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+      },
+      {
+        "command": [
+          "timeout",
+          "--foreground",
+          "30",
+          "python3",
+          "-B",
+          "packages/cyberkrill/test/cluster-help.py",
+          "cluster-help/onchain-decode-psbt/filename"
+        ],
+        "case": "cluster-help/onchain-decode-psbt/filename",
+        "status": 0,
+        "seconds": 0.075452,
+        "failure": "",
+        "stdout_sha256": "62bd5270357535df68273fa9b655dea0b2f0238563b2f1bd7bdc538dd2796860",
+        "stderr_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+      },
+      {
+        "command": [
+          "timeout",
+          "--foreground",
+          "30",
+          "python3",
+          "-B",
+          "packages/cyberkrill/test/cluster-help.py",
+          "cluster-help/onchain-decode-psbt/output-cluster-help"
+        ],
+        "case": "cluster-help/onchain-decode-psbt/output-cluster-help",
+        "status": 1,
+        "seconds": 0.078992,
+        "failure": "AssertionError: cluster help short circuit: cluster-help/onchain-decode-psbt/output-cluster-help",
+        "stdout_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+        "stderr_sha256": "d4f5932244f5f0480f6facd1189e33185d716ad0f06e0495a77665b1f8a2f381"
+      },
+      {
+        "command": [
+          "timeout",
+          "--foreground",
+          "30",
+          "python3",
+          "-B",
+          "packages/cyberkrill/test/cluster-help.py",
+          "cluster-help/onchain-decode-psbt/long-output-cluster-help"
+        ],
+        "case": "cluster-help/onchain-decode-psbt/long-output-cluster-help",
+        "status": 1,
+        "seconds": 0.07627,
+        "failure": "AssertionError: cluster help short circuit: cluster-help/onchain-decode-psbt/long-output-cluster-help",
+        "stdout_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+        "stderr_sha256": "cda50dd39087d306cf715a9764215236c60edcc04f94b7505e4f8c38c1c2dfcf"
+      },
+      {
+        "command": [
+          "timeout",
+          "--foreground",
+          "30",
+          "python3",
+          "-B",
+          "packages/cyberkrill/test/cluster-help.py",
+          "cluster-help/onchain-decode-psbt/value-missing-then-help"
+        ],
+        "case": "cluster-help/onchain-decode-psbt/value-missing-then-help",
+        "status": 0,
+        "seconds": 0.075771,
+        "failure": "",
+        "stdout_sha256": "62bd5270357535df68273fa9b655dea0b2f0238563b2f1bd7bdc538dd2796860",
+        "stderr_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+      },
+      {
+        "command": [
+          "timeout",
+          "--foreground",
+          "30",
+          "python3",
+          "-B",
+          "packages/cyberkrill/test/cluster-help.py",
+          "cluster-help/onchain-decode-psbt/terminator-long-help"
+        ],
+        "case": "cluster-help/onchain-decode-psbt/terminator-long-help",
+        "status": 0,
+        "seconds": 0.07493,
+        "failure": "",
+        "stdout_sha256": "62bd5270357535df68273fa9b655dea0b2f0238563b2f1bd7bdc538dd2796860",
+        "stderr_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+      },
+      {
+        "command": [
+          "timeout",
+          "--foreground",
+          "30",
+          "python3",
+          "-B",
+          "packages/cyberkrill/test/cluster-help.py",
+          "cluster-help/onchain-decode-psbt/prior-output-value"
+        ],
+        "case": "cluster-help/onchain-decode-psbt/prior-output-value",
+        "status": 0,
+        "seconds": 0.07578,
+        "failure": "",
+        "stdout_sha256": "62bd5270357535df68273fa9b655dea0b2f0238563b2f1bd7bdc538dd2796860",
+        "stderr_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+      },
+      {
+        "command": [
+          "timeout",
+          "--foreground",
+          "30",
+          "python3",
+          "-B",
+          "packages/cyberkrill/test/cluster-help.py",
+          "cluster-help/onchain-decode-psbt/network-value-cluster"
+        ],
+        "case": "cluster-help/onchain-decode-psbt/network-value-cluster",
+        "status": 0,
+        "seconds": 0.07652,
+        "failure": "",
+        "stdout_sha256": "62bd5270357535df68273fa9b655dea0b2f0238563b2f1bd7bdc538dd2796860",
+        "stderr_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+      },
+      {
+        "command": [
+          "timeout",
+          "--foreground",
+          "30",
+          "python3",
+          "-B",
+          "packages/cyberkrill/test/cluster-help.py",
+          "cluster-help/onchain-decode-psbt/repeat-network-cluster"
+        ],
+        "case": "cluster-help/onchain-decode-psbt/repeat-network-cluster",
+        "status": 0,
+        "seconds": 0.073705,
+        "failure": "",
+        "stdout_sha256": "62bd5270357535df68273fa9b655dea0b2f0238563b2f1bd7bdc538dd2796860",
+        "stderr_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+      },
+      {
+        "command": [
+          "timeout",
+          "--foreground",
+          "30",
+          "python3",
+          "-B",
+          "packages/cyberkrill/test/cluster-help.py",
+          "cluster-help/onchain-decode-psbt/invalid-network-cluster"
+        ],
+        "case": "cluster-help/onchain-decode-psbt/invalid-network-cluster",
+        "status": 1,
+        "seconds": 0.079901,
+        "failure": "AssertionError: cluster help short circuit: cluster-help/onchain-decode-psbt/invalid-network-cluster",
+        "stdout_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+        "stderr_sha256": "9aa940032df28e807dd406ef60c63e52b4fa1a45e0612f08bba9e3c9aeae0d98"
+      },
+      {
+        "command": [
+          "timeout",
+          "--foreground",
+          "30",
+          "python3",
+          "-B",
+          "packages/cyberkrill/test/cluster-help.py",
+          "cluster-help/onchain-decode-psbt/network-missing-after-cluster"
+        ],
+        "case": "cluster-help/onchain-decode-psbt/network-missing-after-cluster",
+        "status": 1,
+        "seconds": 0.079223,
+        "failure": "AssertionError: cluster help short circuit: cluster-help/onchain-decode-psbt/network-missing-after-cluster",
+        "stdout_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+        "stderr_sha256": "0079ba5e17d181ce44767d2d47dced33fe3b03c996a715bf60230d38ce2c289c"
+      }
+    ]
+  },
+  "after": {
+    "source_sha256": {
+      "Cyberkrill/App.lean": "ae6f881b84da4d7db4ad8cc326a10fb81ead5739462782c1f5f3185f9d8035a0",
+      "test/cluster-help.py": "5c92aff1c9b8b40870e2ec067487a2c99549061da2f8e02d363a1e6a06d4a238",
+      "test/cluster-regressions.py": "f6f60b898c02af961dd2904483cb1cc45ee450cc6dd0786fa5c84dc8f5e7fbee",
+      "test/offline-inputs.py": "bfa086b444ebcf98063e0e186196b1ca9dbd7b5622250b08051bdfb849a3c670",
+      "test/golden/offline-reference.json": "59c0d1f8603315986317591022b32b78375667075fde12021d0befdd5f2108d5"
+    },
+    "checks": [
+      {
+        "command": [
+          "timeout",
+          "--foreground",
+          "30",
+          "python3",
+          "-B",
+          "packages/cyberkrill/test/cluster-help.py",
+          "cluster-help/fm-decode-invite/hx"
+        ],
+        "case": "cluster-help/fm-decode-invite/hx",
+        "status": 0,
+        "seconds": 0.077107,
+        "failure": "",
+        "stdout_sha256": "62bd5270357535df68273fa9b655dea0b2f0238563b2f1bd7bdc538dd2796860",
+        "stderr_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+      },
+      {
+        "command": [
+          "timeout",
+          "--foreground",
+          "30",
+          "python3",
+          "-B",
+          "packages/cyberkrill/test/cluster-help.py",
+          "cluster-help/fm-decode-invite/hh"
+        ],
+        "case": "cluster-help/fm-decode-invite/hh",
+        "status": 0,
+        "seconds": 0.078638,
+        "failure": "",
+        "stdout_sha256": "62bd5270357535df68273fa9b655dea0b2f0238563b2f1bd7bdc538dd2796860",
+        "stderr_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+      },
+      {
+        "command": [
+          "timeout",
+          "--foreground",
+          "30",
+          "python3",
+          "-B",
+          "packages/cyberkrill/test/cluster-help.py",
+          "cluster-help/fm-decode-invite/ho"
+        ],
+        "case": "cluster-help/fm-decode-invite/ho",
+        "status": 0,
+        "seconds": 0.077709,
+        "failure": "",
+        "stdout_sha256": "62bd5270357535df68273fa9b655dea0b2f0238563b2f1bd7bdc538dd2796860",
+        "stderr_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+      },
+      {
+        "command": [
+          "timeout",
+          "--foreground",
+          "30",
+          "python3",
+          "-B",
+          "packages/cyberkrill/test/cluster-help.py",
+          "cluster-help/fm-decode-invite/ho-unknown"
+        ],
+        "case": "cluster-help/fm-decode-invite/ho-unknown",
+        "status": 0,
+        "seconds": 0.077852,
+        "failure": "",
+        "stdout_sha256": "62bd5270357535df68273fa9b655dea0b2f0238563b2f1bd7bdc538dd2796860",
+        "stderr_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+      },
+      {
+        "command": [
+          "timeout",
+          "--foreground",
+          "30",
+          "python3",
+          "-B",
+          "packages/cyberkrill/test/cluster-help.py",
+          "cluster-help/fm-decode-invite/h-equals-one"
+        ],
+        "case": "cluster-help/fm-decode-invite/h-equals-one",
+        "status": 0,
+        "seconds": 0.075377,
+        "failure": "",
+        "stdout_sha256": "62bd5270357535df68273fa9b655dea0b2f0238563b2f1bd7bdc538dd2796860",
+        "stderr_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+      },
+      {
+        "command": [
+          "timeout",
+          "--foreground",
+          "30",
+          "python3",
+          "-B",
+          "packages/cyberkrill/test/cluster-help.py",
+          "cluster-help/fm-decode-invite/h-dashes"
+        ],
+        "case": "cluster-help/fm-decode-invite/h-dashes",
+        "status": 0,
+        "seconds": 0.078541,
+        "failure": "",
+        "stdout_sha256": "62bd5270357535df68273fa9b655dea0b2f0238563b2f1bd7bdc538dd2796860",
+        "stderr_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+      },
+      {
+        "command": [
+          "timeout",
+          "--foreground",
+          "30",
+          "python3",
+          "-B",
+          "packages/cyberkrill/test/cluster-help.py",
+          "cluster-help/fm-decode-invite/hq-unknown"
+        ],
+        "case": "cluster-help/fm-decode-invite/hq-unknown",
+        "status": 0,
+        "seconds": 0.074887,
+        "failure": "",
+        "stdout_sha256": "62bd5270357535df68273fa9b655dea0b2f0238563b2f1bd7bdc538dd2796860",
+        "stderr_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+      },
+      {
+        "command": [
+          "timeout",
+          "--foreground",
+          "30",
+          "python3",
+          "-B",
+          "packages/cyberkrill/test/cluster-help.py",
+          "cluster-help/fm-decode-invite/ho-value"
+        ],
+        "case": "cluster-help/fm-decode-invite/ho-value",
+        "status": 0,
+        "seconds": 0.076361,
+        "failure": "",
+        "stdout_sha256": "62bd5270357535df68273fa9b655dea0b2f0238563b2f1bd7bdc538dd2796860",
+        "stderr_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+      },
+      {
+        "command": [
+          "timeout",
+          "--foreground",
+          "30",
+          "python3",
+          "-B",
+          "packages/cyberkrill/test/cluster-help.py",
+          "cluster-help/fm-decode-invite/h-equals-x"
+        ],
+        "case": "cluster-help/fm-decode-invite/h-equals-x",
+        "status": 0,
+        "seconds": 0.07503,
+        "failure": "",
+        "stdout_sha256": "62bd5270357535df68273fa9b655dea0b2f0238563b2f1bd7bdc538dd2796860",
+        "stderr_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+      },
+      {
+        "command": [
+          "timeout",
+          "--foreground",
+          "30",
+          "python3",
+          "-B",
+          "packages/cyberkrill/test/cluster-help.py",
+          "cluster-help/fm-decode-invite/h-filename"
+        ],
+        "case": "cluster-help/fm-decode-invite/h-filename",
+        "status": 0,
+        "seconds": 0.075432,
+        "failure": "",
+        "stdout_sha256": "62bd5270357535df68273fa9b655dea0b2f0238563b2f1bd7bdc538dd2796860",
+        "stderr_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+      },
+      {
+        "command": [
+          "timeout",
+          "--foreground",
+          "30",
+          "python3",
+          "-B",
+          "packages/cyberkrill/test/cluster-help.py",
+          "cluster-help/fm-decode-invite/hx-long-help"
+        ],
+        "case": "cluster-help/fm-decode-invite/hx-long-help",
+        "status": 0,
+        "seconds": 0.084147,
+        "failure": "",
+        "stdout_sha256": "62bd5270357535df68273fa9b655dea0b2f0238563b2f1bd7bdc538dd2796860",
+        "stderr_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+      },
+      {
+        "command": [
+          "timeout",
+          "--foreground",
+          "30",
+          "python3",
+          "-B",
+          "packages/cyberkrill/test/cluster-help.py",
+          "cluster-help/fm-decode-invite/repeat-cluster"
+        ],
+        "case": "cluster-help/fm-decode-invite/repeat-cluster",
+        "status": 0,
+        "seconds": 0.078281,
+        "failure": "",
+        "stdout_sha256": "62bd5270357535df68273fa9b655dea0b2f0238563b2f1bd7bdc538dd2796860",
+        "stderr_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+      },
+      {
+        "command": [
+          "timeout",
+          "--foreground",
+          "30",
+          "python3",
+          "-B",
+          "packages/cyberkrill/test/cluster-help.py",
+          "cluster-help/fm-decode-invite/unknown-hh"
+        ],
+        "case": "cluster-help/fm-decode-invite/unknown-hh",
+        "status": 0,
+        "seconds": 0.079345,
+        "failure": "",
+        "stdout_sha256": "62bd5270357535df68273fa9b655dea0b2f0238563b2f1bd7bdc538dd2796860",
+        "stderr_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+      },
+      {
+        "command": [
+          "timeout",
+          "--foreground",
+          "30",
+          "python3",
+          "-B",
+          "packages/cyberkrill/test/cluster-help.py",
+          "cluster-help/fm-decode-invite/unknown-short-hh"
+        ],
+        "case": "cluster-help/fm-decode-invite/unknown-short-hh",
+        "status": 0,
+        "seconds": 0.074763,
+        "failure": "",
+        "stdout_sha256": "62bd5270357535df68273fa9b655dea0b2f0238563b2f1bd7bdc538dd2796860",
+        "stderr_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+      },
+      {
+        "command": [
+          "timeout",
+          "--foreground",
+          "30",
+          "python3",
+          "-B",
+          "packages/cyberkrill/test/cluster-help.py",
+          "cluster-help/fm-decode-invite/output-missing-cluster"
+        ],
+        "case": "cluster-help/fm-decode-invite/output-missing-cluster",
+        "status": 0,
+        "seconds": 0.076494,
+        "failure": "",
+        "stdout_sha256": "62bd5270357535df68273fa9b655dea0b2f0238563b2f1bd7bdc538dd2796860",
+        "stderr_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+      },
+      {
+        "command": [
+          "timeout",
+          "--foreground",
+          "30",
+          "python3",
+          "-B",
+          "packages/cyberkrill/test/cluster-help.py",
+          "cluster-help/fm-decode-invite/terminator-cluster"
+        ],
+        "case": "cluster-help/fm-decode-invite/terminator-cluster",
+        "status": 0,
+        "seconds": 0.075114,
+        "failure": "",
+        "stdout_sha256": "62bd5270357535df68273fa9b655dea0b2f0238563b2f1bd7bdc538dd2796860",
+        "stderr_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+      },
+      {
+        "command": [
+          "timeout",
+          "--foreground",
+          "30",
+          "python3",
+          "-B",
+          "packages/cyberkrill/test/cluster-help.py",
+          "cluster-help/fm-decode-invite/long-help-value"
+        ],
+        "case": "cluster-help/fm-decode-invite/long-help-value",
+        "status": 0,
+        "seconds": 0.078835,
+        "failure": "",
+        "stdout_sha256": "62bd5270357535df68273fa9b655dea0b2f0238563b2f1bd7bdc538dd2796860",
+        "stderr_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+      },
+      {
+        "command": [
+          "timeout",
+          "--foreground",
+          "30",
+          "python3",
+          "-B",
+          "packages/cyberkrill/test/cluster-help.py",
+          "cluster-help/fm-decode-invite/invalid-long-cluster"
+        ],
+        "case": "cluster-help/fm-decode-invite/invalid-long-cluster",
+        "status": 0,
+        "seconds": 0.076484,
+        "failure": "",
+        "stdout_sha256": "62bd5270357535df68273fa9b655dea0b2f0238563b2f1bd7bdc538dd2796860",
+        "stderr_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+      },
+      {
+        "command": [
+          "timeout",
+          "--foreground",
+          "30",
+          "python3",
+          "-B",
+          "packages/cyberkrill/test/cluster-help.py",
+          "cluster-help/fm-decode-invite/repeat-output-cluster"
+        ],
+        "case": "cluster-help/fm-decode-invite/repeat-output-cluster",
+        "status": 0,
+        "seconds": 0.077243,
+        "failure": "",
+        "stdout_sha256": "62bd5270357535df68273fa9b655dea0b2f0238563b2f1bd7bdc538dd2796860",
+        "stderr_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+      },
+      {
+        "command": [
+          "timeout",
+          "--foreground",
+          "30",
+          "python3",
+          "-B",
+          "packages/cyberkrill/test/cluster-help.py",
+          "cluster-help/fm-decode-invite/extra-before-cluster"
+        ],
+        "case": "cluster-help/fm-decode-invite/extra-before-cluster",
+        "status": 0,
+        "seconds": 0.075046,
+        "failure": "",
+        "stdout_sha256": "62bd5270357535df68273fa9b655dea0b2f0238563b2f1bd7bdc538dd2796860",
+        "stderr_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+      },
+      {
+        "command": [
+          "timeout",
+          "--foreground",
+          "30",
+          "python3",
+          "-B",
+          "packages/cyberkrill/test/cluster-help.py",
+          "cluster-help/fm-decode-invite/output-short-h"
+        ],
+        "case": "cluster-help/fm-decode-invite/output-short-h",
+        "status": 0,
+        "seconds": 0.076121,
+        "failure": "",
+        "stdout_sha256": "62bd5270357535df68273fa9b655dea0b2f0238563b2f1bd7bdc538dd2796860",
+        "stderr_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+      },
+      {
+        "command": [
+          "timeout",
+          "--foreground",
+          "30",
+          "python3",
+          "-B",
+          "packages/cyberkrill/test/cluster-help.py",
+          "cluster-help/fm-decode-invite/output-short-hyphen"
+        ],
+        "case": "cluster-help/fm-decode-invite/output-short-hyphen",
+        "status": 0,
+        "seconds": 0.073807,
+        "failure": "",
+        "stdout_sha256": "62bd5270357535df68273fa9b655dea0b2f0238563b2f1bd7bdc538dd2796860",
+        "stderr_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+      },
+      {
+        "command": [
+          "timeout",
+          "--foreground",
+          "30",
+          "python3",
+          "-B",
+          "packages/cyberkrill/test/cluster-help.py",
+          "cluster-help/fm-decode-invite/output-long-hyphen"
+        ],
+        "case": "cluster-help/fm-decode-invite/output-long-hyphen",
+        "status": 0,
+        "seconds": 0.074431,
+        "failure": "",
+        "stdout_sha256": "62bd5270357535df68273fa9b655dea0b2f0238563b2f1bd7bdc538dd2796860",
+        "stderr_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+      },
+      {
+        "command": [
+          "timeout",
+          "--foreground",
+          "30",
+          "python3",
+          "-B",
+          "packages/cyberkrill/test/cluster-help.py",
+          "cluster-help/fm-decode-invite/output-short-equals"
+        ],
+        "case": "cluster-help/fm-decode-invite/output-short-equals",
+        "status": 0,
+        "seconds": 0.076809,
+        "failure": "",
+        "stdout_sha256": "62bd5270357535df68273fa9b655dea0b2f0238563b2f1bd7bdc538dd2796860",
+        "stderr_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+      },
+      {
+        "command": [
+          "timeout",
+          "--foreground",
+          "30",
+          "python3",
+          "-B",
+          "packages/cyberkrill/test/cluster-help.py",
+          "cluster-help/fm-decode-invite/output-utf8"
+        ],
+        "case": "cluster-help/fm-decode-invite/output-utf8",
+        "status": 0,
+        "seconds": 0.077752,
+        "failure": "",
+        "stdout_sha256": "62bd5270357535df68273fa9b655dea0b2f0238563b2f1bd7bdc538dd2796860",
+        "stderr_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+      },
+      {
+        "command": [
+          "timeout",
+          "--foreground",
+          "30",
+          "python3",
+          "-B",
+          "packages/cyberkrill/test/cluster-help.py",
+          "cluster-help/fm-decode-invite/whitespace-value"
+        ],
+        "case": "cluster-help/fm-decode-invite/whitespace-value",
+        "status": 0,
+        "seconds": 0.078755,
+        "failure": "",
+        "stdout_sha256": "62bd5270357535df68273fa9b655dea0b2f0238563b2f1bd7bdc538dd2796860",
+        "stderr_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+      },
+      {
+        "command": [
+          "timeout",
+          "--foreground",
+          "30",
+          "python3",
+          "-B",
+          "packages/cyberkrill/test/cluster-help.py",
+          "cluster-help/fm-decode-invite/filename"
+        ],
+        "case": "cluster-help/fm-decode-invite/filename",
+        "status": 0,
+        "seconds": 0.079647,
+        "failure": "",
+        "stdout_sha256": "62bd5270357535df68273fa9b655dea0b2f0238563b2f1bd7bdc538dd2796860",
+        "stderr_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+      },
+      {
+        "command": [
+          "timeout",
+          "--foreground",
+          "30",
+          "python3",
+          "-B",
+          "packages/cyberkrill/test/cluster-help.py",
+          "cluster-help/fm-decode-invite/output-cluster-help"
+        ],
+        "case": "cluster-help/fm-decode-invite/output-cluster-help",
+        "status": 0,
+        "seconds": 0.076425,
+        "failure": "",
+        "stdout_sha256": "62bd5270357535df68273fa9b655dea0b2f0238563b2f1bd7bdc538dd2796860",
+        "stderr_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+      },
+      {
+        "command": [
+          "timeout",
+          "--foreground",
+          "30",
+          "python3",
+          "-B",
+          "packages/cyberkrill/test/cluster-help.py",
+          "cluster-help/fm-decode-invite/long-output-cluster-help"
+        ],
+        "case": "cluster-help/fm-decode-invite/long-output-cluster-help",
+        "status": 0,
+        "seconds": 0.075522,
+        "failure": "",
+        "stdout_sha256": "62bd5270357535df68273fa9b655dea0b2f0238563b2f1bd7bdc538dd2796860",
+        "stderr_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+      },
+      {
+        "command": [
+          "timeout",
+          "--foreground",
+          "30",
+          "python3",
+          "-B",
+          "packages/cyberkrill/test/cluster-help.py",
+          "cluster-help/fm-decode-invite/value-missing-then-help"
+        ],
+        "case": "cluster-help/fm-decode-invite/value-missing-then-help",
+        "status": 0,
+        "seconds": 0.074704,
+        "failure": "",
+        "stdout_sha256": "62bd5270357535df68273fa9b655dea0b2f0238563b2f1bd7bdc538dd2796860",
+        "stderr_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+      },
+      {
+        "command": [
+          "timeout",
+          "--foreground",
+          "30",
+          "python3",
+          "-B",
+          "packages/cyberkrill/test/cluster-help.py",
+          "cluster-help/fm-decode-invite/terminator-long-help"
+        ],
+        "case": "cluster-help/fm-decode-invite/terminator-long-help",
+        "status": 0,
+        "seconds": 0.075953,
+        "failure": "",
+        "stdout_sha256": "62bd5270357535df68273fa9b655dea0b2f0238563b2f1bd7bdc538dd2796860",
+        "stderr_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+      },
+      {
+        "command": [
+          "timeout",
+          "--foreground",
+          "30",
+          "python3",
+          "-B",
+          "packages/cyberkrill/test/cluster-help.py",
+          "cluster-help/fm-decode-invite/prior-output-value"
+        ],
+        "case": "cluster-help/fm-decode-invite/prior-output-value",
+        "status": 0,
+        "seconds": 0.075217,
+        "failure": "",
+        "stdout_sha256": "62bd5270357535df68273fa9b655dea0b2f0238563b2f1bd7bdc538dd2796860",
+        "stderr_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+      },
+      {
+        "command": [
+          "timeout",
+          "--foreground",
+          "30",
+          "python3",
+          "-B",
+          "packages/cyberkrill/test/cluster-help.py",
+          "cluster-help/fm-encode-invite/hx"
+        ],
+        "case": "cluster-help/fm-encode-invite/hx",
+        "status": 0,
+        "seconds": 0.074629,
+        "failure": "",
+        "stdout_sha256": "62bd5270357535df68273fa9b655dea0b2f0238563b2f1bd7bdc538dd2796860",
+        "stderr_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+      },
+      {
+        "command": [
+          "timeout",
+          "--foreground",
+          "30",
+          "python3",
+          "-B",
+          "packages/cyberkrill/test/cluster-help.py",
+          "cluster-help/fm-encode-invite/hh"
+        ],
+        "case": "cluster-help/fm-encode-invite/hh",
+        "status": 0,
+        "seconds": 0.075976,
+        "failure": "",
+        "stdout_sha256": "62bd5270357535df68273fa9b655dea0b2f0238563b2f1bd7bdc538dd2796860",
+        "stderr_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+      },
+      {
+        "command": [
+          "timeout",
+          "--foreground",
+          "30",
+          "python3",
+          "-B",
+          "packages/cyberkrill/test/cluster-help.py",
+          "cluster-help/fm-encode-invite/ho"
+        ],
+        "case": "cluster-help/fm-encode-invite/ho",
+        "status": 0,
+        "seconds": 0.074652,
+        "failure": "",
+        "stdout_sha256": "62bd5270357535df68273fa9b655dea0b2f0238563b2f1bd7bdc538dd2796860",
+        "stderr_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+      },
+      {
+        "command": [
+          "timeout",
+          "--foreground",
+          "30",
+          "python3",
+          "-B",
+          "packages/cyberkrill/test/cluster-help.py",
+          "cluster-help/fm-encode-invite/ho-unknown"
+        ],
+        "case": "cluster-help/fm-encode-invite/ho-unknown",
+        "status": 0,
+        "seconds": 0.073236,
+        "failure": "",
+        "stdout_sha256": "62bd5270357535df68273fa9b655dea0b2f0238563b2f1bd7bdc538dd2796860",
+        "stderr_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+      },
+      {
+        "command": [
+          "timeout",
+          "--foreground",
+          "30",
+          "python3",
+          "-B",
+          "packages/cyberkrill/test/cluster-help.py",
+          "cluster-help/fm-encode-invite/h-equals-one"
+        ],
+        "case": "cluster-help/fm-encode-invite/h-equals-one",
+        "status": 0,
+        "seconds": 0.074082,
+        "failure": "",
+        "stdout_sha256": "62bd5270357535df68273fa9b655dea0b2f0238563b2f1bd7bdc538dd2796860",
+        "stderr_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+      },
+      {
+        "command": [
+          "timeout",
+          "--foreground",
+          "30",
+          "python3",
+          "-B",
+          "packages/cyberkrill/test/cluster-help.py",
+          "cluster-help/fm-encode-invite/h-dashes"
+        ],
+        "case": "cluster-help/fm-encode-invite/h-dashes",
+        "status": 0,
+        "seconds": 0.082983,
+        "failure": "",
+        "stdout_sha256": "62bd5270357535df68273fa9b655dea0b2f0238563b2f1bd7bdc538dd2796860",
+        "stderr_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+      },
+      {
+        "command": [
+          "timeout",
+          "--foreground",
+          "30",
+          "python3",
+          "-B",
+          "packages/cyberkrill/test/cluster-help.py",
+          "cluster-help/fm-encode-invite/hq-unknown"
+        ],
+        "case": "cluster-help/fm-encode-invite/hq-unknown",
+        "status": 0,
+        "seconds": 0.07326,
+        "failure": "",
+        "stdout_sha256": "62bd5270357535df68273fa9b655dea0b2f0238563b2f1bd7bdc538dd2796860",
+        "stderr_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+      },
+      {
+        "command": [
+          "timeout",
+          "--foreground",
+          "30",
+          "python3",
+          "-B",
+          "packages/cyberkrill/test/cluster-help.py",
+          "cluster-help/fm-encode-invite/ho-value"
+        ],
+        "case": "cluster-help/fm-encode-invite/ho-value",
+        "status": 0,
+        "seconds": 0.075112,
+        "failure": "",
+        "stdout_sha256": "62bd5270357535df68273fa9b655dea0b2f0238563b2f1bd7bdc538dd2796860",
+        "stderr_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+      },
+      {
+        "command": [
+          "timeout",
+          "--foreground",
+          "30",
+          "python3",
+          "-B",
+          "packages/cyberkrill/test/cluster-help.py",
+          "cluster-help/fm-encode-invite/h-equals-x"
+        ],
+        "case": "cluster-help/fm-encode-invite/h-equals-x",
+        "status": 0,
+        "seconds": 0.073739,
+        "failure": "",
+        "stdout_sha256": "62bd5270357535df68273fa9b655dea0b2f0238563b2f1bd7bdc538dd2796860",
+        "stderr_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+      },
+      {
+        "command": [
+          "timeout",
+          "--foreground",
+          "30",
+          "python3",
+          "-B",
+          "packages/cyberkrill/test/cluster-help.py",
+          "cluster-help/fm-encode-invite/h-filename"
+        ],
+        "case": "cluster-help/fm-encode-invite/h-filename",
+        "status": 0,
+        "seconds": 0.076568,
+        "failure": "",
+        "stdout_sha256": "62bd5270357535df68273fa9b655dea0b2f0238563b2f1bd7bdc538dd2796860",
+        "stderr_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+      },
+      {
+        "command": [
+          "timeout",
+          "--foreground",
+          "30",
+          "python3",
+          "-B",
+          "packages/cyberkrill/test/cluster-help.py",
+          "cluster-help/fm-encode-invite/hx-long-help"
+        ],
+        "case": "cluster-help/fm-encode-invite/hx-long-help",
+        "status": 0,
+        "seconds": 0.073919,
+        "failure": "",
+        "stdout_sha256": "62bd5270357535df68273fa9b655dea0b2f0238563b2f1bd7bdc538dd2796860",
+        "stderr_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+      },
+      {
+        "command": [
+          "timeout",
+          "--foreground",
+          "30",
+          "python3",
+          "-B",
+          "packages/cyberkrill/test/cluster-help.py",
+          "cluster-help/fm-encode-invite/repeat-cluster"
+        ],
+        "case": "cluster-help/fm-encode-invite/repeat-cluster",
+        "status": 0,
+        "seconds": 0.077511,
+        "failure": "",
+        "stdout_sha256": "62bd5270357535df68273fa9b655dea0b2f0238563b2f1bd7bdc538dd2796860",
+        "stderr_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+      },
+      {
+        "command": [
+          "timeout",
+          "--foreground",
+          "30",
+          "python3",
+          "-B",
+          "packages/cyberkrill/test/cluster-help.py",
+          "cluster-help/fm-encode-invite/unknown-hh"
+        ],
+        "case": "cluster-help/fm-encode-invite/unknown-hh",
+        "status": 0,
+        "seconds": 0.076774,
+        "failure": "",
+        "stdout_sha256": "62bd5270357535df68273fa9b655dea0b2f0238563b2f1bd7bdc538dd2796860",
+        "stderr_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+      },
+      {
+        "command": [
+          "timeout",
+          "--foreground",
+          "30",
+          "python3",
+          "-B",
+          "packages/cyberkrill/test/cluster-help.py",
+          "cluster-help/fm-encode-invite/unknown-short-hh"
+        ],
+        "case": "cluster-help/fm-encode-invite/unknown-short-hh",
+        "status": 0,
+        "seconds": 0.077371,
+        "failure": "",
+        "stdout_sha256": "62bd5270357535df68273fa9b655dea0b2f0238563b2f1bd7bdc538dd2796860",
+        "stderr_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+      },
+      {
+        "command": [
+          "timeout",
+          "--foreground",
+          "30",
+          "python3",
+          "-B",
+          "packages/cyberkrill/test/cluster-help.py",
+          "cluster-help/fm-encode-invite/output-missing-cluster"
+        ],
+        "case": "cluster-help/fm-encode-invite/output-missing-cluster",
+        "status": 0,
+        "seconds": 0.078248,
+        "failure": "",
+        "stdout_sha256": "62bd5270357535df68273fa9b655dea0b2f0238563b2f1bd7bdc538dd2796860",
+        "stderr_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+      },
+      {
+        "command": [
+          "timeout",
+          "--foreground",
+          "30",
+          "python3",
+          "-B",
+          "packages/cyberkrill/test/cluster-help.py",
+          "cluster-help/fm-encode-invite/terminator-cluster"
+        ],
+        "case": "cluster-help/fm-encode-invite/terminator-cluster",
+        "status": 0,
+        "seconds": 0.073916,
+        "failure": "",
+        "stdout_sha256": "62bd5270357535df68273fa9b655dea0b2f0238563b2f1bd7bdc538dd2796860",
+        "stderr_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+      },
+      {
+        "command": [
+          "timeout",
+          "--foreground",
+          "30",
+          "python3",
+          "-B",
+          "packages/cyberkrill/test/cluster-help.py",
+          "cluster-help/fm-encode-invite/long-help-value"
+        ],
+        "case": "cluster-help/fm-encode-invite/long-help-value",
+        "status": 0,
+        "seconds": 0.0772,
+        "failure": "",
+        "stdout_sha256": "62bd5270357535df68273fa9b655dea0b2f0238563b2f1bd7bdc538dd2796860",
+        "stderr_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+      },
+      {
+        "command": [
+          "timeout",
+          "--foreground",
+          "30",
+          "python3",
+          "-B",
+          "packages/cyberkrill/test/cluster-help.py",
+          "cluster-help/fm-encode-invite/invalid-long-cluster"
+        ],
+        "case": "cluster-help/fm-encode-invite/invalid-long-cluster",
+        "status": 0,
+        "seconds": 0.077267,
+        "failure": "",
+        "stdout_sha256": "62bd5270357535df68273fa9b655dea0b2f0238563b2f1bd7bdc538dd2796860",
+        "stderr_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+      },
+      {
+        "command": [
+          "timeout",
+          "--foreground",
+          "30",
+          "python3",
+          "-B",
+          "packages/cyberkrill/test/cluster-help.py",
+          "cluster-help/fm-encode-invite/repeat-output-cluster"
+        ],
+        "case": "cluster-help/fm-encode-invite/repeat-output-cluster",
+        "status": 0,
+        "seconds": 0.07751,
+        "failure": "",
+        "stdout_sha256": "62bd5270357535df68273fa9b655dea0b2f0238563b2f1bd7bdc538dd2796860",
+        "stderr_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+      },
+      {
+        "command": [
+          "timeout",
+          "--foreground",
+          "30",
+          "python3",
+          "-B",
+          "packages/cyberkrill/test/cluster-help.py",
+          "cluster-help/fm-encode-invite/extra-before-cluster"
+        ],
+        "case": "cluster-help/fm-encode-invite/extra-before-cluster",
+        "status": 0,
+        "seconds": 0.075176,
+        "failure": "",
+        "stdout_sha256": "62bd5270357535df68273fa9b655dea0b2f0238563b2f1bd7bdc538dd2796860",
+        "stderr_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+      },
+      {
+        "command": [
+          "timeout",
+          "--foreground",
+          "30",
+          "python3",
+          "-B",
+          "packages/cyberkrill/test/cluster-help.py",
+          "cluster-help/fm-encode-invite/output-short-h"
+        ],
+        "case": "cluster-help/fm-encode-invite/output-short-h",
+        "status": 0,
+        "seconds": 0.075982,
+        "failure": "",
+        "stdout_sha256": "62bd5270357535df68273fa9b655dea0b2f0238563b2f1bd7bdc538dd2796860",
+        "stderr_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+      },
+      {
+        "command": [
+          "timeout",
+          "--foreground",
+          "30",
+          "python3",
+          "-B",
+          "packages/cyberkrill/test/cluster-help.py",
+          "cluster-help/fm-encode-invite/output-short-hyphen"
+        ],
+        "case": "cluster-help/fm-encode-invite/output-short-hyphen",
+        "status": 0,
+        "seconds": 0.083796,
+        "failure": "",
+        "stdout_sha256": "62bd5270357535df68273fa9b655dea0b2f0238563b2f1bd7bdc538dd2796860",
+        "stderr_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+      },
+      {
+        "command": [
+          "timeout",
+          "--foreground",
+          "30",
+          "python3",
+          "-B",
+          "packages/cyberkrill/test/cluster-help.py",
+          "cluster-help/fm-encode-invite/output-long-hyphen"
+        ],
+        "case": "cluster-help/fm-encode-invite/output-long-hyphen",
+        "status": 0,
+        "seconds": 0.073824,
+        "failure": "",
+        "stdout_sha256": "62bd5270357535df68273fa9b655dea0b2f0238563b2f1bd7bdc538dd2796860",
+        "stderr_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+      },
+      {
+        "command": [
+          "timeout",
+          "--foreground",
+          "30",
+          "python3",
+          "-B",
+          "packages/cyberkrill/test/cluster-help.py",
+          "cluster-help/fm-encode-invite/output-short-equals"
+        ],
+        "case": "cluster-help/fm-encode-invite/output-short-equals",
+        "status": 0,
+        "seconds": 0.07508,
+        "failure": "",
+        "stdout_sha256": "62bd5270357535df68273fa9b655dea0b2f0238563b2f1bd7bdc538dd2796860",
+        "stderr_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+      },
+      {
+        "command": [
+          "timeout",
+          "--foreground",
+          "30",
+          "python3",
+          "-B",
+          "packages/cyberkrill/test/cluster-help.py",
+          "cluster-help/fm-encode-invite/output-utf8"
+        ],
+        "case": "cluster-help/fm-encode-invite/output-utf8",
+        "status": 0,
+        "seconds": 0.075097,
+        "failure": "",
+        "stdout_sha256": "62bd5270357535df68273fa9b655dea0b2f0238563b2f1bd7bdc538dd2796860",
+        "stderr_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+      },
+      {
+        "command": [
+          "timeout",
+          "--foreground",
+          "30",
+          "python3",
+          "-B",
+          "packages/cyberkrill/test/cluster-help.py",
+          "cluster-help/fm-encode-invite/whitespace-value"
+        ],
+        "case": "cluster-help/fm-encode-invite/whitespace-value",
+        "status": 0,
+        "seconds": 0.075776,
+        "failure": "",
+        "stdout_sha256": "62bd5270357535df68273fa9b655dea0b2f0238563b2f1bd7bdc538dd2796860",
+        "stderr_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+      },
+      {
+        "command": [
+          "timeout",
+          "--foreground",
+          "30",
+          "python3",
+          "-B",
+          "packages/cyberkrill/test/cluster-help.py",
+          "cluster-help/fm-encode-invite/filename"
+        ],
+        "case": "cluster-help/fm-encode-invite/filename",
+        "status": 0,
+        "seconds": 0.074724,
+        "failure": "",
+        "stdout_sha256": "62bd5270357535df68273fa9b655dea0b2f0238563b2f1bd7bdc538dd2796860",
+        "stderr_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+      },
+      {
+        "command": [
+          "timeout",
+          "--foreground",
+          "30",
+          "python3",
+          "-B",
+          "packages/cyberkrill/test/cluster-help.py",
+          "cluster-help/fm-encode-invite/output-cluster-help"
+        ],
+        "case": "cluster-help/fm-encode-invite/output-cluster-help",
+        "status": 0,
+        "seconds": 0.075849,
+        "failure": "",
+        "stdout_sha256": "62bd5270357535df68273fa9b655dea0b2f0238563b2f1bd7bdc538dd2796860",
+        "stderr_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+      },
+      {
+        "command": [
+          "timeout",
+          "--foreground",
+          "30",
+          "python3",
+          "-B",
+          "packages/cyberkrill/test/cluster-help.py",
+          "cluster-help/fm-encode-invite/long-output-cluster-help"
+        ],
+        "case": "cluster-help/fm-encode-invite/long-output-cluster-help",
+        "status": 0,
+        "seconds": 0.080844,
+        "failure": "",
+        "stdout_sha256": "62bd5270357535df68273fa9b655dea0b2f0238563b2f1bd7bdc538dd2796860",
+        "stderr_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+      },
+      {
+        "command": [
+          "timeout",
+          "--foreground",
+          "30",
+          "python3",
+          "-B",
+          "packages/cyberkrill/test/cluster-help.py",
+          "cluster-help/fm-encode-invite/value-missing-then-help"
+        ],
+        "case": "cluster-help/fm-encode-invite/value-missing-then-help",
+        "status": 0,
+        "seconds": 0.075983,
+        "failure": "",
+        "stdout_sha256": "62bd5270357535df68273fa9b655dea0b2f0238563b2f1bd7bdc538dd2796860",
+        "stderr_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+      },
+      {
+        "command": [
+          "timeout",
+          "--foreground",
+          "30",
+          "python3",
+          "-B",
+          "packages/cyberkrill/test/cluster-help.py",
+          "cluster-help/fm-encode-invite/terminator-long-help"
+        ],
+        "case": "cluster-help/fm-encode-invite/terminator-long-help",
+        "status": 0,
+        "seconds": 0.074659,
+        "failure": "",
+        "stdout_sha256": "62bd5270357535df68273fa9b655dea0b2f0238563b2f1bd7bdc538dd2796860",
+        "stderr_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+      },
+      {
+        "command": [
+          "timeout",
+          "--foreground",
+          "30",
+          "python3",
+          "-B",
+          "packages/cyberkrill/test/cluster-help.py",
+          "cluster-help/fm-encode-invite/prior-output-value"
+        ],
+        "case": "cluster-help/fm-encode-invite/prior-output-value",
+        "status": 0,
+        "seconds": 0.074632,
+        "failure": "",
+        "stdout_sha256": "62bd5270357535df68273fa9b655dea0b2f0238563b2f1bd7bdc538dd2796860",
+        "stderr_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+      },
+      {
+        "command": [
+          "timeout",
+          "--foreground",
+          "30",
+          "python3",
+          "-B",
+          "packages/cyberkrill/test/cluster-help.py",
+          "cluster-help/fm-encode-invite/repeat-skip-cluster"
+        ],
+        "case": "cluster-help/fm-encode-invite/repeat-skip-cluster",
+        "status": 0,
+        "seconds": 0.072412,
+        "failure": "",
+        "stdout_sha256": "62bd5270357535df68273fa9b655dea0b2f0238563b2f1bd7bdc538dd2796860",
+        "stderr_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+      },
+      {
+        "command": [
+          "timeout",
+          "--foreground",
+          "30",
+          "python3",
+          "-B",
+          "packages/cyberkrill/test/cluster-help.py",
+          "cluster-help/fm-encode-invite/skip-value-cluster"
+        ],
+        "case": "cluster-help/fm-encode-invite/skip-value-cluster",
+        "status": 0,
+        "seconds": 0.072718,
+        "failure": "",
+        "stdout_sha256": "62bd5270357535df68273fa9b655dea0b2f0238563b2f1bd7bdc538dd2796860",
+        "stderr_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+      },
+      {
+        "command": [
+          "timeout",
+          "--foreground",
+          "30",
+          "python3",
+          "-B",
+          "packages/cyberkrill/test/cluster-help.py",
+          "cluster-help/onchain-decode-psbt/hx"
+        ],
+        "case": "cluster-help/onchain-decode-psbt/hx",
+        "status": 0,
+        "seconds": 0.073757,
+        "failure": "",
+        "stdout_sha256": "62bd5270357535df68273fa9b655dea0b2f0238563b2f1bd7bdc538dd2796860",
+        "stderr_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+      },
+      {
+        "command": [
+          "timeout",
+          "--foreground",
+          "30",
+          "python3",
+          "-B",
+          "packages/cyberkrill/test/cluster-help.py",
+          "cluster-help/onchain-decode-psbt/hh"
+        ],
+        "case": "cluster-help/onchain-decode-psbt/hh",
+        "status": 0,
+        "seconds": 0.076773,
+        "failure": "",
+        "stdout_sha256": "62bd5270357535df68273fa9b655dea0b2f0238563b2f1bd7bdc538dd2796860",
+        "stderr_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+      },
+      {
+        "command": [
+          "timeout",
+          "--foreground",
+          "30",
+          "python3",
+          "-B",
+          "packages/cyberkrill/test/cluster-help.py",
+          "cluster-help/onchain-decode-psbt/ho"
+        ],
+        "case": "cluster-help/onchain-decode-psbt/ho",
+        "status": 0,
+        "seconds": 0.075869,
+        "failure": "",
+        "stdout_sha256": "62bd5270357535df68273fa9b655dea0b2f0238563b2f1bd7bdc538dd2796860",
+        "stderr_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+      },
+      {
+        "command": [
+          "timeout",
+          "--foreground",
+          "30",
+          "python3",
+          "-B",
+          "packages/cyberkrill/test/cluster-help.py",
+          "cluster-help/onchain-decode-psbt/ho-unknown"
+        ],
+        "case": "cluster-help/onchain-decode-psbt/ho-unknown",
+        "status": 0,
+        "seconds": 0.075809,
+        "failure": "",
+        "stdout_sha256": "62bd5270357535df68273fa9b655dea0b2f0238563b2f1bd7bdc538dd2796860",
+        "stderr_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+      },
+      {
+        "command": [
+          "timeout",
+          "--foreground",
+          "30",
+          "python3",
+          "-B",
+          "packages/cyberkrill/test/cluster-help.py",
+          "cluster-help/onchain-decode-psbt/h-equals-one"
+        ],
+        "case": "cluster-help/onchain-decode-psbt/h-equals-one",
+        "status": 0,
+        "seconds": 0.074852,
+        "failure": "",
+        "stdout_sha256": "62bd5270357535df68273fa9b655dea0b2f0238563b2f1bd7bdc538dd2796860",
+        "stderr_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+      },
+      {
+        "command": [
+          "timeout",
+          "--foreground",
+          "30",
+          "python3",
+          "-B",
+          "packages/cyberkrill/test/cluster-help.py",
+          "cluster-help/onchain-decode-psbt/h-dashes"
+        ],
+        "case": "cluster-help/onchain-decode-psbt/h-dashes",
+        "status": 0,
+        "seconds": 0.076167,
+        "failure": "",
+        "stdout_sha256": "62bd5270357535df68273fa9b655dea0b2f0238563b2f1bd7bdc538dd2796860",
+        "stderr_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+      },
+      {
+        "command": [
+          "timeout",
+          "--foreground",
+          "30",
+          "python3",
+          "-B",
+          "packages/cyberkrill/test/cluster-help.py",
+          "cluster-help/onchain-decode-psbt/hq-unknown"
+        ],
+        "case": "cluster-help/onchain-decode-psbt/hq-unknown",
+        "status": 0,
+        "seconds": 0.075339,
+        "failure": "",
+        "stdout_sha256": "62bd5270357535df68273fa9b655dea0b2f0238563b2f1bd7bdc538dd2796860",
+        "stderr_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+      },
+      {
+        "command": [
+          "timeout",
+          "--foreground",
+          "30",
+          "python3",
+          "-B",
+          "packages/cyberkrill/test/cluster-help.py",
+          "cluster-help/onchain-decode-psbt/ho-value"
+        ],
+        "case": "cluster-help/onchain-decode-psbt/ho-value",
+        "status": 0,
+        "seconds": 0.074641,
+        "failure": "",
+        "stdout_sha256": "62bd5270357535df68273fa9b655dea0b2f0238563b2f1bd7bdc538dd2796860",
+        "stderr_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+      },
+      {
+        "command": [
+          "timeout",
+          "--foreground",
+          "30",
+          "python3",
+          "-B",
+          "packages/cyberkrill/test/cluster-help.py",
+          "cluster-help/onchain-decode-psbt/h-equals-x"
+        ],
+        "case": "cluster-help/onchain-decode-psbt/h-equals-x",
+        "status": 0,
+        "seconds": 0.076506,
+        "failure": "",
+        "stdout_sha256": "62bd5270357535df68273fa9b655dea0b2f0238563b2f1bd7bdc538dd2796860",
+        "stderr_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+      },
+      {
+        "command": [
+          "timeout",
+          "--foreground",
+          "30",
+          "python3",
+          "-B",
+          "packages/cyberkrill/test/cluster-help.py",
+          "cluster-help/onchain-decode-psbt/h-filename"
+        ],
+        "case": "cluster-help/onchain-decode-psbt/h-filename",
+        "status": 0,
+        "seconds": 0.075868,
+        "failure": "",
+        "stdout_sha256": "62bd5270357535df68273fa9b655dea0b2f0238563b2f1bd7bdc538dd2796860",
+        "stderr_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+      },
+      {
+        "command": [
+          "timeout",
+          "--foreground",
+          "30",
+          "python3",
+          "-B",
+          "packages/cyberkrill/test/cluster-help.py",
+          "cluster-help/onchain-decode-psbt/hx-long-help"
+        ],
+        "case": "cluster-help/onchain-decode-psbt/hx-long-help",
+        "status": 0,
+        "seconds": 0.081362,
+        "failure": "",
+        "stdout_sha256": "62bd5270357535df68273fa9b655dea0b2f0238563b2f1bd7bdc538dd2796860",
+        "stderr_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+      },
+      {
+        "command": [
+          "timeout",
+          "--foreground",
+          "30",
+          "python3",
+          "-B",
+          "packages/cyberkrill/test/cluster-help.py",
+          "cluster-help/onchain-decode-psbt/repeat-cluster"
+        ],
+        "case": "cluster-help/onchain-decode-psbt/repeat-cluster",
+        "status": 0,
+        "seconds": 0.074198,
+        "failure": "",
+        "stdout_sha256": "62bd5270357535df68273fa9b655dea0b2f0238563b2f1bd7bdc538dd2796860",
+        "stderr_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+      },
+      {
+        "command": [
+          "timeout",
+          "--foreground",
+          "30",
+          "python3",
+          "-B",
+          "packages/cyberkrill/test/cluster-help.py",
+          "cluster-help/onchain-decode-psbt/unknown-hh"
+        ],
+        "case": "cluster-help/onchain-decode-psbt/unknown-hh",
+        "status": 0,
+        "seconds": 0.074758,
+        "failure": "",
+        "stdout_sha256": "62bd5270357535df68273fa9b655dea0b2f0238563b2f1bd7bdc538dd2796860",
+        "stderr_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+      },
+      {
+        "command": [
+          "timeout",
+          "--foreground",
+          "30",
+          "python3",
+          "-B",
+          "packages/cyberkrill/test/cluster-help.py",
+          "cluster-help/onchain-decode-psbt/unknown-short-hh"
+        ],
+        "case": "cluster-help/onchain-decode-psbt/unknown-short-hh",
+        "status": 0,
+        "seconds": 0.07685,
+        "failure": "",
+        "stdout_sha256": "62bd5270357535df68273fa9b655dea0b2f0238563b2f1bd7bdc538dd2796860",
+        "stderr_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+      },
+      {
+        "command": [
+          "timeout",
+          "--foreground",
+          "30",
+          "python3",
+          "-B",
+          "packages/cyberkrill/test/cluster-help.py",
+          "cluster-help/onchain-decode-psbt/output-missing-cluster"
+        ],
+        "case": "cluster-help/onchain-decode-psbt/output-missing-cluster",
+        "status": 0,
+        "seconds": 0.07335,
+        "failure": "",
+        "stdout_sha256": "62bd5270357535df68273fa9b655dea0b2f0238563b2f1bd7bdc538dd2796860",
+        "stderr_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+      },
+      {
+        "command": [
+          "timeout",
+          "--foreground",
+          "30",
+          "python3",
+          "-B",
+          "packages/cyberkrill/test/cluster-help.py",
+          "cluster-help/onchain-decode-psbt/terminator-cluster"
+        ],
+        "case": "cluster-help/onchain-decode-psbt/terminator-cluster",
+        "status": 0,
+        "seconds": 0.077768,
+        "failure": "",
+        "stdout_sha256": "62bd5270357535df68273fa9b655dea0b2f0238563b2f1bd7bdc538dd2796860",
+        "stderr_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+      },
+      {
+        "command": [
+          "timeout",
+          "--foreground",
+          "30",
+          "python3",
+          "-B",
+          "packages/cyberkrill/test/cluster-help.py",
+          "cluster-help/onchain-decode-psbt/long-help-value"
+        ],
+        "case": "cluster-help/onchain-decode-psbt/long-help-value",
+        "status": 0,
+        "seconds": 0.073762,
+        "failure": "",
+        "stdout_sha256": "62bd5270357535df68273fa9b655dea0b2f0238563b2f1bd7bdc538dd2796860",
+        "stderr_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+      },
+      {
+        "command": [
+          "timeout",
+          "--foreground",
+          "30",
+          "python3",
+          "-B",
+          "packages/cyberkrill/test/cluster-help.py",
+          "cluster-help/onchain-decode-psbt/invalid-long-cluster"
+        ],
+        "case": "cluster-help/onchain-decode-psbt/invalid-long-cluster",
+        "status": 0,
+        "seconds": 0.073239,
+        "failure": "",
+        "stdout_sha256": "62bd5270357535df68273fa9b655dea0b2f0238563b2f1bd7bdc538dd2796860",
+        "stderr_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+      },
+      {
+        "command": [
+          "timeout",
+          "--foreground",
+          "30",
+          "python3",
+          "-B",
+          "packages/cyberkrill/test/cluster-help.py",
+          "cluster-help/onchain-decode-psbt/repeat-output-cluster"
+        ],
+        "case": "cluster-help/onchain-decode-psbt/repeat-output-cluster",
+        "status": 0,
+        "seconds": 0.074668,
+        "failure": "",
+        "stdout_sha256": "62bd5270357535df68273fa9b655dea0b2f0238563b2f1bd7bdc538dd2796860",
+        "stderr_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+      },
+      {
+        "command": [
+          "timeout",
+          "--foreground",
+          "30",
+          "python3",
+          "-B",
+          "packages/cyberkrill/test/cluster-help.py",
+          "cluster-help/onchain-decode-psbt/extra-before-cluster"
+        ],
+        "case": "cluster-help/onchain-decode-psbt/extra-before-cluster",
+        "status": 0,
+        "seconds": 0.075857,
+        "failure": "",
+        "stdout_sha256": "62bd5270357535df68273fa9b655dea0b2f0238563b2f1bd7bdc538dd2796860",
+        "stderr_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+      },
+      {
+        "command": [
+          "timeout",
+          "--foreground",
+          "30",
+          "python3",
+          "-B",
+          "packages/cyberkrill/test/cluster-help.py",
+          "cluster-help/onchain-decode-psbt/output-short-h"
+        ],
+        "case": "cluster-help/onchain-decode-psbt/output-short-h",
+        "status": 0,
+        "seconds": 0.075357,
+        "failure": "",
+        "stdout_sha256": "62bd5270357535df68273fa9b655dea0b2f0238563b2f1bd7bdc538dd2796860",
+        "stderr_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+      },
+      {
+        "command": [
+          "timeout",
+          "--foreground",
+          "30",
+          "python3",
+          "-B",
+          "packages/cyberkrill/test/cluster-help.py",
+          "cluster-help/onchain-decode-psbt/output-short-hyphen"
+        ],
+        "case": "cluster-help/onchain-decode-psbt/output-short-hyphen",
+        "status": 0,
+        "seconds": 0.077876,
+        "failure": "",
+        "stdout_sha256": "62bd5270357535df68273fa9b655dea0b2f0238563b2f1bd7bdc538dd2796860",
+        "stderr_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+      },
+      {
+        "command": [
+          "timeout",
+          "--foreground",
+          "30",
+          "python3",
+          "-B",
+          "packages/cyberkrill/test/cluster-help.py",
+          "cluster-help/onchain-decode-psbt/output-long-hyphen"
+        ],
+        "case": "cluster-help/onchain-decode-psbt/output-long-hyphen",
+        "status": 0,
+        "seconds": 0.075162,
+        "failure": "",
+        "stdout_sha256": "62bd5270357535df68273fa9b655dea0b2f0238563b2f1bd7bdc538dd2796860",
+        "stderr_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+      },
+      {
+        "command": [
+          "timeout",
+          "--foreground",
+          "30",
+          "python3",
+          "-B",
+          "packages/cyberkrill/test/cluster-help.py",
+          "cluster-help/onchain-decode-psbt/output-short-equals"
+        ],
+        "case": "cluster-help/onchain-decode-psbt/output-short-equals",
+        "status": 0,
+        "seconds": 0.077422,
+        "failure": "",
+        "stdout_sha256": "62bd5270357535df68273fa9b655dea0b2f0238563b2f1bd7bdc538dd2796860",
+        "stderr_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+      },
+      {
+        "command": [
+          "timeout",
+          "--foreground",
+          "30",
+          "python3",
+          "-B",
+          "packages/cyberkrill/test/cluster-help.py",
+          "cluster-help/onchain-decode-psbt/output-utf8"
+        ],
+        "case": "cluster-help/onchain-decode-psbt/output-utf8",
+        "status": 0,
+        "seconds": 0.076209,
+        "failure": "",
+        "stdout_sha256": "62bd5270357535df68273fa9b655dea0b2f0238563b2f1bd7bdc538dd2796860",
+        "stderr_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+      },
+      {
+        "command": [
+          "timeout",
+          "--foreground",
+          "30",
+          "python3",
+          "-B",
+          "packages/cyberkrill/test/cluster-help.py",
+          "cluster-help/onchain-decode-psbt/whitespace-value"
+        ],
+        "case": "cluster-help/onchain-decode-psbt/whitespace-value",
+        "status": 0,
+        "seconds": 0.076931,
+        "failure": "",
+        "stdout_sha256": "62bd5270357535df68273fa9b655dea0b2f0238563b2f1bd7bdc538dd2796860",
+        "stderr_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+      },
+      {
+        "command": [
+          "timeout",
+          "--foreground",
+          "30",
+          "python3",
+          "-B",
+          "packages/cyberkrill/test/cluster-help.py",
+          "cluster-help/onchain-decode-psbt/filename"
+        ],
+        "case": "cluster-help/onchain-decode-psbt/filename",
+        "status": 0,
+        "seconds": 0.076635,
+        "failure": "",
+        "stdout_sha256": "62bd5270357535df68273fa9b655dea0b2f0238563b2f1bd7bdc538dd2796860",
+        "stderr_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+      },
+      {
+        "command": [
+          "timeout",
+          "--foreground",
+          "30",
+          "python3",
+          "-B",
+          "packages/cyberkrill/test/cluster-help.py",
+          "cluster-help/onchain-decode-psbt/output-cluster-help"
+        ],
+        "case": "cluster-help/onchain-decode-psbt/output-cluster-help",
+        "status": 0,
+        "seconds": 0.075338,
+        "failure": "",
+        "stdout_sha256": "62bd5270357535df68273fa9b655dea0b2f0238563b2f1bd7bdc538dd2796860",
+        "stderr_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+      },
+      {
+        "command": [
+          "timeout",
+          "--foreground",
+          "30",
+          "python3",
+          "-B",
+          "packages/cyberkrill/test/cluster-help.py",
+          "cluster-help/onchain-decode-psbt/long-output-cluster-help"
+        ],
+        "case": "cluster-help/onchain-decode-psbt/long-output-cluster-help",
+        "status": 0,
+        "seconds": 0.076765,
+        "failure": "",
+        "stdout_sha256": "62bd5270357535df68273fa9b655dea0b2f0238563b2f1bd7bdc538dd2796860",
+        "stderr_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+      },
+      {
+        "command": [
+          "timeout",
+          "--foreground",
+          "30",
+          "python3",
+          "-B",
+          "packages/cyberkrill/test/cluster-help.py",
+          "cluster-help/onchain-decode-psbt/value-missing-then-help"
+        ],
+        "case": "cluster-help/onchain-decode-psbt/value-missing-then-help",
+        "status": 0,
+        "seconds": 0.076702,
+        "failure": "",
+        "stdout_sha256": "62bd5270357535df68273fa9b655dea0b2f0238563b2f1bd7bdc538dd2796860",
+        "stderr_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+      },
+      {
+        "command": [
+          "timeout",
+          "--foreground",
+          "30",
+          "python3",
+          "-B",
+          "packages/cyberkrill/test/cluster-help.py",
+          "cluster-help/onchain-decode-psbt/terminator-long-help"
+        ],
+        "case": "cluster-help/onchain-decode-psbt/terminator-long-help",
+        "status": 0,
+        "seconds": 0.074902,
+        "failure": "",
+        "stdout_sha256": "62bd5270357535df68273fa9b655dea0b2f0238563b2f1bd7bdc538dd2796860",
+        "stderr_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+      },
+      {
+        "command": [
+          "timeout",
+          "--foreground",
+          "30",
+          "python3",
+          "-B",
+          "packages/cyberkrill/test/cluster-help.py",
+          "cluster-help/onchain-decode-psbt/prior-output-value"
+        ],
+        "case": "cluster-help/onchain-decode-psbt/prior-output-value",
+        "status": 0,
+        "seconds": 0.078378,
+        "failure": "",
+        "stdout_sha256": "62bd5270357535df68273fa9b655dea0b2f0238563b2f1bd7bdc538dd2796860",
+        "stderr_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+      },
+      {
+        "command": [
+          "timeout",
+          "--foreground",
+          "30",
+          "python3",
+          "-B",
+          "packages/cyberkrill/test/cluster-help.py",
+          "cluster-help/onchain-decode-psbt/network-value-cluster"
+        ],
+        "case": "cluster-help/onchain-decode-psbt/network-value-cluster",
+        "status": 0,
+        "seconds": 0.073934,
+        "failure": "",
+        "stdout_sha256": "62bd5270357535df68273fa9b655dea0b2f0238563b2f1bd7bdc538dd2796860",
+        "stderr_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+      },
+      {
+        "command": [
+          "timeout",
+          "--foreground",
+          "30",
+          "python3",
+          "-B",
+          "packages/cyberkrill/test/cluster-help.py",
+          "cluster-help/onchain-decode-psbt/repeat-network-cluster"
+        ],
+        "case": "cluster-help/onchain-decode-psbt/repeat-network-cluster",
+        "status": 0,
+        "seconds": 0.076904,
+        "failure": "",
+        "stdout_sha256": "62bd5270357535df68273fa9b655dea0b2f0238563b2f1bd7bdc538dd2796860",
+        "stderr_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+      },
+      {
+        "command": [
+          "timeout",
+          "--foreground",
+          "30",
+          "python3",
+          "-B",
+          "packages/cyberkrill/test/cluster-help.py",
+          "cluster-help/onchain-decode-psbt/invalid-network-cluster"
+        ],
+        "case": "cluster-help/onchain-decode-psbt/invalid-network-cluster",
+        "status": 0,
+        "seconds": 0.075166,
+        "failure": "",
+        "stdout_sha256": "62bd5270357535df68273fa9b655dea0b2f0238563b2f1bd7bdc538dd2796860",
+        "stderr_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+      },
+      {
+        "command": [
+          "timeout",
+          "--foreground",
+          "30",
+          "python3",
+          "-B",
+          "packages/cyberkrill/test/cluster-help.py",
+          "cluster-help/onchain-decode-psbt/network-missing-after-cluster"
+        ],
+        "case": "cluster-help/onchain-decode-psbt/network-missing-after-cluster",
+        "status": 0,
+        "seconds": 0.073705,
+        "failure": "",
+        "stdout_sha256": "62bd5270357535df68273fa9b655dea0b2f0238563b2f1bd7bdc538dd2796860",
+        "stderr_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+      }
+    ]
+  }
+}

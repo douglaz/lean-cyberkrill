@@ -156,6 +156,11 @@ def main():
             from importlib import import_module
             import_module("lightning").main()
             import_module("revisions").main()
+            import_module("offline").main()
+            import_module("ordered-help").main()
+            import_module("cluster-help").main()
+            import_module("carried-help").main()
+            import_module("file-observation").main()
     finally:
         if old_home is not None: os.environ["HOME"] = old_home
         else: os.environ.pop("HOME", None)

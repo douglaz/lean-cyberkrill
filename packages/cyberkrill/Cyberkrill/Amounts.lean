@@ -13,6 +13,7 @@ inductive Error where
   | entropyFailure | shortEntropy | outputFailure | outputPathExists
   | inputFailure | invalidInvoiceJson | badPublicKey | badPrivateKey
   | lightning (code : String)
+  | offline (code : String)
   deriving Repr, DecidableEq
 
 def Error.message : Error → String
@@ -37,6 +38,7 @@ def Error.message : Error → String
   | .badPublicKey => "badPublicKey: Invalid public key"
   | .badPrivateKey => "badPrivateKey: Invalid signing key"
   | .lightning code => code ++ ": Invalid Lightning input"
+  | .offline code => code ++ ": Invalid offline input"
 
 def parseAmount (s : String) : Except Error Bitcoin.Amount :=
   (Bitcoin.Amount.parseInput s).mapError .amount

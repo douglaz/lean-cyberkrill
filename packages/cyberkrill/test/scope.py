@@ -12,8 +12,8 @@ from datetime import datetime
 
 from cases import APP, ROOT
 
-BASE = "d562756f76e1efcea71d7115e4c4381d9690ce4e"
-ISSUE = "lck-phase-7b-ln-offline-commands-rp1"
+BASE = "1b5219f26ddf519da8e4ca05f33d1130d6cf5eb4"
+ISSUE = "lck-phase-7c-fm-psbt-offline-commands-tot"
 # Fixed observations for fixtures first introduced by this phase. Never derive
 # these expected values from HEAD, the index, or the current fixture bytes.
 HISTORICAL_DIGESTS = {
