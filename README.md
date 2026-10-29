@@ -304,8 +304,9 @@ The public command/status/timing summary is
 `test/golden/offline-validation.json`. Scans distinguish grep's no-match status
 from command errors. All 58 unrelated issue records remain unchanged; no
 untracked bytecode remains. Disposable capture HOME/cwd paths were removed by
-their exact owned paths and FIFO children were reaped. Acceptance, closure and
-offline Phase 7 completion remain pending judgement.
+their exact owned paths and FIFO children were reaped. These validation records
+precede acceptance; all three Phase 7 beads are now closed and the offline
+command set is complete.
 
 ## Phase 7b: offline Lightning commands
 
