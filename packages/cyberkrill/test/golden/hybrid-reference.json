@@ -1,0 +1,344 @@
+[
+  {
+    "id": "hybrid-input-06-G",
+    "input_base64": "cHNidP8BADwCAAAAAQAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAD/////AQAAAAAAAAAAAAAAAAAAQgYGeb5mfvncu6xVoGKVzocLBwKb/NstzijZWfKBWxb4F5hIOtp3JqPEZV2k+/wOEQio/Re0SKaFVBmcR9CP+xDUuAQAAAAAAAA=",
+    "expected_success": true,
+    "reason": "matching public point",
+    "command": [
+      "$PRODUCER",
+      "onchain-decode-psbt",
+      "cHNidP8BADwCAAAAAQAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAD/////AQAAAAAAAAAAAAAAAAAAQgYGeb5mfvncu6xVoGKVzocLBwKb/NstzijZWfKBWxb4F5hIOtp3JqPEZV2k+/wOEQio/Re0SKaFVBmcR9CP+xDUuAQAAAAAAAA="
+    ],
+    "result": {
+      "status": 0,
+      "stdout": "{\n  \"fee\": null,\n  \"input_count\": 1,\n  \"inputs\": [\n    {\n      \"index\": 0,\n      \"sequence\": 4294967295,\n      \"txid\": \"0000000000000000000000000000000000000000000000000000000000000000\",\n      \"vout\": 0\n    }\n  ],\n  \"locktime\": 0,\n  \"network\": \"bitcoin\",\n  \"output_count\": 1,\n  \"outputs\": [\n    {\n      \"address\": null,\n      \"index\": 0,\n      \"script_pubkey\": \"\",\n      \"value_btc\": 0.0,\n      \"value_sats\": 0\n    }\n  ],\n  \"total_input_value\": null,\n  \"total_output_value\": 0,\n  \"version\": 2\n}\n",
+      "stderr": "",
+      "file_exists": false
+    },
+    "seconds": 0.025507
+  },
+  {
+    "id": "hybrid-input-07-negG",
+    "input_base64": "cHNidP8BADwCAAAAAQAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAD/////AQAAAAAAAAAAAAAAAAAAQgYHeb5mfvncu6xVoGKVzocLBwKb/NstzijZWfKBWxb4F5i3xSWI2Vw7mqJbBAPx7vdXAuhLt1l6q+ZjuC9vBO8ndwQAAAAAAAA=",
+    "expected_success": true,
+    "reason": "matching public point",
+    "command": [
+      "$PRODUCER",
+      "onchain-decode-psbt",
+      "cHNidP8BADwCAAAAAQAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAD/////AQAAAAAAAAAAAAAAAAAAQgYHeb5mfvncu6xVoGKVzocLBwKb/NstzijZWfKBWxb4F5i3xSWI2Vw7mqJbBAPx7vdXAuhLt1l6q+ZjuC9vBO8ndwQAAAAAAAA="
+    ],
+    "result": {
+      "status": 0,
+      "stdout": "{\n  \"fee\": null,\n  \"input_count\": 1,\n  \"inputs\": [\n    {\n      \"index\": 0,\n      \"sequence\": 4294967295,\n      \"txid\": \"0000000000000000000000000000000000000000000000000000000000000000\",\n      \"vout\": 0\n    }\n  ],\n  \"locktime\": 0,\n  \"network\": \"bitcoin\",\n  \"output_count\": 1,\n  \"outputs\": [\n    {\n      \"address\": null,\n      \"index\": 0,\n      \"script_pubkey\": \"\",\n      \"value_btc\": 0.0,\n      \"value_sats\": 0\n    }\n  ],\n  \"total_input_value\": null,\n  \"total_output_value\": 0,\n  \"version\": 2\n}\n",
+      "stderr": "",
+      "file_exists": false
+    },
+    "seconds": 0.011746
+  },
+  {
+    "id": "hybrid-input-02-G",
+    "input_base64": "cHNidP8BADwCAAAAAQAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAD/////AQAAAAAAAAAAAAAAAAAAIgYCeb5mfvncu6xVoGKVzocLBwKb/NstzijZWfKBWxb4F5gEAAAAAAAA",
+    "expected_success": true,
+    "reason": "matching public point",
+    "command": [
+      "$PRODUCER",
+      "onchain-decode-psbt",
+      "cHNidP8BADwCAAAAAQAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAD/////AQAAAAAAAAAAAAAAAAAAIgYCeb5mfvncu6xVoGKVzocLBwKb/NstzijZWfKBWxb4F5gEAAAAAAAA"
+    ],
+    "result": {
+      "status": 0,
+      "stdout": "{\n  \"fee\": null,\n  \"input_count\": 1,\n  \"inputs\": [\n    {\n      \"index\": 0,\n      \"sequence\": 4294967295,\n      \"txid\": \"0000000000000000000000000000000000000000000000000000000000000000\",\n      \"vout\": 0\n    }\n  ],\n  \"locktime\": 0,\n  \"network\": \"bitcoin\",\n  \"output_count\": 1,\n  \"outputs\": [\n    {\n      \"address\": null,\n      \"index\": 0,\n      \"script_pubkey\": \"\",\n      \"value_btc\": 0.0,\n      \"value_sats\": 0\n    }\n  ],\n  \"total_input_value\": null,\n  \"total_output_value\": 0,\n  \"version\": 2\n}\n",
+      "stderr": "",
+      "file_exists": false
+    },
+    "seconds": 0.012021
+  },
+  {
+    "id": "hybrid-input-04-G",
+    "input_base64": "cHNidP8BADwCAAAAAQAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAD/////AQAAAAAAAAAAAAAAAAAAQgYEeb5mfvncu6xVoGKVzocLBwKb/NstzijZWfKBWxb4F5hIOtp3JqPEZV2k+/wOEQio/Re0SKaFVBmcR9CP+xDUuAQAAAAAAAA=",
+    "expected_success": true,
+    "reason": "matching public point",
+    "command": [
+      "$PRODUCER",
+      "onchain-decode-psbt",
+      "cHNidP8BADwCAAAAAQAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAD/////AQAAAAAAAAAAAAAAAAAAQgYEeb5mfvncu6xVoGKVzocLBwKb/NstzijZWfKBWxb4F5hIOtp3JqPEZV2k+/wOEQio/Re0SKaFVBmcR9CP+xDUuAQAAAAAAAA="
+    ],
+    "result": {
+      "status": 0,
+      "stdout": "{\n  \"fee\": null,\n  \"input_count\": 1,\n  \"inputs\": [\n    {\n      \"index\": 0,\n      \"sequence\": 4294967295,\n      \"txid\": \"0000000000000000000000000000000000000000000000000000000000000000\",\n      \"vout\": 0\n    }\n  ],\n  \"locktime\": 0,\n  \"network\": \"bitcoin\",\n  \"output_count\": 1,\n  \"outputs\": [\n    {\n      \"address\": null,\n      \"index\": 0,\n      \"script_pubkey\": \"\",\n      \"value_btc\": 0.0,\n      \"value_sats\": 0\n    }\n  ],\n  \"total_input_value\": null,\n  \"total_output_value\": 0,\n  \"version\": 2\n}\n",
+      "stderr": "",
+      "file_exists": false
+    },
+    "seconds": 0.011186
+  },
+  {
+    "id": "hybrid-input-07-G",
+    "input_base64": "cHNidP8BADwCAAAAAQAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAD/////AQAAAAAAAAAAAAAAAAAAQgYHeb5mfvncu6xVoGKVzocLBwKb/NstzijZWfKBWxb4F5hIOtp3JqPEZV2k+/wOEQio/Re0SKaFVBmcR9CP+xDUuAQAAAAAAAA=",
+    "expected_success": false,
+    "reason": "mismatched hybrid parity",
+    "command": [
+      "$PRODUCER",
+      "onchain-decode-psbt",
+      "cHNidP8BADwCAAAAAQAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAD/////AQAAAAAAAAAAAAAAAAAAQgYHeb5mfvncu6xVoGKVzocLBwKb/NstzijZWfKBWxb4F5hIOtp3JqPEZV2k+/wOEQio/Re0SKaFVBmcR9CP+xDUuAQAAAAAAAA="
+    ],
+    "result": {
+      "status": 1,
+      "stdout": "",
+      "stderr": "Error: error in internal PSBT data structure\n\nCaused by:\n    invalid secp256k1 public key\n",
+      "file_exists": false
+    },
+    "seconds": 0.010708
+  },
+  {
+    "id": "hybrid-input-06-negG",
+    "input_base64": "cHNidP8BADwCAAAAAQAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAD/////AQAAAAAAAAAAAAAAAAAAQgYGeb5mfvncu6xVoGKVzocLBwKb/NstzijZWfKBWxb4F5i3xSWI2Vw7mqJbBAPx7vdXAuhLt1l6q+ZjuC9vBO8ndwQAAAAAAAA=",
+    "expected_success": false,
+    "reason": "mismatched hybrid parity",
+    "command": [
+      "$PRODUCER",
+      "onchain-decode-psbt",
+      "cHNidP8BADwCAAAAAQAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAD/////AQAAAAAAAAAAAAAAAAAAQgYGeb5mfvncu6xVoGKVzocLBwKb/NstzijZWfKBWxb4F5i3xSWI2Vw7mqJbBAPx7vdXAuhLt1l6q+ZjuC9vBO8ndwQAAAAAAAA="
+    ],
+    "result": {
+      "status": 1,
+      "stdout": "",
+      "stderr": "Error: error in internal PSBT data structure\n\nCaused by:\n    invalid secp256k1 public key\n",
+      "file_exists": false
+    },
+    "seconds": 0.011582
+  },
+  {
+    "id": "hybrid-output-06-G",
+    "input_base64": "cHNidP8BADwCAAAAAQAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAD/////AQAAAAAAAAAAAAAAAAAAAEICBnm+Zn753LusVaBilc6HCwcCm/zbLc4o2VnygVsW+BeYSDradyajxGVdpPv8DhEIqP0XtEimhVQZnEfQj/sQ1LgEAAAAAAA=",
+    "expected_success": true,
+    "reason": "matching public point",
+    "command": [
+      "$PRODUCER",
+      "onchain-decode-psbt",
+      "cHNidP8BADwCAAAAAQAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAD/////AQAAAAAAAAAAAAAAAAAAAEICBnm+Zn753LusVaBilc6HCwcCm/zbLc4o2VnygVsW+BeYSDradyajxGVdpPv8DhEIqP0XtEimhVQZnEfQj/sQ1LgEAAAAAAA="
+    ],
+    "result": {
+      "status": 0,
+      "stdout": "{\n  \"fee\": null,\n  \"input_count\": 1,\n  \"inputs\": [\n    {\n      \"index\": 0,\n      \"sequence\": 4294967295,\n      \"txid\": \"0000000000000000000000000000000000000000000000000000000000000000\",\n      \"vout\": 0\n    }\n  ],\n  \"locktime\": 0,\n  \"network\": \"bitcoin\",\n  \"output_count\": 1,\n  \"outputs\": [\n    {\n      \"address\": null,\n      \"index\": 0,\n      \"script_pubkey\": \"\",\n      \"value_btc\": 0.0,\n      \"value_sats\": 0\n    }\n  ],\n  \"total_input_value\": null,\n  \"total_output_value\": 0,\n  \"version\": 2\n}\n",
+      "stderr": "",
+      "file_exists": false
+    },
+    "seconds": 0.011583
+  },
+  {
+    "id": "hybrid-output-07-negG",
+    "input_base64": "cHNidP8BADwCAAAAAQAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAD/////AQAAAAAAAAAAAAAAAAAAAEICB3m+Zn753LusVaBilc6HCwcCm/zbLc4o2VnygVsW+BeYt8UliNlcO5qiWwQD8e73VwLoS7dZeqvmY7gvbwTvJ3cEAAAAAAA=",
+    "expected_success": true,
+    "reason": "matching public point",
+    "command": [
+      "$PRODUCER",
+      "onchain-decode-psbt",
+      "cHNidP8BADwCAAAAAQAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAD/////AQAAAAAAAAAAAAAAAAAAAEICB3m+Zn753LusVaBilc6HCwcCm/zbLc4o2VnygVsW+BeYt8UliNlcO5qiWwQD8e73VwLoS7dZeqvmY7gvbwTvJ3cEAAAAAAA="
+    ],
+    "result": {
+      "status": 0,
+      "stdout": "{\n  \"fee\": null,\n  \"input_count\": 1,\n  \"inputs\": [\n    {\n      \"index\": 0,\n      \"sequence\": 4294967295,\n      \"txid\": \"0000000000000000000000000000000000000000000000000000000000000000\",\n      \"vout\": 0\n    }\n  ],\n  \"locktime\": 0,\n  \"network\": \"bitcoin\",\n  \"output_count\": 1,\n  \"outputs\": [\n    {\n      \"address\": null,\n      \"index\": 0,\n      \"script_pubkey\": \"\",\n      \"value_btc\": 0.0,\n      \"value_sats\": 0\n    }\n  ],\n  \"total_input_value\": null,\n  \"total_output_value\": 0,\n  \"version\": 2\n}\n",
+      "stderr": "",
+      "file_exists": false
+    },
+    "seconds": 0.011633
+  },
+  {
+    "id": "hybrid-output-02-G",
+    "input_base64": "cHNidP8BADwCAAAAAQAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAD/////AQAAAAAAAAAAAAAAAAAAACICAnm+Zn753LusVaBilc6HCwcCm/zbLc4o2VnygVsW+BeYBAAAAAAA",
+    "expected_success": true,
+    "reason": "matching public point",
+    "command": [
+      "$PRODUCER",
+      "onchain-decode-psbt",
+      "cHNidP8BADwCAAAAAQAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAD/////AQAAAAAAAAAAAAAAAAAAACICAnm+Zn753LusVaBilc6HCwcCm/zbLc4o2VnygVsW+BeYBAAAAAAA"
+    ],
+    "result": {
+      "status": 0,
+      "stdout": "{\n  \"fee\": null,\n  \"input_count\": 1,\n  \"inputs\": [\n    {\n      \"index\": 0,\n      \"sequence\": 4294967295,\n      \"txid\": \"0000000000000000000000000000000000000000000000000000000000000000\",\n      \"vout\": 0\n    }\n  ],\n  \"locktime\": 0,\n  \"network\": \"bitcoin\",\n  \"output_count\": 1,\n  \"outputs\": [\n    {\n      \"address\": null,\n      \"index\": 0,\n      \"script_pubkey\": \"\",\n      \"value_btc\": 0.0,\n      \"value_sats\": 0\n    }\n  ],\n  \"total_input_value\": null,\n  \"total_output_value\": 0,\n  \"version\": 2\n}\n",
+      "stderr": "",
+      "file_exists": false
+    },
+    "seconds": 0.011733
+  },
+  {
+    "id": "hybrid-output-04-G",
+    "input_base64": "cHNidP8BADwCAAAAAQAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAD/////AQAAAAAAAAAAAAAAAAAAAEICBHm+Zn753LusVaBilc6HCwcCm/zbLc4o2VnygVsW+BeYSDradyajxGVdpPv8DhEIqP0XtEimhVQZnEfQj/sQ1LgEAAAAAAA=",
+    "expected_success": true,
+    "reason": "matching public point",
+    "command": [
+      "$PRODUCER",
+      "onchain-decode-psbt",
+      "cHNidP8BADwCAAAAAQAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAD/////AQAAAAAAAAAAAAAAAAAAAEICBHm+Zn753LusVaBilc6HCwcCm/zbLc4o2VnygVsW+BeYSDradyajxGVdpPv8DhEIqP0XtEimhVQZnEfQj/sQ1LgEAAAAAAA="
+    ],
+    "result": {
+      "status": 0,
+      "stdout": "{\n  \"fee\": null,\n  \"input_count\": 1,\n  \"inputs\": [\n    {\n      \"index\": 0,\n      \"sequence\": 4294967295,\n      \"txid\": \"0000000000000000000000000000000000000000000000000000000000000000\",\n      \"vout\": 0\n    }\n  ],\n  \"locktime\": 0,\n  \"network\": \"bitcoin\",\n  \"output_count\": 1,\n  \"outputs\": [\n    {\n      \"address\": null,\n      \"index\": 0,\n      \"script_pubkey\": \"\",\n      \"value_btc\": 0.0,\n      \"value_sats\": 0\n    }\n  ],\n  \"total_input_value\": null,\n  \"total_output_value\": 0,\n  \"version\": 2\n}\n",
+      "stderr": "",
+      "file_exists": false
+    },
+    "seconds": 0.011179
+  },
+  {
+    "id": "hybrid-output-07-G",
+    "input_base64": "cHNidP8BADwCAAAAAQAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAD/////AQAAAAAAAAAAAAAAAAAAAEICB3m+Zn753LusVaBilc6HCwcCm/zbLc4o2VnygVsW+BeYSDradyajxGVdpPv8DhEIqP0XtEimhVQZnEfQj/sQ1LgEAAAAAAA=",
+    "expected_success": false,
+    "reason": "mismatched hybrid parity",
+    "command": [
+      "$PRODUCER",
+      "onchain-decode-psbt",
+      "cHNidP8BADwCAAAAAQAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAD/////AQAAAAAAAAAAAAAAAAAAAEICB3m+Zn753LusVaBilc6HCwcCm/zbLc4o2VnygVsW+BeYSDradyajxGVdpPv8DhEIqP0XtEimhVQZnEfQj/sQ1LgEAAAAAAA="
+    ],
+    "result": {
+      "status": 1,
+      "stdout": "",
+      "stderr": "Error: error in internal PSBT data structure\n\nCaused by:\n    invalid secp256k1 public key\n",
+      "file_exists": false
+    },
+    "seconds": 0.011412
+  },
+  {
+    "id": "hybrid-output-06-negG",
+    "input_base64": "cHNidP8BADwCAAAAAQAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAD/////AQAAAAAAAAAAAAAAAAAAAEICBnm+Zn753LusVaBilc6HCwcCm/zbLc4o2VnygVsW+BeYt8UliNlcO5qiWwQD8e73VwLoS7dZeqvmY7gvbwTvJ3cEAAAAAAA=",
+    "expected_success": false,
+    "reason": "mismatched hybrid parity",
+    "command": [
+      "$PRODUCER",
+      "onchain-decode-psbt",
+      "cHNidP8BADwCAAAAAQAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAD/////AQAAAAAAAAAAAAAAAAAAAEICBnm+Zn753LusVaBilc6HCwcCm/zbLc4o2VnygVsW+BeYt8UliNlcO5qiWwQD8e73VwLoS7dZeqvmY7gvbwTvJ3cEAAAAAAA="
+    ],
+    "result": {
+      "status": 1,
+      "stdout": "",
+      "stderr": "Error: error in internal PSBT data structure\n\nCaused by:\n    invalid secp256k1 public key\n",
+      "file_exists": false
+    },
+    "seconds": 0.011221
+  },
+  {
+    "id": "hybrid-partial-06-G",
+    "input_base64": "cHNidP8BADwCAAAAAQAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAD/////AQAAAAAAAAAAAAAAAAAAQgIGeb5mfvncu6xVoGKVzocLBwKb/NstzijZWfKBWxb4F5hIOtp3JqPEZV2k+/wOEQio/Re0SKaFVBmcR9CP+xDUuAkwBgIBAQIBAQEAAA==",
+    "expected_success": false,
+    "reason": "strict partial signature public key",
+    "command": [
+      "$PRODUCER",
+      "onchain-decode-psbt",
+      "cHNidP8BADwCAAAAAQAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAD/////AQAAAAAAAAAAAAAAAAAAQgIGeb5mfvncu6xVoGKVzocLBwKb/NstzijZWfKBWxb4F5hIOtp3JqPEZV2k+/wOEQio/Re0SKaFVBmcR9CP+xDUuAkwBgIBAQIBAQEAAA=="
+    ],
+    "result": {
+      "status": 1,
+      "stdout": "",
+      "stderr": "Error: error in internal PSBT data structure\n\nCaused by:\n    invalid public key\n",
+      "file_exists": false
+    },
+    "seconds": 0.01063
+  },
+  {
+    "id": "hybrid-partial-07-negG",
+    "input_base64": "cHNidP8BADwCAAAAAQAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAD/////AQAAAAAAAAAAAAAAAAAAQgIHeb5mfvncu6xVoGKVzocLBwKb/NstzijZWfKBWxb4F5i3xSWI2Vw7mqJbBAPx7vdXAuhLt1l6q+ZjuC9vBO8ndwkwBgIBAQIBAQEAAA==",
+    "expected_success": false,
+    "reason": "strict partial signature public key",
+    "command": [
+      "$PRODUCER",
+      "onchain-decode-psbt",
+      "cHNidP8BADwCAAAAAQAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAD/////AQAAAAAAAAAAAAAAAAAAQgIHeb5mfvncu6xVoGKVzocLBwKb/NstzijZWfKBWxb4F5i3xSWI2Vw7mqJbBAPx7vdXAuhLt1l6q+ZjuC9vBO8ndwkwBgIBAQIBAQEAAA=="
+    ],
+    "result": {
+      "status": 1,
+      "stdout": "",
+      "stderr": "Error: error in internal PSBT data structure\n\nCaused by:\n    invalid public key\n",
+      "file_exists": false
+    },
+    "seconds": 0.011084
+  },
+  {
+    "id": "hybrid-input-02-G-and-04-G",
+    "input_base64": "cHNidP8BADwCAAAAAQAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAD/////AQAAAAAAAAAAAAAAAAAAIgYCeb5mfvncu6xVoGKVzocLBwKb/NstzijZWfKBWxb4F5gEAAAAAEIGBHm+Zn753LusVaBilc6HCwcCm/zbLc4o2VnygVsW+BeYSDradyajxGVdpPv8DhEIqP0XtEimhVQZnEfQj/sQ1LgEAAAAAAAA",
+    "expected_success": false,
+    "reason": "same-point duplicate",
+    "command": [
+      "$PRODUCER",
+      "onchain-decode-psbt",
+      "cHNidP8BADwCAAAAAQAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAD/////AQAAAAAAAAAAAAAAAAAAIgYCeb5mfvncu6xVoGKVzocLBwKb/NstzijZWfKBWxb4F5gEAAAAAEIGBHm+Zn753LusVaBilc6HCwcCm/zbLc4o2VnygVsW+BeYSDradyajxGVdpPv8DhEIqP0XtEimhVQZnEfQj/sQ1LgEAAAAAAAA"
+    ],
+    "result": {
+      "status": 1,
+      "stdout": "",
+      "stderr": "Error: error in internal PSBT data structure\n\nCaused by:\n    duplicate key: type: 0x6, key: 0479be667ef9dcbbac55a06295ce870b07029bfcdb2dce28d959f2815b16f81798483ada7726a3c4655da4fbfc0e1108a8fd17b448a68554199c47d08ffb10d4b8\n",
+      "file_exists": false
+    },
+    "seconds": 0.010798
+  },
+  {
+    "id": "hybrid-input-04-G-and-06-G",
+    "input_base64": "cHNidP8BADwCAAAAAQAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAD/////AQAAAAAAAAAAAAAAAAAAQgYEeb5mfvncu6xVoGKVzocLBwKb/NstzijZWfKBWxb4F5hIOtp3JqPEZV2k+/wOEQio/Re0SKaFVBmcR9CP+xDUuAQAAAAAQgYGeb5mfvncu6xVoGKVzocLBwKb/NstzijZWfKBWxb4F5hIOtp3JqPEZV2k+/wOEQio/Re0SKaFVBmcR9CP+xDUuAQAAAAAAAA=",
+    "expected_success": false,
+    "reason": "same-point duplicate",
+    "command": [
+      "$PRODUCER",
+      "onchain-decode-psbt",
+      "cHNidP8BADwCAAAAAQAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAD/////AQAAAAAAAAAAAAAAAAAAQgYEeb5mfvncu6xVoGKVzocLBwKb/NstzijZWfKBWxb4F5hIOtp3JqPEZV2k+/wOEQio/Re0SKaFVBmcR9CP+xDUuAQAAAAAQgYGeb5mfvncu6xVoGKVzocLBwKb/NstzijZWfKBWxb4F5hIOtp3JqPEZV2k+/wOEQio/Re0SKaFVBmcR9CP+xDUuAQAAAAAAAA="
+    ],
+    "result": {
+      "status": 1,
+      "stdout": "",
+      "stderr": "Error: error in internal PSBT data structure\n\nCaused by:\n    duplicate key: type: 0x6, key: 0679be667ef9dcbbac55a06295ce870b07029bfcdb2dce28d959f2815b16f81798483ada7726a3c4655da4fbfc0e1108a8fd17b448a68554199c47d08ffb10d4b8\n",
+      "file_exists": false
+    },
+    "seconds": 0.010853
+  },
+  {
+    "id": "hybrid-output-02-G-and-04-G",
+    "input_base64": "cHNidP8BADwCAAAAAQAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAD/////AQAAAAAAAAAAAAAAAAAAACICAnm+Zn753LusVaBilc6HCwcCm/zbLc4o2VnygVsW+BeYBAAAAABCAgR5vmZ++dy7rFWgYpXOhwsHApv82y3OKNlZ8oFbFvgXmEg62ncmo8RlXaT7/A4RCKj9F7RIpoVUGZxH0I/7ENS4BAAAAAAA",
+    "expected_success": false,
+    "reason": "same-point duplicate",
+    "command": [
+      "$PRODUCER",
+      "onchain-decode-psbt",
+      "cHNidP8BADwCAAAAAQAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAD/////AQAAAAAAAAAAAAAAAAAAACICAnm+Zn753LusVaBilc6HCwcCm/zbLc4o2VnygVsW+BeYBAAAAABCAgR5vmZ++dy7rFWgYpXOhwsHApv82y3OKNlZ8oFbFvgXmEg62ncmo8RlXaT7/A4RCKj9F7RIpoVUGZxH0I/7ENS4BAAAAAAA"
+    ],
+    "result": {
+      "status": 1,
+      "stdout": "",
+      "stderr": "Error: error in internal PSBT data structure\n\nCaused by:\n    duplicate key: type: 0x2, key: 0479be667ef9dcbbac55a06295ce870b07029bfcdb2dce28d959f2815b16f81798483ada7726a3c4655da4fbfc0e1108a8fd17b448a68554199c47d08ffb10d4b8\n",
+      "file_exists": false
+    },
+    "seconds": 0.010928
+  },
+  {
+    "id": "hybrid-input-02-G-and-03-negG",
+    "input_base64": "cHNidP8BADwCAAAAAQAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAD/////AQAAAAAAAAAAAAAAAAAAIgYCeb5mfvncu6xVoGKVzocLBwKb/NstzijZWfKBWxb4F5gEAAAAACIGA3m+Zn753LusVaBilc6HCwcCm/zbLc4o2VnygVsW+BeYBAAAAAAAAA==",
+    "expected_success": true,
+    "reason": "distinct public points",
+    "command": [
+      "$PRODUCER",
+      "onchain-decode-psbt",
+      "cHNidP8BADwCAAAAAQAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAD/////AQAAAAAAAAAAAAAAAAAAIgYCeb5mfvncu6xVoGKVzocLBwKb/NstzijZWfKBWxb4F5gEAAAAACIGA3m+Zn753LusVaBilc6HCwcCm/zbLc4o2VnygVsW+BeYBAAAAAAAAA=="
+    ],
+    "result": {
+      "status": 0,
+      "stdout": "{\n  \"fee\": null,\n  \"input_count\": 1,\n  \"inputs\": [\n    {\n      \"index\": 0,\n      \"sequence\": 4294967295,\n      \"txid\": \"0000000000000000000000000000000000000000000000000000000000000000\",\n      \"vout\": 0\n    }\n  ],\n  \"locktime\": 0,\n  \"network\": \"bitcoin\",\n  \"output_count\": 1,\n  \"outputs\": [\n    {\n      \"address\": null,\n      \"index\": 0,\n      \"script_pubkey\": \"\",\n      \"value_btc\": 0.0,\n      \"value_sats\": 0\n    }\n  ],\n  \"total_input_value\": null,\n  \"total_output_value\": 0,\n  \"version\": 2\n}\n",
+      "stderr": "",
+      "file_exists": false
+    },
+    "seconds": 0.009495
+  },
+  {
+    "id": "hybrid-partial-02-G-and-04-G",
+    "input_base64": "cHNidP8BADwCAAAAAQAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAD/////AQAAAAAAAAAAAAAAAAAAIgICeb5mfvncu6xVoGKVzocLBwKb/NstzijZWfKBWxb4F5gJMAYCAQECAQEBQgIEeb5mfvncu6xVoGKVzocLBwKb/NstzijZWfKBWxb4F5hIOtp3JqPEZV2k+/wOEQio/Re0SKaFVBmcR9CP+xDUuAkwBgIBAQIBAQEAAA==",
+    "expected_success": true,
+    "reason": "distinct raw signature keys",
+    "command": [
+      "$PRODUCER",
+      "onchain-decode-psbt",
+      "cHNidP8BADwCAAAAAQAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAD/////AQAAAAAAAAAAAAAAAAAAIgICeb5mfvncu6xVoGKVzocLBwKb/NstzijZWfKBWxb4F5gJMAYCAQECAQEBQgIEeb5mfvncu6xVoGKVzocLBwKb/NstzijZWfKBWxb4F5hIOtp3JqPEZV2k+/wOEQio/Re0SKaFVBmcR9CP+xDUuAkwBgIBAQIBAQEAAA=="
+    ],
+    "result": {
+      "status": 0,
+      "stdout": "{\n  \"fee\": null,\n  \"input_count\": 1,\n  \"inputs\": [\n    {\n      \"index\": 0,\n      \"sequence\": 4294967295,\n      \"signatures\": 2,\n      \"txid\": \"0000000000000000000000000000000000000000000000000000000000000000\",\n      \"vout\": 0\n    }\n  ],\n  \"locktime\": 0,\n  \"network\": \"bitcoin\",\n  \"output_count\": 1,\n  \"outputs\": [\n    {\n      \"address\": null,\n      \"index\": 0,\n      \"script_pubkey\": \"\",\n      \"value_btc\": 0.0,\n      \"value_sats\": 0\n    }\n  ],\n  \"total_input_value\": null,\n  \"total_output_value\": 0,\n  \"version\": 2\n}\n",
+      "stderr": "",
+      "file_exists": false
+    },
+    "seconds": 0.010774
+  }
+]

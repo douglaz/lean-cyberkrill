@@ -1,0 +1,1667 @@
+{
+  "before": {
+    "source_sha256": {
+      "Cyberkrill/App.lean": "ae6f881b84da4d7db4ad8cc326a10fb81ead5739462782c1f5f3185f9d8035a0",
+      "test/carried-help.py": "a2bd6238d0195b3433d1c1a6e0648f0ac8a728201e9724631c566e9b978e2fe2",
+      "test/carried-regressions.py": "f968ca3d5259a56dd7601ca78edd2aad008b3519c2a944730f04eb525838dd42",
+      "test/offline-inputs.py": "5656df09559f08b2ae33340416e80edbd49a799b60057af5a3c48dbed1e66ef1",
+      "test/golden/offline-reference.json": "75b7fe1f5468c7b9b0160086a942e27ef5f6e3598cf2f0110c468623b89dfa61"
+    },
+    "checks": [
+      {
+        "command": [
+          "timeout",
+          "--foreground",
+          "30",
+          "python3",
+          "-B",
+          "packages/cyberkrill/test/carried-help.py",
+          "carried-help/enum-attached"
+        ],
+        "case": "carried-help/enum-attached",
+        "status": 1,
+        "seconds": 0.079066,
+        "failure": "AssertionError: carried help preceding typed error: carried-help/enum-attached",
+        "stdout_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+        "stderr_sha256": "e7642716294808ca47c04879f48ffb953c77dcfd9c2875a73ac4a235922a8c5b"
+      },
+      {
+        "command": [
+          "timeout",
+          "--foreground",
+          "30",
+          "python3",
+          "-B",
+          "packages/cyberkrill/test/carried-help.py",
+          "carried-help/enum-spaced"
+        ],
+        "case": "carried-help/enum-spaced",
+        "status": 1,
+        "seconds": 0.082669,
+        "failure": "AssertionError: carried help preceding typed error: carried-help/enum-spaced",
+        "stdout_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+        "stderr_sha256": "4de2dbee2a6629f93ee4e332a8157653093bad51d15196d364a1c4cc8f7784f9"
+      },
+      {
+        "command": [
+          "timeout",
+          "--foreground",
+          "30",
+          "python3",
+          "-B",
+          "packages/cyberkrill/test/carried-help.py",
+          "carried-help/enum-missing-terminator"
+        ],
+        "case": "carried-help/enum-missing-terminator",
+        "status": 1,
+        "seconds": 0.090932,
+        "failure": "AssertionError: carried help preceding typed error: carried-help/enum-missing-terminator",
+        "stdout_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+        "stderr_sha256": "2959de44237a806a3dcdea38e580effaeba0916a12bbe078a02f895d3f186f2d"
+      },
+      {
+        "command": [
+          "timeout",
+          "--foreground",
+          "30",
+          "python3",
+          "-B",
+          "packages/cyberkrill/test/carried-help.py",
+          "carried-help/words-spaced"
+        ],
+        "case": "carried-help/words-spaced",
+        "status": 1,
+        "seconds": 0.090311,
+        "failure": "AssertionError: carried help preceding typed error: carried-help/words-spaced",
+        "stdout_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+        "stderr_sha256": "c476ebcf5463d62065d62c76aa00751e5e0b3af8b2ad7acac11287f96eeba1d7"
+      },
+      {
+        "command": [
+          "timeout",
+          "--foreground",
+          "30",
+          "python3",
+          "-B",
+          "packages/cyberkrill/test/carried-help.py",
+          "carried-help/words-equals"
+        ],
+        "case": "carried-help/words-equals",
+        "status": 1,
+        "seconds": 0.085608,
+        "failure": "AssertionError: carried help preceding typed error: carried-help/words-equals",
+        "stdout_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+        "stderr_sha256": "af9c8ce99a346444d701b0e5a4d30f990b8926760231572cbd3f0af336ecbc81"
+      },
+      {
+        "command": [
+          "timeout",
+          "--foreground",
+          "30",
+          "python3",
+          "-B",
+          "packages/cyberkrill/test/carried-help.py",
+          "carried-help/words-overflow"
+        ],
+        "case": "carried-help/words-overflow",
+        "status": 1,
+        "seconds": 0.090779,
+        "failure": "AssertionError: carried help preceding typed error: carried-help/words-overflow",
+        "stdout_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+        "stderr_sha256": "0c382bee10d7f6dcca45fb17cf557063aa833342dc0d43d7ff0fd4fe61a80732"
+      },
+      {
+        "command": [
+          "timeout",
+          "--foreground",
+          "30",
+          "python3",
+          "-B",
+          "packages/cyberkrill/test/carried-help.py",
+          "carried-help/words-missing-terminator"
+        ],
+        "case": "carried-help/words-missing-terminator",
+        "status": 1,
+        "seconds": 0.085108,
+        "failure": "AssertionError: carried help preceding typed error: carried-help/words-missing-terminator",
+        "stdout_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+        "stderr_sha256": "b27a530f082a22ba878d682b8afdd6f87d4477966e700b16bd44f4757078e647"
+      },
+      {
+        "command": [
+          "timeout",
+          "--foreground",
+          "30",
+          "python3",
+          "-B",
+          "packages/cyberkrill/test/carried-help.py",
+          "carried-help/enum-empty"
+        ],
+        "case": "carried-help/enum-empty",
+        "status": 1,
+        "seconds": 0.083262,
+        "failure": "AssertionError: carried help preceding typed error: carried-help/enum-empty",
+        "stdout_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+        "stderr_sha256": "1d43ab16fd17516c3c1aa707b08dc1dce83c87e7d014e6347578bcbbdba4feb2"
+      },
+      {
+        "command": [
+          "timeout",
+          "--foreground",
+          "30",
+          "python3",
+          "-B",
+          "packages/cyberkrill/test/carried-help.py",
+          "carried-help/enum-case"
+        ],
+        "case": "carried-help/enum-case",
+        "status": 1,
+        "seconds": 0.083436,
+        "failure": "AssertionError: carried help preceding typed error: carried-help/enum-case",
+        "stdout_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+        "stderr_sha256": "4e2ed44d737847191d0c7b835ead4beaf4881663b6cd4eec2b282620fce24148"
+      },
+      {
+        "command": [
+          "timeout",
+          "--foreground",
+          "30",
+          "python3",
+          "-B",
+          "packages/cyberkrill/test/carried-help.py",
+          "carried-help/words-long-spaced"
+        ],
+        "case": "carried-help/words-long-spaced",
+        "status": 1,
+        "seconds": 0.077519,
+        "failure": "AssertionError: carried help preceding typed error: carried-help/words-long-spaced",
+        "stdout_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+        "stderr_sha256": "86309a44d244f04d6c438437157d64ebeba1eb3720990b5effd1832fd89bf548"
+      },
+      {
+        "command": [
+          "timeout",
+          "--foreground",
+          "30",
+          "python3",
+          "-B",
+          "packages/cyberkrill/test/carried-help.py",
+          "carried-help/words-long-attached"
+        ],
+        "case": "carried-help/words-long-attached",
+        "status": 1,
+        "seconds": 0.078032,
+        "failure": "AssertionError: carried help preceding typed error: carried-help/words-long-attached",
+        "stdout_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+        "stderr_sha256": "1c36fdb82324ac7db7935d47af3eebf6c96bef16aff4b4232d008a4d9227ac75"
+      },
+      {
+        "command": [
+          "timeout",
+          "--foreground",
+          "30",
+          "python3",
+          "-B",
+          "packages/cyberkrill/test/carried-help.py",
+          "carried-help/words-short-attached"
+        ],
+        "case": "carried-help/words-short-attached",
+        "status": 1,
+        "seconds": 0.081426,
+        "failure": "AssertionError: carried help preceding typed error: carried-help/words-short-attached",
+        "stdout_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+        "stderr_sha256": "f5ec0eb7fcb1de45166098cfc9f580f0d7f3bc9b0d5cc4dab32dfc6f1aa3f932"
+      },
+      {
+        "command": [
+          "timeout",
+          "--foreground",
+          "30",
+          "python3",
+          "-B",
+          "packages/cyberkrill/test/carried-help.py",
+          "carried-help/words-u32-overflow"
+        ],
+        "case": "carried-help/words-u32-overflow",
+        "status": 1,
+        "seconds": 0.084539,
+        "failure": "AssertionError: carried help preceding typed error: carried-help/words-u32-overflow",
+        "stdout_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+        "stderr_sha256": "1f64569e8f47a80a8039b3c42c2280a1334b952991651994cf390818a151ce15"
+      },
+      {
+        "command": [
+          "timeout",
+          "--foreground",
+          "30",
+          "python3",
+          "-B",
+          "packages/cyberkrill/test/carried-help.py",
+          "carried-help/words-long-overflow"
+        ],
+        "case": "carried-help/words-long-overflow",
+        "status": 1,
+        "seconds": 0.081232,
+        "failure": "AssertionError: carried help preceding typed error: carried-help/words-long-overflow",
+        "stdout_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+        "stderr_sha256": "df4abf88130eb608b7a9ec273127fb5d554b9126a4898f2eaaf111ee2e30b367"
+      },
+      {
+        "command": [
+          "timeout",
+          "--foreground",
+          "30",
+          "python3",
+          "-B",
+          "packages/cyberkrill/test/carried-help.py",
+          "carried-help/words-underscore"
+        ],
+        "case": "carried-help/words-underscore",
+        "status": 1,
+        "seconds": 0.085199,
+        "failure": "AssertionError: carried help preceding typed error: carried-help/words-underscore",
+        "stdout_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+        "stderr_sha256": "dabe5cdd4049e1f1a2c66a0d90dd3e2d6314fc3c29ad13f55f9bd65a49a1e2a4"
+      },
+      {
+        "command": [
+          "timeout",
+          "--foreground",
+          "30",
+          "python3",
+          "-B",
+          "packages/cyberkrill/test/carried-help.py",
+          "carried-help/words-negative"
+        ],
+        "case": "carried-help/words-negative",
+        "status": 1,
+        "seconds": 0.086445,
+        "failure": "AssertionError: carried help preceding typed error: carried-help/words-negative",
+        "stdout_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+        "stderr_sha256": "12cc774892903107e19de2fcd99a6d69c0db30f37a85e99f0f5ddfff6585f983"
+      },
+      {
+        "command": [
+          "timeout",
+          "--foreground",
+          "30",
+          "python3",
+          "-B",
+          "packages/cyberkrill/test/carried-help.py",
+          "carried-help/words-empty"
+        ],
+        "case": "carried-help/words-empty",
+        "status": 1,
+        "seconds": 0.084649,
+        "failure": "AssertionError: carried help preceding typed error: carried-help/words-empty",
+        "stdout_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+        "stderr_sha256": "dfc2424fbd92cd57106fc877508c660dd8433cec08e37a4aca2c4da49a849f98"
+      },
+      {
+        "command": [
+          "timeout",
+          "--foreground",
+          "30",
+          "python3",
+          "-B",
+          "packages/cyberkrill/test/carried-help.py",
+          "carried-help/words-missing-help"
+        ],
+        "case": "carried-help/words-missing-help",
+        "status": 0,
+        "seconds": 0.079535,
+        "failure": "",
+        "stdout_sha256": "20230a4fa43ee4ab7c60f2261f2219aacb0cd06cf99ae054b8e0bafd57335044",
+        "stderr_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+      },
+      {
+        "command": [
+          "timeout",
+          "--foreground",
+          "30",
+          "python3",
+          "-B",
+          "packages/cyberkrill/test/carried-help.py",
+          "carried-help/enum-help-first-attached"
+        ],
+        "case": "carried-help/enum-help-first-attached",
+        "status": 0,
+        "seconds": 0.076573,
+        "failure": "",
+        "stdout_sha256": "20230a4fa43ee4ab7c60f2261f2219aacb0cd06cf99ae054b8e0bafd57335044",
+        "stderr_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+      },
+      {
+        "command": [
+          "timeout",
+          "--foreground",
+          "30",
+          "python3",
+          "-B",
+          "packages/cyberkrill/test/carried-help.py",
+          "carried-help/enum-help-first-spaced"
+        ],
+        "case": "carried-help/enum-help-first-spaced",
+        "status": 0,
+        "seconds": 0.080361,
+        "failure": "",
+        "stdout_sha256": "20230a4fa43ee4ab7c60f2261f2219aacb0cd06cf99ae054b8e0bafd57335044",
+        "stderr_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+      },
+      {
+        "command": [
+          "timeout",
+          "--foreground",
+          "30",
+          "python3",
+          "-B",
+          "packages/cyberkrill/test/carried-help.py",
+          "carried-help/enum-help-first-missing"
+        ],
+        "case": "carried-help/enum-help-first-missing",
+        "status": 0,
+        "seconds": 0.078354,
+        "failure": "",
+        "stdout_sha256": "20230a4fa43ee4ab7c60f2261f2219aacb0cd06cf99ae054b8e0bafd57335044",
+        "stderr_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+      },
+      {
+        "command": [
+          "timeout",
+          "--foreground",
+          "30",
+          "python3",
+          "-B",
+          "packages/cyberkrill/test/carried-help.py",
+          "carried-help/words-help-first-grammar"
+        ],
+        "case": "carried-help/words-help-first-grammar",
+        "status": 0,
+        "seconds": 0.078375,
+        "failure": "",
+        "stdout_sha256": "20230a4fa43ee4ab7c60f2261f2219aacb0cd06cf99ae054b8e0bafd57335044",
+        "stderr_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+      },
+      {
+        "command": [
+          "timeout",
+          "--foreground",
+          "30",
+          "python3",
+          "-B",
+          "packages/cyberkrill/test/carried-help.py",
+          "carried-help/words-help-first-overflow"
+        ],
+        "case": "carried-help/words-help-first-overflow",
+        "status": 0,
+        "seconds": 0.079782,
+        "failure": "",
+        "stdout_sha256": "20230a4fa43ee4ab7c60f2261f2219aacb0cd06cf99ae054b8e0bafd57335044",
+        "stderr_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+      },
+      {
+        "command": [
+          "timeout",
+          "--foreground",
+          "30",
+          "python3",
+          "-B",
+          "packages/cyberkrill/test/carried-help.py",
+          "carried-help/words-help-first-terminator"
+        ],
+        "case": "carried-help/words-help-first-terminator",
+        "status": 0,
+        "seconds": 0.084622,
+        "failure": "",
+        "stdout_sha256": "20230a4fa43ee4ab7c60f2261f2219aacb0cd06cf99ae054b8e0bafd57335044",
+        "stderr_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+      },
+      {
+        "command": [
+          "timeout",
+          "--foreground",
+          "30",
+          "python3",
+          "-B",
+          "packages/cyberkrill/test/carried-help.py",
+          "carried-help/words-semantic-13"
+        ],
+        "case": "carried-help/words-semantic-13",
+        "status": 0,
+        "seconds": 0.083363,
+        "failure": "",
+        "stdout_sha256": "20230a4fa43ee4ab7c60f2261f2219aacb0cd06cf99ae054b8e0bafd57335044",
+        "stderr_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+      },
+      {
+        "command": [
+          "timeout",
+          "--foreground",
+          "30",
+          "python3",
+          "-B",
+          "packages/cyberkrill/test/carried-help.py",
+          "carried-help/words-semantic-attached"
+        ],
+        "case": "carried-help/words-semantic-attached",
+        "status": 0,
+        "seconds": 0.080826,
+        "failure": "",
+        "stdout_sha256": "20230a4fa43ee4ab7c60f2261f2219aacb0cd06cf99ae054b8e0bafd57335044",
+        "stderr_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+      },
+      {
+        "command": [
+          "timeout",
+          "--foreground",
+          "30",
+          "python3",
+          "-B",
+          "packages/cyberkrill/test/carried-help.py",
+          "carried-help/words-semantic-plus"
+        ],
+        "case": "carried-help/words-semantic-plus",
+        "status": 0,
+        "seconds": 0.076739,
+        "failure": "",
+        "stdout_sha256": "20230a4fa43ee4ab7c60f2261f2219aacb0cd06cf99ae054b8e0bafd57335044",
+        "stderr_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+      },
+      {
+        "command": [
+          "timeout",
+          "--foreground",
+          "30",
+          "python3",
+          "-B",
+          "packages/cyberkrill/test/carried-help.py",
+          "carried-help/words-u32-max"
+        ],
+        "case": "carried-help/words-u32-max",
+        "status": 0,
+        "seconds": 0.084894,
+        "failure": "",
+        "stdout_sha256": "20230a4fa43ee4ab7c60f2261f2219aacb0cd06cf99ae054b8e0bafd57335044",
+        "stderr_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+      },
+      {
+        "command": [
+          "timeout",
+          "--foreground",
+          "30",
+          "python3",
+          "-B",
+          "packages/cyberkrill/test/carried-help.py",
+          "carried-help/enum-valid"
+        ],
+        "case": "carried-help/enum-valid",
+        "status": 0,
+        "seconds": 0.079745,
+        "failure": "",
+        "stdout_sha256": "20230a4fa43ee4ab7c60f2261f2219aacb0cd06cf99ae054b8e0bafd57335044",
+        "stderr_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+      },
+      {
+        "command": [
+          "timeout",
+          "--foreground",
+          "30",
+          "python3",
+          "-B",
+          "packages/cyberkrill/test/carried-help.py",
+          "carried-help/enum-runtime"
+        ],
+        "case": "carried-help/enum-runtime",
+        "status": 0,
+        "seconds": 0.07849,
+        "failure": "",
+        "stdout_sha256": "20230a4fa43ee4ab7c60f2261f2219aacb0cd06cf99ae054b8e0bafd57335044",
+        "stderr_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+      },
+      {
+        "command": [
+          "timeout",
+          "--foreground",
+          "30",
+          "python3",
+          "-B",
+          "packages/cyberkrill/test/carried-help.py",
+          "carried-help/enum-long-help-first"
+        ],
+        "case": "carried-help/enum-long-help-first",
+        "status": 0,
+        "seconds": 0.078407,
+        "failure": "",
+        "stdout_sha256": "20230a4fa43ee4ab7c60f2261f2219aacb0cd06cf99ae054b8e0bafd57335044",
+        "stderr_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+      },
+      {
+        "command": [
+          "timeout",
+          "--foreground",
+          "30",
+          "python3",
+          "-B",
+          "packages/cyberkrill/test/carried-help.py",
+          "carried-help/words-long-help-first"
+        ],
+        "case": "carried-help/words-long-help-first",
+        "status": 0,
+        "seconds": 0.077912,
+        "failure": "",
+        "stdout_sha256": "20230a4fa43ee4ab7c60f2261f2219aacb0cd06cf99ae054b8e0bafd57335044",
+        "stderr_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+      }
+    ]
+  },
+  "after": {
+    "source_sha256": {
+      "Cyberkrill/App.lean": "10adf88c8731541c2776090befc5a0547b0419d789d866a1100b2d3c6dd20adf",
+      "test/carried-help.py": "a2bd6238d0195b3433d1c1a6e0648f0ac8a728201e9724631c566e9b978e2fe2",
+      "test/carried-regressions.py": "f968ca3d5259a56dd7601ca78edd2aad008b3519c2a944730f04eb525838dd42",
+      "test/offline-inputs.py": "5656df09559f08b2ae33340416e80edbd49a799b60057af5a3c48dbed1e66ef1",
+      "test/golden/offline-reference.json": "75b7fe1f5468c7b9b0160086a942e27ef5f6e3598cf2f0110c468623b89dfa61"
+    },
+    "checks": [
+      {
+        "command": [
+          "timeout",
+          "--foreground",
+          "30",
+          "python3",
+          "-B",
+          "packages/cyberkrill/test/carried-help.py",
+          "carried-help/enum-attached"
+        ],
+        "case": "carried-help/enum-attached",
+        "status": 0,
+        "seconds": 0.091592,
+        "failure": "",
+        "stdout_sha256": "20230a4fa43ee4ab7c60f2261f2219aacb0cd06cf99ae054b8e0bafd57335044",
+        "stderr_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+      },
+      {
+        "command": [
+          "timeout",
+          "--foreground",
+          "30",
+          "python3",
+          "-B",
+          "packages/cyberkrill/test/carried-help.py",
+          "carried-help/enum-spaced"
+        ],
+        "case": "carried-help/enum-spaced",
+        "status": 0,
+        "seconds": 0.08223,
+        "failure": "",
+        "stdout_sha256": "20230a4fa43ee4ab7c60f2261f2219aacb0cd06cf99ae054b8e0bafd57335044",
+        "stderr_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+      },
+      {
+        "command": [
+          "timeout",
+          "--foreground",
+          "30",
+          "python3",
+          "-B",
+          "packages/cyberkrill/test/carried-help.py",
+          "carried-help/enum-missing-terminator"
+        ],
+        "case": "carried-help/enum-missing-terminator",
+        "status": 0,
+        "seconds": 0.087151,
+        "failure": "",
+        "stdout_sha256": "20230a4fa43ee4ab7c60f2261f2219aacb0cd06cf99ae054b8e0bafd57335044",
+        "stderr_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+      },
+      {
+        "command": [
+          "timeout",
+          "--foreground",
+          "30",
+          "python3",
+          "-B",
+          "packages/cyberkrill/test/carried-help.py",
+          "carried-help/words-spaced"
+        ],
+        "case": "carried-help/words-spaced",
+        "status": 0,
+        "seconds": 0.082442,
+        "failure": "",
+        "stdout_sha256": "20230a4fa43ee4ab7c60f2261f2219aacb0cd06cf99ae054b8e0bafd57335044",
+        "stderr_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+      },
+      {
+        "command": [
+          "timeout",
+          "--foreground",
+          "30",
+          "python3",
+          "-B",
+          "packages/cyberkrill/test/carried-help.py",
+          "carried-help/words-equals"
+        ],
+        "case": "carried-help/words-equals",
+        "status": 0,
+        "seconds": 0.087989,
+        "failure": "",
+        "stdout_sha256": "20230a4fa43ee4ab7c60f2261f2219aacb0cd06cf99ae054b8e0bafd57335044",
+        "stderr_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+      },
+      {
+        "command": [
+          "timeout",
+          "--foreground",
+          "30",
+          "python3",
+          "-B",
+          "packages/cyberkrill/test/carried-help.py",
+          "carried-help/words-overflow"
+        ],
+        "case": "carried-help/words-overflow",
+        "status": 0,
+        "seconds": 0.086723,
+        "failure": "",
+        "stdout_sha256": "20230a4fa43ee4ab7c60f2261f2219aacb0cd06cf99ae054b8e0bafd57335044",
+        "stderr_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+      },
+      {
+        "command": [
+          "timeout",
+          "--foreground",
+          "30",
+          "python3",
+          "-B",
+          "packages/cyberkrill/test/carried-help.py",
+          "carried-help/words-missing-terminator"
+        ],
+        "case": "carried-help/words-missing-terminator",
+        "status": 0,
+        "seconds": 0.210912,
+        "failure": "",
+        "stdout_sha256": "20230a4fa43ee4ab7c60f2261f2219aacb0cd06cf99ae054b8e0bafd57335044",
+        "stderr_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+      },
+      {
+        "command": [
+          "timeout",
+          "--foreground",
+          "30",
+          "python3",
+          "-B",
+          "packages/cyberkrill/test/carried-help.py",
+          "carried-help/enum-empty"
+        ],
+        "case": "carried-help/enum-empty",
+        "status": 0,
+        "seconds": 0.087742,
+        "failure": "",
+        "stdout_sha256": "20230a4fa43ee4ab7c60f2261f2219aacb0cd06cf99ae054b8e0bafd57335044",
+        "stderr_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+      },
+      {
+        "command": [
+          "timeout",
+          "--foreground",
+          "30",
+          "python3",
+          "-B",
+          "packages/cyberkrill/test/carried-help.py",
+          "carried-help/enum-case"
+        ],
+        "case": "carried-help/enum-case",
+        "status": 0,
+        "seconds": 0.079859,
+        "failure": "",
+        "stdout_sha256": "20230a4fa43ee4ab7c60f2261f2219aacb0cd06cf99ae054b8e0bafd57335044",
+        "stderr_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+      },
+      {
+        "command": [
+          "timeout",
+          "--foreground",
+          "30",
+          "python3",
+          "-B",
+          "packages/cyberkrill/test/carried-help.py",
+          "carried-help/words-long-spaced"
+        ],
+        "case": "carried-help/words-long-spaced",
+        "status": 0,
+        "seconds": 0.084835,
+        "failure": "",
+        "stdout_sha256": "20230a4fa43ee4ab7c60f2261f2219aacb0cd06cf99ae054b8e0bafd57335044",
+        "stderr_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+      },
+      {
+        "command": [
+          "timeout",
+          "--foreground",
+          "30",
+          "python3",
+          "-B",
+          "packages/cyberkrill/test/carried-help.py",
+          "carried-help/words-long-attached"
+        ],
+        "case": "carried-help/words-long-attached",
+        "status": 0,
+        "seconds": 0.084282,
+        "failure": "",
+        "stdout_sha256": "20230a4fa43ee4ab7c60f2261f2219aacb0cd06cf99ae054b8e0bafd57335044",
+        "stderr_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+      },
+      {
+        "command": [
+          "timeout",
+          "--foreground",
+          "30",
+          "python3",
+          "-B",
+          "packages/cyberkrill/test/carried-help.py",
+          "carried-help/words-short-attached"
+        ],
+        "case": "carried-help/words-short-attached",
+        "status": 0,
+        "seconds": 0.082363,
+        "failure": "",
+        "stdout_sha256": "20230a4fa43ee4ab7c60f2261f2219aacb0cd06cf99ae054b8e0bafd57335044",
+        "stderr_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+      },
+      {
+        "command": [
+          "timeout",
+          "--foreground",
+          "30",
+          "python3",
+          "-B",
+          "packages/cyberkrill/test/carried-help.py",
+          "carried-help/words-u32-overflow"
+        ],
+        "case": "carried-help/words-u32-overflow",
+        "status": 0,
+        "seconds": 0.152118,
+        "failure": "",
+        "stdout_sha256": "20230a4fa43ee4ab7c60f2261f2219aacb0cd06cf99ae054b8e0bafd57335044",
+        "stderr_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+      },
+      {
+        "command": [
+          "timeout",
+          "--foreground",
+          "30",
+          "python3",
+          "-B",
+          "packages/cyberkrill/test/carried-help.py",
+          "carried-help/words-long-overflow"
+        ],
+        "case": "carried-help/words-long-overflow",
+        "status": 0,
+        "seconds": 0.087175,
+        "failure": "",
+        "stdout_sha256": "20230a4fa43ee4ab7c60f2261f2219aacb0cd06cf99ae054b8e0bafd57335044",
+        "stderr_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+      },
+      {
+        "command": [
+          "timeout",
+          "--foreground",
+          "30",
+          "python3",
+          "-B",
+          "packages/cyberkrill/test/carried-help.py",
+          "carried-help/words-underscore"
+        ],
+        "case": "carried-help/words-underscore",
+        "status": 0,
+        "seconds": 0.09438,
+        "failure": "",
+        "stdout_sha256": "20230a4fa43ee4ab7c60f2261f2219aacb0cd06cf99ae054b8e0bafd57335044",
+        "stderr_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+      },
+      {
+        "command": [
+          "timeout",
+          "--foreground",
+          "30",
+          "python3",
+          "-B",
+          "packages/cyberkrill/test/carried-help.py",
+          "carried-help/words-negative"
+        ],
+        "case": "carried-help/words-negative",
+        "status": 0,
+        "seconds": 0.09359,
+        "failure": "",
+        "stdout_sha256": "20230a4fa43ee4ab7c60f2261f2219aacb0cd06cf99ae054b8e0bafd57335044",
+        "stderr_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+      },
+      {
+        "command": [
+          "timeout",
+          "--foreground",
+          "30",
+          "python3",
+          "-B",
+          "packages/cyberkrill/test/carried-help.py",
+          "carried-help/words-empty"
+        ],
+        "case": "carried-help/words-empty",
+        "status": 0,
+        "seconds": 0.089633,
+        "failure": "",
+        "stdout_sha256": "20230a4fa43ee4ab7c60f2261f2219aacb0cd06cf99ae054b8e0bafd57335044",
+        "stderr_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+      },
+      {
+        "command": [
+          "timeout",
+          "--foreground",
+          "30",
+          "python3",
+          "-B",
+          "packages/cyberkrill/test/carried-help.py",
+          "carried-help/words-missing-help"
+        ],
+        "case": "carried-help/words-missing-help",
+        "status": 0,
+        "seconds": 0.081454,
+        "failure": "",
+        "stdout_sha256": "20230a4fa43ee4ab7c60f2261f2219aacb0cd06cf99ae054b8e0bafd57335044",
+        "stderr_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+      },
+      {
+        "command": [
+          "timeout",
+          "--foreground",
+          "30",
+          "python3",
+          "-B",
+          "packages/cyberkrill/test/carried-help.py",
+          "carried-help/enum-help-first-attached"
+        ],
+        "case": "carried-help/enum-help-first-attached",
+        "status": 0,
+        "seconds": 0.135169,
+        "failure": "",
+        "stdout_sha256": "20230a4fa43ee4ab7c60f2261f2219aacb0cd06cf99ae054b8e0bafd57335044",
+        "stderr_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+      },
+      {
+        "command": [
+          "timeout",
+          "--foreground",
+          "30",
+          "python3",
+          "-B",
+          "packages/cyberkrill/test/carried-help.py",
+          "carried-help/enum-help-first-spaced"
+        ],
+        "case": "carried-help/enum-help-first-spaced",
+        "status": 0,
+        "seconds": 0.095735,
+        "failure": "",
+        "stdout_sha256": "20230a4fa43ee4ab7c60f2261f2219aacb0cd06cf99ae054b8e0bafd57335044",
+        "stderr_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+      },
+      {
+        "command": [
+          "timeout",
+          "--foreground",
+          "30",
+          "python3",
+          "-B",
+          "packages/cyberkrill/test/carried-help.py",
+          "carried-help/enum-help-first-missing"
+        ],
+        "case": "carried-help/enum-help-first-missing",
+        "status": 0,
+        "seconds": 0.083701,
+        "failure": "",
+        "stdout_sha256": "20230a4fa43ee4ab7c60f2261f2219aacb0cd06cf99ae054b8e0bafd57335044",
+        "stderr_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+      },
+      {
+        "command": [
+          "timeout",
+          "--foreground",
+          "30",
+          "python3",
+          "-B",
+          "packages/cyberkrill/test/carried-help.py",
+          "carried-help/words-help-first-grammar"
+        ],
+        "case": "carried-help/words-help-first-grammar",
+        "status": 0,
+        "seconds": 0.090421,
+        "failure": "",
+        "stdout_sha256": "20230a4fa43ee4ab7c60f2261f2219aacb0cd06cf99ae054b8e0bafd57335044",
+        "stderr_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+      },
+      {
+        "command": [
+          "timeout",
+          "--foreground",
+          "30",
+          "python3",
+          "-B",
+          "packages/cyberkrill/test/carried-help.py",
+          "carried-help/words-help-first-overflow"
+        ],
+        "case": "carried-help/words-help-first-overflow",
+        "status": 0,
+        "seconds": 0.100668,
+        "failure": "",
+        "stdout_sha256": "20230a4fa43ee4ab7c60f2261f2219aacb0cd06cf99ae054b8e0bafd57335044",
+        "stderr_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+      },
+      {
+        "command": [
+          "timeout",
+          "--foreground",
+          "30",
+          "python3",
+          "-B",
+          "packages/cyberkrill/test/carried-help.py",
+          "carried-help/words-help-first-terminator"
+        ],
+        "case": "carried-help/words-help-first-terminator",
+        "status": 0,
+        "seconds": 0.167623,
+        "failure": "",
+        "stdout_sha256": "20230a4fa43ee4ab7c60f2261f2219aacb0cd06cf99ae054b8e0bafd57335044",
+        "stderr_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+      },
+      {
+        "command": [
+          "timeout",
+          "--foreground",
+          "30",
+          "python3",
+          "-B",
+          "packages/cyberkrill/test/carried-help.py",
+          "carried-help/words-semantic-13"
+        ],
+        "case": "carried-help/words-semantic-13",
+        "status": 0,
+        "seconds": 0.090461,
+        "failure": "",
+        "stdout_sha256": "20230a4fa43ee4ab7c60f2261f2219aacb0cd06cf99ae054b8e0bafd57335044",
+        "stderr_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+      },
+      {
+        "command": [
+          "timeout",
+          "--foreground",
+          "30",
+          "python3",
+          "-B",
+          "packages/cyberkrill/test/carried-help.py",
+          "carried-help/words-semantic-attached"
+        ],
+        "case": "carried-help/words-semantic-attached",
+        "status": 0,
+        "seconds": 0.083407,
+        "failure": "",
+        "stdout_sha256": "20230a4fa43ee4ab7c60f2261f2219aacb0cd06cf99ae054b8e0bafd57335044",
+        "stderr_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+      },
+      {
+        "command": [
+          "timeout",
+          "--foreground",
+          "30",
+          "python3",
+          "-B",
+          "packages/cyberkrill/test/carried-help.py",
+          "carried-help/words-semantic-plus"
+        ],
+        "case": "carried-help/words-semantic-plus",
+        "status": 0,
+        "seconds": 0.085118,
+        "failure": "",
+        "stdout_sha256": "20230a4fa43ee4ab7c60f2261f2219aacb0cd06cf99ae054b8e0bafd57335044",
+        "stderr_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+      },
+      {
+        "command": [
+          "timeout",
+          "--foreground",
+          "30",
+          "python3",
+          "-B",
+          "packages/cyberkrill/test/carried-help.py",
+          "carried-help/words-u32-max"
+        ],
+        "case": "carried-help/words-u32-max",
+        "status": 0,
+        "seconds": 0.101847,
+        "failure": "",
+        "stdout_sha256": "20230a4fa43ee4ab7c60f2261f2219aacb0cd06cf99ae054b8e0bafd57335044",
+        "stderr_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+      },
+      {
+        "command": [
+          "timeout",
+          "--foreground",
+          "30",
+          "python3",
+          "-B",
+          "packages/cyberkrill/test/carried-help.py",
+          "carried-help/enum-valid"
+        ],
+        "case": "carried-help/enum-valid",
+        "status": 0,
+        "seconds": 0.157812,
+        "failure": "",
+        "stdout_sha256": "20230a4fa43ee4ab7c60f2261f2219aacb0cd06cf99ae054b8e0bafd57335044",
+        "stderr_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+      },
+      {
+        "command": [
+          "timeout",
+          "--foreground",
+          "30",
+          "python3",
+          "-B",
+          "packages/cyberkrill/test/carried-help.py",
+          "carried-help/enum-runtime"
+        ],
+        "case": "carried-help/enum-runtime",
+        "status": 0,
+        "seconds": 0.081955,
+        "failure": "",
+        "stdout_sha256": "20230a4fa43ee4ab7c60f2261f2219aacb0cd06cf99ae054b8e0bafd57335044",
+        "stderr_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+      },
+      {
+        "command": [
+          "timeout",
+          "--foreground",
+          "30",
+          "python3",
+          "-B",
+          "packages/cyberkrill/test/carried-help.py",
+          "carried-help/enum-long-help-first"
+        ],
+        "case": "carried-help/enum-long-help-first",
+        "status": 0,
+        "seconds": 0.081872,
+        "failure": "",
+        "stdout_sha256": "20230a4fa43ee4ab7c60f2261f2219aacb0cd06cf99ae054b8e0bafd57335044",
+        "stderr_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+      },
+      {
+        "command": [
+          "timeout",
+          "--foreground",
+          "30",
+          "python3",
+          "-B",
+          "packages/cyberkrill/test/carried-help.py",
+          "carried-help/words-long-help-first"
+        ],
+        "case": "carried-help/words-long-help-first",
+        "status": 0,
+        "seconds": 0.082187,
+        "failure": "",
+        "stdout_sha256": "20230a4fa43ee4ab7c60f2261f2219aacb0cd06cf99ae054b8e0bafd57335044",
+        "stderr_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+      }
+    ]
+  },
+  "current": {
+    "source_sha256": {
+      "Cyberkrill/App.lean": "274f12a1eab4853959654f324b28fdf1c29d6b7cb0fbc7decbb3bd62e08b73dc",
+      "test/carried-help.py": "a2bd6238d0195b3433d1c1a6e0648f0ac8a728201e9724631c566e9b978e2fe2",
+      "test/carried-regressions.py": "aea55461161d06f6eac401fb1549e7ce6bc580313d497b3b4062942699122863",
+      "test/offline-inputs.py": "5656df09559f08b2ae33340416e80edbd49a799b60057af5a3c48dbed1e66ef1",
+      "test/golden/offline-reference.json": "75b7fe1f5468c7b9b0160086a942e27ef5f6e3598cf2f0110c468623b89dfa61"
+    },
+    "checks": [
+      {
+        "command": [
+          "timeout",
+          "--foreground",
+          "30",
+          "python3",
+          "-B",
+          "packages/cyberkrill/test/carried-help.py",
+          "carried-help/enum-attached"
+        ],
+        "case": "carried-help/enum-attached",
+        "status": 0,
+        "seconds": 0.07605,
+        "failure": "",
+        "stdout_sha256": "20230a4fa43ee4ab7c60f2261f2219aacb0cd06cf99ae054b8e0bafd57335044",
+        "stderr_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+      },
+      {
+        "command": [
+          "timeout",
+          "--foreground",
+          "30",
+          "python3",
+          "-B",
+          "packages/cyberkrill/test/carried-help.py",
+          "carried-help/enum-spaced"
+        ],
+        "case": "carried-help/enum-spaced",
+        "status": 0,
+        "seconds": 0.07724,
+        "failure": "",
+        "stdout_sha256": "20230a4fa43ee4ab7c60f2261f2219aacb0cd06cf99ae054b8e0bafd57335044",
+        "stderr_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+      },
+      {
+        "command": [
+          "timeout",
+          "--foreground",
+          "30",
+          "python3",
+          "-B",
+          "packages/cyberkrill/test/carried-help.py",
+          "carried-help/enum-missing-terminator"
+        ],
+        "case": "carried-help/enum-missing-terminator",
+        "status": 0,
+        "seconds": 0.073591,
+        "failure": "",
+        "stdout_sha256": "20230a4fa43ee4ab7c60f2261f2219aacb0cd06cf99ae054b8e0bafd57335044",
+        "stderr_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+      },
+      {
+        "command": [
+          "timeout",
+          "--foreground",
+          "30",
+          "python3",
+          "-B",
+          "packages/cyberkrill/test/carried-help.py",
+          "carried-help/words-spaced"
+        ],
+        "case": "carried-help/words-spaced",
+        "status": 0,
+        "seconds": 0.076369,
+        "failure": "",
+        "stdout_sha256": "20230a4fa43ee4ab7c60f2261f2219aacb0cd06cf99ae054b8e0bafd57335044",
+        "stderr_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+      },
+      {
+        "command": [
+          "timeout",
+          "--foreground",
+          "30",
+          "python3",
+          "-B",
+          "packages/cyberkrill/test/carried-help.py",
+          "carried-help/words-equals"
+        ],
+        "case": "carried-help/words-equals",
+        "status": 0,
+        "seconds": 0.073825,
+        "failure": "",
+        "stdout_sha256": "20230a4fa43ee4ab7c60f2261f2219aacb0cd06cf99ae054b8e0bafd57335044",
+        "stderr_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+      },
+      {
+        "command": [
+          "timeout",
+          "--foreground",
+          "30",
+          "python3",
+          "-B",
+          "packages/cyberkrill/test/carried-help.py",
+          "carried-help/words-overflow"
+        ],
+        "case": "carried-help/words-overflow",
+        "status": 0,
+        "seconds": 0.075937,
+        "failure": "",
+        "stdout_sha256": "20230a4fa43ee4ab7c60f2261f2219aacb0cd06cf99ae054b8e0bafd57335044",
+        "stderr_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+      },
+      {
+        "command": [
+          "timeout",
+          "--foreground",
+          "30",
+          "python3",
+          "-B",
+          "packages/cyberkrill/test/carried-help.py",
+          "carried-help/words-missing-terminator"
+        ],
+        "case": "carried-help/words-missing-terminator",
+        "status": 0,
+        "seconds": 0.072873,
+        "failure": "",
+        "stdout_sha256": "20230a4fa43ee4ab7c60f2261f2219aacb0cd06cf99ae054b8e0bafd57335044",
+        "stderr_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+      },
+      {
+        "command": [
+          "timeout",
+          "--foreground",
+          "30",
+          "python3",
+          "-B",
+          "packages/cyberkrill/test/carried-help.py",
+          "carried-help/enum-empty"
+        ],
+        "case": "carried-help/enum-empty",
+        "status": 0,
+        "seconds": 0.076731,
+        "failure": "",
+        "stdout_sha256": "20230a4fa43ee4ab7c60f2261f2219aacb0cd06cf99ae054b8e0bafd57335044",
+        "stderr_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+      },
+      {
+        "command": [
+          "timeout",
+          "--foreground",
+          "30",
+          "python3",
+          "-B",
+          "packages/cyberkrill/test/carried-help.py",
+          "carried-help/enum-case"
+        ],
+        "case": "carried-help/enum-case",
+        "status": 0,
+        "seconds": 0.07415,
+        "failure": "",
+        "stdout_sha256": "20230a4fa43ee4ab7c60f2261f2219aacb0cd06cf99ae054b8e0bafd57335044",
+        "stderr_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+      },
+      {
+        "command": [
+          "timeout",
+          "--foreground",
+          "30",
+          "python3",
+          "-B",
+          "packages/cyberkrill/test/carried-help.py",
+          "carried-help/words-long-spaced"
+        ],
+        "case": "carried-help/words-long-spaced",
+        "status": 0,
+        "seconds": 0.076283,
+        "failure": "",
+        "stdout_sha256": "20230a4fa43ee4ab7c60f2261f2219aacb0cd06cf99ae054b8e0bafd57335044",
+        "stderr_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+      },
+      {
+        "command": [
+          "timeout",
+          "--foreground",
+          "30",
+          "python3",
+          "-B",
+          "packages/cyberkrill/test/carried-help.py",
+          "carried-help/words-long-attached"
+        ],
+        "case": "carried-help/words-long-attached",
+        "status": 0,
+        "seconds": 0.073809,
+        "failure": "",
+        "stdout_sha256": "20230a4fa43ee4ab7c60f2261f2219aacb0cd06cf99ae054b8e0bafd57335044",
+        "stderr_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+      },
+      {
+        "command": [
+          "timeout",
+          "--foreground",
+          "30",
+          "python3",
+          "-B",
+          "packages/cyberkrill/test/carried-help.py",
+          "carried-help/words-short-attached"
+        ],
+        "case": "carried-help/words-short-attached",
+        "status": 0,
+        "seconds": 0.074445,
+        "failure": "",
+        "stdout_sha256": "20230a4fa43ee4ab7c60f2261f2219aacb0cd06cf99ae054b8e0bafd57335044",
+        "stderr_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+      },
+      {
+        "command": [
+          "timeout",
+          "--foreground",
+          "30",
+          "python3",
+          "-B",
+          "packages/cyberkrill/test/carried-help.py",
+          "carried-help/words-u32-overflow"
+        ],
+        "case": "carried-help/words-u32-overflow",
+        "status": 0,
+        "seconds": 0.074267,
+        "failure": "",
+        "stdout_sha256": "20230a4fa43ee4ab7c60f2261f2219aacb0cd06cf99ae054b8e0bafd57335044",
+        "stderr_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+      },
+      {
+        "command": [
+          "timeout",
+          "--foreground",
+          "30",
+          "python3",
+          "-B",
+          "packages/cyberkrill/test/carried-help.py",
+          "carried-help/words-long-overflow"
+        ],
+        "case": "carried-help/words-long-overflow",
+        "status": 0,
+        "seconds": 0.077787,
+        "failure": "",
+        "stdout_sha256": "20230a4fa43ee4ab7c60f2261f2219aacb0cd06cf99ae054b8e0bafd57335044",
+        "stderr_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+      },
+      {
+        "command": [
+          "timeout",
+          "--foreground",
+          "30",
+          "python3",
+          "-B",
+          "packages/cyberkrill/test/carried-help.py",
+          "carried-help/words-underscore"
+        ],
+        "case": "carried-help/words-underscore",
+        "status": 0,
+        "seconds": 0.073156,
+        "failure": "",
+        "stdout_sha256": "20230a4fa43ee4ab7c60f2261f2219aacb0cd06cf99ae054b8e0bafd57335044",
+        "stderr_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+      },
+      {
+        "command": [
+          "timeout",
+          "--foreground",
+          "30",
+          "python3",
+          "-B",
+          "packages/cyberkrill/test/carried-help.py",
+          "carried-help/words-negative"
+        ],
+        "case": "carried-help/words-negative",
+        "status": 0,
+        "seconds": 0.072953,
+        "failure": "",
+        "stdout_sha256": "20230a4fa43ee4ab7c60f2261f2219aacb0cd06cf99ae054b8e0bafd57335044",
+        "stderr_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+      },
+      {
+        "command": [
+          "timeout",
+          "--foreground",
+          "30",
+          "python3",
+          "-B",
+          "packages/cyberkrill/test/carried-help.py",
+          "carried-help/words-empty"
+        ],
+        "case": "carried-help/words-empty",
+        "status": 0,
+        "seconds": 0.074061,
+        "failure": "",
+        "stdout_sha256": "20230a4fa43ee4ab7c60f2261f2219aacb0cd06cf99ae054b8e0bafd57335044",
+        "stderr_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+      },
+      {
+        "command": [
+          "timeout",
+          "--foreground",
+          "30",
+          "python3",
+          "-B",
+          "packages/cyberkrill/test/carried-help.py",
+          "carried-help/words-missing-help"
+        ],
+        "case": "carried-help/words-missing-help",
+        "status": 0,
+        "seconds": 0.071889,
+        "failure": "",
+        "stdout_sha256": "20230a4fa43ee4ab7c60f2261f2219aacb0cd06cf99ae054b8e0bafd57335044",
+        "stderr_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+      },
+      {
+        "command": [
+          "timeout",
+          "--foreground",
+          "30",
+          "python3",
+          "-B",
+          "packages/cyberkrill/test/carried-help.py",
+          "carried-help/enum-help-first-attached"
+        ],
+        "case": "carried-help/enum-help-first-attached",
+        "status": 0,
+        "seconds": 0.072124,
+        "failure": "",
+        "stdout_sha256": "20230a4fa43ee4ab7c60f2261f2219aacb0cd06cf99ae054b8e0bafd57335044",
+        "stderr_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+      },
+      {
+        "command": [
+          "timeout",
+          "--foreground",
+          "30",
+          "python3",
+          "-B",
+          "packages/cyberkrill/test/carried-help.py",
+          "carried-help/enum-help-first-spaced"
+        ],
+        "case": "carried-help/enum-help-first-spaced",
+        "status": 0,
+        "seconds": 0.073034,
+        "failure": "",
+        "stdout_sha256": "20230a4fa43ee4ab7c60f2261f2219aacb0cd06cf99ae054b8e0bafd57335044",
+        "stderr_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+      },
+      {
+        "command": [
+          "timeout",
+          "--foreground",
+          "30",
+          "python3",
+          "-B",
+          "packages/cyberkrill/test/carried-help.py",
+          "carried-help/enum-help-first-missing"
+        ],
+        "case": "carried-help/enum-help-first-missing",
+        "status": 0,
+        "seconds": 0.076279,
+        "failure": "",
+        "stdout_sha256": "20230a4fa43ee4ab7c60f2261f2219aacb0cd06cf99ae054b8e0bafd57335044",
+        "stderr_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+      },
+      {
+        "command": [
+          "timeout",
+          "--foreground",
+          "30",
+          "python3",
+          "-B",
+          "packages/cyberkrill/test/carried-help.py",
+          "carried-help/words-help-first-grammar"
+        ],
+        "case": "carried-help/words-help-first-grammar",
+        "status": 0,
+        "seconds": 0.075152,
+        "failure": "",
+        "stdout_sha256": "20230a4fa43ee4ab7c60f2261f2219aacb0cd06cf99ae054b8e0bafd57335044",
+        "stderr_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+      },
+      {
+        "command": [
+          "timeout",
+          "--foreground",
+          "30",
+          "python3",
+          "-B",
+          "packages/cyberkrill/test/carried-help.py",
+          "carried-help/words-help-first-overflow"
+        ],
+        "case": "carried-help/words-help-first-overflow",
+        "status": 0,
+        "seconds": 0.079577,
+        "failure": "",
+        "stdout_sha256": "20230a4fa43ee4ab7c60f2261f2219aacb0cd06cf99ae054b8e0bafd57335044",
+        "stderr_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+      },
+      {
+        "command": [
+          "timeout",
+          "--foreground",
+          "30",
+          "python3",
+          "-B",
+          "packages/cyberkrill/test/carried-help.py",
+          "carried-help/words-help-first-terminator"
+        ],
+        "case": "carried-help/words-help-first-terminator",
+        "status": 0,
+        "seconds": 0.075249,
+        "failure": "",
+        "stdout_sha256": "20230a4fa43ee4ab7c60f2261f2219aacb0cd06cf99ae054b8e0bafd57335044",
+        "stderr_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+      },
+      {
+        "command": [
+          "timeout",
+          "--foreground",
+          "30",
+          "python3",
+          "-B",
+          "packages/cyberkrill/test/carried-help.py",
+          "carried-help/words-semantic-13"
+        ],
+        "case": "carried-help/words-semantic-13",
+        "status": 0,
+        "seconds": 0.073959,
+        "failure": "",
+        "stdout_sha256": "20230a4fa43ee4ab7c60f2261f2219aacb0cd06cf99ae054b8e0bafd57335044",
+        "stderr_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+      },
+      {
+        "command": [
+          "timeout",
+          "--foreground",
+          "30",
+          "python3",
+          "-B",
+          "packages/cyberkrill/test/carried-help.py",
+          "carried-help/words-semantic-attached"
+        ],
+        "case": "carried-help/words-semantic-attached",
+        "status": 0,
+        "seconds": 0.080712,
+        "failure": "",
+        "stdout_sha256": "20230a4fa43ee4ab7c60f2261f2219aacb0cd06cf99ae054b8e0bafd57335044",
+        "stderr_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+      },
+      {
+        "command": [
+          "timeout",
+          "--foreground",
+          "30",
+          "python3",
+          "-B",
+          "packages/cyberkrill/test/carried-help.py",
+          "carried-help/words-semantic-plus"
+        ],
+        "case": "carried-help/words-semantic-plus",
+        "status": 0,
+        "seconds": 0.073084,
+        "failure": "",
+        "stdout_sha256": "20230a4fa43ee4ab7c60f2261f2219aacb0cd06cf99ae054b8e0bafd57335044",
+        "stderr_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+      },
+      {
+        "command": [
+          "timeout",
+          "--foreground",
+          "30",
+          "python3",
+          "-B",
+          "packages/cyberkrill/test/carried-help.py",
+          "carried-help/words-u32-max"
+        ],
+        "case": "carried-help/words-u32-max",
+        "status": 0,
+        "seconds": 0.074523,
+        "failure": "",
+        "stdout_sha256": "20230a4fa43ee4ab7c60f2261f2219aacb0cd06cf99ae054b8e0bafd57335044",
+        "stderr_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+      },
+      {
+        "command": [
+          "timeout",
+          "--foreground",
+          "30",
+          "python3",
+          "-B",
+          "packages/cyberkrill/test/carried-help.py",
+          "carried-help/enum-valid"
+        ],
+        "case": "carried-help/enum-valid",
+        "status": 0,
+        "seconds": 0.072987,
+        "failure": "",
+        "stdout_sha256": "20230a4fa43ee4ab7c60f2261f2219aacb0cd06cf99ae054b8e0bafd57335044",
+        "stderr_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+      },
+      {
+        "command": [
+          "timeout",
+          "--foreground",
+          "30",
+          "python3",
+          "-B",
+          "packages/cyberkrill/test/carried-help.py",
+          "carried-help/enum-runtime"
+        ],
+        "case": "carried-help/enum-runtime",
+        "status": 0,
+        "seconds": 0.074421,
+        "failure": "",
+        "stdout_sha256": "20230a4fa43ee4ab7c60f2261f2219aacb0cd06cf99ae054b8e0bafd57335044",
+        "stderr_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+      },
+      {
+        "command": [
+          "timeout",
+          "--foreground",
+          "30",
+          "python3",
+          "-B",
+          "packages/cyberkrill/test/carried-help.py",
+          "carried-help/enum-long-help-first"
+        ],
+        "case": "carried-help/enum-long-help-first",
+        "status": 0,
+        "seconds": 0.074232,
+        "failure": "",
+        "stdout_sha256": "20230a4fa43ee4ab7c60f2261f2219aacb0cd06cf99ae054b8e0bafd57335044",
+        "stderr_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+      },
+      {
+        "command": [
+          "timeout",
+          "--foreground",
+          "30",
+          "python3",
+          "-B",
+          "packages/cyberkrill/test/carried-help.py",
+          "carried-help/words-long-help-first"
+        ],
+        "case": "carried-help/words-long-help-first",
+        "status": 0,
+        "seconds": 0.076377,
+        "failure": "",
+        "stdout_sha256": "20230a4fa43ee4ab7c60f2261f2219aacb0cd06cf99ae054b8e0bafd57335044",
+        "stderr_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+      }
+    ]
+  }
+}

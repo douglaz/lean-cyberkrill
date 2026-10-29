@@ -17,7 +17,7 @@ def edits():
     app, driver, compare = "Cyberkrill/App.lean", "test/driver.py", "test/compare.py"
     rows = [
         ("word-count-rejections", app,
-         'wordCount? ((flag "words").getD "24")', '((flag "words").getD "24").toNat?',
+         "!digits.toList.all (fun c => '0' ≤ c && c ≤ '9')", 'false',
          "word-count rejection before entropy"),
         ("word-count-plus", app,
          "String.ofList (match s.toList with | '+' :: rest => rest | cs => cs)", "s",

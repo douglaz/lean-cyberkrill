@@ -1,0 +1,852 @@
+[
+  {
+    "id": "bip370Valid/0",
+    "kind": "v2",
+    "reference": {
+      "status": 1,
+      "stdout": "",
+      "stderr": "Error: error in internal PSBT data structure\n\nCaused by:\n    version error PSBT versions greater than 0 are not supported\n",
+      "files": {}
+    },
+    "port": {
+      "status": 0,
+      "stdout": "{\"network\":\"bitcoin\",\"version\":2,\"locktime\":0,\"input_count\":1,\"output_count\":2,\"inputs\":[{\"index\":0,\"txid\":\"c85f81844094f9f0eec1e41f8d63e0a99e9f73dc725d7319871c9c4121d90a0b\",\"vout\":0,\"sequence\":4294967295}],\"outputs\":[{\"index\":0,\"value_sats\":800000000,\"value_btc\":8,\"script_pubkey\":\"0014c430f64c4756da310dbd1a085572ef299926272c\",\"address\":\"bc1qcsc0vnz82mdrzrdargy92uh09xvjvfevuqqa6s\"},{\"index\":1,\"value_sats\":199998859,\"value_btc\":1.99998859,\"script_pubkey\":\"00144dd193ac964a56ac1b9e1cca8454fe2f474f8513\",\"address\":\"bc1qfhge8tykfft2cxu7rn9gg4879ar5lpgnl9upah\"}],\"total_input_value\":null,\"total_output_value\":999998859,\"fee\":null}\n",
+      "stderr": "",
+      "files": {}
+    }
+  },
+  {
+    "id": "bip370Valid/1",
+    "kind": "v2",
+    "reference": {
+      "status": 1,
+      "stdout": "",
+      "stderr": "Error: error in internal PSBT data structure\n\nCaused by:\n    version error PSBT versions greater than 0 are not supported\n",
+      "files": {}
+    },
+    "port": {
+      "status": 0,
+      "stdout": "{\"network\":\"bitcoin\",\"version\":2,\"locktime\":0,\"input_count\":1,\"output_count\":2,\"inputs\":[{\"index\":0,\"txid\":\"c85f81844094f9f0eec1e41f8d63e0a99e9f73dc725d7319871c9c4121d90a0b\",\"vout\":0,\"sequence\":4294967295,\"value_sats\":999999000,\"value_btc\":9.99999}],\"outputs\":[{\"index\":0,\"value_sats\":800000000,\"value_btc\":8,\"script_pubkey\":\"0014c430f64c4756da310dbd1a085572ef299926272c\",\"address\":\"bc1qcsc0vnz82mdrzrdargy92uh09xvjvfevuqqa6s\"},{\"index\":1,\"value_sats\":199998859,\"value_btc\":1.99998859,\"script_pubkey\":\"00144dd193ac964a56ac1b9e1cca8454fe2f474f8513\",\"address\":\"bc1qfhge8tykfft2cxu7rn9gg4879ar5lpgnl9upah\"}],\"total_input_value\":999999000,\"total_output_value\":999998859,\"fee\":141}\n",
+      "stderr": "",
+      "files": {}
+    }
+  },
+  {
+    "id": "bip370Valid/2",
+    "kind": "v2",
+    "reference": {
+      "status": 1,
+      "stdout": "",
+      "stderr": "Error: error in internal PSBT data structure\n\nCaused by:\n    version error PSBT versions greater than 0 are not supported\n",
+      "files": {}
+    },
+    "port": {
+      "status": 0,
+      "stdout": "{\"network\":\"bitcoin\",\"version\":2,\"locktime\":0,\"input_count\":1,\"output_count\":2,\"inputs\":[{\"index\":0,\"txid\":\"c85f81844094f9f0eec1e41f8d63e0a99e9f73dc725d7319871c9c4121d90a0b\",\"vout\":0,\"sequence\":4294967294,\"value_sats\":999999000,\"value_btc\":9.99999}],\"outputs\":[{\"index\":0,\"value_sats\":800000000,\"value_btc\":8,\"script_pubkey\":\"0014c430f64c4756da310dbd1a085572ef299926272c\",\"address\":\"bc1qcsc0vnz82mdrzrdargy92uh09xvjvfevuqqa6s\"},{\"index\":1,\"value_sats\":199998859,\"value_btc\":1.99998859,\"script_pubkey\":\"00144dd193ac964a56ac1b9e1cca8454fe2f474f8513\",\"address\":\"bc1qfhge8tykfft2cxu7rn9gg4879ar5lpgnl9upah\"}],\"total_input_value\":999999000,\"total_output_value\":999998859,\"fee\":141}\n",
+      "stderr": "",
+      "files": {}
+    }
+  },
+  {
+    "id": "bip370Valid/3",
+    "kind": "v2",
+    "reference": {
+      "status": 1,
+      "stdout": "",
+      "stderr": "Error: error in internal PSBT data structure\n\nCaused by:\n    version error PSBT versions greater than 0 are not supported\n",
+      "files": {}
+    },
+    "port": {
+      "status": 0,
+      "stdout": "{\"network\":\"bitcoin\",\"version\":2,\"locktime\":10000,\"input_count\":1,\"output_count\":2,\"inputs\":[{\"index\":0,\"txid\":\"c85f81844094f9f0eec1e41f8d63e0a99e9f73dc725d7319871c9c4121d90a0b\",\"vout\":0,\"sequence\":4294967294,\"value_sats\":999999000,\"value_btc\":9.99999}],\"outputs\":[{\"index\":0,\"value_sats\":800000000,\"value_btc\":8,\"script_pubkey\":\"0014c430f64c4756da310dbd1a085572ef299926272c\",\"address\":\"bc1qcsc0vnz82mdrzrdargy92uh09xvjvfevuqqa6s\"},{\"index\":1,\"value_sats\":199998859,\"value_btc\":1.99998859,\"script_pubkey\":\"00144dd193ac964a56ac1b9e1cca8454fe2f474f8513\",\"address\":\"bc1qfhge8tykfft2cxu7rn9gg4879ar5lpgnl9upah\"}],\"total_input_value\":999999000,\"total_output_value\":999998859,\"fee\":141}\n",
+      "stderr": "",
+      "files": {}
+    }
+  },
+  {
+    "id": "bip370Valid/4",
+    "kind": "v2",
+    "reference": {
+      "status": 1,
+      "stdout": "",
+      "stderr": "Error: error in internal PSBT data structure\n\nCaused by:\n    version error PSBT versions greater than 0 are not supported\n",
+      "files": {}
+    },
+    "port": {
+      "status": 0,
+      "stdout": "{\"network\":\"bitcoin\",\"version\":2,\"locktime\":0,\"input_count\":1,\"output_count\":2,\"inputs\":[{\"index\":0,\"txid\":\"c85f81844094f9f0eec1e41f8d63e0a99e9f73dc725d7319871c9c4121d90a0b\",\"vout\":0,\"sequence\":4294967295,\"value_sats\":999999000,\"value_btc\":9.99999}],\"outputs\":[{\"index\":0,\"value_sats\":800000000,\"value_btc\":8,\"script_pubkey\":\"0014c430f64c4756da310dbd1a085572ef299926272c\",\"address\":\"bc1qcsc0vnz82mdrzrdargy92uh09xvjvfevuqqa6s\"},{\"index\":1,\"value_sats\":199998859,\"value_btc\":1.99998859,\"script_pubkey\":\"00144dd193ac964a56ac1b9e1cca8454fe2f474f8513\",\"address\":\"bc1qfhge8tykfft2cxu7rn9gg4879ar5lpgnl9upah\"}],\"total_input_value\":999999000,\"total_output_value\":999998859,\"fee\":141}\n",
+      "stderr": "",
+      "files": {}
+    }
+  },
+  {
+    "id": "bip370Valid/5",
+    "kind": "v2",
+    "reference": {
+      "status": 1,
+      "stdout": "",
+      "stderr": "Error: error in internal PSBT data structure\n\nCaused by:\n    version error PSBT versions greater than 0 are not supported\n",
+      "files": {}
+    },
+    "port": {
+      "status": 0,
+      "stdout": "{\"network\":\"bitcoin\",\"version\":2,\"locktime\":0,\"input_count\":1,\"output_count\":2,\"inputs\":[{\"index\":0,\"txid\":\"c85f81844094f9f0eec1e41f8d63e0a99e9f73dc725d7319871c9c4121d90a0b\",\"vout\":0,\"sequence\":4294967295,\"value_sats\":999999000,\"value_btc\":9.99999}],\"outputs\":[{\"index\":0,\"value_sats\":800000000,\"value_btc\":8,\"script_pubkey\":\"0014c430f64c4756da310dbd1a085572ef299926272c\",\"address\":\"bc1qcsc0vnz82mdrzrdargy92uh09xvjvfevuqqa6s\"},{\"index\":1,\"value_sats\":199998859,\"value_btc\":1.99998859,\"script_pubkey\":\"00144dd193ac964a56ac1b9e1cca8454fe2f474f8513\",\"address\":\"bc1qfhge8tykfft2cxu7rn9gg4879ar5lpgnl9upah\"}],\"total_input_value\":999999000,\"total_output_value\":999998859,\"fee\":141}\n",
+      "stderr": "",
+      "files": {}
+    }
+  },
+  {
+    "id": "bip370Valid/6",
+    "kind": "v2",
+    "reference": {
+      "status": 1,
+      "stdout": "",
+      "stderr": "Error: error in internal PSBT data structure\n\nCaused by:\n    version error PSBT versions greater than 0 are not supported\n",
+      "files": {}
+    },
+    "port": {
+      "status": 0,
+      "stdout": "{\"network\":\"bitcoin\",\"version\":2,\"locktime\":0,\"input_count\":1,\"output_count\":2,\"inputs\":[{\"index\":0,\"txid\":\"c85f81844094f9f0eec1e41f8d63e0a99e9f73dc725d7319871c9c4121d90a0b\",\"vout\":0,\"sequence\":4294967295,\"value_sats\":999999000,\"value_btc\":9.99999}],\"outputs\":[{\"index\":0,\"value_sats\":800000000,\"value_btc\":8,\"script_pubkey\":\"0014c430f64c4756da310dbd1a085572ef299926272c\",\"address\":\"bc1qcsc0vnz82mdrzrdargy92uh09xvjvfevuqqa6s\"},{\"index\":1,\"value_sats\":199998859,\"value_btc\":1.99998859,\"script_pubkey\":\"00144dd193ac964a56ac1b9e1cca8454fe2f474f8513\",\"address\":\"bc1qfhge8tykfft2cxu7rn9gg4879ar5lpgnl9upah\"}],\"total_input_value\":999999000,\"total_output_value\":999998859,\"fee\":141}\n",
+      "stderr": "",
+      "files": {}
+    }
+  },
+  {
+    "id": "bip370Valid/7",
+    "kind": "v2",
+    "reference": {
+      "status": 1,
+      "stdout": "",
+      "stderr": "Error: error in internal PSBT data structure\n\nCaused by:\n    version error PSBT versions greater than 0 are not supported\n",
+      "files": {}
+    },
+    "port": {
+      "status": 0,
+      "stdout": "{\"network\":\"bitcoin\",\"version\":2,\"locktime\":0,\"input_count\":1,\"output_count\":2,\"inputs\":[{\"index\":0,\"txid\":\"c85f81844094f9f0eec1e41f8d63e0a99e9f73dc725d7319871c9c4121d90a0b\",\"vout\":0,\"sequence\":4294967295,\"value_sats\":999999000,\"value_btc\":9.99999}],\"outputs\":[{\"index\":0,\"value_sats\":800000000,\"value_btc\":8,\"script_pubkey\":\"0014c430f64c4756da310dbd1a085572ef299926272c\",\"address\":\"bc1qcsc0vnz82mdrzrdargy92uh09xvjvfevuqqa6s\"},{\"index\":1,\"value_sats\":199998859,\"value_btc\":1.99998859,\"script_pubkey\":\"00144dd193ac964a56ac1b9e1cca8454fe2f474f8513\",\"address\":\"bc1qfhge8tykfft2cxu7rn9gg4879ar5lpgnl9upah\"}],\"total_input_value\":999999000,\"total_output_value\":999998859,\"fee\":141}\n",
+      "stderr": "",
+      "files": {}
+    }
+  },
+  {
+    "id": "bip370Valid/8",
+    "kind": "v2",
+    "reference": {
+      "status": 1,
+      "stdout": "",
+      "stderr": "Error: error in internal PSBT data structure\n\nCaused by:\n    version error PSBT versions greater than 0 are not supported\n",
+      "files": {}
+    },
+    "port": {
+      "status": 0,
+      "stdout": "{\"network\":\"bitcoin\",\"version\":2,\"locktime\":0,\"input_count\":1,\"output_count\":2,\"inputs\":[{\"index\":0,\"txid\":\"c85f81844094f9f0eec1e41f8d63e0a99e9f73dc725d7319871c9c4121d90a0b\",\"vout\":0,\"sequence\":4294967295,\"value_sats\":999999000,\"value_btc\":9.99999}],\"outputs\":[{\"index\":0,\"value_sats\":800000000,\"value_btc\":8,\"script_pubkey\":\"0014c430f64c4756da310dbd1a085572ef299926272c\",\"address\":\"bc1qcsc0vnz82mdrzrdargy92uh09xvjvfevuqqa6s\"},{\"index\":1,\"value_sats\":199998859,\"value_btc\":1.99998859,\"script_pubkey\":\"00144dd193ac964a56ac1b9e1cca8454fe2f474f8513\",\"address\":\"bc1qfhge8tykfft2cxu7rn9gg4879ar5lpgnl9upah\"}],\"total_input_value\":999999000,\"total_output_value\":999998859,\"fee\":141}\n",
+      "stderr": "",
+      "files": {}
+    }
+  },
+  {
+    "id": "bip370Valid/9",
+    "kind": "v2",
+    "reference": {
+      "status": 1,
+      "stdout": "",
+      "stderr": "Error: error in internal PSBT data structure\n\nCaused by:\n    version error PSBT versions greater than 0 are not supported\n",
+      "files": {}
+    },
+    "port": {
+      "status": 0,
+      "stdout": "{\"network\":\"bitcoin\",\"version\":2,\"locktime\":0,\"input_count\":1,\"output_count\":2,\"inputs\":[{\"index\":0,\"txid\":\"c85f81844094f9f0eec1e41f8d63e0a99e9f73dc725d7319871c9c4121d90a0b\",\"vout\":0,\"sequence\":4294967295,\"value_sats\":999999000,\"value_btc\":9.99999}],\"outputs\":[{\"index\":0,\"value_sats\":800000000,\"value_btc\":8,\"script_pubkey\":\"0014c430f64c4756da310dbd1a085572ef299926272c\",\"address\":\"bc1qcsc0vnz82mdrzrdargy92uh09xvjvfevuqqa6s\"},{\"index\":1,\"value_sats\":199998859,\"value_btc\":1.99998859,\"script_pubkey\":\"00144dd193ac964a56ac1b9e1cca8454fe2f474f8513\",\"address\":\"bc1qfhge8tykfft2cxu7rn9gg4879ar5lpgnl9upah\"}],\"total_input_value\":999999000,\"total_output_value\":999998859,\"fee\":141}\n",
+      "stderr": "",
+      "files": {}
+    }
+  },
+  {
+    "id": "bip370Valid/10",
+    "kind": "v2",
+    "reference": {
+      "status": 1,
+      "stdout": "",
+      "stderr": "Error: error in internal PSBT data structure\n\nCaused by:\n    version error PSBT versions greater than 0 are not supported\n",
+      "files": {}
+    },
+    "port": {
+      "status": 0,
+      "stdout": "{\"network\":\"bitcoin\",\"version\":2,\"locktime\":0,\"input_count\":1,\"output_count\":2,\"inputs\":[{\"index\":0,\"txid\":\"c85f81844094f9f0eec1e41f8d63e0a99e9f73dc725d7319871c9c4121d90a0b\",\"vout\":0,\"sequence\":4294967295,\"value_sats\":999999000,\"value_btc\":9.99999}],\"outputs\":[{\"index\":0,\"value_sats\":800000000,\"value_btc\":8,\"script_pubkey\":\"0014c430f64c4756da310dbd1a085572ef299926272c\",\"address\":\"bc1qcsc0vnz82mdrzrdargy92uh09xvjvfevuqqa6s\"},{\"index\":1,\"value_sats\":199998859,\"value_btc\":1.99998859,\"script_pubkey\":\"00144dd193ac964a56ac1b9e1cca8454fe2f474f8513\",\"address\":\"bc1qfhge8tykfft2cxu7rn9gg4879ar5lpgnl9upah\"}],\"total_input_value\":999999000,\"total_output_value\":999998859,\"fee\":141}\n",
+      "stderr": "",
+      "files": {}
+    }
+  },
+  {
+    "id": "bip370Valid/11",
+    "kind": "v2",
+    "reference": {
+      "status": 1,
+      "stdout": "",
+      "stderr": "Error: error in internal PSBT data structure\n\nCaused by:\n    version error PSBT versions greater than 0 are not supported\n",
+      "files": {}
+    },
+    "port": {
+      "status": 0,
+      "stdout": "{\"network\":\"bitcoin\",\"version\":2,\"locktime\":0,\"input_count\":1,\"output_count\":2,\"inputs\":[{\"index\":0,\"txid\":\"c85f81844094f9f0eec1e41f8d63e0a99e9f73dc725d7319871c9c4121d90a0b\",\"vout\":0,\"sequence\":4294967295,\"value_sats\":999999000,\"value_btc\":9.99999}],\"outputs\":[{\"index\":0,\"value_sats\":800000000,\"value_btc\":8,\"script_pubkey\":\"0014c430f64c4756da310dbd1a085572ef299926272c\",\"address\":\"bc1qcsc0vnz82mdrzrdargy92uh09xvjvfevuqqa6s\"},{\"index\":1,\"value_sats\":199998859,\"value_btc\":1.99998859,\"script_pubkey\":\"00144dd193ac964a56ac1b9e1cca8454fe2f474f8513\",\"address\":\"bc1qfhge8tykfft2cxu7rn9gg4879ar5lpgnl9upah\"}],\"total_input_value\":999999000,\"total_output_value\":999998859,\"fee\":141}\n",
+      "stderr": "",
+      "files": {}
+    }
+  },
+  {
+    "id": "bip370Valid/12",
+    "kind": "v2",
+    "reference": {
+      "status": 1,
+      "stdout": "",
+      "stderr": "Error: error in internal PSBT data structure\n\nCaused by:\n    version error PSBT versions greater than 0 are not supported\n",
+      "files": {}
+    },
+    "port": {
+      "status": 0,
+      "stdout": "{\"network\":\"bitcoin\",\"version\":2,\"locktime\":0,\"input_count\":1,\"output_count\":2,\"inputs\":[{\"index\":0,\"txid\":\"c85f81844094f9f0eec1e41f8d63e0a99e9f73dc725d7319871c9c4121d90a0b\",\"vout\":0,\"sequence\":4294967295,\"value_sats\":999999000,\"value_btc\":9.99999}],\"outputs\":[{\"index\":0,\"value_sats\":800000000,\"value_btc\":8,\"script_pubkey\":\"0014c430f64c4756da310dbd1a085572ef299926272c\",\"address\":\"bc1qcsc0vnz82mdrzrdargy92uh09xvjvfevuqqa6s\"},{\"index\":1,\"value_sats\":199998859,\"value_btc\":1.99998859,\"script_pubkey\":\"00144dd193ac964a56ac1b9e1cca8454fe2f474f8513\",\"address\":\"bc1qfhge8tykfft2cxu7rn9gg4879ar5lpgnl9upah\"}],\"total_input_value\":999999000,\"total_output_value\":999998859,\"fee\":141}\n",
+      "stderr": "",
+      "files": {}
+    }
+  },
+  {
+    "id": "bip370Valid/13",
+    "kind": "v2",
+    "reference": {
+      "status": 1,
+      "stdout": "",
+      "stderr": "Error: error in internal PSBT data structure\n\nCaused by:\n    version error PSBT versions greater than 0 are not supported\n",
+      "files": {}
+    },
+    "port": {
+      "status": 0,
+      "stdout": "{\"network\":\"bitcoin\",\"version\":2,\"locktime\":10000,\"input_count\":1,\"output_count\":2,\"inputs\":[{\"index\":0,\"txid\":\"c85f81844094f9f0eec1e41f8d63e0a99e9f73dc725d7319871c9c4121d90a0b\",\"vout\":0,\"sequence\":4294967294,\"value_sats\":999999000,\"value_btc\":9.99999}],\"outputs\":[{\"index\":0,\"value_sats\":800000000,\"value_btc\":8,\"script_pubkey\":\"0014c430f64c4756da310dbd1a085572ef299926272c\",\"address\":\"bc1qcsc0vnz82mdrzrdargy92uh09xvjvfevuqqa6s\"},{\"index\":1,\"value_sats\":199998859,\"value_btc\":1.99998859,\"script_pubkey\":\"00144dd193ac964a56ac1b9e1cca8454fe2f474f8513\",\"address\":\"bc1qfhge8tykfft2cxu7rn9gg4879ar5lpgnl9upah\"}],\"total_input_value\":999999000,\"total_output_value\":999998859,\"fee\":141}\n",
+      "stderr": "",
+      "files": {}
+    }
+  },
+  {
+    "id": "bip370Invalid/1",
+    "kind": "bip-rules",
+    "reference": {
+      "status": 0,
+      "stdout": "{\n  \"fee\": 141,\n  \"input_count\": 1,\n  \"inputs\": [\n    {\n      \"index\": 0,\n      \"sequence\": 4294967294,\n      \"txid\": \"c85f81844094f9f0eec1e41f8d63e0a99e9f73dc725d7319871c9c4121d90a0b\",\n      \"value_btc\": 9.99999,\n      \"value_sats\": 999999000,\n      \"vout\": 0\n    }\n  ],\n  \"locktime\": 0,\n  \"network\": \"bitcoin\",\n  \"output_count\": 2,\n  \"outputs\": [\n    {\n      \"address\": \"bc1qcsc0vnz82mdrzrdargy92uh09xvjvfevuqqa6s\",\n      \"index\": 0,\n      \"script_pubkey\": \"0014c430f64c4756da310dbd1a085572ef299926272c\",\n      \"value_btc\": 8.0,\n      \"value_sats\": 800000000\n    },\n    {\n      \"address\": \"bc1q5p76ez4ke22z6du7672lsdd6w8yuc6y9drkzys\",\n      \"index\": 1,\n      \"script_pubkey\": \"0014a07dac8ab6ca942d379ed795f835ba71c9cc6885\",\n      \"value_btc\": 1.99998859,\n      \"value_sats\": 199998859\n    }\n  ],\n  \"total_input_value\": 999999000,\n  \"total_output_value\": 999998859,\n  \"version\": 2\n}\n",
+      "stderr": "",
+      "files": {}
+    },
+    "port": {
+      "status": 1,
+      "stdout": "",
+      "stderr": "psbtExcludedField:global:2: Invalid offline input\n",
+      "files": {}
+    }
+  },
+  {
+    "id": "bip370Invalid/2",
+    "kind": "bip-rules",
+    "reference": {
+      "status": 0,
+      "stdout": "{\n  \"fee\": 141,\n  \"input_count\": 1,\n  \"inputs\": [\n    {\n      \"index\": 0,\n      \"sequence\": 4294967294,\n      \"txid\": \"c85f81844094f9f0eec1e41f8d63e0a99e9f73dc725d7319871c9c4121d90a0b\",\n      \"value_btc\": 9.99999,\n      \"value_sats\": 999999000,\n      \"vout\": 0\n    }\n  ],\n  \"locktime\": 0,\n  \"network\": \"bitcoin\",\n  \"output_count\": 2,\n  \"outputs\": [\n    {\n      \"address\": \"bc1qcsc0vnz82mdrzrdargy92uh09xvjvfevuqqa6s\",\n      \"index\": 0,\n      \"script_pubkey\": \"0014c430f64c4756da310dbd1a085572ef299926272c\",\n      \"value_btc\": 8.0,\n      \"value_sats\": 800000000\n    },\n    {\n      \"address\": \"bc1q5p76ez4ke22z6du7672lsdd6w8yuc6y9drkzys\",\n      \"index\": 1,\n      \"script_pubkey\": \"0014a07dac8ab6ca942d379ed795f835ba71c9cc6885\",\n      \"value_btc\": 1.99998859,\n      \"value_sats\": 199998859\n    }\n  ],\n  \"total_input_value\": 999999000,\n  \"total_output_value\": 999998859,\n  \"version\": 2\n}\n",
+      "stderr": "",
+      "files": {}
+    },
+    "port": {
+      "status": 1,
+      "stdout": "",
+      "stderr": "psbtExcludedField:global:3: Invalid offline input\n",
+      "files": {}
+    }
+  },
+  {
+    "id": "bip370Invalid/3",
+    "kind": "bip-rules",
+    "reference": {
+      "status": 0,
+      "stdout": "{\n  \"fee\": 141,\n  \"input_count\": 1,\n  \"inputs\": [\n    {\n      \"index\": 0,\n      \"sequence\": 4294967294,\n      \"txid\": \"c85f81844094f9f0eec1e41f8d63e0a99e9f73dc725d7319871c9c4121d90a0b\",\n      \"value_btc\": 9.99999,\n      \"value_sats\": 999999000,\n      \"vout\": 0\n    }\n  ],\n  \"locktime\": 0,\n  \"network\": \"bitcoin\",\n  \"output_count\": 2,\n  \"outputs\": [\n    {\n      \"address\": \"bc1qcsc0vnz82mdrzrdargy92uh09xvjvfevuqqa6s\",\n      \"index\": 0,\n      \"script_pubkey\": \"0014c430f64c4756da310dbd1a085572ef299926272c\",\n      \"value_btc\": 8.0,\n      \"value_sats\": 800000000\n    },\n    {\n      \"address\": \"bc1q5p76ez4ke22z6du7672lsdd6w8yuc6y9drkzys\",\n      \"index\": 1,\n      \"script_pubkey\": \"0014a07dac8ab6ca942d379ed795f835ba71c9cc6885\",\n      \"value_btc\": 1.99998859,\n      \"value_sats\": 199998859\n    }\n  ],\n  \"total_input_value\": 999999000,\n  \"total_output_value\": 999998859,\n  \"version\": 2\n}\n",
+      "stderr": "",
+      "files": {}
+    },
+    "port": {
+      "status": 1,
+      "stdout": "",
+      "stderr": "psbtExcludedField:global:4: Invalid offline input\n",
+      "files": {}
+    }
+  },
+  {
+    "id": "bip370Invalid/4",
+    "kind": "bip-rules",
+    "reference": {
+      "status": 0,
+      "stdout": "{\n  \"fee\": 141,\n  \"input_count\": 1,\n  \"inputs\": [\n    {\n      \"index\": 0,\n      \"sequence\": 4294967294,\n      \"txid\": \"c85f81844094f9f0eec1e41f8d63e0a99e9f73dc725d7319871c9c4121d90a0b\",\n      \"value_btc\": 9.99999,\n      \"value_sats\": 999999000,\n      \"vout\": 0\n    }\n  ],\n  \"locktime\": 0,\n  \"network\": \"bitcoin\",\n  \"output_count\": 2,\n  \"outputs\": [\n    {\n      \"address\": \"bc1qcsc0vnz82mdrzrdargy92uh09xvjvfevuqqa6s\",\n      \"index\": 0,\n      \"script_pubkey\": \"0014c430f64c4756da310dbd1a085572ef299926272c\",\n      \"value_btc\": 8.0,\n      \"value_sats\": 800000000\n    },\n    {\n      \"address\": \"bc1q5p76ez4ke22z6du7672lsdd6w8yuc6y9drkzys\",\n      \"index\": 1,\n      \"script_pubkey\": \"0014a07dac8ab6ca942d379ed795f835ba71c9cc6885\",\n      \"value_btc\": 1.99998859,\n      \"value_sats\": 199998859\n    }\n  ],\n  \"total_input_value\": 999999000,\n  \"total_output_value\": 999998859,\n  \"version\": 2\n}\n",
+      "stderr": "",
+      "files": {}
+    },
+    "port": {
+      "status": 1,
+      "stdout": "",
+      "stderr": "psbtExcludedField:global:5: Invalid offline input\n",
+      "files": {}
+    }
+  },
+  {
+    "id": "bip370Invalid/5",
+    "kind": "bip-rules",
+    "reference": {
+      "status": 0,
+      "stdout": "{\n  \"fee\": 141,\n  \"input_count\": 1,\n  \"inputs\": [\n    {\n      \"index\": 0,\n      \"sequence\": 4294967294,\n      \"txid\": \"c85f81844094f9f0eec1e41f8d63e0a99e9f73dc725d7319871c9c4121d90a0b\",\n      \"value_btc\": 9.99999,\n      \"value_sats\": 999999000,\n      \"vout\": 0\n    }\n  ],\n  \"locktime\": 0,\n  \"network\": \"bitcoin\",\n  \"output_count\": 2,\n  \"outputs\": [\n    {\n      \"address\": \"bc1qcsc0vnz82mdrzrdargy92uh09xvjvfevuqqa6s\",\n      \"index\": 0,\n      \"script_pubkey\": \"0014c430f64c4756da310dbd1a085572ef299926272c\",\n      \"value_btc\": 8.0,\n      \"value_sats\": 800000000\n    },\n    {\n      \"address\": \"bc1q5p76ez4ke22z6du7672lsdd6w8yuc6y9drkzys\",\n      \"index\": 1,\n      \"script_pubkey\": \"0014a07dac8ab6ca942d379ed795f835ba71c9cc6885\",\n      \"value_btc\": 1.99998859,\n      \"value_sats\": 199998859\n    }\n  ],\n  \"total_input_value\": 999999000,\n  \"total_output_value\": 999998859,\n  \"version\": 2\n}\n",
+      "stderr": "",
+      "files": {}
+    },
+    "port": {
+      "status": 1,
+      "stdout": "",
+      "stderr": "psbtExcludedField:global:6: Invalid offline input\n",
+      "files": {}
+    }
+  },
+  {
+    "id": "bip370Invalid/6",
+    "kind": "bip-rules",
+    "reference": {
+      "status": 0,
+      "stdout": "{\n  \"fee\": 141,\n  \"input_count\": 1,\n  \"inputs\": [\n    {\n      \"index\": 0,\n      \"sequence\": 4294967294,\n      \"txid\": \"c85f81844094f9f0eec1e41f8d63e0a99e9f73dc725d7319871c9c4121d90a0b\",\n      \"value_btc\": 9.99999,\n      \"value_sats\": 999999000,\n      \"vout\": 0\n    }\n  ],\n  \"locktime\": 0,\n  \"network\": \"bitcoin\",\n  \"output_count\": 2,\n  \"outputs\": [\n    {\n      \"address\": \"bc1qcsc0vnz82mdrzrdargy92uh09xvjvfevuqqa6s\",\n      \"index\": 0,\n      \"script_pubkey\": \"0014c430f64c4756da310dbd1a085572ef299926272c\",\n      \"value_btc\": 8.0,\n      \"value_sats\": 800000000\n    },\n    {\n      \"address\": \"bc1q5p76ez4ke22z6du7672lsdd6w8yuc6y9drkzys\",\n      \"index\": 1,\n      \"script_pubkey\": \"0014a07dac8ab6ca942d379ed795f835ba71c9cc6885\",\n      \"value_btc\": 1.99998859,\n      \"value_sats\": 199998859\n    }\n  ],\n  \"total_input_value\": 999999000,\n  \"total_output_value\": 999998859,\n  \"version\": 2\n}\n",
+      "stderr": "",
+      "files": {}
+    },
+    "port": {
+      "status": 1,
+      "stdout": "",
+      "stderr": "psbtExcludedField:input:14: Invalid offline input\n",
+      "files": {}
+    }
+  },
+  {
+    "id": "bip370Invalid/7",
+    "kind": "bip-rules",
+    "reference": {
+      "status": 0,
+      "stdout": "{\n  \"fee\": 141,\n  \"input_count\": 1,\n  \"inputs\": [\n    {\n      \"index\": 0,\n      \"sequence\": 4294967294,\n      \"txid\": \"c85f81844094f9f0eec1e41f8d63e0a99e9f73dc725d7319871c9c4121d90a0b\",\n      \"value_btc\": 9.99999,\n      \"value_sats\": 999999000,\n      \"vout\": 0\n    }\n  ],\n  \"locktime\": 0,\n  \"network\": \"bitcoin\",\n  \"output_count\": 2,\n  \"outputs\": [\n    {\n      \"address\": \"bc1qcsc0vnz82mdrzrdargy92uh09xvjvfevuqqa6s\",\n      \"index\": 0,\n      \"script_pubkey\": \"0014c430f64c4756da310dbd1a085572ef299926272c\",\n      \"value_btc\": 8.0,\n      \"value_sats\": 800000000\n    },\n    {\n      \"address\": \"bc1q5p76ez4ke22z6du7672lsdd6w8yuc6y9drkzys\",\n      \"index\": 1,\n      \"script_pubkey\": \"0014a07dac8ab6ca942d379ed795f835ba71c9cc6885\",\n      \"value_btc\": 1.99998859,\n      \"value_sats\": 199998859\n    }\n  ],\n  \"total_input_value\": 999999000,\n  \"total_output_value\": 999998859,\n  \"version\": 2\n}\n",
+      "stderr": "",
+      "files": {}
+    },
+    "port": {
+      "status": 1,
+      "stdout": "",
+      "stderr": "psbtExcludedField:input:15: Invalid offline input\n",
+      "files": {}
+    }
+  },
+  {
+    "id": "bip370Invalid/8",
+    "kind": "bip-rules",
+    "reference": {
+      "status": 0,
+      "stdout": "{\n  \"fee\": 141,\n  \"input_count\": 1,\n  \"inputs\": [\n    {\n      \"index\": 0,\n      \"sequence\": 4294967294,\n      \"txid\": \"c85f81844094f9f0eec1e41f8d63e0a99e9f73dc725d7319871c9c4121d90a0b\",\n      \"value_btc\": 9.99999,\n      \"value_sats\": 999999000,\n      \"vout\": 0\n    }\n  ],\n  \"locktime\": 0,\n  \"network\": \"bitcoin\",\n  \"output_count\": 2,\n  \"outputs\": [\n    {\n      \"address\": \"bc1qcsc0vnz82mdrzrdargy92uh09xvjvfevuqqa6s\",\n      \"index\": 0,\n      \"script_pubkey\": \"0014c430f64c4756da310dbd1a085572ef299926272c\",\n      \"value_btc\": 8.0,\n      \"value_sats\": 800000000\n    },\n    {\n      \"address\": \"bc1q5p76ez4ke22z6du7672lsdd6w8yuc6y9drkzys\",\n      \"index\": 1,\n      \"script_pubkey\": \"0014a07dac8ab6ca942d379ed795f835ba71c9cc6885\",\n      \"value_btc\": 1.99998859,\n      \"value_sats\": 199998859\n    }\n  ],\n  \"total_input_value\": 999999000,\n  \"total_output_value\": 999998859,\n  \"version\": 2\n}\n",
+      "stderr": "",
+      "files": {}
+    },
+    "port": {
+      "status": 1,
+      "stdout": "",
+      "stderr": "psbtExcludedField:input:16: Invalid offline input\n",
+      "files": {}
+    }
+  },
+  {
+    "id": "bip370Invalid/9",
+    "kind": "bip-rules",
+    "reference": {
+      "status": 0,
+      "stdout": "{\n  \"fee\": 141,\n  \"input_count\": 1,\n  \"inputs\": [\n    {\n      \"index\": 0,\n      \"sequence\": 4294967294,\n      \"txid\": \"c85f81844094f9f0eec1e41f8d63e0a99e9f73dc725d7319871c9c4121d90a0b\",\n      \"value_btc\": 9.99999,\n      \"value_sats\": 999999000,\n      \"vout\": 0\n    }\n  ],\n  \"locktime\": 0,\n  \"network\": \"bitcoin\",\n  \"output_count\": 2,\n  \"outputs\": [\n    {\n      \"address\": \"bc1qcsc0vnz82mdrzrdargy92uh09xvjvfevuqqa6s\",\n      \"index\": 0,\n      \"script_pubkey\": \"0014c430f64c4756da310dbd1a085572ef299926272c\",\n      \"value_btc\": 8.0,\n      \"value_sats\": 800000000\n    },\n    {\n      \"address\": \"bc1q5p76ez4ke22z6du7672lsdd6w8yuc6y9drkzys\",\n      \"index\": 1,\n      \"script_pubkey\": \"0014a07dac8ab6ca942d379ed795f835ba71c9cc6885\",\n      \"value_btc\": 1.99998859,\n      \"value_sats\": 199998859\n    }\n  ],\n  \"total_input_value\": 999999000,\n  \"total_output_value\": 999998859,\n  \"version\": 2\n}\n",
+      "stderr": "",
+      "files": {}
+    },
+    "port": {
+      "status": 1,
+      "stdout": "",
+      "stderr": "psbtExcludedField:input:17: Invalid offline input\n",
+      "files": {}
+    }
+  },
+  {
+    "id": "bip370Invalid/10",
+    "kind": "bip-rules",
+    "reference": {
+      "status": 0,
+      "stdout": "{\n  \"fee\": 141,\n  \"input_count\": 1,\n  \"inputs\": [\n    {\n      \"index\": 0,\n      \"sequence\": 4294967294,\n      \"txid\": \"c85f81844094f9f0eec1e41f8d63e0a99e9f73dc725d7319871c9c4121d90a0b\",\n      \"value_btc\": 9.99999,\n      \"value_sats\": 999999000,\n      \"vout\": 0\n    }\n  ],\n  \"locktime\": 0,\n  \"network\": \"bitcoin\",\n  \"output_count\": 2,\n  \"outputs\": [\n    {\n      \"address\": \"bc1qcsc0vnz82mdrzrdargy92uh09xvjvfevuqqa6s\",\n      \"index\": 0,\n      \"script_pubkey\": \"0014c430f64c4756da310dbd1a085572ef299926272c\",\n      \"value_btc\": 8.0,\n      \"value_sats\": 800000000\n    },\n    {\n      \"address\": \"bc1q5p76ez4ke22z6du7672lsdd6w8yuc6y9drkzys\",\n      \"index\": 1,\n      \"script_pubkey\": \"0014a07dac8ab6ca942d379ed795f835ba71c9cc6885\",\n      \"value_btc\": 1.99998859,\n      \"value_sats\": 199998859\n    }\n  ],\n  \"total_input_value\": 999999000,\n  \"total_output_value\": 999998859,\n  \"version\": 2\n}\n",
+      "stderr": "",
+      "files": {}
+    },
+    "port": {
+      "status": 1,
+      "stdout": "",
+      "stderr": "psbtExcludedField:input:18: Invalid offline input\n",
+      "files": {}
+    }
+  },
+  {
+    "id": "bip370Invalid/11",
+    "kind": "bip-rules",
+    "reference": {
+      "status": 0,
+      "stdout": "{\n  \"fee\": 141,\n  \"input_count\": 1,\n  \"inputs\": [\n    {\n      \"index\": 0,\n      \"sequence\": 4294967294,\n      \"txid\": \"c85f81844094f9f0eec1e41f8d63e0a99e9f73dc725d7319871c9c4121d90a0b\",\n      \"value_btc\": 9.99999,\n      \"value_sats\": 999999000,\n      \"vout\": 0\n    }\n  ],\n  \"locktime\": 0,\n  \"network\": \"bitcoin\",\n  \"output_count\": 2,\n  \"outputs\": [\n    {\n      \"address\": \"bc1qcsc0vnz82mdrzrdargy92uh09xvjvfevuqqa6s\",\n      \"index\": 0,\n      \"script_pubkey\": \"0014c430f64c4756da310dbd1a085572ef299926272c\",\n      \"value_btc\": 8.0,\n      \"value_sats\": 800000000\n    },\n    {\n      \"address\": \"bc1q5p76ez4ke22z6du7672lsdd6w8yuc6y9drkzys\",\n      \"index\": 1,\n      \"script_pubkey\": \"0014a07dac8ab6ca942d379ed795f835ba71c9cc6885\",\n      \"value_btc\": 1.99998859,\n      \"value_sats\": 199998859\n    }\n  ],\n  \"total_input_value\": 999999000,\n  \"total_output_value\": 999998859,\n  \"version\": 2\n}\n",
+      "stderr": "",
+      "files": {}
+    },
+    "port": {
+      "status": 1,
+      "stdout": "",
+      "stderr": "psbtExcludedField:output:3: Invalid offline input\n",
+      "files": {}
+    }
+  },
+  {
+    "id": "bip370Invalid/12",
+    "kind": "bip-rules",
+    "reference": {
+      "status": 0,
+      "stdout": "{\n  \"fee\": 141,\n  \"input_count\": 1,\n  \"inputs\": [\n    {\n      \"index\": 0,\n      \"sequence\": 4294967294,\n      \"txid\": \"c85f81844094f9f0eec1e41f8d63e0a99e9f73dc725d7319871c9c4121d90a0b\",\n      \"value_btc\": 9.99999,\n      \"value_sats\": 999999000,\n      \"vout\": 0\n    }\n  ],\n  \"locktime\": 0,\n  \"network\": \"bitcoin\",\n  \"output_count\": 2,\n  \"outputs\": [\n    {\n      \"address\": \"bc1qcsc0vnz82mdrzrdargy92uh09xvjvfevuqqa6s\",\n      \"index\": 0,\n      \"script_pubkey\": \"0014c430f64c4756da310dbd1a085572ef299926272c\",\n      \"value_btc\": 8.0,\n      \"value_sats\": 800000000\n    },\n    {\n      \"address\": \"bc1q5p76ez4ke22z6du7672lsdd6w8yuc6y9drkzys\",\n      \"index\": 1,\n      \"script_pubkey\": \"0014a07dac8ab6ca942d379ed795f835ba71c9cc6885\",\n      \"value_btc\": 1.99998859,\n      \"value_sats\": 199998859\n    }\n  ],\n  \"total_input_value\": 999999000,\n  \"total_output_value\": 999998859,\n  \"version\": 2\n}\n",
+      "stderr": "",
+      "files": {}
+    },
+    "port": {
+      "status": 1,
+      "stdout": "",
+      "stderr": "psbtExcludedField:output:4: Invalid offline input\n",
+      "files": {}
+    }
+  },
+  {
+    "id": "bip370Locktimes/0",
+    "kind": "v2",
+    "reference": {
+      "status": 1,
+      "stdout": "",
+      "stderr": "Error: error in internal PSBT data structure\n\nCaused by:\n    version error PSBT versions greater than 0 are not supported\n",
+      "files": {}
+    },
+    "port": {
+      "status": 0,
+      "stdout": "{\"network\":\"bitcoin\",\"version\":2,\"locktime\":0,\"input_count\":1,\"output_count\":2,\"inputs\":[{\"index\":0,\"txid\":\"c85f81844094f9f0eec1e41f8d63e0a99e9f73dc725d7319871c9c4121d90a0b\",\"vout\":0,\"sequence\":4294967295}],\"outputs\":[{\"index\":0,\"value_sats\":800000000,\"value_btc\":8,\"script_pubkey\":\"0014c430f64c4756da310dbd1a085572ef299926272c\",\"address\":\"bc1qcsc0vnz82mdrzrdargy92uh09xvjvfevuqqa6s\"},{\"index\":1,\"value_sats\":199998859,\"value_btc\":1.99998859,\"script_pubkey\":\"00144dd193ac964a56ac1b9e1cca8454fe2f474f8513\",\"address\":\"bc1qfhge8tykfft2cxu7rn9gg4879ar5lpgnl9upah\"}],\"total_input_value\":null,\"total_output_value\":999998859,\"fee\":null}\n",
+      "stderr": "",
+      "files": {}
+    }
+  },
+  {
+    "id": "bip370Locktimes/1",
+    "kind": "v2",
+    "reference": {
+      "status": 1,
+      "stdout": "",
+      "stderr": "Error: error in internal PSBT data structure\n\nCaused by:\n    version error PSBT versions greater than 0 are not supported\n",
+      "files": {}
+    },
+    "port": {
+      "status": 0,
+      "stdout": "{\"network\":\"bitcoin\",\"version\":2,\"locktime\":0,\"input_count\":2,\"output_count\":1,\"inputs\":[{\"index\":0,\"txid\":\"9fdebde185c45217b0b56d64ea61f500111ec8c309338a6cc1a74dbdbf8d750f\",\"vout\":1,\"sequence\":4294967295},{\"index\":1,\"txid\":\"a578ca688d8074758e95063eef1b003c50ddc7e6d8317aea89647d833c3b1b3a\",\"vout\":0,\"sequence\":4294967295}],\"outputs\":[{\"index\":0,\"value_sats\":1999999823,\"value_btc\":19.99999823,\"script_pubkey\":\"00140b1352cacd03cf6aa1b7f3c8d6388671b34a5e11\",\"address\":\"bc1qpvf49jkdq08k4gdh70ydvwyxwxe55hs32au9lh\"}],\"total_input_value\":null,\"total_output_value\":1999999823,\"fee\":null}\n",
+      "stderr": "",
+      "files": {}
+    }
+  },
+  {
+    "id": "bip370Locktimes/2",
+    "kind": "v2",
+    "reference": {
+      "status": 1,
+      "stdout": "",
+      "stderr": "Error: error in internal PSBT data structure\n\nCaused by:\n    version error PSBT versions greater than 0 are not supported\n",
+      "files": {}
+    },
+    "port": {
+      "status": 0,
+      "stdout": "{\"network\":\"bitcoin\",\"version\":2,\"locktime\":10000,\"input_count\":2,\"output_count\":1,\"inputs\":[{\"index\":0,\"txid\":\"9fdebde185c45217b0b56d64ea61f500111ec8c309338a6cc1a74dbdbf8d750f\",\"vout\":1,\"sequence\":4294967295},{\"index\":1,\"txid\":\"a578ca688d8074758e95063eef1b003c50ddc7e6d8317aea89647d833c3b1b3a\",\"vout\":0,\"sequence\":4294967295}],\"outputs\":[{\"index\":0,\"value_sats\":1999999823,\"value_btc\":19.99999823,\"script_pubkey\":\"00140b1352cacd03cf6aa1b7f3c8d6388671b34a5e11\",\"address\":\"bc1qpvf49jkdq08k4gdh70ydvwyxwxe55hs32au9lh\"}],\"total_input_value\":null,\"total_output_value\":1999999823,\"fee\":null}\n",
+      "stderr": "",
+      "files": {}
+    }
+  },
+  {
+    "id": "bip370Locktimes/3",
+    "kind": "v2",
+    "reference": {
+      "status": 1,
+      "stdout": "",
+      "stderr": "Error: error in internal PSBT data structure\n\nCaused by:\n    version error PSBT versions greater than 0 are not supported\n",
+      "files": {}
+    },
+    "port": {
+      "status": 0,
+      "stdout": "{\"network\":\"bitcoin\",\"version\":2,\"locktime\":10000,\"input_count\":2,\"output_count\":1,\"inputs\":[{\"index\":0,\"txid\":\"9fdebde185c45217b0b56d64ea61f500111ec8c309338a6cc1a74dbdbf8d750f\",\"vout\":1,\"sequence\":4294967295},{\"index\":1,\"txid\":\"a578ca688d8074758e95063eef1b003c50ddc7e6d8317aea89647d833c3b1b3a\",\"vout\":0,\"sequence\":4294967295}],\"outputs\":[{\"index\":0,\"value_sats\":1999999823,\"value_btc\":19.99999823,\"script_pubkey\":\"00140b1352cacd03cf6aa1b7f3c8d6388671b34a5e11\",\"address\":\"bc1qpvf49jkdq08k4gdh70ydvwyxwxe55hs32au9lh\"}],\"total_input_value\":null,\"total_output_value\":1999999823,\"fee\":null}\n",
+      "stderr": "",
+      "files": {}
+    }
+  },
+  {
+    "id": "bip370Locktimes/4",
+    "kind": "v2",
+    "reference": {
+      "status": 1,
+      "stdout": "",
+      "stderr": "Error: error in internal PSBT data structure\n\nCaused by:\n    version error PSBT versions greater than 0 are not supported\n",
+      "files": {}
+    },
+    "port": {
+      "status": 0,
+      "stdout": "{\"network\":\"bitcoin\",\"version\":2,\"locktime\":10000,\"input_count\":2,\"output_count\":1,\"inputs\":[{\"index\":0,\"txid\":\"9fdebde185c45217b0b56d64ea61f500111ec8c309338a6cc1a74dbdbf8d750f\",\"vout\":1,\"sequence\":4294967295},{\"index\":1,\"txid\":\"a578ca688d8074758e95063eef1b003c50ddc7e6d8317aea89647d833c3b1b3a\",\"vout\":0,\"sequence\":4294967295}],\"outputs\":[{\"index\":0,\"value_sats\":1999999823,\"value_btc\":19.99999823,\"script_pubkey\":\"00140b1352cacd03cf6aa1b7f3c8d6388671b34a5e11\",\"address\":\"bc1qpvf49jkdq08k4gdh70ydvwyxwxe55hs32au9lh\"}],\"total_input_value\":null,\"total_output_value\":1999999823,\"fee\":null}\n",
+      "stderr": "",
+      "files": {}
+    }
+  },
+  {
+    "id": "bip370Locktimes/5",
+    "kind": "v2",
+    "reference": {
+      "status": 1,
+      "stdout": "",
+      "stderr": "Error: error in internal PSBT data structure\n\nCaused by:\n    version error PSBT versions greater than 0 are not supported\n",
+      "files": {}
+    },
+    "port": {
+      "status": 0,
+      "stdout": "{\"network\":\"bitcoin\",\"version\":2,\"locktime\":10000,\"input_count\":2,\"output_count\":1,\"inputs\":[{\"index\":0,\"txid\":\"9fdebde185c45217b0b56d64ea61f500111ec8c309338a6cc1a74dbdbf8d750f\",\"vout\":1,\"sequence\":4294967295},{\"index\":1,\"txid\":\"a578ca688d8074758e95063eef1b003c50ddc7e6d8317aea89647d833c3b1b3a\",\"vout\":0,\"sequence\":4294967295}],\"outputs\":[{\"index\":0,\"value_sats\":1999999823,\"value_btc\":19.99999823,\"script_pubkey\":\"00140b1352cacd03cf6aa1b7f3c8d6388671b34a5e11\",\"address\":\"bc1qpvf49jkdq08k4gdh70ydvwyxwxe55hs32au9lh\"}],\"total_input_value\":null,\"total_output_value\":1999999823,\"fee\":null}\n",
+      "stderr": "",
+      "files": {}
+    }
+  },
+  {
+    "id": "bip370Locktimes/6",
+    "kind": "v2",
+    "reference": {
+      "status": 1,
+      "stdout": "",
+      "stderr": "Error: error in internal PSBT data structure\n\nCaused by:\n    version error PSBT versions greater than 0 are not supported\n",
+      "files": {}
+    },
+    "port": {
+      "status": 0,
+      "stdout": "{\"network\":\"bitcoin\",\"version\":2,\"locktime\":1657048460,\"input_count\":2,\"output_count\":1,\"inputs\":[{\"index\":0,\"txid\":\"9fdebde185c45217b0b56d64ea61f500111ec8c309338a6cc1a74dbdbf8d750f\",\"vout\":1,\"sequence\":4294967295},{\"index\":1,\"txid\":\"a578ca688d8074758e95063eef1b003c50ddc7e6d8317aea89647d833c3b1b3a\",\"vout\":0,\"sequence\":4294967295}],\"outputs\":[{\"index\":0,\"value_sats\":1999999823,\"value_btc\":19.99999823,\"script_pubkey\":\"00140b1352cacd03cf6aa1b7f3c8d6388671b34a5e11\",\"address\":\"bc1qpvf49jkdq08k4gdh70ydvwyxwxe55hs32au9lh\"}],\"total_input_value\":null,\"total_output_value\":1999999823,\"fee\":null}\n",
+      "stderr": "",
+      "files": {}
+    }
+  },
+  {
+    "id": "bip370Locktimes/7",
+    "kind": "v2",
+    "reference": {
+      "status": 1,
+      "stdout": "",
+      "stderr": "Error: error in internal PSBT data structure\n\nCaused by:\n    version error PSBT versions greater than 0 are not supported\n",
+      "files": {}
+    },
+    "port": {
+      "status": 0,
+      "stdout": "{\"network\":\"bitcoin\",\"version\":2,\"locktime\":1657048460,\"input_count\":2,\"output_count\":1,\"inputs\":[{\"index\":0,\"txid\":\"9fdebde185c45217b0b56d64ea61f500111ec8c309338a6cc1a74dbdbf8d750f\",\"vout\":1,\"sequence\":4294967295},{\"index\":1,\"txid\":\"a578ca688d8074758e95063eef1b003c50ddc7e6d8317aea89647d833c3b1b3a\",\"vout\":0,\"sequence\":4294967295}],\"outputs\":[{\"index\":0,\"value_sats\":1999999823,\"value_btc\":19.99999823,\"script_pubkey\":\"00140b1352cacd03cf6aa1b7f3c8d6388671b34a5e11\",\"address\":\"bc1qpvf49jkdq08k4gdh70ydvwyxwxe55hs32au9lh\"}],\"total_input_value\":null,\"total_output_value\":1999999823,\"fee\":null}\n",
+      "stderr": "",
+      "files": {}
+    }
+  },
+  {
+    "id": "bip370Locktimes/8",
+    "kind": "v2",
+    "reference": {
+      "status": 1,
+      "stdout": "",
+      "stderr": "Error: error in internal PSBT data structure\n\nCaused by:\n    version error PSBT versions greater than 0 are not supported\n",
+      "files": {}
+    },
+    "port": {
+      "status": 0,
+      "stdout": "{\"network\":\"bitcoin\",\"version\":2,\"locktime\":1657048460,\"input_count\":2,\"output_count\":1,\"inputs\":[{\"index\":0,\"txid\":\"9fdebde185c45217b0b56d64ea61f500111ec8c309338a6cc1a74dbdbf8d750f\",\"vout\":1,\"sequence\":4294967295},{\"index\":1,\"txid\":\"a578ca688d8074758e95063eef1b003c50ddc7e6d8317aea89647d833c3b1b3a\",\"vout\":0,\"sequence\":4294967295}],\"outputs\":[{\"index\":0,\"value_sats\":1999999823,\"value_btc\":19.99999823,\"script_pubkey\":\"00140b1352cacd03cf6aa1b7f3c8d6388671b34a5e11\",\"address\":\"bc1qpvf49jkdq08k4gdh70ydvwyxwxe55hs32au9lh\"}],\"total_input_value\":null,\"total_output_value\":1999999823,\"fee\":null}\n",
+      "stderr": "",
+      "files": {}
+    }
+  },
+  {
+    "id": "parity/key-type-fd01",
+    "kind": "bip-rules",
+    "reference": {
+      "status": 0,
+      "stdout": "{\n  \"fee\": 1013,\n  \"input_count\": 1,\n  \"inputs\": [\n    {\n      \"index\": 0,\n      \"sequence\": 4294967295,\n      \"signatures\": 1,\n      \"txid\": \"39bc5c3b33d66ce3d7852a7942331e3ec10f8ba50f225fc41fb5dfa523239a27\",\n      \"value_btc\": 1.99909013,\n      \"value_sats\": 199909013,\n      \"vout\": 0\n    }\n  ],\n  \"locktime\": 0,\n  \"network\": \"bitcoin\",\n  \"output_count\": 1,\n  \"outputs\": [\n    {\n      \"address\": \"1QL9LAAE6F1JErwLEtL8DgRiYGH75dtje7\",\n      \"index\": 0,\n      \"script_pubkey\": \"76a914ffe9c0061097cc3b636f2cb0460fa4fc427d2b4588ac\",\n      \"value_btc\": 1.99908,\n      \"value_sats\": 199908000\n    }\n  ],\n  \"total_input_value\": 199909013,\n  \"total_output_value\": 199908000,\n  \"version\": 2\n}\n",
+      "stderr": "",
+      "files": {}
+    },
+    "port": {
+      "status": 1,
+      "stdout": "",
+      "stderr": "psbtFraming: Invalid offline input\n",
+      "files": {}
+    }
+  },
+  {
+    "id": "parity/key-type-fd0500",
+    "kind": "bip-rules",
+    "reference": {
+      "status": 0,
+      "stdout": "{\n  \"fee\": 1013,\n  \"input_count\": 1,\n  \"inputs\": [\n    {\n      \"index\": 0,\n      \"sequence\": 4294967295,\n      \"signatures\": 1,\n      \"txid\": \"39bc5c3b33d66ce3d7852a7942331e3ec10f8ba50f225fc41fb5dfa523239a27\",\n      \"value_btc\": 1.99909013,\n      \"value_sats\": 199909013,\n      \"vout\": 0\n    }\n  ],\n  \"locktime\": 0,\n  \"network\": \"bitcoin\",\n  \"output_count\": 1,\n  \"outputs\": [\n    {\n      \"address\": \"1QL9LAAE6F1JErwLEtL8DgRiYGH75dtje7\",\n      \"index\": 0,\n      \"script_pubkey\": \"76a914ffe9c0061097cc3b636f2cb0460fa4fc427d2b4588ac\",\n      \"value_btc\": 1.99908,\n      \"value_sats\": 199908000\n    }\n  ],\n  \"total_input_value\": 199909013,\n  \"total_output_value\": 199908000,\n  \"version\": 2\n}\n",
+      "stderr": "",
+      "files": {}
+    },
+    "port": {
+      "status": 1,
+      "stdout": "",
+      "stderr": "psbtFraming: Invalid offline input\n",
+      "files": {}
+    }
+  },
+  {
+    "id": "parity/proprietary-subtype-fd01",
+    "kind": "bip-rules",
+    "reference": {
+      "status": 0,
+      "stdout": "{\n  \"fee\": 1013,\n  \"input_count\": 1,\n  \"inputs\": [\n    {\n      \"index\": 0,\n      \"sequence\": 4294967295,\n      \"signatures\": 1,\n      \"txid\": \"39bc5c3b33d66ce3d7852a7942331e3ec10f8ba50f225fc41fb5dfa523239a27\",\n      \"value_btc\": 1.99909013,\n      \"value_sats\": 199909013,\n      \"vout\": 0\n    }\n  ],\n  \"locktime\": 0,\n  \"network\": \"bitcoin\",\n  \"output_count\": 1,\n  \"outputs\": [\n    {\n      \"address\": \"1QL9LAAE6F1JErwLEtL8DgRiYGH75dtje7\",\n      \"index\": 0,\n      \"script_pubkey\": \"76a914ffe9c0061097cc3b636f2cb0460fa4fc427d2b4588ac\",\n      \"value_btc\": 1.99908,\n      \"value_sats\": 199908000\n    }\n  ],\n  \"total_input_value\": 199909013,\n  \"total_output_value\": 199908000,\n  \"version\": 2\n}\n",
+      "stderr": "",
+      "files": {}
+    },
+    "port": {
+      "status": 1,
+      "stdout": "",
+      "stderr": "psbtInvalidKey:input:252:malformed proprietary key: Invalid offline input\n",
+      "files": {}
+    }
+  },
+  {
+    "id": "parity/xpub-depth",
+    "kind": "bip-rules",
+    "reference": {
+      "status": 0,
+      "stdout": "{\n  \"fee\": 100000,\n  \"input_count\": 2,\n  \"inputs\": [\n    {\n      \"index\": 0,\n      \"sequence\": 4294967295,\n      \"signatures\": 1,\n      \"txid\": \"35e50bbb2a018990fd0d9eae051898267603cc597e608e43b65c5cb46aa70e71\",\n      \"value_btc\": 1.0,\n      \"value_sats\": 100000000,\n      \"vout\": 1\n    },\n    {\n      \"index\": 1,\n      \"sequence\": 4294967295,\n      \"signatures\": 1,\n      \"txid\": \"676d8d58420d5c4647d4a872b83966a06a10a4fbb2cfcb2cc8c8b3a8d6940919\",\n      \"value_btc\": 1.0,\n      \"value_sats\": 100000000,\n      \"vout\": 0\n    }\n  ],\n  \"locktime\": 0,\n  \"network\": \"bitcoin\",\n  \"output_count\": 2,\n  \"outputs\": [\n    {\n      \"address\": \"1HfDQLiop9zLpiFN25sJZv8msg8VKiySiL\",\n      \"index\": 0,\n      \"script_pubkey\": \"76a914b6bc2c0ee5655a843d79afedd0ccc3f7dd64340988ac\",\n      \"value_btc\": 1.0,\n      \"value_sats\": 100000000\n    },\n    {\n      \"address\": \"bc1qzxywlrjvupzfa2kglv2pe066z9mwdgygrph97h\",\n      \"index\": 1,\n      \"script_pubkey\": \"00141188ef8e4ce0449eaac8fb141cbf5a1176e6a088\",\n      \"value_btc\": 0.999,\n      \"value_sats\": 99900000\n    }\n  ],\n  \"total_input_value\": 200000000,\n  \"total_output_value\": 199900000,\n  \"version\": 1\n}\n",
+      "stderr": "",
+      "files": {}
+    },
+    "port": {
+      "status": 1,
+      "stdout": "",
+      "stderr": "psbtInvalidValue:global:1:path length must match the extended key depth: Invalid offline input\n",
+      "files": {}
+    }
+  },
+  {
+    "id": "parity/bip370-invalid-1",
+    "kind": "bip-rules",
+    "reference": {
+      "status": 0,
+      "stdout": "{\n  \"fee\": 141,\n  \"input_count\": 1,\n  \"inputs\": [\n    {\n      \"index\": 0,\n      \"sequence\": 4294967294,\n      \"txid\": \"c85f81844094f9f0eec1e41f8d63e0a99e9f73dc725d7319871c9c4121d90a0b\",\n      \"value_btc\": 9.99999,\n      \"value_sats\": 999999000,\n      \"vout\": 0\n    }\n  ],\n  \"locktime\": 0,\n  \"network\": \"bitcoin\",\n  \"output_count\": 2,\n  \"outputs\": [\n    {\n      \"address\": \"bc1qcsc0vnz82mdrzrdargy92uh09xvjvfevuqqa6s\",\n      \"index\": 0,\n      \"script_pubkey\": \"0014c430f64c4756da310dbd1a085572ef299926272c\",\n      \"value_btc\": 8.0,\n      \"value_sats\": 800000000\n    },\n    {\n      \"address\": \"bc1q5p76ez4ke22z6du7672lsdd6w8yuc6y9drkzys\",\n      \"index\": 1,\n      \"script_pubkey\": \"0014a07dac8ab6ca942d379ed795f835ba71c9cc6885\",\n      \"value_btc\": 1.99998859,\n      \"value_sats\": 199998859\n    }\n  ],\n  \"total_input_value\": 999999000,\n  \"total_output_value\": 999998859,\n  \"version\": 2\n}\n",
+      "stderr": "",
+      "files": {}
+    },
+    "port": {
+      "status": 1,
+      "stdout": "",
+      "stderr": "psbtExcludedField:global:2: Invalid offline input\n",
+      "files": {}
+    }
+  },
+  {
+    "id": "parity/bip370-invalid-2",
+    "kind": "bip-rules",
+    "reference": {
+      "status": 0,
+      "stdout": "{\n  \"fee\": 141,\n  \"input_count\": 1,\n  \"inputs\": [\n    {\n      \"index\": 0,\n      \"sequence\": 4294967294,\n      \"txid\": \"c85f81844094f9f0eec1e41f8d63e0a99e9f73dc725d7319871c9c4121d90a0b\",\n      \"value_btc\": 9.99999,\n      \"value_sats\": 999999000,\n      \"vout\": 0\n    }\n  ],\n  \"locktime\": 0,\n  \"network\": \"bitcoin\",\n  \"output_count\": 2,\n  \"outputs\": [\n    {\n      \"address\": \"bc1qcsc0vnz82mdrzrdargy92uh09xvjvfevuqqa6s\",\n      \"index\": 0,\n      \"script_pubkey\": \"0014c430f64c4756da310dbd1a085572ef299926272c\",\n      \"value_btc\": 8.0,\n      \"value_sats\": 800000000\n    },\n    {\n      \"address\": \"bc1q5p76ez4ke22z6du7672lsdd6w8yuc6y9drkzys\",\n      \"index\": 1,\n      \"script_pubkey\": \"0014a07dac8ab6ca942d379ed795f835ba71c9cc6885\",\n      \"value_btc\": 1.99998859,\n      \"value_sats\": 199998859\n    }\n  ],\n  \"total_input_value\": 999999000,\n  \"total_output_value\": 999998859,\n  \"version\": 2\n}\n",
+      "stderr": "",
+      "files": {}
+    },
+    "port": {
+      "status": 1,
+      "stdout": "",
+      "stderr": "psbtExcludedField:global:3: Invalid offline input\n",
+      "files": {}
+    }
+  },
+  {
+    "id": "parity/bip370-invalid-3",
+    "kind": "bip-rules",
+    "reference": {
+      "status": 0,
+      "stdout": "{\n  \"fee\": 141,\n  \"input_count\": 1,\n  \"inputs\": [\n    {\n      \"index\": 0,\n      \"sequence\": 4294967294,\n      \"txid\": \"c85f81844094f9f0eec1e41f8d63e0a99e9f73dc725d7319871c9c4121d90a0b\",\n      \"value_btc\": 9.99999,\n      \"value_sats\": 999999000,\n      \"vout\": 0\n    }\n  ],\n  \"locktime\": 0,\n  \"network\": \"bitcoin\",\n  \"output_count\": 2,\n  \"outputs\": [\n    {\n      \"address\": \"bc1qcsc0vnz82mdrzrdargy92uh09xvjvfevuqqa6s\",\n      \"index\": 0,\n      \"script_pubkey\": \"0014c430f64c4756da310dbd1a085572ef299926272c\",\n      \"value_btc\": 8.0,\n      \"value_sats\": 800000000\n    },\n    {\n      \"address\": \"bc1q5p76ez4ke22z6du7672lsdd6w8yuc6y9drkzys\",\n      \"index\": 1,\n      \"script_pubkey\": \"0014a07dac8ab6ca942d379ed795f835ba71c9cc6885\",\n      \"value_btc\": 1.99998859,\n      \"value_sats\": 199998859\n    }\n  ],\n  \"total_input_value\": 999999000,\n  \"total_output_value\": 999998859,\n  \"version\": 2\n}\n",
+      "stderr": "",
+      "files": {}
+    },
+    "port": {
+      "status": 1,
+      "stdout": "",
+      "stderr": "psbtExcludedField:global:4: Invalid offline input\n",
+      "files": {}
+    }
+  },
+  {
+    "id": "parity/bip370-invalid-4",
+    "kind": "bip-rules",
+    "reference": {
+      "status": 0,
+      "stdout": "{\n  \"fee\": 141,\n  \"input_count\": 1,\n  \"inputs\": [\n    {\n      \"index\": 0,\n      \"sequence\": 4294967294,\n      \"txid\": \"c85f81844094f9f0eec1e41f8d63e0a99e9f73dc725d7319871c9c4121d90a0b\",\n      \"value_btc\": 9.99999,\n      \"value_sats\": 999999000,\n      \"vout\": 0\n    }\n  ],\n  \"locktime\": 0,\n  \"network\": \"bitcoin\",\n  \"output_count\": 2,\n  \"outputs\": [\n    {\n      \"address\": \"bc1qcsc0vnz82mdrzrdargy92uh09xvjvfevuqqa6s\",\n      \"index\": 0,\n      \"script_pubkey\": \"0014c430f64c4756da310dbd1a085572ef299926272c\",\n      \"value_btc\": 8.0,\n      \"value_sats\": 800000000\n    },\n    {\n      \"address\": \"bc1q5p76ez4ke22z6du7672lsdd6w8yuc6y9drkzys\",\n      \"index\": 1,\n      \"script_pubkey\": \"0014a07dac8ab6ca942d379ed795f835ba71c9cc6885\",\n      \"value_btc\": 1.99998859,\n      \"value_sats\": 199998859\n    }\n  ],\n  \"total_input_value\": 999999000,\n  \"total_output_value\": 999998859,\n  \"version\": 2\n}\n",
+      "stderr": "",
+      "files": {}
+    },
+    "port": {
+      "status": 1,
+      "stdout": "",
+      "stderr": "psbtExcludedField:global:5: Invalid offline input\n",
+      "files": {}
+    }
+  },
+  {
+    "id": "parity/bip370-invalid-5",
+    "kind": "bip-rules",
+    "reference": {
+      "status": 0,
+      "stdout": "{\n  \"fee\": 141,\n  \"input_count\": 1,\n  \"inputs\": [\n    {\n      \"index\": 0,\n      \"sequence\": 4294967294,\n      \"txid\": \"c85f81844094f9f0eec1e41f8d63e0a99e9f73dc725d7319871c9c4121d90a0b\",\n      \"value_btc\": 9.99999,\n      \"value_sats\": 999999000,\n      \"vout\": 0\n    }\n  ],\n  \"locktime\": 0,\n  \"network\": \"bitcoin\",\n  \"output_count\": 2,\n  \"outputs\": [\n    {\n      \"address\": \"bc1qcsc0vnz82mdrzrdargy92uh09xvjvfevuqqa6s\",\n      \"index\": 0,\n      \"script_pubkey\": \"0014c430f64c4756da310dbd1a085572ef299926272c\",\n      \"value_btc\": 8.0,\n      \"value_sats\": 800000000\n    },\n    {\n      \"address\": \"bc1q5p76ez4ke22z6du7672lsdd6w8yuc6y9drkzys\",\n      \"index\": 1,\n      \"script_pubkey\": \"0014a07dac8ab6ca942d379ed795f835ba71c9cc6885\",\n      \"value_btc\": 1.99998859,\n      \"value_sats\": 199998859\n    }\n  ],\n  \"total_input_value\": 999999000,\n  \"total_output_value\": 999998859,\n  \"version\": 2\n}\n",
+      "stderr": "",
+      "files": {}
+    },
+    "port": {
+      "status": 1,
+      "stdout": "",
+      "stderr": "psbtExcludedField:global:6: Invalid offline input\n",
+      "files": {}
+    }
+  },
+  {
+    "id": "parity/bip370-invalid-6",
+    "kind": "bip-rules",
+    "reference": {
+      "status": 0,
+      "stdout": "{\n  \"fee\": 141,\n  \"input_count\": 1,\n  \"inputs\": [\n    {\n      \"index\": 0,\n      \"sequence\": 4294967294,\n      \"txid\": \"c85f81844094f9f0eec1e41f8d63e0a99e9f73dc725d7319871c9c4121d90a0b\",\n      \"value_btc\": 9.99999,\n      \"value_sats\": 999999000,\n      \"vout\": 0\n    }\n  ],\n  \"locktime\": 0,\n  \"network\": \"bitcoin\",\n  \"output_count\": 2,\n  \"outputs\": [\n    {\n      \"address\": \"bc1qcsc0vnz82mdrzrdargy92uh09xvjvfevuqqa6s\",\n      \"index\": 0,\n      \"script_pubkey\": \"0014c430f64c4756da310dbd1a085572ef299926272c\",\n      \"value_btc\": 8.0,\n      \"value_sats\": 800000000\n    },\n    {\n      \"address\": \"bc1q5p76ez4ke22z6du7672lsdd6w8yuc6y9drkzys\",\n      \"index\": 1,\n      \"script_pubkey\": \"0014a07dac8ab6ca942d379ed795f835ba71c9cc6885\",\n      \"value_btc\": 1.99998859,\n      \"value_sats\": 199998859\n    }\n  ],\n  \"total_input_value\": 999999000,\n  \"total_output_value\": 999998859,\n  \"version\": 2\n}\n",
+      "stderr": "",
+      "files": {}
+    },
+    "port": {
+      "status": 1,
+      "stdout": "",
+      "stderr": "psbtExcludedField:input:14: Invalid offline input\n",
+      "files": {}
+    }
+  },
+  {
+    "id": "parity/bip370-invalid-7",
+    "kind": "bip-rules",
+    "reference": {
+      "status": 0,
+      "stdout": "{\n  \"fee\": 141,\n  \"input_count\": 1,\n  \"inputs\": [\n    {\n      \"index\": 0,\n      \"sequence\": 4294967294,\n      \"txid\": \"c85f81844094f9f0eec1e41f8d63e0a99e9f73dc725d7319871c9c4121d90a0b\",\n      \"value_btc\": 9.99999,\n      \"value_sats\": 999999000,\n      \"vout\": 0\n    }\n  ],\n  \"locktime\": 0,\n  \"network\": \"bitcoin\",\n  \"output_count\": 2,\n  \"outputs\": [\n    {\n      \"address\": \"bc1qcsc0vnz82mdrzrdargy92uh09xvjvfevuqqa6s\",\n      \"index\": 0,\n      \"script_pubkey\": \"0014c430f64c4756da310dbd1a085572ef299926272c\",\n      \"value_btc\": 8.0,\n      \"value_sats\": 800000000\n    },\n    {\n      \"address\": \"bc1q5p76ez4ke22z6du7672lsdd6w8yuc6y9drkzys\",\n      \"index\": 1,\n      \"script_pubkey\": \"0014a07dac8ab6ca942d379ed795f835ba71c9cc6885\",\n      \"value_btc\": 1.99998859,\n      \"value_sats\": 199998859\n    }\n  ],\n  \"total_input_value\": 999999000,\n  \"total_output_value\": 999998859,\n  \"version\": 2\n}\n",
+      "stderr": "",
+      "files": {}
+    },
+    "port": {
+      "status": 1,
+      "stdout": "",
+      "stderr": "psbtExcludedField:input:15: Invalid offline input\n",
+      "files": {}
+    }
+  },
+  {
+    "id": "parity/bip370-invalid-8",
+    "kind": "bip-rules",
+    "reference": {
+      "status": 0,
+      "stdout": "{\n  \"fee\": 141,\n  \"input_count\": 1,\n  \"inputs\": [\n    {\n      \"index\": 0,\n      \"sequence\": 4294967294,\n      \"txid\": \"c85f81844094f9f0eec1e41f8d63e0a99e9f73dc725d7319871c9c4121d90a0b\",\n      \"value_btc\": 9.99999,\n      \"value_sats\": 999999000,\n      \"vout\": 0\n    }\n  ],\n  \"locktime\": 0,\n  \"network\": \"bitcoin\",\n  \"output_count\": 2,\n  \"outputs\": [\n    {\n      \"address\": \"bc1qcsc0vnz82mdrzrdargy92uh09xvjvfevuqqa6s\",\n      \"index\": 0,\n      \"script_pubkey\": \"0014c430f64c4756da310dbd1a085572ef299926272c\",\n      \"value_btc\": 8.0,\n      \"value_sats\": 800000000\n    },\n    {\n      \"address\": \"bc1q5p76ez4ke22z6du7672lsdd6w8yuc6y9drkzys\",\n      \"index\": 1,\n      \"script_pubkey\": \"0014a07dac8ab6ca942d379ed795f835ba71c9cc6885\",\n      \"value_btc\": 1.99998859,\n      \"value_sats\": 199998859\n    }\n  ],\n  \"total_input_value\": 999999000,\n  \"total_output_value\": 999998859,\n  \"version\": 2\n}\n",
+      "stderr": "",
+      "files": {}
+    },
+    "port": {
+      "status": 1,
+      "stdout": "",
+      "stderr": "psbtExcludedField:input:16: Invalid offline input\n",
+      "files": {}
+    }
+  },
+  {
+    "id": "parity/bip370-invalid-9",
+    "kind": "bip-rules",
+    "reference": {
+      "status": 0,
+      "stdout": "{\n  \"fee\": 141,\n  \"input_count\": 1,\n  \"inputs\": [\n    {\n      \"index\": 0,\n      \"sequence\": 4294967294,\n      \"txid\": \"c85f81844094f9f0eec1e41f8d63e0a99e9f73dc725d7319871c9c4121d90a0b\",\n      \"value_btc\": 9.99999,\n      \"value_sats\": 999999000,\n      \"vout\": 0\n    }\n  ],\n  \"locktime\": 0,\n  \"network\": \"bitcoin\",\n  \"output_count\": 2,\n  \"outputs\": [\n    {\n      \"address\": \"bc1qcsc0vnz82mdrzrdargy92uh09xvjvfevuqqa6s\",\n      \"index\": 0,\n      \"script_pubkey\": \"0014c430f64c4756da310dbd1a085572ef299926272c\",\n      \"value_btc\": 8.0,\n      \"value_sats\": 800000000\n    },\n    {\n      \"address\": \"bc1q5p76ez4ke22z6du7672lsdd6w8yuc6y9drkzys\",\n      \"index\": 1,\n      \"script_pubkey\": \"0014a07dac8ab6ca942d379ed795f835ba71c9cc6885\",\n      \"value_btc\": 1.99998859,\n      \"value_sats\": 199998859\n    }\n  ],\n  \"total_input_value\": 999999000,\n  \"total_output_value\": 999998859,\n  \"version\": 2\n}\n",
+      "stderr": "",
+      "files": {}
+    },
+    "port": {
+      "status": 1,
+      "stdout": "",
+      "stderr": "psbtExcludedField:input:17: Invalid offline input\n",
+      "files": {}
+    }
+  },
+  {
+    "id": "parity/bip370-invalid-10",
+    "kind": "bip-rules",
+    "reference": {
+      "status": 0,
+      "stdout": "{\n  \"fee\": 141,\n  \"input_count\": 1,\n  \"inputs\": [\n    {\n      \"index\": 0,\n      \"sequence\": 4294967294,\n      \"txid\": \"c85f81844094f9f0eec1e41f8d63e0a99e9f73dc725d7319871c9c4121d90a0b\",\n      \"value_btc\": 9.99999,\n      \"value_sats\": 999999000,\n      \"vout\": 0\n    }\n  ],\n  \"locktime\": 0,\n  \"network\": \"bitcoin\",\n  \"output_count\": 2,\n  \"outputs\": [\n    {\n      \"address\": \"bc1qcsc0vnz82mdrzrdargy92uh09xvjvfevuqqa6s\",\n      \"index\": 0,\n      \"script_pubkey\": \"0014c430f64c4756da310dbd1a085572ef299926272c\",\n      \"value_btc\": 8.0,\n      \"value_sats\": 800000000\n    },\n    {\n      \"address\": \"bc1q5p76ez4ke22z6du7672lsdd6w8yuc6y9drkzys\",\n      \"index\": 1,\n      \"script_pubkey\": \"0014a07dac8ab6ca942d379ed795f835ba71c9cc6885\",\n      \"value_btc\": 1.99998859,\n      \"value_sats\": 199998859\n    }\n  ],\n  \"total_input_value\": 999999000,\n  \"total_output_value\": 999998859,\n  \"version\": 2\n}\n",
+      "stderr": "",
+      "files": {}
+    },
+    "port": {
+      "status": 1,
+      "stdout": "",
+      "stderr": "psbtExcludedField:input:18: Invalid offline input\n",
+      "files": {}
+    }
+  },
+  {
+    "id": "parity/bip370-invalid-11",
+    "kind": "bip-rules",
+    "reference": {
+      "status": 0,
+      "stdout": "{\n  \"fee\": 141,\n  \"input_count\": 1,\n  \"inputs\": [\n    {\n      \"index\": 0,\n      \"sequence\": 4294967294,\n      \"txid\": \"c85f81844094f9f0eec1e41f8d63e0a99e9f73dc725d7319871c9c4121d90a0b\",\n      \"value_btc\": 9.99999,\n      \"value_sats\": 999999000,\n      \"vout\": 0\n    }\n  ],\n  \"locktime\": 0,\n  \"network\": \"bitcoin\",\n  \"output_count\": 2,\n  \"outputs\": [\n    {\n      \"address\": \"bc1qcsc0vnz82mdrzrdargy92uh09xvjvfevuqqa6s\",\n      \"index\": 0,\n      \"script_pubkey\": \"0014c430f64c4756da310dbd1a085572ef299926272c\",\n      \"value_btc\": 8.0,\n      \"value_sats\": 800000000\n    },\n    {\n      \"address\": \"bc1q5p76ez4ke22z6du7672lsdd6w8yuc6y9drkzys\",\n      \"index\": 1,\n      \"script_pubkey\": \"0014a07dac8ab6ca942d379ed795f835ba71c9cc6885\",\n      \"value_btc\": 1.99998859,\n      \"value_sats\": 199998859\n    }\n  ],\n  \"total_input_value\": 999999000,\n  \"total_output_value\": 999998859,\n  \"version\": 2\n}\n",
+      "stderr": "",
+      "files": {}
+    },
+    "port": {
+      "status": 1,
+      "stdout": "",
+      "stderr": "psbtExcludedField:output:3: Invalid offline input\n",
+      "files": {}
+    }
+  },
+  {
+    "id": "parity/bip370-invalid-12",
+    "kind": "bip-rules",
+    "reference": {
+      "status": 0,
+      "stdout": "{\n  \"fee\": 141,\n  \"input_count\": 1,\n  \"inputs\": [\n    {\n      \"index\": 0,\n      \"sequence\": 4294967294,\n      \"txid\": \"c85f81844094f9f0eec1e41f8d63e0a99e9f73dc725d7319871c9c4121d90a0b\",\n      \"value_btc\": 9.99999,\n      \"value_sats\": 999999000,\n      \"vout\": 0\n    }\n  ],\n  \"locktime\": 0,\n  \"network\": \"bitcoin\",\n  \"output_count\": 2,\n  \"outputs\": [\n    {\n      \"address\": \"bc1qcsc0vnz82mdrzrdargy92uh09xvjvfevuqqa6s\",\n      \"index\": 0,\n      \"script_pubkey\": \"0014c430f64c4756da310dbd1a085572ef299926272c\",\n      \"value_btc\": 8.0,\n      \"value_sats\": 800000000\n    },\n    {\n      \"address\": \"bc1q5p76ez4ke22z6du7672lsdd6w8yuc6y9drkzys\",\n      \"index\": 1,\n      \"script_pubkey\": \"0014a07dac8ab6ca942d379ed795f835ba71c9cc6885\",\n      \"value_btc\": 1.99998859,\n      \"value_sats\": 199998859\n    }\n  ],\n  \"total_input_value\": 999999000,\n  \"total_output_value\": 999998859,\n  \"version\": 2\n}\n",
+      "stderr": "",
+      "files": {}
+    },
+    "port": {
+      "status": 1,
+      "stdout": "",
+      "stderr": "psbtExcludedField:output:4: Invalid offline input\n",
+      "files": {}
+    }
+  },
+  {
+    "id": "synthetic-psbt/large-exact",
+    "kind": "amount",
+    "reference": {
+      "status": 0,
+      "stdout": "{\n  \"fee\": 2,\n  \"input_count\": 1,\n  \"inputs\": [\n    {\n      \"index\": 0,\n      \"sequence\": 123,\n      \"txid\": \"1f1e1d1c1b1a191817161514131211100f0e0d0c0b0a09080706050403020100\",\n      \"value_btc\": 90071992.54740995,\n      \"value_sats\": 9007199254740995,\n      \"vout\": 0\n    }\n  ],\n  \"locktime\": 42,\n  \"network\": \"bitcoin\",\n  \"output_count\": 1,\n  \"outputs\": [\n    {\n      \"address\": null,\n      \"index\": 0,\n      \"script_pubkey\": \"\",\n      \"value_btc\": 90071992.54740994,\n      \"value_sats\": 9007199254740993\n    }\n  ],\n  \"total_input_value\": 9007199254740995,\n  \"total_output_value\": 9007199254740993,\n  \"version\": 2\n}\n",
+      "stderr": "",
+      "files": {}
+    },
+    "fields": [
+      {
+        "field": "stdout[\"outputs\"][0][\"value_btc\"]",
+        "reference": "90071992.54740994",
+        "port": "90071992.54740993"
+      }
+    ]
+  },
+  {
+    "id": "synthetic-psbt/max-output",
+    "kind": "amount",
+    "reference": {
+      "status": 0,
+      "stdout": "{\n  \"fee\": null,\n  \"input_count\": 1,\n  \"inputs\": [\n    {\n      \"index\": 0,\n      \"sequence\": 123,\n      \"txid\": \"1f1e1d1c1b1a191817161514131211100f0e0d0c0b0a09080706050403020100\",\n      \"vout\": 0\n    }\n  ],\n  \"locktime\": 42,\n  \"network\": \"bitcoin\",\n  \"output_count\": 1,\n  \"outputs\": [\n    {\n      \"address\": null,\n      \"index\": 0,\n      \"script_pubkey\": \"\",\n      \"value_btc\": 184467440737.09552,\n      \"value_sats\": 18446744073709551615\n    }\n  ],\n  \"total_input_value\": null,\n  \"total_output_value\": 18446744073709551615,\n  \"version\": 2\n}\n",
+      "stderr": "",
+      "files": {}
+    },
+    "fields": [
+      {
+        "field": "stdout[\"outputs\"][0][\"value_btc\"]",
+        "reference": "184467440737.09552",
+        "port": "184467440737.09551615"
+      }
+    ]
+  }
+]

@@ -1,0 +1,1663 @@
+{
+  "count": 275,
+  "checks": [
+    {
+      "id": "bip370Valid/0",
+      "property": "version",
+      "status": 1,
+      "assertion": "offline v2 complete JSON: bip370Valid/0"
+    },
+    {
+      "id": "bip370Valid/0",
+      "property": "network",
+      "status": 1,
+      "assertion": "offline v2 complete JSON: bip370Valid/0"
+    },
+    {
+      "id": "bip370Valid/0",
+      "property": "unexpected",
+      "status": 1,
+      "assertion": "field set: stdout"
+    },
+    {
+      "id": "bip370Valid/0",
+      "property": "value_btc-Decimal",
+      "status": 1,
+      "assertion": "offline v2 complete JSON: bip370Valid/0"
+    },
+    {
+      "id": "bip370Valid/0",
+      "property": "value_btc-str",
+      "status": 1,
+      "assertion": "offline v2 complete JSON: bip370Valid/0"
+    },
+    {
+      "id": "bip370Valid/0",
+      "property": "value_btc-NoneType",
+      "status": 1,
+      "assertion": "offline v2 complete JSON: bip370Valid/0"
+    },
+    {
+      "id": "bip370Valid/0",
+      "property": "value_btc-bool",
+      "status": 1,
+      "assertion": "offline v2 complete JSON: bip370Valid/0"
+    },
+    {
+      "id": "bip370Valid/0",
+      "property": "newline-''",
+      "status": 1,
+      "assertion": "offline exception status/newline: bip370Valid/0"
+    },
+    {
+      "id": "bip370Valid/0",
+      "property": "newline-'\\n\\n'",
+      "status": 1,
+      "assertion": "offline output newline: bip370Valid/0"
+    },
+    {
+      "id": "bip370Valid/0",
+      "property": "newline-'\\r\\n'",
+      "status": 1,
+      "assertion": "offline output newline: bip370Valid/0"
+    },
+    {
+      "id": "bip370Valid/0",
+      "property": "newline-'\\n \\n'",
+      "status": 1,
+      "assertion": "offline output newline: bip370Valid/0"
+    },
+    {
+      "id": "bip370Valid/1",
+      "property": "version",
+      "status": 1,
+      "assertion": "offline v2 complete JSON: bip370Valid/1"
+    },
+    {
+      "id": "bip370Valid/1",
+      "property": "network",
+      "status": 1,
+      "assertion": "offline v2 complete JSON: bip370Valid/1"
+    },
+    {
+      "id": "bip370Valid/1",
+      "property": "unexpected",
+      "status": 1,
+      "assertion": "field set: stdout"
+    },
+    {
+      "id": "bip370Valid/1",
+      "property": "value_btc-Decimal",
+      "status": 1,
+      "assertion": "offline v2 complete JSON: bip370Valid/1"
+    },
+    {
+      "id": "bip370Valid/1",
+      "property": "value_btc-str",
+      "status": 1,
+      "assertion": "offline v2 complete JSON: bip370Valid/1"
+    },
+    {
+      "id": "bip370Valid/1",
+      "property": "value_btc-NoneType",
+      "status": 1,
+      "assertion": "offline v2 complete JSON: bip370Valid/1"
+    },
+    {
+      "id": "bip370Valid/1",
+      "property": "value_btc-bool",
+      "status": 1,
+      "assertion": "offline v2 complete JSON: bip370Valid/1"
+    },
+    {
+      "id": "bip370Valid/1",
+      "property": "newline-''",
+      "status": 1,
+      "assertion": "offline exception status/newline: bip370Valid/1"
+    },
+    {
+      "id": "bip370Valid/1",
+      "property": "newline-'\\n\\n'",
+      "status": 1,
+      "assertion": "offline output newline: bip370Valid/1"
+    },
+    {
+      "id": "bip370Valid/1",
+      "property": "newline-'\\r\\n'",
+      "status": 1,
+      "assertion": "offline output newline: bip370Valid/1"
+    },
+    {
+      "id": "bip370Valid/1",
+      "property": "newline-'\\n \\n'",
+      "status": 1,
+      "assertion": "offline output newline: bip370Valid/1"
+    },
+    {
+      "id": "bip370Valid/2",
+      "property": "version",
+      "status": 1,
+      "assertion": "offline v2 complete JSON: bip370Valid/2"
+    },
+    {
+      "id": "bip370Valid/2",
+      "property": "network",
+      "status": 1,
+      "assertion": "offline v2 complete JSON: bip370Valid/2"
+    },
+    {
+      "id": "bip370Valid/2",
+      "property": "unexpected",
+      "status": 1,
+      "assertion": "field set: stdout"
+    },
+    {
+      "id": "bip370Valid/2",
+      "property": "value_btc-Decimal",
+      "status": 1,
+      "assertion": "offline v2 complete JSON: bip370Valid/2"
+    },
+    {
+      "id": "bip370Valid/2",
+      "property": "value_btc-str",
+      "status": 1,
+      "assertion": "offline v2 complete JSON: bip370Valid/2"
+    },
+    {
+      "id": "bip370Valid/2",
+      "property": "value_btc-NoneType",
+      "status": 1,
+      "assertion": "offline v2 complete JSON: bip370Valid/2"
+    },
+    {
+      "id": "bip370Valid/2",
+      "property": "value_btc-bool",
+      "status": 1,
+      "assertion": "offline v2 complete JSON: bip370Valid/2"
+    },
+    {
+      "id": "bip370Valid/2",
+      "property": "newline-''",
+      "status": 1,
+      "assertion": "offline exception status/newline: bip370Valid/2"
+    },
+    {
+      "id": "bip370Valid/2",
+      "property": "newline-'\\n\\n'",
+      "status": 1,
+      "assertion": "offline output newline: bip370Valid/2"
+    },
+    {
+      "id": "bip370Valid/2",
+      "property": "newline-'\\r\\n'",
+      "status": 1,
+      "assertion": "offline output newline: bip370Valid/2"
+    },
+    {
+      "id": "bip370Valid/2",
+      "property": "newline-'\\n \\n'",
+      "status": 1,
+      "assertion": "offline output newline: bip370Valid/2"
+    },
+    {
+      "id": "bip370Valid/3",
+      "property": "version",
+      "status": 1,
+      "assertion": "offline v2 complete JSON: bip370Valid/3"
+    },
+    {
+      "id": "bip370Valid/3",
+      "property": "network",
+      "status": 1,
+      "assertion": "offline v2 complete JSON: bip370Valid/3"
+    },
+    {
+      "id": "bip370Valid/3",
+      "property": "unexpected",
+      "status": 1,
+      "assertion": "field set: stdout"
+    },
+    {
+      "id": "bip370Valid/3",
+      "property": "value_btc-Decimal",
+      "status": 1,
+      "assertion": "offline v2 complete JSON: bip370Valid/3"
+    },
+    {
+      "id": "bip370Valid/3",
+      "property": "value_btc-str",
+      "status": 1,
+      "assertion": "offline v2 complete JSON: bip370Valid/3"
+    },
+    {
+      "id": "bip370Valid/3",
+      "property": "value_btc-NoneType",
+      "status": 1,
+      "assertion": "offline v2 complete JSON: bip370Valid/3"
+    },
+    {
+      "id": "bip370Valid/3",
+      "property": "value_btc-bool",
+      "status": 1,
+      "assertion": "offline v2 complete JSON: bip370Valid/3"
+    },
+    {
+      "id": "bip370Valid/3",
+      "property": "newline-''",
+      "status": 1,
+      "assertion": "offline exception status/newline: bip370Valid/3"
+    },
+    {
+      "id": "bip370Valid/3",
+      "property": "newline-'\\n\\n'",
+      "status": 1,
+      "assertion": "offline output newline: bip370Valid/3"
+    },
+    {
+      "id": "bip370Valid/3",
+      "property": "newline-'\\r\\n'",
+      "status": 1,
+      "assertion": "offline output newline: bip370Valid/3"
+    },
+    {
+      "id": "bip370Valid/3",
+      "property": "newline-'\\n \\n'",
+      "status": 1,
+      "assertion": "offline output newline: bip370Valid/3"
+    },
+    {
+      "id": "bip370Valid/4",
+      "property": "version",
+      "status": 1,
+      "assertion": "offline v2 complete JSON: bip370Valid/4"
+    },
+    {
+      "id": "bip370Valid/4",
+      "property": "network",
+      "status": 1,
+      "assertion": "offline v2 complete JSON: bip370Valid/4"
+    },
+    {
+      "id": "bip370Valid/4",
+      "property": "unexpected",
+      "status": 1,
+      "assertion": "field set: stdout"
+    },
+    {
+      "id": "bip370Valid/4",
+      "property": "value_btc-Decimal",
+      "status": 1,
+      "assertion": "offline v2 complete JSON: bip370Valid/4"
+    },
+    {
+      "id": "bip370Valid/4",
+      "property": "value_btc-str",
+      "status": 1,
+      "assertion": "offline v2 complete JSON: bip370Valid/4"
+    },
+    {
+      "id": "bip370Valid/4",
+      "property": "value_btc-NoneType",
+      "status": 1,
+      "assertion": "offline v2 complete JSON: bip370Valid/4"
+    },
+    {
+      "id": "bip370Valid/4",
+      "property": "value_btc-bool",
+      "status": 1,
+      "assertion": "offline v2 complete JSON: bip370Valid/4"
+    },
+    {
+      "id": "bip370Valid/4",
+      "property": "newline-''",
+      "status": 1,
+      "assertion": "offline exception status/newline: bip370Valid/4"
+    },
+    {
+      "id": "bip370Valid/4",
+      "property": "newline-'\\n\\n'",
+      "status": 1,
+      "assertion": "offline output newline: bip370Valid/4"
+    },
+    {
+      "id": "bip370Valid/4",
+      "property": "newline-'\\r\\n'",
+      "status": 1,
+      "assertion": "offline output newline: bip370Valid/4"
+    },
+    {
+      "id": "bip370Valid/4",
+      "property": "newline-'\\n \\n'",
+      "status": 1,
+      "assertion": "offline output newline: bip370Valid/4"
+    },
+    {
+      "id": "bip370Valid/5",
+      "property": "version",
+      "status": 1,
+      "assertion": "offline v2 complete JSON: bip370Valid/5"
+    },
+    {
+      "id": "bip370Valid/5",
+      "property": "network",
+      "status": 1,
+      "assertion": "offline v2 complete JSON: bip370Valid/5"
+    },
+    {
+      "id": "bip370Valid/5",
+      "property": "unexpected",
+      "status": 1,
+      "assertion": "field set: stdout"
+    },
+    {
+      "id": "bip370Valid/5",
+      "property": "value_btc-Decimal",
+      "status": 1,
+      "assertion": "offline v2 complete JSON: bip370Valid/5"
+    },
+    {
+      "id": "bip370Valid/5",
+      "property": "value_btc-str",
+      "status": 1,
+      "assertion": "offline v2 complete JSON: bip370Valid/5"
+    },
+    {
+      "id": "bip370Valid/5",
+      "property": "value_btc-NoneType",
+      "status": 1,
+      "assertion": "offline v2 complete JSON: bip370Valid/5"
+    },
+    {
+      "id": "bip370Valid/5",
+      "property": "value_btc-bool",
+      "status": 1,
+      "assertion": "offline v2 complete JSON: bip370Valid/5"
+    },
+    {
+      "id": "bip370Valid/5",
+      "property": "newline-''",
+      "status": 1,
+      "assertion": "offline exception status/newline: bip370Valid/5"
+    },
+    {
+      "id": "bip370Valid/5",
+      "property": "newline-'\\n\\n'",
+      "status": 1,
+      "assertion": "offline output newline: bip370Valid/5"
+    },
+    {
+      "id": "bip370Valid/5",
+      "property": "newline-'\\r\\n'",
+      "status": 1,
+      "assertion": "offline output newline: bip370Valid/5"
+    },
+    {
+      "id": "bip370Valid/5",
+      "property": "newline-'\\n \\n'",
+      "status": 1,
+      "assertion": "offline output newline: bip370Valid/5"
+    },
+    {
+      "id": "bip370Valid/6",
+      "property": "version",
+      "status": 1,
+      "assertion": "offline v2 complete JSON: bip370Valid/6"
+    },
+    {
+      "id": "bip370Valid/6",
+      "property": "network",
+      "status": 1,
+      "assertion": "offline v2 complete JSON: bip370Valid/6"
+    },
+    {
+      "id": "bip370Valid/6",
+      "property": "unexpected",
+      "status": 1,
+      "assertion": "field set: stdout"
+    },
+    {
+      "id": "bip370Valid/6",
+      "property": "value_btc-Decimal",
+      "status": 1,
+      "assertion": "offline v2 complete JSON: bip370Valid/6"
+    },
+    {
+      "id": "bip370Valid/6",
+      "property": "value_btc-str",
+      "status": 1,
+      "assertion": "offline v2 complete JSON: bip370Valid/6"
+    },
+    {
+      "id": "bip370Valid/6",
+      "property": "value_btc-NoneType",
+      "status": 1,
+      "assertion": "offline v2 complete JSON: bip370Valid/6"
+    },
+    {
+      "id": "bip370Valid/6",
+      "property": "value_btc-bool",
+      "status": 1,
+      "assertion": "offline v2 complete JSON: bip370Valid/6"
+    },
+    {
+      "id": "bip370Valid/6",
+      "property": "newline-''",
+      "status": 1,
+      "assertion": "offline exception status/newline: bip370Valid/6"
+    },
+    {
+      "id": "bip370Valid/6",
+      "property": "newline-'\\n\\n'",
+      "status": 1,
+      "assertion": "offline output newline: bip370Valid/6"
+    },
+    {
+      "id": "bip370Valid/6",
+      "property": "newline-'\\r\\n'",
+      "status": 1,
+      "assertion": "offline output newline: bip370Valid/6"
+    },
+    {
+      "id": "bip370Valid/6",
+      "property": "newline-'\\n \\n'",
+      "status": 1,
+      "assertion": "offline output newline: bip370Valid/6"
+    },
+    {
+      "id": "bip370Valid/7",
+      "property": "version",
+      "status": 1,
+      "assertion": "offline v2 complete JSON: bip370Valid/7"
+    },
+    {
+      "id": "bip370Valid/7",
+      "property": "network",
+      "status": 1,
+      "assertion": "offline v2 complete JSON: bip370Valid/7"
+    },
+    {
+      "id": "bip370Valid/7",
+      "property": "unexpected",
+      "status": 1,
+      "assertion": "field set: stdout"
+    },
+    {
+      "id": "bip370Valid/7",
+      "property": "value_btc-Decimal",
+      "status": 1,
+      "assertion": "offline v2 complete JSON: bip370Valid/7"
+    },
+    {
+      "id": "bip370Valid/7",
+      "property": "value_btc-str",
+      "status": 1,
+      "assertion": "offline v2 complete JSON: bip370Valid/7"
+    },
+    {
+      "id": "bip370Valid/7",
+      "property": "value_btc-NoneType",
+      "status": 1,
+      "assertion": "offline v2 complete JSON: bip370Valid/7"
+    },
+    {
+      "id": "bip370Valid/7",
+      "property": "value_btc-bool",
+      "status": 1,
+      "assertion": "offline v2 complete JSON: bip370Valid/7"
+    },
+    {
+      "id": "bip370Valid/7",
+      "property": "newline-''",
+      "status": 1,
+      "assertion": "offline exception status/newline: bip370Valid/7"
+    },
+    {
+      "id": "bip370Valid/7",
+      "property": "newline-'\\n\\n'",
+      "status": 1,
+      "assertion": "offline output newline: bip370Valid/7"
+    },
+    {
+      "id": "bip370Valid/7",
+      "property": "newline-'\\r\\n'",
+      "status": 1,
+      "assertion": "offline output newline: bip370Valid/7"
+    },
+    {
+      "id": "bip370Valid/7",
+      "property": "newline-'\\n \\n'",
+      "status": 1,
+      "assertion": "offline output newline: bip370Valid/7"
+    },
+    {
+      "id": "bip370Valid/8",
+      "property": "version",
+      "status": 1,
+      "assertion": "offline v2 complete JSON: bip370Valid/8"
+    },
+    {
+      "id": "bip370Valid/8",
+      "property": "network",
+      "status": 1,
+      "assertion": "offline v2 complete JSON: bip370Valid/8"
+    },
+    {
+      "id": "bip370Valid/8",
+      "property": "unexpected",
+      "status": 1,
+      "assertion": "field set: stdout"
+    },
+    {
+      "id": "bip370Valid/8",
+      "property": "value_btc-Decimal",
+      "status": 1,
+      "assertion": "offline v2 complete JSON: bip370Valid/8"
+    },
+    {
+      "id": "bip370Valid/8",
+      "property": "value_btc-str",
+      "status": 1,
+      "assertion": "offline v2 complete JSON: bip370Valid/8"
+    },
+    {
+      "id": "bip370Valid/8",
+      "property": "value_btc-NoneType",
+      "status": 1,
+      "assertion": "offline v2 complete JSON: bip370Valid/8"
+    },
+    {
+      "id": "bip370Valid/8",
+      "property": "value_btc-bool",
+      "status": 1,
+      "assertion": "offline v2 complete JSON: bip370Valid/8"
+    },
+    {
+      "id": "bip370Valid/8",
+      "property": "newline-''",
+      "status": 1,
+      "assertion": "offline exception status/newline: bip370Valid/8"
+    },
+    {
+      "id": "bip370Valid/8",
+      "property": "newline-'\\n\\n'",
+      "status": 1,
+      "assertion": "offline output newline: bip370Valid/8"
+    },
+    {
+      "id": "bip370Valid/8",
+      "property": "newline-'\\r\\n'",
+      "status": 1,
+      "assertion": "offline output newline: bip370Valid/8"
+    },
+    {
+      "id": "bip370Valid/8",
+      "property": "newline-'\\n \\n'",
+      "status": 1,
+      "assertion": "offline output newline: bip370Valid/8"
+    },
+    {
+      "id": "bip370Valid/9",
+      "property": "version",
+      "status": 1,
+      "assertion": "offline v2 complete JSON: bip370Valid/9"
+    },
+    {
+      "id": "bip370Valid/9",
+      "property": "network",
+      "status": 1,
+      "assertion": "offline v2 complete JSON: bip370Valid/9"
+    },
+    {
+      "id": "bip370Valid/9",
+      "property": "unexpected",
+      "status": 1,
+      "assertion": "field set: stdout"
+    },
+    {
+      "id": "bip370Valid/9",
+      "property": "value_btc-Decimal",
+      "status": 1,
+      "assertion": "offline v2 complete JSON: bip370Valid/9"
+    },
+    {
+      "id": "bip370Valid/9",
+      "property": "value_btc-str",
+      "status": 1,
+      "assertion": "offline v2 complete JSON: bip370Valid/9"
+    },
+    {
+      "id": "bip370Valid/9",
+      "property": "value_btc-NoneType",
+      "status": 1,
+      "assertion": "offline v2 complete JSON: bip370Valid/9"
+    },
+    {
+      "id": "bip370Valid/9",
+      "property": "value_btc-bool",
+      "status": 1,
+      "assertion": "offline v2 complete JSON: bip370Valid/9"
+    },
+    {
+      "id": "bip370Valid/9",
+      "property": "newline-''",
+      "status": 1,
+      "assertion": "offline exception status/newline: bip370Valid/9"
+    },
+    {
+      "id": "bip370Valid/9",
+      "property": "newline-'\\n\\n'",
+      "status": 1,
+      "assertion": "offline output newline: bip370Valid/9"
+    },
+    {
+      "id": "bip370Valid/9",
+      "property": "newline-'\\r\\n'",
+      "status": 1,
+      "assertion": "offline output newline: bip370Valid/9"
+    },
+    {
+      "id": "bip370Valid/9",
+      "property": "newline-'\\n \\n'",
+      "status": 1,
+      "assertion": "offline output newline: bip370Valid/9"
+    },
+    {
+      "id": "bip370Valid/10",
+      "property": "version",
+      "status": 1,
+      "assertion": "offline v2 complete JSON: bip370Valid/10"
+    },
+    {
+      "id": "bip370Valid/10",
+      "property": "network",
+      "status": 1,
+      "assertion": "offline v2 complete JSON: bip370Valid/10"
+    },
+    {
+      "id": "bip370Valid/10",
+      "property": "unexpected",
+      "status": 1,
+      "assertion": "field set: stdout"
+    },
+    {
+      "id": "bip370Valid/10",
+      "property": "value_btc-Decimal",
+      "status": 1,
+      "assertion": "offline v2 complete JSON: bip370Valid/10"
+    },
+    {
+      "id": "bip370Valid/10",
+      "property": "value_btc-str",
+      "status": 1,
+      "assertion": "offline v2 complete JSON: bip370Valid/10"
+    },
+    {
+      "id": "bip370Valid/10",
+      "property": "value_btc-NoneType",
+      "status": 1,
+      "assertion": "offline v2 complete JSON: bip370Valid/10"
+    },
+    {
+      "id": "bip370Valid/10",
+      "property": "value_btc-bool",
+      "status": 1,
+      "assertion": "offline v2 complete JSON: bip370Valid/10"
+    },
+    {
+      "id": "bip370Valid/10",
+      "property": "newline-''",
+      "status": 1,
+      "assertion": "offline exception status/newline: bip370Valid/10"
+    },
+    {
+      "id": "bip370Valid/10",
+      "property": "newline-'\\n\\n'",
+      "status": 1,
+      "assertion": "offline output newline: bip370Valid/10"
+    },
+    {
+      "id": "bip370Valid/10",
+      "property": "newline-'\\r\\n'",
+      "status": 1,
+      "assertion": "offline output newline: bip370Valid/10"
+    },
+    {
+      "id": "bip370Valid/10",
+      "property": "newline-'\\n \\n'",
+      "status": 1,
+      "assertion": "offline output newline: bip370Valid/10"
+    },
+    {
+      "id": "bip370Valid/11",
+      "property": "version",
+      "status": 1,
+      "assertion": "offline v2 complete JSON: bip370Valid/11"
+    },
+    {
+      "id": "bip370Valid/11",
+      "property": "network",
+      "status": 1,
+      "assertion": "offline v2 complete JSON: bip370Valid/11"
+    },
+    {
+      "id": "bip370Valid/11",
+      "property": "unexpected",
+      "status": 1,
+      "assertion": "field set: stdout"
+    },
+    {
+      "id": "bip370Valid/11",
+      "property": "value_btc-Decimal",
+      "status": 1,
+      "assertion": "offline v2 complete JSON: bip370Valid/11"
+    },
+    {
+      "id": "bip370Valid/11",
+      "property": "value_btc-str",
+      "status": 1,
+      "assertion": "offline v2 complete JSON: bip370Valid/11"
+    },
+    {
+      "id": "bip370Valid/11",
+      "property": "value_btc-NoneType",
+      "status": 1,
+      "assertion": "offline v2 complete JSON: bip370Valid/11"
+    },
+    {
+      "id": "bip370Valid/11",
+      "property": "value_btc-bool",
+      "status": 1,
+      "assertion": "offline v2 complete JSON: bip370Valid/11"
+    },
+    {
+      "id": "bip370Valid/11",
+      "property": "newline-''",
+      "status": 1,
+      "assertion": "offline exception status/newline: bip370Valid/11"
+    },
+    {
+      "id": "bip370Valid/11",
+      "property": "newline-'\\n\\n'",
+      "status": 1,
+      "assertion": "offline output newline: bip370Valid/11"
+    },
+    {
+      "id": "bip370Valid/11",
+      "property": "newline-'\\r\\n'",
+      "status": 1,
+      "assertion": "offline output newline: bip370Valid/11"
+    },
+    {
+      "id": "bip370Valid/11",
+      "property": "newline-'\\n \\n'",
+      "status": 1,
+      "assertion": "offline output newline: bip370Valid/11"
+    },
+    {
+      "id": "bip370Valid/12",
+      "property": "version",
+      "status": 1,
+      "assertion": "offline v2 complete JSON: bip370Valid/12"
+    },
+    {
+      "id": "bip370Valid/12",
+      "property": "network",
+      "status": 1,
+      "assertion": "offline v2 complete JSON: bip370Valid/12"
+    },
+    {
+      "id": "bip370Valid/12",
+      "property": "unexpected",
+      "status": 1,
+      "assertion": "field set: stdout"
+    },
+    {
+      "id": "bip370Valid/12",
+      "property": "value_btc-Decimal",
+      "status": 1,
+      "assertion": "offline v2 complete JSON: bip370Valid/12"
+    },
+    {
+      "id": "bip370Valid/12",
+      "property": "value_btc-str",
+      "status": 1,
+      "assertion": "offline v2 complete JSON: bip370Valid/12"
+    },
+    {
+      "id": "bip370Valid/12",
+      "property": "value_btc-NoneType",
+      "status": 1,
+      "assertion": "offline v2 complete JSON: bip370Valid/12"
+    },
+    {
+      "id": "bip370Valid/12",
+      "property": "value_btc-bool",
+      "status": 1,
+      "assertion": "offline v2 complete JSON: bip370Valid/12"
+    },
+    {
+      "id": "bip370Valid/12",
+      "property": "newline-''",
+      "status": 1,
+      "assertion": "offline exception status/newline: bip370Valid/12"
+    },
+    {
+      "id": "bip370Valid/12",
+      "property": "newline-'\\n\\n'",
+      "status": 1,
+      "assertion": "offline output newline: bip370Valid/12"
+    },
+    {
+      "id": "bip370Valid/12",
+      "property": "newline-'\\r\\n'",
+      "status": 1,
+      "assertion": "offline output newline: bip370Valid/12"
+    },
+    {
+      "id": "bip370Valid/12",
+      "property": "newline-'\\n \\n'",
+      "status": 1,
+      "assertion": "offline output newline: bip370Valid/12"
+    },
+    {
+      "id": "bip370Valid/13",
+      "property": "version",
+      "status": 1,
+      "assertion": "offline v2 complete JSON: bip370Valid/13"
+    },
+    {
+      "id": "bip370Valid/13",
+      "property": "network",
+      "status": 1,
+      "assertion": "offline v2 complete JSON: bip370Valid/13"
+    },
+    {
+      "id": "bip370Valid/13",
+      "property": "unexpected",
+      "status": 1,
+      "assertion": "field set: stdout"
+    },
+    {
+      "id": "bip370Valid/13",
+      "property": "value_btc-Decimal",
+      "status": 1,
+      "assertion": "offline v2 complete JSON: bip370Valid/13"
+    },
+    {
+      "id": "bip370Valid/13",
+      "property": "value_btc-str",
+      "status": 1,
+      "assertion": "offline v2 complete JSON: bip370Valid/13"
+    },
+    {
+      "id": "bip370Valid/13",
+      "property": "value_btc-NoneType",
+      "status": 1,
+      "assertion": "offline v2 complete JSON: bip370Valid/13"
+    },
+    {
+      "id": "bip370Valid/13",
+      "property": "value_btc-bool",
+      "status": 1,
+      "assertion": "offline v2 complete JSON: bip370Valid/13"
+    },
+    {
+      "id": "bip370Valid/13",
+      "property": "newline-''",
+      "status": 1,
+      "assertion": "offline exception status/newline: bip370Valid/13"
+    },
+    {
+      "id": "bip370Valid/13",
+      "property": "newline-'\\n\\n'",
+      "status": 1,
+      "assertion": "offline output newline: bip370Valid/13"
+    },
+    {
+      "id": "bip370Valid/13",
+      "property": "newline-'\\r\\n'",
+      "status": 1,
+      "assertion": "offline output newline: bip370Valid/13"
+    },
+    {
+      "id": "bip370Valid/13",
+      "property": "newline-'\\n \\n'",
+      "status": 1,
+      "assertion": "offline output newline: bip370Valid/13"
+    },
+    {
+      "id": "bip370Locktimes/0",
+      "property": "version",
+      "status": 1,
+      "assertion": "offline v2 complete JSON: bip370Locktimes/0"
+    },
+    {
+      "id": "bip370Locktimes/0",
+      "property": "network",
+      "status": 1,
+      "assertion": "offline v2 complete JSON: bip370Locktimes/0"
+    },
+    {
+      "id": "bip370Locktimes/0",
+      "property": "unexpected",
+      "status": 1,
+      "assertion": "field set: stdout"
+    },
+    {
+      "id": "bip370Locktimes/0",
+      "property": "value_btc-Decimal",
+      "status": 1,
+      "assertion": "offline v2 complete JSON: bip370Locktimes/0"
+    },
+    {
+      "id": "bip370Locktimes/0",
+      "property": "value_btc-str",
+      "status": 1,
+      "assertion": "offline v2 complete JSON: bip370Locktimes/0"
+    },
+    {
+      "id": "bip370Locktimes/0",
+      "property": "value_btc-NoneType",
+      "status": 1,
+      "assertion": "offline v2 complete JSON: bip370Locktimes/0"
+    },
+    {
+      "id": "bip370Locktimes/0",
+      "property": "value_btc-bool",
+      "status": 1,
+      "assertion": "offline v2 complete JSON: bip370Locktimes/0"
+    },
+    {
+      "id": "bip370Locktimes/0",
+      "property": "newline-''",
+      "status": 1,
+      "assertion": "offline exception status/newline: bip370Locktimes/0"
+    },
+    {
+      "id": "bip370Locktimes/0",
+      "property": "newline-'\\n\\n'",
+      "status": 1,
+      "assertion": "offline output newline: bip370Locktimes/0"
+    },
+    {
+      "id": "bip370Locktimes/0",
+      "property": "newline-'\\r\\n'",
+      "status": 1,
+      "assertion": "offline output newline: bip370Locktimes/0"
+    },
+    {
+      "id": "bip370Locktimes/0",
+      "property": "newline-'\\n \\n'",
+      "status": 1,
+      "assertion": "offline output newline: bip370Locktimes/0"
+    },
+    {
+      "id": "bip370Locktimes/1",
+      "property": "version",
+      "status": 1,
+      "assertion": "offline v2 complete JSON: bip370Locktimes/1"
+    },
+    {
+      "id": "bip370Locktimes/1",
+      "property": "network",
+      "status": 1,
+      "assertion": "offline v2 complete JSON: bip370Locktimes/1"
+    },
+    {
+      "id": "bip370Locktimes/1",
+      "property": "unexpected",
+      "status": 1,
+      "assertion": "field set: stdout"
+    },
+    {
+      "id": "bip370Locktimes/1",
+      "property": "value_btc-Decimal",
+      "status": 1,
+      "assertion": "offline v2 complete JSON: bip370Locktimes/1"
+    },
+    {
+      "id": "bip370Locktimes/1",
+      "property": "value_btc-str",
+      "status": 1,
+      "assertion": "offline v2 complete JSON: bip370Locktimes/1"
+    },
+    {
+      "id": "bip370Locktimes/1",
+      "property": "value_btc-NoneType",
+      "status": 1,
+      "assertion": "offline v2 complete JSON: bip370Locktimes/1"
+    },
+    {
+      "id": "bip370Locktimes/1",
+      "property": "value_btc-bool",
+      "status": 1,
+      "assertion": "offline v2 complete JSON: bip370Locktimes/1"
+    },
+    {
+      "id": "bip370Locktimes/1",
+      "property": "newline-''",
+      "status": 1,
+      "assertion": "offline exception status/newline: bip370Locktimes/1"
+    },
+    {
+      "id": "bip370Locktimes/1",
+      "property": "newline-'\\n\\n'",
+      "status": 1,
+      "assertion": "offline output newline: bip370Locktimes/1"
+    },
+    {
+      "id": "bip370Locktimes/1",
+      "property": "newline-'\\r\\n'",
+      "status": 1,
+      "assertion": "offline output newline: bip370Locktimes/1"
+    },
+    {
+      "id": "bip370Locktimes/1",
+      "property": "newline-'\\n \\n'",
+      "status": 1,
+      "assertion": "offline output newline: bip370Locktimes/1"
+    },
+    {
+      "id": "bip370Locktimes/2",
+      "property": "version",
+      "status": 1,
+      "assertion": "offline v2 complete JSON: bip370Locktimes/2"
+    },
+    {
+      "id": "bip370Locktimes/2",
+      "property": "network",
+      "status": 1,
+      "assertion": "offline v2 complete JSON: bip370Locktimes/2"
+    },
+    {
+      "id": "bip370Locktimes/2",
+      "property": "unexpected",
+      "status": 1,
+      "assertion": "field set: stdout"
+    },
+    {
+      "id": "bip370Locktimes/2",
+      "property": "value_btc-Decimal",
+      "status": 1,
+      "assertion": "offline v2 complete JSON: bip370Locktimes/2"
+    },
+    {
+      "id": "bip370Locktimes/2",
+      "property": "value_btc-str",
+      "status": 1,
+      "assertion": "offline v2 complete JSON: bip370Locktimes/2"
+    },
+    {
+      "id": "bip370Locktimes/2",
+      "property": "value_btc-NoneType",
+      "status": 1,
+      "assertion": "offline v2 complete JSON: bip370Locktimes/2"
+    },
+    {
+      "id": "bip370Locktimes/2",
+      "property": "value_btc-bool",
+      "status": 1,
+      "assertion": "offline v2 complete JSON: bip370Locktimes/2"
+    },
+    {
+      "id": "bip370Locktimes/2",
+      "property": "newline-''",
+      "status": 1,
+      "assertion": "offline exception status/newline: bip370Locktimes/2"
+    },
+    {
+      "id": "bip370Locktimes/2",
+      "property": "newline-'\\n\\n'",
+      "status": 1,
+      "assertion": "offline output newline: bip370Locktimes/2"
+    },
+    {
+      "id": "bip370Locktimes/2",
+      "property": "newline-'\\r\\n'",
+      "status": 1,
+      "assertion": "offline output newline: bip370Locktimes/2"
+    },
+    {
+      "id": "bip370Locktimes/2",
+      "property": "newline-'\\n \\n'",
+      "status": 1,
+      "assertion": "offline output newline: bip370Locktimes/2"
+    },
+    {
+      "id": "bip370Locktimes/3",
+      "property": "version",
+      "status": 1,
+      "assertion": "offline v2 complete JSON: bip370Locktimes/3"
+    },
+    {
+      "id": "bip370Locktimes/3",
+      "property": "network",
+      "status": 1,
+      "assertion": "offline v2 complete JSON: bip370Locktimes/3"
+    },
+    {
+      "id": "bip370Locktimes/3",
+      "property": "unexpected",
+      "status": 1,
+      "assertion": "field set: stdout"
+    },
+    {
+      "id": "bip370Locktimes/3",
+      "property": "value_btc-Decimal",
+      "status": 1,
+      "assertion": "offline v2 complete JSON: bip370Locktimes/3"
+    },
+    {
+      "id": "bip370Locktimes/3",
+      "property": "value_btc-str",
+      "status": 1,
+      "assertion": "offline v2 complete JSON: bip370Locktimes/3"
+    },
+    {
+      "id": "bip370Locktimes/3",
+      "property": "value_btc-NoneType",
+      "status": 1,
+      "assertion": "offline v2 complete JSON: bip370Locktimes/3"
+    },
+    {
+      "id": "bip370Locktimes/3",
+      "property": "value_btc-bool",
+      "status": 1,
+      "assertion": "offline v2 complete JSON: bip370Locktimes/3"
+    },
+    {
+      "id": "bip370Locktimes/3",
+      "property": "newline-''",
+      "status": 1,
+      "assertion": "offline exception status/newline: bip370Locktimes/3"
+    },
+    {
+      "id": "bip370Locktimes/3",
+      "property": "newline-'\\n\\n'",
+      "status": 1,
+      "assertion": "offline output newline: bip370Locktimes/3"
+    },
+    {
+      "id": "bip370Locktimes/3",
+      "property": "newline-'\\r\\n'",
+      "status": 1,
+      "assertion": "offline output newline: bip370Locktimes/3"
+    },
+    {
+      "id": "bip370Locktimes/3",
+      "property": "newline-'\\n \\n'",
+      "status": 1,
+      "assertion": "offline output newline: bip370Locktimes/3"
+    },
+    {
+      "id": "bip370Locktimes/4",
+      "property": "version",
+      "status": 1,
+      "assertion": "offline v2 complete JSON: bip370Locktimes/4"
+    },
+    {
+      "id": "bip370Locktimes/4",
+      "property": "network",
+      "status": 1,
+      "assertion": "offline v2 complete JSON: bip370Locktimes/4"
+    },
+    {
+      "id": "bip370Locktimes/4",
+      "property": "unexpected",
+      "status": 1,
+      "assertion": "field set: stdout"
+    },
+    {
+      "id": "bip370Locktimes/4",
+      "property": "value_btc-Decimal",
+      "status": 1,
+      "assertion": "offline v2 complete JSON: bip370Locktimes/4"
+    },
+    {
+      "id": "bip370Locktimes/4",
+      "property": "value_btc-str",
+      "status": 1,
+      "assertion": "offline v2 complete JSON: bip370Locktimes/4"
+    },
+    {
+      "id": "bip370Locktimes/4",
+      "property": "value_btc-NoneType",
+      "status": 1,
+      "assertion": "offline v2 complete JSON: bip370Locktimes/4"
+    },
+    {
+      "id": "bip370Locktimes/4",
+      "property": "value_btc-bool",
+      "status": 1,
+      "assertion": "offline v2 complete JSON: bip370Locktimes/4"
+    },
+    {
+      "id": "bip370Locktimes/4",
+      "property": "newline-''",
+      "status": 1,
+      "assertion": "offline exception status/newline: bip370Locktimes/4"
+    },
+    {
+      "id": "bip370Locktimes/4",
+      "property": "newline-'\\n\\n'",
+      "status": 1,
+      "assertion": "offline output newline: bip370Locktimes/4"
+    },
+    {
+      "id": "bip370Locktimes/4",
+      "property": "newline-'\\r\\n'",
+      "status": 1,
+      "assertion": "offline output newline: bip370Locktimes/4"
+    },
+    {
+      "id": "bip370Locktimes/4",
+      "property": "newline-'\\n \\n'",
+      "status": 1,
+      "assertion": "offline output newline: bip370Locktimes/4"
+    },
+    {
+      "id": "bip370Locktimes/5",
+      "property": "version",
+      "status": 1,
+      "assertion": "offline v2 complete JSON: bip370Locktimes/5"
+    },
+    {
+      "id": "bip370Locktimes/5",
+      "property": "network",
+      "status": 1,
+      "assertion": "offline v2 complete JSON: bip370Locktimes/5"
+    },
+    {
+      "id": "bip370Locktimes/5",
+      "property": "unexpected",
+      "status": 1,
+      "assertion": "field set: stdout"
+    },
+    {
+      "id": "bip370Locktimes/5",
+      "property": "value_btc-Decimal",
+      "status": 1,
+      "assertion": "offline v2 complete JSON: bip370Locktimes/5"
+    },
+    {
+      "id": "bip370Locktimes/5",
+      "property": "value_btc-str",
+      "status": 1,
+      "assertion": "offline v2 complete JSON: bip370Locktimes/5"
+    },
+    {
+      "id": "bip370Locktimes/5",
+      "property": "value_btc-NoneType",
+      "status": 1,
+      "assertion": "offline v2 complete JSON: bip370Locktimes/5"
+    },
+    {
+      "id": "bip370Locktimes/5",
+      "property": "value_btc-bool",
+      "status": 1,
+      "assertion": "offline v2 complete JSON: bip370Locktimes/5"
+    },
+    {
+      "id": "bip370Locktimes/5",
+      "property": "newline-''",
+      "status": 1,
+      "assertion": "offline exception status/newline: bip370Locktimes/5"
+    },
+    {
+      "id": "bip370Locktimes/5",
+      "property": "newline-'\\n\\n'",
+      "status": 1,
+      "assertion": "offline output newline: bip370Locktimes/5"
+    },
+    {
+      "id": "bip370Locktimes/5",
+      "property": "newline-'\\r\\n'",
+      "status": 1,
+      "assertion": "offline output newline: bip370Locktimes/5"
+    },
+    {
+      "id": "bip370Locktimes/5",
+      "property": "newline-'\\n \\n'",
+      "status": 1,
+      "assertion": "offline output newline: bip370Locktimes/5"
+    },
+    {
+      "id": "bip370Locktimes/6",
+      "property": "version",
+      "status": 1,
+      "assertion": "offline v2 complete JSON: bip370Locktimes/6"
+    },
+    {
+      "id": "bip370Locktimes/6",
+      "property": "network",
+      "status": 1,
+      "assertion": "offline v2 complete JSON: bip370Locktimes/6"
+    },
+    {
+      "id": "bip370Locktimes/6",
+      "property": "unexpected",
+      "status": 1,
+      "assertion": "field set: stdout"
+    },
+    {
+      "id": "bip370Locktimes/6",
+      "property": "value_btc-Decimal",
+      "status": 1,
+      "assertion": "offline v2 complete JSON: bip370Locktimes/6"
+    },
+    {
+      "id": "bip370Locktimes/6",
+      "property": "value_btc-str",
+      "status": 1,
+      "assertion": "offline v2 complete JSON: bip370Locktimes/6"
+    },
+    {
+      "id": "bip370Locktimes/6",
+      "property": "value_btc-NoneType",
+      "status": 1,
+      "assertion": "offline v2 complete JSON: bip370Locktimes/6"
+    },
+    {
+      "id": "bip370Locktimes/6",
+      "property": "value_btc-bool",
+      "status": 1,
+      "assertion": "offline v2 complete JSON: bip370Locktimes/6"
+    },
+    {
+      "id": "bip370Locktimes/6",
+      "property": "newline-''",
+      "status": 1,
+      "assertion": "offline exception status/newline: bip370Locktimes/6"
+    },
+    {
+      "id": "bip370Locktimes/6",
+      "property": "newline-'\\n\\n'",
+      "status": 1,
+      "assertion": "offline output newline: bip370Locktimes/6"
+    },
+    {
+      "id": "bip370Locktimes/6",
+      "property": "newline-'\\r\\n'",
+      "status": 1,
+      "assertion": "offline output newline: bip370Locktimes/6"
+    },
+    {
+      "id": "bip370Locktimes/6",
+      "property": "newline-'\\n \\n'",
+      "status": 1,
+      "assertion": "offline output newline: bip370Locktimes/6"
+    },
+    {
+      "id": "bip370Locktimes/7",
+      "property": "version",
+      "status": 1,
+      "assertion": "offline v2 complete JSON: bip370Locktimes/7"
+    },
+    {
+      "id": "bip370Locktimes/7",
+      "property": "network",
+      "status": 1,
+      "assertion": "offline v2 complete JSON: bip370Locktimes/7"
+    },
+    {
+      "id": "bip370Locktimes/7",
+      "property": "unexpected",
+      "status": 1,
+      "assertion": "field set: stdout"
+    },
+    {
+      "id": "bip370Locktimes/7",
+      "property": "value_btc-Decimal",
+      "status": 1,
+      "assertion": "offline v2 complete JSON: bip370Locktimes/7"
+    },
+    {
+      "id": "bip370Locktimes/7",
+      "property": "value_btc-str",
+      "status": 1,
+      "assertion": "offline v2 complete JSON: bip370Locktimes/7"
+    },
+    {
+      "id": "bip370Locktimes/7",
+      "property": "value_btc-NoneType",
+      "status": 1,
+      "assertion": "offline v2 complete JSON: bip370Locktimes/7"
+    },
+    {
+      "id": "bip370Locktimes/7",
+      "property": "value_btc-bool",
+      "status": 1,
+      "assertion": "offline v2 complete JSON: bip370Locktimes/7"
+    },
+    {
+      "id": "bip370Locktimes/7",
+      "property": "newline-''",
+      "status": 1,
+      "assertion": "offline exception status/newline: bip370Locktimes/7"
+    },
+    {
+      "id": "bip370Locktimes/7",
+      "property": "newline-'\\n\\n'",
+      "status": 1,
+      "assertion": "offline output newline: bip370Locktimes/7"
+    },
+    {
+      "id": "bip370Locktimes/7",
+      "property": "newline-'\\r\\n'",
+      "status": 1,
+      "assertion": "offline output newline: bip370Locktimes/7"
+    },
+    {
+      "id": "bip370Locktimes/7",
+      "property": "newline-'\\n \\n'",
+      "status": 1,
+      "assertion": "offline output newline: bip370Locktimes/7"
+    },
+    {
+      "id": "bip370Locktimes/8",
+      "property": "version",
+      "status": 1,
+      "assertion": "offline v2 complete JSON: bip370Locktimes/8"
+    },
+    {
+      "id": "bip370Locktimes/8",
+      "property": "network",
+      "status": 1,
+      "assertion": "offline v2 complete JSON: bip370Locktimes/8"
+    },
+    {
+      "id": "bip370Locktimes/8",
+      "property": "unexpected",
+      "status": 1,
+      "assertion": "field set: stdout"
+    },
+    {
+      "id": "bip370Locktimes/8",
+      "property": "value_btc-Decimal",
+      "status": 1,
+      "assertion": "offline v2 complete JSON: bip370Locktimes/8"
+    },
+    {
+      "id": "bip370Locktimes/8",
+      "property": "value_btc-str",
+      "status": 1,
+      "assertion": "offline v2 complete JSON: bip370Locktimes/8"
+    },
+    {
+      "id": "bip370Locktimes/8",
+      "property": "value_btc-NoneType",
+      "status": 1,
+      "assertion": "offline v2 complete JSON: bip370Locktimes/8"
+    },
+    {
+      "id": "bip370Locktimes/8",
+      "property": "value_btc-bool",
+      "status": 1,
+      "assertion": "offline v2 complete JSON: bip370Locktimes/8"
+    },
+    {
+      "id": "bip370Locktimes/8",
+      "property": "newline-''",
+      "status": 1,
+      "assertion": "offline exception status/newline: bip370Locktimes/8"
+    },
+    {
+      "id": "bip370Locktimes/8",
+      "property": "newline-'\\n\\n'",
+      "status": 1,
+      "assertion": "offline output newline: bip370Locktimes/8"
+    },
+    {
+      "id": "bip370Locktimes/8",
+      "property": "newline-'\\r\\n'",
+      "status": 1,
+      "assertion": "offline output newline: bip370Locktimes/8"
+    },
+    {
+      "id": "bip370Locktimes/8",
+      "property": "newline-'\\n \\n'",
+      "status": 1,
+      "assertion": "offline output newline: bip370Locktimes/8"
+    },
+    {
+      "id": "synthetic-psbt/large-exact",
+      "property": "version",
+      "status": 1,
+      "assertion": "offline numeric field pin: synthetic-psbt/large-exact"
+    },
+    {
+      "id": "synthetic-psbt/large-exact",
+      "property": "network",
+      "status": 1,
+      "assertion": "offline numeric field pin: synthetic-psbt/large-exact"
+    },
+    {
+      "id": "synthetic-psbt/large-exact",
+      "property": "unexpected",
+      "status": 1,
+      "assertion": "field set: stdout"
+    },
+    {
+      "id": "synthetic-psbt/large-exact",
+      "property": "value_btc-Decimal",
+      "status": 1,
+      "assertion": "offline numeric value pin: synthetic-psbt/large-exact"
+    },
+    {
+      "id": "synthetic-psbt/large-exact",
+      "property": "value_btc-str",
+      "status": 1,
+      "assertion": "offline numeric value pin: synthetic-psbt/large-exact"
+    },
+    {
+      "id": "synthetic-psbt/large-exact",
+      "property": "value_btc-NoneType",
+      "status": 1,
+      "assertion": "offline numeric value pin: synthetic-psbt/large-exact"
+    },
+    {
+      "id": "synthetic-psbt/large-exact",
+      "property": "value_btc-bool",
+      "status": 1,
+      "assertion": "offline numeric value pin: synthetic-psbt/large-exact"
+    },
+    {
+      "id": "synthetic-psbt/large-exact",
+      "property": "newline-''",
+      "status": 1,
+      "assertion": "offline output newline: synthetic-psbt/large-exact"
+    },
+    {
+      "id": "synthetic-psbt/large-exact",
+      "property": "newline-'\\n\\n'",
+      "status": 1,
+      "assertion": "offline output newline: synthetic-psbt/large-exact"
+    },
+    {
+      "id": "synthetic-psbt/large-exact",
+      "property": "newline-'\\r\\n'",
+      "status": 1,
+      "assertion": "offline output newline: synthetic-psbt/large-exact"
+    },
+    {
+      "id": "synthetic-psbt/large-exact",
+      "property": "newline-'\\n \\n'",
+      "status": 1,
+      "assertion": "offline output newline: synthetic-psbt/large-exact"
+    },
+    {
+      "id": "synthetic-psbt/max-output",
+      "property": "version",
+      "status": 1,
+      "assertion": "offline numeric field pin: synthetic-psbt/max-output"
+    },
+    {
+      "id": "synthetic-psbt/max-output",
+      "property": "network",
+      "status": 1,
+      "assertion": "offline numeric field pin: synthetic-psbt/max-output"
+    },
+    {
+      "id": "synthetic-psbt/max-output",
+      "property": "unexpected",
+      "status": 1,
+      "assertion": "field set: stdout"
+    },
+    {
+      "id": "synthetic-psbt/max-output",
+      "property": "value_btc-Decimal",
+      "status": 1,
+      "assertion": "offline numeric value pin: synthetic-psbt/max-output"
+    },
+    {
+      "id": "synthetic-psbt/max-output",
+      "property": "value_btc-str",
+      "status": 1,
+      "assertion": "offline numeric value pin: synthetic-psbt/max-output"
+    },
+    {
+      "id": "synthetic-psbt/max-output",
+      "property": "value_btc-NoneType",
+      "status": 1,
+      "assertion": "offline numeric value pin: synthetic-psbt/max-output"
+    },
+    {
+      "id": "synthetic-psbt/max-output",
+      "property": "value_btc-bool",
+      "status": 1,
+      "assertion": "offline numeric value pin: synthetic-psbt/max-output"
+    },
+    {
+      "id": "synthetic-psbt/max-output",
+      "property": "newline-''",
+      "status": 1,
+      "assertion": "offline output newline: synthetic-psbt/max-output"
+    },
+    {
+      "id": "synthetic-psbt/max-output",
+      "property": "newline-'\\n\\n'",
+      "status": 1,
+      "assertion": "offline output newline: synthetic-psbt/max-output"
+    },
+    {
+      "id": "synthetic-psbt/max-output",
+      "property": "newline-'\\r\\n'",
+      "status": 1,
+      "assertion": "offline output newline: synthetic-psbt/max-output"
+    },
+    {
+      "id": "synthetic-psbt/max-output",
+      "property": "newline-'\\n \\n'",
+      "status": 1,
+      "assertion": "offline output newline: synthetic-psbt/max-output"
+    }
+  ],
+  "source_sha256": {
+    "test/offline-exact-selftest.py": "7416a14362771adc2869c648598670bd073d37073e9abceea4d0ea169051a9e0",
+    "test/offline-compare.py": "5e0c2f02e4033fe0c6334e087f063feed8b023eeb736b9ec4e59ef762e452d9a",
+    "test/compare.py": "65792ec70aab8f33fa83736d1fb7a9708e373d0d74712bc3ce5c3d511b64ba82",
+    "test/psbt-oracle.py": "05776938a88115fe5ec9de38171eeb7f2541715050cebb8ddc10b8cfcfff8e76",
+    "test/golden/offline-exceptions.json": "d3e61bb76afbc8c9401e6c43176b02f9b3b56b5c8188fc23b660f59f0c1e1afe",
+    "test/golden/offline-reference.json": "75b7fe1f5468c7b9b0160086a942e27ef5f6e3598cf2f0110c468623b89dfa61"
+  }
+}

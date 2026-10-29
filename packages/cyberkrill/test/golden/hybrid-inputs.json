@@ -1,0 +1,116 @@
+[
+  {
+    "id": "hybrid-input-06-G",
+    "input_base64": "cHNidP8BADwCAAAAAQAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAD/////AQAAAAAAAAAAAAAAAAAAQgYGeb5mfvncu6xVoGKVzocLBwKb/NstzijZWfKBWxb4F5hIOtp3JqPEZV2k+/wOEQio/Re0SKaFVBmcR9CP+xDUuAQAAAAAAAA=",
+    "expected_success": true,
+    "reason": "matching public point"
+  },
+  {
+    "id": "hybrid-input-07-negG",
+    "input_base64": "cHNidP8BADwCAAAAAQAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAD/////AQAAAAAAAAAAAAAAAAAAQgYHeb5mfvncu6xVoGKVzocLBwKb/NstzijZWfKBWxb4F5i3xSWI2Vw7mqJbBAPx7vdXAuhLt1l6q+ZjuC9vBO8ndwQAAAAAAAA=",
+    "expected_success": true,
+    "reason": "matching public point"
+  },
+  {
+    "id": "hybrid-input-02-G",
+    "input_base64": "cHNidP8BADwCAAAAAQAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAD/////AQAAAAAAAAAAAAAAAAAAIgYCeb5mfvncu6xVoGKVzocLBwKb/NstzijZWfKBWxb4F5gEAAAAAAAA",
+    "expected_success": true,
+    "reason": "matching public point"
+  },
+  {
+    "id": "hybrid-input-04-G",
+    "input_base64": "cHNidP8BADwCAAAAAQAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAD/////AQAAAAAAAAAAAAAAAAAAQgYEeb5mfvncu6xVoGKVzocLBwKb/NstzijZWfKBWxb4F5hIOtp3JqPEZV2k+/wOEQio/Re0SKaFVBmcR9CP+xDUuAQAAAAAAAA=",
+    "expected_success": true,
+    "reason": "matching public point"
+  },
+  {
+    "id": "hybrid-input-07-G",
+    "input_base64": "cHNidP8BADwCAAAAAQAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAD/////AQAAAAAAAAAAAAAAAAAAQgYHeb5mfvncu6xVoGKVzocLBwKb/NstzijZWfKBWxb4F5hIOtp3JqPEZV2k+/wOEQio/Re0SKaFVBmcR9CP+xDUuAQAAAAAAAA=",
+    "expected_success": false,
+    "reason": "mismatched hybrid parity"
+  },
+  {
+    "id": "hybrid-input-06-negG",
+    "input_base64": "cHNidP8BADwCAAAAAQAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAD/////AQAAAAAAAAAAAAAAAAAAQgYGeb5mfvncu6xVoGKVzocLBwKb/NstzijZWfKBWxb4F5i3xSWI2Vw7mqJbBAPx7vdXAuhLt1l6q+ZjuC9vBO8ndwQAAAAAAAA=",
+    "expected_success": false,
+    "reason": "mismatched hybrid parity"
+  },
+  {
+    "id": "hybrid-output-06-G",
+    "input_base64": "cHNidP8BADwCAAAAAQAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAD/////AQAAAAAAAAAAAAAAAAAAAEICBnm+Zn753LusVaBilc6HCwcCm/zbLc4o2VnygVsW+BeYSDradyajxGVdpPv8DhEIqP0XtEimhVQZnEfQj/sQ1LgEAAAAAAA=",
+    "expected_success": true,
+    "reason": "matching public point"
+  },
+  {
+    "id": "hybrid-output-07-negG",
+    "input_base64": "cHNidP8BADwCAAAAAQAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAD/////AQAAAAAAAAAAAAAAAAAAAEICB3m+Zn753LusVaBilc6HCwcCm/zbLc4o2VnygVsW+BeYt8UliNlcO5qiWwQD8e73VwLoS7dZeqvmY7gvbwTvJ3cEAAAAAAA=",
+    "expected_success": true,
+    "reason": "matching public point"
+  },
+  {
+    "id": "hybrid-output-02-G",
+    "input_base64": "cHNidP8BADwCAAAAAQAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAD/////AQAAAAAAAAAAAAAAAAAAACICAnm+Zn753LusVaBilc6HCwcCm/zbLc4o2VnygVsW+BeYBAAAAAAA",
+    "expected_success": true,
+    "reason": "matching public point"
+  },
+  {
+    "id": "hybrid-output-04-G",
+    "input_base64": "cHNidP8BADwCAAAAAQAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAD/////AQAAAAAAAAAAAAAAAAAAAEICBHm+Zn753LusVaBilc6HCwcCm/zbLc4o2VnygVsW+BeYSDradyajxGVdpPv8DhEIqP0XtEimhVQZnEfQj/sQ1LgEAAAAAAA=",
+    "expected_success": true,
+    "reason": "matching public point"
+  },
+  {
+    "id": "hybrid-output-07-G",
+    "input_base64": "cHNidP8BADwCAAAAAQAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAD/////AQAAAAAAAAAAAAAAAAAAAEICB3m+Zn753LusVaBilc6HCwcCm/zbLc4o2VnygVsW+BeYSDradyajxGVdpPv8DhEIqP0XtEimhVQZnEfQj/sQ1LgEAAAAAAA=",
+    "expected_success": false,
+    "reason": "mismatched hybrid parity"
+  },
+  {
+    "id": "hybrid-output-06-negG",
+    "input_base64": "cHNidP8BADwCAAAAAQAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAD/////AQAAAAAAAAAAAAAAAAAAAEICBnm+Zn753LusVaBilc6HCwcCm/zbLc4o2VnygVsW+BeYt8UliNlcO5qiWwQD8e73VwLoS7dZeqvmY7gvbwTvJ3cEAAAAAAA=",
+    "expected_success": false,
+    "reason": "mismatched hybrid parity"
+  },
+  {
+    "id": "hybrid-partial-06-G",
+    "input_base64": "cHNidP8BADwCAAAAAQAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAD/////AQAAAAAAAAAAAAAAAAAAQgIGeb5mfvncu6xVoGKVzocLBwKb/NstzijZWfKBWxb4F5hIOtp3JqPEZV2k+/wOEQio/Re0SKaFVBmcR9CP+xDUuAkwBgIBAQIBAQEAAA==",
+    "expected_success": false,
+    "reason": "strict partial signature public key"
+  },
+  {
+    "id": "hybrid-partial-07-negG",
+    "input_base64": "cHNidP8BADwCAAAAAQAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAD/////AQAAAAAAAAAAAAAAAAAAQgIHeb5mfvncu6xVoGKVzocLBwKb/NstzijZWfKBWxb4F5i3xSWI2Vw7mqJbBAPx7vdXAuhLt1l6q+ZjuC9vBO8ndwkwBgIBAQIBAQEAAA==",
+    "expected_success": false,
+    "reason": "strict partial signature public key"
+  },
+  {
+    "id": "hybrid-input-02-G-and-04-G",
+    "input_base64": "cHNidP8BADwCAAAAAQAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAD/////AQAAAAAAAAAAAAAAAAAAIgYCeb5mfvncu6xVoGKVzocLBwKb/NstzijZWfKBWxb4F5gEAAAAAEIGBHm+Zn753LusVaBilc6HCwcCm/zbLc4o2VnygVsW+BeYSDradyajxGVdpPv8DhEIqP0XtEimhVQZnEfQj/sQ1LgEAAAAAAAA",
+    "expected_success": false,
+    "reason": "same-point duplicate"
+  },
+  {
+    "id": "hybrid-input-04-G-and-06-G",
+    "input_base64": "cHNidP8BADwCAAAAAQAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAD/////AQAAAAAAAAAAAAAAAAAAQgYEeb5mfvncu6xVoGKVzocLBwKb/NstzijZWfKBWxb4F5hIOtp3JqPEZV2k+/wOEQio/Re0SKaFVBmcR9CP+xDUuAQAAAAAQgYGeb5mfvncu6xVoGKVzocLBwKb/NstzijZWfKBWxb4F5hIOtp3JqPEZV2k+/wOEQio/Re0SKaFVBmcR9CP+xDUuAQAAAAAAAA=",
+    "expected_success": false,
+    "reason": "same-point duplicate"
+  },
+  {
+    "id": "hybrid-output-02-G-and-04-G",
+    "input_base64": "cHNidP8BADwCAAAAAQAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAD/////AQAAAAAAAAAAAAAAAAAAACICAnm+Zn753LusVaBilc6HCwcCm/zbLc4o2VnygVsW+BeYBAAAAABCAgR5vmZ++dy7rFWgYpXOhwsHApv82y3OKNlZ8oFbFvgXmEg62ncmo8RlXaT7/A4RCKj9F7RIpoVUGZxH0I/7ENS4BAAAAAAA",
+    "expected_success": false,
+    "reason": "same-point duplicate"
+  },
+  {
+    "id": "hybrid-input-02-G-and-03-negG",
+    "input_base64": "cHNidP8BADwCAAAAAQAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAD/////AQAAAAAAAAAAAAAAAAAAIgYCeb5mfvncu6xVoGKVzocLBwKb/NstzijZWfKBWxb4F5gEAAAAACIGA3m+Zn753LusVaBilc6HCwcCm/zbLc4o2VnygVsW+BeYBAAAAAAAAA==",
+    "expected_success": true,
+    "reason": "distinct public points"
+  },
+  {
+    "id": "hybrid-partial-02-G-and-04-G",
+    "input_base64": "cHNidP8BADwCAAAAAQAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAD/////AQAAAAAAAAAAAAAAAAAAIgICeb5mfvncu6xVoGKVzocLBwKb/NstzijZWfKBWxb4F5gJMAYCAQECAQEBQgIEeb5mfvncu6xVoGKVzocLBwKb/NstzijZWfKBWxb4F5hIOtp3JqPEZV2k+/wOEQio/Re0SKaFVBmcR9CP+xDUuAkwBgIBAQIBAQEAAA==",
+    "expected_success": true,
+    "reason": "distinct raw signature keys"
+  }
+]

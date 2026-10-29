@@ -1,0 +1,563 @@
+{
+  "status": "final required local gates passed; acceptance pending",
+  "acceptance": "pending",
+  "app": [
+    {
+      "command": [
+        "nix",
+        "develop",
+        "-c",
+        "lake",
+        "build"
+      ],
+      "cwd": "packages/cyberkrill",
+      "status": 0,
+      "seconds": 1.028
+    },
+    {
+      "command": [
+        "nix",
+        "develop",
+        "-c",
+        "lake",
+        "test"
+      ],
+      "cwd": "packages/cyberkrill",
+      "status": 0,
+      "seconds": 48.643
+    }
+  ],
+  "evidence": [
+    {
+      "command": [
+        "python3",
+        "-B",
+        "packages/cyberkrill/test/verify.py"
+      ],
+      "cwd": ".",
+      "status": 0,
+      "seconds": 0.18
+    },
+    {
+      "command": [
+        "python3",
+        "-B",
+        "packages/cyberkrill/test/selftest.py"
+      ],
+      "cwd": ".",
+      "status": 0,
+      "seconds": 0.14
+    },
+    {
+      "command": [
+        "python3",
+        "-B",
+        "packages/cyberkrill/test/scope.py"
+      ],
+      "cwd": ".",
+      "status": 0,
+      "seconds": 0.412
+    },
+    {
+      "command": [
+        "python3",
+        "-B",
+        "packages/cyberkrill/test/revisions.py",
+        "--scope"
+      ],
+      "cwd": ".",
+      "status": 0,
+      "seconds": 0.925
+    },
+    {
+      "command": [
+        "python3",
+        "-B",
+        "packages/cyberkrill/test/lightning.py"
+      ],
+      "cwd": ".",
+      "status": 0,
+      "seconds": 11.915
+    },
+    {
+      "command": [
+        "python3",
+        "-B",
+        "packages/cyberkrill/test/revisions.py"
+      ],
+      "cwd": ".",
+      "status": 0,
+      "seconds": 4.811
+    },
+    {
+      "command": [
+        "python3",
+        "-B",
+        "packages/cyberkrill/test/offline.py",
+        "--evidence"
+      ],
+      "cwd": ".",
+      "status": 0,
+      "seconds": 0.138
+    },
+    {
+      "command": [
+        "python3",
+        "-B",
+        "packages/cyberkrill/test/offline-mutate.py",
+        "--verify"
+      ],
+      "cwd": ".",
+      "status": 0,
+      "seconds": 0.036
+    },
+    {
+      "command": [
+        "python3",
+        "-B",
+        "packages/cyberkrill/test/recapture-history.py",
+        "--verify"
+      ],
+      "cwd": ".",
+      "status": 0,
+      "seconds": 0.031
+    },
+    {
+      "command": [
+        "python3",
+        "-B",
+        "packages/cyberkrill/test/offline-exact-selftest.py",
+        "--verify"
+      ],
+      "cwd": ".",
+      "status": 0,
+      "seconds": 0.085
+    },
+    {
+      "command": [
+        "python3",
+        "-B",
+        "packages/cyberkrill/test/ordered-help.py"
+      ],
+      "cwd": ".",
+      "status": 0,
+      "seconds": 1.883
+    },
+    {
+      "command": [
+        "python3",
+        "-B",
+        "packages/cyberkrill/test/cluster-help.py"
+      ],
+      "cwd": ".",
+      "status": 0,
+      "seconds": 2.845
+    },
+    {
+      "command": [
+        "python3",
+        "-B",
+        "packages/cyberkrill/test/cluster-regressions.py",
+        "--verify"
+      ],
+      "cwd": ".",
+      "status": 0,
+      "seconds": 0.043
+    },
+    {
+      "command": [
+        "python3",
+        "-B",
+        "packages/cyberkrill/test/carried-help.py"
+      ],
+      "cwd": ".",
+      "status": 0,
+      "seconds": 0.901
+    },
+    {
+      "command": [
+        "python3",
+        "-B",
+        "packages/cyberkrill/test/carried-regressions.py",
+        "--verify"
+      ],
+      "cwd": ".",
+      "status": 0,
+      "seconds": 0.043
+    },
+    {
+      "command": [
+        "python3",
+        "-B",
+        "packages/cyberkrill/test/file-observation.py"
+      ],
+      "cwd": ".",
+      "status": 0,
+      "seconds": 0.33
+    },
+    {
+      "command": [
+        "python3",
+        "-B",
+        "packages/cyberkrill/test/boundary-regressions.py",
+        "--verify"
+      ],
+      "cwd": ".",
+      "status": 0,
+      "seconds": 0.027
+    }
+  ],
+  "repo": [
+    {
+      "command": [
+        "nix",
+        "flake",
+        "check",
+        "-L"
+      ],
+      "cwd": ".",
+      "status": 0,
+      "seconds": 174.853
+    },
+    {
+      "command": [
+        "nix",
+        "build",
+        "-L"
+      ],
+      "cwd": ".",
+      "status": 0,
+      "seconds": 0.434
+    },
+    {
+      "command": [
+        "./result/bin/cyberkrill",
+        "version"
+      ],
+      "cwd": ".",
+      "status": 0,
+      "seconds": 0.028
+    },
+    {
+      "command": [
+        "python3",
+        "-B",
+        "packages/cyberkrill/test/lightning.py",
+        "--installed"
+      ],
+      "cwd": ".",
+      "status": 0,
+      "seconds": 0.18
+    },
+    {
+      "command": [
+        "python3",
+        "-B",
+        "packages/cyberkrill/test/offline.py",
+        "--installed"
+      ],
+      "cwd": ".",
+      "status": 0,
+      "seconds": 1.472
+    },
+    {
+      "command": [
+        "python3",
+        "-B",
+        "-c",
+        "import pathlib, re, subprocess\nroots = {'Sha256', 'Secp256k1', 'Bitcoin', 'Lightning', 'FedimintInvite', 'HttpCurl', 'Cyberkrill'}\ntracked = subprocess.check_output(['git', 'ls-files', '-z', '--', 'packages']).decode().split(chr(0))\npaths = [pathlib.Path(p) for p in tracked if p and pathlib.Path(p).suffix == '.lean']\npaths = [p for p in paths if len(p.parts) >= 3 and (p.parts[2] in roots or p.parts[2].removesuffix('.lean') in roots)]\nassert len(paths) == 76, 'library/proof source inventory'\nassert {p.parts[2].removesuffix('.lean') for p in paths} == roots, 'library root inventory'\nbad = [str(p) for p in paths if re.search(r'\\b(?:native_decide|bv_decide)\\b', p.read_text())]\nassert not bad, 'native decision in library: ' + ', '.join(bad)\nprint(f'library/proof native-decision scan: {len(paths)}/76 tracked files; zero offenders')\n"
+      ],
+      "cwd": ".",
+      "status": 0,
+      "seconds": 0.03
+    },
+    {
+      "command": [
+        "bash",
+        "-c",
+        "rc=0; grep -rnw sorry --include=\"*.lean\" --exclude-dir=.lake packages || rc=$?; test \"$rc\" -eq 1"
+      ],
+      "cwd": ".",
+      "status": 0,
+      "seconds": 0.008
+    },
+    {
+      "command": [
+        "bash",
+        "-c",
+        "rc=0; grep -rEn --exclude-dir=.lake \"[tuvxyzUVYZ]prv[1-9A-HJ-NP-Za-km-z]{100,}\" packages || rc=$?; test \"$rc\" -eq 1"
+      ],
+      "cwd": ".",
+      "status": 0,
+      "seconds": 0.011
+    }
+  ],
+  "refreshes": [
+    {
+      "command": [
+        "python3",
+        "-B",
+        "packages/cyberkrill/test/mutate.py"
+      ],
+      "cwd": ".",
+      "status": 0,
+      "seconds": 703.961
+    },
+    {
+      "command": [
+        "python3",
+        "-B",
+        "packages/cyberkrill/test/lightning-mutate.py"
+      ],
+      "cwd": ".",
+      "status": 0,
+      "seconds": 748.105
+    },
+    {
+      "command": [
+        "python3",
+        "-B",
+        "packages/cyberkrill/test/revision-mutate.py"
+      ],
+      "cwd": ".",
+      "status": 0,
+      "seconds": 632.996
+    },
+    {
+      "command": [
+        "python3",
+        "-B",
+        "packages/cyberkrill/test/refresh-regressions.py"
+      ],
+      "cwd": ".",
+      "status": 0,
+      "seconds": 64.486
+    },
+    {
+      "command": [
+        "python3",
+        "-B",
+        "packages/cyberkrill/test/output-regressions.py",
+        "refresh"
+      ],
+      "cwd": ".",
+      "status": 0,
+      "seconds": 21.211
+    },
+    {
+      "command": [
+        "python3",
+        "-B",
+        "packages/cyberkrill/test/refresh-attached-output.py"
+      ],
+      "cwd": ".",
+      "status": 0,
+      "seconds": 20.609
+    },
+    {
+      "command": [
+        "python3",
+        "-B",
+        "packages/cyberkrill/test/recapture-history.py"
+      ],
+      "cwd": ".",
+      "status": 0,
+      "seconds": 5.082
+    },
+    {
+      "command": [
+        "python3",
+        "-B",
+        "packages/cyberkrill/test/capture-offline.py",
+        "--check"
+      ],
+      "cwd": ".",
+      "status": 0,
+      "seconds": 5.666
+    },
+    {
+      "command": [
+        "python3",
+        "-B",
+        "packages/cyberkrill/test/record-offline.py",
+        "--check"
+      ],
+      "cwd": ".",
+      "status": 0,
+      "seconds": 16.437
+    },
+    {
+      "command": [
+        "python3",
+        "-B",
+        "packages/cyberkrill/test/offline-mutate.py"
+      ],
+      "cwd": ".",
+      "status": 0,
+      "seconds": 1418.075
+    }
+  ],
+  "inventories": {
+    "offline_captures": 616,
+    "reference_success": 345,
+    "reference_rejection": 271,
+    "port_success": 340,
+    "named_failures": 276,
+    "legacy_lightning_captures": 531,
+    "separate_l814_observation": 1,
+    "published_psbt_vectors": 113,
+    "parity_rows": 49,
+    "hybrid_rows": 19,
+    "ordered_help": 67,
+    "ordered_help_success": 35,
+    "cluster_help": 102,
+    "cluster_help_success": 44,
+    "total_help_success": 93,
+    "carried_help": 32,
+    "carried_help_success": 14
+  },
+  "mutation_counts": {
+    "retained_distinct_edits": 85,
+    "retained_selected_runtime_reds": 150,
+    "new_distinct_edits": 67,
+    "new_cli_capability_edits": 64,
+    "new_comparator_edits": 3,
+    "new_selected_runtime_reds": 125,
+    "combined_distinct_edits": 152,
+    "combined_selected_runtime_reds": 275,
+    "supplemental_historical_runtime_reds": 31,
+    "supplemental_preflight_runtime_reds": 19
+  },
+  "ordered_file_regressions": {
+    "original_runtime_failures": 14,
+    "original_controls": 6,
+    "restored_greens": 20,
+    "real_file_boundary_checks": 16,
+    "passing_file_controls": 3,
+    "newline_refusals": 12,
+    "json_leaf_refusal": 1
+  },
+  "comparator_falsifications": {
+    "general": 668,
+    "exact_single_property": 275,
+    "unchanged_input_byte_boundaries": 38
+  },
+  "producer_build": {
+    "build": [
+      "nix",
+      "build",
+      "--no-link",
+      "--print-out-paths",
+      "--max-jobs",
+      "2",
+      "--cores",
+      "4",
+      "github:douglaz/cyberkrill/27cad1faba86260b06665a89f0af5134d23525c2"
+    ],
+    "build_status": 0,
+    "build_seconds": 0.3912
+  },
+  "final_checks": {
+    "secondary_hybrid_captures_match": 19,
+    "unrelated_issue_records_preserved": 58,
+    "library_proof_files_scanned": 76,
+    "untracked_bytecode_files": 0,
+    "temporary_capture_paths": "Every created command HOME/cwd was removed by its exact owned path; FIFO children were bounded and reaped.",
+    "staged_paths": 53
+  },
+  "final_environment": [
+    {
+      "command": [
+        "python3",
+        "--version"
+      ],
+      "status": 0,
+      "stdout": "Python 3.13.15\n",
+      "stderr_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "seconds": 0.002418
+    },
+    {
+      "command": [
+        "nix",
+        "develop",
+        "-c",
+        "python3",
+        "--version"
+      ],
+      "status": 0,
+      "stdout": "Python 3.14.7\n",
+      "stderr_sha256": "3c52abb842203e54bd33eab4b028fd5545e7b68c5ad50e66047d26b2edcb5a85",
+      "seconds": 0.436633
+    },
+    {
+      "command": [
+        "nix",
+        "develop",
+        "-c",
+        "lean",
+        "--version"
+      ],
+      "status": 0,
+      "stdout": "Lean (version 4.35.0, x86_64-unknown-linux-gnu, commit eb6cafb7290e8bd5f2937522d8d804f58f02bafc, Release)\n",
+      "stderr_sha256": "3c52abb842203e54bd33eab4b028fd5545e7b68c5ad50e66047d26b2edcb5a85",
+      "seconds": 0.145897
+    }
+  ],
+  "refresh_environment": "All refresh commands execute inside nix develop under the complete foreground gate.py supervisor.",
+  "superseded_attempts": [
+    {
+      "name": "offline-mutations",
+      "command": [
+        "timeout",
+        "--foreground",
+        "6000",
+        "python3",
+        "-B",
+        "packages/cyberkrill/test/offline-mutate.py"
+      ],
+      "status": 1,
+      "seconds": 1166.652,
+      "disposition": "Excluded from current selected totals. The short-output attachment check detected missing output existence before the expected newline assertion; the detector identity was corrected, remaining checks preflighted, and the complete suite rerun."
+    }
+  ],
+  "supplemental_preflight": {
+    "distinct_edits": 6,
+    "selected_runtime_reds": 19,
+    "status": 0,
+    "disposition": "Separate diagnostic checks; not added to the main selected execution totals."
+  },
+  "cluster_regressions": {
+    "original_runtime_failures": 44,
+    "original_controls": 58,
+    "restored_greens": 102
+  },
+  "refresh_command": [
+    "python3",
+    "-B",
+    "packages/cyberkrill/test/gate.py",
+    "timeout",
+    "--foreground",
+    "12000",
+    "nix",
+    "develop",
+    "-c",
+    "python3",
+    "-B",
+    "packages/cyberkrill/test/validate.py",
+    "refresh"
+  ],
+  "carried_regressions": {
+    "original_runtime_failures": 17,
+    "original_controls": 15,
+    "first_restored_greens": 32,
+    "current_greens": 32,
+    "injected_no_action_cases": 12,
+    "new_distinct_edits": 6,
+    "selected_runtime_reds": 13
+  },
+  "historical_notes": [
+    "Original ordered/file and cluster observations and their former source bindings are historical; current production reintroductions were executed separately.",
+    "The original carried-help before/after observations are retained, with a separate current run after preserving the bare missing-word diagnostic.",
+    "The superseded attempt and 19 supplemental preflight reds below are historical observations, excluded from current selected execution totals."
+  ]
+}

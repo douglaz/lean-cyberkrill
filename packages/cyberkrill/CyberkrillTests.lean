@@ -7,6 +7,7 @@ import CyberkrillTests.Capabilities
 import CyberkrillTests.Mnemonic
 import CyberkrillTests.Output
 import CyberkrillTests.PrivateOutput
+import CyberkrillTests.Offline
 
 open CyberkrillTests
 
@@ -22,6 +23,7 @@ def main (args : List String) : IO UInt32 := do
       let some i := n.toNat? | throw (IO.userError "invalid output selector")
       outputRefusal i
     | ["--output-boundaries"] => outputBoundaries
+    | ["--offline-boundaries"] => offlineBoundaries
     | ["--output-equals", n] =>
       let some i := n.toNat? | throw (IO.userError "invalid output selector")
       outputEquals i
@@ -32,6 +34,7 @@ def main (args : List String) : IO UInt32 := do
       mnemonicErrors
       wordCountRejections
       outputBoundaries
+      offlineBoundaries
       let result ← IO.Process.output { cmd := "python3", args := #["-B", "test/driver.py"] }
       (← IO.getStdout).putStr result.stdout
       (← IO.getStderr).putStr result.stderr

@@ -41,14 +41,279 @@ round-trip proofs and checksum soundness, with published and synthetic vectors.
 Phase 7a adds the `version`, `convert-amount` and `generate-mnemonic` CLI
 commands, shared whole-sat/explicit-fee helpers, real curve capability wiring,
 and an offline exact-decimal golden comparator. Phase 7b adds offline BOLT11
-invoice decoding/signing and LNURL decoding. Phase 7c and network commands
-remain unregistered; `plan.md` is the plan for v1.
+invoice decoding/signing and LNURL decoding. Phase 7c adds invite decoding,
+invite encoding and PSBT inspection. Network commands remain unregistered;
+`plan.md` is the plan for v1.
+
+## Phase 7c: offline Fedimint and PSBT commands
+
+The executable registers nine offline commands. The three additions are:
+
+| Command | Input | Successful stdout and file bytes |
+|---|---|---|
+| `fm-decode-invite [INPUT] [-o FILE]` | Literal invite, or all EOF stdin if omitted; literal `-` remains an invite | Complete invite JSON, without a trailing newline |
+| `fm-encode-invite INPUT [--skip-api-secret] [-o FILE]` | Required UTF-8 JSON filename, or `-` for all EOF stdin | Bare invite followed by exactly one newline |
+| `onchain-decode-psbt [INPUT] [--network NETWORK] [-o FILE]` | Omitted: all EOF stdin. Supplied: UTF-8 file when that path exists, otherwise literal Base64; `-` follows the same existence rule | Complete PSBT JSON followed by exactly one newline |
+
+All three use ordinary overwrite output, retaining one open writer until its
+final write and flush, including FIFOs. They accept `--output`, short/long
+attachments, `--`, and literal UTF-8/`=` filename bytes. Duplicate/conflicting
+flags, missing values, extra operands and unknown options fail. Diagnostics
+are named, stderr-only, exit 1, without success stdout or supplied input and
+exception disclosure. The private mnemonic writer remains separate.
+
+Help short-circuits in token order: `--help --unknown` prints help, while
+`--unknown --help` fails. Earlier missing values, repeated flags and extra
+operands still fail. Short help also ends a cluster immediately: `-hx`, `-hh`,
+`-ho --unknown`, `-h=1` and `-h--unknown` print help. Output attachments such as
+`-oh`, `-o-hx` and `--output=-hx`, consumed filenames containing `=` or UTF-8,
+and operands after `--` remain data. `-o -hx` and `--help=x` fail. Help performs
+no input, path-existence, output, entropy or backend operation.
+
+Invite decode acquires input before creating/truncating output, then decodes:
+invalid input may leave an empty file, input failure precedes open failure,
+and open failure precedes decoding. Invite encode validates JSON and encodes
+before opening output; `--skip-api-secret` clears a successfully parsed
+optional secret and does not excuse malformed JSON. PSBT validates the network
+before any input/output access, parses and maps before opening output, and
+preserves an existing destination on input/parse/mapping failure. The supported
+case-insensitive network names are `mainnet`/`bitcoin`, `testnet`, `signet`, and
+`regtest`; the default/canonical mainnet output string is `bitcoin`.
+
+The invite adapter preserves ordered guardian objects (`peer_id`, `url`),
+`federation_id` and nullable `api_secret`, including serde's required fields,
+u16 peer width, lexical unsigned integer grammar, duplicate known-field rules,
+struct sequences and ignored unknown values. It adds no URL or nonempty-list
+policy. The library consensus codec and its proofs remain unchanged.
+
+After Unicode White_Space trimming, decoding requires lowercase `fed1`, a valid
+original checksum, HRP `fed1` and bech32m variant. Only failed consensus parsing
+enables the separate unproved app fallback, using the original lax-regrouped
+payload. It scans every byte offset, including overlapping discoveries, for
+six-byte `wss://` or `https:` with at least one following printable ASCII byte
+(32 through 126). Guardians retain encounter order and receive peers from 0.
+The ID is the final 32 bytes at lengths at least 64, otherwise the first up to
+32 bytes; the secret is absent. No match fails. Fallback excludes `ws://` and
+`http://`, while consensus-accepted forms, trailing bytes and unknown parts
+retain their reference behavior. Bad wrappers never reach fallback.
+
+PSBT parsing has one app boundary: trimmed Base64, the pure parser with the
+real secp256k1 and RIPEMD160/HASH160 capabilities, BIP32 same-point rejection,
+typed decoding, and `unsignedTransaction`. Hex input is rejected; the captured
+hex case reports `psbtBase64`.
+Raw public-key bytes remain unchanged. Inputs display reversed transaction IDs,
+vout and sequence; witness UTXO values take precedence over non-witness outputs
+looked up by vout. Missing/out-of-range values omit both input value keys and
+make total input and fee null. Positive partial-signature counts appear as
+`signatures`. Outputs include exact numeric sats/BTC, lowercase script hex and
+per-network address or null. Totals and saturating subtraction match the
+reference, including missing values, empty-input behavior and u64 summation.
+No transaction-policy checks are added.
+
+For v2, transaction version comes from GLOBAL_TX_VERSION as a signed integer;
+counts come from GLOBAL_INPUT_COUNT/OUTPUT_COUNT; locktime follows the existing
+BIP370 determination; transaction IDs reverse IN_PREVIOUS_TXID; vout uses
+IN_OUTPUT_INDEX; sequence uses IN_SEQUENCE or 4294967295; output values/scripts
+use OUT_AMOUNT/OUT_SCRIPT. The independent Python oracle reads wire records,
+derives every JSON field and address without invoking the production adapter,
+and checks all ten published locktime expectations. The incompatible case fails
+with `psbtTransaction:incompatible input locktimes: Invalid offline input`.
+
+### Phase 7c sources and inventories
+
+All reference captures use cyberkrill
+[`27cad1faba86260b06665a89f0af5134d23525c2`](https://github.com/douglaz/cyberkrill/tree/27cad1faba86260b06665a89f0af5134d23525c2),
+`cyberkrill/src/main.rs` and `fedimint-lite/src/lib.rs`, taken under MIT.
+`test/capture-offline.py` builds that exact pin, executes each case offline in
+`unshare -rn` with loopback only, fresh temporary HOME/cwd, bounded foreground
+timeouts and closed stdin except specified deterministic payloads, and records
+separate stdout/stderr/status, elapsed time and output existence/bytes.
+Ordinary files are read as bytes and decoded strictly as UTF-8, preserving
+CRLF, bare CR and final-newline counts. Recapture uses that same observation
+boundary and compares JSON values without normalizing file newlines.
+`test/offline-inputs.py`, `test/hybrid-inputs.py`, `test/psbt-oracle.py` and
+`test/record-offline.py` keep construction, independent expectations and records
+at separate paths. `test/golden/offline-provenance.md` gives attribution and
+modification details. Recapture compares JSON values where key order can vary.
+
+| Independently pinned inventory | Count |
+|---|---|
+| Invite cases: all three primary public decodes and ordinary/skip encodes; seven required constructions; fallback/wrapper/JSON boundaries | 100 |
+| Published BIP174 valid / signer failures / roles / invalid | 10 / 4 / 14 / 20 |
+| Published BIP370 valid / invalid / locktimes | 14 / 24 / 10 |
+| Published BIP371 valid / invalid | 6 / 11 |
+| Published total, including the extracted transaction role row encoded to Base64 for CLI rejection | 113 |
+| Exact Phase 4a parity rows: must-reject / must-accept / port-stricter | 19 / 14 / 16 = 49 |
+| Public G and -G hybrid/duplicate CLI cases: success / rejection | 10 / 9 = 19 |
+| Additional network aliases/case variants and hex rejection | 23 |
+| Synthetic PSBT value/UTXO/fee/version/script/address cases | 33 |
+| Real argv, EOF stdin, routing, output and failure-order cases | 78 |
+| Ordered help, earlier-error and filename/terminator controls | 67 (35 help, 32 errors/data) |
+| Short-help clusters, earlier errors, attached values and terminators | 102 (44 help, 58 errors/data) |
+| Carried typed flags before/after help: errors / help controls | 32 (18 / 14) |
+| Total pinned captures, reference success / rejection | 616, 345 / 271 |
+| Expected port success / rejection | 340 / 276 |
+
+All 14 `bip370Valid` rows actually carry PSBT version 2. Nine locktime rows
+succeed and one is incompatible. All 16 published BIP174/BIP371 valid v0 rows
+have captured reference success; no valid-v0 reference rejection was observed.
+The other published/parity rows retain their actual outcomes rather than being
+classified solely by collection name. The 19 hybrid cases cover matching and
+mismatched parity in both BIP32 maps, strict partial-signature keys, all three
+same-point pairs, and distinct-point/raw-key controls. Every actual reference
+CLI result matched its predicted row. No private scalar or signing is involved.
+
+### Phase 7c deltas taken
+
+The golden allowlist in `test/golden/offline-exceptions.json` has exactly 53
+entries: 23 complete independently expected v2 successes against reference exit
+1, 28 stricter BIP-rule executions against reference exit 0, and two numeric
+leaves. V2 port success requires empty stderr and full expected JSON, including
+newline. The 28 stricter executions represent 16 distinct Phase 4a inputs,
+with the twelve v0/v2-field cases also exercised in the published collection.
+They require port exit 1, empty stdout and exact stderr identity:
+
+| Input class | Named port diagnostic before `: Invalid offline input` |
+|---|---|
+| Noncanonical CompactSize key types (two) | `psbtFraming` |
+| Noncanonical proprietary subtype | `psbtInvalidKey:input:252:malformed proprietary key` |
+| Global xpub depth/path | `psbtInvalidValue:global:1:path length must match the extended key depth` |
+| V2-only global fields in v0 | `psbtExcludedField:global:2` through `:6` |
+| V2-only input fields in v0 | `psbtExcludedField:input:14` through `:18` |
+| V2-only output fields in v0 | `psbtExcludedField:output:3` and `:4` |
+
+BTC numbers use exact decimal coefficients throughout. The original 20 amount
+pins below are unchanged. The two additional PSBT numeric exceptions both
+require reference/port exit 0 and empty stderr; only this precise leaf differs:
+
+| Case | Field | Reference numeric value | Port numeric value |
+|---|---|---|---|
+| `synthetic-psbt/large-exact` | `stdout["outputs"][0]["value_btc"]` | 90071992.54740994 | 90071992.54740993 |
+| `synthetic-psbt/max-output` | `stdout["outputs"][0]["value_btc"]` | 184467440737.09552 | 184467440737.09551615 |
+
+Other plan §3 decisions retain their exact existing pins: BOLT11's six
+padding/integer refusals, leading-zero recovered-key difference and explicit-n
+status reversal are listed in the Lightning section; supported LNURL forms
+still match while the precisely named userinfo/IPv6/IPv4/IDNA/scheme refusals
+remain reference-success/port-exit-1 exceptions. Bare fees still fail with
+`feeUnitRequired` before a consumer, with `15sats` as the explicit-unit example;
+no fee command or backend is registered. Private mnemonic output still uses
+exclusive owner-only creation and `outputPathExists`, with its five controlled
+public-entropy captures and unchanged refusal pins. The planned move-utxos
+whole-selected-value decision belongs to its future command and has no new
+execution claim here. No exception permits unrelated fields, keys, numbers,
+statuses, streams, error identities or unused entries.
+
+### Phase 7c validation
+
+The 102 short-help cluster captures contain **44 help successes and 58
+earlier-error/value/terminator controls**. Against the unfixed implementation,
+the 44 help checks failed at their named runtime assertions and all 58 controls
+passed. The repaired implementation passes all 102 checks. Commands, separate
+stream digests, source bindings, statuses and timings are recorded in
+`test/golden/cluster-regression.json`. The default package suite also checks
+clustered help with injected input, existence, output and entropy boundaries;
+successful help performs none of those actions. The original 67 ordered-help
+rows remain intact. Fixed digests preserve both the first 482 and the first 584
+capture observations, including results and timings, within the expanded
+616-row inventory. The cluster record and its former source bindings remain
+historical; current parser reintroductions are executed separately.
+
+The 32 carried typed-flag captures contain **18 preceding errors and 14 help
+controls**. Before the repair, 17 checks failed at the named preceding-error
+assertion; one missing-value case and all 14 help controls already passed.
+All 32 now pass. `test/golden/carried-regression.json` preserves those original
+observations, the first repaired run and a separate current run. The parser
+checks the `--as` enum and `--words` u32 grammar/width in argv order before
+later help. Earlier help still wins over later errors. A syntactically valid
+u32 count such as 13 or 4294967295 gives help before mnemonic count semantics;
+bare missing `-w` retains its existing diagnostic. Twelve injected cases check
+that these help/error paths perform no entropy, input, path or output actions.
+Reference captures never request a valid mnemonic count or fresh entropy.
+
+The earlier ordered-help/file-observation record remains unchanged historical
+evidence: **14 original runtime failures, six controls and 20 former greens**.
+Its old source binding is historical; actual production reintroductions in the
+current mutation record cover the later sources. The real-file suite retains
+16 checks: three passing controls, twelve final-newline refusals and one changed
+JSON-leaf refusal. Observation preserves raw UTF-8 bytes; comparison ignores
+JSON object order and legal interior formatting. Invite strings and final
+newlines retain their exact byte contracts. Untouched observed input files are
+compared as exact bytes, with 38 independent comparator falsifications.
+
+App build/test and all 17 evidence checks exited 0. All **616 CLI comparisons**,
+**668 general comparator falsifications** and **275 exact single-property
+comparator checks** pass. The package suite runs all five FIFO consumers,
+including both retained Lightning checks, and the injected read/open/decode/
+write-order, retained-handle, network-before-IO and failure checks.
+
+The current mutation records follow actual reruns: 26 retained edits, 30
+Lightning edits with 94 selected runtime reds, and 30 correction edits with one
+shared edit give **85 distinct retained edits and 150 selected runtime reds**.
+The expanded offline record has **67 distinct edits and 125 selected runtime
+reds**: 64 CLI/capability edits and three checker edits. The main sets together
+contain **152 distinct edits and 275 selected runtime reds**. The accepted
+closure's original 84/148 wording remains historical and unchanged.
+
+The eight added edits independently test cluster recognition, earlier errors
+and duplicates, short and long output attachments, missing-value guards,
+terminators, invalid long help values and exact unchanged-input observation.
+Six further edits independently test enum validation, u32 grammar, u32 width,
+missing-value precedence, help before later errors and semantic word counts.
+Each edit compiles, fails at its named runtime assertion, restores exact bytes,
+rebuilds and passes its selected checks. The nine historical reintroductions,
+eighteen output refusals and four attached-filename reds are separate
+supplemental refreshes. A stopped evidence attempt selected the wrong detector
+label for a missing output file; it is recorded separately and excluded from
+the current selected totals. Nineteen remaining-boundary preflight reds are
+also separate historical diagnostics. The complete 67-edit rerun exited 0 and
+its final restored package test exited 0 in 48.102 s. The typed-help group's
+six edits account for 13 selected runtime reds; the 17 original unfixed
+failures and 15 controls are separate regression observations.
+
+Final required local validation under the complete foreground supervisor:
+
+| Check | Exit | Wall seconds |
+|---|---|---|
+| App `nix develop -c lake build` | 0 | 1.028 |
+| App `nix develop -c lake test` | 0 | 48.643 |
+| Root `nix flake check -L` (seven packages and link/OpenSSL gates) | 0 | 174.853 |
+| Root `nix build -L` | 0 | 0.434 |
+| Installed version | 0 | 0.028 |
+| Installed Lightning checks | 0 | 0.180 |
+| Installed new commands and carried help (52 cases, including file bytes and v2) | 0 | 1.472 |
+| Library/proof native-decision scan, 76 files | 0 | 0.030 |
+| Proof-token scan | 0 | 0.008 |
+| Extended-private-key scan | 0 | 0.011 |
+
+The retained, Lightning, revision and expanded offline mutation groups exited
+0 in 703.961, 748.105,
+632.996 and 1418.075 s.
+Historical regression/output/attachment refreshes exited 0 in
+64.486/21.211/20.609 s.
+The 616-case reference recapture, current port-pin check and 532 retained
+Lightning recaptures exited 0 in 5.666,
+16.437 and 5.082 s, retaining portable JSON-value
+comparisons and exact stream/file contracts. The required producer build
+exited 0 in 0.391200 s. The full refresh sequence is reproducible with
+`python3 -B packages/cyberkrill/test/gate.py timeout --foreground 12000 nix develop -c python3 -B packages/cyberkrill/test/validate.py refresh`.
+The 17 final evidence checks all exited 0, including the carried-help runtime
+suite (0.901 s) and its separate regression-record verification (0.043 s).
+
+The public command/status/timing summary is
+`test/golden/offline-validation.json`. Scans distinguish grep's no-match status
+from command errors. All 58 unrelated issue records remain unchanged; no
+untracked bytecode remains. Disposable capture HOME/cwd paths were removed by
+their exact owned paths and FIFO children were reaped. These validation records
+precede acceptance; all three Phase 7 beads are now closed and the offline
+command set is complete.
 
 ## Phase 7b: offline Lightning commands
 
-The app now registers six commands: the three introduced in Phase 7a and
+Phase 7b introduced six commands: the three introduced in Phase 7a and
 `ln-decode-invoice`, `ln-decode-lnurl`, and `ln-encode-invoice`.
-Phase 7c and network commands remain unregistered.
+Phase 7c adds the three commands documented above; network commands remain
+unregistered.
 
 | Command | Input | Successful output |
 |---|---|---|

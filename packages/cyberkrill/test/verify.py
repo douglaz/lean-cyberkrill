@@ -158,6 +158,12 @@ def main():
             value = e[side].replace("\n", "\\n") or "empty"
             assert value in row, "README amount pin: " + e['case']
     print("README exact pins: 20/20")
+    offline = import_module("offline")
+    offline.provenance()
+    offline.selftest(offline.records(),
+        json.loads((APP / "test/golden/offline-exceptions.json").read_bytes()),
+        json.loads((APP / "test/golden/offline-errors.json").read_bytes()))
+    import_module("offline-mutate").verify()
 
 
 if __name__ == "__main__":
