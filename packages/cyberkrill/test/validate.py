@@ -34,6 +34,9 @@ def main():
                   ("test", APP, ["nix", "develop", "-c", "lake", "test"], 600)]
     elif mode == "evidence":
         checks = [
+            ("rpc-recordings", ROOT, ["python3", "-B", "packages/cyberkrill/test/rpc-recordings.py"], 180),
+            ("rpc-safety", ROOT, ["python3", "-B", "packages/cyberkrill/test/rpc-recording-safety.py"], 120),
+            ("rpc-mutations", ROOT, ["python3", "-B", "packages/cyberkrill/test/rpc-recording-mutations.py"], 180),
             ("evidence", ROOT, ["python3", "-B", "packages/cyberkrill/test/verify.py"], 300),
             ("harness", ROOT, ["python3", "-B", "packages/cyberkrill/test/selftest.py"], 300),
             ("scope", ROOT, ["python3", "-B", "packages/cyberkrill/test/scope.py"], 120),
@@ -72,6 +75,7 @@ def main():
             ("installed-version", ROOT, ["./result/bin/cyberkrill", "version"], 30),
             ("installed-lightning", ROOT, ["python3", "-B", "packages/cyberkrill/test/lightning.py", "--installed"], 90),
             ("installed-offline", ROOT, ["python3", "-B", "packages/cyberkrill/test/offline.py", "--installed"], 90),
+            ("installed-rpc-replay", ROOT, ["python3", "-B", "packages/cyberkrill/test/rpc-recordings.py"], 180),
             ("native-library-scan", ROOT, ["python3", "-B", "-c", NATIVE_SCAN], 60),
             ("proof-token-scan", ROOT, ["bash", "-c", 'rc=0; grep -rnw sorry --include="*.lean" --exclude-dir=.lake packages || rc=$?; test "$rc" -eq 1'], 60),
             ("private-key-scan", ROOT, ["bash", "-c", 'rc=0; grep -rEn --exclude-dir=.lake "[tuvxyzUVYZ]prv[1-9A-HJ-NP-Za-km-z]{100,}" packages || rc=$?; test "$rc" -eq 1'], 60),

@@ -5,6 +5,7 @@
 import copy
 from datetime import datetime, timezone
 from decimal import Decimal
+import hashlib
 import http.client
 import importlib
 import json
@@ -20,8 +21,24 @@ from responder import Entry, canonical, json_text, parse_json
 
 COUNTS = {"single-list": 8, "multisig-list": 8, "multipath-create": 9,
           "change-funded": 15, "move-overshoot": 13, "move-f64": 5, "move-success": 2, "dca": 9}
+RESPONSES = {"single-list": 10, "multisig-list": 10, "multipath-create": 9,
+             "change-funded": 15, "move-overshoot": 13, "move-f64": 5, "move-success": 2, "dca": 11}
+METHOD_COUNTS = {
+    "single-list": dict(getdescriptorinfo=2, importdescriptors=2, deriveaddresses=2, listunspent=2),
+    "multisig-list": dict(getdescriptorinfo=2, importdescriptors=2, deriveaddresses=2, listunspent=2),
+    "multipath-create": dict(getdescriptorinfo=3, importdescriptors=1, deriveaddresses=2, listunspent=2, createpsbt=1),
+    "change-funded": dict(getdescriptorinfo=5, importdescriptors=1, deriveaddresses=4, listunspent=2, getreceivedbyaddress=2, walletcreatefundedpsbt=1),
+    "move-overshoot": dict(getdescriptorinfo=3, importdescriptors=1, deriveaddresses=2, listunspent=2, getrawtransaction=4, createpsbt=1),
+    "move-f64": dict(getrawtransaction=3, createpsbt=2),
+    "move-success": dict(getrawtransaction=1, createpsbt=1),
+    "dca": dict(getblockchaininfo=1, scantxoutset=2, getrawtransaction=4, getblock=2),
+}
 METHODS = {"listunspent", "scantxoutset", "getblockchaininfo", "getdescriptorinfo", "importdescriptors",
            "deriveaddresses", "createpsbt", "getreceivedbyaddress", "walletcreatefundedpsbt", "getrawtransaction", "getblock"}
+METHOD_INVENTORY = dict(listunspent=10, scantxoutset=2, getblockchaininfo=1,
+                        getdescriptorinfo=15, importdescriptors=7, deriveaddresses=12,
+                        createpsbt=5, getreceivedbyaddress=2, walletcreatefundedpsbt=1,
+                        getrawtransaction=12, getblock=2)
 
 
 def body(reply):
@@ -36,7 +53,17 @@ def result(entry):
     return body(entry["responses"][0]).get("result")
 
 
+def check_selectors(entries):
+    selectors = set()
+    for entry in entries:
+        for params in entry["rpc"]["params"]:
+            key = (entry["method"], entry["path"], entry["rpc"]["method"], G.selector(params))
+            assert key not in selectors, "overlapping exact selectors"
+            selectors.add(key)
+
+
 def validate_case(row, data, shared):
+    G.validate_definition(row)
     assert data["case"] == row["name"] and data["schema"] == 1, "case identity/schema"
     assert data["binding"]["definition"] == G.digest(G.definition_bytes(row)), "case definition binding"
     assert data["binding"]["files"] == {name: G.digest(value) for name, value in shared.items()}, "case shared/auth binding"
@@ -52,21 +79,27 @@ def validate_case(row, data, shared):
     entries = data["entries"]
     assert G.digest(G.encoded(entries)) == meta["entries_sha256"], "capture response digest"
     assert len(entries) == COUNTS[row["name"]], "case entry completeness: " + row["name"]
-    selectors = set()
+    from collections import Counter
+    assert Counter(e["rpc"]["method"] for e in entries) == METHOD_COUNTS[row["name"]], "case method inventory"
+    assert sum(len(e["responses"]) for e in entries) == RESPONSES[row["name"]], "case response inventory"
+    assert sum(len(e["rpc"]["params"]) for e in entries) == COUNTS[row["name"]], "case selector inventory"
+    check_selectors(entries)
     for entry in entries:
         parsed = Entry(entry)  # The production responder parser, unchanged.
         assert entry["method"] == "POST" and entry["path"] == "/wallet/" + row["fixture"], "case-local endpoint"
         assert entry["authorization"] == G.AUTH and entry["unauthorized"]["status"] == 401, "disposable auth and real 401"
         assert entry["rpc"]["method"] in METHODS and entry.get("source"), "v1 source-traced method"
         assert len(parsed.variants) > 0, "nonempty exact variants"
-        for params in parsed.variants:
-            key = (entry["method"], entry["path"], entry["rpc"]["method"], params)
-            assert key not in selectors, "overlapping exact selectors"
-            selectors.add(key)
         for reply in entry["responses"]: body(reply)
     descriptors = json.loads(shared["shared/descriptors.json"])
     descriptor = descriptors[row["fixture"]]
     methods = {m: [e for e in entries if e["rpc"]["method"] == m] for m in METHODS}
+    exported = json.loads(shared["shared/frozenkrill-" + row["fixture"] + ".json"])
+    prefix = "singlesig_" if row["fixture"] == "single" else ""
+    assert exported["network"] == "regtest" and exported["version"] == 0, "public wallet reader network/version"
+    assert exported["sigtype"] == ("singlesig" if row["fixture"] == "single" else "2-of-3"), "public wallet reader signature type"
+    for branch, field in [(0, "receiving"), (1, "change")]:
+        assert exported[prefix + field + "_output_descriptor"] == descriptor.replace("<0;1>", str(branch)), "wallet/descriptor correspondence"
     funding = meta["funding"]
     assert [p["sats"] for p in funding] == list(map(G.sats, row["funding"])), "funding size plan"
     assert all(p["address"].startswith("bcrt1") and len(p["txid"]) == 64 for p in funding), "public regtest funding"
@@ -126,7 +159,9 @@ def validate_case(row, data, shared):
         pair = methods["createpsbt"]
         assert len(pair) == 2, "distinct float/error and exact/success selectors"
         original, exact = pair
-        floated = sum(float(p["sats"]) / 1e8 for p in funding[:3]) - G.sats(G.option(row, "--fee")) / 1e8
+        floated = 0.0
+        for p in funding[:3]: floated += int(p["sats"]) / 1e8
+        floated -= G.sats(G.option(row, "--fee")) / 1e8
         assert list(original["rpc"]["params"][0][1].values()) == [Decimal(repr(floated))], "source-derived f64 arithmetic"
         assert body(original["responses"][0])["error"]["code"] == -3, "observed Core invalid amount"
         assert "Invalid amount" in body(original["responses"][0])["error"]["message"], "Core amount error message"
@@ -135,38 +170,66 @@ def validate_case(row, data, shared):
         assert result(exact).startswith("cHNidP"), "observed exact amount success"
         assert original["rpc"]["params"] != exact["rpc"]["params"], "float/exact request distinction"
     if row["kind"] == "dca":
+        assert row["scan_range"] == [0, 200], "DCA declared range"
         assert meta["producer"] == "source-client" and meta["reference_result"] is None, "DCA never executes reference"
         assert len(methods["getblockchaininfo"]) == 1 and result(methods["getblockchaininfo"][0])["chain"] == "regtest", "DCA regtest height"
         assert len(methods["scantxoutset"]) == 2 and len(methods["getblock"]) == 2, "DCA branches/blocks"
         for branch, scan in enumerate(methods["scantxoutset"]):
-            assert scan["rpc"]["params"] == [["start", [dict(desc=descriptor.replace("<0;1>", str(branch)), range=[0, 200])]]], "both scan ranges 0..200"
-            assert result(scan)["success"], "real completed scan"
+            assert scan["rpc"]["params"] == [["start", [dict(desc=descriptor.replace("<0;1>", str(branch)), range=row["scan_range"])]]], "both scan ranges 0..200"
+            scanned = result(scan)
+            chain = result(methods["getblockchaininfo"][0])
+            assert scanned["success"], "real completed scan"
+            assert scanned["height"] == chain["blocks"] and scanned["bestblock"] == chain["bestblockhash"], "DCA scan chain snapshot"
             expected = funding[:3] if branch == 0 else funding[3:]
             assert {(u["txid"], u["vout"]) for u in result(scan)["unspents"]} == {(p["txid"], p["vout"]) for p in expected}, "DCA scan funding"
+            assert scanned["total_amount"] == Decimal(sum(int(p["sats"]) for p in expected)) / 100000000, "DCA scan total amount"
+            for index, p in enumerate(expected):
+                utxo = next(u for u in scanned["unspents"] if (u["txid"], u["vout"]) == (p["txid"], p["vout"]))
+                tx = result(next(e for e in methods["getrawtransaction"] if e["rpc"]["params"] == [[p["txid"], True]]))
+                block = result(next(e for e in methods["getblock"] if e["rpc"]["params"] == [[tx["blockhash"]]]))
+                assert utxo["amount"] == Decimal(p["sats"]) / 100000000 and utxo["scriptPubKey"] == tx["vout"][int(p["vout"])]["scriptPubKey"]["hex"], "DCA scan value/script correspondence"
+                assert utxo["height"] == block["height"] and utxo["blockhash"] == block["hash"] and utxo["confirmations"] == tx["confirmations"], "DCA scan block correspondence"
+                path = descriptors["paths"][0][2:].replace("'", "h")
+                prefix = f"wpkh([{descriptors['fingerprint']}/{path}/{branch}/{index}]"
+                assert utxo["desc"].startswith(prefix), "DCA derived descriptor origin"
+                public_key = bytes.fromhex(utxo["desc"][len(prefix):].split(')')[0])
+                assert len(public_key) == 33 and utxo["scriptPubKey"] == "0014" + hashlib.new("ripemd160", hashlib.sha256(public_key).digest()).hexdigest(), "DCA descriptor script hash"
         dates = set()
         for txentry in methods["getrawtransaction"]:
             tx = result(txentry)
             blockentry = next(e for e in methods["getblock"] if e["rpc"]["params"] == [[tx["blockhash"]]])
             block = result(blockentry)
             assert block["hash"] == tx["blockhash"] and tx["txid"] in block["tx"], "DCA transaction/block correspondence"
+            assert block["height"] in [102, 103] and tx["blocktime"] == block["time"], "DCA block height/time"
+            assert block["height"] + tx["confirmations"] - 1 == result(methods["getblockchaininfo"][0])["blocks"], "DCA confirmation height"
             dates.add(datetime.fromtimestamp(int(block["time"]), timezone.utc).strftime("%Y-%m-%d"))
         assert dates == set(row["dates"]), "DCA fixed block dates"
     return entries
 
 
 def validate_bundle(rows, blobs, shared):
+    from collections import Counter
     assert set(blobs) == {r["recording"] for r in rows}, "recording file completeness"
     assert set(shared) == set(G.SHARED) and shared["bitcoin-dir/.cookie"] == G.COOKIE, "shared file completeness/auth"
     methods = set()
+    inventory = Counter()
     total = 0
+    responses = 0
     for row in rows:
         entries = validate_case(row, parse_json(blobs[row["recording"]]), shared)
         methods.update(e["rpc"]["method"] for e in entries)
+        inventory.update(e["rpc"]["method"] for e in entries)
         total += len(entries)
+        responses += sum(len(e["responses"]) for e in entries)
+        print(f"RPC {row['name']}: {len(entries)}/{COUNTS[row['name']]} entries/selectors, "
+              f"{sum(len(e['responses']) for e in entries)}/{RESPONSES[row['name']]} responses; "
+              f"methods {METHOD_COUNTS[row['name']]}", flush=True)
     if {r["name"] for r in rows} == set(COUNTS):
         assert len(rows) == 8 and total == 69, "independent case/entry inventory"
         assert methods == METHODS, "eleven-method completeness"
+        assert inventory == METHOD_INVENTORY and responses == 75, "complete method/response inventory"
         print(f"RPC recordings: {len(rows)}/8 cases, {len(methods)}/11 methods, {total}/69 entries", flush=True)
+        print(f"RPC method inventory: {dict(inventory)}; {responses}/75 authorized responses", flush=True)
 
 
 def request(port, entry, params, authorization=G.AUTH, method="POST", path=None):
@@ -202,7 +265,10 @@ def replay(path, data):
                 for kwargs in [dict(method="GET"), dict(path="/wallet/other"), dict(params=["unexpected-exact-variant"])]:
                     params = kwargs.pop("params", first["rpc"]["params"][0])
                     assert request(port, first, params, **kwargs)[0] == 599, "unexpected request/variant refusal"
-                expected_requests = 3
+                wrong = copy.deepcopy(first)
+                wrong["rpc"]["method"] = "unexpected-rpc-method"
+                assert request(port, wrong, first["rpc"]["params"][0])[0] == 599, "unexpected RPC method refusal"
+                expected_requests = 4
                 for entry in data["entries"]:
                     for params in entry["rpc"]["params"]:
                         assert_response(request(port, entry, params, authorization="Basic invalid"), entry["unauthorized"])
@@ -215,6 +281,14 @@ def replay(path, data):
                 logged = [json.loads(line) for line in log.read_bytes().splitlines()]
                 assert len(logged) == expected_requests, "complete case-local replay request log"
                 assert all(r["path"] in [first["path"], "/wallet/other"] for r in logged), "case-local replay log paths"
+                cursor = 4
+                for entry in data["entries"]:
+                    for params in entry["rpc"]["params"]:
+                        for observed in logged[cursor:cursor + len(entry["responses"]) + 2]:
+                            payload = parse_json(observed["body"])
+                            assert observed["method"] == entry["method"] and observed["path"] == entry["path"], "replay request method/path"
+                            assert payload["method"] == entry["rpc"]["method"] and G.selector(payload["params"]) == G.selector(params), "replay exact request params"
+                        cursor += len(entry["responses"]) + 2
             finally:
                 process.stdin.close()
                 try: process.wait(timeout=5)

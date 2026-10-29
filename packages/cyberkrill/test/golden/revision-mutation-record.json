@@ -13,7 +13,7 @@
     "test/lightning-cases.py": "3c5baaa63ab9fd27d598128dbfb244a3c015262698f09d021d80cd57dc9ee22a",
     "test/compare.py": "65792ec70aab8f33fa83736d1fb7a9708e373d0d74712bc3ce5c3d511b64ba82",
     "test/selftest.py": "2f8ed78c93c4c7e075630defb338d6345f5d33be8975044bcfef90b5946115e5",
-    "test/driver.py": "911db4819d7c207b3486203376419208347e1dcc42ae6bddcd3f5e29301f3c89",
+    "test/driver.py": "1d0c262c9efe561fa9a52e3afce017a979eb511819974e10d81f2d6c39aadec6",
     "test/verify.py": "42f86a5755ce8d37c8d784ac58eeef6c7cd42526a604c1c9d97ae5345da56639",
     "test/fifo.py": "014cff9f435f23f2d553379f7d014fd65753c620c0f0f9975d5b9072d23ced0c",
     "Main.lean": "915167be1211cea874cd9f781d9651bc3e441b81dd9979415ba55d44e34f2eb1",
@@ -33,9 +33,9 @@
     "test/revisions.py": "33dd73d76cfcf51610377a4dd838db0152b06afff425cbde8058ca346fd5ede1",
     "test/revision-cases.py": "34b9422908c0b1dbce438133de14ed5b8cb28aa3756a9132bbad021e01122491",
     "test/capture-revisions.py": "0fb9a5134ad73137a14db31208fd78b61f695cac98ee0cded5c7561189e45694",
-    "test/revision-mutate.py": "0f83afba3da1684dd2b30e9fc526ba603eaaea46cbb97f716e03d926661d4b35",
-    "test/scope.py": "ef7317897ef461a79c0c76609ef6da2bc04f64cbe1e345925346d77150c2bc74",
-    "test/validate.py": "cfafec6183beff481ae623e7c7ae15264e6e69916117f18ae6c3f7f825eee73c",
+    "test/revision-mutate.py": "6ee26a43f43e458e8109ddcf5188edcd9d2c57d0229ac50a2cf402b2c8288b2a",
+    "test/scope.py": "234e3a2b0f43c0458681445ea43efc6762730036cd2214e74e0e30b0b7897533",
+    "test/validate.py": "878927bc33141cf130efb3e489cf83a9e6a767e033a61dd563a2e8ff1f0b4da8",
     "test/record-revision-regressions.py": "835793fffcab60c1b7d340211788fd37b55695f86843ea7d0c5c0774df360fee",
     "test/golden/revision-reference.json": "c168ba949234dc118dc0fb89de5e065c0ba39e3024686334536eec155b5e187e",
     "test/golden/revision-provenance.json": "ee2e60e5e3d6ec507be8181b742531ba67c19434496f6c1ecd1584c876ba3568",
@@ -61,7 +61,7 @@
           "CyberkrillTests"
         ],
         "status": 0,
-        "seconds": 12.817
+        "seconds": 14.059
       },
       "red": {
         "command": [
@@ -75,7 +75,7 @@
           "timestamp/compact-zone"
         ],
         "status": 1,
-        "seconds": 0.112
+        "seconds": 0.12
       },
       "restore_build": {
         "command": [
@@ -88,7 +88,7 @@
           "CyberkrillTests"
         ],
         "status": 0,
-        "seconds": 12.427
+        "seconds": 14.223
       },
       "green": {
         "command": [
@@ -102,7 +102,7 @@
           "timestamp/compact-zone"
         ],
         "status": 0,
-        "seconds": 0.105
+        "seconds": 0.107
       }
     },
     {
@@ -124,7 +124,7 @@
           "CyberkrillTests"
         ],
         "status": 0,
-        "seconds": 11.697
+        "seconds": 13.311
       },
       "red": {
         "command": [
@@ -138,7 +138,7 @@
           "timestamp/expanded-year"
         ],
         "status": 1,
-        "seconds": 0.106
+        "seconds": 0.108
       },
       "restore_build": {
         "command": [
@@ -151,7 +151,7 @@
           "CyberkrillTests"
         ],
         "status": 0,
-        "seconds": 11.697
+        "seconds": 13.397
       },
       "green": {
         "command": [
@@ -165,7 +165,7 @@
           "timestamp/expanded-year"
         ],
         "status": 0,
-        "seconds": 0.118
+        "seconds": 0.104
       }
     },
     {
@@ -187,7 +187,7 @@
           "CyberkrillTests"
         ],
         "status": 0,
-        "seconds": 13.124
+        "seconds": 13.599
       },
       "red": {
         "command": [
@@ -201,7 +201,7 @@
           "timestamp/zone-nbsp"
         ],
         "status": 1,
-        "seconds": 0.116
+        "seconds": 0.103
       },
       "restore_build": {
         "command": [
@@ -214,7 +214,7 @@
           "CyberkrillTests"
         ],
         "status": 0,
-        "seconds": 13.234
+        "seconds": 13.648
       },
       "green": {
         "command": [
@@ -228,7 +228,7 @@
           "timestamp/zone-nbsp"
         ],
         "status": 0,
-        "seconds": 0.112
+        "seconds": 0.105
       }
     },
     {
@@ -250,7 +250,7 @@
           "CyberkrillTests"
         ],
         "status": 0,
-        "seconds": 12.217
+        "seconds": 13.356
       },
       "red": {
         "command": [
@@ -277,7 +277,7 @@
           "CyberkrillTests"
         ],
         "status": 0,
-        "seconds": 11.596
+        "seconds": 13.462
       },
       "green": {
         "command": [
@@ -291,7 +291,7 @@
           "timestamp/utc-underflow"
         ],
         "status": 0,
-        "seconds": 0.106
+        "seconds": 0.121
       }
     },
     {
@@ -313,7 +313,7 @@
           "CyberkrillTests"
         ],
         "status": 0,
-        "seconds": 11.895
+        "seconds": 13.423
       },
       "red": {
         "command": [
@@ -327,7 +327,7 @@
           "timestamp/utc-overflow"
         ],
         "status": 1,
-        "seconds": 0.103
+        "seconds": 0.101
       },
       "restore_build": {
         "command": [
@@ -340,7 +340,7 @@
           "CyberkrillTests"
         ],
         "status": 0,
-        "seconds": 11.607
+        "seconds": 13.66
       },
       "green": {
         "command": [
@@ -354,7 +354,7 @@
           "timestamp/utc-overflow"
         ],
         "status": 0,
-        "seconds": 0.102
+        "seconds": 0.101
       }
     },
     {
@@ -376,7 +376,7 @@
           "CyberkrillTests"
         ],
         "status": 0,
-        "seconds": 11.998
+        "seconds": 13.676
       },
       "red": {
         "command": [
@@ -390,7 +390,7 @@
           "timestamp/date-leap-invalid"
         ],
         "status": 1,
-        "seconds": 0.113
+        "seconds": 0.106
       },
       "restore_build": {
         "command": [
@@ -403,7 +403,7 @@
           "CyberkrillTests"
         ],
         "status": 0,
-        "seconds": 11.511
+        "seconds": 13.694
       },
       "green": {
         "command": [
@@ -417,7 +417,7 @@
           "timestamp/date-leap-invalid"
         ],
         "status": 0,
-        "seconds": 0.1
+        "seconds": 0.103
       }
     },
     {
@@ -439,7 +439,7 @@
           "CyberkrillTests"
         ],
         "status": 0,
-        "seconds": 11.598
+        "seconds": 13.612
       },
       "red": {
         "command": [
@@ -453,7 +453,7 @@
           "timestamp/tab-separator"
         ],
         "status": 1,
-        "seconds": 0.105
+        "seconds": 0.104
       },
       "restore_build": {
         "command": [
@@ -466,7 +466,7 @@
           "CyberkrillTests"
         ],
         "status": 0,
-        "seconds": 11.499
+        "seconds": 14.033
       },
       "green": {
         "command": [
@@ -480,7 +480,7 @@
           "timestamp/tab-separator"
         ],
         "status": 0,
-        "seconds": 0.102
+        "seconds": 0.112
       }
     },
     {
@@ -502,7 +502,7 @@
           "CyberkrillTests"
         ],
         "status": 0,
-        "seconds": 11.593
+        "seconds": 13.536
       },
       "red": {
         "command": [
@@ -516,7 +516,7 @@
           "timestamp/zone-hour-overflow"
         ],
         "status": 1,
-        "seconds": 0.1
+        "seconds": 0.108
       },
       "restore_build": {
         "command": [
@@ -529,7 +529,7 @@
           "CyberkrillTests"
         ],
         "status": 0,
-        "seconds": 11.597
+        "seconds": 13.614
       },
       "green": {
         "command": [
@@ -543,7 +543,7 @@
           "timestamp/zone-hour-overflow"
         ],
         "status": 0,
-        "seconds": 0.099
+        "seconds": 0.119
       }
     },
     {
@@ -565,7 +565,7 @@
           "CyberkrillTests"
         ],
         "status": 0,
-        "seconds": 11.605
+        "seconds": 13.909
       },
       "red": {
         "command": [
@@ -579,7 +579,7 @@
           "unicode/known-high"
         ],
         "status": 1,
-        "seconds": 0.109
+        "seconds": 0.107
       },
       "restore_build": {
         "command": [
@@ -592,7 +592,7 @@
           "CyberkrillTests"
         ],
         "status": 0,
-        "seconds": 11.398
+        "seconds": 13.423
       },
       "green": {
         "command": [
@@ -606,7 +606,7 @@
           "unicode/known-high"
         ],
         "status": 0,
-        "seconds": 0.101
+        "seconds": 0.111
       }
     },
     {
@@ -628,7 +628,7 @@
           "CyberkrillTests"
         ],
         "status": 0,
-        "seconds": 12.727
+        "seconds": 13.951
       },
       "red": {
         "command": [
@@ -642,7 +642,7 @@
           "unicode/known-low"
         ],
         "status": 1,
-        "seconds": 0.152
+        "seconds": 0.106
       },
       "restore_build": {
         "command": [
@@ -655,7 +655,7 @@
           "CyberkrillTests"
         ],
         "status": 0,
-        "seconds": 13.408
+        "seconds": 13.937
       },
       "green": {
         "command": [
@@ -669,7 +669,7 @@
           "unicode/known-low"
         ],
         "status": 0,
-        "seconds": 0.116
+        "seconds": 0.11
       }
     },
     {
@@ -691,7 +691,7 @@
           "CyberkrillTests"
         ],
         "status": 0,
-        "seconds": 12.415
+        "seconds": 13.721
       },
       "red": {
         "command": [
@@ -705,7 +705,7 @@
           "unicode/known-high-ascii"
         ],
         "status": 1,
-        "seconds": 0.113
+        "seconds": 0.112
       },
       "restore_build": {
         "command": [
@@ -718,7 +718,7 @@
           "CyberkrillTests"
         ],
         "status": 0,
-        "seconds": 11.923
+        "seconds": 13.811
       },
       "green": {
         "command": [
@@ -732,7 +732,7 @@
           "unicode/known-high-ascii"
         ],
         "status": 0,
-        "seconds": 0.11
+        "seconds": 0.112
       }
     },
     {
@@ -754,7 +754,7 @@
           "CyberkrillTests"
         ],
         "status": 0,
-        "seconds": 12.301
+        "seconds": 13.416
       },
       "red": {
         "command": [
@@ -768,7 +768,7 @@
           "unicode/field-name-high"
         ],
         "status": 1,
-        "seconds": 0.106
+        "seconds": 0.108
       },
       "restore_build": {
         "command": [
@@ -781,7 +781,7 @@
           "CyberkrillTests"
         ],
         "status": 0,
-        "seconds": 11.601
+        "seconds": 13.317
       },
       "green": {
         "command": [
@@ -795,7 +795,7 @@
           "unicode/field-name-high"
         ],
         "status": 0,
-        "seconds": 0.107
+        "seconds": 0.106
       }
     },
     {
@@ -817,7 +817,7 @@
           "CyberkrillTests"
         ],
         "status": 0,
-        "seconds": 12.004
+        "seconds": 14.068
       },
       "red": {
         "command": [
@@ -831,7 +831,7 @@
           "unicode/ignored-high"
         ],
         "status": 1,
-        "seconds": 0.104
+        "seconds": 0.107
       },
       "restore_build": {
         "command": [
@@ -844,7 +844,7 @@
           "CyberkrillTests"
         ],
         "status": 0,
-        "seconds": 12.12
+        "seconds": 13.858
       },
       "green": {
         "command": [
@@ -858,7 +858,7 @@
           "unicode/ignored-high"
         ],
         "status": 0,
-        "seconds": 0.102
+        "seconds": 0.11
       }
     },
     {
@@ -880,7 +880,7 @@
           "CyberkrillTests"
         ],
         "status": 0,
-        "seconds": 10.805
+        "seconds": 12.539
       },
       "red": {
         "command": [
@@ -894,7 +894,7 @@
           "sequence/root-length-14"
         ],
         "status": 1,
-        "seconds": 0.105
+        "seconds": 0.117
       },
       "restore_build": {
         "command": [
@@ -907,7 +907,7 @@
           "CyberkrillTests"
         ],
         "status": 0,
-        "seconds": 10.499
+        "seconds": 12.721
       },
       "green": {
         "command": [
@@ -921,7 +921,7 @@
           "sequence/root-length-14"
         ],
         "status": 0,
-        "seconds": 0.107
+        "seconds": 0.12
       }
     },
     {
@@ -943,7 +943,7 @@
           "CyberkrillTests"
         ],
         "status": 0,
-        "seconds": 11.006
+        "seconds": 12.631
       },
       "red": {
         "command": [
@@ -957,7 +957,7 @@
           "sequence/hop-length-6"
         ],
         "status": 1,
-        "seconds": 0.1
+        "seconds": 0.122
       },
       "restore_build": {
         "command": [
@@ -970,7 +970,7 @@
           "CyberkrillTests"
         ],
         "status": 0,
-        "seconds": 10.995
+        "seconds": 12.853
       },
       "green": {
         "command": [
@@ -984,7 +984,7 @@
           "sequence/hop-length-6"
         ],
         "status": 0,
-        "seconds": 0.11
+        "seconds": 0.105
       }
     },
     {
@@ -1006,7 +1006,7 @@
           "CyberkrillTests"
         ],
         "status": 0,
-        "seconds": 11.108
+        "seconds": 12.411
       },
       "red": {
         "command": [
@@ -1020,7 +1020,7 @@
           "sequence/fees-length-2"
         ],
         "status": 1,
-        "seconds": 0.106
+        "seconds": 0.108
       },
       "restore_build": {
         "command": [
@@ -1033,7 +1033,7 @@
           "CyberkrillTests"
         ],
         "status": 0,
-        "seconds": 10.913
+        "seconds": 12.419
       },
       "green": {
         "command": [
@@ -1047,7 +1047,7 @@
           "sequence/fees-length-2"
         ],
         "status": 0,
-        "seconds": 0.11
+        "seconds": 0.108
       }
     },
     {
@@ -1069,7 +1069,7 @@
           "CyberkrillTests"
         ],
         "status": 0,
-        "seconds": 12.115
+        "seconds": 14.132
       },
       "red": {
         "command": [
@@ -1083,7 +1083,7 @@
           "sequence/root-unsigned"
         ],
         "status": 1,
-        "seconds": 0.109
+        "seconds": 0.117
       },
       "restore_build": {
         "command": [
@@ -1096,7 +1096,7 @@
           "CyberkrillTests"
         ],
         "status": 0,
-        "seconds": 11.907
+        "seconds": 14.001
       },
       "green": {
         "command": [
@@ -1110,7 +1110,7 @@
           "sequence/root-unsigned"
         ],
         "status": 0,
-        "seconds": 0.102
+        "seconds": 0.11
       }
     },
     {
@@ -1132,7 +1132,7 @@
           "CyberkrillTests"
         ],
         "status": 0,
-        "seconds": 11.395
+        "seconds": 13.529
       },
       "red": {
         "command": [
@@ -1146,7 +1146,7 @@
           "sequence/root-length-15"
         ],
         "status": 1,
-        "seconds": 0.112
+        "seconds": 0.109
       },
       "restore_build": {
         "command": [
@@ -1159,7 +1159,7 @@
           "CyberkrillTests"
         ],
         "status": 0,
-        "seconds": 11.804
+        "seconds": 13.33
       },
       "green": {
         "command": [
@@ -1195,7 +1195,7 @@
           "CyberkrillTests"
         ],
         "status": 0,
-        "seconds": 10.824
+        "seconds": 12.399
       },
       "red": {
         "command": [
@@ -1209,7 +1209,7 @@
           "simnet/decode"
         ],
         "status": 1,
-        "seconds": 0.105
+        "seconds": 0.101
       },
       "restore_build": {
         "command": [
@@ -1222,7 +1222,7 @@
           "CyberkrillTests"
         ],
         "status": 0,
-        "seconds": 10.622
+        "seconds": 12.299
       },
       "green": {
         "command": [
@@ -1236,7 +1236,7 @@
           "simnet/decode"
         ],
         "status": 0,
-        "seconds": 0.103
+        "seconds": 0.117
       }
     },
     {
@@ -1258,7 +1258,7 @@
           "CyberkrillTests"
         ],
         "status": 0,
-        "seconds": 10.715
+        "seconds": 12.338
       },
       "red": {
         "command": [
@@ -1272,7 +1272,7 @@
           "simnet/encode"
         ],
         "status": 1,
-        "seconds": 0.107
+        "seconds": 0.11
       },
       "restore_build": {
         "command": [
@@ -1285,7 +1285,7 @@
           "CyberkrillTests"
         ],
         "status": 0,
-        "seconds": 10.815
+        "seconds": 12.339
       },
       "green": {
         "command": [
@@ -1299,7 +1299,7 @@
           "simnet/encode"
         ],
         "status": 0,
-        "seconds": 0.105
+        "seconds": 0.124
       }
     },
     {
@@ -1321,7 +1321,7 @@
           "CyberkrillTests"
         ],
         "status": 0,
-        "seconds": 9.703
+        "seconds": 11.266
       },
       "red": {
         "command": [
@@ -1335,7 +1335,7 @@
           "output/ln-decode-invoice-create"
         ],
         "status": 1,
-        "seconds": 0.102
+        "seconds": 0.121
       },
       "restore_build": {
         "command": [
@@ -1348,7 +1348,7 @@
           "CyberkrillTests"
         ],
         "status": 0,
-        "seconds": 10.315
+        "seconds": 11.391
       },
       "green": {
         "command": [
@@ -1362,7 +1362,7 @@
           "output/ln-decode-invoice-create"
         ],
         "status": 0,
-        "seconds": 0.111
+        "seconds": 0.106
       }
     },
     {
@@ -1384,7 +1384,7 @@
           "CyberkrillTests"
         ],
         "status": 0,
-        "seconds": 10.218
+        "seconds": 11.026
       },
       "red": {
         "command": [
@@ -1398,7 +1398,7 @@
           "output/ln-decode-lnurl-truncate"
         ],
         "status": 1,
-        "seconds": 0.107
+        "seconds": 0.102
       },
       "restore_build": {
         "command": [
@@ -1411,7 +1411,7 @@
           "CyberkrillTests"
         ],
         "status": 0,
-        "seconds": 10.008
+        "seconds": 11.406
       },
       "green": {
         "command": [
@@ -1425,7 +1425,7 @@
           "output/ln-decode-lnurl-truncate"
         ],
         "status": 0,
-        "seconds": 0.102
+        "seconds": 0.123
       }
     },
     {
@@ -1447,7 +1447,7 @@
           "CyberkrillTests"
         ],
         "status": 0,
-        "seconds": 9.718
+        "seconds": 11.227
       },
       "red": {
         "command": [
@@ -1461,7 +1461,7 @@
           "output/ln-decode-invoice-open-error"
         ],
         "status": 1,
-        "seconds": 0.101
+        "seconds": 0.111
       },
       "restore_build": {
         "command": [
@@ -1474,7 +1474,7 @@
           "CyberkrillTests"
         ],
         "status": 0,
-        "seconds": 9.709
+        "seconds": 10.907
       },
       "green": {
         "command": [
@@ -1488,7 +1488,7 @@
           "output/ln-decode-invoice-open-error"
         ],
         "status": 0,
-        "seconds": 0.1
+        "seconds": 0.101
       }
     },
     {
@@ -1510,7 +1510,7 @@
           "CyberkrillTests"
         ],
         "status": 0,
-        "seconds": 9.606
+        "seconds": 10.808
       },
       "red": {
         "command": [
@@ -1524,7 +1524,7 @@
           "output/ln-decode-lnurl-read-before-open"
         ],
         "status": 1,
-        "seconds": 0.101
+        "seconds": 0.102
       },
       "restore_build": {
         "command": [
@@ -1537,7 +1537,7 @@
           "CyberkrillTests"
         ],
         "status": 0,
-        "seconds": 9.706
+        "seconds": 10.837
       },
       "green": {
         "command": [
@@ -1551,7 +1551,7 @@
           "output/ln-decode-lnurl-read-before-open"
         ],
         "status": 0,
-        "seconds": 0.102
+        "seconds": 0.099
       }
     },
     {
@@ -1573,7 +1573,7 @@
           "CyberkrillTests"
         ],
         "status": 0,
-        "seconds": 9.609
+        "seconds": 10.91
       },
       "red": {
         "command": [
@@ -1587,7 +1587,7 @@
           "output/encode-preserve"
         ],
         "status": 1,
-        "seconds": 0.107
+        "seconds": 0.113
       },
       "restore_build": {
         "command": [
@@ -1600,7 +1600,7 @@
           "CyberkrillTests"
         ],
         "status": 0,
-        "seconds": 9.613
+        "seconds": 10.717
       },
       "green": {
         "command": [
@@ -1636,7 +1636,7 @@
           "CyberkrillTests"
         ],
         "status": 0,
-        "seconds": 0.398
+        "seconds": 0.485
       },
       "red": {
         "command": [
@@ -1650,7 +1650,7 @@
           "closed"
         ],
         "status": 1,
-        "seconds": 0.093
+        "seconds": 0.119
       },
       "restore_build": {
         "command": [
@@ -1663,7 +1663,7 @@
           "CyberkrillTests"
         ],
         "status": 0,
-        "seconds": 0.399
+        "seconds": 0.407
       },
       "green": {
         "command": [
@@ -1677,7 +1677,7 @@
           "closed"
         ],
         "status": 0,
-        "seconds": 0.514
+        "seconds": 0.606
       }
     },
     {
@@ -1688,6 +1688,69 @@
       "case": "scope/closed-empty-reason",
       "assertion": "closure validation",
       "failure": "AssertionError: scope/closed-empty-reason closure validation",
+      "build": {
+        "command": [
+          "timeout",
+          "--foreground",
+          "180",
+          "lake",
+          "build",
+          "cyberkrill",
+          "CyberkrillTests"
+        ],
+        "status": 0,
+        "seconds": 0.399
+      },
+      "red": {
+        "command": [
+          "timeout",
+          "--foreground",
+          "180",
+          "python3",
+          "-B",
+          "test/revisions.py",
+          "--scope",
+          "closed-empty-reason"
+        ],
+        "status": 1,
+        "seconds": 0.618
+      },
+      "restore_build": {
+        "command": [
+          "timeout",
+          "--foreground",
+          "180",
+          "lake",
+          "build",
+          "cyberkrill",
+          "CyberkrillTests"
+        ],
+        "status": 0,
+        "seconds": 0.41
+      },
+      "green": {
+        "command": [
+          "timeout",
+          "--foreground",
+          "180",
+          "python3",
+          "-B",
+          "test/revisions.py",
+          "--scope",
+          "closed-empty-reason"
+        ],
+        "status": 0,
+        "seconds": 0.118
+      }
+    },
+    {
+      "property": "scope-closure-order",
+      "file": "test/scope.py",
+      "replace": "assert date(original[\"updated_at\"]) <= closed <= updated, \"closure timestamp order\"",
+      "with_text": "assert closed <= updated, \"closure timestamp order\"",
+      "case": "scope/closed-wrong-order",
+      "assertion": "closure validation",
+      "failure": "AssertionError: scope/closed-wrong-order closure validation",
       "build": {
         "command": [
           "timeout",
@@ -1710,73 +1773,10 @@
           "-B",
           "test/revisions.py",
           "--scope",
-          "closed-empty-reason"
-        ],
-        "status": 1,
-        "seconds": 0.472
-      },
-      "restore_build": {
-        "command": [
-          "timeout",
-          "--foreground",
-          "180",
-          "lake",
-          "build",
-          "cyberkrill",
-          "CyberkrillTests"
-        ],
-        "status": 0,
-        "seconds": 0.397
-      },
-      "green": {
-        "command": [
-          "timeout",
-          "--foreground",
-          "180",
-          "python3",
-          "-B",
-          "test/revisions.py",
-          "--scope",
-          "closed-empty-reason"
-        ],
-        "status": 0,
-        "seconds": 0.093
-      }
-    },
-    {
-      "property": "scope-closure-order",
-      "file": "test/scope.py",
-      "replace": "assert date(original[\"updated_at\"]) <= closed <= updated, \"closure timestamp order\"",
-      "with_text": "assert closed <= updated, \"closure timestamp order\"",
-      "case": "scope/closed-wrong-order",
-      "assertion": "closure validation",
-      "failure": "AssertionError: scope/closed-wrong-order closure validation",
-      "build": {
-        "command": [
-          "timeout",
-          "--foreground",
-          "180",
-          "lake",
-          "build",
-          "cyberkrill",
-          "CyberkrillTests"
-        ],
-        "status": 0,
-        "seconds": 0.395
-      },
-      "red": {
-        "command": [
-          "timeout",
-          "--foreground",
-          "180",
-          "python3",
-          "-B",
-          "test/revisions.py",
-          "--scope",
           "closed-wrong-order"
         ],
         "status": 1,
-        "seconds": 0.479
+        "seconds": 0.627
       },
       "restore_build": {
         "command": [
@@ -1789,7 +1789,7 @@
           "CyberkrillTests"
         ],
         "status": 0,
-        "seconds": 0.4
+        "seconds": 0.394
       },
       "green": {
         "command": [
@@ -1803,7 +1803,7 @@
           "closed-wrong-order"
         ],
         "status": 0,
-        "seconds": 0.092
+        "seconds": 0.115
       }
     },
     {
@@ -1825,7 +1825,7 @@
           "CyberkrillTests"
         ],
         "status": 0,
-        "seconds": 0.395
+        "seconds": 0.388
       },
       "red": {
         "command": [
@@ -1839,7 +1839,7 @@
           "unrelated"
         ],
         "status": 1,
-        "seconds": 0.473
+        "seconds": 0.622
       },
       "restore_build": {
         "command": [
@@ -1852,7 +1852,7 @@
           "CyberkrillTests"
         ],
         "status": 0,
-        "seconds": 0.403
+        "seconds": 0.393
       },
       "green": {
         "command": [
@@ -1866,14 +1866,14 @@
           "unrelated"
         ],
         "status": 0,
-        "seconds": 0.089
+        "seconds": 0.119
       }
     },
     {
       "property": "scope-decision-preservation",
       "file": "test/scope.py",
-      "replace": "{\"status\", \"updated_at\", \"closed_at\", \"close_reason\"}",
-      "with_text": "{\"status\", \"updated_at\", \"closed_at\", \"close_reason\", \"description\"}",
+      "replace": "hashlib.sha256(amended[\"description\"].encode()).hexdigest() == DESCRIPTION_SHA256",
+      "with_text": "True",
       "case": "scope/decision-text",
       "assertion": "closure validation",
       "failure": "AssertionError: scope/decision-text closure validation",
@@ -1888,7 +1888,7 @@
           "CyberkrillTests"
         ],
         "status": 0,
-        "seconds": 0.399
+        "seconds": 0.395
       },
       "red": {
         "command": [
@@ -1902,7 +1902,7 @@
           "decision-text"
         ],
         "status": 1,
-        "seconds": 0.47
+        "seconds": 0.611
       },
       "restore_build": {
         "command": [
@@ -1915,7 +1915,7 @@
           "CyberkrillTests"
         ],
         "status": 0,
-        "seconds": 0.395
+        "seconds": 0.436
       },
       "green": {
         "command": [
@@ -1929,7 +1929,7 @@
           "decision-text"
         ],
         "status": 0,
-        "seconds": 0.091
+        "seconds": 0.12
       }
     }
   ],
@@ -1942,7 +1942,7 @@
       "test"
     ],
     "status": 0,
-    "seconds": 47.558
+    "seconds": 64.703
   },
   "regressions_green": {
     "command": [
@@ -1954,7 +1954,7 @@
       "test/revisions.py"
     ],
     "status": 0,
-    "seconds": 4.791
+    "seconds": 4.803
   },
   "scope_green": {
     "command": [
@@ -1967,6 +1967,6 @@
       "--scope"
     ],
     "status": 0,
-    "seconds": 1.013
+    "seconds": 1.226
   }
 }

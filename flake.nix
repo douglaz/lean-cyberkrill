@@ -107,6 +107,7 @@
         nativeBuildInputs = [ lean pkgs.glibc.bin pkgs.binutils pkgs.python3 pkgs.openssl ];
         buildInputs = [ pkgs.secp256k1 pkgs.curl pkgs.openssl ];
         buildPhase = ''
+          export PATH=${pkgs.glibc.getent}/bin:$PATH
           export HOME=$TMPDIR
           mkdir -p packages/cyberkrill/.lake/packages
           cp -r ${lean4-cli} packages/cyberkrill/.lake/packages/Cli
@@ -140,7 +141,7 @@
               (recordingPkgs.python3.withPackages (ps: [ ps.bip32 ps.mnemonic ]))
               recordingPkgs.bitcoind recordingPkgs.curl recordingPkgs.iproute2
               recordingPkgs.util-linux recordingPkgs.coreutils recordingPkgs.gnugrep
-              recordingPkgs.glibc.bin
+              recordingPkgs.glibc.bin recordingPkgs.glibc.getent
             ];
           };
         default = pkgs.mkShell (ffiEnvironment // {

@@ -15,7 +15,7 @@
     "test/lightning-cases.py": "3c5baaa63ab9fd27d598128dbfb244a3c015262698f09d021d80cd57dc9ee22a",
     "test/compare.py": "65792ec70aab8f33fa83736d1fb7a9708e373d0d74712bc3ce5c3d511b64ba82",
     "test/selftest.py": "2f8ed78c93c4c7e075630defb338d6345f5d33be8975044bcfef90b5946115e5",
-    "test/driver.py": "911db4819d7c207b3486203376419208347e1dcc42ae6bddcd3f5e29301f3c89",
+    "test/driver.py": "1d0c262c9efe561fa9a52e3afce017a979eb511819974e10d81f2d6c39aadec6",
     "test/verify.py": "42f86a5755ce8d37c8d784ac58eeef6c7cd42526a604c1c9d97ae5345da56639",
     "test/fifo.py": "014cff9f435f23f2d553379f7d014fd65753c620c0f0f9975d5b9072d23ced0c",
     "Main.lean": "915167be1211cea874cd9f781d9651bc3e441b81dd9979415ba55d44e34f2eb1",
@@ -50,7 +50,7 @@
           "CyberkrillTests"
         ],
         "status": 0,
-        "seconds": 9.507
+        "seconds": 11.926
       },
       "restore_build": {
         "command": [
@@ -63,7 +63,7 @@
           "CyberkrillTests"
         ],
         "status": 0,
-        "seconds": 9.912
+        "seconds": 13.346
       },
       "checks": [
         {
@@ -90,7 +90,7 @@
               "valid/L410"
             ],
             "status": 1,
-            "seconds": 0.081,
+            "seconds": 0.088,
             "failure": "AssertionError: success status: valid/L410"
           },
           "green": {
@@ -105,7 +105,7 @@
               "valid/L410"
             ],
             "status": 0,
-            "seconds": 0.071
+            "seconds": 0.081
           }
         }
       ]
@@ -126,7 +126,7 @@
           "CyberkrillTests"
         ],
         "status": 0,
-        "seconds": 9.589
+        "seconds": 11.866
       },
       "restore_build": {
         "command": [
@@ -139,7 +139,7 @@
           "CyberkrillTests"
         ],
         "status": 0,
-        "seconds": 10.1
+        "seconds": 11.312
       },
       "checks": [
         {
@@ -166,7 +166,7 @@
               "lnurl-reference/cyberkrill"
             ],
             "status": 1,
-            "seconds": 0.088,
+            "seconds": 0.085,
             "failure": "AssertionError: success status: lnurl-reference/cyberkrill"
           },
           "green": {
@@ -181,7 +181,7 @@
               "lnurl-reference/cyberkrill"
             ],
             "status": 0,
-            "seconds": 0.072
+            "seconds": 0.076
           }
         }
       ]
@@ -202,7 +202,7 @@
           "CyberkrillTests"
         ],
         "status": 0,
-        "seconds": 9.907
+        "seconds": 11.315
       },
       "restore_build": {
         "command": [
@@ -215,7 +215,7 @@
           "CyberkrillTests"
         ],
         "status": 0,
-        "seconds": 10.001
+        "seconds": 11.324
       },
       "checks": [
         {
@@ -242,7 +242,7 @@
               "encode/valid/L410"
             ],
             "status": 1,
-            "seconds": 0.08,
+            "seconds": 0.083,
             "failure": "AssertionError: success status: encode/valid/L410"
           },
           "green": {
@@ -257,7 +257,7 @@
               "encode/valid/L410"
             ],
             "status": 0,
-            "seconds": 0.074
+            "seconds": 0.078
           }
         }
       ]
@@ -278,7 +278,7 @@
           "CyberkrillTests"
         ],
         "status": 0,
-        "seconds": 9.602
+        "seconds": 11.752
       },
       "restore_build": {
         "command": [
@@ -291,7 +291,7 @@
           "CyberkrillTests"
         ],
         "status": 0,
-        "seconds": 9.697
+        "seconds": 11.634
       },
       "checks": [
         {
@@ -318,7 +318,7 @@
               "valid/L410"
             ],
             "status": 1,
-            "seconds": 0.079,
+            "seconds": 0.097,
             "failure": "AssertionError: success status: valid/L410"
           },
           "green": {
@@ -333,7 +333,7 @@
               "valid/L410"
             ],
             "status": 0,
-            "seconds": 0.069
+            "seconds": 0.079
           }
         }
       ]
@@ -354,7 +354,7 @@
           "CyberkrillTests"
         ],
         "status": 0,
-        "seconds": 9.491
+        "seconds": 11.444
       },
       "restore_build": {
         "command": [
@@ -367,7 +367,7 @@
           "CyberkrillTests"
         ],
         "status": 0,
-        "seconds": 9.9
+        "seconds": 13.07
       },
       "checks": [
         {
@@ -392,7 +392,7 @@
               "--routing"
             ],
             "status": 1,
-            "seconds": 0.331,
+            "seconds": 0.371,
             "failure": "AssertionError: encoder input routing"
           },
           "green": {
@@ -406,7 +406,7 @@
               "--routing"
             ],
             "status": 0,
-            "seconds": 2.558
+            "seconds": 2.846
           }
         }
       ]
@@ -427,7 +427,7 @@
           "CyberkrillTests"
         ],
         "status": 0,
-        "seconds": 9.815
+        "seconds": 13.188
       },
       "restore_build": {
         "command": [
@@ -440,7 +440,7 @@
           "CyberkrillTests"
         ],
         "status": 0,
-        "seconds": 9.601
+        "seconds": 13.175
       },
       "checks": [
         {
@@ -465,7 +465,7 @@
               "--routing"
             ],
             "status": 1,
-            "seconds": 0.449,
+            "seconds": 0.585,
             "failure": "AssertionError: ordinary output status/streams"
           },
           "green": {
@@ -479,7 +479,7 @@
               "--routing"
             ],
             "status": 0,
-            "seconds": 2.491
+            "seconds": 2.827
           }
         }
       ]
@@ -500,7 +500,7 @@
           "CyberkrillTests"
         ],
         "status": 0,
-        "seconds": 10.023
+        "seconds": 12.478
       },
       "restore_build": {
         "command": [
@@ -513,7 +513,7 @@
           "CyberkrillTests"
         ],
         "status": 0,
-        "seconds": 9.906
+        "seconds": 13.677
       },
       "checks": [
         {
@@ -540,7 +540,7 @@
               "encode/valid/L410"
             ],
             "status": 1,
-            "seconds": 0.082,
+            "seconds": 0.092,
             "failure": "AssertionError: unlisted difference: encode/valid/L410 stdout"
           },
           "green": {
@@ -555,7 +555,7 @@
               "encode/valid/L410"
             ],
             "status": 0,
-            "seconds": 0.073
+            "seconds": 0.089
           }
         }
       ]
@@ -576,7 +576,7 @@
           "CyberkrillTests"
         ],
         "status": 0,
-        "seconds": 10.012
+        "seconds": 12.486
       },
       "restore_build": {
         "command": [
@@ -589,7 +589,7 @@
           "CyberkrillTests"
         ],
         "status": 0,
-        "seconds": 9.907
+        "seconds": 12.492
       },
       "checks": [
         {
@@ -616,7 +616,7 @@
               "valid/L410"
             ],
             "status": 1,
-            "seconds": 0.087,
+            "seconds": 0.091,
             "failure": "AssertionError: Lightning stdout newline: valid/L410"
           },
           "green": {
@@ -631,7 +631,7 @@
               "valid/L410"
             ],
             "status": 0,
-            "seconds": 0.08
+            "seconds": 0.089
           }
         }
       ]
@@ -652,7 +652,7 @@
           "CyberkrillTests"
         ],
         "status": 0,
-        "seconds": 10.628
+        "seconds": 13.371
       },
       "restore_build": {
         "command": [
@@ -665,7 +665,7 @@
           "CyberkrillTests"
         ],
         "status": 0,
-        "seconds": 10.493
+        "seconds": 13.262
       },
       "checks": [
         {
@@ -692,7 +692,7 @@
               "encode/valid/L410"
             ],
             "status": 1,
-            "seconds": 0.082,
+            "seconds": 0.091,
             "failure": "AssertionError: unlisted difference: encode/valid/L410 stdout"
           },
           "green": {
@@ -728,7 +728,7 @@
           "CyberkrillTests"
         ],
         "status": 0,
-        "seconds": 10.299
+        "seconds": 13.34
       },
       "restore_build": {
         "command": [
@@ -741,7 +741,7 @@
           "CyberkrillTests"
         ],
         "status": 0,
-        "seconds": 10.499
+        "seconds": 15.885
       },
       "checks": [
         {
@@ -768,7 +768,7 @@
               "encode/valid/L410"
             ],
             "status": 1,
-            "seconds": 0.082,
+            "seconds": 0.092,
             "failure": "AssertionError: unlisted difference: encode/valid/L410 stdout"
           },
           "green": {
@@ -783,7 +783,7 @@
               "encode/valid/L410"
             ],
             "status": 0,
-            "seconds": 0.071
+            "seconds": 0.293
           }
         }
       ]
@@ -804,7 +804,7 @@
           "CyberkrillTests"
         ],
         "status": 0,
-        "seconds": 10.398
+        "seconds": 13.753
       },
       "restore_build": {
         "command": [
@@ -817,7 +817,7 @@
           "CyberkrillTests"
         ],
         "status": 0,
-        "seconds": 10.596
+        "seconds": 13.139
       },
       "checks": [
         {
@@ -844,7 +844,7 @@
               "builder/amount-100000000000"
             ],
             "status": 1,
-            "seconds": 0.083,
+            "seconds": 0.092,
             "failure": "AssertionError: unlisted difference: builder/amount-100000000000 stdout"
           },
           "green": {
@@ -859,7 +859,7 @@
               "builder/amount-100000000000"
             ],
             "status": 0,
-            "seconds": 0.075
+            "seconds": 0.077
           }
         },
         {
@@ -886,7 +886,7 @@
               "builder/amount-0"
             ],
             "status": 1,
-            "seconds": 0.082,
+            "seconds": 0.087,
             "failure": "AssertionError: unlisted difference: builder/amount-0 stdout"
           },
           "green": {
@@ -901,7 +901,7 @@
               "builder/amount-0"
             ],
             "status": 0,
-            "seconds": 0.071
+            "seconds": 0.083
           }
         }
       ]
@@ -922,7 +922,7 @@
           "CyberkrillTests"
         ],
         "status": 0,
-        "seconds": 10.808
+        "seconds": 12.552
       },
       "restore_build": {
         "command": [
@@ -935,7 +935,7 @@
           "CyberkrillTests"
         ],
         "status": 0,
-        "seconds": 10.915
+        "seconds": 12.067
       },
       "checks": [
         {
@@ -962,7 +962,7 @@
               "valid/L410"
             ],
             "status": 1,
-            "seconds": 0.08,
+            "seconds": 0.094,
             "failure": "AssertionError: unlisted difference: valid/L410 stdout[\"timestamp_millis\"]"
           },
           "green": {
@@ -977,7 +977,7 @@
               "valid/L410"
             ],
             "status": 0,
-            "seconds": 0.072
+            "seconds": 0.076
           }
         }
       ]
@@ -998,7 +998,7 @@
           "CyberkrillTests"
         ],
         "status": 0,
-        "seconds": 10.899
+        "seconds": 12.233
       },
       "restore_build": {
         "command": [
@@ -1011,7 +1011,7 @@
           "CyberkrillTests"
         ],
         "status": 0,
-        "seconds": 10.508
+        "seconds": 12.54
       },
       "checks": [
         {
@@ -1038,7 +1038,7 @@
               "encode/valid/L516"
             ],
             "status": 1,
-            "seconds": 0.085,
+            "seconds": 0.082,
             "failure": "AssertionError: unlisted difference: encode/valid/L516 stdout"
           },
           "green": {
@@ -1053,7 +1053,7 @@
               "encode/valid/L516"
             ],
             "status": 0,
-            "seconds": 0.075
+            "seconds": 0.074
           }
         }
       ]
@@ -1074,7 +1074,7 @@
           "CyberkrillTests"
         ],
         "status": 0,
-        "seconds": 10.8
+        "seconds": 12.537
       },
       "restore_build": {
         "command": [
@@ -1087,7 +1087,7 @@
           "CyberkrillTests"
         ],
         "status": 0,
-        "seconds": 10.503
+        "seconds": 13.06
       },
       "checks": [
         {
@@ -1114,7 +1114,7 @@
               "builder/destination-uncompressed"
             ],
             "status": 1,
-            "seconds": 0.078,
+            "seconds": 0.096,
             "failure": "AssertionError: success status: builder/destination-uncompressed"
           },
           "green": {
@@ -1129,7 +1129,7 @@
               "builder/destination-uncompressed"
             ],
             "status": 0,
-            "seconds": 0.07
+            "seconds": 0.084
           }
         },
         {
@@ -1156,7 +1156,7 @@
               "builder/route-uncompressed"
             ],
             "status": 1,
-            "seconds": 0.078,
+            "seconds": 0.102,
             "failure": "AssertionError: success status: builder/route-uncompressed"
           },
           "green": {
@@ -1171,7 +1171,7 @@
               "builder/route-uncompressed"
             ],
             "status": 0,
-            "seconds": 0.07
+            "seconds": 0.078
           }
         },
         {
@@ -1198,7 +1198,7 @@
               "builder/destination-hybrid"
             ],
             "status": 1,
-            "seconds": 0.084,
+            "seconds": 0.097,
             "failure": "AssertionError: success status: builder/destination-hybrid"
           },
           "green": {
@@ -1213,7 +1213,7 @@
               "builder/destination-hybrid"
             ],
             "status": 0,
-            "seconds": 0.072
+            "seconds": 0.079
           }
         },
         {
@@ -1240,7 +1240,7 @@
               "builder/route-hybrid"
             ],
             "status": 1,
-            "seconds": 0.079,
+            "seconds": 0.098,
             "failure": "AssertionError: success status: builder/route-hybrid"
           },
           "green": {
@@ -1255,7 +1255,7 @@
               "builder/route-hybrid"
             ],
             "status": 0,
-            "seconds": 0.072
+            "seconds": 0.08
           }
         }
       ]
@@ -1276,7 +1276,7 @@
           "CyberkrillTests"
         ],
         "status": 0,
-        "seconds": 10.494
+        "seconds": 12.85
       },
       "restore_build": {
         "command": [
@@ -1289,7 +1289,7 @@
           "CyberkrillTests"
         ],
         "status": 0,
-        "seconds": 10.503
+        "seconds": 12.068
       },
       "checks": [
         {
@@ -1316,7 +1316,7 @@
               "builder/destination-mismatched"
             ],
             "status": 1,
-            "seconds": 0.082,
+            "seconds": 0.105,
             "failure": "AssertionError: ordinary failure: builder/destination-mismatched"
           },
           "green": {
@@ -1331,7 +1331,7 @@
               "builder/destination-mismatched"
             ],
             "status": 0,
-            "seconds": 0.072
+            "seconds": 0.085
           }
         },
         {
@@ -1358,7 +1358,7 @@
               "builder/route-mismatched"
             ],
             "status": 1,
-            "seconds": 0.081,
+            "seconds": 0.092,
             "failure": "AssertionError: ordinary failure: builder/route-mismatched"
           },
           "green": {
@@ -1373,7 +1373,7 @@
               "builder/route-mismatched"
             ],
             "status": 0,
-            "seconds": 0.077
+            "seconds": 0.091
           }
         }
       ]
@@ -1394,7 +1394,7 @@
           "CyberkrillTests"
         ],
         "status": 0,
-        "seconds": 10.703
+        "seconds": 11.85
       },
       "restore_build": {
         "command": [
@@ -1407,7 +1407,7 @@
           "CyberkrillTests"
         ],
         "status": 0,
-        "seconds": 10.399
+        "seconds": 11.216
       },
       "checks": [
         {
@@ -1434,7 +1434,7 @@
               "json/duplicate-known"
             ],
             "status": 1,
-            "seconds": 0.079,
+            "seconds": 0.089,
             "failure": "AssertionError: ordinary failure: json/duplicate-known"
           },
           "green": {
@@ -1449,7 +1449,7 @@
               "json/duplicate-known"
             ],
             "status": 0,
-            "seconds": 0.069
+            "seconds": 0.073
           }
         },
         {
@@ -1476,7 +1476,7 @@
               "json/exponent-amount_msats"
             ],
             "status": 1,
-            "seconds": 0.086,
+            "seconds": 0.085,
             "failure": "AssertionError: ordinary failure: json/exponent-amount_msats"
           },
           "green": {
@@ -1491,7 +1491,7 @@
               "json/exponent-amount_msats"
             ],
             "status": 0,
-            "seconds": 0.07
+            "seconds": 0.076
           }
         }
       ]
@@ -1512,7 +1512,7 @@
           "CyberkrillTests"
         ],
         "status": 0,
-        "seconds": 10.597
+        "seconds": 11.413
       },
       "restore_build": {
         "command": [
@@ -1525,7 +1525,7 @@
           "CyberkrillTests"
         ],
         "status": 0,
-        "seconds": 10.599
+        "seconds": 11.447
       },
       "checks": [
         {
@@ -1552,7 +1552,7 @@
               "json/timestamp-6"
             ],
             "status": 1,
-            "seconds": 0.08,
+            "seconds": 0.082,
             "failure": "AssertionError: ordinary failure: json/timestamp-6"
           },
           "green": {
@@ -1567,7 +1567,7 @@
               "json/timestamp-6"
             ],
             "status": 0,
-            "seconds": 0.072
+            "seconds": 0.075
           }
         }
       ]
@@ -1588,7 +1588,7 @@
           "CyberkrillTests"
         ],
         "status": 0,
-        "seconds": 10.496
+        "seconds": 11.215
       },
       "restore_build": {
         "command": [
@@ -1601,7 +1601,7 @@
           "CyberkrillTests"
         ],
         "status": 0,
-        "seconds": 10.801
+        "seconds": 11.625
       },
       "checks": [
         {
@@ -1628,7 +1628,7 @@
               "json/feature-4"
             ],
             "status": 1,
-            "seconds": 0.076,
+            "seconds": 0.087,
             "failure": "AssertionError: success status: json/feature-4"
           },
           "green": {
@@ -1643,7 +1643,7 @@
               "json/feature-4"
             ],
             "status": 0,
-            "seconds": 0.069
+            "seconds": 0.08
           }
         }
       ]
@@ -1664,7 +1664,7 @@
           "CyberkrillTests"
         ],
         "status": 0,
-        "seconds": 10.897
+        "seconds": 13.739
       },
       "restore_build": {
         "command": [
@@ -1677,7 +1677,7 @@
           "CyberkrillTests"
         ],
         "status": 0,
-        "seconds": 10.902
+        "seconds": 15.307
       },
       "checks": [
         {
@@ -1704,7 +1704,7 @@
               "json/hop-overflow-cltv_expiry_delta"
             ],
             "status": 1,
-            "seconds": 0.086,
+            "seconds": 0.107,
             "failure": "AssertionError: ordinary failure: json/hop-overflow-cltv_expiry_delta"
           },
           "green": {
@@ -1719,7 +1719,7 @@
               "json/hop-overflow-cltv_expiry_delta"
             ],
             "status": 0,
-            "seconds": 0.075
+            "seconds": 0.098
           }
         }
       ]
@@ -1740,7 +1740,7 @@
           "CyberkrillTests"
         ],
         "status": 0,
-        "seconds": 9.914
+        "seconds": 11.9
       },
       "restore_build": {
         "command": [
@@ -1753,7 +1753,7 @@
           "CyberkrillTests"
         ],
         "status": 0,
-        "seconds": 9.597
+        "seconds": 11.764
       },
       "checks": [
         {
@@ -1778,7 +1778,7 @@
               "--routing"
             ],
             "status": 1,
-            "seconds": 1.901,
+            "seconds": 2.247,
             "failure": "AssertionError: ordinary write failure status"
           },
           "green": {
@@ -1792,7 +1792,7 @@
               "--routing"
             ],
             "status": 0,
-            "seconds": 2.382
+            "seconds": 2.664
           }
         }
       ]
@@ -1813,7 +1813,7 @@
           "CyberkrillTests"
         ],
         "status": 0,
-        "seconds": 9.6
+        "seconds": 11.538
       },
       "restore_build": {
         "command": [
@@ -1826,7 +1826,7 @@
           "CyberkrillTests"
         ],
         "status": 0,
-        "seconds": 9.495
+        "seconds": 11.788
       },
       "checks": [
         {
@@ -1853,7 +1853,7 @@
               "negative/payment-hash-padding"
             ],
             "status": 1,
-            "seconds": 0.078,
+            "seconds": 0.096,
             "failure": "AssertionError: refusal port status: negative/payment-hash-padding"
           },
           "green": {
@@ -1868,7 +1868,7 @@
               "negative/payment-hash-padding"
             ],
             "status": 0,
-            "seconds": 0.074
+            "seconds": 0.085
           }
         },
         {
@@ -1895,7 +1895,7 @@
               "negative/description-padding"
             ],
             "status": 1,
-            "seconds": 0.086,
+            "seconds": 0.091,
             "failure": "AssertionError: refusal port status: negative/description-padding"
           },
           "green": {
@@ -1910,7 +1910,7 @@
               "negative/description-padding"
             ],
             "status": 0,
-            "seconds": 0.072
+            "seconds": 0.093
           }
         },
         {
@@ -1937,7 +1937,7 @@
               "negative/expiry-leading-zero"
             ],
             "status": 1,
-            "seconds": 0.078,
+            "seconds": 0.09,
             "failure": "AssertionError: refusal port status: negative/expiry-leading-zero"
           },
           "green": {
@@ -1952,7 +1952,7 @@
               "negative/expiry-leading-zero"
             ],
             "status": 0,
-            "seconds": 0.072
+            "seconds": 0.095
           }
         },
         {
@@ -1979,7 +1979,7 @@
               "negative/cltv-leading-zero"
             ],
             "status": 1,
-            "seconds": 0.079,
+            "seconds": 0.089,
             "failure": "AssertionError: refusal port status: negative/cltv-leading-zero"
           },
           "green": {
@@ -1994,7 +1994,7 @@
               "negative/cltv-leading-zero"
             ],
             "status": 0,
-            "seconds": 0.07
+            "seconds": 0.081
           }
         },
         {
@@ -2021,7 +2021,7 @@
               "negative/features-leading-zero"
             ],
             "status": 1,
-            "seconds": 0.08,
+            "seconds": 0.099,
             "failure": "AssertionError: refusal port status: negative/features-leading-zero"
           },
           "green": {
@@ -2036,7 +2036,7 @@
               "negative/features-leading-zero"
             ],
             "status": 0,
-            "seconds": 0.071
+            "seconds": 0.08
           }
         },
         {
@@ -2063,7 +2063,7 @@
               "negative/n-payment-hash-padding"
             ],
             "status": 1,
-            "seconds": 0.081,
+            "seconds": 0.108,
             "failure": "AssertionError: refusal port status: negative/n-payment-hash-padding"
           },
           "green": {
@@ -2078,7 +2078,7 @@
               "negative/n-payment-hash-padding"
             ],
             "status": 0,
-            "seconds": 0.069
+            "seconds": 0.085
           }
         },
         {
@@ -2105,7 +2105,7 @@
               "url-refusal/userinfo"
             ],
             "status": 1,
-            "seconds": 0.086,
+            "seconds": 0.102,
             "failure": "AssertionError: refusal port status: url-refusal/userinfo"
           },
           "green": {
@@ -2120,7 +2120,7 @@
               "url-refusal/userinfo"
             ],
             "status": 0,
-            "seconds": 0.071
+            "seconds": 0.077
           }
         },
         {
@@ -2147,7 +2147,7 @@
               "url-refusal/userinfo-multiple"
             ],
             "status": 1,
-            "seconds": 0.081,
+            "seconds": 0.11,
             "failure": "AssertionError: refusal port status: url-refusal/userinfo-multiple"
           },
           "green": {
@@ -2162,7 +2162,7 @@
               "url-refusal/userinfo-multiple"
             ],
             "status": 0,
-            "seconds": 0.07
+            "seconds": 0.084
           }
         },
         {
@@ -2189,7 +2189,7 @@
               "url-refusal/ipv6"
             ],
             "status": 1,
-            "seconds": 0.077,
+            "seconds": 0.101,
             "failure": "AssertionError: refusal port status: url-refusal/ipv6"
           },
           "green": {
@@ -2204,7 +2204,7 @@
               "url-refusal/ipv6"
             ],
             "status": 0,
-            "seconds": 0.072
+            "seconds": 0.077
           }
         },
         {
@@ -2231,7 +2231,7 @@
               "url-refusal/ipv4-hex"
             ],
             "status": 1,
-            "seconds": 0.083,
+            "seconds": 0.097,
             "failure": "AssertionError: refusal port status: url-refusal/ipv4-hex"
           },
           "green": {
@@ -2246,7 +2246,7 @@
               "url-refusal/ipv4-hex"
             ],
             "status": 0,
-            "seconds": 0.072
+            "seconds": 0.088
           }
         },
         {
@@ -2273,7 +2273,7 @@
               "url-refusal/ipv4-integer"
             ],
             "status": 1,
-            "seconds": 0.077,
+            "seconds": 0.092,
             "failure": "AssertionError: refusal port status: url-refusal/ipv4-integer"
           },
           "green": {
@@ -2288,7 +2288,7 @@
               "url-refusal/ipv4-integer"
             ],
             "status": 0,
-            "seconds": 0.074
+            "seconds": 0.079
           }
         },
         {
@@ -2315,7 +2315,7 @@
               "url-refusal/ipv4-short"
             ],
             "status": 1,
-            "seconds": 0.079,
+            "seconds": 0.092,
             "failure": "AssertionError: refusal port status: url-refusal/ipv4-short"
           },
           "green": {
@@ -2330,7 +2330,7 @@
               "url-refusal/ipv4-short"
             ],
             "status": 0,
-            "seconds": 0.069
+            "seconds": 0.084
           }
         },
         {
@@ -2357,7 +2357,7 @@
               "url-refusal/ipv4-octal"
             ],
             "status": 1,
-            "seconds": 0.081,
+            "seconds": 0.087,
             "failure": "AssertionError: refusal port status: url-refusal/ipv4-octal"
           },
           "green": {
@@ -2372,7 +2372,7 @@
               "url-refusal/ipv4-octal"
             ],
             "status": 0,
-            "seconds": 0.07
+            "seconds": 0.077
           }
         },
         {
@@ -2399,7 +2399,7 @@
               "url-refusal/ipv4-leading"
             ],
             "status": 1,
-            "seconds": 0.079,
+            "seconds": 0.084,
             "failure": "AssertionError: refusal port status: url-refusal/ipv4-leading"
           },
           "green": {
@@ -2414,7 +2414,7 @@
               "url-refusal/ipv4-leading"
             ],
             "status": 0,
-            "seconds": 0.068
+            "seconds": 0.081
           }
         },
         {
@@ -2441,7 +2441,7 @@
               "url-refusal/ipv4-dot"
             ],
             "status": 1,
-            "seconds": 0.08,
+            "seconds": 0.084,
             "failure": "AssertionError: refusal port status: url-refusal/ipv4-dot"
           },
           "green": {
@@ -2456,7 +2456,7 @@
               "url-refusal/ipv4-dot"
             ],
             "status": 0,
-            "seconds": 0.069
+            "seconds": 0.073
           }
         },
         {
@@ -2483,7 +2483,7 @@
               "url-refusal/unicode-host"
             ],
             "status": 1,
-            "seconds": 0.078,
+            "seconds": 0.087,
             "failure": "AssertionError: refusal port status: url-refusal/unicode-host"
           },
           "green": {
@@ -2498,7 +2498,7 @@
               "url-refusal/unicode-host"
             ],
             "status": 0,
-            "seconds": 0.069
+            "seconds": 0.076
           }
         },
         {
@@ -2525,7 +2525,7 @@
               "url-refusal/encoded-unicode-host"
             ],
             "status": 1,
-            "seconds": 0.078,
+            "seconds": 0.091,
             "failure": "AssertionError: refusal port status: url-refusal/encoded-unicode-host"
           },
           "green": {
@@ -2540,7 +2540,7 @@
               "url-refusal/encoded-unicode-host"
             ],
             "status": 0,
-            "seconds": 0.068
+            "seconds": 0.08
           }
         },
         {
@@ -2567,7 +2567,7 @@
               "url-refusal/punycode-host"
             ],
             "status": 1,
-            "seconds": 0.082,
+            "seconds": 0.083,
             "failure": "AssertionError: refusal port status: url-refusal/punycode-host"
           },
           "green": {
@@ -2582,7 +2582,7 @@
               "url-refusal/punycode-host"
             ],
             "status": 0,
-            "seconds": 0.069
+            "seconds": 0.074
           }
         },
         {
@@ -2609,7 +2609,7 @@
               "url-refusal/punycode-upper"
             ],
             "status": 1,
-            "seconds": 0.082,
+            "seconds": 0.089,
             "failure": "AssertionError: refusal port status: url-refusal/punycode-upper"
           },
           "green": {
@@ -2624,7 +2624,7 @@
               "url-refusal/punycode-upper"
             ],
             "status": 0,
-            "seconds": 0.071
+            "seconds": 0.074
           }
         },
         {
@@ -2651,7 +2651,7 @@
               "url-error/scheme"
             ],
             "status": 1,
-            "seconds": 0.078,
+            "seconds": 0.086,
             "failure": "AssertionError: refusal port status: url-error/scheme"
           },
           "green": {
@@ -2666,7 +2666,7 @@
               "url-error/scheme"
             ],
             "status": 0,
-            "seconds": 0.068
+            "seconds": 0.077
           }
         }
       ]
@@ -2687,7 +2687,7 @@
           "CyberkrillTests"
         ],
         "status": 0,
-        "seconds": 9.798
+        "seconds": 11.857
       },
       "restore_build": {
         "command": [
@@ -2700,7 +2700,7 @@
           "CyberkrillTests"
         ],
         "status": 0,
-        "seconds": 9.606
+        "seconds": 11.785
       },
       "checks": [
         {
@@ -2727,7 +2727,7 @@
               "negative/payment-hash-padding"
             ],
             "status": 1,
-            "seconds": 0.081,
+            "seconds": 0.107,
             "failure": "AssertionError: refusal stdout: negative/payment-hash-padding"
           },
           "green": {
@@ -2742,7 +2742,7 @@
               "negative/payment-hash-padding"
             ],
             "status": 0,
-            "seconds": 0.079
+            "seconds": 0.081
           }
         },
         {
@@ -2769,7 +2769,7 @@
               "negative/description-padding"
             ],
             "status": 1,
-            "seconds": 0.082,
+            "seconds": 0.097,
             "failure": "AssertionError: refusal stdout: negative/description-padding"
           },
           "green": {
@@ -2784,7 +2784,7 @@
               "negative/description-padding"
             ],
             "status": 0,
-            "seconds": 0.073
+            "seconds": 0.086
           }
         },
         {
@@ -2811,7 +2811,7 @@
               "negative/expiry-leading-zero"
             ],
             "status": 1,
-            "seconds": 0.081,
+            "seconds": 0.097,
             "failure": "AssertionError: refusal stdout: negative/expiry-leading-zero"
           },
           "green": {
@@ -2826,7 +2826,7 @@
               "negative/expiry-leading-zero"
             ],
             "status": 0,
-            "seconds": 0.072
+            "seconds": 0.082
           }
         },
         {
@@ -2853,7 +2853,7 @@
               "negative/cltv-leading-zero"
             ],
             "status": 1,
-            "seconds": 0.083,
+            "seconds": 0.102,
             "failure": "AssertionError: refusal stdout: negative/cltv-leading-zero"
           },
           "green": {
@@ -2868,7 +2868,7 @@
               "negative/cltv-leading-zero"
             ],
             "status": 0,
-            "seconds": 0.074
+            "seconds": 0.083
           }
         },
         {
@@ -2895,7 +2895,7 @@
               "negative/features-leading-zero"
             ],
             "status": 1,
-            "seconds": 0.08,
+            "seconds": 0.097,
             "failure": "AssertionError: refusal stdout: negative/features-leading-zero"
           },
           "green": {
@@ -2910,7 +2910,7 @@
               "negative/features-leading-zero"
             ],
             "status": 0,
-            "seconds": 0.07
+            "seconds": 0.089
           }
         },
         {
@@ -2937,7 +2937,7 @@
               "negative/n-payment-hash-padding"
             ],
             "status": 1,
-            "seconds": 0.082,
+            "seconds": 0.095,
             "failure": "AssertionError: refusal stdout: negative/n-payment-hash-padding"
           },
           "green": {
@@ -2952,7 +2952,7 @@
               "negative/n-payment-hash-padding"
             ],
             "status": 0,
-            "seconds": 0.071
+            "seconds": 0.088
           }
         },
         {
@@ -2979,7 +2979,7 @@
               "url-refusal/userinfo"
             ],
             "status": 1,
-            "seconds": 0.078,
+            "seconds": 0.105,
             "failure": "AssertionError: refusal stdout: url-refusal/userinfo"
           },
           "green": {
@@ -2994,7 +2994,7 @@
               "url-refusal/userinfo"
             ],
             "status": 0,
-            "seconds": 0.067
+            "seconds": 0.084
           }
         },
         {
@@ -3021,7 +3021,7 @@
               "url-refusal/userinfo-multiple"
             ],
             "status": 1,
-            "seconds": 0.089,
+            "seconds": 0.093,
             "failure": "AssertionError: refusal stdout: url-refusal/userinfo-multiple"
           },
           "green": {
@@ -3036,7 +3036,7 @@
               "url-refusal/userinfo-multiple"
             ],
             "status": 0,
-            "seconds": 0.07
+            "seconds": 0.092
           }
         },
         {
@@ -3063,7 +3063,7 @@
               "url-refusal/ipv6"
             ],
             "status": 1,
-            "seconds": 0.08,
+            "seconds": 0.089,
             "failure": "AssertionError: refusal stdout: url-refusal/ipv6"
           },
           "green": {
@@ -3078,7 +3078,7 @@
               "url-refusal/ipv6"
             ],
             "status": 0,
-            "seconds": 0.071
+            "seconds": 0.082
           }
         },
         {
@@ -3105,7 +3105,7 @@
               "url-refusal/ipv4-hex"
             ],
             "status": 1,
-            "seconds": 0.081,
+            "seconds": 0.093,
             "failure": "AssertionError: refusal stdout: url-refusal/ipv4-hex"
           },
           "green": {
@@ -3120,7 +3120,7 @@
               "url-refusal/ipv4-hex"
             ],
             "status": 0,
-            "seconds": 0.072
+            "seconds": 0.085
           }
         },
         {
@@ -3147,7 +3147,7 @@
               "url-refusal/ipv4-integer"
             ],
             "status": 1,
-            "seconds": 0.082,
+            "seconds": 0.096,
             "failure": "AssertionError: refusal stdout: url-refusal/ipv4-integer"
           },
           "green": {
@@ -3162,7 +3162,7 @@
               "url-refusal/ipv4-integer"
             ],
             "status": 0,
-            "seconds": 0.075
+            "seconds": 0.086
           }
         },
         {
@@ -3189,7 +3189,7 @@
               "url-refusal/ipv4-short"
             ],
             "status": 1,
-            "seconds": 0.083,
+            "seconds": 0.09,
             "failure": "AssertionError: refusal stdout: url-refusal/ipv4-short"
           },
           "green": {
@@ -3204,7 +3204,7 @@
               "url-refusal/ipv4-short"
             ],
             "status": 0,
-            "seconds": 0.071
+            "seconds": 0.085
           }
         },
         {
@@ -3231,7 +3231,7 @@
               "url-refusal/ipv4-octal"
             ],
             "status": 1,
-            "seconds": 0.077,
+            "seconds": 0.098,
             "failure": "AssertionError: refusal stdout: url-refusal/ipv4-octal"
           },
           "green": {
@@ -3246,7 +3246,7 @@
               "url-refusal/ipv4-octal"
             ],
             "status": 0,
-            "seconds": 0.071
+            "seconds": 0.08
           }
         },
         {
@@ -3273,7 +3273,7 @@
               "url-refusal/ipv4-leading"
             ],
             "status": 1,
-            "seconds": 0.081,
+            "seconds": 0.097,
             "failure": "AssertionError: refusal stdout: url-refusal/ipv4-leading"
           },
           "green": {
@@ -3288,7 +3288,7 @@
               "url-refusal/ipv4-leading"
             ],
             "status": 0,
-            "seconds": 0.07
+            "seconds": 0.078
           }
         },
         {
@@ -3315,7 +3315,7 @@
               "url-refusal/ipv4-dot"
             ],
             "status": 1,
-            "seconds": 0.083,
+            "seconds": 0.097,
             "failure": "AssertionError: refusal stdout: url-refusal/ipv4-dot"
           },
           "green": {
@@ -3330,7 +3330,7 @@
               "url-refusal/ipv4-dot"
             ],
             "status": 0,
-            "seconds": 0.072
+            "seconds": 0.085
           }
         },
         {
@@ -3357,7 +3357,7 @@
               "url-refusal/unicode-host"
             ],
             "status": 1,
-            "seconds": 0.08,
+            "seconds": 0.091,
             "failure": "AssertionError: refusal stdout: url-refusal/unicode-host"
           },
           "green": {
@@ -3372,7 +3372,7 @@
               "url-refusal/unicode-host"
             ],
             "status": 0,
-            "seconds": 0.075
+            "seconds": 0.082
           }
         },
         {
@@ -3399,8 +3399,882 @@
               "url-refusal/encoded-unicode-host"
             ],
             "status": 1,
-            "seconds": 0.082,
+            "seconds": 0.098,
             "failure": "AssertionError: refusal stdout: url-refusal/encoded-unicode-host"
+          },
+          "green": {
+            "command": [
+              "timeout",
+              "--foreground",
+              "180",
+              "python3",
+              "-B",
+              "test/lightning.py",
+              "--case",
+              "url-refusal/encoded-unicode-host"
+            ],
+            "status": 0,
+            "seconds": 0.084
+          }
+        },
+        {
+          "command": [
+            "timeout",
+            "--foreground",
+            "180",
+            "python3",
+            "-B",
+            "test/lightning.py",
+            "--case",
+            "url-refusal/punycode-host"
+          ],
+          "assertion": "refusal stdout",
+          "red": {
+            "command": [
+              "timeout",
+              "--foreground",
+              "180",
+              "python3",
+              "-B",
+              "test/lightning.py",
+              "--case",
+              "url-refusal/punycode-host"
+            ],
+            "status": 1,
+            "seconds": 0.097,
+            "failure": "AssertionError: refusal stdout: url-refusal/punycode-host"
+          },
+          "green": {
+            "command": [
+              "timeout",
+              "--foreground",
+              "180",
+              "python3",
+              "-B",
+              "test/lightning.py",
+              "--case",
+              "url-refusal/punycode-host"
+            ],
+            "status": 0,
+            "seconds": 0.08
+          }
+        },
+        {
+          "command": [
+            "timeout",
+            "--foreground",
+            "180",
+            "python3",
+            "-B",
+            "test/lightning.py",
+            "--case",
+            "url-refusal/punycode-upper"
+          ],
+          "assertion": "refusal stdout",
+          "red": {
+            "command": [
+              "timeout",
+              "--foreground",
+              "180",
+              "python3",
+              "-B",
+              "test/lightning.py",
+              "--case",
+              "url-refusal/punycode-upper"
+            ],
+            "status": 1,
+            "seconds": 0.094,
+            "failure": "AssertionError: refusal stdout: url-refusal/punycode-upper"
+          },
+          "green": {
+            "command": [
+              "timeout",
+              "--foreground",
+              "180",
+              "python3",
+              "-B",
+              "test/lightning.py",
+              "--case",
+              "url-refusal/punycode-upper"
+            ],
+            "status": 0,
+            "seconds": 0.075
+          }
+        },
+        {
+          "command": [
+            "timeout",
+            "--foreground",
+            "180",
+            "python3",
+            "-B",
+            "test/lightning.py",
+            "--case",
+            "url-error/scheme"
+          ],
+          "assertion": "refusal stdout",
+          "red": {
+            "command": [
+              "timeout",
+              "--foreground",
+              "180",
+              "python3",
+              "-B",
+              "test/lightning.py",
+              "--case",
+              "url-error/scheme"
+            ],
+            "status": 1,
+            "seconds": 0.094,
+            "failure": "AssertionError: refusal stdout: url-error/scheme"
+          },
+          "green": {
+            "command": [
+              "timeout",
+              "--foreground",
+              "180",
+              "python3",
+              "-B",
+              "test/lightning.py",
+              "--case",
+              "url-error/scheme"
+            ],
+            "status": 0,
+            "seconds": 0.084
+          }
+        }
+      ]
+    },
+    {
+      "property": "refusal-identity",
+      "file": "Cyberkrill/Amounts.lean",
+      "replace": "code ++ \": Invalid Lightning input\"",
+      "with_text": "\"wrongLightningError: Invalid Lightning input\"",
+      "build": {
+        "command": [
+          "timeout",
+          "--foreground",
+          "180",
+          "lake",
+          "build",
+          "cyberkrill",
+          "CyberkrillTests"
+        ],
+        "status": 0,
+        "seconds": 14.788
+      },
+      "restore_build": {
+        "command": [
+          "timeout",
+          "--foreground",
+          "180",
+          "lake",
+          "build",
+          "cyberkrill",
+          "CyberkrillTests"
+        ],
+        "status": 0,
+        "seconds": 13.983
+      },
+      "checks": [
+        {
+          "command": [
+            "timeout",
+            "--foreground",
+            "180",
+            "python3",
+            "-B",
+            "test/lightning.py",
+            "--case",
+            "negative/payment-hash-padding"
+          ],
+          "assertion": "refusal error identity",
+          "red": {
+            "command": [
+              "timeout",
+              "--foreground",
+              "180",
+              "python3",
+              "-B",
+              "test/lightning.py",
+              "--case",
+              "negative/payment-hash-padding"
+            ],
+            "status": 1,
+            "seconds": 0.093,
+            "failure": "AssertionError: refusal error identity: negative/payment-hash-padding"
+          },
+          "green": {
+            "command": [
+              "timeout",
+              "--foreground",
+              "180",
+              "python3",
+              "-B",
+              "test/lightning.py",
+              "--case",
+              "negative/payment-hash-padding"
+            ],
+            "status": 0,
+            "seconds": 0.078
+          }
+        },
+        {
+          "command": [
+            "timeout",
+            "--foreground",
+            "180",
+            "python3",
+            "-B",
+            "test/lightning.py",
+            "--case",
+            "negative/description-padding"
+          ],
+          "assertion": "refusal error identity",
+          "red": {
+            "command": [
+              "timeout",
+              "--foreground",
+              "180",
+              "python3",
+              "-B",
+              "test/lightning.py",
+              "--case",
+              "negative/description-padding"
+            ],
+            "status": 1,
+            "seconds": 0.095,
+            "failure": "AssertionError: refusal error identity: negative/description-padding"
+          },
+          "green": {
+            "command": [
+              "timeout",
+              "--foreground",
+              "180",
+              "python3",
+              "-B",
+              "test/lightning.py",
+              "--case",
+              "negative/description-padding"
+            ],
+            "status": 0,
+            "seconds": 0.075
+          }
+        },
+        {
+          "command": [
+            "timeout",
+            "--foreground",
+            "180",
+            "python3",
+            "-B",
+            "test/lightning.py",
+            "--case",
+            "negative/expiry-leading-zero"
+          ],
+          "assertion": "refusal error identity",
+          "red": {
+            "command": [
+              "timeout",
+              "--foreground",
+              "180",
+              "python3",
+              "-B",
+              "test/lightning.py",
+              "--case",
+              "negative/expiry-leading-zero"
+            ],
+            "status": 1,
+            "seconds": 0.096,
+            "failure": "AssertionError: refusal error identity: negative/expiry-leading-zero"
+          },
+          "green": {
+            "command": [
+              "timeout",
+              "--foreground",
+              "180",
+              "python3",
+              "-B",
+              "test/lightning.py",
+              "--case",
+              "negative/expiry-leading-zero"
+            ],
+            "status": 0,
+            "seconds": 0.077
+          }
+        },
+        {
+          "command": [
+            "timeout",
+            "--foreground",
+            "180",
+            "python3",
+            "-B",
+            "test/lightning.py",
+            "--case",
+            "negative/cltv-leading-zero"
+          ],
+          "assertion": "refusal error identity",
+          "red": {
+            "command": [
+              "timeout",
+              "--foreground",
+              "180",
+              "python3",
+              "-B",
+              "test/lightning.py",
+              "--case",
+              "negative/cltv-leading-zero"
+            ],
+            "status": 1,
+            "seconds": 0.095,
+            "failure": "AssertionError: refusal error identity: negative/cltv-leading-zero"
+          },
+          "green": {
+            "command": [
+              "timeout",
+              "--foreground",
+              "180",
+              "python3",
+              "-B",
+              "test/lightning.py",
+              "--case",
+              "negative/cltv-leading-zero"
+            ],
+            "status": 0,
+            "seconds": 0.081
+          }
+        },
+        {
+          "command": [
+            "timeout",
+            "--foreground",
+            "180",
+            "python3",
+            "-B",
+            "test/lightning.py",
+            "--case",
+            "negative/features-leading-zero"
+          ],
+          "assertion": "refusal error identity",
+          "red": {
+            "command": [
+              "timeout",
+              "--foreground",
+              "180",
+              "python3",
+              "-B",
+              "test/lightning.py",
+              "--case",
+              "negative/features-leading-zero"
+            ],
+            "status": 1,
+            "seconds": 0.099,
+            "failure": "AssertionError: refusal error identity: negative/features-leading-zero"
+          },
+          "green": {
+            "command": [
+              "timeout",
+              "--foreground",
+              "180",
+              "python3",
+              "-B",
+              "test/lightning.py",
+              "--case",
+              "negative/features-leading-zero"
+            ],
+            "status": 0,
+            "seconds": 0.078
+          }
+        },
+        {
+          "command": [
+            "timeout",
+            "--foreground",
+            "180",
+            "python3",
+            "-B",
+            "test/lightning.py",
+            "--case",
+            "negative/n-payment-hash-padding"
+          ],
+          "assertion": "refusal error identity",
+          "red": {
+            "command": [
+              "timeout",
+              "--foreground",
+              "180",
+              "python3",
+              "-B",
+              "test/lightning.py",
+              "--case",
+              "negative/n-payment-hash-padding"
+            ],
+            "status": 1,
+            "seconds": 0.101,
+            "failure": "AssertionError: refusal error identity: negative/n-payment-hash-padding"
+          },
+          "green": {
+            "command": [
+              "timeout",
+              "--foreground",
+              "180",
+              "python3",
+              "-B",
+              "test/lightning.py",
+              "--case",
+              "negative/n-payment-hash-padding"
+            ],
+            "status": 0,
+            "seconds": 0.079
+          }
+        },
+        {
+          "command": [
+            "timeout",
+            "--foreground",
+            "180",
+            "python3",
+            "-B",
+            "test/lightning.py",
+            "--case",
+            "url-refusal/userinfo"
+          ],
+          "assertion": "refusal error identity",
+          "red": {
+            "command": [
+              "timeout",
+              "--foreground",
+              "180",
+              "python3",
+              "-B",
+              "test/lightning.py",
+              "--case",
+              "url-refusal/userinfo"
+            ],
+            "status": 1,
+            "seconds": 0.089,
+            "failure": "AssertionError: refusal error identity: url-refusal/userinfo"
+          },
+          "green": {
+            "command": [
+              "timeout",
+              "--foreground",
+              "180",
+              "python3",
+              "-B",
+              "test/lightning.py",
+              "--case",
+              "url-refusal/userinfo"
+            ],
+            "status": 0,
+            "seconds": 0.077
+          }
+        },
+        {
+          "command": [
+            "timeout",
+            "--foreground",
+            "180",
+            "python3",
+            "-B",
+            "test/lightning.py",
+            "--case",
+            "url-refusal/userinfo-multiple"
+          ],
+          "assertion": "refusal error identity",
+          "red": {
+            "command": [
+              "timeout",
+              "--foreground",
+              "180",
+              "python3",
+              "-B",
+              "test/lightning.py",
+              "--case",
+              "url-refusal/userinfo-multiple"
+            ],
+            "status": 1,
+            "seconds": 0.085,
+            "failure": "AssertionError: refusal error identity: url-refusal/userinfo-multiple"
+          },
+          "green": {
+            "command": [
+              "timeout",
+              "--foreground",
+              "180",
+              "python3",
+              "-B",
+              "test/lightning.py",
+              "--case",
+              "url-refusal/userinfo-multiple"
+            ],
+            "status": 0,
+            "seconds": 0.073
+          }
+        },
+        {
+          "command": [
+            "timeout",
+            "--foreground",
+            "180",
+            "python3",
+            "-B",
+            "test/lightning.py",
+            "--case",
+            "url-refusal/ipv6"
+          ],
+          "assertion": "refusal error identity",
+          "red": {
+            "command": [
+              "timeout",
+              "--foreground",
+              "180",
+              "python3",
+              "-B",
+              "test/lightning.py",
+              "--case",
+              "url-refusal/ipv6"
+            ],
+            "status": 1,
+            "seconds": 0.104,
+            "failure": "AssertionError: refusal error identity: url-refusal/ipv6"
+          },
+          "green": {
+            "command": [
+              "timeout",
+              "--foreground",
+              "180",
+              "python3",
+              "-B",
+              "test/lightning.py",
+              "--case",
+              "url-refusal/ipv6"
+            ],
+            "status": 0,
+            "seconds": 0.075
+          }
+        },
+        {
+          "command": [
+            "timeout",
+            "--foreground",
+            "180",
+            "python3",
+            "-B",
+            "test/lightning.py",
+            "--case",
+            "url-refusal/ipv4-hex"
+          ],
+          "assertion": "refusal error identity",
+          "red": {
+            "command": [
+              "timeout",
+              "--foreground",
+              "180",
+              "python3",
+              "-B",
+              "test/lightning.py",
+              "--case",
+              "url-refusal/ipv4-hex"
+            ],
+            "status": 1,
+            "seconds": 0.097,
+            "failure": "AssertionError: refusal error identity: url-refusal/ipv4-hex"
+          },
+          "green": {
+            "command": [
+              "timeout",
+              "--foreground",
+              "180",
+              "python3",
+              "-B",
+              "test/lightning.py",
+              "--case",
+              "url-refusal/ipv4-hex"
+            ],
+            "status": 0,
+            "seconds": 0.081
+          }
+        },
+        {
+          "command": [
+            "timeout",
+            "--foreground",
+            "180",
+            "python3",
+            "-B",
+            "test/lightning.py",
+            "--case",
+            "url-refusal/ipv4-integer"
+          ],
+          "assertion": "refusal error identity",
+          "red": {
+            "command": [
+              "timeout",
+              "--foreground",
+              "180",
+              "python3",
+              "-B",
+              "test/lightning.py",
+              "--case",
+              "url-refusal/ipv4-integer"
+            ],
+            "status": 1,
+            "seconds": 0.094,
+            "failure": "AssertionError: refusal error identity: url-refusal/ipv4-integer"
+          },
+          "green": {
+            "command": [
+              "timeout",
+              "--foreground",
+              "180",
+              "python3",
+              "-B",
+              "test/lightning.py",
+              "--case",
+              "url-refusal/ipv4-integer"
+            ],
+            "status": 0,
+            "seconds": 0.077
+          }
+        },
+        {
+          "command": [
+            "timeout",
+            "--foreground",
+            "180",
+            "python3",
+            "-B",
+            "test/lightning.py",
+            "--case",
+            "url-refusal/ipv4-short"
+          ],
+          "assertion": "refusal error identity",
+          "red": {
+            "command": [
+              "timeout",
+              "--foreground",
+              "180",
+              "python3",
+              "-B",
+              "test/lightning.py",
+              "--case",
+              "url-refusal/ipv4-short"
+            ],
+            "status": 1,
+            "seconds": 0.098,
+            "failure": "AssertionError: refusal error identity: url-refusal/ipv4-short"
+          },
+          "green": {
+            "command": [
+              "timeout",
+              "--foreground",
+              "180",
+              "python3",
+              "-B",
+              "test/lightning.py",
+              "--case",
+              "url-refusal/ipv4-short"
+            ],
+            "status": 0,
+            "seconds": 0.077
+          }
+        },
+        {
+          "command": [
+            "timeout",
+            "--foreground",
+            "180",
+            "python3",
+            "-B",
+            "test/lightning.py",
+            "--case",
+            "url-refusal/ipv4-octal"
+          ],
+          "assertion": "refusal error identity",
+          "red": {
+            "command": [
+              "timeout",
+              "--foreground",
+              "180",
+              "python3",
+              "-B",
+              "test/lightning.py",
+              "--case",
+              "url-refusal/ipv4-octal"
+            ],
+            "status": 1,
+            "seconds": 0.096,
+            "failure": "AssertionError: refusal error identity: url-refusal/ipv4-octal"
+          },
+          "green": {
+            "command": [
+              "timeout",
+              "--foreground",
+              "180",
+              "python3",
+              "-B",
+              "test/lightning.py",
+              "--case",
+              "url-refusal/ipv4-octal"
+            ],
+            "status": 0,
+            "seconds": 0.083
+          }
+        },
+        {
+          "command": [
+            "timeout",
+            "--foreground",
+            "180",
+            "python3",
+            "-B",
+            "test/lightning.py",
+            "--case",
+            "url-refusal/ipv4-leading"
+          ],
+          "assertion": "refusal error identity",
+          "red": {
+            "command": [
+              "timeout",
+              "--foreground",
+              "180",
+              "python3",
+              "-B",
+              "test/lightning.py",
+              "--case",
+              "url-refusal/ipv4-leading"
+            ],
+            "status": 1,
+            "seconds": 0.1,
+            "failure": "AssertionError: refusal error identity: url-refusal/ipv4-leading"
+          },
+          "green": {
+            "command": [
+              "timeout",
+              "--foreground",
+              "180",
+              "python3",
+              "-B",
+              "test/lightning.py",
+              "--case",
+              "url-refusal/ipv4-leading"
+            ],
+            "status": 0,
+            "seconds": 0.076
+          }
+        },
+        {
+          "command": [
+            "timeout",
+            "--foreground",
+            "180",
+            "python3",
+            "-B",
+            "test/lightning.py",
+            "--case",
+            "url-refusal/ipv4-dot"
+          ],
+          "assertion": "refusal error identity",
+          "red": {
+            "command": [
+              "timeout",
+              "--foreground",
+              "180",
+              "python3",
+              "-B",
+              "test/lightning.py",
+              "--case",
+              "url-refusal/ipv4-dot"
+            ],
+            "status": 1,
+            "seconds": 0.102,
+            "failure": "AssertionError: refusal error identity: url-refusal/ipv4-dot"
+          },
+          "green": {
+            "command": [
+              "timeout",
+              "--foreground",
+              "180",
+              "python3",
+              "-B",
+              "test/lightning.py",
+              "--case",
+              "url-refusal/ipv4-dot"
+            ],
+            "status": 0,
+            "seconds": 0.08
+          }
+        },
+        {
+          "command": [
+            "timeout",
+            "--foreground",
+            "180",
+            "python3",
+            "-B",
+            "test/lightning.py",
+            "--case",
+            "url-refusal/unicode-host"
+          ],
+          "assertion": "refusal error identity",
+          "red": {
+            "command": [
+              "timeout",
+              "--foreground",
+              "180",
+              "python3",
+              "-B",
+              "test/lightning.py",
+              "--case",
+              "url-refusal/unicode-host"
+            ],
+            "status": 1,
+            "seconds": 0.092,
+            "failure": "AssertionError: refusal error identity: url-refusal/unicode-host"
+          },
+          "green": {
+            "command": [
+              "timeout",
+              "--foreground",
+              "180",
+              "python3",
+              "-B",
+              "test/lightning.py",
+              "--case",
+              "url-refusal/unicode-host"
+            ],
+            "status": 0,
+            "seconds": 0.078
+          }
+        },
+        {
+          "command": [
+            "timeout",
+            "--foreground",
+            "180",
+            "python3",
+            "-B",
+            "test/lightning.py",
+            "--case",
+            "url-refusal/encoded-unicode-host"
+          ],
+          "assertion": "refusal error identity",
+          "red": {
+            "command": [
+              "timeout",
+              "--foreground",
+              "180",
+              "python3",
+              "-B",
+              "test/lightning.py",
+              "--case",
+              "url-refusal/encoded-unicode-host"
+            ],
+            "status": 1,
+            "seconds": 0.094,
+            "failure": "AssertionError: refusal error identity: url-refusal/encoded-unicode-host"
           },
           "green": {
             "command": [
@@ -3428,880 +4302,6 @@
             "--case",
             "url-refusal/punycode-host"
           ],
-          "assertion": "refusal stdout",
-          "red": {
-            "command": [
-              "timeout",
-              "--foreground",
-              "180",
-              "python3",
-              "-B",
-              "test/lightning.py",
-              "--case",
-              "url-refusal/punycode-host"
-            ],
-            "status": 1,
-            "seconds": 0.08,
-            "failure": "AssertionError: refusal stdout: url-refusal/punycode-host"
-          },
-          "green": {
-            "command": [
-              "timeout",
-              "--foreground",
-              "180",
-              "python3",
-              "-B",
-              "test/lightning.py",
-              "--case",
-              "url-refusal/punycode-host"
-            ],
-            "status": 0,
-            "seconds": 0.071
-          }
-        },
-        {
-          "command": [
-            "timeout",
-            "--foreground",
-            "180",
-            "python3",
-            "-B",
-            "test/lightning.py",
-            "--case",
-            "url-refusal/punycode-upper"
-          ],
-          "assertion": "refusal stdout",
-          "red": {
-            "command": [
-              "timeout",
-              "--foreground",
-              "180",
-              "python3",
-              "-B",
-              "test/lightning.py",
-              "--case",
-              "url-refusal/punycode-upper"
-            ],
-            "status": 1,
-            "seconds": 0.08,
-            "failure": "AssertionError: refusal stdout: url-refusal/punycode-upper"
-          },
-          "green": {
-            "command": [
-              "timeout",
-              "--foreground",
-              "180",
-              "python3",
-              "-B",
-              "test/lightning.py",
-              "--case",
-              "url-refusal/punycode-upper"
-            ],
-            "status": 0,
-            "seconds": 0.07
-          }
-        },
-        {
-          "command": [
-            "timeout",
-            "--foreground",
-            "180",
-            "python3",
-            "-B",
-            "test/lightning.py",
-            "--case",
-            "url-error/scheme"
-          ],
-          "assertion": "refusal stdout",
-          "red": {
-            "command": [
-              "timeout",
-              "--foreground",
-              "180",
-              "python3",
-              "-B",
-              "test/lightning.py",
-              "--case",
-              "url-error/scheme"
-            ],
-            "status": 1,
-            "seconds": 0.082,
-            "failure": "AssertionError: refusal stdout: url-error/scheme"
-          },
-          "green": {
-            "command": [
-              "timeout",
-              "--foreground",
-              "180",
-              "python3",
-              "-B",
-              "test/lightning.py",
-              "--case",
-              "url-error/scheme"
-            ],
-            "status": 0,
-            "seconds": 0.071
-          }
-        }
-      ]
-    },
-    {
-      "property": "refusal-identity",
-      "file": "Cyberkrill/Amounts.lean",
-      "replace": "code ++ \": Invalid Lightning input\"",
-      "with_text": "\"wrongLightningError: Invalid Lightning input\"",
-      "build": {
-        "command": [
-          "timeout",
-          "--foreground",
-          "180",
-          "lake",
-          "build",
-          "cyberkrill",
-          "CyberkrillTests"
-        ],
-        "status": 0,
-        "seconds": 12.097
-      },
-      "restore_build": {
-        "command": [
-          "timeout",
-          "--foreground",
-          "180",
-          "lake",
-          "build",
-          "cyberkrill",
-          "CyberkrillTests"
-        ],
-        "status": 0,
-        "seconds": 12.196
-      },
-      "checks": [
-        {
-          "command": [
-            "timeout",
-            "--foreground",
-            "180",
-            "python3",
-            "-B",
-            "test/lightning.py",
-            "--case",
-            "negative/payment-hash-padding"
-          ],
-          "assertion": "refusal error identity",
-          "red": {
-            "command": [
-              "timeout",
-              "--foreground",
-              "180",
-              "python3",
-              "-B",
-              "test/lightning.py",
-              "--case",
-              "negative/payment-hash-padding"
-            ],
-            "status": 1,
-            "seconds": 0.079,
-            "failure": "AssertionError: refusal error identity: negative/payment-hash-padding"
-          },
-          "green": {
-            "command": [
-              "timeout",
-              "--foreground",
-              "180",
-              "python3",
-              "-B",
-              "test/lightning.py",
-              "--case",
-              "negative/payment-hash-padding"
-            ],
-            "status": 0,
-            "seconds": 0.07
-          }
-        },
-        {
-          "command": [
-            "timeout",
-            "--foreground",
-            "180",
-            "python3",
-            "-B",
-            "test/lightning.py",
-            "--case",
-            "negative/description-padding"
-          ],
-          "assertion": "refusal error identity",
-          "red": {
-            "command": [
-              "timeout",
-              "--foreground",
-              "180",
-              "python3",
-              "-B",
-              "test/lightning.py",
-              "--case",
-              "negative/description-padding"
-            ],
-            "status": 1,
-            "seconds": 0.079,
-            "failure": "AssertionError: refusal error identity: negative/description-padding"
-          },
-          "green": {
-            "command": [
-              "timeout",
-              "--foreground",
-              "180",
-              "python3",
-              "-B",
-              "test/lightning.py",
-              "--case",
-              "negative/description-padding"
-            ],
-            "status": 0,
-            "seconds": 0.071
-          }
-        },
-        {
-          "command": [
-            "timeout",
-            "--foreground",
-            "180",
-            "python3",
-            "-B",
-            "test/lightning.py",
-            "--case",
-            "negative/expiry-leading-zero"
-          ],
-          "assertion": "refusal error identity",
-          "red": {
-            "command": [
-              "timeout",
-              "--foreground",
-              "180",
-              "python3",
-              "-B",
-              "test/lightning.py",
-              "--case",
-              "negative/expiry-leading-zero"
-            ],
-            "status": 1,
-            "seconds": 0.08,
-            "failure": "AssertionError: refusal error identity: negative/expiry-leading-zero"
-          },
-          "green": {
-            "command": [
-              "timeout",
-              "--foreground",
-              "180",
-              "python3",
-              "-B",
-              "test/lightning.py",
-              "--case",
-              "negative/expiry-leading-zero"
-            ],
-            "status": 0,
-            "seconds": 0.07
-          }
-        },
-        {
-          "command": [
-            "timeout",
-            "--foreground",
-            "180",
-            "python3",
-            "-B",
-            "test/lightning.py",
-            "--case",
-            "negative/cltv-leading-zero"
-          ],
-          "assertion": "refusal error identity",
-          "red": {
-            "command": [
-              "timeout",
-              "--foreground",
-              "180",
-              "python3",
-              "-B",
-              "test/lightning.py",
-              "--case",
-              "negative/cltv-leading-zero"
-            ],
-            "status": 1,
-            "seconds": 0.08,
-            "failure": "AssertionError: refusal error identity: negative/cltv-leading-zero"
-          },
-          "green": {
-            "command": [
-              "timeout",
-              "--foreground",
-              "180",
-              "python3",
-              "-B",
-              "test/lightning.py",
-              "--case",
-              "negative/cltv-leading-zero"
-            ],
-            "status": 0,
-            "seconds": 0.071
-          }
-        },
-        {
-          "command": [
-            "timeout",
-            "--foreground",
-            "180",
-            "python3",
-            "-B",
-            "test/lightning.py",
-            "--case",
-            "negative/features-leading-zero"
-          ],
-          "assertion": "refusal error identity",
-          "red": {
-            "command": [
-              "timeout",
-              "--foreground",
-              "180",
-              "python3",
-              "-B",
-              "test/lightning.py",
-              "--case",
-              "negative/features-leading-zero"
-            ],
-            "status": 1,
-            "seconds": 0.078,
-            "failure": "AssertionError: refusal error identity: negative/features-leading-zero"
-          },
-          "green": {
-            "command": [
-              "timeout",
-              "--foreground",
-              "180",
-              "python3",
-              "-B",
-              "test/lightning.py",
-              "--case",
-              "negative/features-leading-zero"
-            ],
-            "status": 0,
-            "seconds": 0.072
-          }
-        },
-        {
-          "command": [
-            "timeout",
-            "--foreground",
-            "180",
-            "python3",
-            "-B",
-            "test/lightning.py",
-            "--case",
-            "negative/n-payment-hash-padding"
-          ],
-          "assertion": "refusal error identity",
-          "red": {
-            "command": [
-              "timeout",
-              "--foreground",
-              "180",
-              "python3",
-              "-B",
-              "test/lightning.py",
-              "--case",
-              "negative/n-payment-hash-padding"
-            ],
-            "status": 1,
-            "seconds": 0.08,
-            "failure": "AssertionError: refusal error identity: negative/n-payment-hash-padding"
-          },
-          "green": {
-            "command": [
-              "timeout",
-              "--foreground",
-              "180",
-              "python3",
-              "-B",
-              "test/lightning.py",
-              "--case",
-              "negative/n-payment-hash-padding"
-            ],
-            "status": 0,
-            "seconds": 0.071
-          }
-        },
-        {
-          "command": [
-            "timeout",
-            "--foreground",
-            "180",
-            "python3",
-            "-B",
-            "test/lightning.py",
-            "--case",
-            "url-refusal/userinfo"
-          ],
-          "assertion": "refusal error identity",
-          "red": {
-            "command": [
-              "timeout",
-              "--foreground",
-              "180",
-              "python3",
-              "-B",
-              "test/lightning.py",
-              "--case",
-              "url-refusal/userinfo"
-            ],
-            "status": 1,
-            "seconds": 0.077,
-            "failure": "AssertionError: refusal error identity: url-refusal/userinfo"
-          },
-          "green": {
-            "command": [
-              "timeout",
-              "--foreground",
-              "180",
-              "python3",
-              "-B",
-              "test/lightning.py",
-              "--case",
-              "url-refusal/userinfo"
-            ],
-            "status": 0,
-            "seconds": 0.068
-          }
-        },
-        {
-          "command": [
-            "timeout",
-            "--foreground",
-            "180",
-            "python3",
-            "-B",
-            "test/lightning.py",
-            "--case",
-            "url-refusal/userinfo-multiple"
-          ],
-          "assertion": "refusal error identity",
-          "red": {
-            "command": [
-              "timeout",
-              "--foreground",
-              "180",
-              "python3",
-              "-B",
-              "test/lightning.py",
-              "--case",
-              "url-refusal/userinfo-multiple"
-            ],
-            "status": 1,
-            "seconds": 0.079,
-            "failure": "AssertionError: refusal error identity: url-refusal/userinfo-multiple"
-          },
-          "green": {
-            "command": [
-              "timeout",
-              "--foreground",
-              "180",
-              "python3",
-              "-B",
-              "test/lightning.py",
-              "--case",
-              "url-refusal/userinfo-multiple"
-            ],
-            "status": 0,
-            "seconds": 0.069
-          }
-        },
-        {
-          "command": [
-            "timeout",
-            "--foreground",
-            "180",
-            "python3",
-            "-B",
-            "test/lightning.py",
-            "--case",
-            "url-refusal/ipv6"
-          ],
-          "assertion": "refusal error identity",
-          "red": {
-            "command": [
-              "timeout",
-              "--foreground",
-              "180",
-              "python3",
-              "-B",
-              "test/lightning.py",
-              "--case",
-              "url-refusal/ipv6"
-            ],
-            "status": 1,
-            "seconds": 0.077,
-            "failure": "AssertionError: refusal error identity: url-refusal/ipv6"
-          },
-          "green": {
-            "command": [
-              "timeout",
-              "--foreground",
-              "180",
-              "python3",
-              "-B",
-              "test/lightning.py",
-              "--case",
-              "url-refusal/ipv6"
-            ],
-            "status": 0,
-            "seconds": 0.074
-          }
-        },
-        {
-          "command": [
-            "timeout",
-            "--foreground",
-            "180",
-            "python3",
-            "-B",
-            "test/lightning.py",
-            "--case",
-            "url-refusal/ipv4-hex"
-          ],
-          "assertion": "refusal error identity",
-          "red": {
-            "command": [
-              "timeout",
-              "--foreground",
-              "180",
-              "python3",
-              "-B",
-              "test/lightning.py",
-              "--case",
-              "url-refusal/ipv4-hex"
-            ],
-            "status": 1,
-            "seconds": 0.077,
-            "failure": "AssertionError: refusal error identity: url-refusal/ipv4-hex"
-          },
-          "green": {
-            "command": [
-              "timeout",
-              "--foreground",
-              "180",
-              "python3",
-              "-B",
-              "test/lightning.py",
-              "--case",
-              "url-refusal/ipv4-hex"
-            ],
-            "status": 0,
-            "seconds": 0.074
-          }
-        },
-        {
-          "command": [
-            "timeout",
-            "--foreground",
-            "180",
-            "python3",
-            "-B",
-            "test/lightning.py",
-            "--case",
-            "url-refusal/ipv4-integer"
-          ],
-          "assertion": "refusal error identity",
-          "red": {
-            "command": [
-              "timeout",
-              "--foreground",
-              "180",
-              "python3",
-              "-B",
-              "test/lightning.py",
-              "--case",
-              "url-refusal/ipv4-integer"
-            ],
-            "status": 1,
-            "seconds": 0.082,
-            "failure": "AssertionError: refusal error identity: url-refusal/ipv4-integer"
-          },
-          "green": {
-            "command": [
-              "timeout",
-              "--foreground",
-              "180",
-              "python3",
-              "-B",
-              "test/lightning.py",
-              "--case",
-              "url-refusal/ipv4-integer"
-            ],
-            "status": 0,
-            "seconds": 0.076
-          }
-        },
-        {
-          "command": [
-            "timeout",
-            "--foreground",
-            "180",
-            "python3",
-            "-B",
-            "test/lightning.py",
-            "--case",
-            "url-refusal/ipv4-short"
-          ],
-          "assertion": "refusal error identity",
-          "red": {
-            "command": [
-              "timeout",
-              "--foreground",
-              "180",
-              "python3",
-              "-B",
-              "test/lightning.py",
-              "--case",
-              "url-refusal/ipv4-short"
-            ],
-            "status": 1,
-            "seconds": 0.08,
-            "failure": "AssertionError: refusal error identity: url-refusal/ipv4-short"
-          },
-          "green": {
-            "command": [
-              "timeout",
-              "--foreground",
-              "180",
-              "python3",
-              "-B",
-              "test/lightning.py",
-              "--case",
-              "url-refusal/ipv4-short"
-            ],
-            "status": 0,
-            "seconds": 0.068
-          }
-        },
-        {
-          "command": [
-            "timeout",
-            "--foreground",
-            "180",
-            "python3",
-            "-B",
-            "test/lightning.py",
-            "--case",
-            "url-refusal/ipv4-octal"
-          ],
-          "assertion": "refusal error identity",
-          "red": {
-            "command": [
-              "timeout",
-              "--foreground",
-              "180",
-              "python3",
-              "-B",
-              "test/lightning.py",
-              "--case",
-              "url-refusal/ipv4-octal"
-            ],
-            "status": 1,
-            "seconds": 0.08,
-            "failure": "AssertionError: refusal error identity: url-refusal/ipv4-octal"
-          },
-          "green": {
-            "command": [
-              "timeout",
-              "--foreground",
-              "180",
-              "python3",
-              "-B",
-              "test/lightning.py",
-              "--case",
-              "url-refusal/ipv4-octal"
-            ],
-            "status": 0,
-            "seconds": 0.068
-          }
-        },
-        {
-          "command": [
-            "timeout",
-            "--foreground",
-            "180",
-            "python3",
-            "-B",
-            "test/lightning.py",
-            "--case",
-            "url-refusal/ipv4-leading"
-          ],
-          "assertion": "refusal error identity",
-          "red": {
-            "command": [
-              "timeout",
-              "--foreground",
-              "180",
-              "python3",
-              "-B",
-              "test/lightning.py",
-              "--case",
-              "url-refusal/ipv4-leading"
-            ],
-            "status": 1,
-            "seconds": 0.078,
-            "failure": "AssertionError: refusal error identity: url-refusal/ipv4-leading"
-          },
-          "green": {
-            "command": [
-              "timeout",
-              "--foreground",
-              "180",
-              "python3",
-              "-B",
-              "test/lightning.py",
-              "--case",
-              "url-refusal/ipv4-leading"
-            ],
-            "status": 0,
-            "seconds": 0.067
-          }
-        },
-        {
-          "command": [
-            "timeout",
-            "--foreground",
-            "180",
-            "python3",
-            "-B",
-            "test/lightning.py",
-            "--case",
-            "url-refusal/ipv4-dot"
-          ],
-          "assertion": "refusal error identity",
-          "red": {
-            "command": [
-              "timeout",
-              "--foreground",
-              "180",
-              "python3",
-              "-B",
-              "test/lightning.py",
-              "--case",
-              "url-refusal/ipv4-dot"
-            ],
-            "status": 1,
-            "seconds": 0.078,
-            "failure": "AssertionError: refusal error identity: url-refusal/ipv4-dot"
-          },
-          "green": {
-            "command": [
-              "timeout",
-              "--foreground",
-              "180",
-              "python3",
-              "-B",
-              "test/lightning.py",
-              "--case",
-              "url-refusal/ipv4-dot"
-            ],
-            "status": 0,
-            "seconds": 0.069
-          }
-        },
-        {
-          "command": [
-            "timeout",
-            "--foreground",
-            "180",
-            "python3",
-            "-B",
-            "test/lightning.py",
-            "--case",
-            "url-refusal/unicode-host"
-          ],
-          "assertion": "refusal error identity",
-          "red": {
-            "command": [
-              "timeout",
-              "--foreground",
-              "180",
-              "python3",
-              "-B",
-              "test/lightning.py",
-              "--case",
-              "url-refusal/unicode-host"
-            ],
-            "status": 1,
-            "seconds": 0.079,
-            "failure": "AssertionError: refusal error identity: url-refusal/unicode-host"
-          },
-          "green": {
-            "command": [
-              "timeout",
-              "--foreground",
-              "180",
-              "python3",
-              "-B",
-              "test/lightning.py",
-              "--case",
-              "url-refusal/unicode-host"
-            ],
-            "status": 0,
-            "seconds": 0.072
-          }
-        },
-        {
-          "command": [
-            "timeout",
-            "--foreground",
-            "180",
-            "python3",
-            "-B",
-            "test/lightning.py",
-            "--case",
-            "url-refusal/encoded-unicode-host"
-          ],
-          "assertion": "refusal error identity",
-          "red": {
-            "command": [
-              "timeout",
-              "--foreground",
-              "180",
-              "python3",
-              "-B",
-              "test/lightning.py",
-              "--case",
-              "url-refusal/encoded-unicode-host"
-            ],
-            "status": 1,
-            "seconds": 0.081,
-            "failure": "AssertionError: refusal error identity: url-refusal/encoded-unicode-host"
-          },
-          "green": {
-            "command": [
-              "timeout",
-              "--foreground",
-              "180",
-              "python3",
-              "-B",
-              "test/lightning.py",
-              "--case",
-              "url-refusal/encoded-unicode-host"
-            ],
-            "status": 0,
-            "seconds": 0.07
-          }
-        },
-        {
-          "command": [
-            "timeout",
-            "--foreground",
-            "180",
-            "python3",
-            "-B",
-            "test/lightning.py",
-            "--case",
-            "url-refusal/punycode-host"
-          ],
           "assertion": "refusal error identity",
           "red": {
             "command": [
@@ -4315,7 +4315,7 @@
               "url-refusal/punycode-host"
             ],
             "status": 1,
-            "seconds": 0.08,
+            "seconds": 0.095,
             "failure": "AssertionError: refusal error identity: url-refusal/punycode-host"
           },
           "green": {
@@ -4330,7 +4330,7 @@
               "url-refusal/punycode-host"
             ],
             "status": 0,
-            "seconds": 0.068
+            "seconds": 0.079
           }
         },
         {
@@ -4357,7 +4357,7 @@
               "url-refusal/punycode-upper"
             ],
             "status": 1,
-            "seconds": 0.083,
+            "seconds": 0.091,
             "failure": "AssertionError: refusal error identity: url-refusal/punycode-upper"
           },
           "green": {
@@ -4372,7 +4372,7 @@
               "url-refusal/punycode-upper"
             ],
             "status": 0,
-            "seconds": 0.07
+            "seconds": 0.075
           }
         },
         {
@@ -4399,7 +4399,7 @@
               "url-error/scheme"
             ],
             "status": 1,
-            "seconds": 0.081,
+            "seconds": 0.093,
             "failure": "AssertionError: refusal error identity: url-error/scheme"
           },
           "green": {
@@ -4414,7 +4414,7 @@
               "url-error/scheme"
             ],
             "status": 0,
-            "seconds": 0.071
+            "seconds": 0.079
           }
         }
       ]
@@ -4435,7 +4435,7 @@
           "CyberkrillTests"
         ],
         "status": 0,
-        "seconds": 10.402
+        "seconds": 11.83
       },
       "restore_build": {
         "command": [
@@ -4448,7 +4448,7 @@
           "CyberkrillTests"
         ],
         "status": 0,
-        "seconds": 10.409
+        "seconds": 12.144
       },
       "checks": [
         {
@@ -4475,7 +4475,7 @@
               "positive/amount-leading-zero"
             ],
             "status": 1,
-            "seconds": 0.086,
+            "seconds": 0.083,
             "failure": "AssertionError: wrong pinned values: positive/amount-leading-zero stdout[\"destination\"]"
           },
           "green": {
@@ -4490,7 +4490,7 @@
               "positive/amount-leading-zero"
             ],
             "status": 0,
-            "seconds": 0.07
+            "seconds": 0.086
           }
         }
       ]
@@ -4511,7 +4511,7 @@
           "CyberkrillTests"
         ],
         "status": 0,
-        "seconds": 11.004
+        "seconds": 12.338
       },
       "restore_build": {
         "command": [
@@ -4524,7 +4524,7 @@
           "CyberkrillTests"
         ],
         "status": 0,
-        "seconds": 13.637
+        "seconds": 12.335
       },
       "checks": [
         {
@@ -4551,7 +4551,7 @@
               "positive/n-amount-leading-zero"
             ],
             "status": 1,
-            "seconds": 0.083,
+            "seconds": 0.09,
             "failure": "AssertionError: leading-zero port status/stderr"
           },
           "green": {
@@ -4566,7 +4566,7 @@
               "positive/n-amount-leading-zero"
             ],
             "status": 0,
-            "seconds": 0.077
+            "seconds": 0.086
           }
         }
       ]
@@ -4587,7 +4587,7 @@
           "CyberkrillTests"
         ],
         "status": 0,
-        "seconds": 13.83
+        "seconds": 13.162
       },
       "restore_build": {
         "command": [
@@ -4600,7 +4600,7 @@
           "CyberkrillTests"
         ],
         "status": 0,
-        "seconds": 13.241
+        "seconds": 12.928
       },
       "checks": [
         {
@@ -4627,7 +4627,7 @@
               "valid/L516"
             ],
             "status": 1,
-            "seconds": 0.084,
+            "seconds": 0.104,
             "failure": "AssertionError: unlisted difference: valid/L516 stdout[\"routes\"][0][0][\"fees\"][\"base_msat\"]"
           },
           "green": {
@@ -4642,7 +4642,7 @@
               "valid/L516"
             ],
             "status": 0,
-            "seconds": 0.136
+            "seconds": 0.125
           }
         }
       ]
@@ -4663,7 +4663,7 @@
           "CyberkrillTests"
         ],
         "status": 0,
-        "seconds": 18.318
+        "seconds": 22.082
       },
       "restore_build": {
         "command": [
@@ -4676,7 +4676,7 @@
           "CyberkrillTests"
         ],
         "status": 0,
-        "seconds": 13.203
+        "seconds": 19.185
       },
       "checks": [
         {
@@ -4703,7 +4703,7 @@
               "lnurl-reference/cyberkrill"
             ],
             "status": 1,
-            "seconds": 0.105,
+            "seconds": 0.165,
             "failure": "AssertionError: unlisted difference: lnurl-reference/cyberkrill stdout[\"query_params\"][\"q\"]"
           },
           "green": {
@@ -4718,7 +4718,7 @@
               "lnurl-reference/cyberkrill"
             ],
             "status": 0,
-            "seconds": 0.072
+            "seconds": 0.124
           }
         }
       ]
@@ -4739,7 +4739,7 @@
           "CyberkrillTests"
         ],
         "status": 0,
-        "seconds": 14.795
+        "seconds": 18.385
       },
       "restore_build": {
         "command": [
@@ -4752,7 +4752,7 @@
           "CyberkrillTests"
         ],
         "status": 0,
-        "seconds": 14.226
+        "seconds": 20.534
       },
       "checks": [
         {
@@ -4779,7 +4779,7 @@
               "builder/explicit-n-mismatch"
             ],
             "status": 1,
-            "seconds": 0.1,
+            "seconds": 0.166,
             "failure": "AssertionError: success status: builder/explicit-n-mismatch"
           },
           "green": {
@@ -4794,7 +4794,7 @@
               "builder/explicit-n-mismatch"
             ],
             "status": 0,
-            "seconds": 0.131
+            "seconds": 0.169
           }
         }
       ]
@@ -4815,7 +4815,7 @@
           "CyberkrillTests"
         ],
         "status": 0,
-        "seconds": 18.487
+        "seconds": 22.895
       },
       "restore_build": {
         "command": [
@@ -4828,7 +4828,7 @@
           "CyberkrillTests"
         ],
         "status": 0,
-        "seconds": 15.071
+        "seconds": 19.511
       },
       "checks": [
         {
@@ -4855,7 +4855,7 @@
               "json/duplicate-network-enum"
             ],
             "status": 1,
-            "seconds": 0.095,
+            "seconds": 0.152,
             "failure": "AssertionError: ordinary failure: json/duplicate-network-enum"
           },
           "green": {
@@ -4870,7 +4870,7 @@
               "json/duplicate-network-enum"
             ],
             "status": 0,
-            "seconds": 0.082
+            "seconds": 0.084
           }
         }
       ]
@@ -4891,7 +4891,7 @@
           "CyberkrillTests"
         ],
         "status": 0,
-        "seconds": 13.493
+        "seconds": 11.472
       },
       "restore_build": {
         "command": [
@@ -4904,7 +4904,7 @@
           "CyberkrillTests"
         ],
         "status": 0,
-        "seconds": 13.103
+        "seconds": 11.871
       },
       "checks": [
         {
@@ -4931,7 +4931,7 @@
               "ln-decode-invoice"
             ],
             "status": 1,
-            "seconds": 0.096,
+            "seconds": 0.095,
             "failure": "AssertionError: FIFO output bytes before EOF: ln-decode-invoice"
           },
           "green": {
@@ -4946,7 +4946,7 @@
               "ln-decode-invoice"
             ],
             "status": 0,
-            "seconds": 0.085
+            "seconds": 0.078
           }
         },
         {
@@ -4988,7 +4988,7 @@
               "ln-decode-lnurl"
             ],
             "status": 0,
-            "seconds": 0.084
+            "seconds": 0.083
           }
         }
       ]
@@ -5003,6 +5003,6 @@
       "test"
     ],
     "status": 0,
-    "seconds": 57.607
+    "seconds": 60.334
   }
 }

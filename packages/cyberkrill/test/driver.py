@@ -161,6 +161,8 @@ def main():
             import_module("cluster-help").main()
             import_module("carried-help").main()
             import_module("file-observation").main()
+            import_module("rpc-recordings").main()
+            import_module("rpc-recording-safety").main()
     finally:
         if old_home is not None: os.environ["HOME"] = old_home
         else: os.environ.pop("HOME", None)

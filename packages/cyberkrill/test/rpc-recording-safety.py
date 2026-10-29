@@ -13,7 +13,7 @@ import tempfile
 
 G = importlib.import_module("generate-rpc-recordings")
 KEY_PATTERN = r"[tuvxyzUVYZ]prv[1-9A-HJ-NP-Za-km-z]{100,}"
-HOST_PATTERN = r"/(?:home|Users|root|tmp|var/tmp|nix/store)/|/run/user/|[A-Za-z]:[\\/](?:Users|Windows)[\\/]"
+HOST_PATTERN = r"/(?:home|Users|root|tmp|var/tmp|nix/store)/|/run/(?:user)/|[A-Za-z]:[\\/](?:Users|Windows)[\\/]"
 
 
 def portable(name, data):
@@ -28,15 +28,23 @@ def portable(name, data):
     def visit(obj, trail=()):
         if isinstance(obj, dict):
             for key, item in obj.items():
-                if key.lower() in {"seed", "seed_bytes", "private_key", "privatekey", "mnemonic", "rpcpassword", "password", "wif", "xprv", "tprv"}:
-                    allowed = name == "shared/provenance.json" and trail in [("derivation",), ("derivation", "versions")] and key == "mnemonic"
+                if key.lower() in {"seed", "seed_bytes", "seed_hex", "private", "private_key", "privatekey", "secret", "secret_key", "mnemonic", "rpcpassword", "password", "wif", "xprv", "tprv"}:
+                    version = key == "mnemonic" and item == "0.21"
+                    source = name == "shared/provenance.json" and trail == ("derivation",) and key == "mnemonic" and item == dict(url="https://github.com/trezor/python-mnemonic", tag="v0.21", licence="MIT", nar_hash="sha256-D1mS/JQhefYmwrShfWR9SdiGsBUM+jmuCkfWix9tDOU=")
+                    allowed = (version and ((name == "shared/provenance.json" and trail == ("derivation", "versions")) or trail == ("capture", "tools"))) or source
                     assert allowed, "private field in recording"
                 if key == "authorization": assert item == G.AUTH, "unexpected recording credentials"
+                if key.lower() == "rpcauth":
+                    assert name == "shared/provenance.json" and trail == ("auth",) and item == G.RPCAUTH, "unexpected rpcauth credentials"
                 visit(item, trail + (key,))
         elif isinstance(obj, list):
             for item in obj: visit(item, trail)
         elif isinstance(obj, str):
-            assert not obj.startswith("Basic ") or obj == G.AUTH, "unexpected Basic credentials"
+            assert not obj.startswith(("/", "\\\\")) or obj in ["/wallet/single", "/wallet/multisig"], "absolute host path in recording"
+            assert re.match(r"^[A-Za-z]:[\\/]", obj) is None, "drive path in recording"
+            assert not obj.startswith(("~/", "~\\")), "home-relative path in recording"
+            challenge = trail == ("entries", "unauthorized", "headers", "www-authenticate") and obj == 'Basic realm="jsonrpc"'
+            assert not obj.startswith("Basic ") or obj == G.AUTH or challenge, "unexpected Basic credentials"
             if obj.lstrip().startswith(('{', '[')):
                 try: nested = json.loads(obj)
                 except ValueError: return
@@ -51,6 +59,8 @@ def scan(root):
     assert proc.returncode == 1, "recording safety grep requires exit 1"
     files = list(root.rglob("*"))
     assert files, "nonempty recording tree"
+    expected = set(G.SHARED) | {r["recording"] for r in G.inventory()}
+    assert {p.relative_to(root).as_posix() for p in files if p.is_file()} == expected, "exact public artifact inventory"
     for path in files:
         assert not path.is_symlink(), "no recording symlink"
         if path.is_file(): portable(path.relative_to(root).as_posix(), path.read_bytes())
