@@ -2,7 +2,7 @@
   "source_sha256": {
     "CyberkrillTests/Output.lean": "9912e5c699b4fb7c07ff5eaacd2d5d821d6585118cb17a0829b224c96965a966",
     "CyberkrillTests/Mnemonic.lean": "49c85bcaf2327da760e08fb7fef4ea5071c4b29160481a578caa61e36200cb0e",
-    "CyberkrillTests.lean": "1b941e7345e11d00191bb92924f6f4fea807f6a40d60a661fe7f6fc9d69b5509",
+    "CyberkrillTests.lean": "17b7f5170c8a14b3ed82af865b5a7c50aaa9cc5893f1e1c842e1cf05e52f0405",
     "test/output-regressions.py": "0c9c3284471ab2fde2ed27559b7a76d05a30ac8e81e1a865c3d8c4fa14d73c14",
     "test/driver.py": "1d0c262c9efe561fa9a52e3afce017a979eb511819974e10d81f2d6c39aadec6",
     "CyberkrillTests/Support.lean": "80dbdfd22c0478dde791bfc46ae73418a8cf838f7728bb08f248291cdb3a179c",
@@ -23,7 +23,7 @@
       "CyberkrillTests"
     ],
     "status": 0,
-    "seconds": 11.283
+    "seconds": 11.211
   },
   "restore_build": {
     "command": [
@@ -36,7 +36,7 @@
       "CyberkrillTests"
     ],
     "status": 0,
-    "seconds": 11.538
+    "seconds": 10.823
   },
   "checks": [
     {
@@ -56,7 +56,7 @@
           "0"
         ],
         "status": 1,
-        "seconds": 0.03
+        "seconds": 0.029
       },
       "detecting_assertion": "output refusal 0 status",
       "green": {
@@ -89,7 +89,7 @@
           "1"
         ],
         "status": 1,
-        "seconds": 0.03
+        "seconds": 0.029
       },
       "detecting_assertion": "output refusal 1 status",
       "green": {
@@ -102,7 +102,7 @@
           "1"
         ],
         "status": 0,
-        "seconds": 0.028
+        "seconds": 0.032
       }
     },
     {
@@ -135,7 +135,7 @@
           "2"
         ],
         "status": 0,
-        "seconds": 0.029
+        "seconds": 0.03
       }
     },
     {
@@ -155,7 +155,7 @@
           "3"
         ],
         "status": 1,
-        "seconds": 0.031
+        "seconds": 0.029
       },
       "detecting_assertion": "output refusal 3 status",
       "green": {
@@ -168,7 +168,7 @@
           "3"
         ],
         "status": 0,
-        "seconds": 0.03
+        "seconds": 0.029
       }
     },
     {
@@ -188,7 +188,7 @@
           "4"
         ],
         "status": 1,
-        "seconds": 0.031
+        "seconds": 0.029
       },
       "detecting_assertion": "output refusal 4 status",
       "green": {
@@ -201,7 +201,7 @@
           "4"
         ],
         "status": 0,
-        "seconds": 0.031
+        "seconds": 0.028
       }
     },
     {
@@ -221,7 +221,7 @@
           "5"
         ],
         "status": 1,
-        "seconds": 0.03
+        "seconds": 0.028
       },
       "detecting_assertion": "output refusal 5 status",
       "green": {
@@ -254,7 +254,7 @@
           "6"
         ],
         "status": 1,
-        "seconds": 0.03
+        "seconds": 0.028
       },
       "detecting_assertion": "output refusal 6 status",
       "green": {
@@ -267,7 +267,7 @@
           "6"
         ],
         "status": 0,
-        "seconds": 0.029
+        "seconds": 0.027
       }
     },
     {
@@ -287,7 +287,7 @@
           "7"
         ],
         "status": 1,
-        "seconds": 0.03
+        "seconds": 0.028
       },
       "detecting_assertion": "output refusal 7 status",
       "green": {
@@ -320,7 +320,7 @@
           "8"
         ],
         "status": 1,
-        "seconds": 0.03
+        "seconds": 0.028
       },
       "detecting_assertion": "output refusal 8 status",
       "green": {
@@ -353,7 +353,7 @@
           "9"
         ],
         "status": 1,
-        "seconds": 0.03
+        "seconds": 0.027
       },
       "detecting_assertion": "output refusal 9 status",
       "green": {
@@ -366,7 +366,7 @@
           "9"
         ],
         "status": 0,
-        "seconds": 0.031
+        "seconds": 0.028
       }
     },
     {
@@ -386,7 +386,7 @@
           "10"
         ],
         "status": 1,
-        "seconds": 0.031
+        "seconds": 0.028
       },
       "detecting_assertion": "output refusal 10 status",
       "green": {
@@ -399,7 +399,7 @@
           "10"
         ],
         "status": 0,
-        "seconds": 0.029
+        "seconds": 0.026
       }
     },
     {
@@ -419,7 +419,7 @@
           "11"
         ],
         "status": 1,
-        "seconds": 0.029
+        "seconds": 0.027
       },
       "detecting_assertion": "output refusal 11 status",
       "green": {
@@ -432,7 +432,7 @@
           "11"
         ],
         "status": 0,
-        "seconds": 0.034
+        "seconds": 0.027
       }
     },
     {
@@ -452,7 +452,7 @@
           "12"
         ],
         "status": 1,
-        "seconds": 0.029
+        "seconds": 0.028
       },
       "detecting_assertion": "output refusal 12 status",
       "green": {
@@ -485,7 +485,7 @@
           "13"
         ],
         "status": 1,
-        "seconds": 0.029
+        "seconds": 0.028
       },
       "detecting_assertion": "output refusal 13 status",
       "green": {
@@ -498,7 +498,7 @@
           "13"
         ],
         "status": 0,
-        "seconds": 0.032
+        "seconds": 0.029
       }
     },
     {
@@ -531,7 +531,7 @@
           "14"
         ],
         "status": 0,
-        "seconds": 0.03
+        "seconds": 0.031
       }
     },
     {
@@ -551,7 +551,7 @@
           "15"
         ],
         "status": 1,
-        "seconds": 0.03
+        "seconds": 0.027
       },
       "detecting_assertion": "output refusal 15 status",
       "green": {
@@ -564,7 +564,7 @@
           "15"
         ],
         "status": 0,
-        "seconds": 0.03
+        "seconds": 0.027
       }
     },
     {
@@ -584,7 +584,7 @@
           "16"
         ],
         "status": 1,
-        "seconds": 0.031
+        "seconds": 0.027
       },
       "detecting_assertion": "output refusal 16 status",
       "green": {
@@ -597,7 +597,7 @@
           "16"
         ],
         "status": 0,
-        "seconds": 0.031
+        "seconds": 0.027
       }
     },
     {
@@ -617,7 +617,7 @@
           "17"
         ],
         "status": 1,
-        "seconds": 0.029
+        "seconds": 0.028
       },
       "detecting_assertion": "output refusal 17 status",
       "green": {
@@ -643,6 +643,6 @@
       "--output-boundaries"
     ],
     "status": 0,
-    "seconds": 0.03
+    "seconds": 0.028
   }
 }

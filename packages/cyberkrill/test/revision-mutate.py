@@ -51,7 +51,7 @@ def mutations():
         ("scope-closure-reason", scope, 'assert current["close_reason"].strip(), "nonempty closure reason"', 'assert isinstance(current["close_reason"], str), "closure reason type"', "scope/closed-empty-reason", "closure validation"),
         ("scope-closure-order", scope, 'assert date(original["updated_at"]) <= closed <= updated, "closure timestamp order"', 'assert closed <= updated, "closure timestamp order"', "scope/closed-wrong-order", "closure validation"),
         ("scope-unrelated-record", scope, 'assert all(original[k] == current[k] for k in original if k != ISSUE)', 'assert all(original[k]["id"] == current[k]["id"] for k in original if k != ISSUE)', "scope/unrelated", "closure validation"),
-        ("scope-decision-preservation", scope, 'hashlib.sha256(amended["description"].encode()).hexdigest() == DESCRIPTION_SHA256', 'True', "scope/decision-text", "closure validation"),
+        ("scope-decision-preservation", scope, 'check_lifecycle(original[ISSUE], amended)', 'check_lifecycle(dict(original[ISSUE], description=amended["description"]), amended)', "scope/decision-text", "closure validation"),
     ]
     assert len(rows) == 30
     return rows

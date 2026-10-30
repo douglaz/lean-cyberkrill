@@ -12,10 +12,8 @@ from datetime import datetime
 
 from cases import APP, ROOT
 
-BASE = "e5d8f075c3e5415add3909cc8d1cb318418211f5"
-ISSUE = "lck-phase-8a-core-rpc-client-recordings-w4r"
-DESCRIPTION_SHA256 = "7b76b503f48f309e774023738dbb80616fa74d74bb2e5de59a4916e9a4fbf647"
-COMMENTS_SHA256 = "7b69174d7cf37ca8db9f71a82a2122e3b08163e36aaeacc5376b425c195d6069"
+BASE = "1d104f4e2cddc5632b50431aef48998e3966521b"
+ISSUE = "lck-phase-8a-core-rpc-client-yt0"
 # Fixed observations for fixtures first introduced by this phase. Never derive
 # these expected values from HEAD, the index, or the current fixture bytes.
 HISTORICAL_DIGESTS = {
@@ -62,21 +60,22 @@ def check_lifecycle(original, current):
 
 def main():
     allowed = {"README.md", ".beads/issues.jsonl", "flake.nix"}
-    changed = set(git("diff", BASE, "--name-only", "-z").decode().strip("\0").split("\0"))
+    # Exact paths, grouped by their concrete integration responsibility.
+    allowed |= {"packages/cyberkrill/" + p for p in [
+        "Cyberkrill.lean", "CyberkrillTests.lean", "Cyberkrill/CoreRpc.lean",
+        "Cyberkrill/RpcFlags.lean", "CyberkrillTests/Rpc.lean",
+        "test/network.py", "test/network-safety.py", "test/rpc-client.py",
+        "test/rpc-client-mutations.py", "test/generate-rpc-recordings.py",
+        "test/rpc-recordings.py", "test/scope.py", "test/validate.py", "test/revision-mutate.py"]}
+    # These current observations are refreshed by their executable mutation suites.
+    allowed |= {"packages/cyberkrill/test/golden/" + p for p in [
+        "regression-refresh.json", "output-regression-refresh.json", "attached-output-refresh.json",
+        "mutation-record.json", "lightning-mutation-record.json", "revision-mutation-record.json",
+        "offline-mutation-record.json", "rpc-client-mutation-record.json"]}
+    changed = set(filter(None, git("diff", BASE, "--name-only", "-z").decode().split("\0")))
     new = set(filter(None, git("ls-files", "--others", "--exclude-standard", "-z").decode().split("\0")))
     base_paths = set(git("ls-tree", "-r", "--name-only", BASE).decode().splitlines())
-    import importlib
-    recording = importlib.import_module("generate-rpc-recordings")
-    new_paths = {"packages/cyberkrill/test/" + p for p in [
-        "generate-rpc-recordings.py", "rpc-recording-cases.json", "rpc-recordings.py",
-        "rpc-recording-safety.py", "rpc-recording-mutations.py"]}
-    new_paths |= {"packages/cyberkrill/test/recordings/" + p for p in recording.SHARED}
-    new_paths |= {"packages/cyberkrill/test/recordings/" + r["recording"] for r in recording.inventory()}
-    for path in changed | new:
-        if path not in base_paths:
-            assert path in new_paths, "new path outside recording allowlist: " + path
-        else:
-            assert path in allowed or path.startswith("packages/cyberkrill/test/"), "unrelated changed path: " + path
+    assert changed | new <= allowed, "path outside Core RPC scope: " + repr(sorted((changed | new) - allowed))
     # Equality against the base for each unrelated issue includes every field.
     def issues(data):
         rows = [json.loads(line) for line in data.splitlines()]
@@ -88,11 +87,7 @@ def main():
     assert original.keys() == current.keys(), "issue identity set"
     assert all(original[k] == current[k] for k in original if k != ISSUE), "unrelated issue changed"
     amended = current[ISSUE]
-    assert hashlib.sha256(amended["description"].encode()).hexdigest() == DESCRIPTION_SHA256, "approved description"
-    comments = json.dumps(amended["comments"], sort_keys=True, separators=(',', ':'), ensure_ascii=False).encode()
-    assert hashlib.sha256(comments).hexdigest() == COMMENTS_SHA256, "six approved comments"
-    expected = dict(original[ISSUE], description=amended["description"], comments=amended["comments"])
-    check_lifecycle(expected, amended)
+    check_lifecycle(original[ISSUE], amended)
     # These files must retain the original observations, not refreshed hashes.
     for path, expected in HISTORICAL_DIGESTS.items():
         relative = "packages/cyberkrill/test/golden/" + path
@@ -106,31 +101,13 @@ def main():
     assert 'lake build && lake test' in flake and 'bash scripts/check-link-spike.sh' in flake
     assert git("diff", BASE, "--", "scripts/check-link-spike.sh", "scripts/check-one-openssl.sh") == b""
     original_flake = git("show", BASE + ":flake.nix").decode()
-    recording_import = '''      # Manual disposable-regtest capture tools; never part of release/check inputs.
-      recordingPkgs = import nixpkgs {
-        inherit system;
-        config = { permittedInsecurePackages = []; allowInsecurePredicate = _: false; };
-      };
-'''
-    recording_shell = '''        recordings =
-          assert recordingPkgs.bitcoind.version == "31.1";
-          assert recordingPkgs.python3Packages.bip32.version == "5.0";
-          assert recordingPkgs.python3Packages.mnemonic.version == "0.21";
-          recordingPkgs.mkShell {
-            packages = [
-              (recordingPkgs.python3.withPackages (ps: [ ps.bip32 ps.mnemonic ]))
-              recordingPkgs.bitcoind recordingPkgs.curl recordingPkgs.iproute2
-              recordingPkgs.util-linux recordingPkgs.coreutils recordingPkgs.gnugrep
-              recordingPkgs.glibc.bin recordingPkgs.glibc.getent
-            ];
-          };
-'''
-    assert flake.count(recording_import) == flake.count(recording_shell) == 1, "pinned manual recording shell"
-    test_lookup = "          export PATH=${pkgs.glibc.getent}/bin:$PATH\n"
-    assert flake.count(test_lookup) == 1, "pinned sandbox passwd lookup utility"
-    assert flake.replace(recording_import, "").replace(recording_shell, "").replace(test_lookup, "") == original_flake, "only recording tooling/test flake delta"
+    marker = '          export LCK_RPC_SANDBOX=1\n          readlink /proc/self/ns/net > "$NIX_BUILD_TOP/rpc-network-namespace"\n'
+    shell_packages = "packages = [ lean pkgs.glibc.bin pkgs.binutils pkgs.python3 pkgs.openssl pkgs.util-linux pkgs.iproute2 ];"
+    original_packages = "packages = [ lean pkgs.glibc.bin pkgs.binutils pkgs.python3 pkgs.openssl ];"
+    assert flake.count(marker) == 1 and flake.count(shell_packages) == 1, "sandbox-only marker and namespace tools"
+    assert flake.replace(marker, "").replace(shell_packages, original_packages) == original_flake, "only network check/dev-shell flake delta"
     for relative in base_paths:
-        if relative in allowed or relative.startswith("packages/cyberkrill/test/"):
+        if relative in allowed:
             continue
         path = ROOT / relative
         data = os.fsencode(os.readlink(path)) if path.is_symlink() else path.read_bytes()

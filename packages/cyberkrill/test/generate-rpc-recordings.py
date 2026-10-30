@@ -131,9 +131,12 @@ def inventory(path=HERE / "rpc-recording-cases.json"):
     return rows
 
 
-def run(args, *, data=None, cwd=None, env=None, timeout=30, check=True):
+def run(args, *, data=None, cwd=None, env=None, timeout=30, check=True, stub_url=None, reference=False):
     global CALL_NUMBER
-    core = Path(args[0]).name in {"bitcoin-cli", "bitcoind", "cyberkrill", "curl"}
+    if reference:
+        from network import refuse_spawn
+        refuse_spawn(args[1:], stub_url)
+    core = reference or Path(args[0]).name in {"bitcoin-cli", "bitcoind", "curl"}
     def diagnostic(status, stderr, stdout=b""):
         global CALL_NUMBER
         if core:
@@ -553,7 +556,8 @@ def capture_case(job):
                     try:
                         proc = run([job["reference"], row["command"], *args,
                             "--network", "regtest", "--rpc-url", f"http://127.0.0.1:{ports[2]}/wallet/{wallet}",
-                            "--rpc-user", "lck", "--rpc-password", "lck-throwaway"], timeout=45, check=False)
+                            "--rpc-user", "lck", "--rpc-password", "lck-throwaway"], timeout=45, check=False,
+                            stub_url=f"http://127.0.0.1:{ports[2]}", reference=True)
                         result = dict(status=proc.returncode, stdout=proc.stdout.decode().replace(str(root), "$TMP_ROOT"), stderr=proc.stderr.decode().replace(str(root), "$TMP_ROOT"))
                     except subprocess.TimeoutExpired as error:
                         result = dict(status=124, stdout=(error.stdout or b"").decode().replace(str(root), "$TMP_ROOT"), stderr=(error.stderr or b"").decode().replace(str(root), "$TMP_ROOT"))

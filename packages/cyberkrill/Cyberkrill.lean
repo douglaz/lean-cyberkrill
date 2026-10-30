@@ -10,6 +10,7 @@ import FedimintInvite
 import HttpCurl
 import Cyberkrill.Capabilities
 import Cyberkrill.App
+import Cyberkrill.CoreRpc
 
 /-! # Cyberkrill
 

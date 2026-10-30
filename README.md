@@ -45,6 +45,197 @@ invoice decoding/signing and LNURL decoding. Phase 7c adds invite decoding,
 invite encoding and PSBT inspection. Network commands remain unregistered;
 `plan.md` is the plan for v1.
 
+## Phase 8a: Core RPC client and shared connection flags (2 of 2)
+
+`Cyberkrill.CoreRpc` provides an app-local `Client` over `HttpCurl.request`.
+`Client.ofFlags` resolves authentication; callers can also supply `url` and
+`auth` directly. `Client.call method params` sends a POST with JSON-RPC `2.0`,
+id `cyberkrill`, and exact JSON parameters. It accepts user-configured HTTP(S)
+URLs through the existing bounded transport, with its response limit,
+connect/transfer deadlines, CA selection, proxy refusal and redirect policy.
+The production client has no loopback-only restriction.
+
+The typed methods construct their own requests and convert their results:
+
+| Method | Arguments and result |
+|---|---|
+| `listUnspent` | Confirmation bounds, optional address filter; ordered `Utxo` values with exact `Amount` and retained Core fields |
+| `scanTxOutSet` | `ScanObject` descriptors and optional inclusive ranges; success, height, exact total and UTXOs |
+| `getDescriptorInfo` | Descriptor; checked descriptor, checksum, range flag and retained fields |
+| `deriveAddresses` | Checked descriptor and optional range; ordered address array |
+| `createPsbt` | Ordered `Input` values (optional sequence), exact outputs, locktime and replaceable flag; PSBT string |
+| `walletCreateFundedPsbt` | Inputs, exact outputs, Core options, locktime, optional BIP32-derivations flag; PSBT, exact fee and change position |
+| `importDescriptors` | Checked descriptors; original item results, including Core's import failures |
+| `getBlockchainInfo` | Chain, block height and best-block hash |
+| `getReceivedByAddress` | Address and minimum confirmations; exact `Amount` |
+| `getRawTransaction` | Txid with verbose results; transaction identity, exact output amounts and retained fields |
+| `getBlock` | Block hash and optional verbosity; hash, height, time, ordered transaction ids and retained fields |
+
+Block conversion expects the transaction-id form returned by verbosity 1
+(Core's default). Options and additional raw fields remain exact JSON.
+No wrapper performs coin selection, fee calculation, signing or broadcast.
+The four Core CLI handlers and their fee-command goldens remain Phase 8b/8c
+work; the shared flag group is not registered on offline commands.
+
+`Cyberkrill.RpcFlags.flags` is the common `Cli.Flag` array, with `ofParsed`
+for future command groups and `parse` for in-process use. It defines
+`--rpc-url`, `--bitcoin-dir`, `--rpc-user` and `--rpc-password` once.
+The URL defaults to `http://127.0.0.1:8332`; the directory and credentials
+default to absent. Split and `--flag=value` forms are supported.
+An explicit directory conflicts with either credential flag, including when
+only one credential is supplied. Tests inspect the default URL without
+connecting to it.
+
+Authentication follows
+[`bitcoin_rpc.rs` at the parity revision](https://github.com/douglaz/cyberkrill/blob/27cad1faba86260b06665a89f0af5134d23525c2/cyberkrill-core/src/bitcoin_rpc.rs).
+Only an explicitly supplied directory is read: its `.cookie` is trimmed,
+then split at the first colon, retaining any further colons in the password.
+A successfully parsed cookie takes precedence. Missing, unreadable and
+malformed cookies silently fall back to user/password; authentication is
+present only when both options are present, including empty strings within
+HttpCurl's input contract. There is no implicit Bitcoin directory or config
+lookup. Upstream help mentions a default directory, but its actual RPC call
+sites pass no directory when the flag is omitted.
+An explicitly empty directory keeps relative `.cookie` lookup in the current
+working directory; `cookiePath` exposes that path rule without reading a file.
+
+HTTP status is checked before JSON decoding. Errors distinguish transport,
+HTTP (including 401), non-null RPC errors, malformed JSON, missing results,
+unexpected result shapes and invalid amounts. Diagnostics contain fixed
+messages and status/code data, never response text, cookies, passwords or
+Authorization values. Successful envelopes may omit `error`; a present null
+`result` is valid. Incoming BTC numbers use `Bitcoin.Amount.ofJsonNumber` and
+its exact mantissa/exponent. Outgoing BTC values stay numeric JSON with the
+same exact value, including exponent forms and zero. No binary64 conversion
+or numeric-string substitution is used. `Amount` remains unbounded,
+nonnegative millisatoshis; negative and nonzero sub-msat amounts fail, while
+trailing zeros remain valid. Wire/policy bounds belong to operations that
+require them, rather than being imposed on every Core result.
+
+`Client.listUnspentForDescriptor` attempts the original watch-only import
+with timestamp `"now"`, range `[0,1000]` and label `cyberkrill_import`, ignores
+import failure, then expands both descriptor branches and lists their
+addresses in order, deduplicating outpoints on first occurrence. It does no
+historical rescan, so funds older than the import may be missed. Follow-on
+request failures retain their HTTP/RPC/transport error class.
+
+Both Phase 8c caveats still apply. The recorded f64 request
+`0.6999833999999999` receives Core RPC -3 (`Invalid amount`), whereas exact
+numeric `0.6999834` succeeds; the client replays both without doing f64
+arithmetic. [#156](https://github.com/douglaz/cyberkrill/issues/156)'s pinned
+BDK default of approximately 1 sat/vB, possible change, and low-rate failures
+are not a fee oracle. There is no BDK fee-match claim here. The settled future
+move handler will use selected-total-minus-computed-fee without a clamp.
+
+### Client replay and safety inventories
+
+`test/rpc-client.py` drives the compiled Lean methods through HttpCurl and the
+real `http-curl/test/responder.py`. Every case owns a fresh responder, and
+actual request logs assert POST, wallet endpoint, JSON-RPC version/id, method,
+ordered parameters and exact numbers. The original eight cases, 69 selectors,
+75 authorized responses and eleven-method inventory below remain unchanged.
+No new Core capture was needed; source/tool digests in the captures remain
+historical observations. Additional envelope and precision fixtures are
+explicitly synthetic transport fixtures, not Core captures.
+
+| New test group | Pinned inventory |
+|---|---:|
+| Shared flags, including defaults and both conflicts in split/attached forms | 9 |
+| Credential-pair presence rules | 5 |
+| Cookie trim/first-colon parsing, including Unicode whitespace | 8 |
+| Exact numeric parse/print cases | 10 |
+| Optional/scoped pure boundaries | 2 |
+| Typed wrapper replay | 11 methods / 75 responses in 8 separate cases |
+| Ignored import followed by actual wrapper requests | 1 / 8 requests |
+| Descriptor helper preserves HTTP failure | 1 / 2 requests |
+| Authentication resolution and recorded 401, including an explicitly empty directory | 18 |
+| Synthetic envelope/precedence/secret cases and transport failure | 8 + 1 |
+| HTTP precision | 10 incoming / 7 outgoing values, plus nested exponent-zero serialization |
+| Spawn refusals, asserted at the shared boundary and both reference executable names | 122 each |
+| Permitted sentinel-spawn controls at those three boundaries | 37 each, plus 1 unrelated utility |
+| Namespace boundaries | 8 |
+| Process-tree lifecycle controls at direct and host namespace-entry paths | 16 |
+
+Host network execution re-execs through `unshare -rn`, brings loopback up and
+binds its recursion marker to the changed namespace and executing process.
+Missing/refused unshare alone can print `SKIP (no unshare)`; loopback and test
+failures fail. An inherited host marker cannot bypass isolation. The marker
+for the network-free Nix derivation is set only in that build, with a private
+file bound to that build's actual network namespace checked before bypass.
+The dev shell supplies unshare
+and ip. Sentinel tests never run a node or open a connection, even under a
+deliberately broken refusal. They cover default/missing/wrong Core URLs,
+hardcoded DCA, fiat in all amount positions, attached flags and nested URL,
+invite and Lightning-address forms naming port 8332.
+Valid invite controls use independently checksummed `fed1`-HRP bech32m with
+consensus framing, and LNURL controls use bech32. Both cover zero-padded
+default ports and permitted nondefault ports. Invoice fiat recognition examines
+the amount positional after the address, skipping comment/output options in
+split and attached forms. A three-letter address suffix is not an amount.
+Reference execution is identified explicitly at its call boundary, including
+when its configured executable has a different name.
+
+The Linux foreground runner creates an owned process group and temporarily
+enables child subreaping. It terminates and reaps descendants on completion,
+failure, timeout and managed interruption, escalating with finite deadlines.
+Connection-free lifecycle probes independently observe PID disappearance and
+reaping, including children ignoring termination; their separate recovery
+keeps cleanup mutations safe. Host entry and already-isolated execution share
+this lifecycle, including the unshare availability probe.
+
+`test/rpc-client-mutations.py` pins the new mutation definitions and preserves
+separate build/red/restoration/green streams under
+`packages/cyberkrill/.lake/validation/rpc-client-mutations-round2/`. Its committed
+record is separate from the retained historical **152 distinct edits / 275
+selected reds**. Existing current evidence is refreshed by executing its
+mutation commands, never by substituting current source hashes into old
+observations. `test/validate.py` records each command's separate streams,
+status and elapsed time in the same ignored validation directory.
+
+### Current client validation
+
+On 2026-10-30, the following commands ran through the complete foreground
+supervisor. Commands needing the toolchain ran in the default dev shell;
+package commands ran in `packages/cyberkrill` and repository commands at the
+root. Each named log below has separate `.stdout`, `.stderr` and `.status`
+files in `packages/cyberkrill/.lake/validation/`.
+
+| Command/check | Exit | Log stem |
+|---|---:|---|
+| `nix develop -c lake build` | 0 | `build` |
+| `nix develop -c lake test` | 0 | `test` |
+| `nix flake check -L` | 0 | `flake-check`, with the fresh execution retained as `round2/fresh-sandbox` |
+| `nix build -L` | 0 | `nix-build` |
+| `test/validate.py app` | 0 | `app.json` (2 commands) |
+| `test/validate.py evidence` | 0 | `evidence.json` (23 commands) |
+| `test/validate.py repo` | 0 | `repo.json` (9 commands) |
+| Seven affected existing mutation/refresh commands | 0 each | `round2/refresh.json`, `round2/refresh-*` |
+| `test/rpc-client-mutations.py` | 0 | `rpc-client-mutations-round2/` and its committed record |
+
+The preceding client observation had **64 distinct source edits / 164
+independently selected detecting failures**. It is retained as
+`previous_observation` in the client mutation record, with its original digest;
+it describes the source before the connection-boundary corrections.
+The corrected-source rerun has **69 distinct source edits / 211 independently
+selected detecting failures**: 62 client/capture selections and 149 safety
+selections, each with restored green execution. The final named assertion
+was checked in every red stream, and source fingerprints match the restored
+files. The existing current-evidence refreshes were actually executed; the
+earlier captures and historical regression records retain their original
+bytes. Their historical 152/275 inventory remains separate from these new
+observations.
+
+The fresh sandbox log records all eleven wrappers and 75 responses, all 18
+auth cases, all three sets of 122 spawn refusals, eight namespace boundaries
+and sixteen process-tree lifecycle controls
+executing without `SKIP (no unshare)`. Final host replay also ran without a
+suite skip; simulated missing/refused-unshare controls capture the expected
+skip text. The root checks retain all seven packages, the link/OpenSSL
+checks, axiom gates, the 78-file library/proof native-decision inventory and
+the proof/private-material scans. Installed version, Lightning, offline and
+RPC replay checks all exited 0. No new Core recording, fee-command golden or
+network command handler was added.
+
 ## Phase 8a: disposable Core RPC recordings (1 of 2)
 
 The manual generator and offline replay fixtures prepare the Core client and
