@@ -45,6 +45,327 @@ invoice decoding/signing and LNURL decoding. Phase 7c adds invite decoding,
 invite encoding and PSBT inspection. Network commands remain unregistered;
 `plan.md` is the plan for v1.
 
+## Phase 8a: disposable Core RPC recordings (1 of 2)
+
+The manual generator and offline replay fixtures prepare the Core client and
+handlers for later work. Network commands remain unregistered. The captured
+corpus has eight cases, eleven RPC methods, 69 exact selectors/entries and 75
+authorized responses, plus a real HTTP 401 response for every entry:
+
+| Case | Entries/selectors | Authorized responses | Purpose |
+|---|---:|---:|---|
+| `single-list` | 8 | 10 | Single-sig export, both descriptor branches |
+| `multisig-list` | 8 | 10 | 2-of-3 export, both descriptor branches |
+| `multipath-create` | 9 | 9 | Multipath import and explicit-output PSBT |
+| `change-funded` | 15 | 15 | Used/unused change probes and funded PSBT |
+| `move-overshoot` | 13 | 13 | Largest-first selection overshoots the cap |
+| `move-f64` | 5 | 5 | Actual float error and exact-satoshi success |
+| `move-success` | 2 | 2 | Successful explicit-outpoint consolidation |
+| `dca` | 9 | 11 | Both scans, four verbose transactions, two blocks |
+
+Method entry counts are `getdescriptorinfo` 15, `deriveaddresses` 12,
+`getrawtransaction` 12, `listunspent` 10, `importdescriptors` 7, `createpsbt` 5,
+`scantxoutset` 2, `getreceivedbyaddress` 2, `getblock` 2,
+`getblockchaininfo` 1 and `walletcreatefundedpsbt` 1.
+
+`test/rpc-recordings.py` independently pins each case's entry, method, selector
+and response counts. It checks descriptor/export correspondence, funding
+outpoints and amounts, verbose transaction outputs, DCA block membership,
+height, time and confirmations. Each case loads through the unchanged Phase 1b
+parser and replays on its own real responder, with controlled stdin ownership.
+Complete reply bytes, retained headers/status, exact params, auth, unexpected
+methods/paths/variants and exhaustion are checked. Exact JSON comparison uses
+Decimal values; numeric `1` and `1.0` agree, booleans remain distinct, and array
+order and every field matter. There is no global selector uniqueness rule.
+
+PSBT request inputs are independently reconstructed from the declared arguments,
+case-local descriptor replies and explicit funding outpoints. Complete ordered
+arrays are checked for create, funded, successful move and both precision
+selectors, including largest-first capped selection. Descriptor expansion keeps
+the first-seen `listunspent` order and deduplicates within that invocation's
+branches; explicit duplicates and separate expansions retain their own scope.
+The source-shaped fallback consumes those actual replies in the same order.
+
+The seven non-DCA cases were captured by the pinned reference through the
+recording proxy. Six reference commands exited 0; `move-f64` exited 1 with
+Core's actual invalid-amount reply. DCA uses the generator's source-shaped
+client exclusively; the reference DCA command is never executed. Its two scans
+use range 0..200. Every case runs a separate disposable node, with explicit
+wallet URL paths. Setup and funding calls are excluded from replay entries.
+Repeated descriptor-info and block requests retain their complete ordered
+responses. The original multipath import and wallet-file split routes retain
+real ignored descriptor-import errors.
+
+### Generate or extend the corpus
+
+From the repository root, first build the immutable reference and obtain its
+source directory using Nix metadata:
+
+```bash
+REFERENCE=$(nix build --no-link --print-out-paths --max-jobs 2 --cores 4 \
+  github:douglaz/cyberkrill/27cad1faba86260b06665a89f0af5134d23525c2)
+REFERENCE_SOURCE=$(nix flake metadata --json \
+  github:douglaz/cyberkrill/27cad1faba86260b06665a89f0af5134d23525c2 \
+  | python3 -B -c 'import json,sys; print(json.load(sys.stdin)["path"])')
+env -u NIXPKGS_ALLOW_INSECURE -u NIXPKGS_CONFIG \
+  nix develop .#recordings --max-jobs 2 --cores 4 -c \
+  python3 -B packages/cyberkrill/test/generate-rpc-recordings.py \
+    --reference "$REFERENCE/bin/cyberkrill" --reference-source "$REFERENCE_SOURCE"
+```
+
+Set an absolute `TMPDIR` under the host's permitted temporary parent. Run manual
+generation and gates in a bounded foreground scope (16 GiB memory, no swap,
+4096 tasks, modest build fan-out), using `test/gate.py` for validation. The
+recording shell alone supplies Core 31.1 (binary 31.1.0), mnemonic 0.21,
+bip32 Nix 5.0/Python 5.0.0, coincurve 21.0.0 and base58 2.1.1, from nixpkgs
+`fe13242281a67641c0102cdb1087f0ebe586c7df`. It permits no insecure dependencies;
+bip-utils and ecdsa are absent. Default/release/check package sets and Lean 4.35.0
+remain unchanged. The separate getent output of the existing locked glibc supplies
+passwd lookup in the recording shell and sandbox test PATH. Shared provenance
+records source URLs, revisions, licences, fixed source hashes and the prior
+published-vector derivation proof's limits.
+Only generation derives public account tpubs from the published BIP39 mnemonic;
+tests and CI never derive private keys or launch Core.
+
+The inventory is `packages/cyberkrill/test/rpc-recording-cases.json`. Each row
+declares command, args, fixture, unit-bearing funding amounts, dates and its own
+recording filename. Supported command/kind/argument inconsistencies are refused.
+To add a case, add its definition and independent completeness assertions, then
+run the same generator command with `--cases NEW_NAME`. The selected invocation
+verifies all existing shared/auth bytes before namespace/node startup, refuses
+missing or changed shared data, and publishes only selected case JSON files.
+Before publication, all selected replacements must agree with the non-DCA
+producer policy of the unchanged cases. An incompatible replacement refuses
+without changing any published artifact. Offline corpus checking enforces the
+same policy. The first non-DCA capture still has at most two reference attempts;
+DCA keeps its source-client exception. Changing the corpus policy requires a
+full regeneration rather than silently refreshing unselected cases.
+Capture checking also requires per-case reference results and the bounded
+first-case attempt records. Reference-proxy cases retain their actual execution
+result, including the precision case's intended exit 1. New attempts record
+`qualifying_capture` separately from process status: exit 0 with incomplete
+capture can still require a retry. Source-client fallback requires two explicitly
+unqualified attempts; later fallback cases may carry those attempts with a null
+per-case reference result. DCA never executes the reference and may carry the
+first case's attempts. A qualifying first-case attempt must have status 0 or 1;
+the carried precision exit 1 can differ from the current case's execution result.
+An explicit incomplete exit 0 remains unqualified. Nonempty DCA histories obey
+the same stop/retry rule: a terminal qualification after unqualified retries,
+or exactly two unqualified attempts. Empty DCA history remains permitted.
+Existing successful historical captures retain their
+original status/stream evidence and bytes. These checks reject absent or
+contradictory evidence; they do not authenticate an arbitrarily fabricated history.
+An initial/full invocation publishes the deterministic shared set. Deliberate
+shared/schema changes require complete regeneration. `shared` and `bitcoin-dir`
+are reserved names; unknown names, traversal, extra artifacts and symlinks fail.
+
+For example, append `--cases move-f64` to regenerate that case alone. An actual
+selected rerun exited 0 and `git diff --stat -- packages/cyberkrill/test/recordings`
+listed only `move-f64.json`; before/after hashes of every other recording, shared
+file, cookie and inventory agreed. Selected outputs are all validated before
+publication and files are staged before replacement. One-file replacement is
+atomic; several selected replacements are not crash-atomic as a group.
+
+`test/recordings/shared/` holds deterministic public descriptors, compatible
+single/multisig frozenkrill JSON and static provenance. Dynamic funding,
+outpoints, replies, tool versions and capture digests live inside each case.
+Each binding hashes its own canonical UTF-8 JSON definition (sorted keys,
+compact separators, literal Unicode, finite numbers) and named exact shared/auth
+bytes with SHA-256. Generator/source/tool hashes describe the original capture;
+editing another case or generator does not invalidate or rewrite older cases.
+There is no changing global capture manifest or per-case sidecar.
+
+### Observed amounts, dates and safety
+
+The default funding sizes are 40M/20M/10M/3M sats, with three receive outputs
+and one change output. `move-f64` instead funds/selects 10M/40M/20M sats in that
+order. Mock block dates are 2026-01-01 (height 102, first two funding pairs)
+and 2026-01-02 (height 103, final two pairs). A separate ephemeral miner mines
+101 initial blocks. Miner funding uses an explicit setup-only 1 sat/vB rate;
+captured command fee semantics remain independent. Mocktime fixes dates, while
+the miner's random seed, txids, block hashes, coin selection and change position
+can vary. Recording bytes are not reproducible between runs.
+
+The actual reference ordered f64 sum at `bitcoin_rpc.rs:1357-1359`, fee
+conversion/subtraction at :1386-1390 and `json!(output_amount)` at :1401 sent
+`0.6999833999999999` BTC. Core returned HTTP 200 with RPC error -3, `Invalid
+amount`. Independent integer arithmetic gives 70,000,000 - 1,660 = 69,998,340
+sats; sending exact numeric `0.6999834` returned a real PSBT. These have distinct
+selectors and actual producer response envelopes. The fallback uses explicit
+ordered accumulation and shortest decimal serialization, avoiding Python's
+compensated `sum` for the reference calculation. Replay never uses binary64.
+
+The overshoot fixture selects 60M sats against a 50M-sat cap and records the
+pinned Core route's clamped destination. The settled future port keeps
+largest-first selection and sends selected-total-minus-computed-fee without the
+clamp. Its handler and port-only golden belong to later work. Separately,
+[#156](https://github.com/douglaz/cyberkrill/issues/156)'s pinned BDK builder
+computes a fee but never applies it (`bdk_wallet.rs:888-912`); its approximately
+1 sat/vB default, low-rate failures and possible change are not a fee oracle.
+No BDK backend was executed here.
+
+Requests/replies come from
+[cyberkrill at the fixed revision](https://github.com/douglaz/cyberkrill/tree/27cad1faba86260b06665a89f0af5134d23525c2),
+`cyberkrill-core/src/bitcoin_rpc.rs`, `frozenkrill.rs`, `dca_report.rs` and
+`cyberkrill/src/main.rs`, under MIT as declared by their package manifests.
+Core's captured JSON-RPC 2.0 errors use HTTP 200; auth failure is HTTP 401.
+Every JSON field and response body byte is retained. Header names are folded;
+transport/framing and host metadata headers (`content-length`,
+`transfer-encoding`, `connection`, `date`, `server`) are removed deterministically.
+The remaining headers, including the actual Basic challenge, are replayed.
+
+`bitcoin-dir/.cookie` is exactly `lck:lck-throwaway`. These are disposable
+regtest test credentials, not keys. Static provenance records the fixed rpcauth
+salt/HMAC and corresponding Basic header; cookie and user/password modes use
+the same header. Restored wallets disable private keys and import only public
+descriptors. Miner secrets never leave the owned temporary node state.
+
+The public entry resolves the real passwd home before HOME/namespace changes,
+canonicalizes prospective paths, and refuses its Bitcoin tree even for
+nonexistent descendants. It also refuses unsafe/default RPC/P2P/proxy ports,
+non-regtest, non-loopback, reused datadirs and unsafe output paths.
+Optimized Python execution (`-O`, `-OO` or inherited `PYTHONOPTIMIZE`) is refused
+at import before identity lookup, path resolution, derivation or worker effects,
+so both manual and worker entry retain every required assertion.
+Node, proxy, curl and reference run inside one new network namespace with loopback only,
+isolated HOME/cwd and empty owned config. A chain assertion precedes wallet
+setup. Every Core call has explicit regtest/datadir/config/RPC port and finite
+timeouts; only the daemon receives the P2P port. Diagnostics preserve actual
+status and separated streams privately under the app's ignored validation
+directory, including empty stderr observations. Node termination precedes proxy
+shutdown; process-group escalation and adopted-child reaping precede datadir
+removal. Controlled failures, repeated signals, stalled proxy and between-case
+termination left exact owned children/datadirs absent and publication unchanged.
+
+`lake test` runs format/completeness/binding/replay and refusal/portable-data
+checks without a node, internet or derivation libraries. Safety grep requires
+exit 1; matches, errors and missing paths fail. Extended private keys, WIF/seed
+output, host paths and unexpected credentials fail. The only capture mnemonic
+field allowed is the library-version metadata. Thirty independent isolated
+source variants produced named detecting reds and original-code greens, with
+original files verified byte-identical; a planted
+long key and missing recording path were separately refused in disposable data.
+The existing 616 offline captures, 53 precise exceptions and prior mutation
+inventories retain their original observations.
+
+### Recording validation
+
+The following earlier validation ran on 2026-10-29 under the bounded foreground
+supervisor described above. Package commands ran in `packages/cyberkrill`;
+repository commands ran at the root, after staging all new files.
+
+| Command | Exit | Seconds |
+|---|---:|---:|
+| `nix develop -c lake build` | 0 | 1.153 |
+| `nix develop -c lake test` | 0 | 99.175 |
+| `nix develop -c python3 -B packages/cyberkrill/test/validate.py evidence` | 0 | 30.234 |
+| `nix flake check -L` | 0 | 217.440 |
+| `nix build -L` | 0 | 0.493 |
+
+The evidence run passed all 20 checks, including the 30 new recording mutations.
+The existing full refresh also exited 0; after the scope check's final change,
+the affected 30 revision and 67 offline mutations were actually rerun to exit 0.
+The repository run used a capped local Nix store build and passed installed
+version 0.1.0, installed Lightning/offline checks, recording replay and the
+76-file library/proof native-decision scan. Proof-placeholder and private-key
+grep wrappers passed with underlying no-match status 1. All seven packages'
+builds, tests and axiom gates ran inside the sandbox. Separate installed
+`onchain-decode-psbt --network regtest` checks decoded all five successful
+captured PSBTs and verified each requested destination's exact satoshi value.
+Commands, separated streams, statuses, source digests, timings and controlled
+failure evidence remain in the app's ignored `.lake/validation` directory.
+
+Subsequent recording checks retain the original corpus and add 45 named repair
+controls, including 35 independent input-corruption checks, descriptor ordering
+and duplicate scope, four optimized-entry shapes, and producer-policy checking
+and selected refusal. Against the earlier implementation, 38 controls exposed
+missing behavior; five overshoot corruptions already hit its largest-first gate.
+The two new expansion-helper controls have separate production mutations.
+Ten additional isolated source variants produced detecting failures and restored
+greens; these are separate from the earlier 30 recording mutations and the
+historical 152 edits/275 selected failures. Original source bytes were retained.
+The complete 20-check evidence run exited 0 in 47.593 seconds. Each of the ten
+new source variants also records actual before/red/after subprocess statuses
+`0/1/0` with separate streams. A fresh full
+manual demonstration in a disposable copy exited 0, replayed all eight cases,
+and left the workspace's existing captures byte-identical. Its selected
+`move-f64` rerun changed one file, with the other thirteen artifact/inventory
+hashes unchanged. A controlled failing RPC retained exit 8 and stderr, left
+publication unchanged and owned processes/datadir absent, then a recovery
+capture exited 0. No new handler or command parity is claimed by these checks.
+
+The subsequent package/repository checks also completed under the same resource
+limits, with the changed sources staged before the Nix checks:
+
+| Command | Exit | Seconds |
+|---|---:|---:|
+| `nix develop -c lake build` | 0 | 0.825 |
+| `nix develop -c lake test` | 0 | 86.674 |
+| `nix flake check -L` | 0 | 243.608 |
+| `nix build -L` | 0 | 0.359 |
+
+Installed version, Lightning/offline checks, case-local replay, all five captured
+successful PSBT destination checks and the 76-file native-decision scan passed.
+The proof-placeholder and private-key grep wrappers exited 0 with the underlying
+no-match status 1. The repository check retained all seven packages and axiom
+gates. Fresh refusal demonstrations covered all five shared/auth files plus a
+missing fixture; controlled cleanup and timeout/diagnostic-failure checks passed.
+
+Earlier capture-metadata validation ran 26 controls: 25 independent refusals plus valid
+historical, precision-error, DCA, retry and fallback controls. The same 25 refusal
+tests fail against the previous checker at their named missing-refusal assertions,
+with entries, replies, content digests and definition/shared bindings unchanged.
+Twelve independent checker mutations each produced actual before/red/after
+statuses `0/1/0`, including refusal before selected publication and preservation
+of every artifact. These counts are separate from the earlier mutation totals.
+The complete 20-check evidence suite exited 0 in 49.226 seconds. Another full
+disposable capture and replay passed; selected regeneration changed only
+`move-f64.json`, with thirteen other artifact/inventory hashes unchanged.
+Existing workspace captures retained their original bytes. Runtime refusal,
+diagnostic recovery, controlled cleanup and installed checks also passed.
+
+| Command | Exit | Seconds |
+|---|---:|---:|
+| `nix develop -c lake build` | 0 | 0.626 |
+| `nix develop -c lake test` | 0 | 72.802 |
+| `nix flake check -L` | 0 | 216.500 |
+| `nix build -L` | 0 | 0.337 |
+
+The current metadata suite runs 42 controls: 32 refusals and ten positive
+controls/groups. Seven new metadata-only corruptions failed at named
+missing-refusal assertions against the previous checker, then passed after the
+qualification-status and DCA retry-history repair. Entries, replies, content
+digests and definition/shared bindings stayed unchanged throughout those probes.
+All 17 metadata source mutations produced actual before/red/after statuses
+`0/1/0`. The complete 20-check evidence suite exited 0 in 48.262 seconds.
+
+A fresh full disposable capture exited 0, followed by successful replay and a
+selected `move-f64` rerun that changed only its recording; thirteen other
+artifact/inventory hashes agreed. The initial demonstration retained an actual
+successful funding CLI response whose unquoted transaction ID caused numeric
+JSON parsing to fail. The CLI adapter now preserves textual transaction IDs and
+addresses before JSON parsing. Its isolated production-adapter regression failed
+before repair, passed afterward and detected removal of the repair. Repair
+checks now comprise 46 controls and eleven independent source mutations;
+the earlier 45/ten counts above remain historical. Existing captures retain
+their original bytes and provenance.
+
+Final checks on the repaired sources ran under the same bounded foreground
+supervisor, with changed sources staged before repository validation:
+
+| Command | Exit | Seconds |
+|---|---:|---:|
+| `nix develop -c lake build` | 0 | 1.091 |
+| `nix develop -c lake test` | 0 | 74.374 |
+| `nix flake check -L` | 0 | 204.939 |
+| `nix build -L` | 0 | 0.368 |
+
+Installed version, Lightning/offline checks, case-local replay and all five
+successful captured PSBT destination checks passed. The 76-file native-decision,
+proof-placeholder and private-key scans passed, with all seven packages and
+their existing tests/axiom gates retained. These results concern recording
+readiness; Core client and command handlers remain later work.
+
 ## Phase 7c: offline Fedimint and PSBT commands
 
 The executable registers nine offline commands. The three additions are:

@@ -1,0 +1,111 @@
+#!/usr/bin/env python3
+# Copyright (c) 2026 lean-cyberkrill developers. Released under the MIT License or the
+# Apache License 2.0, at your option; see LICENSE-MIT and LICENSE-APACHE.
+"""Refusal-only entry checks and portable recording checks; never launch a node."""
+import importlib
+import json
+import os
+from pathlib import Path
+import re
+import subprocess
+import sys
+import tempfile
+
+G = importlib.import_module("generate-rpc-recordings")
+KEY_PATTERN = r"[tuvxyzUVYZ]prv[1-9A-HJ-NP-Za-km-z]{100,}"
+HOST_PATTERN = r"/(?:home|Users|root|tmp|var/tmp|nix/store)/|/run/(?:user)/|[A-Za-z]:[\\/](?:Users|Windows)[\\/]"
+
+
+def portable(name, data):
+    text = data.decode("utf-8")
+    assert re.search(KEY_PATTERN, text) is None, "private extended key in recording"
+    assert re.search(HOST_PATTERN, text) is None, "host path in recording"
+    assert re.search(r"(?<![A-Za-z0-9])[5KLc9][1-9A-HJ-NP-Za-km-z]{50,51}(?![A-Za-z0-9])", text) is None, "WIF-shaped recording material"
+    if name == "bitcoin-dir/.cookie":
+        assert data == G.COOKIE, "fixed disposable cookie"
+        return
+    value = json.loads(text)
+    def visit(obj, trail=()):
+        if isinstance(obj, dict):
+            for key, item in obj.items():
+                if key.lower() in {"seed", "seed_bytes", "seed_hex", "private", "private_key", "privatekey", "secret", "secret_key", "mnemonic", "rpcpassword", "password", "wif", "xprv", "tprv"}:
+                    version = key == "mnemonic" and item == "0.21"
+                    source = name == "shared/provenance.json" and trail == ("derivation",) and key == "mnemonic" and item == dict(url="https://github.com/trezor/python-mnemonic", tag="v0.21", licence="MIT", nar_hash="sha256-D1mS/JQhefYmwrShfWR9SdiGsBUM+jmuCkfWix9tDOU=")
+                    allowed = (version and ((name == "shared/provenance.json" and trail == ("derivation", "versions")) or trail == ("capture", "tools"))) or source
+                    assert allowed, "private field in recording"
+                if key == "authorization": assert item == G.AUTH, "unexpected recording credentials"
+                if key.lower() == "rpcauth":
+                    assert name == "shared/provenance.json" and trail == ("auth",) and item == G.RPCAUTH, "unexpected rpcauth credentials"
+                visit(item, trail + (key,))
+        elif isinstance(obj, list):
+            for item in obj: visit(item, trail)
+        elif isinstance(obj, str):
+            assert not obj.startswith(("/", "\\\\")) or obj in ["/wallet/single", "/wallet/multisig"], "absolute host path in recording"
+            assert re.match(r"^[A-Za-z]:[\\/]", obj) is None, "drive path in recording"
+            assert not obj.startswith(("~/", "~\\")), "home-relative path in recording"
+            challenge = trail == ("entries", "unauthorized", "headers", "www-authenticate") and obj == 'Basic realm="jsonrpc"'
+            assert not obj.startswith("Basic ") or obj == G.AUTH or challenge, "unexpected Basic credentials"
+            if obj.lstrip().startswith(('{', '[')):
+                try: nested = json.loads(obj)
+                except ValueError: return
+                visit(nested)
+    visit(value)
+
+
+def scan(root):
+    assert root.is_dir() and not root.is_symlink(), "real recording directory required"
+    proc = subprocess.run(["grep", "-rEn", KEY_PATTERN + "|" + "/" + "home/", str(root)], stdin=subprocess.DEVNULL,
+                          capture_output=True, timeout=15)
+    assert proc.returncode == 1, "recording safety grep requires exit 1"
+    files = list(root.rglob("*"))
+    assert files, "nonempty recording tree"
+    expected = set(G.SHARED) | {r["recording"] for r in G.inventory()}
+    assert {p.relative_to(root).as_posix() for p in files if p.is_file()} == expected, "exact public artifact inventory"
+    for path in files:
+        assert not path.is_symlink(), "no recording symlink"
+        if path.is_file(): portable(path.relative_to(root).as_posix(), path.read_bytes())
+
+
+def refusals():
+    username = subprocess.run(["id", "-un"], check=True, capture_output=True, timeout=5).stdout.decode().strip()
+    passwd = subprocess.run(["getent", "passwd", username], check=True, capture_output=True, timeout=5).stdout.decode().split(":")
+    # Construct strings only. Never stat/read/create anything in this owner tree.
+    unsafe = passwd[5] + "/.bitcoin/not-created-recording-guard"
+    cases = [(["--datadir", unsafe], "refused real-home bitcoin datadir"),
+             (["--rpcport", "8332"], "refused unsafe/default port"),
+             (["--port", "8333"], "refused unsafe/default port"),
+             (["--rpcport", "8333"], "refused unsafe/default port"),
+             (["--port", "8332"], "refused unsafe/default port"),
+             (["--rpcport", "18443"], "refused unsafe/default port"),
+             (["--network", "mainnet"], "refused non-regtest network"),
+             (["--rpc-host", "example.invalid"], "refused non-loopback RPC host")]
+    for args, assertion in cases:
+        proc = subprocess.run([sys.executable, "-B", str(G.HERE / "generate-rpc-recordings.py"), *args], stdin=subprocess.DEVNULL,
+                              capture_output=True, timeout=10)
+        assert proc.returncode == 1 and not proc.stdout and assertion in proc.stderr.decode(), "entry refusal: " + assertion
+        assert b"owned datadir=" not in proc.stderr, "guard before creation/launch"
+    print(f"RPC entry refusals: {len(cases)}/8 (real-home string only, ports and network)")
+    optimized = 0
+    for inherited in [False, True]:
+        for worker in [False, True]:
+            env = dict(os.environ)
+            env.pop("PYTHONOPTIMIZE", None)
+            flags = [] if inherited else ["-O"]
+            if inherited: env["PYTHONOPTIMIZE"] = "2"
+            args = ["--inside"] if worker else ["--rpcport", "8332"]
+            proc = subprocess.run([sys.executable, "-B", *flags, str(G.HERE / "generate-rpc-recordings.py"), *args],
+                                  env=env, input=b"{}" if worker else b"", capture_output=True, timeout=10)
+            assert proc.returncode == 1 and not proc.stdout and b"optimized Python execution refused" in proc.stderr, "optimized public/worker entry refusal"
+            assert b"owned datadir=" not in proc.stderr, "optimization refusal before effects"
+            optimized += 1
+    print(f"RPC optimized entry refusals: {optimized}/4 (explicit/inherited, manual/worker)")
+
+
+def main():
+    # Relative to the package, independent of the invoking working directory.
+    scan(G.HERE.parent / "test/recordings")
+    refusals()
+    print("RPC recording safety: grep exit 1, portable data and disposable credentials")
+
+
+if __name__ == "__main__": main()

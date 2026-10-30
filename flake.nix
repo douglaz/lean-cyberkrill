@@ -15,6 +15,11 @@
     let
       system = "x86_64-linux";
       pkgs = nixpkgs.legacyPackages.${system};
+      # Manual disposable-regtest capture tools; never part of release/check inputs.
+      recordingPkgs = import nixpkgs {
+        inherit system;
+        config = { permittedInsecurePackages = []; allowInsecurePredicate = _: false; };
+      };
       cc = pkgs.stdenv.cc;
 
       # The official Lean v4.35.0 release, patched the way nixpkgs' elan patches toolchains:
@@ -102,6 +107,7 @@
         nativeBuildInputs = [ lean pkgs.glibc.bin pkgs.binutils pkgs.python3 pkgs.openssl ];
         buildInputs = [ pkgs.secp256k1 pkgs.curl pkgs.openssl ];
         buildPhase = ''
+          export PATH=${pkgs.glibc.getent}/bin:$PATH
           export HOME=$TMPDIR
           mkdir -p packages/cyberkrill/.lake/packages
           cp -r ${lean4-cli} packages/cyberkrill/.lake/packages/Cli
@@ -126,6 +132,18 @@
       checks.${system}.default = cyberkrill;
 
       devShells.${system} = {
+        recordings =
+          assert recordingPkgs.bitcoind.version == "31.1";
+          assert recordingPkgs.python3Packages.bip32.version == "5.0";
+          assert recordingPkgs.python3Packages.mnemonic.version == "0.21";
+          recordingPkgs.mkShell {
+            packages = [
+              (recordingPkgs.python3.withPackages (ps: [ ps.bip32 ps.mnemonic ]))
+              recordingPkgs.bitcoind recordingPkgs.curl recordingPkgs.iproute2
+              recordingPkgs.util-linux recordingPkgs.coreutils recordingPkgs.gnugrep
+              recordingPkgs.glibc.bin recordingPkgs.glibc.getent
+            ];
+          };
         default = pkgs.mkShell (ffiEnvironment // {
           shellHook = ''
             _cli_root=$(git rev-parse --show-toplevel)
