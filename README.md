@@ -154,7 +154,7 @@ explicitly synthetic transport fixtures, not Core captures.
 | Spawn refusals, asserted at the shared boundary and both reference executable names | 122 each |
 | Permitted sentinel-spawn controls at those three boundaries | 37 each, plus 1 unrelated utility |
 | Namespace boundaries | 8 |
-| Process-tree lifecycle controls at direct and host namespace-entry paths | 16 |
+| Process-tree lifecycle controls at direct and host namespace-entry paths | 48: 16 single-level, 14 nested, 4 disappearing-process read controls, 14 children discovered during final escalation |
 
 Host network execution re-execs through `unshare -rn`, brings loopback up and
 binds its recursion marker to the changed namespace and executing process.
@@ -176,16 +176,26 @@ Reference execution is identified explicitly at its call boundary, including
 when its configured executable has a different name.
 
 The Linux foreground runner creates an owned process group and temporarily
-enables child subreaping. It terminates and reaps descendants on completion,
-failure, timeout and managed interruption, escalating with finite deadlines.
-Connection-free lifecycle probes independently observe PID disappearance and
-reaping, including children ignoring termination; their separate recovery
-keeps cleanup mutations safe. Host entry and already-isolated execution share
-this lifecycle, including the unshare availability probe.
+enables child subreaping. It tracks descendants across nested sessions using
+process identities and child lists, including processes adopted during cleanup.
+Process-table reads handle both missing-file and vanished-process errors.
+Each cleanup polling pass signals the newly discovered descendants with the
+current escalation signal, including during the final SIGKILL round. A
+controlled fork after the signal snapshot creates a child in another session;
+fourteen controls cover success, failure, timeout and all four managed
+interruptions at both entry paths. Their readiness handshake makes that
+discovery ordering explicit.
+It terminates and reaps descendants on completion, failure, timeout and managed
+interruption, escalating with finite deadlines. Connection-free lifecycle
+probes independently observe PID disappearance and reaping, including nested
+children ignoring termination. Their separate recovery stops known sentinels
+before draining remaining output, so a broken helper cannot strand the observer
+on an inherited pipe. Host entry and already-isolated execution share this
+lifecycle, including the unshare availability probe.
 
 `test/rpc-client-mutations.py` pins the new mutation definitions and preserves
 separate build/red/restoration/green streams under
-`packages/cyberkrill/.lake/validation/rpc-client-mutations-round2/`. Its committed
+`packages/cyberkrill/.lake/validation/rpc-client-mutations-late-final/`. Its committed
 record is separate from the retained historical **152 distinct edits / 275
 selected reds**. Existing current evidence is refreshed by executing its
 mutation commands, never by substituting current source hashes into old
@@ -194,43 +204,91 @@ status and elapsed time in the same ignored validation directory.
 
 ### Current client validation
 
-On 2026-10-30, the following commands ran through the complete foreground
-supervisor. Commands needing the toolchain ran in the default dev shell;
+On 2026-10-30, after the final escalation repair, the following commands
+completed through the foreground supervisor with exit **0**. Log stems below
+are relative to `packages/cyberkrill/.lake/validation/late-child-final/`;
+each has separate `.stdout`, `.stderr`, `.status` and command/timing `.json`.
+Toolchain commands used the default dev shell. The package build/test commands
+ran in `packages/cyberkrill`; other commands ran at the repository root.
+
+| Command/check | Exit | Log stem |
+|---|---:|---|
+| `test/rpc-client-mutations.py` | 0 | `rpc-mutations-final` |
+| `test/rpc-client-mutations.py --verify` | 0 | `rpc-mutations-verify` |
+| `test/validate.py app` (2 commands: `nix develop -c lake build`, `nix develop -c lake test`) | 0 | `validate-app`; child streams: `../build`, `../test` |
+| `nix flake check -L` (fresh sandbox execution) | 0 | `fresh-sandbox` |
+| Sandbox inventory and packaged-source audit | 0 | `sandbox-audit`, `fresh-sandbox-record.json` |
+| `nix build -L` | 0 | `root-build` |
+| `test/validate.py evidence` (23 commands) | 0 | `validate-evidence`; child records: `../evidence.json` |
+| `test/validate.py repo` (9 commands) | 0 | `validate-repo`; child records: `../repo.json` |
+| Current source/index, mutation-stream and process audit | 0 | `index-audit` |
+
+The current RPC execution records **73 distinct edits / 271 selected detecting
+failures**: 62 client/capture and 209 safety selections, each with a restored
+green execution. The 14 new lifecycle cases each detect omitted cleanup and
+omitted repeated signalling during escalation. The earlier **72/243** object
+is preserved as `nested_observation` with its fixed digest, beside the original
+**64/164** and corrected **69/211** observations. The seven unchanged legacy
+records retain their preceding executions; none binds a source changed by this
+repair. All **204 current source bindings across nine records** match both
+the worktree and staged blobs.
+
+The fresh sandbox log contains the eight replay cases, eleven wrappers and
+75 responses, auth18, spawn122 at all three boundaries, permissions37,
+namespace8 and lifecycle48, without a suite skip. All **356 packaged source
+files** match staged bytes. Later cached repository checks are recorded
+separately. The sibling-exclusion control passed success/failure/timeout
+(**3/3**, `sibling-exclusion`); the original finite fork probe left no child in
+any of eight trials (`original-probe-fixed`). The named cleanup assertion failed
+against the unfixed helper (`late-child-unfixed-red`, exit1), with independent
+recovery afterward, and detects removal of repeated signalling
+(`late-mutation-red`, exit1). No outer cleanup is counted as a passing assertion.
+
+### Retained client validation before final escalation cleanup
+
+On 2026-10-30, the following commands ran on the earlier source through the
+complete foreground supervisor. Commands needing the toolchain ran in the default dev shell;
 package commands ran in `packages/cyberkrill` and repository commands at the
 root. Each named log below has separate `.stdout`, `.stderr` and `.status`
-files in `packages/cyberkrill/.lake/validation/`.
+files in `packages/cyberkrill/.lake/validation/`. The earlier standard mode logs
+are also preserved under `late-child-final/retained-mode-logs/` before their
+names are reused by the later executions.
 
 | Command/check | Exit | Log stem |
 |---|---:|---|
 | `nix develop -c lake build` | 0 | `build` |
 | `nix develop -c lake test` | 0 | `test` |
-| `nix flake check -L` | 0 | `flake-check`, with the fresh execution retained as `round2/fresh-sandbox` |
-| `nix build -L` | 0 | `nix-build` |
-| `test/validate.py app` | 0 | `app.json` (2 commands) |
-| `test/validate.py evidence` | 0 | `evidence.json` (23 commands) |
-| `test/validate.py repo` | 0 | `repo.json` (9 commands) |
-| Seven affected existing mutation/refresh commands | 0 each | `round2/refresh.json`, `round2/refresh-*` |
-| `test/rpc-client-mutations.py` | 0 | `rpc-client-mutations-round2/` and its committed record |
+| `nix flake check -L` | 0 | `recovery-final/fresh-sandbox`; inventory/source audit: `recovery-final/sandbox-audit` |
+| `nix build -L` | 0 | `recovery-final/root-build` |
+| `test/validate.py app` | 0 | `recovery-final/validate-app`, `app.json` (2 commands) |
+| `test/validate.py evidence` | 0 | `recovery-final/validate-evidence`, `evidence.json` (23 commands) |
+| `test/validate.py repo` | 0 | `recovery-final/validate-repo`, `repo.json` (9 commands) |
+| Seven affected existing mutation/refresh commands | 0 each | `recovery-final/refresh.json`, `recovery-final/seven-refresh` |
+| `test/rpc-client-mutations.py` | 0 | `recovery-final/rpc-mutations-final`, `rpc-client-mutations-nested-final/` |
+| `test/rpc-client-mutations.py --verify` | 0 | `recovery-final/rpc-mutations-verify` |
 
 The preceding client observation had **64 distinct source edits / 164
 independently selected detecting failures**. It is retained as
 `previous_observation` in the client mutation record, with its original digest;
 it describes the source before the connection-boundary corrections.
-The corrected-source rerun has **69 distinct source edits / 211 independently
-selected detecting failures**: 62 client/capture selections and 149 safety
-selections, each with restored green execution. The final named assertion
-was checked in every red stream, and source fingerprints match the restored
-files. The existing current-evidence refreshes were actually executed; the
-earlier captures and historical regression records retain their original
-bytes. Their historical 152/275 inventory remains separate from these new
-observations.
+The earlier corrected-source observation of **69 distinct edits / 211 selected
+failures** is retained as `corrected_observation`, with its original digest.
+That earlier source execution has **72 distinct source edits / 243 independently
+selected detecting failures**: 62 client/capture selections and 181 safety
+selections, each with restored green execution. Every red stream contains its
+intended named assertion. Those records' source fingerprints matched both
+the then-restored files and staged blobs. The seven affected evidence commands
+were executed sequentially; earlier captures and historical regression records
+retain their original bytes. The historical observation of **152 distinct edits /
+275 selected reds** remains separate.
 
 The fresh sandbox log records all eleven wrappers and 75 responses, all 18
 auth cases, all three sets of 122 spawn refusals, eight namespace boundaries
-and sixteen process-tree lifecycle controls
+and all 34 process-tree lifecycle controls
 executing without `SKIP (no unshare)`. Final host replay also ran without a
 suite skip; simulated missing/refused-unshare controls capture the expected
-skip text. The root checks retain all seven packages, the link/OpenSSL
+skip text. All 356 packaged source files were compared with their staged bytes.
+The root checks retain all seven packages, the link/OpenSSL
 checks, axiom gates, the 78-file library/proof native-decision inventory and
 the proof/private-material scans. Installed version, Lightning, offline and
 RPC replay checks all exited 0. No new Core recording, fee-command golden or

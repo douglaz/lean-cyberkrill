@@ -9,7 +9,7 @@
     "CyberkrillTests/Offline.lean": "e6243c51b6638c0bd777835b843459e955e2e7f6163e7bbac6bfe22230407a9d",
     "CyberkrillTests/Output.lean": "9912e5c699b4fb7c07ff5eaacd2d5d821d6585118cb17a0829b224c96965a966",
     "CyberkrillTests/PrivateOutput.lean": "a4412bb4cf4908cc777e39018cb2ac34fc12c697e373b90be3b6c1235514997f",
-    "CyberkrillTests/Rpc.lean": "3fac15fedc5bda8a294037014f9bcc3f930f62c3cb7c0d326fff38f4bc611576",
+    "CyberkrillTests/Rpc.lean": "d13fcea42aa79f9fad9cbc205b14ec5bbe04c67fd1ebd4af2a7b93ccbf97dcac",
     "CyberkrillTests/Support.lean": "80dbdfd22c0478dde791bfc46ae73418a8cf838f7728bb08f248291cdb3a179c",
     "CyberkrillTests.lean": "17b7f5170c8a14b3ed82af865b5a7c50aaa9cc5893f1e1c842e1cf05e52f0405",
     "test/regressions.py": "b1e757d159d3255817c8227c80b18822040ea77073f4ef2dcb8a75218fdd7787",
@@ -36,7 +36,7 @@
           "CyberkrillTests"
         ],
         "status": 0,
-        "seconds": 11.123
+        "seconds": 9.911
       },
       "red": {
         "command": [
@@ -49,7 +49,7 @@
           "word-count-rejections"
         ],
         "status": 1,
-        "seconds": 0.078
+        "seconds": 0.076
       },
       "restore_build": {
         "command": [
@@ -62,7 +62,7 @@
           "CyberkrillTests"
         ],
         "status": 0,
-        "seconds": 11.108
+        "seconds": 11.012
       },
       "green": {
         "command": [
@@ -75,7 +75,7 @@
           "word-count-rejections"
         ],
         "status": 0,
-        "seconds": 0.068
+        "seconds": 0.074
       },
       "detecting_assertion": "word-count rejection before entropy"
     },
@@ -95,7 +95,7 @@
           "CyberkrillTests"
         ],
         "status": 0,
-        "seconds": 10.916
+        "seconds": 10.958
       },
       "red": {
         "command": [
@@ -108,7 +108,7 @@
           "word-count-plus"
         ],
         "status": 1,
-        "seconds": 0.077
+        "seconds": 0.078
       },
       "restore_build": {
         "command": [
@@ -121,7 +121,7 @@
           "CyberkrillTests"
         ],
         "status": 0,
-        "seconds": 11.008
+        "seconds": 10.726
       },
       "green": {
         "command": [
@@ -134,7 +134,7 @@
           "word-count-plus"
         ],
         "status": 0,
-        "seconds": 0.077
+        "seconds": 0.08
       },
       "detecting_assertion": "mnemonic exact status 0"
     },
@@ -154,7 +154,7 @@
           "CyberkrillTests"
         ],
         "status": 0,
-        "seconds": 11.014
+        "seconds": 10.321
       },
       "red": {
         "command": [
@@ -167,7 +167,7 @@
           "bare-negative-zero"
         ],
         "status": 1,
-        "seconds": 0.078
+        "seconds": 0.08
       },
       "restore_build": {
         "command": [
@@ -180,7 +180,7 @@
           "CyberkrillTests"
         ],
         "status": 0,
-        "seconds": 11.314
+        "seconds": 10.819
       },
       "green": {
         "command": [
@@ -213,7 +213,7 @@
           "CyberkrillTests"
         ],
         "status": 0,
-        "seconds": 0.397
+        "seconds": 0.403
       },
       "red": {
         "command": [
@@ -226,7 +226,7 @@
           "stdout-crlf"
         ],
         "status": 1,
-        "seconds": 0.065
+        "seconds": 0.066
       },
       "restore_build": {
         "command": [
@@ -239,7 +239,7 @@
           "CyberkrillTests"
         ],
         "status": 0,
-        "seconds": 0.391
+        "seconds": 0.403
       },
       "green": {
         "command": [
@@ -252,7 +252,7 @@
           "stdout-crlf"
         ],
         "status": 0,
-        "seconds": 0.053
+        "seconds": 0.054
       },
       "detecting_assertion": "subprocess stdout CRLF preserved"
     },
@@ -261,6 +261,124 @@
       "file": "test/driver.py",
       "replace": "proc.stdout.decode(\"utf-8\")",
       "with_text": "proc.stdout.decode(\"utf-8\").replace(\"\\r\\n\", \"\\n\").replace(\"\\r\", \"\\n\")",
+      "build": {
+        "command": [
+          "timeout",
+          "--foreground",
+          "180",
+          "lake",
+          "build",
+          "cyberkrill",
+          "CyberkrillTests"
+        ],
+        "status": 0,
+        "seconds": 0.412
+      },
+      "red": {
+        "command": [
+          "timeout",
+          "--foreground",
+          "180",
+          "python3",
+          "-B",
+          "test/regressions.py",
+          "stdout-cr"
+        ],
+        "status": 1,
+        "seconds": 0.066
+      },
+      "restore_build": {
+        "command": [
+          "timeout",
+          "--foreground",
+          "180",
+          "lake",
+          "build",
+          "cyberkrill",
+          "CyberkrillTests"
+        ],
+        "status": 0,
+        "seconds": 0.403
+      },
+      "green": {
+        "command": [
+          "timeout",
+          "--foreground",
+          "180",
+          "python3",
+          "-B",
+          "test/regressions.py",
+          "stdout-cr"
+        ],
+        "status": 0,
+        "seconds": 0.056
+      },
+      "detecting_assertion": "subprocess stdout CR preserved"
+    },
+    {
+      "property": "stderr-crlf",
+      "file": "test/driver.py",
+      "replace": "proc.stderr.decode(\"utf-8\")",
+      "with_text": "proc.stderr.decode(\"utf-8\").replace(\"\\r\\n\", \"\\n\").replace(\"\\r\", \"\\n\")",
+      "build": {
+        "command": [
+          "timeout",
+          "--foreground",
+          "180",
+          "lake",
+          "build",
+          "cyberkrill",
+          "CyberkrillTests"
+        ],
+        "status": 0,
+        "seconds": 0.419
+      },
+      "red": {
+        "command": [
+          "timeout",
+          "--foreground",
+          "180",
+          "python3",
+          "-B",
+          "test/regressions.py",
+          "stderr-crlf"
+        ],
+        "status": 1,
+        "seconds": 0.069
+      },
+      "restore_build": {
+        "command": [
+          "timeout",
+          "--foreground",
+          "180",
+          "lake",
+          "build",
+          "cyberkrill",
+          "CyberkrillTests"
+        ],
+        "status": 0,
+        "seconds": 0.443
+      },
+      "green": {
+        "command": [
+          "timeout",
+          "--foreground",
+          "180",
+          "python3",
+          "-B",
+          "test/regressions.py",
+          "stderr-crlf"
+        ],
+        "status": 0,
+        "seconds": 0.054
+      },
+      "detecting_assertion": "subprocess stderr CRLF preserved"
+    },
+    {
+      "property": "stderr-cr",
+      "file": "test/driver.py",
+      "replace": "proc.stderr.decode(\"utf-8\")",
+      "with_text": "proc.stderr.decode(\"utf-8\").replace(\"\\r\\n\", \"\\n\").replace(\"\\r\", \"\\n\")",
       "build": {
         "command": [
           "timeout",
@@ -282,128 +400,10 @@
           "python3",
           "-B",
           "test/regressions.py",
-          "stdout-cr"
-        ],
-        "status": 1,
-        "seconds": 0.061
-      },
-      "restore_build": {
-        "command": [
-          "timeout",
-          "--foreground",
-          "180",
-          "lake",
-          "build",
-          "cyberkrill",
-          "CyberkrillTests"
-        ],
-        "status": 0,
-        "seconds": 0.404
-      },
-      "green": {
-        "command": [
-          "timeout",
-          "--foreground",
-          "180",
-          "python3",
-          "-B",
-          "test/regressions.py",
-          "stdout-cr"
-        ],
-        "status": 0,
-        "seconds": 0.055
-      },
-      "detecting_assertion": "subprocess stdout CR preserved"
-    },
-    {
-      "property": "stderr-crlf",
-      "file": "test/driver.py",
-      "replace": "proc.stderr.decode(\"utf-8\")",
-      "with_text": "proc.stderr.decode(\"utf-8\").replace(\"\\r\\n\", \"\\n\").replace(\"\\r\", \"\\n\")",
-      "build": {
-        "command": [
-          "timeout",
-          "--foreground",
-          "180",
-          "lake",
-          "build",
-          "cyberkrill",
-          "CyberkrillTests"
-        ],
-        "status": 0,
-        "seconds": 0.395
-      },
-      "red": {
-        "command": [
-          "timeout",
-          "--foreground",
-          "180",
-          "python3",
-          "-B",
-          "test/regressions.py",
-          "stderr-crlf"
-        ],
-        "status": 1,
-        "seconds": 0.061
-      },
-      "restore_build": {
-        "command": [
-          "timeout",
-          "--foreground",
-          "180",
-          "lake",
-          "build",
-          "cyberkrill",
-          "CyberkrillTests"
-        ],
-        "status": 0,
-        "seconds": 0.402
-      },
-      "green": {
-        "command": [
-          "timeout",
-          "--foreground",
-          "180",
-          "python3",
-          "-B",
-          "test/regressions.py",
-          "stderr-crlf"
-        ],
-        "status": 0,
-        "seconds": 0.049
-      },
-      "detecting_assertion": "subprocess stderr CRLF preserved"
-    },
-    {
-      "property": "stderr-cr",
-      "file": "test/driver.py",
-      "replace": "proc.stderr.decode(\"utf-8\")",
-      "with_text": "proc.stderr.decode(\"utf-8\").replace(\"\\r\\n\", \"\\n\").replace(\"\\r\", \"\\n\")",
-      "build": {
-        "command": [
-          "timeout",
-          "--foreground",
-          "180",
-          "lake",
-          "build",
-          "cyberkrill",
-          "CyberkrillTests"
-        ],
-        "status": 0,
-        "seconds": 0.387
-      },
-      "red": {
-        "command": [
-          "timeout",
-          "--foreground",
-          "180",
-          "python3",
-          "-B",
-          "test/regressions.py",
           "stderr-cr"
         ],
         "status": 1,
-        "seconds": 0.063
+        "seconds": 0.066
       },
       "restore_build": {
         "command": [
@@ -416,7 +416,7 @@
           "CyberkrillTests"
         ],
         "status": 0,
-        "seconds": 0.396
+        "seconds": 0.421
       },
       "green": {
         "command": [
@@ -429,7 +429,7 @@
           "stderr-cr"
         ],
         "status": 0,
-        "seconds": 0.05
+        "seconds": 0.059
       },
       "detecting_assertion": "subprocess stderr CR preserved"
     },
@@ -449,7 +449,7 @@
           "CyberkrillTests"
         ],
         "status": 0,
-        "seconds": 0.4
+        "seconds": 0.41
       },
       "red": {
         "command": [
@@ -462,7 +462,7 @@
           "dotted-collision"
         ],
         "status": 1,
-        "seconds": 0.046
+        "seconds": 0.054
       },
       "restore_build": {
         "command": [
@@ -475,7 +475,7 @@
           "CyberkrillTests"
         ],
         "status": 0,
-        "seconds": 0.406
+        "seconds": 0.414
       },
       "green": {
         "command": [
@@ -488,7 +488,7 @@
           "dotted-collision"
         ],
         "status": 0,
-        "seconds": 0.04
+        "seconds": 0.043
       },
       "detecting_assertion": "dotted leaf collision refused"
     },
@@ -508,7 +508,7 @@
           "CyberkrillTests"
         ],
         "status": 0,
-        "seconds": 0.397
+        "seconds": 0.419
       },
       "red": {
         "command": [
@@ -521,7 +521,7 @@
           "bracket-collision"
         ],
         "status": 1,
-        "seconds": 0.046
+        "seconds": 0.055
       },
       "restore_build": {
         "command": [
@@ -534,7 +534,7 @@
           "CyberkrillTests"
         ],
         "status": 0,
-        "seconds": 0.397
+        "seconds": 0.408
       },
       "green": {
         "command": [
@@ -547,7 +547,7 @@
           "bracket-collision"
         ],
         "status": 0,
-        "seconds": 0.038
+        "seconds": 0.045
       },
       "detecting_assertion": "bracket leaf collision refused"
     }
@@ -562,6 +562,6 @@
       "test/regressions.py"
     ],
     "status": 0,
-    "seconds": 0.303
+    "seconds": 0.318
   }
 }

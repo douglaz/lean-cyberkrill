@@ -223,8 +223,15 @@ def namespace_checks(only=None):
 
 
 def lifecycle_cases():
-    return [branch + "/" + outcome for branch in ["direct", "host"]
-            for outcome in ["success", "failure", "leader-signal", "timeout", "HUP", "INT", "QUIT", "TERM"]]
+    single = [branch + "/" + outcome for branch in ["direct", "host"]
+              for outcome in ["success", "failure", "leader-signal", "timeout", "HUP", "INT", "QUIT", "TERM"]]
+    nested = ["nested-" + branch + "/" + outcome for branch in ["direct", "host"]
+              for outcome in ["success", "failure", "timeout", "HUP", "INT", "QUIT", "TERM"]]
+    proc_races = [branch + "/proc-" + field + "-race" for branch in ["direct", "host"]
+                  for field in ["stat", "children"]]
+    late = ["late-" + branch + "/" + outcome for branch in ["direct", "host"]
+            for outcome in ["success", "failure", "timeout", "HUP", "INT", "QUIT", "TERM"]]
+    return single + nested + proc_races + late
 
 
 def lifecycle_checks(only=None):
@@ -240,12 +247,25 @@ def lifecycle_checks(only=None):
         for name in cases:
             if only is not None and name != only: continue
             branch, outcome = name.split("/")
+            nested = branch.startswith("nested-")
+            late = branch.startswith("late-")
+            direct = branch.removeprefix("nested-").removeprefix("late-") == "direct"
             with tempfile.TemporaryDirectory(dir=directory) as root:
                 root = Path(root)
                 ready, pids = root / "ready", root / "pids"
+                escaped = root / "escaped"
                 leaf = root / "leaf.py"
                 leaf.write_text("import os,signal,time\nfrom pathlib import Path\n"
                                 "signal.signal(signal.SIGTERM, signal.SIG_IGN)\n"
+                                + ("os.setsid()\n"
+                                   "def escape(_signum,_frame):\n"
+                                   "    if os.fork()==0:\n"
+                                   "        os.setsid()\n"
+                                   "        marker=Path(" + repr(str(escaped)) + ")\n"
+                                   "        marker.with_suffix('.pending').write_text(str(os.getpid()))\n"
+                                   "        marker.with_suffix('.pending').replace(marker)\n"
+                                   "        time.sleep(10)\n        os._exit(0)\n"
+                                   "signal.signal(signal.SIGUSR1,escape)\n" if late else "") +
                                 "Path(" + repr(str(ready)) + ").write_text(str(os.getpid()))\n"
                                 "time.sleep(60)\n")
                 leader = root / "leader.py"
@@ -255,7 +275,8 @@ def lifecycle_checks(only=None):
                                   "limit = time.monotonic()+5\n"
                                   "while not Path(" + repr(str(ready)) + ").exists():\n"
                                   "    assert time.monotonic()<limit\n    time.sleep(.01)\n"
-                                  "Path(" + repr(str(pids)) + ").write_text(str(os.getpid())+' '+str(child.pid))\n"
+                                  "Path(" + repr(str(pids)) + ").write_text(str(os.getpid())+' '+str(child.pid)"
+                                  + ("+' '+str(os.getppid())" if nested else "") + ")\n"
                                   + ("sys.exit(0)\n" if outcome == "success" else
                                      "sys.exit(23)\n" if outcome == "failure" else
                                      "os.kill(os.getpid(),signal.SIGTERM)\n" if outcome == "leader-signal" else
@@ -271,14 +292,49 @@ def lifecycle_checks(only=None):
                 ip.write_text("#!" + shell + "\nexit 0\n")
                 unshare.chmod(0o700); ip.chmod(0o700)
                 source = getattr(network, "__source__", Path(network.__file__).read_text())
+                payload = leader
+                if nested:
+                    inner = root / "inner.py"
+                    # A leaked inner runner must not hold the observer's pipes
+                    # open and hide the PID/reaping assertion under a timeout.
+                    inner.write_text("import os,sys\nnull=os.open(os.devnull,os.O_WRONLY)\n"
+                                     "os.dup2(null,1); os.dup2(null,2); os.close(null)\nsys.path.insert(0," + repr(str(Path(__file__).parent)) + ")\n"
+                                     "import network\nexec(compile(" + repr(source) + ", network.__file__, 'exec'),network.__dict__)\n"
+                                     "network.sandbox=lambda: " + repr(direct) + "\n"
+                                     "network.isolated=lambda: False\n"
+                                     "sys.exit(network.run_isolated([sys.executable,'-B'," + repr(str(leader)) + "],timeout=60))\n")
+                    payload = inner
                 driver = root / "driver.py"
                 driver.write_text("import sys,subprocess\nsys.path.insert(0," + repr(str(Path(__file__).parent)) + ")\n"
                                   "import network\nexec(compile(" + repr(source) + ", network.__file__, 'exec'),network.__dict__)\n"
-                                  "network.sandbox=lambda: " + repr(branch == "direct") + "\n"
+                                  "network.sandbox=lambda: " + repr(direct) + "\n"
                                   "network.isolated=lambda: False\n"
-                                  "try:\n    status=network.run_isolated([sys.executable,'-B'," + repr(str(leader)) + "],timeout=1)\n"
+                                  # Schedule one real fork after the KILL snapshot
+                                  # has been taken. Signals still reach real PIDs;
+                                  # no discovery, ownership or reaping is mocked.
+                                  + ("import os,signal,time\nfrom pathlib import Path\n"
+                                     "kill=os.kill\n"
+                                     "def scheduled_kill(pid,signum):\n"
+                                     "    if signum==signal.SIGKILL and Path(" + repr(str(ready)) + ").exists() and pid==int(Path(" + repr(str(ready)) + ").read_text()) and not Path(" + repr(str(escaped)) + ").exists():\n"
+                                     "        kill(pid,signal.SIGUSR1)\n"
+                                     "        deadline=time.monotonic()+3\n"
+                                     "        while not Path(" + repr(str(escaped)) + ").exists():\n"
+                                     "            assert time.monotonic()<deadline, 'late child readiness'\n"
+                                     "            time.sleep(.001)\n"
+                                     "    return kill(pid,signum)\n"
+                                     "os.kill=scheduled_kill\n" if late else "")
+                                  + ("import os\nfrom pathlib import Path\n"
+                                     "read_text=Path.read_text\ninjected=[False]\n"
+                                     "def proc_read(path,*args,**kwargs):\n"
+                                     "    if not injected[0] and Path(" + repr(str(pids)) + ").exists() and str(path).startswith('/proc/') and path.name==" + repr("stat" if outcome == "proc-stat-race" else "children") + " and path.parts[2]!=str(os.getpid()):\n"
+                                     "        injected[0]=True\n        raise ProcessLookupError(3,'synthetic disappearing process')\n"
+                                     "    return read_text(path,*args,**kwargs)\n"
+                                     "Path.read_text=proc_read\n" if outcome.startswith("proc-") else "") +
+                                  "try:\n    status=network.run_isolated([sys.executable,'-B'," + repr(str(payload)) + "],timeout=" + ("2" if nested else "1") + ")\n"
                                   "    print('RETURN',status,flush=True)\n"
-                                  "except subprocess.TimeoutExpired:\n    print('TIMEOUT',flush=True)\n    sys.exit(124)\n")
+                                  "except subprocess.TimeoutExpired:\n"
+                                  + ("    assert injected[0], 'lifecycle proc race injected'\n" if outcome.startswith("proc-") else "") +
+                                  "    print('TIMEOUT',flush=True)\n    sys.exit(124)\n")
                 env = {**os.environ, "PATH": str(root), "PYTHONDONTWRITEBYTECODE": "1"}
                 process = subprocess.Popen([sys.executable, "-B", str(driver)], env=env,
                                            stdin=subprocess.DEVNULL, stdout=subprocess.PIPE, stderr=subprocess.PIPE,
@@ -293,32 +349,39 @@ def lifecycle_checks(only=None):
                     if outcome in {"HUP", "INT", "QUIT", "TERM"}:
                         process.send_signal(getattr(signal, "SIG" + outcome))
                     stdout, stderr = process.communicate(timeout=8)
+                    if escaped.exists(): owned.append(int(escaped.read_text()))
                     # /proc includes zombies. No PID may remain, and this outer
                     # observer must not inherit an unreaped descendant.
                     absent = all(not Path("/proc", str(pid)).exists() for pid in owned)
                     reaped = True
+                    observations = {}
                     for pid in owned:
+                        try: observations[pid] = Path("/proc", str(pid), "stat").read_text().rsplit(")", 1)[1].split()[:3]
+                        except (FileNotFoundError, ProcessLookupError): observations[pid] = "absent"
                         try:
                             waited, _ = os.waitpid(pid, os.WNOHANG)
                             reaped = False
                         except ChildProcessError: pass
-                    assert absent and reaped, "lifecycle descendants stopped/reaped: " + name
-                    expected_status = 124 if outcome == "timeout" else 128 + getattr(signal, "SIG" + outcome) if outcome in {"HUP", "INT", "QUIT", "TERM"} else 0
-                    expected_output = b"TIMEOUT\n" if outcome == "timeout" else b"" if expected_status else (
+                    assert absent and reaped, "lifecycle descendants stopped/reaped: " + name + repr((observations, process.returncode, stdout, stderr))
+                    if late: assert escaped.exists(), "late child scheduling reached: " + name
+                    timed_out = outcome == "timeout" or outcome.startswith("proc-")
+                    expected_status = 124 if timed_out else 128 + getattr(signal, "SIG" + outcome) if outcome in {"HUP", "INT", "QUIT", "TERM"} else 0
+                    expected_output = b"TIMEOUT\n" if timed_out else b"" if expected_status else (
                         b"RETURN 23\n" if outcome == "failure" else b"RETURN -15\n" if outcome == "leader-signal" else b"RETURN 0\n")
                     assert (process.returncode, stdout, stderr) == (expected_status, expected_output, b""), "lifecycle outcome: " + name + repr((process.returncode, stdout, stderr))
                 finally:
                     # Independent bounded recovery keeps mutation probes safe;
                     # these kills occur only after the cleanup observation.
                     if process.poll() is None: process.kill()
-                    process.communicate(timeout=3)
                     if pids.exists(): owned = list(map(int, pids.read_text().split()))
+                    if escaped.exists(): owned.append(int(escaped.read_text()))
                     if owned:
                         try: os.killpg(owned[0], signal.SIGKILL)
                         except ProcessLookupError: pass
                     for pid in owned:
                         try: os.kill(pid, signal.SIGKILL)
                         except ProcessLookupError: pass
+                    process.communicate(timeout=3)
                     deadline = time.monotonic() + 3
                     for pid in owned:
                         while True:
@@ -329,8 +392,8 @@ def lifecycle_checks(only=None):
                             time.sleep(.01)
     finally:
         assert libc.prctl(36, previous.value, 0, 0, 0) == 0
-    assert len(cases) == 16 and (only is None or only in cases), "lifecycle inventory"
-    if only is None: print("network process lifecycle: 16/16; direct and host entry; success/failure/timeout/four interruptions; descendants stopped and reaped", flush=True)
+    assert len(cases) == 48 and (only is None or only in cases), "lifecycle inventory"
+    if only is None: print("network process lifecycle: 48/48; 16 single-level, 14 nested, four disappearing-process read controls, 14 late-child escalation controls; direct and host entry; success/failure/timeout/four interruptions; descendants stopped and reaped", flush=True)
 
 
 def main():

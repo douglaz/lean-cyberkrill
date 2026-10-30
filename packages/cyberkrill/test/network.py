@@ -132,7 +132,7 @@ def sandbox():
 
 
 def run_owned(command, *, timeout, env=None, capture_output=False):
-    """Wait in the foreground, containing and reaping this invocation's group.
+    """Wait in the foreground, containing and reaping this invocation's tree.
 
     Linux subreaping keeps orphaned grandchildren ours until waitpid collects
     them. The child unblocks managed signals before exec, as in the gate.
@@ -147,30 +147,67 @@ def run_owned(command, *, timeout, env=None, capture_output=False):
         raise OSError(ctypes.get_errno(), "cannot enable child subreaper")
     child = None
     handlers = {}
+    def children(pid):
+        try: return list(map(int, Path(f"/proc/{pid}/task/{pid}/children").read_text().split()))
+        except (FileNotFoundError, ProcessLookupError): return []
+    def identity(pid):
+        try: return Path(f"/proc/{pid}/stat").read_text().rsplit(")", 1)[1].split()[19]
+        except (FileNotFoundError, ProcessLookupError): return None
+    # Do not claim siblings already owned by the caller. Newly adopted children
+    # belong to this foreground invocation, including nested runner sessions.
+    baseline = {pid: identity(pid) for pid in children(os.getpid())}
+    owned = {}
+    def discover():
+        pending = [*owned, *(pid for pid in children(os.getpid())
+                                      if baseline.get(pid) != identity(pid))]
+        seen = set()
+        while pending:
+            pid = pending.pop()
+            if pid in seen: continue
+            seen.add(pid)
+            current = identity(pid)
+            if current is None or (pid in owned and owned[pid] != current): continue
+            owned[pid] = current
+            pending.extend(children(pid))
     def interrupted(signum, _frame):
         raise SystemExit(128 + signum)
     def reap():
+        discover()
         child.poll()
-        if child.returncode is None: return
-        while True:
-            try: pid, _ = os.waitpid(-child.pid, os.WNOHANG)
-            except ChildProcessError: return
-            if pid == 0: return
+        for pid in tuple(owned):
+            if pid == child.pid: continue
+            try: os.waitpid(pid, os.WNOHANG)
+            except ChildProcessError: pass
+        for pid, started in tuple(owned.items()):
+            if identity(pid) != started: del owned[pid]
     def alive():
         reap()
         try: os.killpg(child.pid, 0); return True
-        except ProcessLookupError: return False
+        except ProcessLookupError: return bool(owned)
+    def signal_owned(signum):
+        # Nested runners and their descendants may occupy separate sessions.
+        for pid in tuple(owned):
+            if identity(pid) != owned[pid]: continue
+            try:
+                os.kill(pid, signum)
+                os.kill(pid, signal.SIGCONT)
+            except ProcessLookupError: pass
+        try:
+            os.killpg(child.pid, signum)
+            os.killpg(child.pid, signal.SIGCONT)
+        except ProcessLookupError: pass
     def stop():
         for signum, duration in [(signal.SIGTERM, 0.2), (signal.SIGKILL, 2.0)]:
             if not alive(): break
-            try:
-                os.killpg(child.pid, signum)
-                os.killpg(child.pid, signal.SIGCONT)
-            except ProcessLookupError: pass
+            signal_owned(signum)
             deadline = time.monotonic() + duration
-            while alive() and time.monotonic() < deadline: time.sleep(0.01)
+            while alive() and time.monotonic() < deadline:
+                # Discovery can adopt a child forked during the last snapshot.
+                # Apply this round's signal to it before waiting again.
+                signal_owned(signum)
+                time.sleep(0.01)
         child.wait(timeout=1)
-        if alive(): raise RuntimeError("isolated test process group did not stop")
+        if alive(): raise RuntimeError("isolated test process tree did not stop")
     try:
         for signum in managed: handlers[signum] = signal.signal(signum, interrupted)
         mask = signal.pthread_sigmask(signal.SIG_BLOCK, managed)
@@ -183,6 +220,8 @@ def run_owned(command, *, timeout, env=None, capture_output=False):
                                      start_new_session=True, env=env, stdin=subprocess.DEVNULL,
                                      stdout=subprocess.PIPE if capture_output else None,
                                      stderr=subprocess.PIPE if capture_output else None)
+            started = identity(child.pid)
+            if started is not None: owned[child.pid] = started
         finally: signal.pthread_sigmask(signal.SIG_SETMASK, mask)
         stdout, stderr = child.communicate(timeout=timeout)
         return subprocess.CompletedProcess(command, child.returncode, stdout, stderr)

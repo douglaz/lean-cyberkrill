@@ -19,8 +19,10 @@ S = importlib.import_module("network-safety")
 SOURCE = APP / "Cyberkrill/CoreRpc.lean"
 FLAGS = APP / "Cyberkrill/RpcFlags.lean"
 DEST = APP / "test/golden/rpc-client-mutation-record.json"
-LOGS = APP / ".lake/validation/rpc-client-mutations-round2"
+LOGS = APP / ".lake/validation/rpc-client-mutations-late-final"
 PREVIOUS_SHA256 = "ceacb68cf44ee76be24595af3f33022898a03040f2e4e6a4b1053c1fb050d693"
+CORRECTED_SHA256 = "ccdc53e07f0ecb9a4a9a346c0f8304f0f5f00bbf3ca1daaf7ca162967326b004"
+NESTED_SHA256 = "6ee597e6e65cb112b03b8d08a7fefef4e8e6fd41854e2f53379fc6a9178bbddd"
 
 
 def client_edits():
@@ -143,7 +145,23 @@ def network_edits():
     for name in S.lifecycle_cases():
         rows.append(("lifecycle/" + name, source, 'if child is not None: stop()', 'if child is not None: child.poll()',
                      "lifecycle", name, "lifecycle descendants stopped/reaped: " + name))
-    assert len(rows) == 149, "network mutation inventory"
+        if name.startswith("late-"):
+            rows.append(("late-escalation/" + name, source,
+                         '                signal_owned(signum)\n                time.sleep(0.01)',
+                         '                time.sleep(0.01)',
+                         "lifecycle", name, "lifecycle descendants stopped/reaped: " + name))
+        if name.startswith("nested-") and name.split("/")[1] not in {"success", "failure"}:
+            rows.append(("nested-sessions/" + name, source,
+                         '        discover()\n        child.poll()',
+                         '        child.poll()',
+                         "lifecycle", name, "lifecycle descendants stopped/reaped: " + name))
+        if "/proc-" in name:
+            result = "None" if "stat-race" in name else "[]"
+            rows.append(("proc-read/" + name, source,
+                         'except (FileNotFoundError, ProcessLookupError): return ' + result,
+                         'except FileNotFoundError: return ' + result,
+                         "lifecycle", name, "lifecycle descendants stopped/reaped: " + name))
+    assert len(rows) == 209, "network mutation inventory"
     return rows
 
 
@@ -187,10 +205,16 @@ def verify():
     assert record["source_sha256"] == fingerprints(), "stale RPC mutation evidence"
     expected = [r[0] for r in client_edits()] + [r[0] for r in network_edits()]
     assert [r["property"] for r in record["checks"]] == expected, "RPC mutation property inventory"
-    assert record["count"] == len(record["checks"]) == 211, "RPC mutation count"
+    assert record["count"] == len(record["checks"]) == 271, "RPC mutation count"
     previous = record["previous_observation"]
     assert hashlib.sha256((json.dumps(previous, indent=2) + "\n").encode()).hexdigest() == PREVIOUS_SHA256, "retained prior RPC observations"
     assert previous["count"] == len(previous["checks"]) == 164
+    corrected = record["corrected_observation"]
+    assert hashlib.sha256((json.dumps(corrected, indent=2) + "\n").encode()).hexdigest() == CORRECTED_SHA256, "retained corrected RPC observations"
+    assert corrected["count"] == len(corrected["checks"]) == 211
+    nested = record["nested_observation"]
+    assert hashlib.sha256((json.dumps(nested, indent=2) + "\n").encode()).hexdigest() == NESTED_SHA256, "retained nested cleanup observations"
+    assert nested["count"] == len(nested["checks"]) == 243
     planned = client_edits() + network_edits()
     assert [(r["file"], r["replace"], r["with_text"]) for r in record["checks"]] == [
         (str(r[1].relative_to(APP)), r[2], r[3]) for r in planned], "RPC exact mutation definitions"
@@ -199,7 +223,7 @@ def verify():
         assert row["assertion"] and row["replace"] != row["with_text"]
         if "build" in row: assert row["build"]["status"] == row["restore_build"]["status"] == 0
     assert record["restored_full"]["status"] == 0
-    print("RPC mutation evidence: 62 client/capture selections; 149 separately selected safety reds; exact restoration; prior 64 edits/164 reds retained", flush=True)
+    print("RPC mutation evidence: 62 client/capture selections; 209 separately selected safety reds; exact restoration; prior 64/164, corrected 69/211 and nested 72/243 retained", flush=True)
 
 
 def main():
@@ -215,6 +239,10 @@ def main():
     prior = json.loads(DEST.read_bytes())
     previous = prior.get("previous_observation", prior)
     assert hashlib.sha256((json.dumps(previous, indent=2) + "\n").encode()).hexdigest() == PREVIOUS_SHA256, "original RPC observation"
+    corrected = prior.get("corrected_observation", prior)
+    assert hashlib.sha256((json.dumps(corrected, indent=2) + "\n").encode()).hexdigest() == CORRECTED_SHA256, "corrected RPC observation"
+    nested = prior.get("nested_observation", prior)
+    assert hashlib.sha256((json.dumps(nested, indent=2) + "\n").encode()).hexdigest() == NESTED_SHA256, "nested RPC observation"
     hashes = fingerprints()
     originals = {p: p.read_bytes() for _, p, *_ in client_edits()}
     managed = [signal.SIGHUP, signal.SIGINT, signal.SIGQUIT, signal.SIGTERM]
@@ -268,7 +296,8 @@ def main():
         full = command("restored-full", ["lake", "test"], 0)
         assert fingerprints() == hashes, "RPC exact source restoration"
         DEST.write_text(json.dumps(dict(count=len(records), source_sha256=hashes, checks=records, restored_full=full,
-                                       previous_observation=previous), indent=2) + "\n")
+                                       previous_observation=previous, corrected_observation=corrected,
+                                       nested_observation=nested), indent=2) + "\n")
         verify()
     finally:
         restore()
