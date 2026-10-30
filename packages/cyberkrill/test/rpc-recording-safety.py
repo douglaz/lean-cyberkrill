@@ -85,6 +85,20 @@ def refusals():
         assert proc.returncode == 1 and not proc.stdout and assertion in proc.stderr.decode(), "entry refusal: " + assertion
         assert b"owned datadir=" not in proc.stderr, "guard before creation/launch"
     print(f"RPC entry refusals: {len(cases)}/8 (real-home string only, ports and network)")
+    optimized = 0
+    for inherited in [False, True]:
+        for worker in [False, True]:
+            env = dict(os.environ)
+            env.pop("PYTHONOPTIMIZE", None)
+            flags = [] if inherited else ["-O"]
+            if inherited: env["PYTHONOPTIMIZE"] = "2"
+            args = ["--inside"] if worker else ["--rpcport", "8332"]
+            proc = subprocess.run([sys.executable, "-B", *flags, str(G.HERE / "generate-rpc-recordings.py"), *args],
+                                  env=env, input=b"{}" if worker else b"", capture_output=True, timeout=10)
+            assert proc.returncode == 1 and not proc.stdout and b"optimized Python execution refused" in proc.stderr, "optimized public/worker entry refusal"
+            assert b"owned datadir=" not in proc.stderr, "optimization refusal before effects"
+            optimized += 1
+    print(f"RPC optimized entry refusals: {optimized}/4 (explicit/inherited, manual/worker)")
 
 
 def main():

@@ -78,6 +78,14 @@ methods/paths/variants and exhaustion are checked. Exact JSON comparison uses
 Decimal values; numeric `1` and `1.0` agree, booleans remain distinct, and array
 order and every field matter. There is no global selector uniqueness rule.
 
+PSBT request inputs are independently reconstructed from the declared arguments,
+case-local descriptor replies and explicit funding outpoints. Complete ordered
+arrays are checked for create, funded, successful move and both precision
+selectors, including largest-first capped selection. Descriptor expansion keeps
+the first-seen `listunspent` order and deduplicates within that invocation's
+branches; explicit duplicates and separate expansions retain their own scope.
+The source-shaped fallback consumes those actual replies in the same order.
+
 The seven non-DCA cases were captured by the pinned reference through the
 recording proxy. Six reference commands exited 0; `move-f64` exited 1 with
 Core's actual invalid-amount reply. DCA uses the generator's source-shaped
@@ -126,6 +134,27 @@ To add a case, add its definition and independent completeness assertions, then
 run the same generator command with `--cases NEW_NAME`. The selected invocation
 verifies all existing shared/auth bytes before namespace/node startup, refuses
 missing or changed shared data, and publishes only selected case JSON files.
+Before publication, all selected replacements must agree with the non-DCA
+producer policy of the unchanged cases. An incompatible replacement refuses
+without changing any published artifact. Offline corpus checking enforces the
+same policy. The first non-DCA capture still has at most two reference attempts;
+DCA keeps its source-client exception. Changing the corpus policy requires a
+full regeneration rather than silently refreshing unselected cases.
+Capture checking also requires per-case reference results and the bounded
+first-case attempt records. Reference-proxy cases retain their actual execution
+result, including the precision case's intended exit 1. New attempts record
+`qualifying_capture` separately from process status: exit 0 with incomplete
+capture can still require a retry. Source-client fallback requires two explicitly
+unqualified attempts; later fallback cases may carry those attempts with a null
+per-case reference result. DCA never executes the reference and may carry the
+first case's attempts. A qualifying first-case attempt must have status 0 or 1;
+the carried precision exit 1 can differ from the current case's execution result.
+An explicit incomplete exit 0 remains unqualified. Nonempty DCA histories obey
+the same stop/retry rule: a terminal qualification after unqualified retries,
+or exactly two unqualified attempts. Empty DCA history remains permitted.
+Existing successful historical captures retain their
+original status/stream evidence and bytes. These checks reject absent or
+contradictory evidence; they do not authenticate an arbitrarily fabricated history.
 An initial/full invocation publishes the deterministic shared set. Deliberate
 shared/schema changes require complete regeneration. `shared` and `bitcoin-dir`
 are reserved names; unknown names, traversal, extra artifacts and symlinks fail.
@@ -194,8 +223,11 @@ descriptors. Miner secrets never leave the owned temporary node state.
 The public entry resolves the real passwd home before HOME/namespace changes,
 canonicalizes prospective paths, and refuses its Bitcoin tree even for
 nonexistent descendants. It also refuses unsafe/default RPC/P2P/proxy ports,
-non-regtest, non-loopback, reused datadirs and unsafe output paths. Node, proxy,
-curl and reference run inside one new network namespace with loopback only,
+non-regtest, non-loopback, reused datadirs and unsafe output paths.
+Optimized Python execution (`-O`, `-OO` or inherited `PYTHONOPTIMIZE`) is refused
+at import before identity lookup, path resolution, derivation or worker effects,
+so both manual and worker entry retain every required assertion.
+Node, proxy, curl and reference run inside one new network namespace with loopback only,
 isolated HOME/cwd and empty owned config. A chain assertion precedes wallet
 setup. Every Core call has explicit regtest/datadir/config/RPC port and finite
 timeouts; only the daemon receives the P2P port. Diagnostics preserve actual
@@ -218,7 +250,7 @@ inventories retain their original observations.
 
 ### Recording validation
 
-On 2026-10-29, the required commands ran under the bounded foreground
+The following earlier validation ran on 2026-10-29 under the bounded foreground
 supervisor described above. Package commands ran in `packages/cyberkrill`;
 repository commands ran at the root, after staging all new files.
 
@@ -242,6 +274,97 @@ builds, tests and axiom gates ran inside the sandbox. Separate installed
 captured PSBTs and verified each requested destination's exact satoshi value.
 Commands, separated streams, statuses, source digests, timings and controlled
 failure evidence remain in the app's ignored `.lake/validation` directory.
+
+Subsequent recording checks retain the original corpus and add 45 named repair
+controls, including 35 independent input-corruption checks, descriptor ordering
+and duplicate scope, four optimized-entry shapes, and producer-policy checking
+and selected refusal. Against the earlier implementation, 38 controls exposed
+missing behavior; five overshoot corruptions already hit its largest-first gate.
+The two new expansion-helper controls have separate production mutations.
+Ten additional isolated source variants produced detecting failures and restored
+greens; these are separate from the earlier 30 recording mutations and the
+historical 152 edits/275 selected failures. Original source bytes were retained.
+The complete 20-check evidence run exited 0 in 47.593 seconds. Each of the ten
+new source variants also records actual before/red/after subprocess statuses
+`0/1/0` with separate streams. A fresh full
+manual demonstration in a disposable copy exited 0, replayed all eight cases,
+and left the workspace's existing captures byte-identical. Its selected
+`move-f64` rerun changed one file, with the other thirteen artifact/inventory
+hashes unchanged. A controlled failing RPC retained exit 8 and stderr, left
+publication unchanged and owned processes/datadir absent, then a recovery
+capture exited 0. No new handler or command parity is claimed by these checks.
+
+The subsequent package/repository checks also completed under the same resource
+limits, with the changed sources staged before the Nix checks:
+
+| Command | Exit | Seconds |
+|---|---:|---:|
+| `nix develop -c lake build` | 0 | 0.825 |
+| `nix develop -c lake test` | 0 | 86.674 |
+| `nix flake check -L` | 0 | 243.608 |
+| `nix build -L` | 0 | 0.359 |
+
+Installed version, Lightning/offline checks, case-local replay, all five captured
+successful PSBT destination checks and the 76-file native-decision scan passed.
+The proof-placeholder and private-key grep wrappers exited 0 with the underlying
+no-match status 1. The repository check retained all seven packages and axiom
+gates. Fresh refusal demonstrations covered all five shared/auth files plus a
+missing fixture; controlled cleanup and timeout/diagnostic-failure checks passed.
+
+Earlier capture-metadata validation ran 26 controls: 25 independent refusals plus valid
+historical, precision-error, DCA, retry and fallback controls. The same 25 refusal
+tests fail against the previous checker at their named missing-refusal assertions,
+with entries, replies, content digests and definition/shared bindings unchanged.
+Twelve independent checker mutations each produced actual before/red/after
+statuses `0/1/0`, including refusal before selected publication and preservation
+of every artifact. These counts are separate from the earlier mutation totals.
+The complete 20-check evidence suite exited 0 in 49.226 seconds. Another full
+disposable capture and replay passed; selected regeneration changed only
+`move-f64.json`, with thirteen other artifact/inventory hashes unchanged.
+Existing workspace captures retained their original bytes. Runtime refusal,
+diagnostic recovery, controlled cleanup and installed checks also passed.
+
+| Command | Exit | Seconds |
+|---|---:|---:|
+| `nix develop -c lake build` | 0 | 0.626 |
+| `nix develop -c lake test` | 0 | 72.802 |
+| `nix flake check -L` | 0 | 216.500 |
+| `nix build -L` | 0 | 0.337 |
+
+The current metadata suite runs 42 controls: 32 refusals and ten positive
+controls/groups. Seven new metadata-only corruptions failed at named
+missing-refusal assertions against the previous checker, then passed after the
+qualification-status and DCA retry-history repair. Entries, replies, content
+digests and definition/shared bindings stayed unchanged throughout those probes.
+All 17 metadata source mutations produced actual before/red/after statuses
+`0/1/0`. The complete 20-check evidence suite exited 0 in 48.262 seconds.
+
+A fresh full disposable capture exited 0, followed by successful replay and a
+selected `move-f64` rerun that changed only its recording; thirteen other
+artifact/inventory hashes agreed. The initial demonstration retained an actual
+successful funding CLI response whose unquoted transaction ID caused numeric
+JSON parsing to fail. The CLI adapter now preserves textual transaction IDs and
+addresses before JSON parsing. Its isolated production-adapter regression failed
+before repair, passed afterward and detected removal of the repair. Repair
+checks now comprise 46 controls and eleven independent source mutations;
+the earlier 45/ten counts above remain historical. Existing captures retain
+their original bytes and provenance.
+
+Final checks on the repaired sources ran under the same bounded foreground
+supervisor, with changed sources staged before repository validation:
+
+| Command | Exit | Seconds |
+|---|---:|---:|
+| `nix develop -c lake build` | 0 | 1.091 |
+| `nix develop -c lake test` | 0 | 74.374 |
+| `nix flake check -L` | 0 | 204.939 |
+| `nix build -L` | 0 | 0.368 |
+
+Installed version, Lightning/offline checks, case-local replay and all five
+successful captured PSBT destination checks passed. The 76-file native-decision,
+proof-placeholder and private-key scans passed, with all seven packages and
+their existing tests/axiom gates retained. These results concern recording
+readiness; Core client and command handlers remain later work.
 
 ## Phase 7c: offline Fedimint and PSBT commands
 

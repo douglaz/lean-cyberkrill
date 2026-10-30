@@ -24,6 +24,11 @@ import threading
 import time
 from datetime import datetime, timezone
 
+# Every live prerequisite below must remain active at manual AND worker entry.
+# Refuse before path resolution, identity lookup, derivation or namespace effects.
+if not __debug__ or sys.flags.optimize:
+    raise RuntimeError("optimized Python execution refused")
+
 HERE = Path(__file__).resolve().parent
 ROOT = HERE.parents[2]
 sys.path.insert(0, str(ROOT / "packages/http-curl/test"))
@@ -355,23 +360,40 @@ class Proxy(http.server.BaseHTTPRequestHandler):
         self.wfile.write(data)
 
 
+def expand_inputs(capture, inputs, wallet, desc, outpoints):
+    """bitcoin_rpc.rs:735-802,854-889; deduplicate per descriptor invocation."""
+    def rpc(method, params): return capture.record(method, params, wallet)
+    selected = []
+    for input in inputs:
+        if input in ["{first}", "{second}", "{third}"]:
+            selected.append(outpoints[["{first}", "{second}", "{third}"].index(input)])
+        else:
+            original = desc if input == "{descriptor}" else input
+            checked = rpc("getdescriptorinfo", [original])["descriptor"]
+            rpc("importdescriptors", [[dict(desc=checked, timestamp="now", range=[0, 1000], watchonly=True, label="cyberkrill_import")]])
+            branches = [original.replace("<0;1>", str(b)) for b in [0, 1]] if "<0;1>" in original else [original]
+            seen = set()
+            for expanded in branches:
+                checked = rpc("getdescriptorinfo", [expanded])["descriptor"]
+                addrs = rpc("deriveaddresses", [checked, [0, 99]])
+                for utxo in rpc("listunspent", [0, 9999999, addrs]):
+                    key = (utxo["txid"], utxo["vout"])
+                    if key not in seen:
+                        seen.add(key)
+                        selected.append({**utxo, "sats": int(utxo["amount"] * Decimal(100000000))})
+    return selected
+
+
 def fallback(capture, row, descriptors, addresses, outpoints):
     validate_definition(row)
     wallet = row["fixture"]
     desc = descriptors[wallet]
     def rpc(method, params): return capture.record(method, params, wallet)
-    if row["kind"] in ["list", "create", "funded", "overshoot"]:
-        # list_unspent_for_descriptor, bitcoin_rpc.rs:735-841. Import errors are retained.
-        imports = [desc.replace("<0;1>", str(b)) for b in [0, 1]] if "--wallet-file" in row["args"] else [desc]
-        for original in imports:
-            checked = rpc("getdescriptorinfo", [original])["descriptor"]
-            rpc("importdescriptors", [[dict(desc=checked, timestamp="now", range=[0, 1000], watchonly=True, label="cyberkrill_import")]])
-            branches = [original.replace("<0;1>", str(b)) for b in [0, 1]] if "<0;1>" in original else [original]
-            for expanded in branches:
-                checked = rpc("getdescriptorinfo", [expanded])["descriptor"]
-                addrs = rpc("deriveaddresses", [checked, [0, 99]])
-                rpc("listunspent", [0, 9999999, addrs])
-    selected = outpoints if "{descriptor}" in row["args"] else [outpoints[["{first}", "{second}", "{third}"].index(a)] for a in row["args"] if a in ["{first}", "{second}", "{third}"]]
+    if "--wallet-file" in row["args"]:
+        inputs = [desc.replace("<0;1>", str(b)) for b in [0, 1]]
+    else:
+        inputs = [row["args"][i + 1] for i, arg in enumerate(row["args"]) if arg == "--inputs"]
+    selected = expand_inputs(capture, inputs, wallet, desc, outpoints)
     inputs = [dict(txid=p["txid"], vout=p["vout"]) for p in selected]
     destination = addresses["single"][0][5]
     output = sats(option(row, "--outputs").split(':')[-1]) if "--outputs" in row["args"] else None
@@ -431,6 +453,7 @@ def capture_case(job):
         else:
             args += [method] + [json_text(p) if not isinstance(p, str) else p for p in (params or [])]
         output = run(args, timeout=45).stdout.decode().strip()
+        if method in ["sendtoaddress", "getnewaddress"]: return output
         try: return parse_json(output)
         except ValueError: return output
     node_out = open(root / "node.stdout", "w+b")
@@ -534,15 +557,14 @@ def capture_case(job):
                         result = dict(status=proc.returncode, stdout=proc.stdout.decode().replace(str(root), "$TMP_ROOT"), stderr=proc.stderr.decode().replace(str(root), "$TMP_ROOT"))
                     except subprocess.TimeoutExpired as error:
                         result = dict(status=124, stdout=(error.stdout or b"").decode().replace(str(root), "$TMP_ROOT"), stderr=(error.stderr or b"").decode().replace(str(root), "$TMP_ROOT"))
-                    if producer is None: attempts.append(result)
                     first_counts = {"list": 8, "create": 9, "funded": 15, "overshoot": 13, "move-f64": 4, "move-success": 2}
                     expected_status = 1 if row["kind"] == "move-f64" else 0
                     complete_first = result["status"] == expected_status and len({(m, w, selector(p)) for m, p, w, _ in capture.calls}) == first_counts[row["kind"]]
+                    if producer is None: attempts.append({**result, "qualifying_capture": complete_first})
                     if capture.calls and result["status"] != 124 and (producer is not None or complete_first):
                         producer = "reference-proxy"
                         break
                 if producer is None:
-                    assert producer is None, "reference stopped producing after first case"
                     producer = "source-client"
                     capture.calls = []
             if row["kind"] != "dca" and producer == "source-client":
@@ -690,7 +712,8 @@ def main():
     parser.add_argument("--wait-between-cases", action="store_true", help=argparse.SUPPRESS)
     args = parser.parse_args()
     candidate = guards(args)
-    rows = inventory()
+    all_rows = inventory()
+    rows = all_rows
     destination = HERE / "recordings"
     if destination.exists() or destination.is_symlink():
         assert destination.is_dir() and not destination.is_symlink(), "safe recording destination"
@@ -761,6 +784,12 @@ def main():
         # Stage in memory. Validate all selected outputs before touching publication files.
         blobs = {name + ".json": encoded(captures[name]) for name in captures}
         checker.validate_bundle(rows, blobs, shared)
+        if args.cases:
+            # Read metadata only from unselected cases; responses stay case-local.
+            # This also covers new cases without refreshing any existing artifact.
+            corpus = {r["name"]: parse_json(blobs[r["recording"]] if r["recording"] in blobs
+                      else (destination / r["recording"]).read_bytes()) for r in all_rows}
+            checker.check_producers(all_rows, corpus)
         safety = importlib.import_module("rpc-recording-safety")
         for name, data in {**shared, **blobs}.items(): safety.portable(name, data)
         publication = blobs if args.cases else {**shared, **blobs}

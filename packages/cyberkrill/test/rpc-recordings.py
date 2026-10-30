@@ -62,6 +62,93 @@ def check_selectors(entries):
             selectors.add(key)
 
 
+def expected_inputs(row, methods, descriptor, funding):
+    """Independently reconstruct command inputs from case-local RPC replies.
+
+    Never consult a PSBT request or the generator's expansion implementation.
+    Source: bitcoin_rpc.rs:786-802,854-889,1329-1345 at the pinned revision.
+    """
+    expanded = []
+    explicit = dict(zip(["{first}", "{second}", "{third}"], funding))
+    for index, arg in enumerate(row["args"]):
+        if arg != "--inputs": continue
+        input = row["args"][index + 1]
+        if input in explicit:
+            expanded.append(explicit[input])
+        else:
+            assert input == "{descriptor}", "declared input expansion"
+            seen = set()
+            for branch in [0, 1]:
+                desc = descriptor.replace("<0;1>", str(branch))
+                info = next(e for e in methods["getdescriptorinfo"] if e["rpc"]["params"] == [[desc]])
+                derive = next(e for e in methods["deriveaddresses"] if e["rpc"]["params"] == [[result(info)["descriptor"], [0, 99]]])
+                entry = next(e for e in methods["listunspent"] if e["rpc"]["params"] == [[0, 9999999, result(derive)]])
+                for utxo in result(entry):
+                    key = (utxo["txid"], utxo["vout"])
+                    if key in seen: continue
+                    seen.add(key)
+                    # Funding correspondence is checked independently before here.
+                    expanded.append(next(p for p in funding if (p["txid"], p["vout"]) == key))
+    if "--max-amount" in row["args"]:
+        selected = []
+        total = 0
+        cap = G.sats(G.option(row, "--max-amount"))
+        for p in sorted(expanded, key=lambda p: p["sats"], reverse=True):
+            if total >= cap: break
+            selected.append(p)
+            total += p["sats"]
+        expanded = selected
+    return [dict(txid=p["txid"], vout=p["vout"]) for p in expanded]
+
+
+def check_producers(rows, cases):
+    producers = {cases[row["name"]]["capture"]["producer"] for row in rows if row["kind"] != "dca"}
+    assert producers <= {"reference-proxy", "source-client"} and len(producers) <= 1, "consistent non-DCA producer policy"
+
+
+def check_capture(row, meta):
+    assert "reference_result" in meta and "first_case_attempts" in meta, "required capture attempt metadata"
+    attempts = meta["first_case_attempts"]
+    assert isinstance(attempts, list) and (0 if row["kind"] == "dca" else 1) <= len(attempts) <= 2, "bounded first-case attempts"
+
+    def execution(value):
+        assert isinstance(value, dict) and {"status", "stdout", "stderr"} <= value.keys(), "capture execution record"
+        status = value["status"]
+        assert type(status) in [int, Decimal] and Decimal(status).is_finite() and status == int(status), "capture execution record"
+        assert all(isinstance(value[k], str) for k in ["stdout", "stderr"]), "capture execution record"
+        assert "qualifying_capture" not in value or type(value["qualifying_capture"]) is bool, "capture execution record"
+
+    for attempt in attempts: execution(attempt)
+    reference = meta["reference_result"]
+    if reference is not None: execution(reference)
+
+    def history():
+        assert all(a.get("qualifying_capture") is False for a in attempts[:-1]), "first-case retry evidence"
+        if attempts[-1].get("qualifying_capture", True) is True:
+            # The first case may be precision exit1, independently of this case.
+            assert attempts[-1]["status"] in [0, 1], "first-case qualification status"
+        elif row["kind"] == "dca":
+            assert len(attempts) == 2 and attempts[0].get("qualifying_capture") is False, "fallback requires two failed reference attempts"
+
+    if row["kind"] == "dca":
+        # Full runs carry the first non-DCA attempts; DCA itself never runs it.
+        assert reference is None, "DCA never executes reference"
+        if attempts: history()
+        return
+    if meta["producer"] == "reference-proxy":
+        assert reference is not None and reference["status"] != 124, "reference-proxy execution evidence"
+        # Older successful captures have status/streams only. Their complete
+        # case-local entries remain checked below; do not infer success from exit0.
+        assert attempts[-1].get("qualifying_capture", True) is True, "reference first-case qualification"
+        history()
+    else:
+        # Both preferred attempts must have failed to produce a qualifying capture.
+        # A process can exit0 with incomplete capture, or exit1 with the intended
+        # precision error. Preserve the capture decision separately from status.
+        assert len(attempts) == 2 and all(a.get("qualifying_capture") is False for a in attempts), "fallback requires two failed reference attempts"
+        assert reference is None or reference == {k: attempts[-1][k] for k in ["status", "stdout", "stderr"]}, "fallback per-case reference evidence"
+
+
 def validate_case(row, data, shared):
     G.validate_definition(row)
     assert data["case"] == row["name"] and data["schema"] == 1, "case identity/schema"
@@ -76,6 +163,7 @@ def validate_case(row, data, shared):
     assert meta["producer"] in ["reference-proxy", "source-client"], "capture producer"
     assert meta["wallet_private_keys_enabled"] is False, "watch-only capture"
     assert set(meta["tools"]) == {"mnemonic", "bip32", "coincurve", "base58"} and all(isinstance(v, str) and v for v in meta["tools"].values()), "historical tool versions"
+    check_capture(row, meta)
     entries = data["entries"]
     assert G.digest(G.encoded(entries)) == meta["entries_sha256"], "capture response digest"
     assert len(entries) == COUNTS[row["name"]], "case entry completeness: " + row["name"]
@@ -126,6 +214,12 @@ def validate_case(row, data, shared):
             expected = [[dict(desc=result(info)["descriptor"], timestamp="now", range=[0, 1000], watchonly=True, label="cyberkrill_import")]]
             assert any(e["rpc"]["params"] == [expected] for e in methods["importdescriptors"]), "source-shaped original descriptor import"
         assert any(any(not item["success"] and "error" in item for item in result(e)) for e in methods["importdescriptors"]), "real ignored import error retained"
+    if row["kind"] in ["create", "funded", "move-success", "overshoot", "move-f64"]:
+        expected = expected_inputs(row, methods, descriptor, funding)
+        for method in ["createpsbt", "walletcreatefundedpsbt"]:
+            for entry in methods[method]:
+                for params in entry["rpc"]["params"]:
+                    assert G.selector(params[0]) == G.selector(expected), "ordered case-local PSBT inputs: " + row["name"]
     if row["kind"] in ["create", "funded", "move-success", "overshoot"]:
         name = "walletcreatefundedpsbt" if row["kind"] == "funded" else "createpsbt"
         assert len(methods[name]) == 1, "successful PSBT command shape"
@@ -211,6 +305,7 @@ def validate_bundle(rows, blobs, shared):
     from collections import Counter
     assert set(blobs) == {r["recording"] for r in rows}, "recording file completeness"
     assert set(shared) == set(G.SHARED) and shared["bitcoin-dir/.cookie"] == G.COOKIE, "shared file completeness/auth"
+    check_producers(rows, {r["name"]: parse_json(blobs[r["recording"]]) for r in rows})
     methods = set()
     inventory = Counter()
     total = 0
