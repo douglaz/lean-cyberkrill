@@ -392,7 +392,7 @@ def replay(path, data):
                 assert process.returncode == 0, "replay child reaped"
 
 
-def main():
+def replay_main():
     rows = G.inventory()
     assert {r["name"] for r in rows} == set(COUNTS), "pinned case inventory"
     root = G.HERE / "recordings"
@@ -404,4 +404,17 @@ def main():
     print("RPC replay: 8/8 separate real responders; exact params/auth, complete replies, refusals and exhaustion")
 
 
-if __name__ == "__main__": main()
+def main():
+    import network
+    status = network.run_isolated([sys.executable, "-B", str(Path(__file__).resolve()), "--isolated-replay"])
+    assert status == 0, "recording replay namespace/test failure"
+
+
+if __name__ == "__main__":
+    if sys.argv[1:] == ["--isolated-replay"]:
+        import network
+        assert network.sandbox() or network.isolated(), "recording replay requires isolation"
+        replay_main()
+    else:
+        assert not sys.argv[1:]
+        main()

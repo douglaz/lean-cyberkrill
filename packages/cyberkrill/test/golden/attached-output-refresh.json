@@ -2,7 +2,7 @@
   "source_sha256": {
     "Cyberkrill/App.lean": "274f12a1eab4853959654f324b28fdf1c29d6b7cb0fbc7decbb3bd62e08b73dc",
     "test/refresh-attached-output.py": "d2fbf51f11c6b17a92d10b95dd7a0ef26157093cb2ba6b7664b4af580c4321cd",
-    "CyberkrillTests.lean": "1b941e7345e11d00191bb92924f6f4fea807f6a40d60a661fe7f6fc9d69b5509",
+    "CyberkrillTests.lean": "9e98ad7a629156a199b3760cceff6a4d2f1fbb3c29a305210b01cbe7f9d16296",
     "test/attached-output-regressions.py": "5c98053295b9b26b0decee9ba538766bd431363704a57974fefc7d9d140b07db",
     "CyberkrillTests/Capabilities.lean": "50172673976ead4aef29242efa591ed2237d2db4f60a6a323c2d5f9f4555fd66",
     "CyberkrillTests/Helpers.lean": "d4484cedac1da7a20e5bc0a05080c7d6c171e7ec49f7a64e3a80ad3d075bc70a",
@@ -10,6 +10,7 @@
     "CyberkrillTests/Offline.lean": "e6243c51b6638c0bd777835b843459e955e2e7f6163e7bbac6bfe22230407a9d",
     "CyberkrillTests/Output.lean": "9912e5c699b4fb7c07ff5eaacd2d5d821d6585118cb17a0829b224c96965a966",
     "CyberkrillTests/PrivateOutput.lean": "a4412bb4cf4908cc777e39018cb2ac34fc12c697e373b90be3b6c1235514997f",
+    "CyberkrillTests/Rpc.lean": "3f1887f1dad6d82d421e7bbeecaea6486431b33ba134051d07d5d828809419bf",
     "CyberkrillTests/Support.lean": "80dbdfd22c0478dde791bfc46ae73418a8cf838f7728bb08f248291cdb3a179c"
   },
   "replace": "(args.head?.getD \"\") :: outputParserArgs args.tail else args",

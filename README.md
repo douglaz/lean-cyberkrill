@@ -45,6 +45,376 @@ invoice decoding/signing and LNURL decoding. Phase 7c adds invite decoding,
 invite encoding and PSBT inspection. Network commands remain unregistered;
 `plan.md` is the plan for v1.
 
+## Phase 8a: Core RPC client and shared connection flags (2 of 2)
+
+`Cyberkrill.CoreRpc` provides an app-local `Client` over `HttpCurl.request`.
+`Client.ofFlags` resolves authentication; callers can also supply `url` and
+`auth` directly. `Client.call method params` sends a POST with JSON-RPC `2.0`,
+id `cyberkrill`, and exact JSON parameters. It accepts user-configured HTTP(S)
+URLs through the existing bounded transport, with its response limit,
+connect/transfer deadlines, CA selection, proxy refusal and redirect policy.
+`Client.totalTimeoutMs` forwards the whole-transfer timeout setting to HttpCurl.
+It defaults to 30,000 ms; callers can choose a longer finite deadline for
+`scanTxOutSet` and other slow RPCs. Zero retains HttpCurl's explicit
+unlimited-transfer setting. The connection-timeout default is unchanged.
+`Client.maxResponseBytes` sets an inclusive response-body byte limit, defaulting to 1,048,576 bytes; callers
+can raise this finite bound for large UTXO or transaction results.
+The production client has no loopback-only restriction.
+
+The typed methods construct their own requests and convert their results:
+
+| Method | Arguments and result |
+|---|---|
+| `listUnspent` | Confirmation bounds, optional address filter; ordered `Utxo` values with exact `Amount` and retained Core fields |
+| `scanTxOutSet` | `ScanObject` descriptors and optional inclusive ranges; success, height, exact total and UTXOs |
+| `getDescriptorInfo` | Descriptor; checked descriptor, checksum, range flag and retained fields |
+| `deriveAddresses` | Checked descriptor and optional range; ordered address array |
+| `createPsbt` | Ordered `Input` values (optional sequence), exact outputs, locktime and replaceable flag; PSBT string |
+| `walletCreateFundedPsbt` | Inputs, exact outputs, Core options, locktime, optional BIP32-derivations flag; PSBT, exact fee and change position |
+| `importDescriptors` | Checked descriptors; original item results, including Core's import failures |
+| `getBlockchainInfo` | Chain, block height and best-block hash |
+| `getReceivedByAddress` | Address and minimum confirmations; exact `Amount` |
+| `getRawTransaction` | Txid with verbose results; transaction identity, exact output amounts and retained fields |
+| `getBlock` | Block hash and optional verbosity; hash, height, time, ordered transaction ids and retained fields |
+
+Block conversion expects the transaction-id form returned by verbosity 1
+(Core's default). Options and additional raw fields remain exact JSON.
+No wrapper performs coin selection, fee calculation, signing or broadcast.
+PSBT outputs use an address-keyed JSON object, as in the pinned reference.
+Repeated addresses retain the last supplied amount rather than accumulating
+amounts or producing multiple outputs.
+The four Core CLI handlers and their fee-command goldens remain Phase 8b/8c
+work; the shared flag group is not registered on offline commands.
+
+`Cyberkrill.RpcFlags.flags` is the common `Cli.Flag` array, with `ofParsed`
+for future command groups and `parse` for in-process use. It defines
+`--rpc-url`, `--bitcoin-dir`, `--rpc-user` and `--rpc-password` once.
+The URL defaults to `http://127.0.0.1:8332`; the directory and credentials
+default to absent. Split and `--flag=value` forms are supported.
+An explicit directory conflicts with either credential flag, including when
+only one credential is supplied. Tests inspect the default URL without
+connecting to it.
+
+Authentication follows
+[`bitcoin_rpc.rs` at the parity revision](https://github.com/douglaz/cyberkrill/blob/27cad1faba86260b06665a89f0af5134d23525c2/cyberkrill-core/src/bitcoin_rpc.rs).
+Only an explicitly supplied directory is read: its `.cookie` is trimmed,
+then split at the first colon, retaining any further colons in the password.
+A successfully parsed cookie takes precedence. Missing, unreadable and
+malformed cookies silently fall back to user/password; authentication is
+present only when both options are present, including empty strings within
+HttpCurl's input contract. There is no implicit Bitcoin directory or config
+lookup. Upstream help mentions a default directory, but its actual RPC call
+sites pass no directory when the flag is omitted.
+An explicitly empty directory keeps relative `.cookie` lookup in the current
+working directory; `cookiePath` exposes that path rule without reading a file.
+
+HTTP status is checked before JSON decoding. Errors distinguish transport,
+HTTP (including 401), non-null RPC errors, malformed JSON, missing results,
+unexpected result shapes and invalid amounts. Diagnostics contain fixed
+messages and status/code data, never response text, cookies, passwords or
+Authorization values. Successful envelopes may omit `error`; a present null
+`result` is valid. Incoming BTC numbers use `Bitcoin.Amount.ofJsonNumber` and
+its exact mantissa/exponent. Outgoing BTC values stay numeric JSON with the
+same exact value, including exponent forms and zero. No binary64 conversion
+or numeric-string substitution is used. `Amount` remains unbounded,
+nonnegative millisatoshis; negative and nonzero sub-msat amounts fail, while
+trailing zeros remain valid. Wire/policy bounds belong to operations that
+require them, rather than being imposed on every Core result.
+
+`Client.listUnspentForDescriptor` attempts the original watch-only import
+with timestamp `"now"`, range `[0,1000]` and label `cyberkrill_import`, ignores
+import failure, then expands both descriptor branches and lists their
+addresses in order, deduplicating outpoints on first occurrence. It does no
+historical rescan, so funds older than the import may be missed. Follow-on
+request failures retain their HTTP/RPC/transport error class.
+
+Both Phase 8c caveats still apply. The recorded f64 request
+`0.6999833999999999` receives Core RPC -3 (`Invalid amount`), whereas exact
+numeric `0.6999834` succeeds; the client replays both without doing f64
+arithmetic. [#156](https://github.com/douglaz/cyberkrill/issues/156)'s pinned
+BDK default of approximately 1 sat/vB, possible change, and low-rate failures
+are not a fee oracle. There is no BDK fee-match claim here. The settled future
+move handler will use selected-total-minus-computed-fee without a clamp.
+
+### Client replay and safety inventories
+
+`test/rpc-client.py` drives the compiled Lean methods through HttpCurl and the
+real `http-curl/test/responder.py`. Every case owns a fresh responder, and
+actual request logs assert POST, wallet endpoint, JSON-RPC version/id, method,
+ordered parameters and exact numbers. The original eight cases, 69 selectors,
+75 authorized responses and eleven-method inventory below remain unchanged.
+No new Core capture was needed; source/tool digests in the captures remain
+historical observations. Additional envelope and precision fixtures are
+explicitly synthetic transport fixtures, not Core captures.
+
+| New test group | Pinned inventory |
+|---|---:|
+| Shared flags, including defaults and both conflicts in split/attached forms | 9 |
+| Credential-pair presence rules | 5 |
+| Cookie trim/first-colon parsing, including Unicode whitespace | 8 |
+| Exact numeric parse/print cases | 10 |
+| Optional/scoped pure boundaries | 2 |
+| Typed wrapper replay | 11 methods / 75 responses in 8 separate cases |
+| Ignored import followed by actual wrapper requests | 1 / 8 requests |
+| Descriptor helper preserves HTTP failure | 1 / 2 requests |
+| Authentication resolution and recorded 401, including an explicitly empty directory | 18 |
+| Synthetic envelope/precedence/secret cases and transport failure | 8 + 1 |
+| HTTP precision | 10 incoming / 7 outgoing values, plus nested exponent-zero serialization |
+| Scan deadlines | Default 30,000 ms; a response after 31 seconds with a 60,000 ms override, and a separate short-deadline refusal |
+| Response bounds | Default 1,048,576 bytes; a typed scan response above that size with a 2,097,152-byte bound, and refusal with a smaller explicit bound |
+| Spawn refusals, asserted at the shared boundary and both reference executable names | 122 each |
+| Permitted sentinel-spawn controls at those three boundaries | 37 each, plus 1 unrelated utility |
+| Namespace boundaries | 8 |
+| Process-tree lifecycle controls at direct and host namespace-entry paths | 50: 16 single-level, 14 nested, 4 disappearing-process read controls, 14 children discovered during final escalation, 2 post-snapshot adoption controls |
+
+Host network execution re-execs through `unshare -rn`, brings loopback up and
+binds its recursion marker to the changed namespace and executing process.
+Missing/refused unshare alone can print `SKIP (no unshare)`; loopback and test
+failures fail. An inherited host marker cannot bypass isolation. The marker
+for the network-free Nix derivation is set only in that build, with a private
+file bound to that build's actual network namespace checked before bypass.
+The dev shell supplies unshare
+and ip. Sentinel tests never run a node or open a connection, even under a
+deliberately broken refusal. They cover default/missing/wrong Core URLs,
+hardcoded DCA, fiat in all amount positions, attached flags and nested URL,
+invite and Lightning-address forms naming port 8332.
+Valid invite controls use independently checksummed `fed1`-HRP bech32m with
+consensus framing, and LNURL controls use bech32. Both cover zero-padded
+default ports and permitted nondefault ports. Invoice fiat recognition examines
+the amount positional after the address, skipping comment/output options in
+split and attached forms. A three-letter address suffix is not an amount.
+Reference execution is identified explicitly at its call boundary, including
+when its configured executable has a different name.
+
+The Linux foreground runner creates an owned process group and temporarily
+enables child subreaping. It tracks descendants across nested sessions using
+process identities and child lists, including processes adopted during cleanup.
+Process-table reads handle both missing-file and vanished-process errors.
+Each cleanup polling pass signals the newly discovered descendants with the
+current escalation signal, including during the final SIGKILL round. A
+controlled fork after the signal snapshot creates a child in another session;
+fourteen controls cover success, failure, timeout and all four managed
+interruptions at both entry paths. Their readiness handshake makes that
+discovery ordering explicit.
+Two further controls freeze the real children snapshot, let one parent fork
+and exit, and verify that its adopted child was absent from that snapshot.
+Cleanup rescans after reaping known parents, before deciding the tree is empty,
+so those adopted children receive the current escalation signal and are reaped.
+It terminates and reaps descendants on completion, failure, timeout and managed
+interruption, escalating with finite deadlines. Connection-free lifecycle
+probes independently observe PID disappearance and reaping, including nested
+children ignoring termination. Their separate recovery stops known sentinels
+before draining remaining output, so a broken helper cannot strand the observer
+on an inherited pipe. Host entry and already-isolated execution share this
+lifecycle, including the unshare availability probe.
+
+`test/rpc-client-mutations.py` pins the new mutation definitions and preserves
+separate build/red/restoration/green streams under
+`packages/cyberkrill/.lake/validation/rpc-client-mutations-response-checked-final/`. Its committed
+record is separate from the retained historical **152 distinct edits / 275
+selected reds**. Existing current evidence is refreshed by executing its
+mutation commands, never by substituting current source hashes into old
+observations. `test/validate.py` records each command's separate streams,
+status and elapsed time in the same ignored validation directory.
+
+### Current client validation
+
+On 2026-10-31 all thirteen acceptance commands below completed with exit
+**0**, through the complete foreground supervisor and command-owned temporary
+directories. Toolchain commands used the default dev shell. Script paths in
+this table are relative to the repository root; package build/test children
+ran in `packages/cyberkrill`. Separate streams, statuses and measured command
+times were retained.
+
+| Command/check | Exit | Measured wall time (s) |
+|---|---:|---:|
+| `packages/cyberkrill/test/mutate.py` | 0 | 659.167 |
+| `packages/cyberkrill/test/lightning-mutate.py` | 0 | 809.526 |
+| `packages/cyberkrill/test/revision-mutate.py` | 0 | 730.852 |
+| `packages/cyberkrill/test/refresh-regressions.py` | 0 | 68.601 |
+| `packages/cyberkrill/test/output-regressions.py refresh` | 0 | 22.705 |
+| `packages/cyberkrill/test/refresh-attached-output.py` | 0 | 22.859 |
+| `packages/cyberkrill/test/offline-mutate.py` | 0 | 1567.525 |
+| `packages/cyberkrill/test/rpc-client-mutations.py` | 0 | 1879.790 |
+| `packages/cyberkrill/test/rpc-client-mutations.py --verify` | 0 | 0.364 |
+| `packages/cyberkrill/test/scope.py` | 0 | 1.817 |
+| `packages/cyberkrill/test/validate.py app` | 0 | 120.072 |
+| `packages/cyberkrill/test/validate.py evidence` | 0 | 108.449 |
+| `packages/cyberkrill/test/validate.py repo` | 0 | 248.165 |
+
+The RPC record now contains **80 distinct source edits / 281 independently
+selected detecting failures**: 68 client/capture and 213 safety selections,
+each followed by a restored green execution. Before mutation, the unchanged
+build passed. The three response-bound properties then each compiled and
+failed their intended runtime assertion: a hardcoded default rejects the
+larger response, an oversized fixed limit misses the smaller configured bound,
+and a changed default fails its pure check. Exact restoration, rebuilding and
+all three selected greens passed. The restored full package suite exited 0.
+
+The preceding **77/278** observation is retained unchanged as
+`deadline_adoption_observation`, alongside the fixed-digest **73/271**,
+**72/243**, **69/211** and **64/164** observations. Historical **152/275**
+evidence remains separate. All seven affected legacy mutation/refresh commands
+were actually rerun; their definitions, commands, statuses and detecting
+assertions remain unchanged. All **204 source bindings across nine current
+records** match both the restored worktree and staged bytes.
+
+The app gate ran two commands, the evidence gate 23, and the repository gate
+nine. The repository gate included a fresh sandbox execution of all eight
+replay cases, eleven wrappers and 75 responses, 18 authentication cases, both
+scan deadlines, both response-bound cases, all spawn/namespace controls and
+**50 lifecycle controls**, without a suite skip. All **356 packaged source
+files** match the index. All seven package checks, link/OpenSSL checks, the
+78-file native-decision inventory, proof/private-material scans and installed
+version/Lightning/offline/RPC checks passed. The tracker and plan are unchanged
+by the response-bound fix; recordings and reference fixtures are unchanged.
+
+### Retained client validation before configurable response bounds
+
+On 2026-10-31 the following thirteen acceptance commands completed with exit
+**0**, through the complete foreground supervisor. Each affected mutation or
+refresh command was executed again on the final sources. Toolchain commands
+used the default dev shell, with fresh temporary directories owned for each
+foreground command's lifetime. Package build/test commands ran in
+`packages/cyberkrill`; other commands ran at the repository root. Separate
+streams, statuses and command times were retained. Full-suite progress is
+flushed between test groups, and mutation failures include both output streams.
+
+| Command/check | Exit | Measured wall time (s) |
+|---|---:|---:|
+| `packages/cyberkrill/test/mutate.py` | 0 | 663.478 |
+| `packages/cyberkrill/test/lightning-mutate.py` | 0 | 777.329 |
+| `packages/cyberkrill/test/revision-mutate.py` | 0 | 700.295 |
+| `packages/cyberkrill/test/refresh-regressions.py` | 0 | 72.017 |
+| `packages/cyberkrill/test/output-regressions.py refresh` | 0 | 23.410 |
+| `packages/cyberkrill/test/refresh-attached-output.py` | 0 | 22.158 |
+| `packages/cyberkrill/test/offline-mutate.py` | 0 | 1487.205 |
+| `packages/cyberkrill/test/rpc-client-mutations.py` | 0 | 1815.481 |
+| `packages/cyberkrill/test/rpc-client-mutations.py --verify` | 0 | 0.314 |
+| `packages/cyberkrill/test/scope.py` | 0 | 1.216 |
+| `packages/cyberkrill/test/validate.py app` (2 commands) | 0 | 117.214 |
+| `packages/cyberkrill/test/validate.py evidence` (23 commands) | 0 | 107.347 |
+| `packages/cyberkrill/test/validate.py repo` (9 commands) | 0 | 257.284 |
+
+The current RPC record contains **77 distinct source edits / 278 selected
+detecting failures**: 65 client/capture selections and 213 safety selections,
+each with a restored green execution. The restored full package suite exited
+0. The deadline regressions independently detect a hardcoded 30-second limit,
+a disabled short deadline and a changed default. The two adoption regressions
+detect removal of the post-reap discovery pass at both entry paths; the
+existing nested-session and final-escalation controls remain selected.
+The preceding **73/271** observation is preserved unchanged as
+`late_cleanup_observation`, alongside the fixed-digest **64/164**, **69/211**
+and **72/243** observations. Historical **152/275** evidence remains separate.
+
+All **204 source bindings across nine records** matched the then-current
+worktree and index. Legacy mutation definitions, commands, statuses and
+detecting assertions are unchanged; refreshed observations carry their actual
+new timings and source fingerprints. Tracker verification confirms all 59
+identities, 58 byte-identical unrelated records and only this task's lifecycle
+fields changed from the phase base. The plan is unchanged.
+
+The repository check included a fresh sandbox build: all eight replay cases,
+eleven wrappers and 75 responses, 18 authentication cases, both scan deadlines,
+122 spawn refusals at each of three boundaries, 37 permitted controls, eight
+namespace boundaries and **50 lifecycle controls** executed without a suite
+skip. All **356 packaged source files** match staged bytes. The seven package
+checks, link/OpenSSL checks, 78-file native-decision inventory and proof/private
+material scans passed, as did the installed version, Lightning, offline and
+RPC replay checks. No recording or reference fixture was regenerated.
+
+### Retained client validation before configurable scan deadlines
+
+On 2026-10-30, after the final escalation repair, the following commands
+completed through the foreground supervisor with exit **0**. Log stems below
+are relative to `packages/cyberkrill/.lake/validation/late-child-final/`;
+each has separate `.stdout`, `.stderr`, `.status` and command/timing `.json`.
+Toolchain commands used the default dev shell. The package build/test commands
+ran in `packages/cyberkrill`; other commands ran at the repository root.
+
+| Command/check | Exit | Log stem |
+|---|---:|---|
+| `test/rpc-client-mutations.py` | 0 | `rpc-mutations-final` |
+| `test/rpc-client-mutations.py --verify` | 0 | `rpc-mutations-verify` |
+| `test/validate.py app` (2 commands: `nix develop -c lake build`, `nix develop -c lake test`) | 0 | `validate-app`; child streams: `../build`, `../test` |
+| `nix flake check -L` (fresh sandbox execution) | 0 | `fresh-sandbox` |
+| Sandbox inventory and packaged-source audit | 0 | `sandbox-audit`, `fresh-sandbox-record.json` |
+| `nix build -L` | 0 | `root-build` |
+| `test/validate.py evidence` (23 commands) | 0 | `validate-evidence`; child records: `../evidence.json` |
+| `test/validate.py repo` (9 commands) | 0 | `validate-repo`; child records: `../repo.json` |
+| Current source/index, mutation-stream and process audit | 0 | `index-audit` |
+
+That RPC execution recorded **73 distinct edits / 271 selected detecting
+failures**: 62 client/capture and 209 safety selections, each with a restored
+green execution. The 14 new lifecycle cases each detect omitted cleanup and
+omitted repeated signalling during escalation. The earlier **72/243** object
+is preserved as `nested_observation` with its fixed digest, beside the original
+**64/164** and corrected **69/211** observations. The seven unchanged legacy
+records retain their preceding executions; none binds a source changed by this
+repair. All **204 source bindings across nine records** matched both
+the then-current worktree and staged blobs.
+
+The fresh sandbox log contains the eight replay cases, eleven wrappers and
+75 responses, auth18, spawn122 at all three boundaries, permissions37,
+namespace8 and lifecycle48, without a suite skip. All **356 packaged source
+files** match staged bytes. Later cached repository checks are recorded
+separately. The sibling-exclusion control passed success/failure/timeout
+(**3/3**, `sibling-exclusion`); the original finite fork probe left no child in
+any of eight trials (`original-probe-fixed`). The named cleanup assertion failed
+against the unfixed helper (`late-child-unfixed-red`, exit1), with independent
+recovery afterward, and detects removal of repeated signalling
+(`late-mutation-red`, exit1). No outer cleanup is counted as a passing assertion.
+
+### Retained client validation before final escalation cleanup
+
+On 2026-10-30, the following commands ran on the earlier source through the
+complete foreground supervisor. Commands needing the toolchain ran in the default dev shell;
+package commands ran in `packages/cyberkrill` and repository commands at the
+root. Each named log below has separate `.stdout`, `.stderr` and `.status`
+files in `packages/cyberkrill/.lake/validation/`. The earlier standard mode logs
+are also preserved under `late-child-final/retained-mode-logs/` before their
+names are reused by the later executions.
+
+| Command/check | Exit | Log stem |
+|---|---:|---|
+| `nix develop -c lake build` | 0 | `build` |
+| `nix develop -c lake test` | 0 | `test` |
+| `nix flake check -L` | 0 | `recovery-final/fresh-sandbox`; inventory/source audit: `recovery-final/sandbox-audit` |
+| `nix build -L` | 0 | `recovery-final/root-build` |
+| `test/validate.py app` | 0 | `recovery-final/validate-app`, `app.json` (2 commands) |
+| `test/validate.py evidence` | 0 | `recovery-final/validate-evidence`, `evidence.json` (23 commands) |
+| `test/validate.py repo` | 0 | `recovery-final/validate-repo`, `repo.json` (9 commands) |
+| Seven affected existing mutation/refresh commands | 0 each | `recovery-final/refresh.json`, `recovery-final/seven-refresh` |
+| `test/rpc-client-mutations.py` | 0 | `recovery-final/rpc-mutations-final`, `rpc-client-mutations-nested-final/` |
+| `test/rpc-client-mutations.py --verify` | 0 | `recovery-final/rpc-mutations-verify` |
+
+The preceding client observation had **64 distinct source edits / 164
+independently selected detecting failures**. It is retained as
+`previous_observation` in the client mutation record, with its original digest;
+it describes the source before the connection-boundary corrections.
+The earlier corrected-source observation of **69 distinct edits / 211 selected
+failures** is retained as `corrected_observation`, with its original digest.
+That earlier source execution has **72 distinct source edits / 243 independently
+selected detecting failures**: 62 client/capture selections and 181 safety
+selections, each with restored green execution. Every red stream contains its
+intended named assertion. Those records' source fingerprints matched both
+the then-restored files and staged blobs. The seven affected evidence commands
+were executed sequentially; earlier captures and historical regression records
+retain their original bytes. The historical observation of **152 distinct edits /
+275 selected reds** remains separate.
+
+The fresh sandbox log records all eleven wrappers and 75 responses, all 18
+auth cases, all three sets of 122 spawn refusals, eight namespace boundaries
+and all 34 process-tree lifecycle controls
+executing without `SKIP (no unshare)`. Final host replay also ran without a
+suite skip; simulated missing/refused-unshare controls capture the expected
+skip text. All 356 packaged source files were compared with their staged bytes.
+The root checks retain all seven packages, the link/OpenSSL
+checks, axiom gates, the 78-file library/proof native-decision inventory and
+the proof/private-material scans. Installed version, Lightning, offline and
+RPC replay checks all exited 0. No new Core recording, fee-command golden or
+network command handler was added.
+
 ## Phase 8a: disposable Core RPC recordings (1 of 2)
 
 The manual generator and offline replay fixtures prepare the Core client and

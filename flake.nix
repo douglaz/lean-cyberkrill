@@ -108,6 +108,8 @@
         buildInputs = [ pkgs.secp256k1 pkgs.curl pkgs.openssl ];
         buildPhase = ''
           export PATH=${pkgs.glibc.getent}/bin:$PATH
+          export LCK_RPC_SANDBOX=1
+          readlink /proc/self/ns/net > "$NIX_BUILD_TOP/rpc-network-namespace"
           export HOME=$TMPDIR
           mkdir -p packages/cyberkrill/.lake/packages
           cp -r ${lean4-cli} packages/cyberkrill/.lake/packages/Cli
@@ -153,7 +155,7 @@
               chmod -R u+w "$_cli_root/packages/cyberkrill/.lake/packages/Cli"
             fi
           '';
-          packages = [ lean pkgs.glibc.bin pkgs.binutils pkgs.python3 pkgs.openssl ];
+          packages = [ lean pkgs.glibc.bin pkgs.binutils pkgs.python3 pkgs.openssl pkgs.util-linux pkgs.iproute2 ];
           buildInputs = [ pkgs.secp256k1 pkgs.curl pkgs.openssl ];
         });
         # Phase 10 probe: build the Lean toolchain against musl. See nix/musl/build-lean-musl.sh.

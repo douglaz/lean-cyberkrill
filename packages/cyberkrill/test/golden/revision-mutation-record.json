@@ -17,7 +17,7 @@
     "test/verify.py": "42f86a5755ce8d37c8d784ac58eeef6c7cd42526a604c1c9d97ae5345da56639",
     "test/fifo.py": "014cff9f435f23f2d553379f7d014fd65753c620c0f0f9975d5b9072d23ced0c",
     "Main.lean": "915167be1211cea874cd9f781d9651bc3e441b81dd9979415ba55d44e34f2eb1",
-    "CyberkrillTests.lean": "1b941e7345e11d00191bb92924f6f4fea807f6a40d60a661fe7f6fc9d69b5509",
+    "CyberkrillTests.lean": "9e98ad7a629156a199b3760cceff6a4d2f1fbb3c29a305210b01cbe7f9d16296",
     "lakefile.lean": "091b5366403a589d69a1226b5728588a7d7b4907cbe3b32199f22d5a0ed4093d",
     "private_output.c": "5bf3940e88b4d8dfba6214e5e489a0c3d6dbd94e0d26f212126c8fd8ef1d3308",
     "CyberkrillTests/Capabilities.lean": "50172673976ead4aef29242efa591ed2237d2db4f60a6a323c2d5f9f4555fd66",
@@ -26,6 +26,7 @@
     "CyberkrillTests/Offline.lean": "e6243c51b6638c0bd777835b843459e955e2e7f6163e7bbac6bfe22230407a9d",
     "CyberkrillTests/Output.lean": "9912e5c699b4fb7c07ff5eaacd2d5d821d6585118cb17a0829b224c96965a966",
     "CyberkrillTests/PrivateOutput.lean": "a4412bb4cf4908cc777e39018cb2ac34fc12c697e373b90be3b6c1235514997f",
+    "CyberkrillTests/Rpc.lean": "3f1887f1dad6d82d421e7bbeecaea6486431b33ba134051d07d5d828809419bf",
     "CyberkrillTests/Support.lean": "80dbdfd22c0478dde791bfc46ae73418a8cf838f7728bb08f248291cdb3a179c",
     "test/golden/lightning-reference.json": "1e897b600d4cbf8012615a4daadc2fd201e9773e01190e79ddd0809a9bc7eadb",
     "test/golden/lightning-routing-reference.json": "f4fd3c541d90dbbadbfd12f45f54f06b2d0bab337bf1fa4c36b5715ad944fce6",
@@ -33,9 +34,9 @@
     "test/revisions.py": "33dd73d76cfcf51610377a4dd838db0152b06afff425cbde8058ca346fd5ede1",
     "test/revision-cases.py": "34b9422908c0b1dbce438133de14ed5b8cb28aa3756a9132bbad021e01122491",
     "test/capture-revisions.py": "0fb9a5134ad73137a14db31208fd78b61f695cac98ee0cded5c7561189e45694",
-    "test/revision-mutate.py": "6ee26a43f43e458e8109ddcf5188edcd9d2c57d0229ac50a2cf402b2c8288b2a",
-    "test/scope.py": "234e3a2b0f43c0458681445ea43efc6762730036cd2214e74e0e30b0b7897533",
-    "test/validate.py": "878927bc33141cf130efb3e489cf83a9e6a767e033a61dd563a2e8ff1f0b4da8",
+    "test/revision-mutate.py": "84bad9d537970c5dba1c0e74dcf4803ca8b71acc646d3bc382f0dd2ef9dc57fc",
+    "test/scope.py": "325a1e75d4eef28608506b810cba9fa253e317dbe9e5aca3343eb61fda107507",
+    "test/validate.py": "aa74fd2193258748f9dd76b1938c33ae4982921c23771a0fefa50877a3a9a51f",
     "test/record-revision-regressions.py": "835793fffcab60c1b7d340211788fd37b55695f86843ea7d0c5c0774df360fee",
     "test/golden/revision-reference.json": "c168ba949234dc118dc0fb89de5e065c0ba39e3024686334536eec155b5e187e",
     "test/golden/revision-provenance.json": "ee2e60e5e3d6ec507be8181b742531ba67c19434496f6c1ecd1584c876ba3568",
@@ -61,7 +62,7 @@
           "CyberkrillTests"
         ],
         "status": 0,
-        "seconds": 14.059
+        "seconds": 12.42
       },
       "red": {
         "command": [
@@ -75,7 +76,7 @@
           "timestamp/compact-zone"
         ],
         "status": 1,
-        "seconds": 0.12
+        "seconds": 0.11
       },
       "restore_build": {
         "command": [
@@ -88,7 +89,7 @@
           "CyberkrillTests"
         ],
         "status": 0,
-        "seconds": 14.223
+        "seconds": 12.324
       },
       "green": {
         "command": [
@@ -102,7 +103,7 @@
           "timestamp/compact-zone"
         ],
         "status": 0,
-        "seconds": 0.107
+        "seconds": 0.106
       }
     },
     {
@@ -124,7 +125,7 @@
           "CyberkrillTests"
         ],
         "status": 0,
-        "seconds": 13.311
+        "seconds": 12.316
       },
       "red": {
         "command": [
@@ -138,7 +139,7 @@
           "timestamp/expanded-year"
         ],
         "status": 1,
-        "seconds": 0.108
+        "seconds": 0.106
       },
       "restore_build": {
         "command": [
@@ -151,7 +152,7 @@
           "CyberkrillTests"
         ],
         "status": 0,
-        "seconds": 13.397
+        "seconds": 12.211
       },
       "green": {
         "command": [
@@ -165,7 +166,7 @@
           "timestamp/expanded-year"
         ],
         "status": 0,
-        "seconds": 0.104
+        "seconds": 0.105
       }
     },
     {
@@ -187,7 +188,7 @@
           "CyberkrillTests"
         ],
         "status": 0,
-        "seconds": 13.599
+        "seconds": 12.311
       },
       "red": {
         "command": [
@@ -201,7 +202,7 @@
           "timestamp/zone-nbsp"
         ],
         "status": 1,
-        "seconds": 0.103
+        "seconds": 0.109
       },
       "restore_build": {
         "command": [
@@ -214,7 +215,7 @@
           "CyberkrillTests"
         ],
         "status": 0,
-        "seconds": 13.648
+        "seconds": 12.644
       },
       "green": {
         "command": [
@@ -228,7 +229,7 @@
           "timestamp/zone-nbsp"
         ],
         "status": 0,
-        "seconds": 0.105
+        "seconds": 0.103
       }
     },
     {
@@ -250,7 +251,7 @@
           "CyberkrillTests"
         ],
         "status": 0,
-        "seconds": 13.356
+        "seconds": 11.915
       },
       "red": {
         "command": [
@@ -264,7 +265,7 @@
           "timestamp/utc-underflow"
         ],
         "status": 1,
-        "seconds": 0.104
+        "seconds": 0.114
       },
       "restore_build": {
         "command": [
@@ -277,7 +278,7 @@
           "CyberkrillTests"
         ],
         "status": 0,
-        "seconds": 13.462
+        "seconds": 12.509
       },
       "green": {
         "command": [
@@ -291,7 +292,7 @@
           "timestamp/utc-underflow"
         ],
         "status": 0,
-        "seconds": 0.121
+        "seconds": 0.106
       }
     },
     {
@@ -313,7 +314,7 @@
           "CyberkrillTests"
         ],
         "status": 0,
-        "seconds": 13.423
+        "seconds": 12.247
       },
       "red": {
         "command": [
@@ -327,7 +328,7 @@
           "timestamp/utc-overflow"
         ],
         "status": 1,
-        "seconds": 0.101
+        "seconds": 0.12
       },
       "restore_build": {
         "command": [
@@ -340,7 +341,7 @@
           "CyberkrillTests"
         ],
         "status": 0,
-        "seconds": 13.66
+        "seconds": 12.55
       },
       "green": {
         "command": [
@@ -354,7 +355,7 @@
           "timestamp/utc-overflow"
         ],
         "status": 0,
-        "seconds": 0.101
+        "seconds": 0.119
       }
     },
     {
@@ -376,7 +377,7 @@
           "CyberkrillTests"
         ],
         "status": 0,
-        "seconds": 13.676
+        "seconds": 12.683
       },
       "red": {
         "command": [
@@ -390,7 +391,7 @@
           "timestamp/date-leap-invalid"
         ],
         "status": 1,
-        "seconds": 0.106
+        "seconds": 0.109
       },
       "restore_build": {
         "command": [
@@ -403,7 +404,7 @@
           "CyberkrillTests"
         ],
         "status": 0,
-        "seconds": 13.694
+        "seconds": 12.639
       },
       "green": {
         "command": [
@@ -417,7 +418,7 @@
           "timestamp/date-leap-invalid"
         ],
         "status": 0,
-        "seconds": 0.103
+        "seconds": 0.1
       }
     },
     {
@@ -439,7 +440,7 @@
           "CyberkrillTests"
         ],
         "status": 0,
-        "seconds": 13.612
+        "seconds": 12.422
       },
       "red": {
         "command": [
@@ -453,7 +454,7 @@
           "timestamp/tab-separator"
         ],
         "status": 1,
-        "seconds": 0.104
+        "seconds": 0.112
       },
       "restore_build": {
         "command": [
@@ -466,7 +467,7 @@
           "CyberkrillTests"
         ],
         "status": 0,
-        "seconds": 14.033
+        "seconds": 13.15
       },
       "green": {
         "command": [
@@ -480,7 +481,7 @@
           "timestamp/tab-separator"
         ],
         "status": 0,
-        "seconds": 0.112
+        "seconds": 0.106
       }
     },
     {
@@ -502,7 +503,7 @@
           "CyberkrillTests"
         ],
         "status": 0,
-        "seconds": 13.536
+        "seconds": 12.537
       },
       "red": {
         "command": [
@@ -516,7 +517,7 @@
           "timestamp/zone-hour-overflow"
         ],
         "status": 1,
-        "seconds": 0.108
+        "seconds": 0.106
       },
       "restore_build": {
         "command": [
@@ -529,7 +530,7 @@
           "CyberkrillTests"
         ],
         "status": 0,
-        "seconds": 13.614
+        "seconds": 12.636
       },
       "green": {
         "command": [
@@ -543,7 +544,7 @@
           "timestamp/zone-hour-overflow"
         ],
         "status": 0,
-        "seconds": 0.119
+        "seconds": 0.111
       }
     },
     {
@@ -565,7 +566,7 @@
           "CyberkrillTests"
         ],
         "status": 0,
-        "seconds": 13.909
+        "seconds": 12.932
       },
       "red": {
         "command": [
@@ -579,7 +580,7 @@
           "unicode/known-high"
         ],
         "status": 1,
-        "seconds": 0.107
+        "seconds": 0.129
       },
       "restore_build": {
         "command": [
@@ -592,7 +593,7 @@
           "CyberkrillTests"
         ],
         "status": 0,
-        "seconds": 13.423
+        "seconds": 12.865
       },
       "green": {
         "command": [
@@ -606,7 +607,7 @@
           "unicode/known-high"
         ],
         "status": 0,
-        "seconds": 0.111
+        "seconds": 0.103
       }
     },
     {
@@ -628,7 +629,7 @@
           "CyberkrillTests"
         ],
         "status": 0,
-        "seconds": 13.951
+        "seconds": 12.612
       },
       "red": {
         "command": [
@@ -642,7 +643,7 @@
           "unicode/known-low"
         ],
         "status": 1,
-        "seconds": 0.106
+        "seconds": 0.112
       },
       "restore_build": {
         "command": [
@@ -655,7 +656,7 @@
           "CyberkrillTests"
         ],
         "status": 0,
-        "seconds": 13.937
+        "seconds": 12.447
       },
       "green": {
         "command": [
@@ -691,7 +692,7 @@
           "CyberkrillTests"
         ],
         "status": 0,
-        "seconds": 13.721
+        "seconds": 12.524
       },
       "red": {
         "command": [
@@ -705,7 +706,7 @@
           "unicode/known-high-ascii"
         ],
         "status": 1,
-        "seconds": 0.112
+        "seconds": 0.119
       },
       "restore_build": {
         "command": [
@@ -718,7 +719,7 @@
           "CyberkrillTests"
         ],
         "status": 0,
-        "seconds": 13.811
+        "seconds": 13.035
       },
       "green": {
         "command": [
@@ -732,7 +733,7 @@
           "unicode/known-high-ascii"
         ],
         "status": 0,
-        "seconds": 0.112
+        "seconds": 0.102
       }
     },
     {
@@ -754,7 +755,7 @@
           "CyberkrillTests"
         ],
         "status": 0,
-        "seconds": 13.416
+        "seconds": 12.206
       },
       "red": {
         "command": [
@@ -768,7 +769,7 @@
           "unicode/field-name-high"
         ],
         "status": 1,
-        "seconds": 0.108
+        "seconds": 0.101
       },
       "restore_build": {
         "command": [
@@ -781,7 +782,7 @@
           "CyberkrillTests"
         ],
         "status": 0,
-        "seconds": 13.317
+        "seconds": 12.418
       },
       "green": {
         "command": [
@@ -795,7 +796,7 @@
           "unicode/field-name-high"
         ],
         "status": 0,
-        "seconds": 0.106
+        "seconds": 0.108
       }
     },
     {
@@ -817,7 +818,7 @@
           "CyberkrillTests"
         ],
         "status": 0,
-        "seconds": 14.068
+        "seconds": 12.418
       },
       "red": {
         "command": [
@@ -831,7 +832,7 @@
           "unicode/ignored-high"
         ],
         "status": 1,
-        "seconds": 0.107
+        "seconds": 0.116
       },
       "restore_build": {
         "command": [
@@ -844,7 +845,7 @@
           "CyberkrillTests"
         ],
         "status": 0,
-        "seconds": 13.858
+        "seconds": 12.445
       },
       "green": {
         "command": [
@@ -858,7 +859,7 @@
           "unicode/ignored-high"
         ],
         "status": 0,
-        "seconds": 0.11
+        "seconds": 0.107
       }
     },
     {
@@ -880,7 +881,7 @@
           "CyberkrillTests"
         ],
         "status": 0,
-        "seconds": 12.539
+        "seconds": 11.717
       },
       "red": {
         "command": [
@@ -894,7 +895,7 @@
           "sequence/root-length-14"
         ],
         "status": 1,
-        "seconds": 0.117
+        "seconds": 0.114
       },
       "restore_build": {
         "command": [
@@ -907,7 +908,7 @@
           "CyberkrillTests"
         ],
         "status": 0,
-        "seconds": 12.721
+        "seconds": 11.527
       },
       "green": {
         "command": [
@@ -921,7 +922,7 @@
           "sequence/root-length-14"
         ],
         "status": 0,
-        "seconds": 0.12
+        "seconds": 0.114
       }
     },
     {
@@ -943,7 +944,7 @@
           "CyberkrillTests"
         ],
         "status": 0,
-        "seconds": 12.631
+        "seconds": 11.638
       },
       "red": {
         "command": [
@@ -957,7 +958,7 @@
           "sequence/hop-length-6"
         ],
         "status": 1,
-        "seconds": 0.122
+        "seconds": 0.115
       },
       "restore_build": {
         "command": [
@@ -970,7 +971,7 @@
           "CyberkrillTests"
         ],
         "status": 0,
-        "seconds": 12.853
+        "seconds": 11.95
       },
       "green": {
         "command": [
@@ -984,7 +985,7 @@
           "sequence/hop-length-6"
         ],
         "status": 0,
-        "seconds": 0.105
+        "seconds": 0.112
       }
     },
     {
@@ -1006,7 +1007,7 @@
           "CyberkrillTests"
         ],
         "status": 0,
-        "seconds": 12.411
+        "seconds": 11.439
       },
       "red": {
         "command": [
@@ -1018,387 +1019,9 @@
           "test/revisions.py",
           "--case",
           "sequence/fees-length-2"
-        ],
-        "status": 1,
-        "seconds": 0.108
-      },
-      "restore_build": {
-        "command": [
-          "timeout",
-          "--foreground",
-          "180",
-          "lake",
-          "build",
-          "cyberkrill",
-          "CyberkrillTests"
-        ],
-        "status": 0,
-        "seconds": 12.419
-      },
-      "green": {
-        "command": [
-          "timeout",
-          "--foreground",
-          "180",
-          "python3",
-          "-B",
-          "test/revisions.py",
-          "--case",
-          "sequence/fees-length-2"
-        ],
-        "status": 0,
-        "seconds": 0.108
-      }
-    },
-    {
-      "property": "sequence-lexical-number",
-      "file": "Cyberkrill/InvoiceJson.lean",
-      "replace": "unless digits literal do throw .invalidInvoiceJson",
-      "with_text": "unless digits literal || literal.contains 'e' do throw .invalidInvoiceJson",
-      "case": "sequence/root-unsigned",
-      "assertion": "failure status",
-      "failure": "AssertionError: sequence/root-unsigned failure status",
-      "build": {
-        "command": [
-          "timeout",
-          "--foreground",
-          "180",
-          "lake",
-          "build",
-          "cyberkrill",
-          "CyberkrillTests"
-        ],
-        "status": 0,
-        "seconds": 14.132
-      },
-      "red": {
-        "command": [
-          "timeout",
-          "--foreground",
-          "180",
-          "python3",
-          "-B",
-          "test/revisions.py",
-          "--case",
-          "sequence/root-unsigned"
-        ],
-        "status": 1,
-        "seconds": 0.117
-      },
-      "restore_build": {
-        "command": [
-          "timeout",
-          "--foreground",
-          "180",
-          "lake",
-          "build",
-          "cyberkrill",
-          "CyberkrillTests"
-        ],
-        "status": 0,
-        "seconds": 14.001
-      },
-      "green": {
-        "command": [
-          "timeout",
-          "--foreground",
-          "180",
-          "python3",
-          "-B",
-          "test/revisions.py",
-          "--case",
-          "sequence/root-unsigned"
-        ],
-        "status": 0,
-        "seconds": 0.11
-      }
-    },
-    {
-      "property": "sequence-length-bound",
-      "file": "Cyberkrill/InvoiceJson.lean",
-      "replace": "actual == expected",
-      "with_text": "actual \u2265 expected",
-      "case": "sequence/root-length-15",
-      "assertion": "failure status",
-      "failure": "AssertionError: sequence/root-length-15 failure status",
-      "build": {
-        "command": [
-          "timeout",
-          "--foreground",
-          "180",
-          "lake",
-          "build",
-          "cyberkrill",
-          "CyberkrillTests"
-        ],
-        "status": 0,
-        "seconds": 13.529
-      },
-      "red": {
-        "command": [
-          "timeout",
-          "--foreground",
-          "180",
-          "python3",
-          "-B",
-          "test/revisions.py",
-          "--case",
-          "sequence/root-length-15"
-        ],
-        "status": 1,
-        "seconds": 0.109
-      },
-      "restore_build": {
-        "command": [
-          "timeout",
-          "--foreground",
-          "180",
-          "lake",
-          "build",
-          "cyberkrill",
-          "CyberkrillTests"
-        ],
-        "status": 0,
-        "seconds": 13.33
-      },
-      "green": {
-        "command": [
-          "timeout",
-          "--foreground",
-          "180",
-          "python3",
-          "-B",
-          "test/revisions.py",
-          "--case",
-          "sequence/root-length-15"
-        ],
-        "status": 0,
-        "seconds": 0.107
-      }
-    },
-    {
-      "property": "simnet-decode-network",
-      "file": "Cyberkrill/Lightning.lean",
-      "replace": "Bitcoin.Address.encodeScript parts.hrp.currency.network",
-      "with_text": "Bitcoin.Address.encodeScript (addressNetwork parts.hrp.currency)",
-      "case": "simnet/decode",
-      "assertion": "unlisted difference",
-      "failure": "AssertionError: unlisted difference: simnet/decode stdout[\"fallback_addresses\"][0]",
-      "build": {
-        "command": [
-          "timeout",
-          "--foreground",
-          "180",
-          "lake",
-          "build",
-          "cyberkrill",
-          "CyberkrillTests"
-        ],
-        "status": 0,
-        "seconds": 12.399
-      },
-      "red": {
-        "command": [
-          "timeout",
-          "--foreground",
-          "180",
-          "python3",
-          "-B",
-          "test/revisions.py",
-          "--case",
-          "simnet/decode"
         ],
         "status": 1,
         "seconds": 0.101
-      },
-      "restore_build": {
-        "command": [
-          "timeout",
-          "--foreground",
-          "180",
-          "lake",
-          "build",
-          "cyberkrill",
-          "CyberkrillTests"
-        ],
-        "status": 0,
-        "seconds": 12.299
-      },
-      "green": {
-        "command": [
-          "timeout",
-          "--foreground",
-          "180",
-          "python3",
-          "-B",
-          "test/revisions.py",
-          "--case",
-          "simnet/decode"
-        ],
-        "status": 0,
-        "seconds": 0.117
-      }
-    },
-    {
-      "property": "simnet-encode-network",
-      "file": "Cyberkrill/Lightning.lean",
-      "replace": "| .bc => .mainnet | .bcrt => .regtest | .tbs => .signet | .tb | .sb => .testnet",
-      "with_text": "| .bc => .mainnet | .bcrt | .sb => .regtest | .tbs => .signet | .tb => .testnet",
-      "case": "simnet/encode",
-      "assertion": "success status",
-      "failure": "AssertionError: success status: simnet/encode",
-      "build": {
-        "command": [
-          "timeout",
-          "--foreground",
-          "180",
-          "lake",
-          "build",
-          "cyberkrill",
-          "CyberkrillTests"
-        ],
-        "status": 0,
-        "seconds": 12.338
-      },
-      "red": {
-        "command": [
-          "timeout",
-          "--foreground",
-          "180",
-          "python3",
-          "-B",
-          "test/revisions.py",
-          "--case",
-          "simnet/encode"
-        ],
-        "status": 1,
-        "seconds": 0.11
-      },
-      "restore_build": {
-        "command": [
-          "timeout",
-          "--foreground",
-          "180",
-          "lake",
-          "build",
-          "cyberkrill",
-          "CyberkrillTests"
-        ],
-        "status": 0,
-        "seconds": 12.339
-      },
-      "green": {
-        "command": [
-          "timeout",
-          "--foreground",
-          "180",
-          "python3",
-          "-B",
-          "test/revisions.py",
-          "--case",
-          "simnet/encode"
-        ],
-        "status": 0,
-        "seconds": 0.124
-      }
-    },
-    {
-      "property": "decoder-create-invoice",
-      "file": "Cyberkrill/App.lean",
-      "replace": "let .ok writer \u2190 prepareDecodeOutput services path | return .error .outputFailure\n    return (LightningCli.decodeInvoice",
-      "with_text": "let .ok writer \u2190 prepareDecodeOutput services none | return .error .outputFailure\n    return (LightningCli.decodeInvoice",
-      "case": "output/ln-decode-invoice-create",
-      "assertion": "failed output existence/bytes",
-      "failure": "AssertionError: output/ln-decode-invoice-create failed output existence/bytes",
-      "build": {
-        "command": [
-          "timeout",
-          "--foreground",
-          "180",
-          "lake",
-          "build",
-          "cyberkrill",
-          "CyberkrillTests"
-        ],
-        "status": 0,
-        "seconds": 11.266
-      },
-      "red": {
-        "command": [
-          "timeout",
-          "--foreground",
-          "180",
-          "python3",
-          "-B",
-          "test/revisions.py",
-          "--case",
-          "output/ln-decode-invoice-create"
-        ],
-        "status": 1,
-        "seconds": 0.121
-      },
-      "restore_build": {
-        "command": [
-          "timeout",
-          "--foreground",
-          "180",
-          "lake",
-          "build",
-          "cyberkrill",
-          "CyberkrillTests"
-        ],
-        "status": 0,
-        "seconds": 11.391
-      },
-      "green": {
-        "command": [
-          "timeout",
-          "--foreground",
-          "180",
-          "python3",
-          "-B",
-          "test/revisions.py",
-          "--case",
-          "output/ln-decode-invoice-create"
-        ],
-        "status": 0,
-        "seconds": 0.106
-      }
-    },
-    {
-      "property": "decoder-truncate-lnurl",
-      "file": "Cyberkrill/App.lean",
-      "replace": "let .ok writer \u2190 prepareDecodeOutput services path | return .error .outputFailure\n    return (LightningCli.decodeLnurl",
-      "with_text": "let .ok writer \u2190 prepareDecodeOutput services none | return .error .outputFailure\n    return (LightningCli.decodeLnurl",
-      "case": "output/ln-decode-lnurl-truncate",
-      "assertion": "failed output existence/bytes",
-      "failure": "AssertionError: output/ln-decode-lnurl-truncate failed output existence/bytes",
-      "build": {
-        "command": [
-          "timeout",
-          "--foreground",
-          "180",
-          "lake",
-          "build",
-          "cyberkrill",
-          "CyberkrillTests"
-        ],
-        "status": 0,
-        "seconds": 11.026
-      },
-      "red": {
-        "command": [
-          "timeout",
-          "--foreground",
-          "180",
-          "python3",
-          "-B",
-          "test/revisions.py",
-          "--case",
-          "output/ln-decode-lnurl-truncate"
-        ],
-        "status": 1,
-        "seconds": 0.102
       },
       "restore_build": {
         "command": [
@@ -1422,10 +1045,388 @@
           "-B",
           "test/revisions.py",
           "--case",
+          "sequence/fees-length-2"
+        ],
+        "status": 0,
+        "seconds": 0.119
+      }
+    },
+    {
+      "property": "sequence-lexical-number",
+      "file": "Cyberkrill/InvoiceJson.lean",
+      "replace": "unless digits literal do throw .invalidInvoiceJson",
+      "with_text": "unless digits literal || literal.contains 'e' do throw .invalidInvoiceJson",
+      "case": "sequence/root-unsigned",
+      "assertion": "failure status",
+      "failure": "AssertionError: sequence/root-unsigned failure status",
+      "build": {
+        "command": [
+          "timeout",
+          "--foreground",
+          "180",
+          "lake",
+          "build",
+          "cyberkrill",
+          "CyberkrillTests"
+        ],
+        "status": 0,
+        "seconds": 12.331
+      },
+      "red": {
+        "command": [
+          "timeout",
+          "--foreground",
+          "180",
+          "python3",
+          "-B",
+          "test/revisions.py",
+          "--case",
+          "sequence/root-unsigned"
+        ],
+        "status": 1,
+        "seconds": 0.109
+      },
+      "restore_build": {
+        "command": [
+          "timeout",
+          "--foreground",
+          "180",
+          "lake",
+          "build",
+          "cyberkrill",
+          "CyberkrillTests"
+        ],
+        "status": 0,
+        "seconds": 12.53
+      },
+      "green": {
+        "command": [
+          "timeout",
+          "--foreground",
+          "180",
+          "python3",
+          "-B",
+          "test/revisions.py",
+          "--case",
+          "sequence/root-unsigned"
+        ],
+        "status": 0,
+        "seconds": 0.106
+      }
+    },
+    {
+      "property": "sequence-length-bound",
+      "file": "Cyberkrill/InvoiceJson.lean",
+      "replace": "actual == expected",
+      "with_text": "actual \u2265 expected",
+      "case": "sequence/root-length-15",
+      "assertion": "failure status",
+      "failure": "AssertionError: sequence/root-length-15 failure status",
+      "build": {
+        "command": [
+          "timeout",
+          "--foreground",
+          "180",
+          "lake",
+          "build",
+          "cyberkrill",
+          "CyberkrillTests"
+        ],
+        "status": 0,
+        "seconds": 12.424
+      },
+      "red": {
+        "command": [
+          "timeout",
+          "--foreground",
+          "180",
+          "python3",
+          "-B",
+          "test/revisions.py",
+          "--case",
+          "sequence/root-length-15"
+        ],
+        "status": 1,
+        "seconds": 0.113
+      },
+      "restore_build": {
+        "command": [
+          "timeout",
+          "--foreground",
+          "180",
+          "lake",
+          "build",
+          "cyberkrill",
+          "CyberkrillTests"
+        ],
+        "status": 0,
+        "seconds": 12.328
+      },
+      "green": {
+        "command": [
+          "timeout",
+          "--foreground",
+          "180",
+          "python3",
+          "-B",
+          "test/revisions.py",
+          "--case",
+          "sequence/root-length-15"
+        ],
+        "status": 0,
+        "seconds": 0.108
+      }
+    },
+    {
+      "property": "simnet-decode-network",
+      "file": "Cyberkrill/Lightning.lean",
+      "replace": "Bitcoin.Address.encodeScript parts.hrp.currency.network",
+      "with_text": "Bitcoin.Address.encodeScript (addressNetwork parts.hrp.currency)",
+      "case": "simnet/decode",
+      "assertion": "unlisted difference",
+      "failure": "AssertionError: unlisted difference: simnet/decode stdout[\"fallback_addresses\"][0]",
+      "build": {
+        "command": [
+          "timeout",
+          "--foreground",
+          "180",
+          "lake",
+          "build",
+          "cyberkrill",
+          "CyberkrillTests"
+        ],
+        "status": 0,
+        "seconds": 11.105
+      },
+      "red": {
+        "command": [
+          "timeout",
+          "--foreground",
+          "180",
+          "python3",
+          "-B",
+          "test/revisions.py",
+          "--case",
+          "simnet/decode"
+        ],
+        "status": 1,
+        "seconds": 0.106
+      },
+      "restore_build": {
+        "command": [
+          "timeout",
+          "--foreground",
+          "180",
+          "lake",
+          "build",
+          "cyberkrill",
+          "CyberkrillTests"
+        ],
+        "status": 0,
+        "seconds": 11.207
+      },
+      "green": {
+        "command": [
+          "timeout",
+          "--foreground",
+          "180",
+          "python3",
+          "-B",
+          "test/revisions.py",
+          "--case",
+          "simnet/decode"
+        ],
+        "status": 0,
+        "seconds": 0.107
+      }
+    },
+    {
+      "property": "simnet-encode-network",
+      "file": "Cyberkrill/Lightning.lean",
+      "replace": "| .bc => .mainnet | .bcrt => .regtest | .tbs => .signet | .tb | .sb => .testnet",
+      "with_text": "| .bc => .mainnet | .bcrt | .sb => .regtest | .tbs => .signet | .tb => .testnet",
+      "case": "simnet/encode",
+      "assertion": "success status",
+      "failure": "AssertionError: success status: simnet/encode",
+      "build": {
+        "command": [
+          "timeout",
+          "--foreground",
+          "180",
+          "lake",
+          "build",
+          "cyberkrill",
+          "CyberkrillTests"
+        ],
+        "status": 0,
+        "seconds": 11.205
+      },
+      "red": {
+        "command": [
+          "timeout",
+          "--foreground",
+          "180",
+          "python3",
+          "-B",
+          "test/revisions.py",
+          "--case",
+          "simnet/encode"
+        ],
+        "status": 1,
+        "seconds": 0.115
+      },
+      "restore_build": {
+        "command": [
+          "timeout",
+          "--foreground",
+          "180",
+          "lake",
+          "build",
+          "cyberkrill",
+          "CyberkrillTests"
+        ],
+        "status": 0,
+        "seconds": 10.933
+      },
+      "green": {
+        "command": [
+          "timeout",
+          "--foreground",
+          "180",
+          "python3",
+          "-B",
+          "test/revisions.py",
+          "--case",
+          "simnet/encode"
+        ],
+        "status": 0,
+        "seconds": 0.111
+      }
+    },
+    {
+      "property": "decoder-create-invoice",
+      "file": "Cyberkrill/App.lean",
+      "replace": "let .ok writer \u2190 prepareDecodeOutput services path | return .error .outputFailure\n    return (LightningCli.decodeInvoice",
+      "with_text": "let .ok writer \u2190 prepareDecodeOutput services none | return .error .outputFailure\n    return (LightningCli.decodeInvoice",
+      "case": "output/ln-decode-invoice-create",
+      "assertion": "failed output existence/bytes",
+      "failure": "AssertionError: output/ln-decode-invoice-create failed output existence/bytes",
+      "build": {
+        "command": [
+          "timeout",
+          "--foreground",
+          "180",
+          "lake",
+          "build",
+          "cyberkrill",
+          "CyberkrillTests"
+        ],
+        "status": 0,
+        "seconds": 10.308
+      },
+      "red": {
+        "command": [
+          "timeout",
+          "--foreground",
+          "180",
+          "python3",
+          "-B",
+          "test/revisions.py",
+          "--case",
+          "output/ln-decode-invoice-create"
+        ],
+        "status": 1,
+        "seconds": 0.106
+      },
+      "restore_build": {
+        "command": [
+          "timeout",
+          "--foreground",
+          "180",
+          "lake",
+          "build",
+          "cyberkrill",
+          "CyberkrillTests"
+        ],
+        "status": 0,
+        "seconds": 10.02
+      },
+      "green": {
+        "command": [
+          "timeout",
+          "--foreground",
+          "180",
+          "python3",
+          "-B",
+          "test/revisions.py",
+          "--case",
+          "output/ln-decode-invoice-create"
+        ],
+        "status": 0,
+        "seconds": 0.11
+      }
+    },
+    {
+      "property": "decoder-truncate-lnurl",
+      "file": "Cyberkrill/App.lean",
+      "replace": "let .ok writer \u2190 prepareDecodeOutput services path | return .error .outputFailure\n    return (LightningCli.decodeLnurl",
+      "with_text": "let .ok writer \u2190 prepareDecodeOutput services none | return .error .outputFailure\n    return (LightningCli.decodeLnurl",
+      "case": "output/ln-decode-lnurl-truncate",
+      "assertion": "failed output existence/bytes",
+      "failure": "AssertionError: output/ln-decode-lnurl-truncate failed output existence/bytes",
+      "build": {
+        "command": [
+          "timeout",
+          "--foreground",
+          "180",
+          "lake",
+          "build",
+          "cyberkrill",
+          "CyberkrillTests"
+        ],
+        "status": 0,
+        "seconds": 10.415
+      },
+      "red": {
+        "command": [
+          "timeout",
+          "--foreground",
+          "180",
+          "python3",
+          "-B",
+          "test/revisions.py",
+          "--case",
+          "output/ln-decode-lnurl-truncate"
+        ],
+        "status": 1,
+        "seconds": 0.104
+      },
+      "restore_build": {
+        "command": [
+          "timeout",
+          "--foreground",
+          "180",
+          "lake",
+          "build",
+          "cyberkrill",
+          "CyberkrillTests"
+        ],
+        "status": 0,
+        "seconds": 10.105
+      },
+      "green": {
+        "command": [
+          "timeout",
+          "--foreground",
+          "180",
+          "python3",
+          "-B",
+          "test/revisions.py",
+          "--case",
           "output/ln-decode-lnurl-truncate"
         ],
         "status": 0,
-        "seconds": 0.123
+        "seconds": 0.103
       }
     },
     {
@@ -1447,7 +1448,7 @@
           "CyberkrillTests"
         ],
         "status": 0,
-        "seconds": 11.227
+        "seconds": 10.008
       },
       "red": {
         "command": [
@@ -1461,7 +1462,7 @@
           "output/ln-decode-invoice-open-error"
         ],
         "status": 1,
-        "seconds": 0.111
+        "seconds": 0.106
       },
       "restore_build": {
         "command": [
@@ -1474,7 +1475,7 @@
           "CyberkrillTests"
         ],
         "status": 0,
-        "seconds": 10.907
+        "seconds": 10.215
       },
       "green": {
         "command": [
@@ -1488,7 +1489,7 @@
           "output/ln-decode-invoice-open-error"
         ],
         "status": 0,
-        "seconds": 0.101
+        "seconds": 0.118
       }
     },
     {
@@ -1510,7 +1511,7 @@
           "CyberkrillTests"
         ],
         "status": 0,
-        "seconds": 10.808
+        "seconds": 10.512
       },
       "red": {
         "command": [
@@ -1524,7 +1525,7 @@
           "output/ln-decode-lnurl-read-before-open"
         ],
         "status": 1,
-        "seconds": 0.102
+        "seconds": 0.112
       },
       "restore_build": {
         "command": [
@@ -1537,7 +1538,7 @@
           "CyberkrillTests"
         ],
         "status": 0,
-        "seconds": 10.837
+        "seconds": 10.337
       },
       "green": {
         "command": [
@@ -1551,7 +1552,7 @@
           "output/ln-decode-lnurl-read-before-open"
         ],
         "status": 0,
-        "seconds": 0.099
+        "seconds": 0.115
       }
     },
     {
@@ -1573,7 +1574,7 @@
           "CyberkrillTests"
         ],
         "status": 0,
-        "seconds": 10.91
+        "seconds": 10.32
       },
       "red": {
         "command": [
@@ -1587,7 +1588,7 @@
           "output/encode-preserve"
         ],
         "status": 1,
-        "seconds": 0.113
+        "seconds": 0.11
       },
       "restore_build": {
         "command": [
@@ -1600,7 +1601,7 @@
           "CyberkrillTests"
         ],
         "status": 0,
-        "seconds": 10.717
+        "seconds": 10.427
       },
       "green": {
         "command": [
@@ -1614,7 +1615,7 @@
           "output/encode-preserve"
         ],
         "status": 0,
-        "seconds": 0.103
+        "seconds": 0.107
       }
     },
     {
@@ -1636,7 +1637,7 @@
           "CyberkrillTests"
         ],
         "status": 0,
-        "seconds": 0.485
+        "seconds": 0.394
       },
       "red": {
         "command": [
@@ -1650,7 +1651,7 @@
           "closed"
         ],
         "status": 1,
-        "seconds": 0.119
+        "seconds": 0.094
       },
       "restore_build": {
         "command": [
@@ -1663,7 +1664,7 @@
           "CyberkrillTests"
         ],
         "status": 0,
-        "seconds": 0.407
+        "seconds": 0.406
       },
       "green": {
         "command": [
@@ -1677,7 +1678,7 @@
           "closed"
         ],
         "status": 0,
-        "seconds": 0.606
+        "seconds": 1.049
       }
     },
     {
@@ -1713,7 +1714,7 @@
           "closed-empty-reason"
         ],
         "status": 1,
-        "seconds": 0.618
+        "seconds": 1.054
       },
       "restore_build": {
         "command": [
@@ -1726,7 +1727,7 @@
           "CyberkrillTests"
         ],
         "status": 0,
-        "seconds": 0.41
+        "seconds": 0.398
       },
       "green": {
         "command": [
@@ -1740,7 +1741,7 @@
           "closed-empty-reason"
         ],
         "status": 0,
-        "seconds": 0.118
+        "seconds": 0.09
       }
     },
     {
@@ -1762,7 +1763,7 @@
           "CyberkrillTests"
         ],
         "status": 0,
-        "seconds": 0.402
+        "seconds": 0.394
       },
       "red": {
         "command": [
@@ -1776,7 +1777,133 @@
           "closed-wrong-order"
         ],
         "status": 1,
-        "seconds": 0.627
+        "seconds": 1.112
+      },
+      "restore_build": {
+        "command": [
+          "timeout",
+          "--foreground",
+          "180",
+          "lake",
+          "build",
+          "cyberkrill",
+          "CyberkrillTests"
+        ],
+        "status": 0,
+        "seconds": 0.395
+      },
+      "green": {
+        "command": [
+          "timeout",
+          "--foreground",
+          "180",
+          "python3",
+          "-B",
+          "test/revisions.py",
+          "--scope",
+          "closed-wrong-order"
+        ],
+        "status": 0,
+        "seconds": 0.095
+      }
+    },
+    {
+      "property": "scope-unrelated-record",
+      "file": "test/scope.py",
+      "replace": "assert all(original[k] == current[k] for k in original if k != ISSUE)",
+      "with_text": "assert all(original[k][\"id\"] == current[k][\"id\"] for k in original if k != ISSUE)",
+      "case": "scope/unrelated",
+      "assertion": "closure validation",
+      "failure": "AssertionError: scope/unrelated closure validation",
+      "build": {
+        "command": [
+          "timeout",
+          "--foreground",
+          "180",
+          "lake",
+          "build",
+          "cyberkrill",
+          "CyberkrillTests"
+        ],
+        "status": 0,
+        "seconds": 0.404
+      },
+      "red": {
+        "command": [
+          "timeout",
+          "--foreground",
+          "180",
+          "python3",
+          "-B",
+          "test/revisions.py",
+          "--scope",
+          "unrelated"
+        ],
+        "status": 1,
+        "seconds": 1.029
+      },
+      "restore_build": {
+        "command": [
+          "timeout",
+          "--foreground",
+          "180",
+          "lake",
+          "build",
+          "cyberkrill",
+          "CyberkrillTests"
+        ],
+        "status": 0,
+        "seconds": 0.402
+      },
+      "green": {
+        "command": [
+          "timeout",
+          "--foreground",
+          "180",
+          "python3",
+          "-B",
+          "test/revisions.py",
+          "--scope",
+          "unrelated"
+        ],
+        "status": 0,
+        "seconds": 0.093
+      }
+    },
+    {
+      "property": "scope-decision-preservation",
+      "file": "test/scope.py",
+      "replace": "check_lifecycle(original[ISSUE], amended)",
+      "with_text": "check_lifecycle(dict(original[ISSUE], description=amended[\"description\"]), amended)",
+      "case": "scope/decision-text",
+      "assertion": "closure validation",
+      "failure": "AssertionError: scope/decision-text closure validation",
+      "build": {
+        "command": [
+          "timeout",
+          "--foreground",
+          "180",
+          "lake",
+          "build",
+          "cyberkrill",
+          "CyberkrillTests"
+        ],
+        "status": 0,
+        "seconds": 0.396
+      },
+      "red": {
+        "command": [
+          "timeout",
+          "--foreground",
+          "180",
+          "python3",
+          "-B",
+          "test/revisions.py",
+          "--scope",
+          "decision-text"
+        ],
+        "status": 1,
+        "seconds": 1.088
       },
       "restore_build": {
         "command": [
@@ -1800,136 +1927,10 @@
           "-B",
           "test/revisions.py",
           "--scope",
-          "closed-wrong-order"
-        ],
-        "status": 0,
-        "seconds": 0.115
-      }
-    },
-    {
-      "property": "scope-unrelated-record",
-      "file": "test/scope.py",
-      "replace": "assert all(original[k] == current[k] for k in original if k != ISSUE)",
-      "with_text": "assert all(original[k][\"id\"] == current[k][\"id\"] for k in original if k != ISSUE)",
-      "case": "scope/unrelated",
-      "assertion": "closure validation",
-      "failure": "AssertionError: scope/unrelated closure validation",
-      "build": {
-        "command": [
-          "timeout",
-          "--foreground",
-          "180",
-          "lake",
-          "build",
-          "cyberkrill",
-          "CyberkrillTests"
-        ],
-        "status": 0,
-        "seconds": 0.388
-      },
-      "red": {
-        "command": [
-          "timeout",
-          "--foreground",
-          "180",
-          "python3",
-          "-B",
-          "test/revisions.py",
-          "--scope",
-          "unrelated"
-        ],
-        "status": 1,
-        "seconds": 0.622
-      },
-      "restore_build": {
-        "command": [
-          "timeout",
-          "--foreground",
-          "180",
-          "lake",
-          "build",
-          "cyberkrill",
-          "CyberkrillTests"
-        ],
-        "status": 0,
-        "seconds": 0.393
-      },
-      "green": {
-        "command": [
-          "timeout",
-          "--foreground",
-          "180",
-          "python3",
-          "-B",
-          "test/revisions.py",
-          "--scope",
-          "unrelated"
-        ],
-        "status": 0,
-        "seconds": 0.119
-      }
-    },
-    {
-      "property": "scope-decision-preservation",
-      "file": "test/scope.py",
-      "replace": "hashlib.sha256(amended[\"description\"].encode()).hexdigest() == DESCRIPTION_SHA256",
-      "with_text": "True",
-      "case": "scope/decision-text",
-      "assertion": "closure validation",
-      "failure": "AssertionError: scope/decision-text closure validation",
-      "build": {
-        "command": [
-          "timeout",
-          "--foreground",
-          "180",
-          "lake",
-          "build",
-          "cyberkrill",
-          "CyberkrillTests"
-        ],
-        "status": 0,
-        "seconds": 0.395
-      },
-      "red": {
-        "command": [
-          "timeout",
-          "--foreground",
-          "180",
-          "python3",
-          "-B",
-          "test/revisions.py",
-          "--scope",
-          "decision-text"
-        ],
-        "status": 1,
-        "seconds": 0.611
-      },
-      "restore_build": {
-        "command": [
-          "timeout",
-          "--foreground",
-          "180",
-          "lake",
-          "build",
-          "cyberkrill",
-          "CyberkrillTests"
-        ],
-        "status": 0,
-        "seconds": 0.436
-      },
-      "green": {
-        "command": [
-          "timeout",
-          "--foreground",
-          "180",
-          "python3",
-          "-B",
-          "test/revisions.py",
-          "--scope",
           "decision-text"
         ],
         "status": 0,
-        "seconds": 0.12
+        "seconds": 0.09
       }
     }
   ],
@@ -1942,7 +1943,7 @@
       "test"
     ],
     "status": 0,
-    "seconds": 64.703
+    "seconds": 115.414
   },
   "regressions_green": {
     "command": [
@@ -1954,7 +1955,7 @@
       "test/revisions.py"
     ],
     "status": 0,
-    "seconds": 4.803
+    "seconds": 4.681
   },
   "scope_green": {
     "command": [
@@ -1967,6 +1968,6 @@
       "--scope"
     ],
     "status": 0,
-    "seconds": 1.226
+    "seconds": 2.14
   }
 }

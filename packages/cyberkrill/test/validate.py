@@ -16,11 +16,12 @@ roots = {'Sha256', 'Secp256k1', 'Bitcoin', 'Lightning', 'FedimintInvite', 'HttpC
 tracked = subprocess.check_output(['git', 'ls-files', '-z', '--', 'packages']).decode().split(chr(0))
 paths = [pathlib.Path(p) for p in tracked if p and pathlib.Path(p).suffix == '.lean']
 paths = [p for p in paths if len(p.parts) >= 3 and (p.parts[2] in roots or p.parts[2].removesuffix('.lean') in roots)]
-assert len(paths) == 76, 'library/proof source inventory'
+assert len(paths) == 78, 'library/proof source inventory'
+assert {'packages/cyberkrill/Cyberkrill/CoreRpc.lean', 'packages/cyberkrill/Cyberkrill/RpcFlags.lean'} <= {str(p) for p in paths}, 'Core RPC/flags source inventory'
 assert {p.parts[2].removesuffix('.lean') for p in paths} == roots, 'library root inventory'
 bad = [str(p) for p in paths if re.search(r'\\b(?:native_decide|bv_decide)\\b', p.read_text())]
 assert not bad, 'native decision in library: ' + ', '.join(bad)
-print(f'library/proof native-decision scan: {len(paths)}/76 tracked files; zero offenders')
+print(f'library/proof native-decision scan: {len(paths)}/78 tracked files; zero offenders')
 """
 
 
@@ -34,6 +35,9 @@ def main():
                   ("test", APP, ["nix", "develop", "-c", "lake", "test"], 600)]
     elif mode == "evidence":
         checks = [
+            ("rpc-client", ROOT, ["python3", "-B", "packages/cyberkrill/test/rpc-client.py"], 180),
+            ("network-safety", ROOT, ["python3", "-B", "packages/cyberkrill/test/network-safety.py"], 120),
+            ("rpc-client-mutations", ROOT, ["python3", "-B", "packages/cyberkrill/test/rpc-client-mutations.py", "--verify"], 120),
             ("rpc-recordings", ROOT, ["python3", "-B", "packages/cyberkrill/test/rpc-recordings.py"], 180),
             ("rpc-safety", ROOT, ["python3", "-B", "packages/cyberkrill/test/rpc-recording-safety.py"], 120),
             ("rpc-mutations", ROOT, ["python3", "-B", "packages/cyberkrill/test/rpc-recording-mutations.py"], 180),
