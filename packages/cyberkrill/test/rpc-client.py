@@ -14,6 +14,7 @@ import signal
 import subprocess
 import sys
 import tempfile
+import time
 
 from cases import APP, ROOT
 import network
@@ -33,15 +34,34 @@ def run(args, payload=None, *, cwd=APP):
 
 
 @contextmanager
-def responder(path):
+def responder(path, *, delay_ms=0):
     directory = APP / ".lake/rpc-replay"
     directory.mkdir(parents=True, exist_ok=True)
     with tempfile.TemporaryDirectory(dir=directory) as root:
         root = Path(root)
         log = root / "requests.jsonl"
         with (root / "stderr").open("wb") as errors:
-            child = subprocess.Popen([sys.executable, "-B", str(ROOT / "packages/http-curl/test/responder.py"),
-                                      str(path), "--log", str(log)], stdin=subprocess.PIPE,
+            script = ROOT / "packages/http-curl/test/responder.py"
+            args = [sys.executable, "-B", str(script), str(path), "--log", str(log)]
+            if delay_ms:
+                # Delay the real responder's selected reply. Parsing, selection,
+                # logging, HTTP framing and the client transport remain real.
+                program = """import importlib.util, sys, time
+spec = importlib.util.spec_from_file_location('delayed_rpc_responder', sys.argv[1])
+module = importlib.util.module_from_spec(spec)
+spec.loader.exec_module(module)
+delay = int(sys.argv[2])
+original = module.Handler.send_recorded
+def delayed(self, response):
+    time.sleep(delay / 1000)
+    original(self, response)
+module.Handler.send_recorded = delayed
+sys.argv = [sys.argv[1], *sys.argv[3:]]
+module.main()
+"""
+                args = [sys.executable, "-B", "-c", program, str(script), str(delay_ms),
+                        str(path), "--log", str(log)]
+            child = subprocess.Popen(args, stdin=subprocess.PIPE,
                                      stdout=subprocess.PIPE, stderr=errors)
             old = {}
             def interrupted(signum, _frame): raise InterruptedError("RPC replay interrupted")
@@ -244,15 +264,46 @@ def precision():
     print("Lean RPC HTTP precision: 10/10 incoming; 7/7 outgoing numeric values; optional sequence/locktime/replaceable", flush=True)
 
 
+def timeouts(only=None):
+    # A real scan response arrives after the default 30-second deadline. A
+    # separately selected short-deadline case detects accidentally disabling it.
+    rows = [("long", 60000, 31000), ("short", 50, 300)]
+    assert only is None or only in {r[0] for r in rows}, "RPC timeout selection"
+    directory = APP / ".lake/rpc-timeouts"
+    directory.mkdir(parents=True, exist_ok=True)
+    with tempfile.TemporaryDirectory(dir=directory) as root:
+        fixture = Path(root) / "synthetic.json"
+        entry = dict(method="POST", path="/scan", rpc=dict(method="scantxoutset", params=[["start", []]]),
+                     responses=[dict(status=200, json=dict(result=dict(success=True, height=1, unspents=[], total_amount=0)))])
+        fixture.write_text(json.dumps(dict(entries=[entry])))
+        for name, deadline, delay in rows:
+            if only is not None and only != name: continue
+            with responder(fixture, delay_ms=delay) as (base, log, _):
+                started = time.monotonic()
+                result = request(base + "/scan", "unused", [], operation="scan", totalTimeoutMs=deadline)
+                elapsed = time.monotonic() - started
+                if name == "long":
+                    assert result == dict(success=True, height=1), "RPC configured long scan deadline"
+                    assert elapsed >= 30, "RPC delayed scan crosses default deadline"
+                else:
+                    assert result.get("error") == "rpcTransport: HTTP transport failed", "RPC configured short scan deadline"
+                    assert elapsed < 2, "RPC configured scan deadline remains bounded"
+                records = logged(log)
+                assert len(records) == 1, "RPC delayed scan request count"
+                assert_request(records[0], entry, ["start", []])
+    if only is None: print("Lean RPC scan deadlines: 2/2; delayed beyond default and bounded short override", flush=True)
+
+
 def main():
     if not (network.sandbox() or network.isolated()):
         return network.run_isolated([sys.executable, "-B", str(Path(__file__).resolve()), *sys.argv[1:]])
     selected = sys.argv[1:]
     checks = dict(replay=replay, continuation=continuation, continuation_failure=continuation_failure,
-                  auth=authentication, synthetic=synthetic, precision=precision)
+                  auth=authentication, synthetic=synthetic, precision=precision, timeouts=timeouts)
     if selected:
         assert len(selected) == 1
         if selected[0].startswith("auth/"): authentication(selected[0][5:])
+        elif selected[0].startswith("timeout/"): timeouts(selected[0][8:])
         else:
             assert selected[0] in checks
             checks[selected[0]]()

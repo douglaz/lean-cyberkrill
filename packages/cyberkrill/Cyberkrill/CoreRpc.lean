@@ -62,6 +62,8 @@ def resolveAuth (flags : RpcFlags) : IO (Option (String × String)) := do
 structure Client where
   url : String
   auth : Option (String × String) := none
+  /-- Whole-transfer deadline in milliseconds; zero follows HttpCurl's unlimited setting. -/
+  totalTimeoutMs : UInt32 := 30000
 
 def Client.ofFlags (flags : RpcFlags) : IO Client := do
   return { url := flags.url, auth := ← resolveAuth flags }
@@ -88,6 +90,7 @@ def Client.call (client : Client) (method : String) (params : Array Json) : IO (
     ("method", .str method), ("params", .arr params)]
   match ← HttpCurl.request {
       method := .post, url := client.url, basicAuth := client.auth,
+      totalTimeoutMs := client.totalTimeoutMs,
       headers := #[("Content-Type", "application/json")], body := some (wireJson body).compress.toUTF8 } with
   | .error _ => return .error .transport
   | .ok response => return decodeResponse response

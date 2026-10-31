@@ -180,6 +180,9 @@ def run_owned(command, *, timeout, env=None, capture_output=False):
             except ChildProcessError: pass
         for pid, started in tuple(owned.items()):
             if identity(pid) != started: del owned[pid]
+        # A parent's exit may reparent children after the first snapshot.
+        # Rescan after reaping/pruning before treating owned as empty.
+        discover()
     def alive():
         reap()
         try: os.killpg(child.pid, 0); return True

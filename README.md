@@ -53,6 +53,11 @@ invite encoding and PSBT inspection. Network commands remain unregistered;
 id `cyberkrill`, and exact JSON parameters. It accepts user-configured HTTP(S)
 URLs through the existing bounded transport, with its response limit,
 connect/transfer deadlines, CA selection, proxy refusal and redirect policy.
+`Client.totalTimeoutMs` forwards the whole-transfer timeout setting to HttpCurl.
+It defaults to 30,000 ms; callers can choose a longer finite deadline for
+`scanTxOutSet` and other slow RPCs. Zero retains HttpCurl's explicit
+unlimited-transfer setting. The response-size and connection-timeout defaults
+are unchanged.
 The production client has no loopback-only restriction.
 
 The typed methods construct their own requests and convert their results:
@@ -151,10 +156,11 @@ explicitly synthetic transport fixtures, not Core captures.
 | Authentication resolution and recorded 401, including an explicitly empty directory | 18 |
 | Synthetic envelope/precedence/secret cases and transport failure | 8 + 1 |
 | HTTP precision | 10 incoming / 7 outgoing values, plus nested exponent-zero serialization |
+| Scan deadlines | Default 30,000 ms; a response after 31 seconds with a 60,000 ms override, and a separate short-deadline refusal |
 | Spawn refusals, asserted at the shared boundary and both reference executable names | 122 each |
 | Permitted sentinel-spawn controls at those three boundaries | 37 each, plus 1 unrelated utility |
 | Namespace boundaries | 8 |
-| Process-tree lifecycle controls at direct and host namespace-entry paths | 48: 16 single-level, 14 nested, 4 disappearing-process read controls, 14 children discovered during final escalation |
+| Process-tree lifecycle controls at direct and host namespace-entry paths | 50: 16 single-level, 14 nested, 4 disappearing-process read controls, 14 children discovered during final escalation, 2 post-snapshot adoption controls |
 
 Host network execution re-execs through `unshare -rn`, brings loopback up and
 binds its recursion marker to the changed namespace and executing process.
@@ -185,6 +191,10 @@ controlled fork after the signal snapshot creates a child in another session;
 fourteen controls cover success, failure, timeout and all four managed
 interruptions at both entry paths. Their readiness handshake makes that
 discovery ordering explicit.
+Two further controls freeze the real children snapshot, let one parent fork
+and exit, and verify that its adopted child was absent from that snapshot.
+Cleanup rescans after reaping known parents, before deciding the tree is empty,
+so those adopted children receive the current escalation signal and are reaped.
 It terminates and reaps descendants on completion, failure, timeout and managed
 interruption, escalating with finite deadlines. Connection-free lifecycle
 probes independently observe PID disappearance and reaping, including nested
@@ -195,7 +205,7 @@ lifecycle, including the unshare availability probe.
 
 `test/rpc-client-mutations.py` pins the new mutation definitions and preserves
 separate build/red/restoration/green streams under
-`packages/cyberkrill/.lake/validation/rpc-client-mutations-late-final/`. Its committed
+`packages/cyberkrill/.lake/validation/rpc-client-mutations-diagnostics-final/`. Its committed
 record is separate from the retained historical **152 distinct edits / 275
 selected reds**. Existing current evidence is refreshed by executing its
 mutation commands, never by substituting current source hashes into old
@@ -203,6 +213,60 @@ observations. `test/validate.py` records each command's separate streams,
 status and elapsed time in the same ignored validation directory.
 
 ### Current client validation
+
+On 2026-10-31 the following thirteen acceptance commands completed with exit
+**0**, through the complete foreground supervisor. Each affected mutation or
+refresh command was executed again on the final sources. Toolchain commands
+used the default dev shell, with fresh temporary directories owned for each
+foreground command's lifetime. Package build/test commands ran in
+`packages/cyberkrill`; other commands ran at the repository root. Separate
+streams, statuses and command times were retained. Full-suite progress is
+flushed between test groups, and mutation failures include both output streams.
+
+| Command/check | Exit | Measured wall time (s) |
+|---|---:|---:|
+| `test/mutate.py` | 0 | 663.478 |
+| `test/lightning-mutate.py` | 0 | 777.329 |
+| `test/revision-mutate.py` | 0 | 700.295 |
+| `test/refresh-regressions.py` | 0 | 72.017 |
+| `test/output-regressions.py refresh` | 0 | 23.410 |
+| `test/refresh-attached-output.py` | 0 | 22.158 |
+| `test/offline-mutate.py` | 0 | 1487.205 |
+| `test/rpc-client-mutations.py` | 0 | 1815.481 |
+| `test/rpc-client-mutations.py --verify` | 0 | 0.314 |
+| `test/scope.py` | 0 | 1.216 |
+| `test/validate.py app` (2 commands) | 0 | 117.214 |
+| `test/validate.py evidence` (23 commands) | 0 | 107.347 |
+| `test/validate.py repo` (9 commands) | 0 | 257.284 |
+
+The current RPC record contains **77 distinct source edits / 278 selected
+detecting failures**: 65 client/capture selections and 213 safety selections,
+each with a restored green execution. The restored full package suite exited
+0. The deadline regressions independently detect a hardcoded 30-second limit,
+a disabled short deadline and a changed default. The two adoption regressions
+detect removal of the post-reap discovery pass at both entry paths; the
+existing nested-session and final-escalation controls remain selected.
+The preceding **73/271** observation is preserved unchanged as
+`late_cleanup_observation`, alongside the fixed-digest **64/164**, **69/211**
+and **72/243** observations. Historical **152/275** evidence remains separate.
+
+All **204 source bindings across nine current records** match the final
+worktree and index. Legacy mutation definitions, commands, statuses and
+detecting assertions are unchanged; refreshed observations carry their actual
+new timings and source fingerprints. Tracker verification confirms all 59
+identities, 58 byte-identical unrelated records and only this task's lifecycle
+fields changed from the phase base. The plan is unchanged.
+
+The repository check included a fresh sandbox build: all eight replay cases,
+eleven wrappers and 75 responses, 18 authentication cases, both scan deadlines,
+122 spawn refusals at each of three boundaries, 37 permitted controls, eight
+namespace boundaries and **50 lifecycle controls** executed without a suite
+skip. All **356 packaged source files** match staged bytes. The seven package
+checks, link/OpenSSL checks, 78-file native-decision inventory and proof/private
+material scans passed, as did the installed version, Lightning, offline and
+RPC replay checks. No recording or reference fixture was regenerated.
+
+### Retained client validation before configurable scan deadlines
 
 On 2026-10-30, after the final escalation repair, the following commands
 completed through the foreground supervisor with exit **0**. Log stems below
@@ -223,15 +287,15 @@ ran in `packages/cyberkrill`; other commands ran at the repository root.
 | `test/validate.py repo` (9 commands) | 0 | `validate-repo`; child records: `../repo.json` |
 | Current source/index, mutation-stream and process audit | 0 | `index-audit` |
 
-The current RPC execution records **73 distinct edits / 271 selected detecting
+That RPC execution recorded **73 distinct edits / 271 selected detecting
 failures**: 62 client/capture and 209 safety selections, each with a restored
 green execution. The 14 new lifecycle cases each detect omitted cleanup and
 omitted repeated signalling during escalation. The earlier **72/243** object
 is preserved as `nested_observation` with its fixed digest, beside the original
 **64/164** and corrected **69/211** observations. The seven unchanged legacy
 records retain their preceding executions; none binds a source changed by this
-repair. All **204 current source bindings across nine records** match both
-the worktree and staged blobs.
+repair. All **204 source bindings across nine records** matched both
+the then-current worktree and staged blobs.
 
 The fresh sandbox log contains the eight replay cases, eleven wrappers and
 75 responses, auth18, spawn122 at all three boundaries, permissions37,

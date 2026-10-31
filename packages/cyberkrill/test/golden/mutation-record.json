@@ -19,9 +19,9 @@
     "CyberkrillTests/Offline.lean": "e6243c51b6638c0bd777835b843459e955e2e7f6163e7bbac6bfe22230407a9d",
     "CyberkrillTests/Output.lean": "9912e5c699b4fb7c07ff5eaacd2d5d821d6585118cb17a0829b224c96965a966",
     "CyberkrillTests/PrivateOutput.lean": "a4412bb4cf4908cc777e39018cb2ac34fc12c697e373b90be3b6c1235514997f",
-    "CyberkrillTests/Rpc.lean": "d13fcea42aa79f9fad9cbc205b14ec5bbe04c67fd1ebd4af2a7b93ccbf97dcac",
+    "CyberkrillTests/Rpc.lean": "03657138036b2cd6f83bc82f6acc363be0e7d772bc0db0618f493ad95bb98c9b",
     "CyberkrillTests/Support.lean": "80dbdfd22c0478dde791bfc46ae73418a8cf838f7728bb08f248291cdb3a179c",
-    "CyberkrillTests.lean": "17b7f5170c8a14b3ed82af865b5a7c50aaa9cc5893f1e1c842e1cf05e52f0405",
+    "CyberkrillTests.lean": "9e98ad7a629156a199b3760cceff6a4d2f1fbb3c29a305210b01cbe7f9d16296",
     "test/output-regressions.py": "0c9c3284471ab2fde2ed27559b7a76d05a30ac8e81e1a865c3d8c4fa14d73c14",
     "test/private-output.py": "07d8a492d3f66eace44dd4c4c5a32f68b06cd50bb3c4ee34b6f40e8c3809e1f9",
     "Cyberkrill/PrivateOutput.lean": "46ecbff603563e28e27ec208a64333acc23680ac062f6d1b050c9c78cd8bf7f4",
@@ -54,7 +54,7 @@
       ],
       "status": 1,
       "detecting_assertion": "amount scaling",
-      "seconds": 0.569,
+      "seconds": 0.53,
       "restored_status": 0
     },
     {
@@ -83,7 +83,7 @@
       ],
       "status": 1,
       "detecting_assertion": "sats flooring",
-      "seconds": 1.39,
+      "seconds": 1.382,
       "restored_status": 0
     },
     {
@@ -112,7 +112,7 @@
       ],
       "status": 1,
       "detecting_assertion": "output refusal 0 stdout",
-      "seconds": 0.081,
+      "seconds": 0.086,
       "restored_status": 0
     },
     {
@@ -140,7 +140,7 @@
       ],
       "status": 1,
       "detecting_assertion": "wholeSat half-up",
-      "seconds": 0.031,
+      "seconds": 0.029,
       "restored_status": 0
     },
     {
@@ -168,7 +168,7 @@
       ],
       "status": 1,
       "detecting_assertion": "wholeSat tiny",
-      "seconds": 0.028,
+      "seconds": 0.029,
       "restored_status": 0
     },
     {
@@ -224,7 +224,7 @@
       ],
       "status": 1,
       "detecting_assertion": "exact wholeSat rejects",
-      "seconds": 0.028,
+      "seconds": 0.029,
       "restored_status": 0
     },
     {
@@ -252,7 +252,7 @@
       ],
       "status": 1,
       "detecting_assertion": "fee unit requirement",
-      "seconds": 0.029,
+      "seconds": 0.028,
       "restored_status": 0
     },
     {
@@ -281,7 +281,7 @@
       ],
       "status": 1,
       "detecting_assertion": "mnemonic entropy mapping",
-      "seconds": 0.078,
+      "seconds": 0.083,
       "restored_status": 0
     },
     {
@@ -338,7 +338,7 @@
       ],
       "status": 1,
       "detecting_assertion": "mnemonic file stdout",
-      "seconds": 0.078,
+      "seconds": 0.077,
       "restored_status": 0
     },
     {
@@ -366,7 +366,7 @@
       ],
       "status": 1,
       "detecting_assertion": "cap Bitcoin pubkey accepts",
-      "seconds": 0.027,
+      "seconds": 0.028,
       "restored_status": 0
     },
     {
@@ -394,7 +394,7 @@
       ],
       "status": 1,
       "detecting_assertion": "cap Bitcoin compression matches",
-      "seconds": 0.027,
+      "seconds": 0.028,
       "restored_status": 0
     },
     {
@@ -422,7 +422,7 @@
       ],
       "status": 1,
       "detecting_assertion": "cap Bitcoin xonly accepts",
-      "seconds": 0.029,
+      "seconds": 0.03,
       "restored_status": 0
     },
     {
@@ -450,7 +450,7 @@
       ],
       "status": 1,
       "detecting_assertion": "cap Bitcoin DER accepts",
-      "seconds": 0.029,
+      "seconds": 0.028,
       "restored_status": 0
     },
     {
@@ -478,7 +478,7 @@
       ],
       "status": 1,
       "detecting_assertion": "cap BOLT recover L382",
-      "seconds": 0.029,
+      "seconds": 0.03,
       "restored_status": 0
     },
     {
@@ -506,7 +506,7 @@
       ],
       "status": 1,
       "detecting_assertion": "cap BOLT verify decode",
-      "seconds": 0.028,
+      "seconds": 0.029,
       "restored_status": 0
     },
     {
@@ -534,7 +534,7 @@
       ],
       "status": 1,
       "detecting_assertion": "cap BOLT signature exact",
-      "seconds": 0.027,
+      "seconds": 0.031,
       "restored_status": 0
     },
     {
@@ -562,7 +562,7 @@
       ],
       "status": 1,
       "detecting_assertion": "cap BOLT point accepts",
-      "seconds": 0.031,
+      "seconds": 0.029,
       "restored_status": 0
     },
     {
@@ -590,7 +590,7 @@
       ],
       "status": 1,
       "detecting_assertion": "cap RIPEMD160",
-      "seconds": 0.031,
+      "seconds": 0.029,
       "restored_status": 0
     },
     {
@@ -618,7 +618,7 @@
       ],
       "status": 1,
       "detecting_assertion": "cap HASH160",
-      "seconds": 0.035,
+      "seconds": 0.028,
       "restored_status": 0
     },
     {
@@ -647,7 +647,7 @@
       ],
       "status": 1,
       "detecting_assertion": "private output mode 0600",
-      "seconds": 0.089,
+      "seconds": 0.072,
       "restored_status": 0
     },
     {
@@ -676,7 +676,7 @@
       ],
       "status": 1,
       "detecting_assertion": "private output exclusive create",
-      "seconds": 0.083,
+      "seconds": 0.069,
       "restored_status": 0
     },
     {
@@ -705,7 +705,7 @@
       ],
       "status": 1,
       "detecting_assertion": "private output write failure",
-      "seconds": 0.084,
+      "seconds": 0.081,
       "restored_status": 0
     },
     {
@@ -734,7 +734,7 @@
       ],
       "status": 1,
       "detecting_assertion": "private output existing trailing slash",
-      "seconds": 0.094,
+      "seconds": 0.078,
       "restored_status": 0
     },
     {
@@ -763,7 +763,7 @@
       ],
       "status": 1,
       "detecting_assertion": "private output missing trailing slash",
-      "seconds": 0.096,
+      "seconds": 0.073,
       "restored_status": 0
     }
   ],
@@ -776,6 +776,6 @@
       "test"
     ],
     "status": 0,
-    "seconds": 83.009
+    "seconds": 115.281
   }
 }

@@ -231,7 +231,8 @@ def lifecycle_cases():
                   for field in ["stat", "children"]]
     late = ["late-" + branch + "/" + outcome for branch in ["direct", "host"]
             for outcome in ["success", "failure", "timeout", "HUP", "INT", "QUIT", "TERM"]]
-    return single + nested + proc_races + late
+    adoption = ["adopt-" + branch + "/failure" for branch in ["direct", "host"]]
+    return single + nested + proc_races + late + adoption
 
 
 def lifecycle_checks(only=None):
@@ -248,12 +249,14 @@ def lifecycle_checks(only=None):
             if only is not None and name != only: continue
             branch, outcome = name.split("/")
             nested = branch.startswith("nested-")
-            late = branch.startswith("late-")
-            direct = branch.removeprefix("nested-").removeprefix("late-") == "direct"
+            adoption = branch.startswith("adopt-")
+            late = branch.startswith("late-") or adoption
+            direct = branch.removeprefix("nested-").removeprefix("late-").removeprefix("adopt-") == "direct"
             with tempfile.TemporaryDirectory(dir=directory) as root:
                 root = Path(root)
                 ready, pids = root / "ready", root / "pids"
                 escaped = root / "escaped"
+                adoption_record = root / "adoption.json"
                 leaf = root / "leaf.py"
                 leaf.write_text("import os,signal,time\nfrom pathlib import Path\n"
                                 "signal.signal(signal.SIGTERM, signal.SIG_IGN)\n"
@@ -265,7 +268,10 @@ def lifecycle_checks(only=None):
                                    "        marker.with_suffix('.pending').write_text(str(os.getpid()))\n"
                                    "        marker.with_suffix('.pending').replace(marker)\n"
                                    "        time.sleep(10)\n        os._exit(0)\n"
-                                   "signal.signal(signal.SIGUSR1,escape)\n" if late else "") +
+                                   + ("def adopt_escape(signum,frame):\n"
+                                      "    escape(signum,frame)\n    os._exit(0)\n"
+                                      "signal.signal(signal.SIGUSR1,adopt_escape)\n" if adoption else
+                                      "signal.signal(signal.SIGUSR1,escape)\n") if late else "") +
                                 "Path(" + repr(str(ready)) + ").write_text(str(os.getpid()))\n"
                                 "time.sleep(60)\n")
                 leader = root / "leader.py"
@@ -304,6 +310,37 @@ def lifecycle_checks(only=None):
                                      "network.isolated=lambda: False\n"
                                      "sys.exit(network.run_isolated([sys.executable,'-B'," + repr(str(leader)) + "],timeout=60))\n")
                     payload = inner
+                # Freeze the root's real children snapshot, then make one
+                # parent fork and exit before discovery walks that snapshot.
+                # No PID discovery, signal delivery or reaping is substituted.
+                adoption_schedule = ""
+                if adoption:
+                    adoption_schedule = f"""import json
+read_snapshot = Path.read_text
+injected = [False]
+def adoption_read(path,*args,**kwargs):
+    value = read_snapshot(path,*args,**kwargs)
+    own = os.getpid()
+    if (str(path)==f'/proc/{{own}}/task/{{own}}/children' and not injected[0]
+            and Path({str(ready)!r}).exists()):
+        parent = int(read_snapshot(Path({str(ready)!r})))
+        if str(parent) in value.split():
+            injected[0] = True
+            kill(parent,signal.SIGUSR1)
+            deadline = time.monotonic()+3
+            while True:
+                if Path({str(escaped)!r}).exists():
+                    descendant = int(read_snapshot(Path({str(escaped)!r})))
+                    stat = read_snapshot(Path(f'/proc/{{descendant}}/stat')).rsplit(')',1)[1].split()
+                    if int(stat[1])==own:
+                        Path({str(adoption_record)!r}).write_text(json.dumps(dict(snapshot=value.split(),
+                            exiting_parent=parent,adopted=descendant,owner=own)))
+                        break
+                assert time.monotonic()<deadline,'adoption scheduling handshake'
+                time.sleep(.001)
+    return value
+Path.read_text = adoption_read
+"""
                 driver = root / "driver.py"
                 driver.write_text("import sys,subprocess\nsys.path.insert(0," + repr(str(Path(__file__).parent)) + ")\n"
                                   "import network\nexec(compile(" + repr(source) + ", network.__file__, 'exec'),network.__dict__)\n"
@@ -330,6 +367,7 @@ def lifecycle_checks(only=None):
                                      "        injected[0]=True\n        raise ProcessLookupError(3,'synthetic disappearing process')\n"
                                      "    return read_text(path,*args,**kwargs)\n"
                                      "Path.read_text=proc_read\n" if outcome.startswith("proc-") else "") +
+                                  adoption_schedule +
                                   "try:\n    status=network.run_isolated([sys.executable,'-B'," + repr(str(payload)) + "],timeout=" + ("2" if nested else "1") + ")\n"
                                   "    print('RETURN',status,flush=True)\n"
                                   "except subprocess.TimeoutExpired:\n"
@@ -364,6 +402,10 @@ def lifecycle_checks(only=None):
                         except ChildProcessError: pass
                     assert absent and reaped, "lifecycle descendants stopped/reaped: " + name + repr((observations, process.returncode, stdout, stderr))
                     if late: assert escaped.exists(), "late child scheduling reached: " + name
+                    if adoption:
+                        observed = json.loads(adoption_record.read_text())
+                        assert observed["owner"] == process.pid and observed["exiting_parent"] == owned[1], "adoption scheduling ownership"
+                        assert str(observed["exiting_parent"]) in observed["snapshot"] and str(observed["adopted"]) not in observed["snapshot"], "adoption scheduling snapshot"
                     timed_out = outcome == "timeout" or outcome.startswith("proc-")
                     expected_status = 124 if timed_out else 128 + getattr(signal, "SIG" + outcome) if outcome in {"HUP", "INT", "QUIT", "TERM"} else 0
                     expected_output = b"TIMEOUT\n" if timed_out else b"" if expected_status else (
@@ -392,8 +434,8 @@ def lifecycle_checks(only=None):
                             time.sleep(.01)
     finally:
         assert libc.prctl(36, previous.value, 0, 0, 0) == 0
-    assert len(cases) == 48 and (only is None or only in cases), "lifecycle inventory"
-    if only is None: print("network process lifecycle: 48/48; 16 single-level, 14 nested, four disappearing-process read controls, 14 late-child escalation controls; direct and host entry; success/failure/timeout/four interruptions; descendants stopped and reaped", flush=True)
+    assert len(cases) == 50 and (only is None or only in cases), "lifecycle inventory"
+    if only is None: print("network process lifecycle: 50/50; 16 single-level, 14 nested, four disappearing-process read controls, 14 late-child escalation controls, two post-snapshot adoption controls; direct and host entry; success/failure/timeout/four interruptions; descendants stopped and reaped", flush=True)
 
 
 def main():

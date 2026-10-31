@@ -153,6 +153,14 @@ def rpcRequest : IO Unit := do
     bitcoinDir := (request.getObjValAs? String "dir").toOption,
     user := (request.getObjValAs? String "user").toOption,
     password := (request.getObjValAs? String "password").toOption }
+  let client := { client with totalTimeoutMs :=
+    ((request.getObjValAs? Nat "totalTimeoutMs").toOption.map Nat.toUInt32).getD client.totalTimeoutMs }
+  if (request.getObjValAs? String "operation").toOption == some "scan" then
+    let result ← client.scanTxOutSet #[]
+    match result with
+    | .ok scan => IO.println (Json.mkObj [("success", toJson scan.success), ("height", toJson scan.height)]).compress
+    | .error e => IO.println (Json.mkObj [("error", .str e.message)]).compress
+    return
   if (request.getObjValAs? String "operation").toOption == some "create" then
     let values ← (← arr (← item request "amounts")).mapM btc
     let result ← client.createPsbt #[{ txid := "synthetic", vout := 2, sequence := some 7 }]
@@ -173,6 +181,8 @@ def rpcRequest : IO Unit := do
   | .ok value => IO.println (Json.mkObj [("result", value)]).compress
 
 def rpcPure : IO Unit := do
+  check "RPC default transfer deadline" (({ url := "http://example.invalid:18444" } : Client).totalTimeoutMs == 30000)
+  IO.println "RPC default transfer deadline: 1/1"
   let defaults ← getOk "RPC default flags" (RpcFlags.parse [])
   check "RPC default URL and absent credentials" (defaults == ({} : RpcFlags) &&
     defaults.url == "http://127.0.0.1:8332" && defaults.bitcoinDir.isNone &&
