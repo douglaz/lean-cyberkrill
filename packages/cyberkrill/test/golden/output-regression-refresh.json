@@ -23,7 +23,7 @@
       "CyberkrillTests"
     ],
     "status": 0,
-    "seconds": 10.52
+    "seconds": 10.098
   },
   "restore_build": {
     "command": [
@@ -36,7 +36,7 @@
       "CyberkrillTests"
     ],
     "status": 0,
-    "seconds": 10.341
+    "seconds": 10.117
   },
   "checks": [
     {
@@ -56,7 +56,7 @@
           "0"
         ],
         "status": 1,
-        "seconds": 0.029
+        "seconds": 0.027
       },
       "detecting_assertion": "output refusal 0 status",
       "green": {
@@ -69,7 +69,7 @@
           "0"
         ],
         "status": 0,
-        "seconds": 0.027
+        "seconds": 0.03
       }
     },
     {
@@ -89,7 +89,7 @@
           "1"
         ],
         "status": 1,
-        "seconds": 0.029
+        "seconds": 0.03
       },
       "detecting_assertion": "output refusal 1 status",
       "green": {
@@ -102,7 +102,7 @@
           "1"
         ],
         "status": 0,
-        "seconds": 0.028
+        "seconds": 0.029
       }
     },
     {
@@ -122,7 +122,7 @@
           "2"
         ],
         "status": 1,
-        "seconds": 0.03
+        "seconds": 0.026
       },
       "detecting_assertion": "output refusal 2 status",
       "green": {
@@ -135,7 +135,7 @@
           "2"
         ],
         "status": 0,
-        "seconds": 0.027
+        "seconds": 0.029
       }
     },
     {
@@ -155,7 +155,7 @@
           "3"
         ],
         "status": 1,
-        "seconds": 0.029
+        "seconds": 0.027
       },
       "detecting_assertion": "output refusal 3 status",
       "green": {
@@ -168,7 +168,7 @@
           "3"
         ],
         "status": 0,
-        "seconds": 0.027
+        "seconds": 0.029
       }
     },
     {
@@ -188,7 +188,7 @@
           "4"
         ],
         "status": 1,
-        "seconds": 0.031
+        "seconds": 0.026
       },
       "detecting_assertion": "output refusal 4 status",
       "green": {
@@ -201,7 +201,7 @@
           "4"
         ],
         "status": 0,
-        "seconds": 0.027
+        "seconds": 0.029
       }
     },
     {
@@ -221,7 +221,7 @@
           "5"
         ],
         "status": 1,
-        "seconds": 0.029
+        "seconds": 0.026
       },
       "detecting_assertion": "output refusal 5 status",
       "green": {
@@ -234,7 +234,7 @@
           "5"
         ],
         "status": 0,
-        "seconds": 0.027
+        "seconds": 0.028
       }
     },
     {
@@ -287,7 +287,7 @@
           "7"
         ],
         "status": 1,
-        "seconds": 0.03
+        "seconds": 0.027
       },
       "detecting_assertion": "output refusal 7 status",
       "green": {
@@ -300,7 +300,7 @@
           "7"
         ],
         "status": 0,
-        "seconds": 0.033
+        "seconds": 0.032
       }
     },
     {
@@ -320,7 +320,7 @@
           "8"
         ],
         "status": 1,
-        "seconds": 0.031
+        "seconds": 0.028
       },
       "detecting_assertion": "output refusal 8 status",
       "green": {
@@ -333,7 +333,7 @@
           "8"
         ],
         "status": 0,
-        "seconds": 0.028
+        "seconds": 0.027
       }
     },
     {
@@ -353,7 +353,7 @@
           "9"
         ],
         "status": 1,
-        "seconds": 0.029
+        "seconds": 0.026
       },
       "detecting_assertion": "output refusal 9 status",
       "green": {
@@ -366,7 +366,7 @@
           "9"
         ],
         "status": 0,
-        "seconds": 0.027
+        "seconds": 0.029
       }
     },
     {
@@ -386,7 +386,7 @@
           "10"
         ],
         "status": 1,
-        "seconds": 0.028
+        "seconds": 0.026
       },
       "detecting_assertion": "output refusal 10 status",
       "green": {
@@ -399,7 +399,7 @@
           "10"
         ],
         "status": 0,
-        "seconds": 0.026
+        "seconds": 0.029
       }
     },
     {
@@ -419,7 +419,7 @@
           "11"
         ],
         "status": 1,
-        "seconds": 0.03
+        "seconds": 0.028
       },
       "detecting_assertion": "output refusal 11 status",
       "green": {
@@ -432,7 +432,7 @@
           "11"
         ],
         "status": 0,
-        "seconds": 0.03
+        "seconds": 0.028
       }
     },
     {
@@ -452,7 +452,7 @@
           "12"
         ],
         "status": 1,
-        "seconds": 0.03
+        "seconds": 0.028
       },
       "detecting_assertion": "output refusal 12 status",
       "green": {
@@ -465,7 +465,7 @@
           "12"
         ],
         "status": 0,
-        "seconds": 0.028
+        "seconds": 0.027
       }
     },
     {
@@ -485,7 +485,7 @@
           "13"
         ],
         "status": 1,
-        "seconds": 0.03
+        "seconds": 0.027
       },
       "detecting_assertion": "output refusal 13 status",
       "green": {
@@ -498,7 +498,7 @@
           "13"
         ],
         "status": 0,
-        "seconds": 0.028
+        "seconds": 0.027
       }
     },
     {
@@ -518,7 +518,7 @@
           "14"
         ],
         "status": 1,
-        "seconds": 0.029
+        "seconds": 0.028
       },
       "detecting_assertion": "output refusal 14 status",
       "green": {
@@ -531,7 +531,7 @@
           "14"
         ],
         "status": 0,
-        "seconds": 0.029
+        "seconds": 0.026
       }
     },
     {
@@ -551,7 +551,7 @@
           "15"
         ],
         "status": 1,
-        "seconds": 0.03
+        "seconds": 0.027
       },
       "detecting_assertion": "output refusal 15 status",
       "green": {
@@ -564,7 +564,7 @@
           "15"
         ],
         "status": 0,
-        "seconds": 0.033
+        "seconds": 0.026
       }
     },
     {
@@ -584,7 +584,7 @@
           "16"
         ],
         "status": 1,
-        "seconds": 0.032
+        "seconds": 0.028
       },
       "detecting_assertion": "output refusal 16 status",
       "green": {
@@ -597,7 +597,7 @@
           "16"
         ],
         "status": 0,
-        "seconds": 0.03
+        "seconds": 0.027
       }
     },
     {
@@ -617,7 +617,7 @@
           "17"
         ],
         "status": 1,
-        "seconds": 0.029
+        "seconds": 0.027
       },
       "detecting_assertion": "output refusal 17 status",
       "green": {
@@ -630,7 +630,7 @@
           "17"
         ],
         "status": 0,
-        "seconds": 0.03
+        "seconds": 0.027
       }
     }
   ],
@@ -643,6 +643,6 @@
       "--output-boundaries"
     ],
     "status": 0,
-    "seconds": 0.029
+    "seconds": 0.027
   }
 }

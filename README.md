@@ -56,8 +56,9 @@ connect/transfer deadlines, CA selection, proxy refusal and redirect policy.
 `Client.totalTimeoutMs` forwards the whole-transfer timeout setting to HttpCurl.
 It defaults to 30,000 ms; callers can choose a longer finite deadline for
 `scanTxOutSet` and other slow RPCs. Zero retains HttpCurl's explicit
-unlimited-transfer setting. The response-size and connection-timeout defaults
-are unchanged.
+unlimited-transfer setting. The connection-timeout default is unchanged.
+`Client.maxResponseBytes` sets an inclusive response-body byte limit, defaulting to 1,048,576 bytes; callers
+can raise this finite bound for large UTXO or transaction results.
 The production client has no loopback-only restriction.
 
 The typed methods construct their own requests and convert their results:
@@ -79,6 +80,9 @@ The typed methods construct their own requests and convert their results:
 Block conversion expects the transaction-id form returned by verbosity 1
 (Core's default). Options and additional raw fields remain exact JSON.
 No wrapper performs coin selection, fee calculation, signing or broadcast.
+PSBT outputs use an address-keyed JSON object, as in the pinned reference.
+Repeated addresses retain the last supplied amount rather than accumulating
+amounts or producing multiple outputs.
 The four Core CLI handlers and their fee-command goldens remain Phase 8b/8c
 work; the shared flag group is not registered on offline commands.
 
@@ -157,6 +161,7 @@ explicitly synthetic transport fixtures, not Core captures.
 | Synthetic envelope/precedence/secret cases and transport failure | 8 + 1 |
 | HTTP precision | 10 incoming / 7 outgoing values, plus nested exponent-zero serialization |
 | Scan deadlines | Default 30,000 ms; a response after 31 seconds with a 60,000 ms override, and a separate short-deadline refusal |
+| Response bounds | Default 1,048,576 bytes; a typed scan response above that size with a 2,097,152-byte bound, and refusal with a smaller explicit bound |
 | Spawn refusals, asserted at the shared boundary and both reference executable names | 122 each |
 | Permitted sentinel-spawn controls at those three boundaries | 37 each, plus 1 unrelated utility |
 | Namespace boundaries | 8 |
@@ -205,7 +210,7 @@ lifecycle, including the unshare availability probe.
 
 `test/rpc-client-mutations.py` pins the new mutation definitions and preserves
 separate build/red/restoration/green streams under
-`packages/cyberkrill/.lake/validation/rpc-client-mutations-diagnostics-final/`. Its committed
+`packages/cyberkrill/.lake/validation/rpc-client-mutations-response-checked-final/`. Its committed
 record is separate from the retained historical **152 distinct edits / 275
 selected reds**. Existing current evidence is refreshed by executing its
 mutation commands, never by substituting current source hashes into old
@@ -213,6 +218,58 @@ observations. `test/validate.py` records each command's separate streams,
 status and elapsed time in the same ignored validation directory.
 
 ### Current client validation
+
+On 2026-10-31 all thirteen acceptance commands below completed with exit
+**0**, through the complete foreground supervisor and command-owned temporary
+directories. Toolchain commands used the default dev shell. Script paths in
+this table are relative to the repository root; package build/test children
+ran in `packages/cyberkrill`. Separate streams, statuses and measured command
+times were retained.
+
+| Command/check | Exit | Measured wall time (s) |
+|---|---:|---:|
+| `packages/cyberkrill/test/mutate.py` | 0 | 659.167 |
+| `packages/cyberkrill/test/lightning-mutate.py` | 0 | 809.526 |
+| `packages/cyberkrill/test/revision-mutate.py` | 0 | 730.852 |
+| `packages/cyberkrill/test/refresh-regressions.py` | 0 | 68.601 |
+| `packages/cyberkrill/test/output-regressions.py refresh` | 0 | 22.705 |
+| `packages/cyberkrill/test/refresh-attached-output.py` | 0 | 22.859 |
+| `packages/cyberkrill/test/offline-mutate.py` | 0 | 1567.525 |
+| `packages/cyberkrill/test/rpc-client-mutations.py` | 0 | 1879.790 |
+| `packages/cyberkrill/test/rpc-client-mutations.py --verify` | 0 | 0.364 |
+| `packages/cyberkrill/test/scope.py` | 0 | 1.817 |
+| `packages/cyberkrill/test/validate.py app` | 0 | 120.072 |
+| `packages/cyberkrill/test/validate.py evidence` | 0 | 108.449 |
+| `packages/cyberkrill/test/validate.py repo` | 0 | 248.165 |
+
+The RPC record now contains **80 distinct source edits / 281 independently
+selected detecting failures**: 68 client/capture and 213 safety selections,
+each followed by a restored green execution. Before mutation, the unchanged
+build passed. The three response-bound properties then each compiled and
+failed their intended runtime assertion: a hardcoded default rejects the
+larger response, an oversized fixed limit misses the smaller configured bound,
+and a changed default fails its pure check. Exact restoration, rebuilding and
+all three selected greens passed. The restored full package suite exited 0.
+
+The preceding **77/278** observation is retained unchanged as
+`deadline_adoption_observation`, alongside the fixed-digest **73/271**,
+**72/243**, **69/211** and **64/164** observations. Historical **152/275**
+evidence remains separate. All seven affected legacy mutation/refresh commands
+were actually rerun; their definitions, commands, statuses and detecting
+assertions remain unchanged. All **204 source bindings across nine current
+records** match both the restored worktree and staged bytes.
+
+The app gate ran two commands, the evidence gate 23, and the repository gate
+nine. The repository gate included a fresh sandbox execution of all eight
+replay cases, eleven wrappers and 75 responses, 18 authentication cases, both
+scan deadlines, both response-bound cases, all spawn/namespace controls and
+**50 lifecycle controls**, without a suite skip. All **356 packaged source
+files** match the index. All seven package checks, link/OpenSSL checks, the
+78-file native-decision inventory, proof/private-material scans and installed
+version/Lightning/offline/RPC checks passed. The tracker and plan are unchanged
+by the response-bound fix; recordings and reference fixtures are unchanged.
+
+### Retained client validation before configurable response bounds
 
 On 2026-10-31 the following thirteen acceptance commands completed with exit
 **0**, through the complete foreground supervisor. Each affected mutation or
@@ -250,7 +307,7 @@ The preceding **73/271** observation is preserved unchanged as
 `late_cleanup_observation`, alongside the fixed-digest **64/164**, **69/211**
 and **72/243** observations. Historical **152/275** evidence remains separate.
 
-All **204 source bindings across nine current records** match the final
+All **204 source bindings across nine records** matched the then-current
 worktree and index. Legacy mutation definitions, commands, statuses and
 detecting assertions are unchanged; refreshed observations carry their actual
 new timings and source fingerprints. Tracker verification confirms all 59

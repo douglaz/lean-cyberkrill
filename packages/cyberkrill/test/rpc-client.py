@@ -294,16 +294,45 @@ def timeouts(only=None):
     if only is None: print("Lean RPC scan deadlines: 2/2; delayed beyond default and bounded short override", flush=True)
 
 
+def response_bounds(only=None):
+    rows = [("large", 2097152), ("bounded", 524288)]
+    assert only is None or only in {r[0] for r in rows}, "RPC response-bound selection"
+    directory = APP / ".lake/rpc-response-bounds"
+    directory.mkdir(parents=True, exist_ok=True)
+    with tempfile.TemporaryDirectory(dir=directory) as root:
+        fixture = Path(root) / "synthetic.json"
+        result = dict(success=True, height=1, unspents=[], total_amount=0, padding="x" * 1048576)
+        response = dict(result=result)
+        body_size = len(json.dumps(response).encode())
+        assert 1048576 < body_size < 2097152, "RPC synthetic response exceeds default bound"
+        entry = dict(method="POST", path="/scan", rpc=dict(method="scantxoutset", params=[["start", []]]),
+                     responses=[dict(status=200, json=response)])
+        fixture.write_text(json.dumps(dict(entries=[entry])))
+        for name, limit in rows:
+            if only is not None and only != name: continue
+            with responder(fixture) as (base, log, _):
+                value = request(base + "/scan", "unused", [], operation="scan", maxResponseBytes=limit)
+                if name == "large":
+                    assert value == dict(success=True, height=1), "RPC configured large response bound"
+                else:
+                    assert value.get("error") == "rpcTransport: HTTP transport failed", "RPC configured response remains bounded"
+                records = logged(log)
+                assert len(records) == 1, "RPC response-bound request count"
+                assert_request(records[0], entry, ["start", []])
+    if only is None: print("Lean RPC response bounds: 2/2; response above default and enforced smaller override", flush=True)
+
+
 def main():
     if not (network.sandbox() or network.isolated()):
         return network.run_isolated([sys.executable, "-B", str(Path(__file__).resolve()), *sys.argv[1:]])
     selected = sys.argv[1:]
     checks = dict(replay=replay, continuation=continuation, continuation_failure=continuation_failure,
-                  auth=authentication, synthetic=synthetic, precision=precision, timeouts=timeouts)
+                  auth=authentication, synthetic=synthetic, precision=precision, timeouts=timeouts, sizes=response_bounds)
     if selected:
         assert len(selected) == 1
         if selected[0].startswith("auth/"): authentication(selected[0][5:])
         elif selected[0].startswith("timeout/"): timeouts(selected[0][8:])
+        elif selected[0].startswith("size/"): response_bounds(selected[0][5:])
         else:
             assert selected[0] in checks
             checks[selected[0]]()

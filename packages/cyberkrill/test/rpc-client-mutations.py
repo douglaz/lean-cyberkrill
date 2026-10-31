@@ -19,11 +19,12 @@ S = importlib.import_module("network-safety")
 SOURCE = APP / "Cyberkrill/CoreRpc.lean"
 FLAGS = APP / "Cyberkrill/RpcFlags.lean"
 DEST = APP / "test/golden/rpc-client-mutation-record.json"
-LOGS = APP / ".lake/validation/rpc-client-mutations-diagnostics-final"
+LOGS = APP / ".lake/validation/rpc-client-mutations-response-checked-final"
 PREVIOUS_SHA256 = "ceacb68cf44ee76be24595af3f33022898a03040f2e4e6a4b1053c1fb050d693"
 CORRECTED_SHA256 = "ccdc53e07f0ecb9a4a9a346c0f8304f0f5f00bbf3ca1daaf7ca162967326b004"
 NESTED_SHA256 = "6ee597e6e65cb112b03b8d08a7fefef4e8e6fd41854e2f53379fc6a9178bbddd"
 LATE_SHA256 = "2eacf03deac4fc975f35588b57856dc94550b6fb69d035418fc384bcf84645c1"
+DEADLINE_SHA256 = "5cb6c57630a7232cb6fc1a28be98ec770e7fc0fe62f3d1db3119f4d652c81500"
 
 
 def client_edits():
@@ -59,6 +60,12 @@ def client_edits():
         ("request-verb", SOURCE, 'method := .post, url := client.url', 'method := .get, url := client.url', replay, "RPC getdescriptorinfo success"),
         ("request-version", SOURCE, '("jsonrpc", .str "2.0")', '("jsonrpc", .str "1.0")', replay, "RPC version/id"),
         ("request-id", SOURCE, '("id", .str "cyberkrill")', '("id", .str "wrong")', replay, "RPC version/id"),
+        ("response-bound-large", SOURCE, 'maxResponseBytes := client.maxResponseBytes', 'maxResponseBytes := 1048576',
+         ["python3", "-B", "test/rpc-client.py", "size/large"], "RPC configured large response bound"),
+        ("response-bound-small", SOURCE, 'maxResponseBytes := client.maxResponseBytes', 'maxResponseBytes := 2097152',
+         ["python3", "-B", "test/rpc-client.py", "size/bounded"], "RPC configured response remains bounded"),
+        ("response-bound-default", SOURCE, 'maxResponseBytes : USize := 1048576', 'maxResponseBytes : USize := 524288',
+         pure, "RPC default response bound"),
         ("scan-timeout-long", SOURCE, 'totalTimeoutMs := client.totalTimeoutMs', 'totalTimeoutMs := 30000',
          ["python3", "-B", "test/rpc-client.py", "timeout/long"], "RPC configured long scan deadline"),
         ("scan-timeout-short", SOURCE, 'totalTimeoutMs := client.totalTimeoutMs', 'totalTimeoutMs := 0',
@@ -120,7 +127,7 @@ def client_edits():
         elif name == "rpc": replacement = replacement.replace(target, 'throw (.leak body)', 1)
         else: replacement = replacement.replace(target, 'throw (.leak ((String.fromUTF8? response.body).getD ""))', 1)
         rows.append(("secret-" + name, SOURCE, prefix, replacement, synthetic, "RPC secret suppression " + name))
-    assert len(rows) == 65, "client mutation inventory"
+    assert len(rows) == 68, "client mutation inventory"
     return rows
 
 
@@ -218,7 +225,7 @@ def verify():
     assert record["source_sha256"] == fingerprints(), "stale RPC mutation evidence"
     expected = [r[0] for r in client_edits()] + [r[0] for r in network_edits()]
     assert [r["property"] for r in record["checks"]] == expected, "RPC mutation property inventory"
-    assert record["count"] == len(record["checks"]) == 278, "RPC mutation count"
+    assert record["count"] == len(record["checks"]) == 281, "RPC mutation count"
     previous = record["previous_observation"]
     assert hashlib.sha256((json.dumps(previous, indent=2) + "\n").encode()).hexdigest() == PREVIOUS_SHA256, "retained prior RPC observations"
     assert previous["count"] == len(previous["checks"]) == 164
@@ -231,6 +238,9 @@ def verify():
     late = record["late_cleanup_observation"]
     assert hashlib.sha256((json.dumps(late, indent=2) + "\n").encode()).hexdigest() == LATE_SHA256, "retained final cleanup observations"
     assert late["count"] == len(late["checks"]) == 271
+    deadline = record["deadline_adoption_observation"]
+    assert hashlib.sha256((json.dumps(deadline, indent=2) + "\n").encode()).hexdigest() == DEADLINE_SHA256, "retained deadline/adoption observations"
+    assert deadline["count"] == len(deadline["checks"]) == 278
     planned = client_edits() + network_edits()
     assert [(r["file"], r["replace"], r["with_text"]) for r in record["checks"]] == [
         (str(r[1].relative_to(APP)), r[2], r[3]) for r in planned], "RPC exact mutation definitions"
@@ -239,7 +249,7 @@ def verify():
         assert row["assertion"] and row["replace"] != row["with_text"]
         if "build" in row: assert row["build"]["status"] == row["restore_build"]["status"] == 0
     assert record["restored_full"]["status"] == 0
-    print("RPC mutation evidence: 65 client/capture selections; 213 separately selected safety reds; exact restoration; prior 64/164, corrected 69/211, nested 72/243 and final cleanup 73/271 retained", flush=True)
+    print("RPC mutation evidence: 68 client/capture selections; 213 separately selected safety reds; exact restoration; prior 64/164, corrected 69/211, nested 72/243 and final cleanup 73/271 and deadline/adoption 77/278 retained", flush=True)
 
 
 def main():
@@ -261,6 +271,8 @@ def main():
     assert hashlib.sha256((json.dumps(nested, indent=2) + "\n").encode()).hexdigest() == NESTED_SHA256, "nested RPC observation"
     late = prior.get("late_cleanup_observation", prior)
     assert hashlib.sha256((json.dumps(late, indent=2) + "\n").encode()).hexdigest() == LATE_SHA256, "final cleanup RPC observation"
+    deadline = prior.get("deadline_adoption_observation", prior)
+    assert hashlib.sha256((json.dumps(deadline, indent=2) + "\n").encode()).hexdigest() == DEADLINE_SHA256, "deadline/adoption RPC observation"
     hashes = fingerprints()
     originals = {p: p.read_bytes() for _, p, *_ in client_edits()}
     managed = [signal.SIGHUP, signal.SIGINT, signal.SIGQUIT, signal.SIGTERM]
@@ -315,7 +327,7 @@ def main():
         assert fingerprints() == hashes, "RPC exact source restoration"
         DEST.write_text(json.dumps(dict(count=len(records), source_sha256=hashes, checks=records, restored_full=full,
                                        previous_observation=previous, corrected_observation=corrected,
-                                       nested_observation=nested, late_cleanup_observation=late), indent=2) + "\n")
+                                       nested_observation=nested, late_cleanup_observation=late, deadline_adoption_observation=deadline), indent=2) + "\n")
         verify()
     finally:
         restore()
