@@ -225,19 +225,19 @@ flushed between test groups, and mutation failures include both output streams.
 
 | Command/check | Exit | Measured wall time (s) |
 |---|---:|---:|
-| `test/mutate.py` | 0 | 663.478 |
-| `test/lightning-mutate.py` | 0 | 777.329 |
-| `test/revision-mutate.py` | 0 | 700.295 |
-| `test/refresh-regressions.py` | 0 | 72.017 |
-| `test/output-regressions.py refresh` | 0 | 23.410 |
-| `test/refresh-attached-output.py` | 0 | 22.158 |
-| `test/offline-mutate.py` | 0 | 1487.205 |
-| `test/rpc-client-mutations.py` | 0 | 1815.481 |
-| `test/rpc-client-mutations.py --verify` | 0 | 0.314 |
-| `test/scope.py` | 0 | 1.216 |
-| `test/validate.py app` (2 commands) | 0 | 117.214 |
-| `test/validate.py evidence` (23 commands) | 0 | 107.347 |
-| `test/validate.py repo` (9 commands) | 0 | 257.284 |
+| `packages/cyberkrill/test/mutate.py` | 0 | 663.478 |
+| `packages/cyberkrill/test/lightning-mutate.py` | 0 | 777.329 |
+| `packages/cyberkrill/test/revision-mutate.py` | 0 | 700.295 |
+| `packages/cyberkrill/test/refresh-regressions.py` | 0 | 72.017 |
+| `packages/cyberkrill/test/output-regressions.py refresh` | 0 | 23.410 |
+| `packages/cyberkrill/test/refresh-attached-output.py` | 0 | 22.158 |
+| `packages/cyberkrill/test/offline-mutate.py` | 0 | 1487.205 |
+| `packages/cyberkrill/test/rpc-client-mutations.py` | 0 | 1815.481 |
+| `packages/cyberkrill/test/rpc-client-mutations.py --verify` | 0 | 0.314 |
+| `packages/cyberkrill/test/scope.py` | 0 | 1.216 |
+| `packages/cyberkrill/test/validate.py app` (2 commands) | 0 | 117.214 |
+| `packages/cyberkrill/test/validate.py evidence` (23 commands) | 0 | 107.347 |
+| `packages/cyberkrill/test/validate.py repo` (9 commands) | 0 | 257.284 |
 
 The current RPC record contains **77 distinct source edits / 278 selected
 detecting failures**: 65 client/capture selections and 213 safety selections,
