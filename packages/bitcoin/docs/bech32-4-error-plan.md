@@ -720,8 +720,7 @@ sys.exit(result.returncode)
 # Apache License 2.0, at your option; see LICENSE-MIT and LICENSE-APACHE.
 import pathlib, sys
 root, repo = map(pathlib.Path, sys.argv[1:])
-a = (repo/"AGENTS.md").read_text()
-s = "POSIXLY_CORRECT=y\n" + a.split("```bash\nPOSIXLY_CORRECT=y\n",1)[1].split("\n```",1)[0]
+s = (repo/"packages/cyberkrill/test/gate-supervisor.bash").read_text()
 assert s.count("<gate>") == 1
 s = s.replace("<gate>", '\"$SPIKE_GATE_BASH\" --noprofile --norc -eo pipefail \"$SPIKE_GATE_FILE\"')
 start = s.index("try:\n    os.kill(watchdog_pid, signal.SIGTERM)")

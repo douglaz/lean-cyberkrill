@@ -11,10 +11,9 @@ ROOT = pathlib.Path(__file__).resolve().parents[3]
 
 
 def main():
-    instructions = (ROOT / "AGENTS.md").read_text(encoding="utf-8")
-    start = instructions.index("POSIXLY_CORRECT=y\n")
-    end = instructions.index("\n```", start)
-    wrapper = instructions[start:end]
+    wrapper = (ROOT / "packages/cyberkrill/test/gate-supervisor.bash").read_text(
+        encoding="utf-8"
+    )
     assert wrapper.count("<gate>") == 1
     command = shlex.join(sys.argv[1:])
     assert command
