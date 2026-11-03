@@ -198,11 +198,15 @@ the first cancellation in the driver. Its restored handlers preserve that
 status through the command's handoff, including HUP after unmasking and queued
 HUP plus QUIT. The command's status writer also consults the saved cancellation
 when a later signal interrupts exception handling before the local status
-assignment. It blocks managed signals across the final status decision and
-complete write, then restores the caller's exact mask. A pending late signal
-is delivered only after the authoritative command record exists. Recorded TERM
-remains status 143; a first signal keeps its own
-status and actual state-restoration errors still propagate. Controls compare
+assignment. The decision and write controls inject a late signal after managed
+signals have been blocked; those controls retain the complete status record and
+restore the caller's exact mask. They do not establish that recording survives
+a second signal at every instruction boundary. A HUP after caught TERM but
+before the final signal block takes effect can omit the command's status file,
+while the caught outcome remains 143. Such an interrupted attempt is incomplete
+validation evidence and must be rerun; a missing record is never a passing result.
+The measured cases retain the first signal's status, and actual
+state-restoration errors still propagate. Controls compare
 the handlers, nonempty mask and both disabled and already-enabled subreaper
 settings before and after the real command. Disposable sources and a separate
 session's TERM-refusing sentinel replace real builds. Checks require immediate
