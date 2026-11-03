@@ -12,7 +12,7 @@ from datetime import datetime
 
 from cases import APP, ROOT
 
-BASE = "d0da4376659acf11c4837cb74ba0d9018bd236ec"
+BASE = "4b983961ded2308aa62fe45c29a5862d36f19e2b"
 ISSUE = "lck-phase-8b-list-utxos-wallet-file-qa6"
 # Fixed observations for fixtures first introduced by this phase. Never derive
 # these expected values from HEAD, the index, or the current fixture bytes.
