@@ -25,7 +25,11 @@ def main():
     rows = importlib.import_module("offline-inputs").carried_help_cases()
     if mode == "--verify":
         record = json.loads(destination.read_bytes())
-        assert record["current"]["source_sha256"] == hashes(), "stale current carried regressions"
+        # All three observations predate the list command. Preserve their
+        # original bytes; current typed-help reintroductions are executed and
+        # source-bound separately by offline-mutate.py.
+        assert hashlib.sha256(destination.read_bytes()).hexdigest() == "1799bb3f87469c5143dc5c11bc9a6b9fa9f04dc5b294c0729066d32445b3de3d", "historical carried observations unchanged"
+        importlib.import_module("offline-mutate").verify()
         assert len(record["current"]["checks"]) == 32 and all(r["status"] == 0 for r in record["current"]["checks"])
         assert len(record["before"]["checks"]) == len(record["after"]["checks"]) == len(rows) == 32
         for row, red, green in zip(rows,record["before"]["checks"],record["after"]["checks"]):
@@ -34,7 +38,7 @@ def main():
             assert red["status"] == int(failing) and green["status"] == 0
             assert red["failure"] == ("AssertionError: carried help preceding typed error: " + row["id"] if failing else "")
         assert record["before"]["source_sha256"]["Cyberkrill/App.lean"] != record["after"]["source_sha256"]["Cyberkrill/App.lean"]
-        print("carried regressions: 17 original named runtime failures, 15 controls, 32 restored greens")
+        print("historical carried regressions: 17 original named runtime failures, 15 controls, 32 former greens; current reintroductions verified separately")
         return
     logs = APP/".lake/carried-regressions"; logs.mkdir(exist_ok=True)
     checks = []

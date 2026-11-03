@@ -9,6 +9,7 @@ import CyberkrillTests.Output
 import CyberkrillTests.PrivateOutput
 import CyberkrillTests.Offline
 import CyberkrillTests.Rpc
+import CyberkrillTests.ListUtxos
 
 open CyberkrillTests
 
@@ -27,6 +28,9 @@ private def suite (name : String) (action : IO Unit) : IO Unit := do
 def main (args : List String) : IO UInt32 := do
   try
     match args with
+    | ["--wallet-reader"] => walletReader
+    | ["--list-fetch"] => listFetch
+    | ["--list-injected"] => listInjected
     | ["--rpc-pure"] => rpcPure
     | ["--rpc-request"] => rpcRequest
     | ["--rpc-replay", url, path] => rpcReplay url path
@@ -47,6 +51,12 @@ def main (args : List String) : IO UInt32 := do
       outputEquals i
     | ["--check", name] => helpers name; capabilities name
     | [] =>
+      suite "list-injected" listInjected
+      suite "list CLI replay driver" do
+        let result ← IO.Process.output { cmd := "python3", args := #["-B", "test/list-utxos.py"] }
+        (← IO.getStdout).putStr result.stdout
+        (← IO.getStderr).putStr result.stderr
+        check "list CLI replay driver" (result.exitCode == 0)
       suite "rpc-pure" rpcPure
       suite "helpers" (helpers "all")
       suite "capabilities" (capabilities "all")

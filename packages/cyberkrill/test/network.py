@@ -131,11 +131,15 @@ def sandbox():
         return False
 
 
-def run_owned(command, *, timeout, env=None, capture_output=False):
+def run_owned(command, *, timeout, env=None, capture_output=False, gate_cancellation=False, on_cancel=None):
     """Wait in the foreground, containing and reaping this invocation's tree.
 
     Linux subreaping keeps orphaned grandchildren ours until waitpid collects
     them. The child unblocks managed signals before exec, as in the gate.
+    gate_cancellation keeps mutation commands in the outer gate's group and
+    defers signal exceptions out of Popen's wait-lock acquisition boundary.
+    Its on_cancel callback only records the first signal in the driver, so
+    restored caller handlers retain that status through cancellation handoff.
     """
     import ctypes
     managed = (signal.SIGHUP, signal.SIGINT, signal.SIGQUIT, signal.SIGTERM)
@@ -146,6 +150,7 @@ def run_owned(command, *, timeout, env=None, capture_output=False):
     if libc.prctl(36, 1, 0, 0, 0) != 0:
         raise OSError(ctypes.get_errno(), "cannot enable child subreaper")
     child = None
+    cancellation = None
     handlers = {}
     def children(pid):
         try: return list(map(int, Path(f"/proc/{pid}/task/{pid}/children").read_text().split()))
@@ -170,7 +175,14 @@ def run_owned(command, *, timeout, env=None, capture_output=False):
             owned[pid] = current
             pending.extend(children(pid))
     def interrupted(signum, _frame):
-        raise SystemExit(128 + signum)
+        nonlocal cancellation
+        if not gate_cancellation:
+            raise SystemExit(128 + signum)
+        # Raising inside Popen._wait can strand its acquired waitpid lock.
+        # Record the first signal and unwind only between bounded waits.
+        if cancellation is None:
+            cancellation = signum
+            if on_cancel is not None: on_cancel(signum)
     def reap():
         discover()
         child.poll()
@@ -185,6 +197,7 @@ def run_owned(command, *, timeout, env=None, capture_output=False):
         discover()
     def alive():
         reap()
+        if gate_cancellation: return bool(owned)
         try: os.killpg(child.pid, 0); return True
         except ProcessLookupError: return bool(owned)
     def signal_owned(signum):
@@ -195,16 +208,26 @@ def run_owned(command, *, timeout, env=None, capture_output=False):
                 os.kill(pid, signum)
                 os.kill(pid, signal.SIGCONT)
             except ProcessLookupError: pass
+        if gate_cancellation: return
         try:
             os.killpg(child.pid, signum)
             os.killpg(child.pid, signal.SIGCONT)
         except ProcessLookupError: pass
     def stop():
-        for signum, duration in [(signal.SIGTERM, 0.2), (signal.SIGKILL, 2.0)]:
+        # The outer supervisor allows 0.2s before killing its group. Cancelled
+        # commands must not spend that grace waiting for TERM-refusing children
+        # in other sessions; stop them immediately, then reap before unwinding.
+        rounds = [(signal.SIGKILL, 2.0)] if cancellation else [(signal.SIGTERM, 0.2), (signal.SIGKILL, 2.0)]
+        for signum, duration in rounds:
             if not alive(): break
             signal_owned(signum)
             deadline = time.monotonic() + duration
             while alive() and time.monotonic() < deadline:
+                if gate_cancellation and cancellation and signum != signal.SIGKILL:
+                    # A first signal may arrive during an ordinary TERM grace.
+                    # Escalate now, within the outer gate's shorter deadline.
+                    signum = signal.SIGKILL
+                    deadline = time.monotonic() + 2.0
                 # Discovery can adopt a child forked during the last snapshot.
                 # Apply this round's signal to it before waiting again.
                 signal_owned(signum)
@@ -220,23 +243,49 @@ def run_owned(command, *, timeout, env=None, capture_output=False):
                          "os.execvpe(sys.argv[5],sys.argv[5:],os.environ)")
             child = subprocess.Popen([sys.executable, "-I", "-c", bootstrap,
                                       *map(str, managed), *map(str, command)],
-                                     start_new_session=True, env=env, stdin=subprocess.DEVNULL,
+                                     start_new_session=not gate_cancellation, env=env, stdin=subprocess.DEVNULL,
                                      stdout=subprocess.PIPE if capture_output else None,
                                      stderr=subprocess.PIPE if capture_output else None)
             started = identity(child.pid)
             if started is not None: owned[child.pid] = started
         finally: signal.pthread_sigmask(signal.SIG_SETMASK, mask)
-        stdout, stderr = child.communicate(timeout=timeout)
+        if gate_cancellation:
+            deadline = time.monotonic() + timeout
+            while True:
+                if cancellation: raise SystemExit(128 + cancellation)
+                remaining = deadline - time.monotonic()
+                if remaining <= 0: raise subprocess.TimeoutExpired(command, timeout)
+                try:
+                    stdout, stderr = child.communicate(timeout=min(0.02, remaining))
+                    break
+                except subprocess.TimeoutExpired:
+                    if cancellation: raise SystemExit(128 + cancellation)
+            if cancellation: raise SystemExit(128 + cancellation)
+        else:
+            stdout, stderr = child.communicate(timeout=timeout)
         return subprocess.CompletedProcess(command, child.returncode, stdout, stderr)
     finally:
-        # Once cleanup starts, repeated interruption cannot abandon descendants.
-        for signum in handlers: signal.signal(signum, signal.SIG_IGN)
+        # The opt-in recording handler cannot throw through cleanup, and must
+        # retain a first cancellation even after ordinary cleanup has begun.
+        if not gate_cancellation:
+            for signum in handlers: signal.signal(signum, signal.SIG_IGN)
         try:
             if child is not None: stop()
         finally:
-            for signum, handler in handlers.items(): signal.signal(signum, handler)
-            if libc.prctl(36, previous_subreaper.value, 0, 0, 0) != 0:
-                raise OSError(ctypes.get_errno(), "cannot restore child subreaper state")
+            # Caller handlers may raise. Defer delivery until all helper state
+            # is restored, then preserve an already recorded cancellation if
+            # unmasking delivers a later signal to one of those handlers.
+            final_mask = signal.pthread_sigmask(signal.SIG_BLOCK, managed) if gate_cancellation else None
+            try:
+                for signum, handler in handlers.items(): signal.signal(signum, handler)
+                if libc.prctl(36, previous_subreaper.value, 0, 0, 0) != 0:
+                    raise OSError(ctypes.get_errno(), "cannot restore child subreaper state")
+            finally:
+                if gate_cancellation:
+                    try: signal.pthread_sigmask(signal.SIG_SETMASK, final_mask)
+                    except (SystemExit, KeyboardInterrupt):
+                        if cancellation is None: raise
+        if cancellation: raise SystemExit(128 + cancellation)
 
 
 def run_isolated(command, *, timeout=180):

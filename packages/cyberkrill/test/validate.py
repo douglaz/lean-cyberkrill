@@ -3,25 +3,28 @@
 # Apache License 2.0, at your option; see LICENSE-MIT and LICENSE-APACHE.
 """Bounded foreground validation; separate streams, statuses and wall times."""
 import json
+from contextlib import chdir
 import os
 from pathlib import Path
 import subprocess
 import sys
+import tempfile
 import time
 
 from cases import APP, ROOT
+from network import run_owned
 
 NATIVE_SCAN = """import pathlib, re, subprocess
 roots = {'Sha256', 'Secp256k1', 'Bitcoin', 'Lightning', 'FedimintInvite', 'HttpCurl', 'Cyberkrill'}
 tracked = subprocess.check_output(['git', 'ls-files', '-z', '--', 'packages']).decode().split(chr(0))
 paths = [pathlib.Path(p) for p in tracked if p and pathlib.Path(p).suffix == '.lean']
 paths = [p for p in paths if len(p.parts) >= 3 and (p.parts[2] in roots or p.parts[2].removesuffix('.lean') in roots)]
-assert len(paths) == 78, 'library/proof source inventory'
+assert len(paths) == 80, 'library/proof source inventory'
 assert {'packages/cyberkrill/Cyberkrill/CoreRpc.lean', 'packages/cyberkrill/Cyberkrill/RpcFlags.lean'} <= {str(p) for p in paths}, 'Core RPC/flags source inventory'
 assert {p.parts[2].removesuffix('.lean') for p in paths} == roots, 'library root inventory'
 bad = [str(p) for p in paths if re.search(r'\\b(?:native_decide|bv_decide)\\b', p.read_text())]
 assert not bad, 'native decision in library: ' + ', '.join(bad)
-print(f'library/proof native-decision scan: {len(paths)}/78 tracked files; zero offenders')
+print(f'library/proof native-decision scan: {len(paths)}/80 tracked files; zero offenders')
 """
 
 
@@ -35,6 +38,12 @@ def main():
                   ("test", APP, ["nix", "develop", "-c", "lake", "test"], 600)]
     elif mode == "evidence":
         checks = [
+            ("list-utxos", ROOT, ["python3", "-B", "packages/cyberkrill/test/list-utxos.py"], 180),
+            ("list-utxos-mutations", ROOT, ["python3", "-B", "packages/cyberkrill/test/list-utxos-mutations.py", "--verify"], 120),
+            ("list-utxos-lexical-mutations", ROOT, ["python3", "-B", "packages/cyberkrill/test/list-utxos-lexical-mutations.py", "--verify"], 120),
+            ("list-utxos-lifecycle", ROOT, ["python3", "-B", "packages/cyberkrill/test/list-utxos-lifecycle.py"], 120),
+            ("list-utxos-lifecycle-evidence", ROOT, ["python3", "-B", "packages/cyberkrill/test/list-utxos-lifecycle.py", "--verify"], 120),
+            ("fifo", ROOT, ["python3", "-B", "packages/cyberkrill/test/fifo.py"], 90),
             ("rpc-client", ROOT, ["python3", "-B", "packages/cyberkrill/test/rpc-client.py"], 180),
             ("network-safety", ROOT, ["python3", "-B", "packages/cyberkrill/test/network-safety.py"], 120),
             ("rpc-client-mutations", ROOT, ["python3", "-B", "packages/cyberkrill/test/rpc-client-mutations.py", "--verify"], 120),
@@ -87,13 +96,22 @@ def main():
     records = []
     for name, cwd, args, limit in checks:
         start = time.monotonic()
-        proc = subprocess.run(["timeout", "--foreground", str(limit), *args], cwd=cwd,
-                              stdin=subprocess.DEVNULL, capture_output=True, timeout=limit+10)
+        # Keep an owned, existing temp parent for the complete child lifetime.
+        # A development shell may replace TMPDIR, so restore it explicitly at
+        # that boundary before Lake/Lean starts.
+        with tempfile.TemporaryDirectory(prefix=name + "-tmp-", dir=directory) as temporary:
+            environment = dict(os.environ, TMPDIR=temporary, PYTHONDONTWRITEBYTECODE="1")
+            command = args
+            if args[:3] == ["nix", "develop", "-c"]:
+                command = args[:3] + ["env", "TMPDIR=" + temporary, *args[3:]]
+            with chdir(cwd):
+                proc = run_owned(["timeout", "--foreground", str(limit), *command],
+                                 env=environment, capture_output=True, timeout=limit+10)
         elapsed = round(time.monotonic() - start, 3)
         for stream in ["stdout", "stderr"]:
             (directory / (name + "." + stream)).write_bytes(getattr(proc, stream))
         (directory / (name + ".status")).write_text(str(proc.returncode) + "\n")
-        records.append(dict(command=args, cwd=str(cwd.relative_to(ROOT)) or ".",
+        records.append(dict(command=command, cwd=str(cwd.relative_to(ROOT)) or ".",
                             status=proc.returncode, seconds=elapsed))
         (directory / (mode + ".json")).write_text(json.dumps(records, indent=2) + "\n")
         print(f"{name}: exit {proc.returncode}, {elapsed:.3f}s", flush=True)
