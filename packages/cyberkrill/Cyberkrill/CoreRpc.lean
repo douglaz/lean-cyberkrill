@@ -87,7 +87,8 @@ private partial def wireJson : Json → Json
   | .obj fields => Json.mkObj (fields.toArray.toList.map fun (k, v) => (k, wireJson v))
   | value => value
 
-def Client.call (client : Client) (method : String) (params : Array Json) : IO (Except Error Json) := do
+def Client.call (client : Client) (method : String) (params : Array Json)
+    (mapResult : String → Json → Json := fun _ value => value) : IO (Except Error Json) := do
   let body := Json.mkObj [("jsonrpc", .str "2.0"), ("id", .str "cyberkrill"),
     ("method", .str method), ("params", .arr params)]
   match ← HttpCurl.request {
@@ -96,7 +97,9 @@ def Client.call (client : Client) (method : String) (params : Array Json) : IO (
       totalTimeoutMs := client.totalTimeoutMs,
       headers := #[("Content-Type", "application/json")], body := some (wireJson body).compress.toUTF8 } with
   | .error _ => return .error .transport
-  | .ok response => return decodeResponse response
+  | .ok response =>
+    return (decodeResponse response).map (fun value =>
+      mapResult ((String.fromUTF8? response.body).getD "") value)
 
 private def shape (value : Except String α) : Except Error α := value.mapError (fun _ => .invalidResult)
 def amount (value : Json) : Except Error Amount := do
@@ -202,6 +205,71 @@ def Client.walletCreateFundedPsbt (client : Client) (inputs : Array Input)
     return {
       psbt := ← string raw "psbt", fee := ← amount (← field raw "fee"),
       changePosition := ← shape (raw.getObjValAs? Int "changepos") }
+
+-- JsonNumber retains exact values but erases exponent spelling and negative
+-- zero. The command's as_i64 default needs the original token classification.
+open Std.Internal.Parsec Std.Internal.Parsec.String in
+private def positionNumber : Parser Bool := do
+  let negative ← (pchar '-' *> pure true) <|> pure false
+  let digits ← many1Chars digit
+  if negative && digits == "0" then fail "noninteger token"
+  let next ← peek!
+  unless [' ', '\t', '\r', '\n', ',', '}'].contains next do fail "noninteger token"
+  ws
+  return true
+
+open Std.Internal.Parsec Std.Internal.Parsec.String in
+private partial def positionMembers (key : String) (special : Parser Bool) (found : Bool) : Parser Bool := do
+  let _ ← pchar '"'
+  let name ← Lean.Json.Parser.str
+  ws
+  let _ ← pchar ':'
+  ws
+  let flag ← if name == key then special else Lean.Json.Parser.anyCore *> pure false
+  let found := if name == key then flag else found
+  let delimiter ← any
+  ws
+  if delimiter == '}' then return found
+  if delimiter == ',' then positionMembers key special found else fail "object separator"
+
+open Std.Internal.Parsec Std.Internal.Parsec.String in
+private def positionObject (key : String) (special : Parser Bool) : Parser Bool := do
+  let _ ← pchar '{'
+  ws
+  if (← peek!) == '}' then skip; ws; return false
+  positionMembers key special false
+
+open Std.Internal.Parsec Std.Internal.Parsec.String in
+private def positionInteger (body : String) : Bool :=
+  let scalar := attempt positionNumber <|> (Lean.Json.Parser.anyCore *> pure false)
+  let result := attempt (positionObject "changepos" scalar) <|> (Lean.Json.Parser.anyCore *> pure false)
+  (Parser.run (do ws; let flag ← positionObject "result" result; eof; pure flag) body).toOption.getD false
+
+private def commandPosition (body : String) (value : Json) : Json :=
+  if positionInteger body then value else
+    match value with
+    | .obj fields => Json.mkObj (fields.toArray.toList.map fun (name, value) =>
+        (name, if name == "changepos" then .null else value))
+    | _ => value
+
+/-- Omit empty command options, retaining the supplied client's limits/auth.
+The raw result allows the handler to validate the PSBT before fee conversion. -/
+def Client.walletCreateFundedPsbtCommand (client : Client) (inputs : Array Input)
+    (outputs : Array (String × Amount)) (options : List (String × Json)) : IO (Except Error Json) := do
+  let params := #[.arr (inputs.map (·.json)), outputsJson outputs, toJson (0 : Nat)] ++
+    (if options.isEmpty then #[] else #[Json.mkObj options])
+  client.call "walletcreatefundedpsbt" params commandPosition
+
+/-- Command-only defaults, including the reference's i64-to-i32 conversion.
+The strict typed wallet wrapper above retains its required fields. -/
+def fundedCommandResult (raw : Json) : Except Error FundedPsbt := do
+  let fee ← match raw.getObjVal? "fee" with
+    | .ok (.num n) => amount (.num n)
+    | _ => pure (Amount.ofSats 0)
+  let position := (raw.getObjValAs? Int "changepos").toOption.getD (-1)
+  let position := if -9223372036854775808 ≤ position && position ≤ 9223372036854775807 then
+    (position + 2147483648) % 4294967296 - 2147483648 else -1
+  return { psbt := ← string raw "psbt", fee, changePosition := position }
 
 /-- Item-level import failures are returned intact, just as Core reports them. -/
 def Client.importDescriptors (client : Client) (descriptors : Array String) : IO (Except Error (Array Json)) := do

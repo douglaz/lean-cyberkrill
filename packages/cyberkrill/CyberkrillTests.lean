@@ -10,6 +10,7 @@ import CyberkrillTests.PrivateOutput
 import CyberkrillTests.Offline
 import CyberkrillTests.Rpc
 import CyberkrillTests.ListUtxos
+import CyberkrillTests.PsbtCommands
 
 open CyberkrillTests
 
@@ -28,6 +29,8 @@ private def suite (name : String) (action : IO Unit) : IO Unit := do
 def main (args : List String) : IO UInt32 := do
   try
     match args with
+    | ["--psbt-fetch"] => psbtFetch
+    | ["--psbt-injected"] => psbtInjected
     | ["--wallet-reader"] => walletReader
     | ["--list-fetch"] => listFetch
     | ["--list-injected"] => listInjected
@@ -51,6 +54,12 @@ def main (args : List String) : IO UInt32 := do
       outputEquals i
     | ["--check", name] => helpers name; capabilities name
     | [] =>
+      suite "PSBT injection" psbtInjected
+      suite "PSBT commands replay driver" do
+        let result ← IO.Process.output { cmd := "python3", args := #["-B", "test/psbt-commands.py"] }
+        (← IO.getStdout).putStr result.stdout
+        (← IO.getStderr).putStr result.stderr
+        check "PSBT commands replay driver" (result.exitCode == 0)
       suite "list-injected" listInjected
       suite "list CLI replay driver" do
         let result ← IO.Process.output { cmd := "python3", args := #["-B", "test/list-utxos.py"] }

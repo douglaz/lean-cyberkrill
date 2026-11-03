@@ -94,7 +94,12 @@ def client_edits():
         ("importdescriptors", "RPC importdescriptors response"), ("getblockchaininfo", "RPC getblockchaininfo success"),
         ("getreceivedbyaddress", "RPC getreceivedbyaddress success"), ("getrawtransaction", "RPC getrawtransaction success"),
         ("getblock", "RPC getblock success")]:
-        rows.append(("wrapper-" + method, SOURCE, 'client.call "' + method + '"', 'client.call "disabled-' + method + '"', replay, assertion))
+        old = 'client.call "' + method + '"'
+        new = 'client.call "disabled-' + method + '"'
+        if method == "walletcreatefundedpsbt":
+            old += ' params).bind fun raw => do\n    return {'
+            new += ' params).bind fun raw => do\n    return {'
+        rows.append(("wrapper-" + method, SOURCE, old, new, replay, assertion))
     rows += [
         ("list-filter", SOURCE, 'toJson minConf, toJson maxConf', 'toJson (minConf + 1), toJson maxConf', replay, "RPC listunspent success"),
         ("derive-range", SOURCE, 'fun (lo, hi) => #[toJson #[lo, hi]]', 'fun (lo, hi) => #[toJson #[lo, hi + 1]]', replay, "RPC deriveaddresses success"),
@@ -221,8 +226,12 @@ def network_variant(index):
     else: S.lifecycle_checks(selected)
 
 
+PRE_PSBT_SHA256 = '220593b68521f27b6364ce0ca00a65eae09d3a1b4fff4eb6710d4a122675cd82'
+
 def verify():
     record = json.loads(DEST.read_bytes())
+    retained = record["pre_psbt_observation"]
+    assert hashlib.sha256((json.dumps(retained, indent=2) + "\n").encode()).hexdigest() == PRE_PSBT_SHA256, "retained pre-PSBT observation"
     assert record["source_sha256"] == fingerprints(), "stale RPC mutation evidence"
     expected = [r[0] for r in client_edits()] + [r[0] for r in network_edits()]
     assert [r["property"] for r in record["checks"]] == expected, "RPC mutation property inventory"
@@ -267,6 +276,8 @@ def main():
     assert args in [[], ["--resume"]]
     LOGS.mkdir(parents=True, exist_ok=True)
     prior = json.loads(DEST.read_bytes())
+    pre_psbt = prior.get("pre_psbt_observation", {k: v for k, v in prior.items() if not k.endswith("_observation")})
+    assert hashlib.sha256((json.dumps(pre_psbt, indent=2) + "\n").encode()).hexdigest() == PRE_PSBT_SHA256, "original pre-PSBT observation"
     pre_list = prior.get("pre_list_observation", {k: v for k, v in prior.items() if not k.endswith("_observation")})
     assert hashlib.sha256((json.dumps(pre_list, indent=2) + "\n").encode()).hexdigest() == PRE_LIST_SHA256, "original pre-list observation"
     previous = prior.get("previous_observation", prior)
@@ -331,7 +342,7 @@ def main():
             print(name + ": red/green 1/0", flush=True)
         full = command("restored-full", ["lake", "test"], 0)
         assert fingerprints() == hashes, "RPC exact source restoration"
-        DEST.write_text(json.dumps(dict(count=len(records), source_sha256=hashes, checks=records, restored_full=full,
+        DEST.write_text(json.dumps(dict(pre_psbt_observation=pre_psbt, count=len(records), source_sha256=hashes, checks=records, restored_full=full,
                                        previous_observation=previous, corrected_observation=corrected,
                                        nested_observation=nested, late_cleanup_observation=late, deadline_adoption_observation=deadline,
                                        pre_list_observation=pre_list), indent=2) + "\n")

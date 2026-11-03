@@ -66,8 +66,12 @@ def fingerprints():
     return dict(M.fingerprints(), **{"test/list-utxos-lexical-mutations.py": hashlib.sha256(Path(__file__).read_bytes()).hexdigest()})
 
 
+PRE_PSBT_SHA256 = 'a31ab2e1625bff057b56362d03bee1923a30c650c0cf81bfdf0f542672d21003'
+
 def verify():
     record = json.loads(DEST.read_bytes())
+    retained = record["pre_psbt_observation"]
+    assert hashlib.sha256((json.dumps(retained, indent=2) + "\n").encode()).hexdigest() == PRE_PSBT_SHA256, "retained pre-PSBT observation"
     previous = record["previous_observation"]
     assert hashlib.sha256((json.dumps(previous, indent=2) + "\n").encode()).hexdigest() == PREVIOUS_SHA256, "retained lexical branch observation"
     assert record["source_sha256"] == fingerprints(), "stale lexical branch evidence"
@@ -89,6 +93,8 @@ def main():
     M.LOGS.mkdir(parents=True, exist_ok=True)
     original = SOURCE.read_bytes(); hashes = fingerprints()
     prior = json.loads(DEST.read_bytes())
+    pre_psbt = prior.get("pre_psbt_observation", {k: v for k, v in prior.items() if not k.endswith("_observation")})
+    assert hashlib.sha256((json.dumps(pre_psbt, indent=2) + "\n").encode()).hexdigest() == PRE_PSBT_SHA256, "original pre-PSBT observation"
     previous = prior.get("previous_observation", prior)
     assert hashlib.sha256((json.dumps(previous, indent=2) + "\n").encode()).hexdigest() == PREVIOUS_SHA256
     managed = [signal.SIGHUP, signal.SIGINT, signal.SIGQUIT, signal.SIGTERM]
@@ -119,7 +125,7 @@ def main():
             print(name + ": build/red/restore/green 0/1/0/0", flush=True)
         full = M.command("restored-full", ["python3", "-B", "test/list-utxos.py"], 0)
         assert fingerprints() == hashes, "lexical branch exact restoration"
-        DEST.write_text(json.dumps(dict(count=len(records), source_sha256=hashes, previous_observation=previous, baseline=baseline,
+        DEST.write_text(json.dumps(dict(pre_psbt_observation=pre_psbt, count=len(records), source_sha256=hashes, previous_observation=previous, baseline=baseline,
                                         checks=records, restored_full=full), indent=2) + "\n")
         verify()
     except SystemExit:

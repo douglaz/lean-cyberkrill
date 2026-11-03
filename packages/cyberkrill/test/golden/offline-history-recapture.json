@@ -12,7 +12,7 @@
     "github:douglaz/cyberkrill/27cad1faba86260b06665a89f0af5134d23525c2"
   ],
   "build_status": 0,
-  "seconds": 4.469,
+  "seconds": 4.652,
   "execution": "unshare -rn with fresh temporary HOME/cwd, loopback only, timeout --foreground 15 \"$PRODUCER\"; original deterministic inputs and separate streams",
   "historical_sha256": {
     "lightning-reference.json": "1e897b600d4cbf8012615a4daadc2fd201e9773e01190e79ddd0809a9bc7eadb",
@@ -27,7 +27,7 @@
       "id": "valid/L382",
       "reference_status": 0,
       "comparison_status": 0,
-      "seconds": 0.01
+      "seconds": 0.009
     },
     {
       "source": "lightning-reference.json",
@@ -41,21 +41,21 @@
       "id": "valid/L438",
       "reference_status": 0,
       "comparison_status": 0,
-      "seconds": 0.01
+      "seconds": 0.008
     },
     {
       "source": "lightning-reference.json",
       "id": "valid/L466",
       "reference_status": 0,
       "comparison_status": 0,
-      "seconds": 0.008
+      "seconds": 0.009
     },
     {
       "source": "lightning-reference.json",
       "id": "valid/L491",
       "reference_status": 0,
       "comparison_status": 0,
-      "seconds": 0.008
+      "seconds": 0.009
     },
     {
       "source": "lightning-reference.json",
@@ -69,7 +69,7 @@
       "id": "valid/L554",
       "reference_status": 0,
       "comparison_status": 0,
-      "seconds": 0.008
+      "seconds": 0.009
     },
     {
       "source": "lightning-reference.json",
@@ -83,14 +83,14 @@
       "id": "valid/L602",
       "reference_status": 0,
       "comparison_status": 0,
-      "seconds": 0.008
+      "seconds": 0.009
     },
     {
       "source": "lightning-reference.json",
       "id": "valid/L625",
       "reference_status": 0,
       "comparison_status": 0,
-      "seconds": 0.008
+      "seconds": 0.009
     },
     {
       "source": "lightning-reference.json",
@@ -104,28 +104,28 @@
       "id": "valid/L682",
       "reference_status": 0,
       "comparison_status": 0,
-      "seconds": 0.008
+      "seconds": 0.009
     },
     {
       "source": "lightning-reference.json",
       "id": "valid/L704",
       "reference_status": 0,
       "comparison_status": 0,
-      "seconds": 0.007
+      "seconds": 0.009
     },
     {
       "source": "lightning-reference.json",
       "id": "valid/L707",
       "reference_status": 0,
       "comparison_status": 0,
-      "seconds": 0.008
+      "seconds": 0.009
     },
     {
       "source": "lightning-reference.json",
       "id": "valid/L735",
       "reference_status": 0,
       "comparison_status": 0,
-      "seconds": 0.008
+      "seconds": 0.009
     },
     {
       "source": "lightning-reference.json",
@@ -139,21 +139,21 @@
       "id": "invalid/L792",
       "reference_status": 1,
       "comparison_status": 0,
-      "seconds": 0.007
+      "seconds": 0.009
     },
     {
       "source": "lightning-reference.json",
       "id": "invalid/L814",
       "reference_status": 0,
       "comparison_status": 0,
-      "seconds": 0.008
+      "seconds": 0.009
     },
     {
       "source": "lightning-reference.json",
       "id": "invalid/L821",
       "reference_status": 1,
       "comparison_status": 0,
-      "seconds": 0.008
+      "seconds": 0.009
     },
     {
       "source": "lightning-reference.json",
@@ -188,7 +188,7 @@
       "id": "invalid/L836",
       "reference_status": 1,
       "comparison_status": 0,
-      "seconds": 0.008
+      "seconds": 0.009
     },
     {
       "source": "lightning-reference.json",
@@ -209,7 +209,7 @@
       "id": "invalid/L845",
       "reference_status": 1,
       "comparison_status": 0,
-      "seconds": 0.007
+      "seconds": 0.008
     },
     {
       "source": "lightning-reference.json",
@@ -272,7 +272,7 @@
       "id": "negative/two-descriptions",
       "reference_status": 1,
       "comparison_status": 0,
-      "seconds": 0.008
+      "seconds": 0.009
     },
     {
       "source": "lightning-reference.json",
@@ -293,7 +293,7 @@
       "id": "negative/fallback-short",
       "reference_status": 1,
       "comparison_status": 0,
-      "seconds": 0.008
+      "seconds": 0.007
     },
     {
       "source": "lightning-reference.json",
@@ -307,7 +307,7 @@
       "id": "negative/route-point",
       "reference_status": 1,
       "comparison_status": 0,
-      "seconds": 0.008
+      "seconds": 0.009
     },
     {
       "source": "lightning-reference.json",
@@ -321,7 +321,7 @@
       "id": "negative/amount-overflow",
       "reference_status": 1,
       "comparison_status": 0,
-      "seconds": 0.008
+      "seconds": 0.009
     },
     {
       "source": "lightning-reference.json",
@@ -356,7 +356,7 @@
       "id": "negative/cltv-leading-zero",
       "reference_status": 0,
       "comparison_status": 0,
-      "seconds": 0.008
+      "seconds": 0.009
     },
     {
       "source": "lightning-reference.json",
@@ -384,14 +384,14 @@
       "id": "positive/fallback-25",
       "reference_status": 0,
       "comparison_status": 0,
-      "seconds": 0.008
+      "seconds": 0.009
     },
     {
       "source": "lightning-reference.json",
       "id": "positive/amount-none",
       "reference_status": 0,
       "comparison_status": 0,
-      "seconds": 0.008
+      "seconds": 0.009
     },
     {
       "source": "lightning-reference.json",
@@ -433,7 +433,7 @@
       "id": "url-supported/form-pieces",
       "reference_status": 0,
       "comparison_status": 0,
-      "seconds": 0.008
+      "seconds": 0.009
     },
     {
       "source": "lightning-reference.json",
@@ -454,14 +454,14 @@
       "id": "url-supported/query-encode-set",
       "reference_status": 0,
       "comparison_status": 0,
-      "seconds": 0.008
+      "seconds": 0.009
     },
     {
       "source": "lightning-reference.json",
       "id": "url-supported/no-query",
       "reference_status": 0,
       "comparison_status": 0,
-      "seconds": 0.008
+      "seconds": 0.009
     },
     {
       "source": "lightning-reference.json",
@@ -517,7 +517,7 @@
       "id": "url-supported/domain-dot",
       "reference_status": 0,
       "comparison_status": 0,
-      "seconds": 0.007
+      "seconds": 0.008
     },
     {
       "source": "lightning-reference.json",
@@ -545,7 +545,7 @@
       "id": "url-supported/port-leading",
       "reference_status": 0,
       "comparison_status": 0,
-      "seconds": 0.008
+      "seconds": 0.009
     },
     {
       "source": "lightning-reference.json",
@@ -587,7 +587,7 @@
       "id": "url-supported/backslash-at",
       "reference_status": 0,
       "comparison_status": 0,
-      "seconds": 0.007
+      "seconds": 0.008
     },
     {
       "source": "lightning-reference.json",
@@ -629,14 +629,14 @@
       "id": "url-supported/long-label",
       "reference_status": 0,
       "comparison_status": 0,
-      "seconds": 0.008
+      "seconds": 0.009
     },
     {
       "source": "lightning-reference.json",
       "id": "url-supported/http-case",
       "reference_status": 0,
       "comparison_status": 0,
-      "seconds": 0.008
+      "seconds": 0.009
     },
     {
       "source": "lightning-reference.json",
@@ -664,7 +664,7 @@
       "id": "url-supported/fragment-no-query",
       "reference_status": 0,
       "comparison_status": 0,
-      "seconds": 0.008
+      "seconds": 0.009
     },
     {
       "source": "lightning-reference.json",
@@ -678,14 +678,14 @@
       "id": "url-refusal/userinfo-multiple",
       "reference_status": 0,
       "comparison_status": 0,
-      "seconds": 0.008
+      "seconds": 0.009
     },
     {
       "source": "lightning-reference.json",
       "id": "url-refusal/ipv6",
       "reference_status": 0,
       "comparison_status": 0,
-      "seconds": 0.008
+      "seconds": 0.009
     },
     {
       "source": "lightning-reference.json",
@@ -706,7 +706,7 @@
       "id": "url-refusal/ipv4-short",
       "reference_status": 0,
       "comparison_status": 0,
-      "seconds": 0.009
+      "seconds": 0.008
     },
     {
       "source": "lightning-reference.json",
@@ -720,7 +720,7 @@
       "id": "url-refusal/ipv4-leading",
       "reference_status": 0,
       "comparison_status": 0,
-      "seconds": 0.01
+      "seconds": 0.008
     },
     {
       "source": "lightning-reference.json",
@@ -776,7 +776,7 @@
       "id": "url-error/encoded-hash",
       "reference_status": 1,
       "comparison_status": 0,
-      "seconds": 0.007
+      "seconds": 0.008
     },
     {
       "source": "lightning-reference.json",
@@ -860,7 +860,7 @@
       "id": "url-error/port-letters",
       "reference_status": 1,
       "comparison_status": 0,
-      "seconds": 0.008
+      "seconds": 0.009
     },
     {
       "source": "lightning-reference.json",
@@ -874,7 +874,7 @@
       "id": "url-error/port-colon",
       "reference_status": 1,
       "comparison_status": 0,
-      "seconds": 0.008
+      "seconds": 0.009
     },
     {
       "source": "lightning-reference.json",
@@ -888,7 +888,7 @@
       "id": "url-error/scheme",
       "reference_status": 0,
       "comparison_status": 0,
-      "seconds": 0.008
+      "seconds": 0.009
     },
     {
       "source": "lightning-reference.json",
@@ -951,7 +951,7 @@
       "id": "lnurl-positive/long",
       "reference_status": 0,
       "comparison_status": 0,
-      "seconds": 0.008
+      "seconds": 0.009
     },
     {
       "source": "lightning-reference.json",
@@ -965,7 +965,7 @@
       "id": "lnurl-positive/bech32m",
       "reference_status": 0,
       "comparison_status": 0,
-      "seconds": 0.008
+      "seconds": 0.009
     },
     {
       "source": "lightning-reference.json",
@@ -1007,35 +1007,35 @@
       "id": "lnurl-negative/missing-separator",
       "reference_status": 1,
       "comparison_status": 0,
-      "seconds": 0.008
+      "seconds": 0.009
     },
     {
       "source": "lightning-reference.json",
       "id": "lnurl-negative/short-checksum",
       "reference_status": 1,
       "comparison_status": 0,
-      "seconds": 0.008
+      "seconds": 0.009
     },
     {
       "source": "lightning-reference.json",
       "id": "lnurl-negative/checksum",
       "reference_status": 1,
       "comparison_status": 0,
-      "seconds": 0.007
+      "seconds": 0.008
     },
     {
       "source": "lightning-reference.json",
       "id": "lnurl-negative/character",
       "reference_status": 1,
       "comparison_status": 0,
-      "seconds": 0.009
+      "seconds": 0.008
     },
     {
       "source": "lightning-reference.json",
       "id": "lnurl-negative/mixed-case",
       "reference_status": 1,
       "comparison_status": 0,
-      "seconds": 0.008
+      "seconds": 0.009
     },
     {
       "source": "lightning-reference.json",
@@ -1049,49 +1049,49 @@
       "id": "lnurl-negative/hrp-character",
       "reference_status": 1,
       "comparison_status": 0,
-      "seconds": 0.008
+      "seconds": 0.009
     },
     {
       "source": "lightning-reference.json",
       "id": "lnurl-negative/limit-1024",
       "reference_status": 1,
       "comparison_status": 0,
-      "seconds": 0.008
+      "seconds": 0.009
     },
     {
       "source": "lightning-reference.json",
       "id": "lnurl-reference/cyberkrill",
       "reference_status": 0,
       "comparison_status": 0,
-      "seconds": 0.007
+      "seconds": 0.009
     },
     {
       "source": "lightning-reference.json",
       "id": "encode/valid/L382",
       "reference_status": 0,
       "comparison_status": 0,
-      "seconds": 0.008
+      "seconds": 0.009
     },
     {
       "source": "lightning-reference.json",
       "id": "encode/valid/L410",
       "reference_status": 0,
       "comparison_status": 0,
-      "seconds": 0.008
+      "seconds": 0.009
     },
     {
       "source": "lightning-reference.json",
       "id": "encode/valid/L438",
       "reference_status": 0,
       "comparison_status": 0,
-      "seconds": 0.009
+      "seconds": 0.008
     },
     {
       "source": "lightning-reference.json",
       "id": "encode/valid/L466",
       "reference_status": 0,
       "comparison_status": 0,
-      "seconds": 0.008
+      "seconds": 0.007
     },
     {
       "source": "lightning-reference.json",
@@ -1140,7 +1140,7 @@
       "id": "encode/valid/L648",
       "reference_status": 0,
       "comparison_status": 0,
-      "seconds": 0.008
+      "seconds": 0.009
     },
     {
       "source": "lightning-reference.json",
@@ -1168,14 +1168,14 @@
       "id": "encode/valid/L735",
       "reference_status": 0,
       "comparison_status": 0,
-      "seconds": 0.008
+      "seconds": 0.009
     },
     {
       "source": "lightning-reference.json",
       "id": "encode/valid/L762",
       "reference_status": 0,
       "comparison_status": 0,
-      "seconds": 0.008
+      "seconds": 0.009
     },
     {
       "source": "lightning-reference.json",
@@ -1308,35 +1308,35 @@
       "id": "builder/amount-1844674407370955161",
       "reference_status": 0,
       "comparison_status": 0,
-      "seconds": 0.008
+      "seconds": 0.009
     },
     {
       "source": "lightning-reference.json",
       "id": "builder/amount-1844674407370955162",
       "reference_status": 1,
       "comparison_status": 0,
-      "seconds": 0.008
+      "seconds": 0.01
     },
     {
       "source": "lightning-reference.json",
       "id": "builder/amount-18446744073709551615",
       "reference_status": 1,
       "comparison_status": 0,
-      "seconds": 0.008
+      "seconds": 0.009
     },
     {
       "source": "lightning-reference.json",
       "id": "builder/network-bitcoin",
       "reference_status": 0,
       "comparison_status": 0,
-      "seconds": 0.008
+      "seconds": 0.009
     },
     {
       "source": "lightning-reference.json",
       "id": "builder/network-mainnet",
       "reference_status": 0,
       "comparison_status": 0,
-      "seconds": 0.008
+      "seconds": 0.009
     },
     {
       "source": "lightning-reference.json",
@@ -1371,7 +1371,7 @@
       "id": "builder/empty-description",
       "reference_status": 0,
       "comparison_status": 0,
-      "seconds": 0.009
+      "seconds": 0.008
     },
     {
       "source": "lightning-reference.json",
@@ -1392,7 +1392,7 @@
       "id": "builder/empty-route",
       "reference_status": 0,
       "comparison_status": 0,
-      "seconds": 0.007
+      "seconds": 0.008
     },
     {
       "source": "lightning-reference.json",
@@ -1420,7 +1420,7 @@
       "id": "builder/timestamp-cast",
       "reference_status": 0,
       "comparison_status": 0,
-      "seconds": 0.008
+      "seconds": 0.009
     },
     {
       "source": "lightning-reference.json",
@@ -1434,14 +1434,14 @@
       "id": "json/null-network",
       "reference_status": 1,
       "comparison_status": 0,
-      "seconds": 0.008
+      "seconds": 0.009
     },
     {
       "source": "lightning-reference.json",
       "id": "json/type-network",
       "reference_status": 1,
       "comparison_status": 0,
-      "seconds": 0.008
+      "seconds": 0.009
     },
     {
       "source": "lightning-reference.json",
@@ -1469,28 +1469,28 @@
       "id": "json/missing-timestamp",
       "reference_status": 1,
       "comparison_status": 0,
-      "seconds": 0.008
+      "seconds": 0.009
     },
     {
       "source": "lightning-reference.json",
       "id": "json/null-timestamp",
       "reference_status": 1,
       "comparison_status": 0,
-      "seconds": 0.007
+      "seconds": 0.008
     },
     {
       "source": "lightning-reference.json",
       "id": "json/type-timestamp",
       "reference_status": 1,
       "comparison_status": 0,
-      "seconds": 0.008
+      "seconds": 0.009
     },
     {
       "source": "lightning-reference.json",
       "id": "json/missing-timestamp_millis",
       "reference_status": 1,
       "comparison_status": 0,
-      "seconds": 0.008
+      "seconds": 0.009
     },
     {
       "source": "lightning-reference.json",
@@ -1518,7 +1518,7 @@
       "id": "json/null-payment_hash",
       "reference_status": 1,
       "comparison_status": 0,
-      "seconds": 0.008
+      "seconds": 0.009
     },
     {
       "source": "lightning-reference.json",
@@ -1532,7 +1532,7 @@
       "id": "json/missing-payment_secret",
       "reference_status": 1,
       "comparison_status": 0,
-      "seconds": 0.008
+      "seconds": 0.009
     },
     {
       "source": "lightning-reference.json",
@@ -1560,7 +1560,7 @@
       "id": "json/null-features",
       "reference_status": 1,
       "comparison_status": 0,
-      "seconds": 0.009
+      "seconds": 0.008
     },
     {
       "source": "lightning-reference.json",
@@ -1602,14 +1602,14 @@
       "id": "json/null-description_hash",
       "reference_status": 0,
       "comparison_status": 0,
-      "seconds": 0.008
+      "seconds": 0.009
     },
     {
       "source": "lightning-reference.json",
       "id": "json/type-description_hash",
       "reference_status": 1,
       "comparison_status": 0,
-      "seconds": 0.009
+      "seconds": 0.008
     },
     {
       "source": "lightning-reference.json",
@@ -1658,7 +1658,7 @@
       "id": "json/missing-min_final_cltv_expiry",
       "reference_status": 1,
       "comparison_status": 0,
-      "seconds": 0.008
+      "seconds": 0.009
     },
     {
       "source": "lightning-reference.json",
@@ -1686,7 +1686,7 @@
       "id": "json/null-fallback_addresses",
       "reference_status": 1,
       "comparison_status": 0,
-      "seconds": 0.007
+      "seconds": 0.008
     },
     {
       "source": "lightning-reference.json",
@@ -1742,7 +1742,7 @@
       "id": "json/bool-amount_msats",
       "reference_status": 1,
       "comparison_status": 0,
-      "seconds": 0.007
+      "seconds": 0.008
     },
     {
       "source": "lightning-reference.json",
@@ -1763,7 +1763,7 @@
       "id": "json/exponent-amount_msats",
       "reference_status": 1,
       "comparison_status": 0,
-      "seconds": 0.007
+      "seconds": 0.008
     },
     {
       "source": "lightning-reference.json",
@@ -1805,7 +1805,7 @@
       "id": "json/float-timestamp_millis",
       "reference_status": 1,
       "comparison_status": 0,
-      "seconds": 0.007
+      "seconds": 0.008
     },
     {
       "source": "lightning-reference.json",
@@ -1833,21 +1833,21 @@
       "id": "json/string-expiry_seconds",
       "reference_status": 1,
       "comparison_status": 0,
-      "seconds": 0.008
+      "seconds": 0.009
     },
     {
       "source": "lightning-reference.json",
       "id": "json/bool-expiry_seconds",
       "reference_status": 1,
       "comparison_status": 0,
-      "seconds": 0.008
+      "seconds": 0.009
     },
     {
       "source": "lightning-reference.json",
       "id": "json/overflow-expiry_seconds",
       "reference_status": 1,
       "comparison_status": 0,
-      "seconds": 0.008
+      "seconds": 0.009
     },
     {
       "source": "lightning-reference.json",
@@ -1868,7 +1868,7 @@
       "id": "json/negative-min_final_cltv_expiry",
       "reference_status": 1,
       "comparison_status": 0,
-      "seconds": 0.007
+      "seconds": 0.008
     },
     {
       "source": "lightning-reference.json",
@@ -1882,7 +1882,7 @@
       "id": "json/string-min_final_cltv_expiry",
       "reference_status": 1,
       "comparison_status": 0,
-      "seconds": 0.007
+      "seconds": 0.009
     },
     {
       "source": "lightning-reference.json",
@@ -1903,7 +1903,7 @@
       "id": "json/float-min_final_cltv_expiry",
       "reference_status": 1,
       "comparison_status": 0,
-      "seconds": 0.008
+      "seconds": 0.009
     },
     {
       "source": "lightning-reference.json",
@@ -1931,14 +1931,14 @@
       "id": "json/short-payment_hash",
       "reference_status": 1,
       "comparison_status": 0,
-      "seconds": 0.008
+      "seconds": 0.009
     },
     {
       "source": "lightning-reference.json",
       "id": "json/empty-payment_hash",
       "reference_status": 1,
       "comparison_status": 0,
-      "seconds": 0.009
+      "seconds": 0.008
     },
     {
       "source": "lightning-reference.json",
@@ -1952,21 +1952,21 @@
       "id": "json/odd-payment_secret",
       "reference_status": 1,
       "comparison_status": 0,
-      "seconds": 0.007
+      "seconds": 0.008
     },
     {
       "source": "lightning-reference.json",
       "id": "json/short-payment_secret",
       "reference_status": 1,
       "comparison_status": 0,
-      "seconds": 0.007
+      "seconds": 0.008
     },
     {
       "source": "lightning-reference.json",
       "id": "json/empty-payment_secret",
       "reference_status": 1,
       "comparison_status": 0,
-      "seconds": 0.007
+      "seconds": 0.008
     },
     {
       "source": "lightning-reference.json",
@@ -1987,14 +1987,14 @@
       "id": "json/short-description_hash",
       "reference_status": 1,
       "comparison_status": 0,
-      "seconds": 0.007
+      "seconds": 0.008
     },
     {
       "source": "lightning-reference.json",
       "id": "json/empty-description_hash",
       "reference_status": 1,
       "comparison_status": 0,
-      "seconds": 0.007
+      "seconds": 0.008
     },
     {
       "source": "lightning-reference.json",
@@ -2008,7 +2008,7 @@
       "id": "json/odd-destination",
       "reference_status": 1,
       "comparison_status": 0,
-      "seconds": 0.007
+      "seconds": 0.008
     },
     {
       "source": "lightning-reference.json",
@@ -2036,7 +2036,7 @@
       "id": "json/feature-1",
       "reference_status": 0,
       "comparison_status": 0,
-      "seconds": 0.009
+      "seconds": 0.008
     },
     {
       "source": "lightning-reference.json",
@@ -2050,7 +2050,7 @@
       "id": "json/feature-3",
       "reference_status": 0,
       "comparison_status": 0,
-      "seconds": 0.009
+      "seconds": 0.007
     },
     {
       "source": "lightning-reference.json",
@@ -2071,7 +2071,7 @@
       "id": "json/feature-6",
       "reference_status": 1,
       "comparison_status": 0,
-      "seconds": 0.009
+      "seconds": 0.008
     },
     {
       "source": "lightning-reference.json",
@@ -2092,21 +2092,21 @@
       "id": "json/feature-9",
       "reference_status": 1,
       "comparison_status": 0,
-      "seconds": 0.007
+      "seconds": 0.008
     },
     {
       "source": "lightning-reference.json",
       "id": "json/timestamp-0",
       "reference_status": 0,
       "comparison_status": 0,
-      "seconds": 0.008
+      "seconds": 0.009
     },
     {
       "source": "lightning-reference.json",
       "id": "json/timestamp-1",
       "reference_status": 0,
       "comparison_status": 0,
-      "seconds": 0.007
+      "seconds": 0.008
     },
     {
       "source": "lightning-reference.json",
@@ -2127,21 +2127,21 @@
       "id": "json/timestamp-4",
       "reference_status": 0,
       "comparison_status": 0,
-      "seconds": 0.008
+      "seconds": 0.009
     },
     {
       "source": "lightning-reference.json",
       "id": "json/timestamp-5",
       "reference_status": 0,
       "comparison_status": 0,
-      "seconds": 0.007
+      "seconds": 0.008
     },
     {
       "source": "lightning-reference.json",
       "id": "json/timestamp-6",
       "reference_status": 1,
       "comparison_status": 0,
-      "seconds": 0.007
+      "seconds": 0.008
     },
     {
       "source": "lightning-reference.json",
@@ -2176,7 +2176,7 @@
       "id": "json/network-object",
       "reference_status": 0,
       "comparison_status": 0,
-      "seconds": 0.008
+      "seconds": 0.009
     },
     {
       "source": "lightning-reference.json",
@@ -2253,7 +2253,7 @@
       "id": "json/fee-overflow-proportional_millionths",
       "reference_status": 1,
       "comparison_status": 0,
-      "seconds": 0.009
+      "seconds": 0.008
     },
     {
       "source": "lightning-reference.json",
@@ -2267,7 +2267,7 @@
       "id": "json/hop-missing-short_channel_id",
       "reference_status": 1,
       "comparison_status": 0,
-      "seconds": 0.007
+      "seconds": 0.008
     },
     {
       "source": "lightning-reference.json",
@@ -2302,7 +2302,7 @@
       "id": "json/route-shape-2",
       "reference_status": 1,
       "comparison_status": 0,
-      "seconds": 0.008
+      "seconds": 0.009
     },
     {
       "source": "lightning-reference.json",
@@ -2351,14 +2351,14 @@
       "id": "json/duplicate-unknown",
       "reference_status": 0,
       "comparison_status": 0,
-      "seconds": 0.008
+      "seconds": 0.009
     },
     {
       "source": "lightning-reference.json",
       "id": "json/malformed",
       "reference_status": 1,
       "comparison_status": 0,
-      "seconds": 0.009
+      "seconds": 0.008
     },
     {
       "source": "lightning-reference.json",
@@ -2379,21 +2379,21 @@
       "id": "json/duplicate-feature-enum",
       "reference_status": 1,
       "comparison_status": 0,
-      "seconds": 0.008
+      "seconds": 0.009
     },
     {
       "source": "lightning-reference.json",
       "id": "json/duplicate-status-enum",
       "reference_status": 1,
       "comparison_status": 0,
-      "seconds": 0.008
+      "seconds": 0.009
     },
     {
       "source": "lightning-reference.json",
       "id": "json/duplicate-unit-enum",
       "reference_status": 1,
       "comparison_status": 0,
-      "seconds": 0.008
+      "seconds": 0.009
     },
     {
       "source": "lightning-routing-reference.json",
@@ -2414,28 +2414,28 @@
       "id": "routing/ln-decode-invoice-literal-dash",
       "reference_status": 1,
       "comparison_status": 0,
-      "seconds": 0.007
+      "seconds": 0.008
     },
     {
       "source": "lightning-routing-reference.json",
       "id": "routing/ln-decode-invoice-file",
       "reference_status": 0,
       "comparison_status": 0,
-      "seconds": 0.008
+      "seconds": 0.009
     },
     {
       "source": "lightning-routing-reference.json",
       "id": "routing/ln-decode-invoice-attached-equals",
       "reference_status": 0,
       "comparison_status": 0,
-      "seconds": 0.009
+      "seconds": 0.008
     },
     {
       "source": "lightning-routing-reference.json",
       "id": "routing/ln-decode-invoice-overwrite",
       "reference_status": 0,
       "comparison_status": 0,
-      "seconds": 0.008
+      "seconds": 0.009
     },
     {
       "source": "lightning-routing-reference.json",
@@ -2477,21 +2477,21 @@
       "id": "routing/ln-decode-lnurl-overwrite",
       "reference_status": 0,
       "comparison_status": 0,
-      "seconds": 0.008
+      "seconds": 0.01
     },
     {
       "source": "lightning-routing-reference.json",
       "id": "routing/ln-encode-invoice-stdin",
       "reference_status": 0,
       "comparison_status": 0,
-      "seconds": 0.008
+      "seconds": 0.009
     },
     {
       "source": "lightning-routing-reference.json",
       "id": "routing/ln-encode-invoice-dash-newline",
       "reference_status": 0,
       "comparison_status": 0,
-      "seconds": 0.008
+      "seconds": 0.009
     },
     {
       "source": "lightning-routing-reference.json",
@@ -2512,7 +2512,7 @@
       "id": "routing/ln-encode-invoice-overwrite-equals",
       "reference_status": 0,
       "comparison_status": 0,
-      "seconds": 0.008
+      "seconds": 0.009
     },
     {
       "source": "lightning-routing-reference.json",
@@ -2526,49 +2526,49 @@
       "id": "timestamp/compact-zone",
       "reference_status": 0,
       "comparison_status": 0,
-      "seconds": 0.008
+      "seconds": 0.009
     },
     {
       "source": "revision-reference.json",
       "id": "timestamp/unpadded-date",
       "reference_status": 0,
       "comparison_status": 0,
-      "seconds": 0.01
+      "seconds": 0.009
     },
     {
       "source": "revision-reference.json",
       "id": "timestamp/expanded-year",
       "reference_status": 0,
       "comparison_status": 0,
-      "seconds": 0.008
+      "seconds": 0.009
     },
     {
       "source": "revision-reference.json",
       "id": "timestamp/utc-underflow",
       "reference_status": 1,
       "comparison_status": 0,
-      "seconds": 0.008
+      "seconds": 0.009
     },
     {
       "source": "revision-reference.json",
       "id": "timestamp/utc-name",
       "reference_status": 0,
       "comparison_status": 0,
-      "seconds": 0.008
+      "seconds": 0.009
     },
     {
       "source": "revision-reference.json",
       "id": "timestamp/utc-name-case",
       "reference_status": 0,
       "comparison_status": 0,
-      "seconds": 0.008
+      "seconds": 0.009
     },
     {
       "source": "revision-reference.json",
       "id": "timestamp/zone-space",
       "reference_status": 0,
       "comparison_status": 0,
-      "seconds": 0.008
+      "seconds": 0.009
     },
     {
       "source": "revision-reference.json",
@@ -2589,42 +2589,42 @@
       "id": "timestamp/zone-tab",
       "reference_status": 0,
       "comparison_status": 0,
-      "seconds": 0.009
+      "seconds": 0.008
     },
     {
       "source": "revision-reference.json",
       "id": "timestamp/zone-nbsp",
       "reference_status": 0,
       "comparison_status": 0,
-      "seconds": 0.008
+      "seconds": 0.009
     },
     {
       "source": "revision-reference.json",
       "id": "timestamp/surrounding-space",
       "reference_status": 0,
       "comparison_status": 0,
-      "seconds": 0.008
+      "seconds": 0.009
     },
     {
       "source": "revision-reference.json",
       "id": "timestamp/component-space",
       "reference_status": 0,
       "comparison_status": 0,
-      "seconds": 0.008
+      "seconds": 0.009
     },
     {
       "source": "revision-reference.json",
       "id": "timestamp/component-unicode-space",
       "reference_status": 0,
       "comparison_status": 0,
-      "seconds": 0.008
+      "seconds": 0.01
     },
     {
       "source": "revision-reference.json",
       "id": "timestamp/upper-year",
       "reference_status": 0,
       "comparison_status": 0,
-      "seconds": 0.008
+      "seconds": 0.009
     },
     {
       "source": "revision-reference.json",
@@ -2645,7 +2645,7 @@
       "id": "timestamp/utc-max-inward",
       "reference_status": 0,
       "comparison_status": 0,
-      "seconds": 0.008
+      "seconds": 0.009
     },
     {
       "source": "revision-reference.json",
@@ -2659,14 +2659,14 @@
       "id": "timestamp/utc-min-inward",
       "reference_status": 0,
       "comparison_status": 0,
-      "seconds": 0.007
+      "seconds": 0.009
     },
     {
       "source": "revision-reference.json",
       "id": "timestamp/utc-min-exact",
       "reference_status": 0,
       "comparison_status": 0,
-      "seconds": 0.009
+      "seconds": 0.008
     },
     {
       "source": "revision-reference.json",
@@ -2715,7 +2715,7 @@
       "id": "timestamp/signed-leading-zeros",
       "reference_status": 0,
       "comparison_status": 0,
-      "seconds": 0.009
+      "seconds": 0.008
     },
     {
       "source": "revision-reference.json",
@@ -2736,7 +2736,7 @@
       "id": "timestamp/year-underflow",
       "reference_status": 1,
       "comparison_status": 0,
-      "seconds": 0.008
+      "seconds": 0.009
     },
     {
       "source": "revision-reference.json",
@@ -2778,7 +2778,7 @@
       "id": "timestamp/fraction-space",
       "reference_status": 1,
       "comparison_status": 0,
-      "seconds": 0.007
+      "seconds": 0.008
     },
     {
       "source": "revision-reference.json",
@@ -2792,7 +2792,7 @@
       "id": "timestamp/second-overflow",
       "reference_status": 1,
       "comparison_status": 0,
-      "seconds": 0.008
+      "seconds": 0.009
     },
     {
       "source": "revision-reference.json",
@@ -2806,7 +2806,7 @@
       "id": "timestamp/space-separator",
       "reference_status": 0,
       "comparison_status": 0,
-      "seconds": 0.009
+      "seconds": 0.008
     },
     {
       "source": "revision-reference.json",
@@ -2820,21 +2820,21 @@
       "id": "timestamp/space-before-t",
       "reference_status": 1,
       "comparison_status": 0,
-      "seconds": 0.008
+      "seconds": 0.007
     },
     {
       "source": "revision-reference.json",
       "id": "timestamp/zone-colons",
       "reference_status": 0,
       "comparison_status": 0,
-      "seconds": 0.008
+      "seconds": 0.009
     },
     {
       "source": "revision-reference.json",
       "id": "timestamp/zone-unicode-minus",
       "reference_status": 0,
       "comparison_status": 0,
-      "seconds": 0.008
+      "seconds": 0.009
     },
     {
       "source": "revision-reference.json",
@@ -2862,7 +2862,7 @@
       "id": "timestamp/zone-minute-overflow",
       "reference_status": 1,
       "comparison_status": 0,
-      "seconds": 0.007
+      "seconds": 0.009
     },
     {
       "source": "revision-reference.json",
@@ -2981,7 +2981,7 @@
       "id": "unicode/nested-ignored-low",
       "reference_status": 0,
       "comparison_status": 0,
-      "seconds": 0.007
+      "seconds": 0.008
     },
     {
       "source": "revision-reference.json",
@@ -3002,7 +3002,7 @@
       "id": "unicode/field-name-high-ascii",
       "reference_status": 1,
       "comparison_status": 0,
-      "seconds": 0.007
+      "seconds": 0.008
     },
     {
       "source": "revision-reference.json",
@@ -3037,7 +3037,7 @@
       "id": "unicode/nested-ignored-high-high",
       "reference_status": 0,
       "comparison_status": 0,
-      "seconds": 0.009
+      "seconds": 0.008
     },
     {
       "source": "revision-reference.json",
@@ -3051,7 +3051,7 @@
       "id": "unicode/ignored-pair",
       "reference_status": 0,
       "comparison_status": 0,
-      "seconds": 0.009
+      "seconds": 0.008
     },
     {
       "source": "revision-reference.json",
@@ -3072,7 +3072,7 @@
       "id": "unicode/known-pair-upper",
       "reference_status": 0,
       "comparison_status": 0,
-      "seconds": 0.009
+      "seconds": 0.008
     },
     {
       "source": "revision-reference.json",
@@ -3128,7 +3128,7 @@
       "id": "unicode/known-pair-then-low",
       "reference_status": 1,
       "comparison_status": 0,
-      "seconds": 0.008
+      "seconds": 0.007
     },
     {
       "source": "revision-reference.json",
@@ -3198,14 +3198,14 @@
       "id": "sequence/root-length-4",
       "reference_status": 1,
       "comparison_status": 0,
-      "seconds": 0.007
+      "seconds": 0.008
     },
     {
       "source": "revision-reference.json",
       "id": "sequence/root-length-5",
       "reference_status": 1,
       "comparison_status": 0,
-      "seconds": 0.008
+      "seconds": 0.009
     },
     {
       "source": "revision-reference.json",
@@ -3240,14 +3240,14 @@
       "id": "sequence/root-length-10",
       "reference_status": 1,
       "comparison_status": 0,
-      "seconds": 0.008
+      "seconds": 0.009
     },
     {
       "source": "revision-reference.json",
       "id": "sequence/root-length-11",
       "reference_status": 1,
       "comparison_status": 0,
-      "seconds": 0.007
+      "seconds": 0.009
     },
     {
       "source": "revision-reference.json",
@@ -3296,7 +3296,7 @@
       "id": "sequence/hop-length-2",
       "reference_status": 1,
       "comparison_status": 0,
-      "seconds": 0.007
+      "seconds": 0.008
     },
     {
       "source": "revision-reference.json",
@@ -3366,7 +3366,7 @@
       "id": "sequence/root-null-0",
       "reference_status": 1,
       "comparison_status": 0,
-      "seconds": 0.007
+      "seconds": 0.008
     },
     {
       "source": "revision-reference.json",
@@ -3401,7 +3401,7 @@
       "id": "sequence/root-null-5",
       "reference_status": 1,
       "comparison_status": 0,
-      "seconds": 0.008
+      "seconds": 0.007
     },
     {
       "source": "revision-reference.json",
@@ -3429,7 +3429,7 @@
       "id": "sequence/root-null-9",
       "reference_status": 1,
       "comparison_status": 0,
-      "seconds": 0.008
+      "seconds": 0.009
     },
     {
       "source": "revision-reference.json",
@@ -3499,14 +3499,14 @@
       "id": "sequence/hop-null-5",
       "reference_status": 0,
       "comparison_status": 0,
-      "seconds": 0.009
+      "seconds": 0.008
     },
     {
       "source": "revision-reference.json",
       "id": "sequence/fees-null-0",
       "reference_status": 1,
       "comparison_status": 0,
-      "seconds": 0.009
+      "seconds": 0.008
     },
     {
       "source": "revision-reference.json",
@@ -3569,7 +3569,7 @@
       "id": "sequence/root-overflow",
       "reference_status": 1,
       "comparison_status": 0,
-      "seconds": 0.009
+      "seconds": 0.008
     },
     {
       "source": "revision-reference.json",
@@ -3646,7 +3646,7 @@
       "id": "simnet/encode",
       "reference_status": 0,
       "comparison_status": 0,
-      "seconds": 0.008
+      "seconds": 0.009
     },
     {
       "source": "revision-reference.json",

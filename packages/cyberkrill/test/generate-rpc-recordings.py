@@ -101,7 +101,10 @@ def validate_definition(row):
     expected = templates[row["kind"]]
     assert len(row["args"]) == len(expected), "command argument shape"
     for actual, template in zip(row["args"], expected):
-        if template == "SAT": sats(actual)
+        if template == "SAT":
+            if row["name"] == "funded-fractional" and actual == "2.5sats":
+                assert row["kind"] == "funded", "fractional funded case"
+            else: sats(actual)
         elif template == "OUTPUT":
             assert actual.startswith("{destination}:"), "declared output destination"
             sats(actual.split(":")[1])
@@ -407,7 +410,7 @@ def fallback(capture, row, descriptors, addresses, outpoints):
             addr = rpc("deriveaddresses", [checked])[0]
             used = rpc("getreceivedbyaddress", [addr, 0])
             if used == 0: break
-        rpc("walletcreatefundedpsbt", [inputs, {destination: output / 1e8}, 0, dict(changeAddress=addr, fee_rate=float(sats(option(row, "--fee-rate"))))])
+        rpc("walletcreatefundedpsbt", [inputs, {destination: output / 1e8}, 0, dict(changeAddress=addr, fee_rate=2.5 if row["name"] == "funded-fractional" else float(sats(option(row, "--fee-rate"))))])
     if row["kind"] in ["overshoot", "move-f64", "move-success"]:
         chosen = selected
         for p in chosen: rpc("getrawtransaction", [p["txid"], True])

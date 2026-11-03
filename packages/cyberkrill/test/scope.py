@@ -12,8 +12,8 @@ from datetime import datetime
 
 from cases import APP, ROOT
 
-BASE = "4b983961ded2308aa62fe45c29a5862d36f19e2b"
-ISSUE = "lck-phase-8b-list-utxos-wallet-file-qa6"
+BASE = "1740dafe5abb36c2d609cda3cdc2906040732642"
+ISSUE = "lck-phase-8c-psbt-rpc-commands-85g"
 # Fixed observations for fixtures first introduced by this phase. Never derive
 # these expected values from HEAD, the index, or the current fixture bytes.
 HISTORICAL_DIGESTS = {
@@ -60,35 +60,37 @@ def check_lifecycle(original, current):
 
 def main():
     allowed = {"README.md", ".beads/issues.jsonl"}
-    # Exact paths, grouped by their concrete integration responsibility.
+    # Each path has a command integration or actual evidence-refresh purpose.
     allowed |= {"packages/cyberkrill/" + p for p in [
-        "CyberkrillTests.lean",  # Selected reader, composed-client and CLI driver registration.
-        "Cyberkrill/App.lean", "Cyberkrill/Amounts.lean",  # Dispatch, flags, retained writer and fixed errors.
-        "Cyberkrill/CoreRpc.lean",  # Failed derivation continues with an empty address list.
-        "Cyberkrill/Frozenkrill.lean", "Cyberkrill/ListUtxos.lean",  # App-local export reader and orchestration.
-        "CyberkrillTests/ListUtxos.lean", "test/list-utxos.py",  # Schema, writer, parser and real HTTP/CLI checks.
-        "test/list-utxos-mutations.py",  # Detecting production mutations and exact restoration.
-        "test/list-utxos-lexical-mutations.py",  # Independent surrogate, escaped-key and ignored-field branches.
-        "test/list-utxos-lifecycle.py",  # Disposable sentinels check cleanup before either driver's restoration.
-        "test/network.py",  # Opt-in bounded signal deferral and same-group cancellation for mutation commands.
-        "test/list-utxos-provenance.json",  # Pinned MIT source and public-fixture attribution.
-        "test/scope.py", "test/validate.py",  # Phase boundary and executable acceptance integration.
-        "test/rpc-client-mutations.py",  # Retain the 80/281 observation while executing its current refresh.
-        "test/carried-regressions.py",  # Pin original observations and require current typed-help mutation evidence.
-        "test/revision-mutate.py"]}  # Preserve scope controls after retargeting.
-    # These current observations are refreshed by their executable mutation suites.
+        "Cyberkrill/App.lean",  # Two parsers, retained ordinary writer and dispatch.
+        "Cyberkrill/PsbtCommands.lean",  # Exact outputs, expansion, change and validation.
+        "Cyberkrill/CoreRpc.lean",  # Separate funded command defaults; strict API retained.
+        "CyberkrillTests.lean", "CyberkrillTests/PsbtCommands.lean",  # Test registration/injection.
+        "test/psbt-commands.py", "test/psbt-commands-mutations.py",  # Handler replay and detecting edits.
+        "test/psbt-commands-provenance.json",  # Pinned source/licence and recorded input binding.
+        "test/scope.py", "test/validate.py",  # Phase boundary, registration and source count.
+        "test/revision-mutate.py", "test/carried-regressions.py", "test/verify.py",  # Affected evidence integration.
+        "test/rpc-client.py",  # New fractional replay and opt-in stage delays; original 75 replies retained.
+        "test/list-utxos-mutations.py", "test/list-utxos-lexical-mutations.py",  # Preserve each pre-PSBT observation during actual refresh.
+        "test/rpc-client-mutations.py",  # Preserve historical/current observations on client refresh.
+        "test/rpc-recording-cases.json",  # New fractional funded request only.
+        "test/generate-rpc-recordings.py",  # Fractional rate in new case only.
+        "test/rpc-recordings.py",  # Independently pin the new case alongside the original eight.
+        "test/recordings/funded-fractional.json",  # Actual Core fractional funded capture.
+    ]}
     allowed |= {"packages/cyberkrill/test/golden/" + p for p in [
-        "regression-refresh.json", "output-regression-refresh.json", "attached-output-refresh.json",
+        "psbt-commands-reference.json", "psbt-commands-mutation-record.json",  # Actual new captures/reds.
         "mutation-record.json", "lightning-mutation-record.json", "revision-mutation-record.json",
         "offline-mutation-record.json", "rpc-client-mutation-record.json",
-        "list-utxos-reference.json", "list-utxos-mutation-record.json",
-        "list-utxos-lexical-mutation-record.json",
-        "list-utxos-lifecycle-record.json",  # Actual timeout/interruption boundaries and retained detecting failures.
-        "offline-history-recapture.json"]}  # Actual replay observation; retained corpus digest stays fixed.
+        "list-utxos-mutation-record.json", "list-utxos-lexical-mutation-record.json",
+        "list-utxos-lifecycle-record.json",  # Actual lifecycle rerun binds the amended refresh producers.
+        "regression-refresh.json", "output-regression-refresh.json", "attached-output-refresh.json",
+        "offline-history-recapture.json",  # Refreshed only by their actual affected producers.
+    ]}
     changed = set(filter(None, git("diff", BASE, "--name-only", "-z").decode().split("\0")))
     new = set(filter(None, git("ls-files", "--others", "--exclude-standard", "-z").decode().split("\0")))
     base_paths = set(git("ls-tree", "-r", "--name-only", BASE).decode().splitlines())
-    assert changed | new <= allowed, "path outside list UTXO scope: " + repr(sorted((changed | new) - allowed))
+    assert changed | new <= allowed, "path outside PSBT command scope: " + repr(sorted((changed | new) - allowed))
     # Equality against the base for each unrelated issue includes every field.
     def issues(data):
         rows = [json.loads(line) for line in data.splitlines()]
