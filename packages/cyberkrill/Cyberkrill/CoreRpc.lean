@@ -262,7 +262,7 @@ def Client.listUnspentForDescriptor (client : Client) (descriptor : String) : IO
       | .error e => return .error e
       | .ok info => pure info
     let addresses ← match ← client.deriveAddresses info.descriptor (some (0, 99)) with
-      | .error e => return .error e
+      | .error _ => pure #[]
       | .ok addresses => pure addresses
     let utxos ← client.listUnspent 0 9999999 (some addresses)
     match utxos with

@@ -1,0 +1,276 @@
+{
+  "upstream": "https://github.com/douglaz/cyberkrill",
+  "revision": "27cad1faba86260b06665a89f0af5134d23525c2",
+  "captures": [
+    {
+      "name": "descriptor-1-9999999",
+      "case": "multipath-create",
+      "source": "descriptor",
+      "bounds": [
+        1,
+        9999999
+      ],
+      "file": false,
+      "status": 0,
+      "stdout": "{\n  \"utxos\": [\n    {\n      \"txid\": \"7e7cc8237fec44a2b2be75909de73604e487cf54d03dbef7df0dfa3cfa4d9e04\",\n      \"vout\": 0,\n      \"amount_sats\": 10000000,\n      \"confirmations\": 1,\n      \"spendable\": true,\n      \"solvable\": true,\n      \"safe\": true,\n      \"address\": \"bcrt1qxdyjf6h5d6qxap4n2dap97q4j5ps6ua8jkxz0z\",\n      \"script_pub_key\": \"0014334924eaf46e806e86b3537a12f81595030d73a7\",\n      \"descriptor\": null\n    },\n    {\n      \"txid\": \"a157c0c8d60db70be9b2df86e5a4aea68599e049e1b5e82c078509dd51beb056\",\n      \"vout\": 0,\n      \"amount_sats\": 20000000,\n      \"confirmations\": 2,\n      \"spendable\": true,\n      \"solvable\": true,\n      \"safe\": true,\n      \"address\": \"bcrt1qd7spv5q28348xl4myc8zmh983w5jx32cs707jh\",\n      \"script_pub_key\": \"00146fa016500a3c6a737ebb260e2ddca78ba9234558\",\n      \"descriptor\": null\n    },\n    {\n      \"txid\": \"4c66b77eaed1548107f29e6d637393bbef713cd7408b02d285afad770c298a79\",\n      \"vout\": 1,\n      \"amount_sats\": 40000000,\n      \"confirmations\": 2,\n      \"spendable\": true,\n      \"solvable\": true,\n      \"safe\": true,\n      \"address\": \"bcrt1q6rz28mcfaxtmd6v789l9rrlrusdprr9pz3cppk\",\n      \"script_pub_key\": \"0014d0c4a3ef09e997b6e99e397e518fe3e41a118ca1\",\n      \"descriptor\": null\n    },\n    {\n      \"txid\": \"1fc104d4715bf864674f9a3c0bd7a7e5249646d98f370ce395548338c4beff6a\",\n      \"vout\": 1,\n      \"amount_sats\": 3000000,\n      \"confirmations\": 1,\n      \"spendable\": true,\n      \"solvable\": true,\n      \"safe\": true,\n      \"address\": \"bcrt1q9u62588spffmq4dzjxsr5l297znf3z6jkgnhsw\",\n      \"script_pub_key\": \"00142f34aa1cf00a53b055a291a03a7d45f0a6988b52\",\n      \"descriptor\": null\n    }\n  ],\n  \"total_amount_sats\": 73000000,\n  \"total_count\": 4\n}",
+      "stderr": "",
+      "file_bytes": null,
+      "requests": 8
+    },
+    {
+      "name": "descriptor-1-1",
+      "case": "multipath-create",
+      "source": "descriptor",
+      "bounds": [
+        1,
+        1
+      ],
+      "file": false,
+      "status": 0,
+      "stdout": "{\n  \"utxos\": [\n    {\n      \"txid\": \"7e7cc8237fec44a2b2be75909de73604e487cf54d03dbef7df0dfa3cfa4d9e04\",\n      \"vout\": 0,\n      \"amount_sats\": 10000000,\n      \"confirmations\": 1,\n      \"spendable\": true,\n      \"solvable\": true,\n      \"safe\": true,\n      \"address\": \"bcrt1qxdyjf6h5d6qxap4n2dap97q4j5ps6ua8jkxz0z\",\n      \"script_pub_key\": \"0014334924eaf46e806e86b3537a12f81595030d73a7\",\n      \"descriptor\": null\n    },\n    {\n      \"txid\": \"1fc104d4715bf864674f9a3c0bd7a7e5249646d98f370ce395548338c4beff6a\",\n      \"vout\": 1,\n      \"amount_sats\": 3000000,\n      \"confirmations\": 1,\n      \"spendable\": true,\n      \"solvable\": true,\n      \"safe\": true,\n      \"address\": \"bcrt1q9u62588spffmq4dzjxsr5l297znf3z6jkgnhsw\",\n      \"script_pub_key\": \"00142f34aa1cf00a53b055a291a03a7d45f0a6988b52\",\n      \"descriptor\": null\n    }\n  ],\n  \"total_amount_sats\": 13000000,\n  \"total_count\": 2\n}",
+      "stderr": "",
+      "file_bytes": null,
+      "requests": 8
+    },
+    {
+      "name": "descriptor-2-2",
+      "case": "multipath-create",
+      "source": "descriptor",
+      "bounds": [
+        2,
+        2
+      ],
+      "file": false,
+      "status": 0,
+      "stdout": "{\n  \"utxos\": [\n    {\n      \"txid\": \"a157c0c8d60db70be9b2df86e5a4aea68599e049e1b5e82c078509dd51beb056\",\n      \"vout\": 0,\n      \"amount_sats\": 20000000,\n      \"confirmations\": 2,\n      \"spendable\": true,\n      \"solvable\": true,\n      \"safe\": true,\n      \"address\": \"bcrt1qd7spv5q28348xl4myc8zmh983w5jx32cs707jh\",\n      \"script_pub_key\": \"00146fa016500a3c6a737ebb260e2ddca78ba9234558\",\n      \"descriptor\": null\n    },\n    {\n      \"txid\": \"4c66b77eaed1548107f29e6d637393bbef713cd7408b02d285afad770c298a79\",\n      \"vout\": 1,\n      \"amount_sats\": 40000000,\n      \"confirmations\": 2,\n      \"spendable\": true,\n      \"solvable\": true,\n      \"safe\": true,\n      \"address\": \"bcrt1q6rz28mcfaxtmd6v789l9rrlrusdprr9pz3cppk\",\n      \"script_pub_key\": \"0014d0c4a3ef09e997b6e99e397e518fe3e41a118ca1\",\n      \"descriptor\": null\n    }\n  ],\n  \"total_amount_sats\": 60000000,\n  \"total_count\": 2\n}",
+      "stderr": "",
+      "file_bytes": null,
+      "requests": 8
+    },
+    {
+      "name": "descriptor-3-9999999",
+      "case": "multipath-create",
+      "source": "descriptor",
+      "bounds": [
+        3,
+        9999999
+      ],
+      "file": false,
+      "status": 0,
+      "stdout": "{\n  \"utxos\": [],\n  \"total_amount_sats\": 0,\n  \"total_count\": 0\n}",
+      "stderr": "",
+      "file_bytes": null,
+      "requests": 8
+    },
+    {
+      "name": "descriptor-2-1",
+      "case": "multipath-create",
+      "source": "descriptor",
+      "bounds": [
+        2,
+        1
+      ],
+      "file": false,
+      "status": 0,
+      "stdout": "{\n  \"utxos\": [],\n  \"total_amount_sats\": 0,\n  \"total_count\": 0\n}",
+      "stderr": "",
+      "file_bytes": null,
+      "requests": 8
+    },
+    {
+      "name": "single-1-9999999",
+      "case": "single-list",
+      "source": "single",
+      "bounds": [
+        1,
+        9999999
+      ],
+      "file": false,
+      "status": 0,
+      "stdout": "{\n  \"utxos\": [\n    {\n      \"txid\": \"309b6cebaa215572a123bf8b256f486a980cfab8f199c78012f1280e2d39ab64\",\n      \"vout\": 1,\n      \"amount_sats\": 20000000,\n      \"confirmations\": 2,\n      \"spendable\": true,\n      \"solvable\": true,\n      \"safe\": true,\n      \"address\": \"bcrt1qd7spv5q28348xl4myc8zmh983w5jx32cs707jh\",\n      \"script_pub_key\": \"00146fa016500a3c6a737ebb260e2ddca78ba9234558\",\n      \"descriptor\": null\n    },\n    {\n      \"txid\": \"5a71af69328a1202b986b714ccd597e235cc34a924bc3dde1c158c702070be48\",\n      \"vout\": 1,\n      \"amount_sats\": 10000000,\n      \"confirmations\": 1,\n      \"spendable\": true,\n      \"solvable\": true,\n      \"safe\": true,\n      \"address\": \"bcrt1qxdyjf6h5d6qxap4n2dap97q4j5ps6ua8jkxz0z\",\n      \"script_pub_key\": \"0014334924eaf46e806e86b3537a12f81595030d73a7\",\n      \"descriptor\": null\n    },\n    {\n      \"txid\": \"294a48f441094ee9eb26eb3fe3f3d34632a9e464fc5bcba53f2c084145ff5f38\",\n      \"vout\": 1,\n      \"amount_sats\": 40000000,\n      \"confirmations\": 2,\n      \"spendable\": true,\n      \"solvable\": true,\n      \"safe\": true,\n      \"address\": \"bcrt1q6rz28mcfaxtmd6v789l9rrlrusdprr9pz3cppk\",\n      \"script_pub_key\": \"0014d0c4a3ef09e997b6e99e397e518fe3e41a118ca1\",\n      \"descriptor\": null\n    },\n    {\n      \"txid\": \"2d20f0308850a9b84e65b67d51607e5a389fde23686b236a621a51f344d2f692\",\n      \"vout\": 0,\n      \"amount_sats\": 3000000,\n      \"confirmations\": 1,\n      \"spendable\": true,\n      \"solvable\": true,\n      \"safe\": true,\n      \"address\": \"bcrt1q9u62588spffmq4dzjxsr5l297znf3z6jkgnhsw\",\n      \"script_pub_key\": \"00142f34aa1cf00a53b055a291a03a7d45f0a6988b52\",\n      \"descriptor\": null\n    }\n  ],\n  \"total_amount_sats\": 73000000,\n  \"total_count\": 4\n}",
+      "stderr": "",
+      "file_bytes": null,
+      "requests": 10
+    },
+    {
+      "name": "single-1-1",
+      "case": "single-list",
+      "source": "single",
+      "bounds": [
+        1,
+        1
+      ],
+      "file": false,
+      "status": 0,
+      "stdout": "{\n  \"utxos\": [\n    {\n      \"txid\": \"5a71af69328a1202b986b714ccd597e235cc34a924bc3dde1c158c702070be48\",\n      \"vout\": 1,\n      \"amount_sats\": 10000000,\n      \"confirmations\": 1,\n      \"spendable\": true,\n      \"solvable\": true,\n      \"safe\": true,\n      \"address\": \"bcrt1qxdyjf6h5d6qxap4n2dap97q4j5ps6ua8jkxz0z\",\n      \"script_pub_key\": \"0014334924eaf46e806e86b3537a12f81595030d73a7\",\n      \"descriptor\": null\n    },\n    {\n      \"txid\": \"2d20f0308850a9b84e65b67d51607e5a389fde23686b236a621a51f344d2f692\",\n      \"vout\": 0,\n      \"amount_sats\": 3000000,\n      \"confirmations\": 1,\n      \"spendable\": true,\n      \"solvable\": true,\n      \"safe\": true,\n      \"address\": \"bcrt1q9u62588spffmq4dzjxsr5l297znf3z6jkgnhsw\",\n      \"script_pub_key\": \"00142f34aa1cf00a53b055a291a03a7d45f0a6988b52\",\n      \"descriptor\": null\n    }\n  ],\n  \"total_amount_sats\": 13000000,\n  \"total_count\": 2\n}",
+      "stderr": "",
+      "file_bytes": null,
+      "requests": 10
+    },
+    {
+      "name": "single-2-2",
+      "case": "single-list",
+      "source": "single",
+      "bounds": [
+        2,
+        2
+      ],
+      "file": false,
+      "status": 0,
+      "stdout": "{\n  \"utxos\": [\n    {\n      \"txid\": \"309b6cebaa215572a123bf8b256f486a980cfab8f199c78012f1280e2d39ab64\",\n      \"vout\": 1,\n      \"amount_sats\": 20000000,\n      \"confirmations\": 2,\n      \"spendable\": true,\n      \"solvable\": true,\n      \"safe\": true,\n      \"address\": \"bcrt1qd7spv5q28348xl4myc8zmh983w5jx32cs707jh\",\n      \"script_pub_key\": \"00146fa016500a3c6a737ebb260e2ddca78ba9234558\",\n      \"descriptor\": null\n    },\n    {\n      \"txid\": \"294a48f441094ee9eb26eb3fe3f3d34632a9e464fc5bcba53f2c084145ff5f38\",\n      \"vout\": 1,\n      \"amount_sats\": 40000000,\n      \"confirmations\": 2,\n      \"spendable\": true,\n      \"solvable\": true,\n      \"safe\": true,\n      \"address\": \"bcrt1q6rz28mcfaxtmd6v789l9rrlrusdprr9pz3cppk\",\n      \"script_pub_key\": \"0014d0c4a3ef09e997b6e99e397e518fe3e41a118ca1\",\n      \"descriptor\": null\n    }\n  ],\n  \"total_amount_sats\": 60000000,\n  \"total_count\": 2\n}",
+      "stderr": "",
+      "file_bytes": null,
+      "requests": 10
+    },
+    {
+      "name": "single-3-9999999",
+      "case": "single-list",
+      "source": "single",
+      "bounds": [
+        3,
+        9999999
+      ],
+      "file": false,
+      "status": 0,
+      "stdout": "{\n  \"utxos\": [],\n  \"total_amount_sats\": 0,\n  \"total_count\": 0\n}",
+      "stderr": "",
+      "file_bytes": null,
+      "requests": 10
+    },
+    {
+      "name": "single-2-1",
+      "case": "single-list",
+      "source": "single",
+      "bounds": [
+        2,
+        1
+      ],
+      "file": false,
+      "status": 0,
+      "stdout": "{\n  \"utxos\": [],\n  \"total_amount_sats\": 0,\n  \"total_count\": 0\n}",
+      "stderr": "",
+      "file_bytes": null,
+      "requests": 10
+    },
+    {
+      "name": "multisig-1-9999999",
+      "case": "multisig-list",
+      "source": "multisig",
+      "bounds": [
+        1,
+        9999999
+      ],
+      "file": false,
+      "status": 0,
+      "stdout": "{\n  \"utxos\": [\n    {\n      \"txid\": \"61c71de8ecf93c0c228e3be3838cb5ca733acb98c96e13254cf869cd65bb5379\",\n      \"vout\": 0,\n      \"amount_sats\": 10000000,\n      \"confirmations\": 1,\n      \"spendable\": true,\n      \"solvable\": true,\n      \"safe\": true,\n      \"address\": \"bcrt1qa7nkhhsu8heky8af6rkl85pvh5lzm4j04k5q9twdmyqmsr203twqrqk8yf\",\n      \"script_pub_key\": \"0020efa76bde1c3df3621fa9d0edf3d02cbd3e2dd64fada802adcdd901b80d4f8adc\",\n      \"descriptor\": null\n    },\n    {\n      \"txid\": \"9cc6dd66a2013393ddfc9e1564be605da207be3bb9d71f8e36738a719c92b413\",\n      \"vout\": 1,\n      \"amount_sats\": 20000000,\n      \"confirmations\": 2,\n      \"spendable\": true,\n      \"solvable\": true,\n      \"safe\": true,\n      \"address\": \"bcrt1qeu9c5ka9kcypfzc87vzq38atlacy8khe3cg7sq3q97k0x230cyxs4mhan2\",\n      \"script_pub_key\": \"0020cf0b8a5ba5b608148b07f304089fabff7043daf98e11e802202facf32a2fc10d\",\n      \"descriptor\": null\n    },\n    {\n      \"txid\": \"b8e152273d792dfd6b0cafa14bf13695426a91038cb6c5a303fbb5cb4ccabc3c\",\n      \"vout\": 0,\n      \"amount_sats\": 40000000,\n      \"confirmations\": 2,\n      \"spendable\": true,\n      \"solvable\": true,\n      \"safe\": true,\n      \"address\": \"bcrt1q6n7r3u9lrlq6gycq0g76l0jcuq58n6m48ahy8wykuhyw5swptp4qpgnlh8\",\n      \"script_pub_key\": \"0020d4fc38f0bf1fc1a413007a3dafbe58e02879eb753f6e43b896e5c8ea41c1586a\",\n      \"descriptor\": null\n    },\n    {\n      \"txid\": \"dddd9d83dc94a2fcfb07f36984728fbcf1dc4142172d4ecd837998d85096aeb0\",\n      \"vout\": 0,\n      \"amount_sats\": 3000000,\n      \"confirmations\": 1,\n      \"spendable\": true,\n      \"solvable\": true,\n      \"safe\": true,\n      \"address\": \"bcrt1q6fhclm62efj99kjugkzntf9vr99kzgwglzx8yfp46lexks6lr4nq0ccusx\",\n      \"script_pub_key\": \"0020d26f8fef4aca6452da5c458535a4ac194b6121c8f88c722435d7f26b435f1d66\",\n      \"descriptor\": null\n    }\n  ],\n  \"total_amount_sats\": 73000000,\n  \"total_count\": 4\n}",
+      "stderr": "",
+      "file_bytes": null,
+      "requests": 10
+    },
+    {
+      "name": "multisig-1-1",
+      "case": "multisig-list",
+      "source": "multisig",
+      "bounds": [
+        1,
+        1
+      ],
+      "file": false,
+      "status": 0,
+      "stdout": "{\n  \"utxos\": [\n    {\n      \"txid\": \"61c71de8ecf93c0c228e3be3838cb5ca733acb98c96e13254cf869cd65bb5379\",\n      \"vout\": 0,\n      \"amount_sats\": 10000000,\n      \"confirmations\": 1,\n      \"spendable\": true,\n      \"solvable\": true,\n      \"safe\": true,\n      \"address\": \"bcrt1qa7nkhhsu8heky8af6rkl85pvh5lzm4j04k5q9twdmyqmsr203twqrqk8yf\",\n      \"script_pub_key\": \"0020efa76bde1c3df3621fa9d0edf3d02cbd3e2dd64fada802adcdd901b80d4f8adc\",\n      \"descriptor\": null\n    },\n    {\n      \"txid\": \"dddd9d83dc94a2fcfb07f36984728fbcf1dc4142172d4ecd837998d85096aeb0\",\n      \"vout\": 0,\n      \"amount_sats\": 3000000,\n      \"confirmations\": 1,\n      \"spendable\": true,\n      \"solvable\": true,\n      \"safe\": true,\n      \"address\": \"bcrt1q6fhclm62efj99kjugkzntf9vr99kzgwglzx8yfp46lexks6lr4nq0ccusx\",\n      \"script_pub_key\": \"0020d26f8fef4aca6452da5c458535a4ac194b6121c8f88c722435d7f26b435f1d66\",\n      \"descriptor\": null\n    }\n  ],\n  \"total_amount_sats\": 13000000,\n  \"total_count\": 2\n}",
+      "stderr": "",
+      "file_bytes": null,
+      "requests": 10
+    },
+    {
+      "name": "multisig-2-2",
+      "case": "multisig-list",
+      "source": "multisig",
+      "bounds": [
+        2,
+        2
+      ],
+      "file": false,
+      "status": 0,
+      "stdout": "{\n  \"utxos\": [\n    {\n      \"txid\": \"9cc6dd66a2013393ddfc9e1564be605da207be3bb9d71f8e36738a719c92b413\",\n      \"vout\": 1,\n      \"amount_sats\": 20000000,\n      \"confirmations\": 2,\n      \"spendable\": true,\n      \"solvable\": true,\n      \"safe\": true,\n      \"address\": \"bcrt1qeu9c5ka9kcypfzc87vzq38atlacy8khe3cg7sq3q97k0x230cyxs4mhan2\",\n      \"script_pub_key\": \"0020cf0b8a5ba5b608148b07f304089fabff7043daf98e11e802202facf32a2fc10d\",\n      \"descriptor\": null\n    },\n    {\n      \"txid\": \"b8e152273d792dfd6b0cafa14bf13695426a91038cb6c5a303fbb5cb4ccabc3c\",\n      \"vout\": 0,\n      \"amount_sats\": 40000000,\n      \"confirmations\": 2,\n      \"spendable\": true,\n      \"solvable\": true,\n      \"safe\": true,\n      \"address\": \"bcrt1q6n7r3u9lrlq6gycq0g76l0jcuq58n6m48ahy8wykuhyw5swptp4qpgnlh8\",\n      \"script_pub_key\": \"0020d4fc38f0bf1fc1a413007a3dafbe58e02879eb753f6e43b896e5c8ea41c1586a\",\n      \"descriptor\": null\n    }\n  ],\n  \"total_amount_sats\": 60000000,\n  \"total_count\": 2\n}",
+      "stderr": "",
+      "file_bytes": null,
+      "requests": 10
+    },
+    {
+      "name": "multisig-3-9999999",
+      "case": "multisig-list",
+      "source": "multisig",
+      "bounds": [
+        3,
+        9999999
+      ],
+      "file": false,
+      "status": 0,
+      "stdout": "{\n  \"utxos\": [],\n  \"total_amount_sats\": 0,\n  \"total_count\": 0\n}",
+      "stderr": "",
+      "file_bytes": null,
+      "requests": 10
+    },
+    {
+      "name": "multisig-2-1",
+      "case": "multisig-list",
+      "source": "multisig",
+      "bounds": [
+        2,
+        1
+      ],
+      "file": false,
+      "status": 0,
+      "stdout": "{\n  \"utxos\": [],\n  \"total_amount_sats\": 0,\n  \"total_count\": 0\n}",
+      "stderr": "",
+      "file_bytes": null,
+      "requests": 10
+    },
+    {
+      "name": "addresses",
+      "case": "single-list",
+      "source": "addresses",
+      "bounds": [
+        0,
+        9999999
+      ],
+      "file": false,
+      "status": 0,
+      "stdout": "{\n  \"utxos\": [\n    {\n      \"txid\": \"309b6cebaa215572a123bf8b256f486a980cfab8f199c78012f1280e2d39ab64\",\n      \"vout\": 1,\n      \"amount_sats\": 20000000,\n      \"confirmations\": 2,\n      \"spendable\": true,\n      \"solvable\": true,\n      \"safe\": true,\n      \"address\": \"bcrt1qd7spv5q28348xl4myc8zmh983w5jx32cs707jh\",\n      \"script_pub_key\": \"00146fa016500a3c6a737ebb260e2ddca78ba9234558\",\n      \"descriptor\": null\n    },\n    {\n      \"txid\": \"5a71af69328a1202b986b714ccd597e235cc34a924bc3dde1c158c702070be48\",\n      \"vout\": 1,\n      \"amount_sats\": 10000000,\n      \"confirmations\": 1,\n      \"spendable\": true,\n      \"solvable\": true,\n      \"safe\": true,\n      \"address\": \"bcrt1qxdyjf6h5d6qxap4n2dap97q4j5ps6ua8jkxz0z\",\n      \"script_pub_key\": \"0014334924eaf46e806e86b3537a12f81595030d73a7\",\n      \"descriptor\": null\n    },\n    {\n      \"txid\": \"294a48f441094ee9eb26eb3fe3f3d34632a9e464fc5bcba53f2c084145ff5f38\",\n      \"vout\": 1,\n      \"amount_sats\": 40000000,\n      \"confirmations\": 2,\n      \"spendable\": true,\n      \"solvable\": true,\n      \"safe\": true,\n      \"address\": \"bcrt1q6rz28mcfaxtmd6v789l9rrlrusdprr9pz3cppk\",\n      \"script_pub_key\": \"0014d0c4a3ef09e997b6e99e397e518fe3e41a118ca1\",\n      \"descriptor\": null\n    }\n  ],\n  \"total_amount_sats\": 70000000,\n  \"total_count\": 3\n}",
+      "stderr": "",
+      "file_bytes": null,
+      "requests": 1
+    },
+    {
+      "name": "single-file",
+      "case": "single-list",
+      "source": "single",
+      "bounds": [
+        1,
+        9999999
+      ],
+      "file": true,
+      "status": 0,
+      "stdout": "",
+      "stderr": "",
+      "file_bytes": "{\n  \"utxos\": [\n    {\n      \"txid\": \"309b6cebaa215572a123bf8b256f486a980cfab8f199c78012f1280e2d39ab64\",\n      \"vout\": 1,\n      \"amount_sats\": 20000000,\n      \"confirmations\": 2,\n      \"spendable\": true,\n      \"solvable\": true,\n      \"safe\": true,\n      \"address\": \"bcrt1qd7spv5q28348xl4myc8zmh983w5jx32cs707jh\",\n      \"script_pub_key\": \"00146fa016500a3c6a737ebb260e2ddca78ba9234558\",\n      \"descriptor\": null\n    },\n    {\n      \"txid\": \"5a71af69328a1202b986b714ccd597e235cc34a924bc3dde1c158c702070be48\",\n      \"vout\": 1,\n      \"amount_sats\": 10000000,\n      \"confirmations\": 1,\n      \"spendable\": true,\n      \"solvable\": true,\n      \"safe\": true,\n      \"address\": \"bcrt1qxdyjf6h5d6qxap4n2dap97q4j5ps6ua8jkxz0z\",\n      \"script_pub_key\": \"0014334924eaf46e806e86b3537a12f81595030d73a7\",\n      \"descriptor\": null\n    },\n    {\n      \"txid\": \"294a48f441094ee9eb26eb3fe3f3d34632a9e464fc5bcba53f2c084145ff5f38\",\n      \"vout\": 1,\n      \"amount_sats\": 40000000,\n      \"confirmations\": 2,\n      \"spendable\": true,\n      \"solvable\": true,\n      \"safe\": true,\n      \"address\": \"bcrt1q6rz28mcfaxtmd6v789l9rrlrusdprr9pz3cppk\",\n      \"script_pub_key\": \"0014d0c4a3ef09e997b6e99e397e518fe3e41a118ca1\",\n      \"descriptor\": null\n    },\n    {\n      \"txid\": \"2d20f0308850a9b84e65b67d51607e5a389fde23686b236a621a51f344d2f692\",\n      \"vout\": 0,\n      \"amount_sats\": 3000000,\n      \"confirmations\": 1,\n      \"spendable\": true,\n      \"solvable\": true,\n      \"safe\": true,\n      \"address\": \"bcrt1q9u62588spffmq4dzjxsr5l297znf3z6jkgnhsw\",\n      \"script_pub_key\": \"00142f34aa1cf00a53b055a291a03a7d45f0a6988b52\",\n      \"descriptor\": null\n    }\n  ],\n  \"total_amount_sats\": 73000000,\n  \"total_count\": 4\n}",
+      "requests": 10
+    },
+    {
+      "name": "descriptor-file",
+      "case": "multipath-create",
+      "source": "descriptor",
+      "bounds": [
+        1,
+        9999999
+      ],
+      "file": true,
+      "status": 0,
+      "stdout": "",
+      "stderr": "",
+      "file_bytes": "{\n  \"utxos\": [\n    {\n      \"txid\": \"7e7cc8237fec44a2b2be75909de73604e487cf54d03dbef7df0dfa3cfa4d9e04\",\n      \"vout\": 0,\n      \"amount_sats\": 10000000,\n      \"confirmations\": 1,\n      \"spendable\": true,\n      \"solvable\": true,\n      \"safe\": true,\n      \"address\": \"bcrt1qxdyjf6h5d6qxap4n2dap97q4j5ps6ua8jkxz0z\",\n      \"script_pub_key\": \"0014334924eaf46e806e86b3537a12f81595030d73a7\",\n      \"descriptor\": null\n    },\n    {\n      \"txid\": \"a157c0c8d60db70be9b2df86e5a4aea68599e049e1b5e82c078509dd51beb056\",\n      \"vout\": 0,\n      \"amount_sats\": 20000000,\n      \"confirmations\": 2,\n      \"spendable\": true,\n      \"solvable\": true,\n      \"safe\": true,\n      \"address\": \"bcrt1qd7spv5q28348xl4myc8zmh983w5jx32cs707jh\",\n      \"script_pub_key\": \"00146fa016500a3c6a737ebb260e2ddca78ba9234558\",\n      \"descriptor\": null\n    },\n    {\n      \"txid\": \"4c66b77eaed1548107f29e6d637393bbef713cd7408b02d285afad770c298a79\",\n      \"vout\": 1,\n      \"amount_sats\": 40000000,\n      \"confirmations\": 2,\n      \"spendable\": true,\n      \"solvable\": true,\n      \"safe\": true,\n      \"address\": \"bcrt1q6rz28mcfaxtmd6v789l9rrlrusdprr9pz3cppk\",\n      \"script_pub_key\": \"0014d0c4a3ef09e997b6e99e397e518fe3e41a118ca1\",\n      \"descriptor\": null\n    },\n    {\n      \"txid\": \"1fc104d4715bf864674f9a3c0bd7a7e5249646d98f370ce395548338c4beff6a\",\n      \"vout\": 1,\n      \"amount_sats\": 3000000,\n      \"confirmations\": 1,\n      \"spendable\": true,\n      \"solvable\": true,\n      \"safe\": true,\n      \"address\": \"bcrt1q9u62588spffmq4dzjxsr5l297znf3z6jkgnhsw\",\n      \"script_pub_key\": \"00142f34aa1cf00a53b055a291a03a7d45f0a6988b52\",\n      \"descriptor\": null\n    }\n  ],\n  \"total_amount_sats\": 73000000,\n  \"total_count\": 4\n}",
+      "requests": 8
+    }
+  ]
+}

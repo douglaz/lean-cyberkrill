@@ -12,8 +12,8 @@ from datetime import datetime
 
 from cases import APP, ROOT
 
-BASE = "1d104f4e2cddc5632b50431aef48998e3966521b"
-ISSUE = "lck-phase-8a-core-rpc-client-yt0"
+BASE = "d0da4376659acf11c4837cb74ba0d9018bd236ec"
+ISSUE = "lck-phase-8b-list-utxos-wallet-file-qa6"
 # Fixed observations for fixtures first introduced by this phase. Never derive
 # these expected values from HEAD, the index, or the current fixture bytes.
 HISTORICAL_DIGESTS = {
@@ -59,23 +59,36 @@ def check_lifecycle(original, current):
 
 
 def main():
-    allowed = {"README.md", ".beads/issues.jsonl", "flake.nix"}
+    allowed = {"README.md", ".beads/issues.jsonl"}
     # Exact paths, grouped by their concrete integration responsibility.
     allowed |= {"packages/cyberkrill/" + p for p in [
-        "Cyberkrill.lean", "CyberkrillTests.lean", "Cyberkrill/CoreRpc.lean",
-        "Cyberkrill/RpcFlags.lean", "CyberkrillTests/Rpc.lean",
-        "test/network.py", "test/network-safety.py", "test/rpc-client.py",
-        "test/rpc-client-mutations.py", "test/generate-rpc-recordings.py",
-        "test/rpc-recordings.py", "test/scope.py", "test/validate.py", "test/revision-mutate.py"]}
+        "CyberkrillTests.lean",  # Selected reader, composed-client and CLI driver registration.
+        "Cyberkrill/App.lean", "Cyberkrill/Amounts.lean",  # Dispatch, flags, retained writer and fixed errors.
+        "Cyberkrill/CoreRpc.lean",  # Failed derivation continues with an empty address list.
+        "Cyberkrill/Frozenkrill.lean", "Cyberkrill/ListUtxos.lean",  # App-local export reader and orchestration.
+        "CyberkrillTests/ListUtxos.lean", "test/list-utxos.py",  # Schema, writer, parser and real HTTP/CLI checks.
+        "test/list-utxos-mutations.py",  # Detecting production mutations and exact restoration.
+        "test/list-utxos-lexical-mutations.py",  # Independent surrogate, escaped-key and ignored-field branches.
+        "test/list-utxos-lifecycle.py",  # Disposable sentinels check cleanup before either driver's restoration.
+        "test/network.py",  # Opt-in bounded signal deferral and same-group cancellation for mutation commands.
+        "test/list-utxos-provenance.json",  # Pinned MIT source and public-fixture attribution.
+        "test/scope.py", "test/validate.py",  # Phase boundary and executable acceptance integration.
+        "test/rpc-client-mutations.py",  # Retain the 80/281 observation while executing its current refresh.
+        "test/carried-regressions.py",  # Pin original observations and require current typed-help mutation evidence.
+        "test/revision-mutate.py"]}  # Preserve scope controls after retargeting.
     # These current observations are refreshed by their executable mutation suites.
     allowed |= {"packages/cyberkrill/test/golden/" + p for p in [
         "regression-refresh.json", "output-regression-refresh.json", "attached-output-refresh.json",
         "mutation-record.json", "lightning-mutation-record.json", "revision-mutation-record.json",
-        "offline-mutation-record.json", "rpc-client-mutation-record.json"]}
+        "offline-mutation-record.json", "rpc-client-mutation-record.json",
+        "list-utxos-reference.json", "list-utxos-mutation-record.json",
+        "list-utxos-lexical-mutation-record.json",
+        "list-utxos-lifecycle-record.json",  # Actual timeout/interruption boundaries and retained detecting failures.
+        "offline-history-recapture.json"]}  # Actual replay observation; retained corpus digest stays fixed.
     changed = set(filter(None, git("diff", BASE, "--name-only", "-z").decode().split("\0")))
     new = set(filter(None, git("ls-files", "--others", "--exclude-standard", "-z").decode().split("\0")))
     base_paths = set(git("ls-tree", "-r", "--name-only", BASE).decode().splitlines())
-    assert changed | new <= allowed, "path outside Core RPC scope: " + repr(sorted((changed | new) - allowed))
+    assert changed | new <= allowed, "path outside list UTXO scope: " + repr(sorted((changed | new) - allowed))
     # Equality against the base for each unrelated issue includes every field.
     def issues(data):
         rows = [json.loads(line) for line in data.splitlines()]
@@ -101,11 +114,7 @@ def main():
     assert 'lake build && lake test' in flake and 'bash scripts/check-link-spike.sh' in flake
     assert git("diff", BASE, "--", "scripts/check-link-spike.sh", "scripts/check-one-openssl.sh") == b""
     original_flake = git("show", BASE + ":flake.nix").decode()
-    marker = '          export LCK_RPC_SANDBOX=1\n          readlink /proc/self/ns/net > "$NIX_BUILD_TOP/rpc-network-namespace"\n'
-    shell_packages = "packages = [ lean pkgs.glibc.bin pkgs.binutils pkgs.python3 pkgs.openssl pkgs.util-linux pkgs.iproute2 ];"
-    original_packages = "packages = [ lean pkgs.glibc.bin pkgs.binutils pkgs.python3 pkgs.openssl ];"
-    assert flake.count(marker) == 1 and flake.count(shell_packages) == 1, "sandbox-only marker and namespace tools"
-    assert flake.replace(marker, "").replace(shell_packages, original_packages) == original_flake, "only network check/dev-shell flake delta"
+    assert flake == original_flake, "landed flake and network isolation contract unchanged"
     for relative in base_paths:
         if relative in allowed:
             continue

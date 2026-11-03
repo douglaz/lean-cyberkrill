@@ -42,8 +42,212 @@ Phase 7a adds the `version`, `convert-amount` and `generate-mnemonic` CLI
 commands, shared whole-sat/explicit-fee helpers, real curve capability wiring,
 and an offline exact-decimal golden comparator. Phase 7b adds offline BOLT11
 invoice decoding/signing and LNURL decoding. Phase 7c adds invite decoding,
-invite encoding and PSBT inspection. Network commands remain unregistered;
+invite encoding and PSBT inspection. Phase 8b adds Core UTXO listing and the
+public frozenkrill reader;
 `plan.md` is the plan for v1.
+
+## Phase 8b: Core UTXO listing and frozenkrill exports
+
+`onchain-list-utxos` accepts one of `--descriptor`, `--addresses` or
+`--wallet-file`, the shared RPC connection flags, `--network`, `--min-conf`,
+`--max-conf` and `-o/--output`. Source conflicts are argument errors; a missing
+source is a runtime `missingSource` error. Confirmation bounds use unsigned
+32-bit decimal arguments, including an optional leading `+`, defaulting to
+1 and 9999999. Reversed bounds remain accepted. Network names are case
+insensitive: mainnet/bitcoin, testnet, signet and regtest. Address input splits
+on commas, trims whitespace and removes empty items while preserving order.
+Effective help takes precedence over source and directory/credential conflicts.
+An invalid typed confirmation value before help still fails; help before that
+value returns normally. Consumed operands and attached output filenames retain
+their existing shielding rules.
+Split string values for the source and RPC connection flags refuse hyphen-leading
+tokens such as `--help` and `-x` before opening output, reading a wallet or
+initializing a client. A literal `-` and an empty value remain accepted;
+attached values such as `--descriptor=-x` retain every byte after `=`.
+
+Address listing sends the requested confirmation bounds directly to
+`listunspent`, including an empty address array. Descriptor listing imports
+with timestamp `now`, ignoring import failure, expands receiving before change,
+derives `[0,99]`, and lists with bounds `[0,9999999]`. It preserves the first
+occurrence of each outpoint within that descriptor invocation. A failed
+`deriveaddresses` continues with an empty address array; subsequent descriptor
+information failures propagate. The independent typed derivation wrapper still
+returns its error. Importing now does not scan historical transactions: older
+funds may be missed.
+
+Wallet files are public frozenkrill JSON exports. `Cyberkrill.Frozenkrill.parse`
+checks the exact wallet marker, signature discriminator, required u32 version,
+all required strings (including unused public-key and derivation fields), both
+address arrays, and each address's optional string derivation path/u32 index.
+Missing/null optional metadata is accepted; malformed JSON, wrong types,
+missing required fields and invalid signature types are refused. Nonzero
+versions through 4294967295 are accepted. Single-sig and multisig schemas follow
+the pinned source; strings are deserialized without descriptor, key or network
+validation. Signature matching is case insensitive. Multisig selects the first
+unanchored M-of-N match, accepts one optional ASCII space or hyphen on either
+side of `of`, and requires `0 < M <= N <= 15`. An invalid first match cannot be
+replaced by a later valid match. Floating JSON tokens are refused for u32 fields,
+including exponent forms and negative zero that normalize to an integer.
+The reader retains raw field occurrences and string tokens while checking the
+selected schema. Duplicate recognized fields are refused, including escaped
+spellings of the same name and duplicates inside address metadata. Typed strings
+and field names reject unpaired UTF-16 surrogates; valid pairs and ordinary
+Unicode remain accepted. Unknown fields retain their ignored-value behavior,
+including repeated unknown fields and ignored strings with lone surrogate escapes.
+Each address entry also accepts the positional form
+`["synthetic", null, null]`: exactly three slots for address, derivation path
+and index. The address is a required string; metadata slots accept null or their
+respective string/u32 types. Omitted or extra slots fail. Positional strings
+follow the same Unicode checks and numeric tokens follow the same u32 rules
+as object fields. Both representations work in either address array and either
+wallet schema.
+
+`Cyberkrill.ListUtxos.fetch` uses the supplied Core client's authentication,
+timeout and response bound throughout. Wallet receiving and change descriptors
+are listed independently, concatenated in that order, and filtered inclusively
+after concatenation; there is no deduplication across halves. Descriptor results
+are also filtered locally. The exact JSON object contains `utxos`,
+`total_amount_sats` and `total_count`. Each entry contains `txid`, `vout`,
+`amount_sats`, `confirmations`, `spendable`, `solvable`, `safe`, `address`,
+`script_pub_key` and `descriptor`. Optional fields remain null. Core's `desc`
+does not populate `descriptor`, matching the pinned Rust schema. Exact
+millisatoshi amounts produce integer satoshi values and totals without a
+binary64 round trip. All 18 reference captures agree exactly as JSON values;
+a separately identified synthetic control preserves 9007199254740993 sats,
+above binary64's exact integer range. This supplements the retained 20-row
+exact-amount table without changing any of its exceptions.
+
+An ordinary output writer opens/truncates before network validation, source
+validation, wallet reading or RPC and stays open through the final write.
+Success JSON has no appended newline. With `--output`, stdout is empty.
+`outputFailure` takes precedence over later runtime failures. `invalidNetwork`,
+`walletReadFailure`, `invalidWallet`, `missingSource`, `unsupportedBackend` and
+the existing fixed RPC diagnostics never echo wallet contents, credentials or
+exception bodies. Mnemonic output retains its separate private-file contract.
+
+The BDK routing delta is deliberate: `--descriptor` plus `--bitcoin-dir` is
+refused even with an explicit RPC URL. The reference selects BDK in
+`cyberkrill/src/main.rs:1506`, whose `cyberkrill-core/src/bdk_wallet.rs:254`
+uses a hardcoded endpoint. Address and wallet-file cookie authentication remain
+supported. Electrum/Esplora and the three PSBT command handlers remain outside
+this implementation; their wallet-file support remains deferred to their scope.
+
+Behavior is independently reimplemented from
+[cyberkrill at the parity revision](https://github.com/douglaz/cyberkrill/tree/27cad1faba86260b06665a89f0af5134d23525c2)
+(`cyberkrill/src/main.rs`, `cyberkrill-core/src/bitcoin_rpc.rs`,
+`cyberkrill-core/src/frozenkrill.rs`, MIT) and
+[frozenkrill's export detector and signature parser](https://github.com/planktonlabs/frozenkrill/tree/c6883ec2daf9886f96106815528b7052eecaf5b4)
+(`frozenkrill-core/src/wallet_export.rs`, `wallet_description.rs`, MIT chosen
+from MIT OR Apache-2.0). `test/list-utxos-provenance.json` records the paths and
+changes. Only the merged public test-mnemonic exports are used. Malformed
+exports and orchestration failures are explicitly synthetic.
+
+`test/list-utxos.py --capture` builds the immutable reference and runs each of
+18 captures in its own fresh loopback-only namespace with owned HOME/cwd and
+finite deadlines. `test/golden/list-utxos-reference.json` retains separate
+stdout/stderr/status and file bytes. Replay uses those same unmodified Core
+recordings: 8 cases, 11 methods, 69 selectors, 75 authorized replies and 69
+authentication controls. No new recording or shared fixture is required.
+The suite compares exact JSON values with boolean/number type distinctions,
+array order, nulls, complete requests, and stream/newline/file boundaries.
+It also covers schema failures, custom limits, ignored import and derivation
+failure, outpoint scope/order, output truncation and a FIFO consumer. The five
+existing FIFO consumers remain in their own suite. Current mutation evidence
+is kept separately from retained historical observations.
+
+The current list suite checks 249 public-export/synthetic schema cases,
+160 raw-token cases, 188 positional raw-slot cases, 126 injected/parser checks,
+78 executable split-value controls and 48 help/conflict/typed-order controls
+with zero RPC calls. Six object/positional wallet replays match the complete
+JSON and ten ordered calls from the unchanged pinned captures. The original
+18 pinned CLI captures remain separate. `test/list-utxos-mutations.py` records 63 separate
+compiled production edits: each has build exit 0, a named runtime failure at
+exit 1, restoration/rebuild exit 0 and a passing selected test at exit 0.
+The restored full list suite also exits 0. Its record binds the current source,
+test, capture and provenance bytes; the original 33-edit and later 43-edit list observations and
+earlier offline and RPC observations remain separate.
+`test/list-utxos-lexical-mutations.py` adds nine independent compiled branch
+edits for high/low surrogates, pairing, escaped and nested field names, ignored
+fields, and valid Unicode. Each records a named runtime red, exact restoration
+and green controls on both public export shapes.
+Both mutation drivers contain and reap the immediate child and its descendants
+before returning or restoring sources. Their shared runner's opt-in cancellation
+mode keeps the immediate command in the outer gate's process group, records
+signals without raising inside Python's wait lock, and checks them between
+bounded waits. Cancellation kills owned descendants immediately before reaping;
+it restores sources and preserves the signal status without starting recovery
+work. Ordinary failures and timeouts still restore and rebuild. The next
+invocation builds restored sources before making any mutation. Separate command streams
+and real timeout/interruption statuses remain recorded; every command owns
+an existing temporary parent until cleanup finishes.
+`test/list-utxos-lifecycle.py` checks thirty-four connection-free boundaries: the
+original timeout and HUP/INT/QUIT/TERM cases in each driver, plus cancellation
+through the complete real `gate.py` supervisor and a signal at the interpreter's
+acquired-wait-lock boundary in each driver, plus first cancellation at cleanup
+entry, during ordinary TERM cleanup and through the real supervisor during
+that cleanup wait, plus single and repeated cancellation at the final
+helper-state restoration boundary, HUP after unmasking and two distinct pending
+late signals in each driver, and HUP after caught TERM but before copying its
+status into the command record, and HUP at the final status decision and writing
+boundaries in both drivers. The recording handler remains active throughout cleanup;
+first cancellation switches an ordinary TERM wait to immediate KILL and
+repeated signals preserve the first status. Finalization blocks managed signals
+while restoring the original handlers and prior subreaper setting, then restores
+the caller's exact signal mask. Before restoring handlers, the helper records
+the first cancellation in the driver. Its restored handlers preserve that
+status through the command's handoff, including HUP after unmasking and queued
+HUP plus QUIT. The command's status writer also consults the saved cancellation
+when a later signal interrupts exception handling before the local status
+assignment. It blocks managed signals across the final status decision and
+complete write, then restores the caller's exact mask. A pending late signal
+is delivered only after the authoritative command record exists. Recorded TERM
+remains status 143; a first signal keeps its own
+status and actual state-restoration errors still propagate. Controls compare
+the handlers, nonempty mask and both disabled and already-enabled subreaper
+settings before and after the real command. Disposable sources and a separate
+session's TERM-refusing sentinel replace real builds. Checks require immediate
+child and descendant PID absence at command return and source restoration,
+recovery only after ordinary failure, exact source restoration and original
+signal statuses. The real gate must exit 143 with no surviving child before the
+independent observer cleans up. The retained wait-lock observations use Python
+3.13.15; current runs record their interpreter version and locate its actual
+boundary. Four focused
+runtime failures against the earlier harness remain separate from the original
+four timeout/TERM failures and retained ten-case success observation. The
+earlier fourteen-case success is retained unchanged. Six further runtime
+failures detect lost cleanup cancellation in the incoming helper; two separate
+controls retain the recording handler but remove prompt cleanup escalation,
+and fail at the named escalation assertion. The twenty-case success remains
+retained unchanged. Two further runtime failures against the incoming helper
+observe HUP status 129 and an unrestored subreaper after TERM. The twenty-four-case
+success is retained unchanged. Four further runtime failures in both drivers
+observe status 129 after unmasking or status 131 with two pending late signals,
+despite restored helper state. The twenty-eight-case success is retained
+unchanged. Two further runtime failures keep caught TERM status 143 but write
+status 1 when HUP interrupts the local status assignment. The thirty-case success
+is retained unchanged. Four further runtime failures keep caught TERM status 143
+but omit the status file when HUP interrupts the final decision or write. Both
+TERM-only controls pass. The current thirty-four-case suite exits 0,
+including explicit status-file existence, exact complete status bytes, caught-outcome and helper-state
+restoration checks and exact source restoration at real supervisor exit. These observations remain distinct from compiled
+Lean mutations and earlier success-path evidence.
+`test/validate.py app` builds and runs the full package suite;
+`evidence` includes the list suite, mutation-record verification, both-driver
+lifecycle checks and all five
+older FIFO consumers; `repo` runs the root build/check and source scans.
+Each validation command owns a fresh temp parent, explicitly restored across
+the development-shell boundary. Use these through the existing `test/gate.py`
+foreground supervisor and the resource caps described below.
+
+The Phase 8c caveats still apply: upstream #156's BDK move command used a
+default fee near 1 sat/vB, could add change or fail in its low-rate band, and
+does not supply a fee/change oracle. The settled output follows the destination
+calculation rather than that observed fee. The recorded Core binary64 output
+`0.6999833999999999` returns RPC -3 `Invalid amount`, while exact
+`0.6999834` succeeds; both requests/outcomes remain checked. Full selected
+total minus computed fee without clamping, explicit fee units and actual fee
+handler goldens belong to 8c. Address-keyed output maps collapse duplicate
+destinations before estimation; that future command concern is unchanged.
 
 ## Phase 8a: Core RPC client and shared connection flags (2 of 2)
 
@@ -83,8 +287,8 @@ No wrapper performs coin selection, fee calculation, signing or broadcast.
 PSBT outputs use an address-keyed JSON object, as in the pinned reference.
 Repeated addresses retain the last supplied amount rather than accumulating
 amounts or producing multiple outputs.
-The four Core CLI handlers and their fee-command goldens remain Phase 8b/8c
-work; the shared flag group is not registered on offline commands.
+Core UTXO listing is registered in Phase 8b; the three PSBT handlers and their
+fee-command goldens remain Phase 8c work. Offline commands have no RPC flags.
 
 `Cyberkrill.RpcFlags.flags` is the common `Cli.Flag` array, with `ofParsed`
 for future command groups and `parse` for in-process use. It defines
@@ -914,7 +1118,10 @@ The 32 carried typed-flag captures contain **18 preceding errors and 14 help
 controls**. Before the repair, 17 checks failed at the named preceding-error
 assertion; one missing-value case and all 14 help controls already passed.
 All 32 now pass. `test/golden/carried-regression.json` preserves those original
-observations, the first repaired run and a separate current run. The parser
+observations, the first repaired run and a later pre-list run. All three retain
+their original bytes and source bindings. Current typed-help reintroductions
+are executed separately by `test/offline-mutate.py`; the historical-record
+verifier also requires that current mutation evidence. The parser
 checks the `--as` enum and `--words` u32 grammar/width in argv order before
 later help. Earlier help still wins over later errors. A syntactically valid
 u32 count such as 13 or 4294967295 gives help before mnemonic count semantics;
@@ -8181,6 +8388,13 @@ that a false theorem statement was detected.
 
 ## Deltas taken
 
+For `onchain-list-utxos`, `--descriptor` with `--bitcoin-dir` returns
+`unsupportedBackend` before any Core call, including with an explicit URL.
+The pinned `cyberkrill/src/main.rs:1506` selects BDK for this combination;
+`cyberkrill-core/src/bdk_wallet.rs:254` ignores that URL and uses a hardcoded
+endpoint. These refusal cases execute only the port. Address and wallet-file
+cookie paths continue through Core; Electrum and Esplora remain unsupported.
+
 The BOLT11 as-written signing hash and strict field canonicality are the third
 golden-parity exception in plan §3. See [Phase 5 (1 of 3)](#phase-5-1-of-3-bolt11-invoices)
 for the positive leading-zero amounts, strictness negatives and source lines;
@@ -8395,6 +8609,15 @@ described elsewhere as derived/predicted await their actual later CLI captures;
 historical evidence above remains historical.
 
 ## Exact amounts vs cyberkrill
+
+The 18 Core list captures in Phase 8b match as exact JSON values; its synthetic
+9007199254740993-satoshi control separately detects loss of integer precision.
+The recorded Core move request `0.6999833999999999` fails with RPC -3 while
+exact `0.6999834` succeeds. Both variants remain asserted for 8c, whose BDK
+default-fee/change outcomes are not a fee oracle; the settled output follows
+the destination calculation. No-clamp destination
+calculation, explicit fee units and actual fee-handler goldens remain 8c work;
+duplicate-address JSON-map collapse before estimation remains relevant there.
 
 These pins come from the new executable captures, not the older pure-parser
 capture. Numeric rows compare exact values. Scalar strings below include

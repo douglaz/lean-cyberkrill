@@ -9,6 +9,7 @@ import Cyberkrill.PrivateOutput
 import Cyberkrill.Lightning
 import Cyberkrill.Invite
 import Cyberkrill.Psbt
+import Cyberkrill.ListUtxos
 
 namespace Cyberkrill
 
@@ -24,12 +25,23 @@ inductive Command where
   | decodeInvite (input output : Option String)
   | encodeInvite (input : String) (skipSecret : Bool) (output : Option String)
   | decodePsbt (input : Option String) (network : String) (output : Option String)
+  | listUtxos (args : ListUtxos.Args)
   | help (text : String)
 
 private def parser : Cli.Cmd :=
-  Cli.Cmd.mk "cyberkrill" none "Bitcoin, Lightning and Fedimint tools (offline subset)"
+  Cli.Cmd.mk "cyberkrill" none "Bitcoin, Lightning and Fedimint tools"
     (run := fun _ => pure 0)
     (subCmds := #[
+      Cli.Cmd.mk "onchain-list-utxos" none "List UTXOs using Bitcoin Core RPC"
+        (flags := RpcFlags.flags ++ #[
+          ⟨none, "descriptor", "Output descriptor", String⟩,
+          ⟨none, "addresses", "Comma-separated addresses", String⟩,
+          ⟨none, "wallet-file", "Public frozenkrill JSON export", String⟩,
+          ⟨none, "network", "mainnet (default), bitcoin, testnet, signet or regtest", String⟩,
+          ⟨none, "min-conf", "Minimum confirmations (default 1)", String⟩,
+          ⟨none, "max-conf", "Maximum confirmations (default 9999999)", String⟩,
+          ⟨some "o", "output", "Write JSON to a file", String⟩])
+        (run := fun _ => pure 0),
       Cli.Cmd.mk "version" none "Print the package version as JSON" (run := fun _ => pure 0),
       Cli.Cmd.mk "convert-amount" none "Convert BTC, sats or msats exactly; bare amounts are BTC"
         (flags := #[⟨none, "as", "Scalar output: btc, sats or msats", String⟩])
@@ -78,6 +90,11 @@ private def wordCount? (s : String) : Option Nat := do
 -- The dependency's whitespace reader accepts option tokens as flag values.
 -- Only an attached output value can start with '-' (apart from literal '-').
 -- Skip consumed values so filenames are never inspected as option syntax.
+private def valueFlags : List String :=
+  ["-o", "--output", "-w", "--words", "-k", "--private-key", "--network", "--as",
+   "--descriptor", "--addresses", "--wallet-file", "--rpc-url", "--bitcoin-dir",
+   "--rpc-user", "--rpc-password", "--min-conf", "--max-conf"]
+
 private def outputArgsValid : List String → Bool
   | "--" :: _ => true
   | flag :: value :: rest =>
@@ -88,6 +105,10 @@ private def outputArgsValid : List String → Bool
       (!(value.startsWith "-") || value == "-") && outputArgsValid rest
     else if flag == "--network" then
       (!(value.startsWith "-") || value == "-") && outputArgsValid rest
+    else if ["--descriptor", "--addresses", "--wallet-file", "--rpc-url", "--bitcoin-dir",
+        "--rpc-user", "--rpc-password"].contains flag then
+      (!(value.startsWith "-") || value == "-") && outputArgsValid rest
+    else if valueFlags.contains flag then outputArgsValid rest
     else outputArgsValid (value :: rest)
   | _ => true
 
@@ -97,8 +118,7 @@ private def outputArgsValid : List String → Bool
 private def outputParserArgs : List String → List String
   | "--" :: rest => "--" :: rest
   | flag :: rest =>
-    if flag == "-o" || flag == "--output" || flag == "-w" || flag == "--words" ||
-        flag == "-k" || flag == "--private-key" || flag == "--network" then
+    if valueFlags.contains flag then
       match rest with
       | value :: tail => flag :: value :: outputParserArgs tail
       | [] => [flag]
@@ -116,7 +136,7 @@ private def throughHelp : List String → List String
   | "--" :: rest => "--" :: rest
   | flag :: rest =>
     if flag == "--help" || flag.startsWith "-h" then ["-h"]
-    else if ["-o", "--output", "-w", "--words", "-k", "--private-key", "--network", "--as"].contains flag then
+    else if valueFlags.contains flag then
       match rest with
       | value :: tail => flag :: value :: throughHelp tail
       | [] => [flag]
@@ -127,6 +147,24 @@ private def throughHelp : List String → List String
 -- types are an enum and u32. Check their parse-time values in argv order,
 -- before a later help return. Mnemonic count semantics stay in execution.
 private def validateTypedArgs (command : String) (args : List String) : Except Error Unit := do
+  if command == "onchain-list-utxos" then
+    let mut bound := false
+    let mut shield := false
+    for flag in args do
+      if bound then
+        unless (wordCount? flag).isSome do throw (.onchain "invalidConfirmations: Expected an unsigned 32-bit decimal")
+        bound := false
+      else if shield then shield := false
+      else if flag == "--" || flag == "-h" then return
+      else
+        let name := (flag.splitOn "=").head!
+        if name == "--min-conf" || name == "--max-conf" then
+          if flag == name then bound := true
+          else unless (wordCount? (String.intercalate "=" (flag.splitOn "=").tail)).isSome do
+            throw (.onchain "invalidConfirmations: Expected an unsigned 32-bit decimal")
+        else if valueFlags.contains flag then shield := true
+    if bound then throw .invalidArguments
+    return
   unless command == "convert-amount" || command == "generate-mnemonic" do return
   let check := fun value => do
     if command == "convert-amount" then
@@ -158,7 +196,7 @@ def parseCommand (args : List String) : Except Error Command := do
   let args := throughHelp args
   validateTypedArgs (args.head?.getD "") args.tail
   let routed := ["generate-mnemonic", "ln-decode-invoice", "ln-decode-lnurl", "ln-encode-invoice",
-    "fm-decode-invite", "fm-encode-invite", "onchain-decode-psbt"].contains
+    "fm-decode-invite", "fm-encode-invite", "onchain-decode-psbt", "onchain-list-utxos"].contains
     (args.head?.getD "")
   if routed then
     unless outputArgsValid args.tail do throw .invalidArguments
@@ -168,6 +206,16 @@ def parseCommand (args : List String) : Except Error Command := do
   if p.hasFlag "help" || args.isEmpty then return .help cmd.help
   let flag := fun name => (p.flag? name).map (·.value)
   match cmd.meta.name with
+  | "onchain-list-utxos" =>
+    let sources := ["descriptor", "addresses", "wallet-file"].filter p.hasFlag
+    if sources.length > 1 then throw .invalidArguments
+    let rpc ← RpcFlags.ofParsed p |>.mapError Error.onchain
+    return .listUtxos {
+      rpc, descriptor := flag "descriptor", addresses := flag "addresses",
+      walletFile := flag "wallet-file", network := (flag "network").getD "mainnet",
+      minConf := (wordCount? ((flag "min-conf").getD "1")).getD 1,
+      maxConf := (wordCount? ((flag "max-conf").getD "9999999")).getD 9999999,
+      output := flag "output" }
   | "version" => return .version
   | "convert-amount" =>
     let some arg := p.positionalArg? "amount" | throw .invalidArguments
@@ -215,6 +263,8 @@ structure Services where
     return fun text => do
       handle.putStr text
       handle.flush
+  coreClient : RpcFlags → IO CoreRpc.Client := CoreRpc.Client.ofFlags
+  listUtxos : CoreRpc.Client → ListUtxos.Args → Option Frozenkrill.Wallet → IO (Except CoreRpc.Error Json) := ListUtxos.fetch
 
 def productionServices : Services where
   entropy := fun n => IO.getRandomBytes n.toUSize
@@ -273,6 +323,27 @@ private def prepareDecodeOutput (services : Services) (path : Option String) :
   catch _ => return .error .outputFailure
 
 def execute (version : String) (services : Services) : Command → IO (Except Error Output)
+  | .listUtxos args => do
+    let .ok writer ← prepareDecodeOutput services args.output | return .error .outputFailure
+    unless ListUtxos.networkValid args.network do
+      return .error (.onchain "invalidNetwork: Expected mainnet, bitcoin, testnet, signet or regtest")
+    if args.descriptor.isSome && args.rpc.bitcoinDir.isSome then
+      return .error (.onchain "unsupportedBackend: descriptor with bitcoin-dir requires BDK")
+    if args.descriptor.isNone && args.addresses.isNone && args.walletFile.isNone then
+      return .error (.onchain "missingSource: Provide descriptor, addresses or wallet-file")
+    let wallet ← match args.walletFile with
+      | none => pure none
+      | some path =>
+        let content ← try services.readFile path catch _ =>
+          return .error (.onchain "walletReadFailure: Cannot read wallet export")
+        match Frozenkrill.parse content with
+        | .error _ => return .error (.onchain "invalidWallet: Invalid frozenkrill export")
+        | .ok wallet => pure (some wallet)
+    let client ← try services.coreClient args.rpc catch _ =>
+      return .error (.onchain "rpcTransport: Cannot initialize Core client")
+    match ← services.listUtxos client args wallet with
+    | .error e => return .error (.onchain e.message)
+    | .ok result => return .ok (lightningOutput result.pretty writer false)
   | .version => pure (.ok { stdout := (Lean.Json.mkObj [("version", .str version)]).compress ++ "\n" })
   | .help text => pure (.ok { stdout := text ++ "\n" })
   | .convert input unit => pure (conversion input unit)

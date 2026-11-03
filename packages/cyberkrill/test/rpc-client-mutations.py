@@ -25,6 +25,7 @@ CORRECTED_SHA256 = "ccdc53e07f0ecb9a4a9a346c0f8304f0f5f00bbf3ca1daaf7ca162967326
 NESTED_SHA256 = "6ee597e6e65cb112b03b8d08a7fefef4e8e6fd41854e2f53379fc6a9178bbddd"
 LATE_SHA256 = "2eacf03deac4fc975f35588b57856dc94550b6fb69d035418fc384bcf84645c1"
 DEADLINE_SHA256 = "5cb6c57630a7232cb6fc1a28be98ec770e7fc0fe62f3d1db3119f4d652c81500"
+PRE_LIST_SHA256 = "1eafcc41c753102860c70eaea88dbb68cb1b2bf90444c09bd01b512a863cfa4e"
 
 
 def client_edits():
@@ -226,6 +227,9 @@ def verify():
     expected = [r[0] for r in client_edits()] + [r[0] for r in network_edits()]
     assert [r["property"] for r in record["checks"]] == expected, "RPC mutation property inventory"
     assert record["count"] == len(record["checks"]) == 281, "RPC mutation count"
+    pre_list = record["pre_list_observation"]
+    assert hashlib.sha256((json.dumps(pre_list, indent=2) + "\n").encode()).hexdigest() == PRE_LIST_SHA256, "retained pre-list 80/281 observation"
+    assert pre_list["count"] == len(pre_list["checks"]) == 281
     previous = record["previous_observation"]
     assert hashlib.sha256((json.dumps(previous, indent=2) + "\n").encode()).hexdigest() == PREVIOUS_SHA256, "retained prior RPC observations"
     assert previous["count"] == len(previous["checks"]) == 164
@@ -263,6 +267,8 @@ def main():
     assert args in [[], ["--resume"]]
     LOGS.mkdir(parents=True, exist_ok=True)
     prior = json.loads(DEST.read_bytes())
+    pre_list = prior.get("pre_list_observation", {k: v for k, v in prior.items() if not k.endswith("_observation")})
+    assert hashlib.sha256((json.dumps(pre_list, indent=2) + "\n").encode()).hexdigest() == PRE_LIST_SHA256, "original pre-list observation"
     previous = prior.get("previous_observation", prior)
     assert hashlib.sha256((json.dumps(previous, indent=2) + "\n").encode()).hexdigest() == PREVIOUS_SHA256, "original RPC observation"
     corrected = prior.get("corrected_observation", prior)
@@ -327,7 +333,8 @@ def main():
         assert fingerprints() == hashes, "RPC exact source restoration"
         DEST.write_text(json.dumps(dict(count=len(records), source_sha256=hashes, checks=records, restored_full=full,
                                        previous_observation=previous, corrected_observation=corrected,
-                                       nested_observation=nested, late_cleanup_observation=late, deadline_adoption_observation=deadline), indent=2) + "\n")
+                                       nested_observation=nested, late_cleanup_observation=late, deadline_adoption_observation=deadline,
+                                       pre_list_observation=pre_list), indent=2) + "\n")
         verify()
     finally:
         restore()
