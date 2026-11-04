@@ -10,6 +10,7 @@ import signal
 import sys
 import time
 
+from evidence_history import publish_history
 from cases import APP
 
 M = importlib.import_module("list-utxos-mutations")
@@ -125,7 +126,7 @@ def main():
             print(name + ": build/red/restore/green 0/1/0/0", flush=True)
         full = M.command("restored-full", ["python3", "-B", "test/list-utxos.py"], 0)
         assert fingerprints() == hashes, "lexical branch exact restoration"
-        DEST.write_text(json.dumps(dict(pre_psbt_observation=pre_psbt, count=len(records), source_sha256=hashes, previous_observation=previous, baseline=baseline,
+        publish_history(DEST, json.dumps(dict(pre_psbt_observation=pre_psbt, count=len(records), source_sha256=hashes, previous_observation=previous, baseline=baseline,
                                         checks=records, restored_full=full), indent=2) + "\n")
         verify()
     except SystemExit:

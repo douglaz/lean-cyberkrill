@@ -1,0 +1,5268 @@
+{
+  "previous_observation": {
+    "source_sha256": {
+      "Cyberkrill/App.lean": "dd0f3b0fb528e14361936d1228015b141eb33ea6cbf5106615a1654197fd8ee4",
+      "Cyberkrill/MoveUtxos.lean": "66dd2963ece278de7872d65b6832ce530a923ff4408db9057b5ae6d3527befd5",
+      "Cyberkrill/Amounts.lean": "5c61afca50ba859e8dba2fea4fd04d3db1c70905684815aec03c9174a1ac327f",
+      "Cyberkrill/CoreRpc.lean": "63fab1a1540c05eac769322a77fc799dc86cdb210da98a35696f8f46d3848a6d",
+      "Cyberkrill/PsbtCommands.lean": "ac75bf7a9f60270a0b0e55f42af1225b754c60ab21ee22bf85f885542bac0a0b",
+      "CyberkrillTests.lean": "c9c1cb1df6c52105e55ce96bbd9ae004f87278ff337d3c274a21abae9329880a",
+      "CyberkrillTests/MoveUtxos.lean": "21c75970bc0e8eaa89faf1599bc4e369bb71af676110f92b6eb9a079ca478c75",
+      "test/move-utxos.py": "4ce95d04673a89b7967721b3b8f7dd98fb8c5a8417589cbe086167e2799e33f4",
+      "test/move-utxos-mutations.py": "775c13debe71c04a6a44707d55251a7fcc0a91a8a87fdd41c629984bd69445a8",
+      "test/move-utxos-provenance.json": "c0c7c551daff9d0792364de30fa3e1c23b00b8a8b63ee116bb0bdd4d2d3524a2",
+      "test/golden/move-utxos-reference.json": "4c8b1d595e7ca7206556d9908b675f5f3676edb5562ae897b4eb7516aafc8da0",
+      "test/scope.py": "02c5700145ee2cbae3781611df23fb28ec2d4515ae3c2b26bedd59faf3e9529b"
+    },
+    "initial_build": {
+      "command": [
+        "lake",
+        "build",
+        "cyberkrill",
+        "CyberkrillTests"
+      ],
+      "status": 0,
+      "seconds": 0.423
+    },
+    "initial_green": {
+      "command": [
+        "python3",
+        "-B",
+        "test/move-utxos.py"
+      ],
+      "status": 0,
+      "seconds": 7.007
+    },
+    "checks": [
+      {
+        "property": "scope-raw-bytes",
+        "file": "test/scope.py",
+        "replace": "assert all(original_raw[k] == current_raw[k] for k in original_raw if k != ISSUE)",
+        "with_text": "assert all(original_raw[k] == current_raw[k] for k in [] if k != ISSUE)",
+        "selection": [
+          "scope-bytes"
+        ],
+        "assertion": "move scope raw serialization",
+        "failure": "AssertionError: move scope raw serialization",
+        "build": {
+          "command": [
+            "lake",
+            "build",
+            "cyberkrill",
+            "CyberkrillTests"
+          ],
+          "status": 0,
+          "seconds": 0.411
+        },
+        "red": {
+          "command": [
+            "python3",
+            "-B",
+            "test/move-utxos.py",
+            "scope-bytes"
+          ],
+          "status": 1,
+          "seconds": 1.461
+        },
+        "restore_build": {
+          "command": [
+            "lake",
+            "build",
+            "cyberkrill",
+            "CyberkrillTests"
+          ],
+          "status": 0,
+          "seconds": 0.418
+        },
+        "green": {
+          "command": [
+            "python3",
+            "-B",
+            "test/move-utxos.py",
+            "scope-bytes"
+          ],
+          "status": 0,
+          "seconds": 0.791
+        }
+      },
+      {
+        "property": "registration",
+        "file": "Cyberkrill/App.lean",
+        "replace": "Cli.Cmd.mk \"onchain-move-utxos\"",
+        "with_text": "Cli.Cmd.mk \"disabled-onchain-move-utxos\"",
+        "selection": [
+          "replay",
+          "absolute"
+        ],
+        "assertion": "move CLI success",
+        "failure": "AssertionError: move CLI success absolute: invalidArguments: Invalid command arguments; use --help",
+        "build": {
+          "command": [
+            "lake",
+            "build",
+            "cyberkrill",
+            "CyberkrillTests"
+          ],
+          "status": 0,
+          "seconds": 12.046
+        },
+        "red": {
+          "command": [
+            "python3",
+            "-B",
+            "test/move-utxos.py",
+            "replay",
+            "absolute"
+          ],
+          "status": 1,
+          "seconds": 0.383
+        },
+        "restore_build": {
+          "command": [
+            "lake",
+            "build",
+            "cyberkrill",
+            "CyberkrillTests"
+          ],
+          "status": 0,
+          "seconds": 10.221
+        },
+        "green": {
+          "command": [
+            "python3",
+            "-B",
+            "test/move-utxos.py",
+            "replay",
+            "absolute"
+          ],
+          "status": 0,
+          "seconds": 0.339
+        }
+      },
+      {
+        "property": "required-input",
+        "file": "Cyberkrill/App.lean",
+        "replace": "if inputs.isEmpty then throw .invalidArguments",
+        "with_text": "if false then throw .invalidArguments",
+        "selection": [
+          "refusals"
+        ],
+        "assertion": "move required flags",
+        "failure": "AssertionError: move required flags",
+        "build": {
+          "command": [
+            "lake",
+            "build",
+            "cyberkrill",
+            "CyberkrillTests"
+          ],
+          "status": 0,
+          "seconds": 10.304
+        },
+        "red": {
+          "command": [
+            "python3",
+            "-B",
+            "test/move-utxos.py",
+            "refusals"
+          ],
+          "status": 1,
+          "seconds": 0.835
+        },
+        "restore_build": {
+          "command": [
+            "lake",
+            "build",
+            "cyberkrill",
+            "CyberkrillTests"
+          ],
+          "status": 0,
+          "seconds": 10.403
+        },
+        "green": {
+          "command": [
+            "python3",
+            "-B",
+            "test/move-utxos.py",
+            "refusals"
+          ],
+          "status": 0,
+          "seconds": 0.839
+        }
+      },
+      {
+        "property": "required-destination",
+        "file": "Cyberkrill/App.lean",
+        "replace": "let some destination := flag \"destination\" | throw .invalidArguments",
+        "with_text": "let destination := (flag \"destination\").getD \"\"",
+        "selection": [
+          "refusals"
+        ],
+        "assertion": "move required flags",
+        "failure": "AssertionError: move required flags",
+        "build": {
+          "command": [
+            "lake",
+            "build",
+            "cyberkrill",
+            "CyberkrillTests"
+          ],
+          "status": 0,
+          "seconds": 10.202
+        },
+        "red": {
+          "command": [
+            "python3",
+            "-B",
+            "test/move-utxos.py",
+            "refusals"
+          ],
+          "status": 1,
+          "seconds": 0.785
+        },
+        "restore_build": {
+          "command": [
+            "lake",
+            "build",
+            "cyberkrill",
+            "CyberkrillTests"
+          ],
+          "status": 0,
+          "seconds": 10.324
+        },
+        "green": {
+          "command": [
+            "python3",
+            "-B",
+            "test/move-utxos.py",
+            "refusals"
+          ],
+          "status": 0,
+          "seconds": 0.785
+        }
+      },
+      {
+        "property": "fee-units-absolute",
+        "file": "Cyberkrill/Amounts.lean",
+        "replace": "if hasBitcoinUnit s then parseAmount s else .error .feeUnitRequired",
+        "with_text": "parseAmount s",
+        "selection": [
+          "replay",
+          "absolute-bare"
+        ],
+        "assertion": "move bare fee handler refusal",
+        "failure": "AssertionError: move bare fee handler refusal",
+        "build": {
+          "command": [
+            "lake",
+            "build",
+            "cyberkrill",
+            "CyberkrillTests"
+          ],
+          "status": 0,
+          "seconds": 14.716
+        },
+        "red": {
+          "command": [
+            "python3",
+            "-B",
+            "test/move-utxos.py",
+            "replay",
+            "absolute-bare"
+          ],
+          "status": 1,
+          "seconds": 0.385
+        },
+        "restore_build": {
+          "command": [
+            "lake",
+            "build",
+            "cyberkrill",
+            "CyberkrillTests"
+          ],
+          "status": 0,
+          "seconds": 15.007
+        },
+        "green": {
+          "command": [
+            "python3",
+            "-B",
+            "test/move-utxos.py",
+            "replay",
+            "absolute-bare"
+          ],
+          "status": 0,
+          "seconds": 0.335
+        }
+      },
+      {
+        "property": "fee-units-rate",
+        "file": "Cyberkrill/Amounts.lean",
+        "replace": "if hasBitcoinUnit s then parseAmount s else .error .feeUnitRequired",
+        "with_text": "parseAmount s",
+        "selection": [
+          "replay",
+          "rate-bare"
+        ],
+        "assertion": "move bare fee handler refusal",
+        "failure": "AssertionError: move bare fee handler refusal",
+        "build": {
+          "command": [
+            "lake",
+            "build",
+            "cyberkrill",
+            "CyberkrillTests"
+          ],
+          "status": 0,
+          "seconds": 14.712
+        },
+        "red": {
+          "command": [
+            "python3",
+            "-B",
+            "test/move-utxos.py",
+            "replay",
+            "rate-bare"
+          ],
+          "status": 1,
+          "seconds": 0.39
+        },
+        "restore_build": {
+          "command": [
+            "lake",
+            "build",
+            "cyberkrill",
+            "CyberkrillTests"
+          ],
+          "status": 0,
+          "seconds": 14.516
+        },
+        "green": {
+          "command": [
+            "python3",
+            "-B",
+            "test/move-utxos.py",
+            "replay",
+            "rate-bare"
+          ],
+          "status": 0,
+          "seconds": 0.335
+        }
+      },
+      {
+        "property": "max-grammar",
+        "file": "Cyberkrill/MoveUtxos.lean",
+        "replace": "if PsbtCommands.fiatValid text then return else throw e",
+        "with_text": "if false then return else throw e",
+        "selection": [
+          "injected"
+        ],
+        "assertion": "move runtime ordering",
+        "failure": "assertion failed: move runtime ordering",
+        "build": {
+          "command": [
+            "lake",
+            "build",
+            "cyberkrill",
+            "CyberkrillTests"
+          ],
+          "status": 0,
+          "seconds": 10.898
+        },
+        "red": {
+          "command": [
+            "python3",
+            "-B",
+            "test/move-utxos.py",
+            "injected"
+          ],
+          "status": 1,
+          "seconds": 0.333
+        },
+        "restore_build": {
+          "command": [
+            "lake",
+            "build",
+            "cyberkrill",
+            "CyberkrillTests"
+          ],
+          "status": 0,
+          "seconds": 10.81
+        },
+        "green": {
+          "command": [
+            "python3",
+            "-B",
+            "test/move-utxos.py",
+            "injected"
+          ],
+          "status": 0,
+          "seconds": 0.284
+        }
+      },
+      {
+        "property": "max-grouped-exponent",
+        "file": "Cyberkrill/MoveUtxos.lean",
+        "replace": "if PsbtCommands.fiatValid text then return else throw e",
+        "with_text": "if recognizableFiat text then\n      match PsbtCommands.parseOutputs (\"unused:\" ++ text) with\n      | .error .fiatNotSupported => return\n      | _ => throw e\n    else throw e",
+        "selection": [
+          "injected"
+        ],
+        "assertion": "move runtime ordering",
+        "failure": "assertion failed: move runtime ordering",
+        "build": {
+          "command": [
+            "lake",
+            "build",
+            "cyberkrill",
+            "CyberkrillTests"
+          ],
+          "status": 0,
+          "seconds": 10.811
+        },
+        "red": {
+          "command": [
+            "python3",
+            "-B",
+            "test/move-utxos.py",
+            "injected"
+          ],
+          "status": 1,
+          "seconds": 0.287
+        },
+        "restore_build": {
+          "command": [
+            "lake",
+            "build",
+            "cyberkrill",
+            "CyberkrillTests"
+          ],
+          "status": 0,
+          "seconds": 10.711
+        },
+        "green": {
+          "command": [
+            "python3",
+            "-B",
+            "test/move-utxos.py",
+            "injected"
+          ],
+          "status": 0,
+          "seconds": 0.281
+        }
+      },
+      {
+        "property": "maximum-floor",
+        "file": "Cyberkrill/MoveUtxos.lean",
+        "replace": "floorSat (\u2190 parseAmount text)",
+        "with_text": "wholeSat (\u2190 parseAmount text)",
+        "selection": [
+          "controls",
+          "fractional-cap"
+        ],
+        "assertion": "move synthetic success",
+        "failure": "AssertionError: move synthetic success fractional-cap",
+        "build": {
+          "command": [
+            "lake",
+            "build",
+            "cyberkrill",
+            "CyberkrillTests"
+          ],
+          "status": 0,
+          "seconds": 10.814
+        },
+        "red": {
+          "command": [
+            "python3",
+            "-B",
+            "test/move-utxos.py",
+            "controls",
+            "fractional-cap"
+          ],
+          "status": 1,
+          "seconds": 0.388
+        },
+        "restore_build": {
+          "command": [
+            "lake",
+            "build",
+            "cyberkrill",
+            "CyberkrillTests"
+          ],
+          "status": 0,
+          "seconds": 10.818
+        },
+        "green": {
+          "command": [
+            "python3",
+            "-B",
+            "test/move-utxos.py",
+            "controls",
+            "fractional-cap"
+          ],
+          "status": 0,
+          "seconds": 0.345
+        }
+      },
+      {
+        "property": "maximum-subsat",
+        "file": "Cyberkrill/MoveUtxos.lean",
+        "replace": "floorSat (\u2190 parseAmount text)",
+        "with_text": "pure (\u2190 parseAmount text)",
+        "selection": [
+          "refusals"
+        ],
+        "assertion": "move executable refusal/help",
+        "failure": "AssertionError: move executable refusal/help ['--max-amount', '0.1sat']",
+        "build": {
+          "command": [
+            "lake",
+            "build",
+            "cyberkrill",
+            "CyberkrillTests"
+          ],
+          "status": 0,
+          "seconds": 11.227
+        },
+        "red": {
+          "command": [
+            "python3",
+            "-B",
+            "test/move-utxos.py",
+            "refusals"
+          ],
+          "status": 1,
+          "seconds": 0.591
+        },
+        "restore_build": {
+          "command": [
+            "lake",
+            "build",
+            "cyberkrill",
+            "CyberkrillTests"
+          ],
+          "status": 0,
+          "seconds": 11.016
+        },
+        "green": {
+          "command": [
+            "python3",
+            "-B",
+            "test/move-utxos.py",
+            "refusals"
+          ],
+          "status": 0,
+          "seconds": 0.788
+        }
+      },
+      {
+        "property": "lookup-all",
+        "file": "Cyberkrill/MoveUtxos.lean",
+        "replace": "for input in inputs do",
+        "with_text": "for input in (if maximum.isSome then inputs.extract 0 1 else inputs) do",
+        "selection": [
+          "replay",
+          "overshoot"
+        ],
+        "assertion": "move CLI success",
+        "failure": "AssertionError: move CLI success overshoot: rpcHttp: HTTP 599",
+        "build": {
+          "command": [
+            "lake",
+            "build",
+            "cyberkrill",
+            "CyberkrillTests"
+          ],
+          "status": 0,
+          "seconds": 11.011
+        },
+        "red": {
+          "command": [
+            "python3",
+            "-B",
+            "test/move-utxos.py",
+            "replay",
+            "overshoot"
+          ],
+          "status": 1,
+          "seconds": 0.334
+        },
+        "restore_build": {
+          "command": [
+            "lake",
+            "build",
+            "cyberkrill",
+            "CyberkrillTests"
+          ],
+          "status": 0,
+          "seconds": 10.908
+        },
+        "green": {
+          "command": [
+            "python3",
+            "-B",
+            "test/move-utxos.py",
+            "replay",
+            "overshoot"
+          ],
+          "status": 0,
+          "seconds": 0.384
+        }
+      },
+      {
+        "property": "lookup-order",
+        "file": "Cyberkrill/MoveUtxos.lean",
+        "replace": "for input in inputs do",
+        "with_text": "for input in inputs.reverse do",
+        "selection": [
+          "replay",
+          "f64"
+        ],
+        "assertion": "move CLI success",
+        "failure": "AssertionError: move CLI success f64: rpcHttp: HTTP 599",
+        "build": {
+          "command": [
+            "lake",
+            "build",
+            "cyberkrill",
+            "CyberkrillTests"
+          ],
+          "status": 0,
+          "seconds": 11.022
+        },
+        "red": {
+          "command": [
+            "python3",
+            "-B",
+            "test/move-utxos.py",
+            "replay",
+            "f64"
+          ],
+          "status": 1,
+          "seconds": 0.385
+        },
+        "restore_build": {
+          "command": [
+            "lake",
+            "build",
+            "cyberkrill",
+            "CyberkrillTests"
+          ],
+          "status": 0,
+          "seconds": 11.009
+        },
+        "green": {
+          "command": [
+            "python3",
+            "-B",
+            "test/move-utxos.py",
+            "replay",
+            "f64"
+          ],
+          "status": 0,
+          "seconds": 0.333
+        }
+      },
+      {
+        "property": "lookup-index",
+        "file": "Cyberkrill/MoveUtxos.lean",
+        "replace": "let some output := outputs[index]? | throw .invalidResult",
+        "with_text": "let some output := outputs.find? (fun output => (output.getObjValAs? Nat \"n\").toOption == some index) | throw .invalidResult",
+        "selection": [
+          "controls",
+          "unrelated-fields"
+        ],
+        "assertion": "move synthetic success",
+        "failure": "AssertionError: move synthetic success unrelated-fields",
+        "build": {
+          "command": [
+            "lake",
+            "build",
+            "cyberkrill",
+            "CyberkrillTests"
+          ],
+          "status": 0,
+          "seconds": 11.007
+        },
+        "red": {
+          "command": [
+            "python3",
+            "-B",
+            "test/move-utxos.py",
+            "controls",
+            "unrelated-fields"
+          ],
+          "status": 1,
+          "seconds": 0.385
+        },
+        "restore_build": {
+          "command": [
+            "lake",
+            "build",
+            "cyberkrill",
+            "CyberkrillTests"
+          ],
+          "status": 0,
+          "seconds": 11.011
+        },
+        "green": {
+          "command": [
+            "python3",
+            "-B",
+            "test/move-utxos.py",
+            "controls",
+            "unrelated-fields"
+          ],
+          "status": 0,
+          "seconds": 0.333
+        }
+      },
+      {
+        "property": "lookup-precision",
+        "file": "Cyberkrill/MoveUtxos.lean",
+        "replace": "CoreRpc.amount value",
+        "with_text": "CoreRpc.amount value |>.map (fun amount => (\u27e8amount.msat.toUInt64.toFloat.toUInt64.toNat\u27e9 : Amount))",
+        "selection": [
+          "controls",
+          "exact-values"
+        ],
+        "assertion": "move synthetic",
+        "failure": "AssertionError: move synthetic success exact-values",
+        "build": {
+          "command": [
+            "lake",
+            "build",
+            "cyberkrill",
+            "CyberkrillTests"
+          ],
+          "status": 0,
+          "seconds": 10.802
+        },
+        "red": {
+          "command": [
+            "python3",
+            "-B",
+            "test/move-utxos.py",
+            "controls",
+            "exact-values"
+          ],
+          "status": 1,
+          "seconds": 0.39
+        },
+        "restore_build": {
+          "command": [
+            "lake",
+            "build",
+            "cyberkrill",
+            "CyberkrillTests"
+          ],
+          "status": 0,
+          "seconds": 11.512
+        },
+        "green": {
+          "command": [
+            "python3",
+            "-B",
+            "test/move-utxos.py",
+            "controls",
+            "exact-values"
+          ],
+          "status": 0,
+          "seconds": 0.427
+        }
+      },
+      {
+        "property": "no-global-dedup",
+        "file": "Cyberkrill/MoveUtxos.lean",
+        "replace": "  let mut values := #[]",
+        "with_text": "  let inputs := inputs.foldl (fun acc input => if acc.any (fun i => i.txid == input.txid && i.vout == input.vout) then acc else acc.push input) (#[] : Array CoreRpc.Input)\n  let mut values := #[]",
+        "selection": [
+          "controls",
+          "duplicate-input"
+        ],
+        "assertion": "move synthetic success",
+        "failure": "AssertionError: move synthetic success duplicate-input",
+        "build": {
+          "command": [
+            "lake",
+            "build",
+            "cyberkrill",
+            "CyberkrillTests"
+          ],
+          "status": 0,
+          "seconds": 12.444
+        },
+        "red": {
+          "command": [
+            "python3",
+            "-B",
+            "test/move-utxos.py",
+            "controls",
+            "duplicate-input"
+          ],
+          "status": 1,
+          "seconds": 0.406
+        },
+        "restore_build": {
+          "command": [
+            "lake",
+            "build",
+            "cyberkrill",
+            "CyberkrillTests"
+          ],
+          "status": 0,
+          "seconds": 11.013
+        },
+        "green": {
+          "command": [
+            "python3",
+            "-B",
+            "test/move-utxos.py",
+            "controls",
+            "duplicate-input"
+          ],
+          "status": 0,
+          "seconds": 0.338
+        }
+      },
+      {
+        "property": "uncapped-order",
+        "file": "Cyberkrill/MoveUtxos.lean",
+        "replace": "| none => values.toList",
+        "with_text": "| none => values.toList.reverse",
+        "selection": [
+          "controls",
+          "no-cap"
+        ],
+        "assertion": "move synthetic success",
+        "failure": "AssertionError: move synthetic success no-cap",
+        "build": {
+          "command": [
+            "lake",
+            "build",
+            "cyberkrill",
+            "CyberkrillTests"
+          ],
+          "status": 0,
+          "seconds": 11.016
+        },
+        "red": {
+          "command": [
+            "python3",
+            "-B",
+            "test/move-utxos.py",
+            "controls",
+            "no-cap"
+          ],
+          "status": 1,
+          "seconds": 0.387
+        },
+        "restore_build": {
+          "command": [
+            "lake",
+            "build",
+            "cyberkrill",
+            "CyberkrillTests"
+          ],
+          "status": 0,
+          "seconds": 10.831
+        },
+        "green": {
+          "command": [
+            "python3",
+            "-B",
+            "test/move-utxos.py",
+            "controls",
+            "no-cap"
+          ],
+          "status": 0,
+          "seconds": 0.347
+        }
+      },
+      {
+        "property": "stable-ties",
+        "file": "Cyberkrill/MoveUtxos.lean",
+        "replace": "a.2.msat \u2265 b.2.msat",
+        "with_text": "a.2.msat > b.2.msat",
+        "selection": [
+          "controls",
+          "overshoot"
+        ],
+        "assertion": "move synthetic success",
+        "failure": "AssertionError: move synthetic success overshoot",
+        "build": {
+          "command": [
+            "lake",
+            "build",
+            "cyberkrill",
+            "CyberkrillTests"
+          ],
+          "status": 0,
+          "seconds": 10.905
+        },
+        "red": {
+          "command": [
+            "python3",
+            "-B",
+            "test/move-utxos.py",
+            "controls",
+            "overshoot"
+          ],
+          "status": 1,
+          "seconds": 0.332
+        },
+        "restore_build": {
+          "command": [
+            "lake",
+            "build",
+            "cyberkrill",
+            "CyberkrillTests"
+          ],
+          "status": 0,
+          "seconds": 10.903
+        },
+        "green": {
+          "command": [
+            "python3",
+            "-B",
+            "test/move-utxos.py",
+            "controls",
+            "overshoot"
+          ],
+          "status": 0,
+          "seconds": 0.338
+        }
+      },
+      {
+        "property": "descending",
+        "file": "Cyberkrill/MoveUtxos.lean",
+        "replace": "a.2.msat \u2265 b.2.msat",
+        "with_text": "a.2.msat \u2264 b.2.msat",
+        "selection": [
+          "controls",
+          "below-largest"
+        ],
+        "assertion": "move synthetic success",
+        "failure": "AssertionError: move synthetic success below-largest",
+        "build": {
+          "command": [
+            "lake",
+            "build",
+            "cyberkrill",
+            "CyberkrillTests"
+          ],
+          "status": 0,
+          "seconds": 10.9
+        },
+        "red": {
+          "command": [
+            "python3",
+            "-B",
+            "test/move-utxos.py",
+            "controls",
+            "below-largest"
+          ],
+          "status": 1,
+          "seconds": 0.332
+        },
+        "restore_build": {
+          "command": [
+            "lake",
+            "build",
+            "cyberkrill",
+            "CyberkrillTests"
+          ],
+          "status": 0,
+          "seconds": 10.819
+        },
+        "green": {
+          "command": [
+            "python3",
+            "-B",
+            "test/move-utxos.py",
+            "controls",
+            "below-largest"
+          ],
+          "status": 0,
+          "seconds": 0.334
+        }
+      },
+      {
+        "property": "threshold-before-add",
+        "file": "Cyberkrill/MoveUtxos.lean",
+        "replace": "total.msat \u2265 cap.msat",
+        "with_text": "total.msat > cap.msat",
+        "selection": [
+          "controls",
+          "exact-cap"
+        ],
+        "assertion": "move synthetic success",
+        "failure": "AssertionError: move synthetic success exact-cap",
+        "build": {
+          "command": [
+            "lake",
+            "build",
+            "cyberkrill",
+            "CyberkrillTests"
+          ],
+          "status": 0,
+          "seconds": 10.902
+        },
+        "red": {
+          "command": [
+            "python3",
+            "-B",
+            "test/move-utxos.py",
+            "controls",
+            "exact-cap"
+          ],
+          "status": 1,
+          "seconds": 0.387
+        },
+        "restore_build": {
+          "command": [
+            "lake",
+            "build",
+            "cyberkrill",
+            "CyberkrillTests"
+          ],
+          "status": 0,
+          "seconds": 11.004
+        },
+        "green": {
+          "command": [
+            "python3",
+            "-B",
+            "test/move-utxos.py",
+            "controls",
+            "exact-cap"
+          ],
+          "status": 0,
+          "seconds": 0.336
+        }
+      },
+      {
+        "property": "no-clamp",
+        "file": "Cyberkrill/MoveUtxos.lean",
+        "replace": "let output : Amount := \u27e8total.msat - fee.msat\u27e9",
+        "with_text": "let output : Amount := \u27e8(maximum.map (fun cap => min cap.msat total.msat)).getD total.msat - fee.msat\u27e9",
+        "selection": [
+          "replay",
+          "overshoot"
+        ],
+        "assertion": "move complete JSON overshoot",
+        "failure": "AssertionError: move complete JSON overshoot",
+        "build": {
+          "command": [
+            "lake",
+            "build",
+            "cyberkrill",
+            "CyberkrillTests"
+          ],
+          "status": 0,
+          "seconds": 10.906
+        },
+        "red": {
+          "command": [
+            "python3",
+            "-B",
+            "test/move-utxos.py",
+            "replay",
+            "overshoot"
+          ],
+          "status": 1,
+          "seconds": 0.383
+        },
+        "restore_build": {
+          "command": [
+            "lake",
+            "build",
+            "cyberkrill",
+            "CyberkrillTests"
+          ],
+          "status": 0,
+          "seconds": 10.808
+        },
+        "green": {
+          "command": [
+            "python3",
+            "-B",
+            "test/move-utxos.py",
+            "replay",
+            "overshoot"
+          ],
+          "status": 0,
+          "seconds": 0.338
+        }
+      },
+      {
+        "property": "fee-selected-count",
+        "file": "Cyberkrill/MoveUtxos.lean",
+        "replace": "Fee.estimateWeight selected.size 1",
+        "with_text": "Fee.estimateWeight inputs.size 1",
+        "selection": [
+          "controls",
+          "capped-rate"
+        ],
+        "assertion": "move synthetic success",
+        "failure": "AssertionError: move synthetic success capped-rate",
+        "build": {
+          "command": [
+            "lake",
+            "build",
+            "cyberkrill",
+            "CyberkrillTests"
+          ],
+          "status": 0,
+          "seconds": 10.711
+        },
+        "red": {
+          "command": [
+            "python3",
+            "-B",
+            "test/move-utxos.py",
+            "controls",
+            "capped-rate"
+          ],
+          "status": 1,
+          "seconds": 0.334
+        },
+        "restore_build": {
+          "command": [
+            "lake",
+            "build",
+            "cyberkrill",
+            "CyberkrillTests"
+          ],
+          "status": 0,
+          "seconds": 10.901
+        },
+        "green": {
+          "command": [
+            "python3",
+            "-B",
+            "test/move-utxos.py",
+            "controls",
+            "capped-rate"
+          ],
+          "status": 0,
+          "seconds": 0.337
+        }
+      },
+      {
+        "property": "fee-one-output",
+        "file": "Cyberkrill/MoveUtxos.lean",
+        "replace": "Fee.estimateWeight selected.size 1",
+        "with_text": "Fee.estimateWeight selected.size 2",
+        "selection": [
+          "controls",
+          "fractional-rate"
+        ],
+        "assertion": "move synthetic success",
+        "failure": "AssertionError: move synthetic success fractional-rate",
+        "build": {
+          "command": [
+            "lake",
+            "build",
+            "cyberkrill",
+            "CyberkrillTests"
+          ],
+          "status": 0,
+          "seconds": 10.904
+        },
+        "red": {
+          "command": [
+            "python3",
+            "-B",
+            "test/move-utxos.py",
+            "controls",
+            "fractional-rate"
+          ],
+          "status": 1,
+          "seconds": 0.384
+        },
+        "restore_build": {
+          "command": [
+            "lake",
+            "build",
+            "cyberkrill",
+            "CyberkrillTests"
+          ],
+          "status": 0,
+          "seconds": 10.909
+        },
+        "green": {
+          "command": [
+            "python3",
+            "-B",
+            "test/move-utxos.py",
+            "controls",
+            "fractional-rate"
+          ],
+          "status": 0,
+          "seconds": 0.392
+        }
+      },
+      {
+        "property": "fee-absolute-floor",
+        "file": "Cyberkrill/MoveUtxos.lean",
+        "replace": "Amount.ofSats (fee.msat / 1000)",
+        "with_text": "Amount.ofSats ((fee.msat + 500) / 1000)",
+        "selection": [
+          "controls",
+          "fractional-fee"
+        ],
+        "assertion": "move synthetic success",
+        "failure": "AssertionError: move synthetic success fractional-fee",
+        "build": {
+          "command": [
+            "lake",
+            "build",
+            "cyberkrill",
+            "CyberkrillTests"
+          ],
+          "status": 0,
+          "seconds": 10.918
+        },
+        "red": {
+          "command": [
+            "python3",
+            "-B",
+            "test/move-utxos.py",
+            "controls",
+            "fractional-fee"
+          ],
+          "status": 1,
+          "seconds": 0.392
+        },
+        "restore_build": {
+          "command": [
+            "lake",
+            "build",
+            "cyberkrill",
+            "CyberkrillTests"
+          ],
+          "status": 0,
+          "seconds": 11.021
+        },
+        "green": {
+          "command": [
+            "python3",
+            "-B",
+            "test/move-utxos.py",
+            "controls",
+            "fractional-fee"
+          ],
+          "status": 0,
+          "seconds": 0.339
+        }
+      },
+      {
+        "property": "fee-subsat-allowed",
+        "file": "Cyberkrill/MoveUtxos.lean",
+        "replace": "pure (Amount.ofSats (fee.msat / 1000))",
+        "with_text": "pure (Amount.ofSats (max 1 (fee.msat / 1000)))",
+        "selection": [
+          "controls",
+          "subsat-fee"
+        ],
+        "assertion": "move synthetic success",
+        "failure": "AssertionError: move synthetic success subsat-fee",
+        "build": {
+          "command": [
+            "lake",
+            "build",
+            "cyberkrill",
+            "CyberkrillTests"
+          ],
+          "status": 0,
+          "seconds": 10.907
+        },
+        "red": {
+          "command": [
+            "python3",
+            "-B",
+            "test/move-utxos.py",
+            "controls",
+            "subsat-fee"
+          ],
+          "status": 1,
+          "seconds": 0.388
+        },
+        "restore_build": {
+          "command": [
+            "lake",
+            "build",
+            "cyberkrill",
+            "CyberkrillTests"
+          ],
+          "status": 0,
+          "seconds": 10.917
+        },
+        "green": {
+          "command": [
+            "python3",
+            "-B",
+            "test/move-utxos.py",
+            "controls",
+            "subsat-fee"
+          ],
+          "status": 0,
+          "seconds": 0.34
+        }
+      },
+      {
+        "property": "positive-output",
+        "file": "Cyberkrill/MoveUtxos.lean",
+        "replace": "unless total.msat > fee.msat do",
+        "with_text": "unless true do",
+        "selection": [
+          "controls",
+          "equal-fee"
+        ],
+        "assertion": "move synthetic refusal",
+        "failure": "AssertionError: move synthetic refusal equal-fee",
+        "build": {
+          "command": [
+            "lake",
+            "build",
+            "cyberkrill",
+            "CyberkrillTests"
+          ],
+          "status": 0,
+          "seconds": 11.108
+        },
+        "red": {
+          "command": [
+            "python3",
+            "-B",
+            "test/move-utxos.py",
+            "controls",
+            "equal-fee"
+          ],
+          "status": 1,
+          "seconds": 0.39
+        },
+        "restore_build": {
+          "command": [
+            "lake",
+            "build",
+            "cyberkrill",
+            "CyberkrillTests"
+          ],
+          "status": 0,
+          "seconds": 11.215
+        },
+        "green": {
+          "command": [
+            "python3",
+            "-B",
+            "test/move-utxos.py",
+            "controls",
+            "equal-fee"
+          ],
+          "status": 0,
+          "seconds": 0.339
+        }
+      },
+      {
+        "property": "psbt-original-spelling",
+        "file": "Cyberkrill/MoveUtxos.lean",
+        "replace": "unless (Base64.decode psbt).isSome do throw (.offline \"psbtBase64\")",
+        "with_text": "unless true do throw (.offline \"psbtBase64\")",
+        "selection": [
+          "controls",
+          "psbt-space-10"
+        ],
+        "assertion": "move synthetic refusal",
+        "failure": "AssertionError: move synthetic refusal psbt-space-10",
+        "build": {
+          "command": [
+            "lake",
+            "build",
+            "cyberkrill",
+            "CyberkrillTests"
+          ],
+          "status": 0,
+          "seconds": 11.029
+        },
+        "red": {
+          "command": [
+            "python3",
+            "-B",
+            "test/move-utxos.py",
+            "controls",
+            "psbt-space-10"
+          ],
+          "status": 1,
+          "seconds": 0.385
+        },
+        "restore_build": {
+          "command": [
+            "lake",
+            "build",
+            "cyberkrill",
+            "CyberkrillTests"
+          ],
+          "status": 0,
+          "seconds": 11.02
+        },
+        "green": {
+          "command": [
+            "python3",
+            "-B",
+            "test/move-utxos.py",
+            "controls",
+            "psbt-space-10"
+          ],
+          "status": 0,
+          "seconds": 0.335
+        }
+      },
+      {
+        "property": "psbt-curve",
+        "file": "Cyberkrill/MoveUtxos.lean",
+        "replace": "let _ \u2190 PsbtCli.parse psbt",
+        "with_text": "let _ := psbt",
+        "selection": [
+          "deep",
+          "curve"
+        ],
+        "assertion": "move synthetic refusal",
+        "failure": "AssertionError: move synthetic refusal curve",
+        "build": {
+          "command": [
+            "lake",
+            "build",
+            "cyberkrill",
+            "CyberkrillTests"
+          ],
+          "status": 0,
+          "seconds": 10.906
+        },
+        "red": {
+          "command": [
+            "python3",
+            "-B",
+            "test/move-utxos.py",
+            "deep",
+            "curve"
+          ],
+          "status": 1,
+          "seconds": 0.333
+        },
+        "restore_build": {
+          "command": [
+            "lake",
+            "build",
+            "cyberkrill",
+            "CyberkrillTests"
+          ],
+          "status": 0,
+          "seconds": 11.003
+        },
+        "green": {
+          "command": [
+            "python3",
+            "-B",
+            "test/move-utxos.py",
+            "deep",
+            "curve"
+          ],
+          "status": 0,
+          "seconds": 0.388
+        }
+      },
+      {
+        "property": "psbt-hash",
+        "file": "Cyberkrill/MoveUtxos.lean",
+        "replace": "let _ \u2190 PsbtCli.parse psbt",
+        "with_text": "let _ := psbt",
+        "selection": [
+          "deep",
+          "hash"
+        ],
+        "assertion": "move synthetic refusal",
+        "failure": "AssertionError: move synthetic refusal hash",
+        "build": {
+          "command": [
+            "lake",
+            "build",
+            "cyberkrill",
+            "CyberkrillTests"
+          ],
+          "status": 0,
+          "seconds": 11.423
+        },
+        "red": {
+          "command": [
+            "python3",
+            "-B",
+            "test/move-utxos.py",
+            "deep",
+            "hash"
+          ],
+          "status": 1,
+          "seconds": 0.342
+        },
+        "restore_build": {
+          "command": [
+            "lake",
+            "build",
+            "cyberkrill",
+            "CyberkrillTests"
+          ],
+          "status": 0,
+          "seconds": 10.898
+        },
+        "green": {
+          "command": [
+            "python3",
+            "-B",
+            "test/move-utxos.py",
+            "deep",
+            "hash"
+          ],
+          "status": 0,
+          "seconds": 0.334
+        }
+      },
+      {
+        "property": "psbt-same-point",
+        "file": "Cyberkrill/MoveUtxos.lean",
+        "replace": "let _ \u2190 PsbtCli.parse psbt",
+        "with_text": "let _ := psbt",
+        "selection": [
+          "deep",
+          "same-point"
+        ],
+        "assertion": "move synthetic refusal",
+        "failure": "AssertionError: move synthetic refusal same-point",
+        "build": {
+          "command": [
+            "lake",
+            "build",
+            "cyberkrill",
+            "CyberkrillTests"
+          ],
+          "status": 0,
+          "seconds": 10.905
+        },
+        "red": {
+          "command": [
+            "python3",
+            "-B",
+            "test/move-utxos.py",
+            "deep",
+            "same-point"
+          ],
+          "status": 1,
+          "seconds": 0.395
+        },
+        "restore_build": {
+          "command": [
+            "lake",
+            "build",
+            "cyberkrill",
+            "CyberkrillTests"
+          ],
+          "status": 0,
+          "seconds": 11.13
+        },
+        "green": {
+          "command": [
+            "python3",
+            "-B",
+            "test/move-utxos.py",
+            "deep",
+            "same-point"
+          ],
+          "status": 0,
+          "seconds": 0.347
+        }
+      },
+      {
+        "property": "writer-retained",
+        "file": "Cyberkrill/App.lean",
+        "replace": "    let .ok writer \u2190 prepareDecodeOutput services args.output | return .error .outputFailure\n    if args.feeRate.isNone",
+        "with_text": "    let .ok writer \u2190 prepareDecodeOutput services none | return .error .outputFailure\n    if args.feeRate.isNone",
+        "selection": [
+          "injected"
+        ],
+        "assertion": "move injected success",
+        "failure": "assertion failed: move injected success",
+        "build": {
+          "command": [
+            "lake",
+            "build",
+            "cyberkrill",
+            "CyberkrillTests"
+          ],
+          "status": 0,
+          "seconds": 10.411
+        },
+        "red": {
+          "command": [
+            "python3",
+            "-B",
+            "test/move-utxos.py",
+            "injected"
+          ],
+          "status": 1,
+          "seconds": 0.282
+        },
+        "restore_build": {
+          "command": [
+            "lake",
+            "build",
+            "cyberkrill",
+            "CyberkrillTests"
+          ],
+          "status": 0,
+          "seconds": 10.211
+        },
+        "green": {
+          "command": [
+            "python3",
+            "-B",
+            "test/move-utxos.py",
+            "injected"
+          ],
+          "status": 0,
+          "seconds": 0.283
+        }
+      },
+      {
+        "property": "raw-bytes",
+        "file": "Cyberkrill/App.lean",
+        "replace": "          services.writeOrdinaryFile path result.psbt",
+        "with_text": "          services.writeOrdinaryFile path (result.psbt ++ \"\\n\")",
+        "selection": [
+          "replay",
+          "raw"
+        ],
+        "assertion": "move raw bytes no newline",
+        "failure": "AssertionError: move raw bytes no newline",
+        "build": {
+          "command": [
+            "lake",
+            "build",
+            "cyberkrill",
+            "CyberkrillTests"
+          ],
+          "status": 0,
+          "seconds": 10.199
+        },
+        "red": {
+          "command": [
+            "python3",
+            "-B",
+            "test/move-utxos.py",
+            "replay",
+            "raw"
+          ],
+          "status": 1,
+          "seconds": 0.332
+        },
+        "restore_build": {
+          "command": [
+            "lake",
+            "build",
+            "cyberkrill",
+            "CyberkrillTests"
+          ],
+          "status": 0,
+          "seconds": 10.204
+        },
+        "green": {
+          "command": [
+            "python3",
+            "-B",
+            "test/move-utxos.py",
+            "replay",
+            "raw"
+          ],
+          "status": 0,
+          "seconds": 0.331
+        }
+      },
+      {
+        "property": "descriptor-dedup",
+        "file": "Cyberkrill/CoreRpc.lean",
+        "replace": "unless result.any (fun u => u.txid == value.txid && u.vout == value.vout) do",
+        "with_text": "if true then",
+        "selection": [
+          "expansions",
+          "scope-dedup"
+        ],
+        "assertion": "move expansion status",
+        "failure": "AssertionError: move expansion status scope-dedup: rpcHttp: HTTP 599",
+        "build": {
+          "command": [
+            "lake",
+            "build",
+            "cyberkrill",
+            "CyberkrillTests"
+          ],
+          "status": 0,
+          "seconds": 13.208
+        },
+        "red": {
+          "command": [
+            "python3",
+            "-B",
+            "test/move-utxos.py",
+            "expansions",
+            "scope-dedup"
+          ],
+          "status": 1,
+          "seconds": 0.385
+        },
+        "restore_build": {
+          "command": [
+            "lake",
+            "build",
+            "cyberkrill",
+            "CyberkrillTests"
+          ],
+          "status": 0,
+          "seconds": 13.107
+        },
+        "green": {
+          "command": [
+            "python3",
+            "-B",
+            "test/move-utxos.py",
+            "expansions",
+            "scope-dedup"
+          ],
+          "status": 0,
+          "seconds": 0.386
+        }
+      },
+      {
+        "property": "derive-fallback",
+        "file": "Cyberkrill/CoreRpc.lean",
+        "replace": "| .error _ => pure #[]",
+        "with_text": "| .error e => return .error e",
+        "selection": [
+          "expansions",
+          "derive-fallback"
+        ],
+        "assertion": "move expansion status",
+        "failure": "AssertionError: move expansion status derive-fallback: rpcError: Core rejected the request",
+        "build": {
+          "command": [
+            "lake",
+            "build",
+            "cyberkrill",
+            "CyberkrillTests"
+          ],
+          "status": 0,
+          "seconds": 13.211
+        },
+        "red": {
+          "command": [
+            "python3",
+            "-B",
+            "test/move-utxos.py",
+            "expansions",
+            "derive-fallback"
+          ],
+          "status": 1,
+          "seconds": 0.333
+        },
+        "restore_build": {
+          "command": [
+            "lake",
+            "build",
+            "cyberkrill",
+            "CyberkrillTests"
+          ],
+          "status": 0,
+          "seconds": 13.004
+        },
+        "green": {
+          "command": [
+            "python3",
+            "-B",
+            "test/move-utxos.py",
+            "expansions",
+            "derive-fallback"
+          ],
+          "status": 0,
+          "seconds": 0.34
+        }
+      },
+      {
+        "property": "implicit-cookie",
+        "file": "Cyberkrill/CoreRpc.lean",
+        "replace": "  return pairAuth flags.user flags.password",
+        "with_text": "  if flags.bitcoinDir.isNone then\n    if let some home \u2190 IO.getEnv \"HOME\" then\n      try\n        if let some auth := parseCookie (\u2190 IO.FS.readFile (System.FilePath.mk home / \".bitcoin\" / \".cookie\")) then return some auth\n      catch _ => pure ()\n  return pairAuth flags.user flags.password",
+        "selection": [
+          "auth",
+          "none"
+        ],
+        "assertion": "move auth secret suppression",
+        "failure": "AssertionError: move auth secret suppression none",
+        "build": {
+          "command": [
+            "lake",
+            "build",
+            "cyberkrill",
+            "CyberkrillTests"
+          ],
+          "status": 0,
+          "seconds": 13.005
+        },
+        "red": {
+          "command": [
+            "python3",
+            "-B",
+            "test/move-utxos.py",
+            "auth",
+            "none"
+          ],
+          "status": 1,
+          "seconds": 0.333
+        },
+        "restore_build": {
+          "command": [
+            "lake",
+            "build",
+            "cyberkrill",
+            "CyberkrillTests"
+          ],
+          "status": 0,
+          "seconds": 13.006
+        },
+        "green": {
+          "command": [
+            "python3",
+            "-B",
+            "test/move-utxos.py",
+            "auth",
+            "none"
+          ],
+          "status": 0,
+          "seconds": 0.335
+        }
+      },
+      {
+        "property": "expansion-size",
+        "file": "Cyberkrill/MoveUtxos.lean",
+        "replace": "PsbtCommands.expand client args.inputs",
+        "with_text": "PsbtCommands.expand { client with maxResponseBytes := 1048576 } args.inputs",
+        "selection": [
+          "limits",
+          "expansion-size"
+        ],
+        "assertion": "move inherited expansion-size",
+        "failure": "AssertionError: move inherited expansion-size: assertion failed: move fetch status",
+        "build": {
+          "command": [
+            "lake",
+            "build",
+            "cyberkrill",
+            "CyberkrillTests"
+          ],
+          "status": 0,
+          "seconds": 10.897
+        },
+        "red": {
+          "command": [
+            "python3",
+            "-B",
+            "test/move-utxos.py",
+            "limits",
+            "expansion-size"
+          ],
+          "status": 1,
+          "seconds": 0.381
+        },
+        "restore_build": {
+          "command": [
+            "lake",
+            "build",
+            "cyberkrill",
+            "CyberkrillTests"
+          ],
+          "status": 0,
+          "seconds": 10.896
+        },
+        "green": {
+          "command": [
+            "python3",
+            "-B",
+            "test/move-utxos.py",
+            "limits",
+            "expansion-size"
+          ],
+          "status": 0,
+          "seconds": 0.436
+        }
+      },
+      {
+        "property": "expansion-timeout",
+        "file": "Cyberkrill/MoveUtxos.lean",
+        "replace": "PsbtCommands.expand client args.inputs",
+        "with_text": "PsbtCommands.expand { client with totalTimeoutMs := 30000 } args.inputs",
+        "selection": [
+          "limits",
+          "expansion-timeout"
+        ],
+        "assertion": "move inherited expansion-timeout",
+        "failure": "AssertionError: move inherited expansion-timeout: assertion failed: move fetch status",
+        "build": {
+          "command": [
+            "lake",
+            "build",
+            "cyberkrill",
+            "CyberkrillTests"
+          ],
+          "status": 0,
+          "seconds": 10.912
+        },
+        "red": {
+          "command": [
+            "python3",
+            "-B",
+            "test/move-utxos.py",
+            "limits",
+            "expansion-timeout"
+          ],
+          "status": 1,
+          "seconds": 0.487
+        },
+        "restore_build": {
+          "command": [
+            "lake",
+            "build",
+            "cyberkrill",
+            "CyberkrillTests"
+          ],
+          "status": 0,
+          "seconds": 10.898
+        },
+        "green": {
+          "command": [
+            "python3",
+            "-B",
+            "test/move-utxos.py",
+            "limits",
+            "expansion-timeout"
+          ],
+          "status": 0,
+          "seconds": 0.582
+        }
+      },
+      {
+        "property": "lookup-size",
+        "file": "Cyberkrill/MoveUtxos.lean",
+        "replace": "client.call \"getrawtransaction\"",
+        "with_text": "({ client with maxResponseBytes := 1048576 } : CoreRpc.Client).call \"getrawtransaction\"",
+        "selection": [
+          "limits",
+          "lookup-size"
+        ],
+        "assertion": "move inherited lookup-size",
+        "failure": "AssertionError: move inherited lookup-size: assertion failed: move fetch status",
+        "build": {
+          "command": [
+            "lake",
+            "build",
+            "cyberkrill",
+            "CyberkrillTests"
+          ],
+          "status": 0,
+          "seconds": 10.811
+        },
+        "red": {
+          "command": [
+            "python3",
+            "-B",
+            "test/move-utxos.py",
+            "limits",
+            "lookup-size"
+          ],
+          "status": 1,
+          "seconds": 0.387
+        },
+        "restore_build": {
+          "command": [
+            "lake",
+            "build",
+            "cyberkrill",
+            "CyberkrillTests"
+          ],
+          "status": 0,
+          "seconds": 10.806
+        },
+        "green": {
+          "command": [
+            "python3",
+            "-B",
+            "test/move-utxos.py",
+            "limits",
+            "lookup-size"
+          ],
+          "status": 0,
+          "seconds": 0.438
+        }
+      },
+      {
+        "property": "lookup-timeout",
+        "file": "Cyberkrill/MoveUtxos.lean",
+        "replace": "client.call \"getrawtransaction\"",
+        "with_text": "({ client with totalTimeoutMs := 30000 } : CoreRpc.Client).call \"getrawtransaction\"",
+        "selection": [
+          "limits",
+          "lookup-timeout"
+        ],
+        "assertion": "move inherited lookup-timeout",
+        "failure": "AssertionError: move inherited lookup-timeout: assertion failed: move fetch status",
+        "build": {
+          "command": [
+            "lake",
+            "build",
+            "cyberkrill",
+            "CyberkrillTests"
+          ],
+          "status": 0,
+          "seconds": 10.914
+        },
+        "red": {
+          "command": [
+            "python3",
+            "-B",
+            "test/move-utxos.py",
+            "limits",
+            "lookup-timeout"
+          ],
+          "status": 1,
+          "seconds": 0.488
+        },
+        "restore_build": {
+          "command": [
+            "lake",
+            "build",
+            "cyberkrill",
+            "CyberkrillTests"
+          ],
+          "status": 0,
+          "seconds": 11.005
+        },
+        "green": {
+          "command": [
+            "python3",
+            "-B",
+            "test/move-utxos.py",
+            "limits",
+            "lookup-timeout"
+          ],
+          "status": 0,
+          "seconds": 0.586
+        }
+      },
+      {
+        "property": "final-size",
+        "file": "Cyberkrill/MoveUtxos.lean",
+        "replace": "client.createPsbt selected",
+        "with_text": "({ client with maxResponseBytes := 1048576 } : CoreRpc.Client).createPsbt selected",
+        "selection": [
+          "limits",
+          "final-size"
+        ],
+        "assertion": "move inherited final-size",
+        "failure": "AssertionError: move inherited final-size: assertion failed: move fetch status",
+        "build": {
+          "command": [
+            "lake",
+            "build",
+            "cyberkrill",
+            "CyberkrillTests"
+          ],
+          "status": 0,
+          "seconds": 10.91
+        },
+        "red": {
+          "command": [
+            "python3",
+            "-B",
+            "test/move-utxos.py",
+            "limits",
+            "final-size"
+          ],
+          "status": 1,
+          "seconds": 0.382
+        },
+        "restore_build": {
+          "command": [
+            "lake",
+            "build",
+            "cyberkrill",
+            "CyberkrillTests"
+          ],
+          "status": 0,
+          "seconds": 10.903
+        },
+        "green": {
+          "command": [
+            "python3",
+            "-B",
+            "test/move-utxos.py",
+            "limits",
+            "final-size"
+          ],
+          "status": 0,
+          "seconds": 0.433
+        }
+      },
+      {
+        "property": "final-timeout",
+        "file": "Cyberkrill/MoveUtxos.lean",
+        "replace": "client.createPsbt selected",
+        "with_text": "({ client with totalTimeoutMs := 30000 } : CoreRpc.Client).createPsbt selected",
+        "selection": [
+          "limits",
+          "final-timeout"
+        ],
+        "assertion": "move inherited final-timeout",
+        "failure": "AssertionError: move inherited final-timeout: assertion failed: move fetch status",
+        "build": {
+          "command": [
+            "lake",
+            "build",
+            "cyberkrill",
+            "CyberkrillTests"
+          ],
+          "status": 0,
+          "seconds": 10.911
+        },
+        "red": {
+          "command": [
+            "python3",
+            "-B",
+            "test/move-utxos.py",
+            "limits",
+            "final-timeout"
+          ],
+          "status": 1,
+          "seconds": 0.481
+        },
+        "restore_build": {
+          "command": [
+            "lake",
+            "build",
+            "cyberkrill",
+            "CyberkrillTests"
+          ],
+          "status": 0,
+          "seconds": 10.809
+        },
+        "green": {
+          "command": [
+            "python3",
+            "-B",
+            "test/move-utxos.py",
+            "limits",
+            "final-timeout"
+          ],
+          "status": 0,
+          "seconds": 0.585
+        }
+      }
+    ],
+    "restored_full": {
+      "command": [
+        "python3",
+        "-B",
+        "test/move-utxos.py"
+      ],
+      "status": 0,
+      "seconds": 6.59
+    }
+  },
+  "source_sha256": {
+    "Cyberkrill/App.lean": "6f7edc73a36d4412e63bcf4696fd1af7c3da539be7d3252be40a5b099c923047",
+    "Cyberkrill/MoveUtxos.lean": "66dd2963ece278de7872d65b6832ce530a923ff4408db9057b5ae6d3527befd5",
+    "Cyberkrill/Amounts.lean": "5c61afca50ba859e8dba2fea4fd04d3db1c70905684815aec03c9174a1ac327f",
+    "Cyberkrill/CoreRpc.lean": "63fab1a1540c05eac769322a77fc799dc86cdb210da98a35696f8f46d3848a6d",
+    "Cyberkrill/PsbtCommands.lean": "ac75bf7a9f60270a0b0e55f42af1225b754c60ab21ee22bf85f885542bac0a0b",
+    "CyberkrillTests.lean": "3d28755d3577cc7669a5ed341274211cc5f353bda063bf65e149e4a3ef78c57d",
+    "CyberkrillTests/MoveUtxos.lean": "d551d8b7021775e97db187a3835c5eb8d8e77bba195df69c234c5cb375814386",
+    "test/move-utxos.py": "d99e5045c5529a08706ce80475d5f9811dd9332a16db21b8cd4c64cea2b01f34",
+    "test/move-utxos-mutations.py": "bca48c46cb14a2b75e1c7e9e1a1c5077552bb3a5e922f574d0c14b3697fc313f",
+    "test/move-utxos-provenance.json": "c0c7c551daff9d0792364de30fa3e1c23b00b8a8b63ee116bb0bdd4d2d3524a2",
+    "test/golden/move-utxos-reference.json": "4c8b1d595e7ca7206556d9908b675f5f3676edb5562ae897b4eb7516aafc8da0",
+    "test/scope.py": "9b4a5ac0d7fa5605f1a377c2015209539e26363d5b2e67552d3914cc91740e44",
+    "test/evidence_history.py": "73c20f77c9e398544d1ef7eaad881a0870b28eb90a659d9b0f30f372d4f00a24"
+  },
+  "initial_build": {
+    "command": [
+      "lake",
+      "build",
+      "cyberkrill",
+      "CyberkrillTests"
+    ],
+    "status": 0,
+    "seconds": 0.4
+  },
+  "initial_green": {
+    "command": [
+      "python3",
+      "-B",
+      "test/move-utxos.py"
+    ],
+    "status": 0,
+    "seconds": 7.546
+  },
+  "checks": [
+    {
+      "property": "scope-raw-bytes",
+      "file": "test/scope.py",
+      "replace": "assert all(original_raw[k] == current_raw[k] for k in original_raw if k != ISSUE)",
+      "with_text": "assert all(original_raw[k] == current_raw[k] for k in [] if k != ISSUE)",
+      "selection": [
+        "scope-bytes"
+      ],
+      "assertion": "move scope raw serialization",
+      "failure": "AssertionError: move scope raw serialization",
+      "build": {
+        "command": [
+          "lake",
+          "build",
+          "cyberkrill",
+          "CyberkrillTests"
+        ],
+        "status": 0,
+        "seconds": 0.394
+      },
+      "red": {
+        "command": [
+          "python3",
+          "-B",
+          "test/move-utxos.py",
+          "scope-bytes"
+        ],
+        "status": 1,
+        "seconds": 5.0
+      },
+      "restore_build": {
+        "command": [
+          "lake",
+          "build",
+          "cyberkrill",
+          "CyberkrillTests"
+        ],
+        "status": 0,
+        "seconds": 0.399
+      },
+      "green": {
+        "command": [
+          "python3",
+          "-B",
+          "test/move-utxos.py",
+          "scope-bytes"
+        ],
+        "status": 0,
+        "seconds": 2.604
+      }
+    },
+    {
+      "property": "registration",
+      "file": "Cyberkrill/App.lean",
+      "replace": "Cli.Cmd.mk \"onchain-move-utxos\"",
+      "with_text": "Cli.Cmd.mk \"disabled-onchain-move-utxos\"",
+      "selection": [
+        "replay",
+        "absolute"
+      ],
+      "assertion": "move CLI success",
+      "failure": "AssertionError: move CLI success absolute: invalidArguments: Invalid command arguments; use --help",
+      "build": {
+        "command": [
+          "lake",
+          "build",
+          "cyberkrill",
+          "CyberkrillTests"
+        ],
+        "status": 0,
+        "seconds": 10.306
+      },
+      "red": {
+        "command": [
+          "python3",
+          "-B",
+          "test/move-utxos.py",
+          "replay",
+          "absolute"
+        ],
+        "status": 1,
+        "seconds": 0.332
+      },
+      "restore_build": {
+        "command": [
+          "lake",
+          "build",
+          "cyberkrill",
+          "CyberkrillTests"
+        ],
+        "status": 0,
+        "seconds": 9.999
+      },
+      "green": {
+        "command": [
+          "python3",
+          "-B",
+          "test/move-utxos.py",
+          "replay",
+          "absolute"
+        ],
+        "status": 0,
+        "seconds": 0.335
+      }
+    },
+    {
+      "property": "required-input",
+      "file": "Cyberkrill/App.lean",
+      "replace": "if inputs.isEmpty then throw .invalidArguments",
+      "with_text": "if false then throw .invalidArguments",
+      "selection": [
+        "refusals"
+      ],
+      "assertion": "move required flags",
+      "failure": "AssertionError: move required flags",
+      "build": {
+        "command": [
+          "lake",
+          "build",
+          "cyberkrill",
+          "CyberkrillTests"
+        ],
+        "status": 0,
+        "seconds": 10.199
+      },
+      "red": {
+        "command": [
+          "python3",
+          "-B",
+          "test/move-utxos.py",
+          "refusals"
+        ],
+        "status": 1,
+        "seconds": 0.834
+      },
+      "restore_build": {
+        "command": [
+          "lake",
+          "build",
+          "cyberkrill",
+          "CyberkrillTests"
+        ],
+        "status": 0,
+        "seconds": 10.101
+      },
+      "green": {
+        "command": [
+          "python3",
+          "-B",
+          "test/move-utxos.py",
+          "refusals"
+        ],
+        "status": 0,
+        "seconds": 0.783
+      }
+    },
+    {
+      "property": "required-destination",
+      "file": "Cyberkrill/App.lean",
+      "replace": "let some destination := flag \"destination\" | throw .invalidArguments",
+      "with_text": "let destination := (flag \"destination\").getD \"\"",
+      "selection": [
+        "refusals"
+      ],
+      "assertion": "move required flags",
+      "failure": "AssertionError: move required flags",
+      "build": {
+        "command": [
+          "lake",
+          "build",
+          "cyberkrill",
+          "CyberkrillTests"
+        ],
+        "status": 0,
+        "seconds": 10.205
+      },
+      "red": {
+        "command": [
+          "python3",
+          "-B",
+          "test/move-utxos.py",
+          "refusals"
+        ],
+        "status": 1,
+        "seconds": 0.789
+      },
+      "restore_build": {
+        "command": [
+          "lake",
+          "build",
+          "cyberkrill",
+          "CyberkrillTests"
+        ],
+        "status": 0,
+        "seconds": 10.416
+      },
+      "green": {
+        "command": [
+          "python3",
+          "-B",
+          "test/move-utxos.py",
+          "refusals"
+        ],
+        "status": 0,
+        "seconds": 0.847
+      }
+    },
+    {
+      "property": "fee-units-absolute",
+      "file": "Cyberkrill/Amounts.lean",
+      "replace": "if hasBitcoinUnit s then parseAmount s else .error .feeUnitRequired",
+      "with_text": "parseAmount s",
+      "selection": [
+        "replay",
+        "absolute-bare"
+      ],
+      "assertion": "move bare fee handler refusal",
+      "failure": "AssertionError: move bare fee handler refusal",
+      "build": {
+        "command": [
+          "lake",
+          "build",
+          "cyberkrill",
+          "CyberkrillTests"
+        ],
+        "status": 0,
+        "seconds": 14.505
+      },
+      "red": {
+        "command": [
+          "python3",
+          "-B",
+          "test/move-utxos.py",
+          "replay",
+          "absolute-bare"
+        ],
+        "status": 1,
+        "seconds": 0.34
+      },
+      "restore_build": {
+        "command": [
+          "lake",
+          "build",
+          "cyberkrill",
+          "CyberkrillTests"
+        ],
+        "status": 0,
+        "seconds": 14.714
+      },
+      "green": {
+        "command": [
+          "python3",
+          "-B",
+          "test/move-utxos.py",
+          "replay",
+          "absolute-bare"
+        ],
+        "status": 0,
+        "seconds": 0.387
+      }
+    },
+    {
+      "property": "fee-units-rate",
+      "file": "Cyberkrill/Amounts.lean",
+      "replace": "if hasBitcoinUnit s then parseAmount s else .error .feeUnitRequired",
+      "with_text": "parseAmount s",
+      "selection": [
+        "replay",
+        "rate-bare"
+      ],
+      "assertion": "move bare fee handler refusal",
+      "failure": "AssertionError: move bare fee handler refusal",
+      "build": {
+        "command": [
+          "lake",
+          "build",
+          "cyberkrill",
+          "CyberkrillTests"
+        ],
+        "status": 0,
+        "seconds": 15.136
+      },
+      "red": {
+        "command": [
+          "python3",
+          "-B",
+          "test/move-utxos.py",
+          "replay",
+          "rate-bare"
+        ],
+        "status": 1,
+        "seconds": 0.33
+      },
+      "restore_build": {
+        "command": [
+          "lake",
+          "build",
+          "cyberkrill",
+          "CyberkrillTests"
+        ],
+        "status": 0,
+        "seconds": 14.504
+      },
+      "green": {
+        "command": [
+          "python3",
+          "-B",
+          "test/move-utxos.py",
+          "replay",
+          "rate-bare"
+        ],
+        "status": 0,
+        "seconds": 0.335
+      }
+    },
+    {
+      "property": "max-grammar",
+      "file": "Cyberkrill/MoveUtxos.lean",
+      "replace": "if PsbtCommands.fiatValid text then return else throw e",
+      "with_text": "if false then return else throw e",
+      "selection": [
+        "injected"
+      ],
+      "assertion": "move runtime ordering",
+      "failure": "assertion failed: move runtime ordering fiat",
+      "build": {
+        "command": [
+          "lake",
+          "build",
+          "cyberkrill",
+          "CyberkrillTests"
+        ],
+        "status": 0,
+        "seconds": 10.807
+      },
+      "red": {
+        "command": [
+          "python3",
+          "-B",
+          "test/move-utxos.py",
+          "injected"
+        ],
+        "status": 1,
+        "seconds": 0.28
+      },
+      "restore_build": {
+        "command": [
+          "lake",
+          "build",
+          "cyberkrill",
+          "CyberkrillTests"
+        ],
+        "status": 0,
+        "seconds": 10.8
+      },
+      "green": {
+        "command": [
+          "python3",
+          "-B",
+          "test/move-utxos.py",
+          "injected"
+        ],
+        "status": 0,
+        "seconds": 0.281
+      }
+    },
+    {
+      "property": "max-grouped-exponent",
+      "file": "Cyberkrill/MoveUtxos.lean",
+      "replace": "if PsbtCommands.fiatValid text then return else throw e",
+      "with_text": "if recognizableFiat text then\n      match PsbtCommands.parseOutputs (\"unused:\" ++ text) with\n      | .error .fiatNotSupported => return\n      | _ => throw e\n    else throw e",
+      "selection": [
+        "injected"
+      ],
+      "assertion": "move runtime ordering",
+      "failure": "assertion failed: move runtime ordering fiat-exponent",
+      "build": {
+        "command": [
+          "lake",
+          "build",
+          "cyberkrill",
+          "CyberkrillTests"
+        ],
+        "status": 0,
+        "seconds": 10.798
+      },
+      "red": {
+        "command": [
+          "python3",
+          "-B",
+          "test/move-utxos.py",
+          "injected"
+        ],
+        "status": 1,
+        "seconds": 0.283
+      },
+      "restore_build": {
+        "command": [
+          "lake",
+          "build",
+          "cyberkrill",
+          "CyberkrillTests"
+        ],
+        "status": 0,
+        "seconds": 10.811
+      },
+      "green": {
+        "command": [
+          "python3",
+          "-B",
+          "test/move-utxos.py",
+          "injected"
+        ],
+        "status": 0,
+        "seconds": 0.29
+      }
+    },
+    {
+      "property": "maximum-floor",
+      "file": "Cyberkrill/MoveUtxos.lean",
+      "replace": "floorSat (\u2190 parseAmount text)",
+      "with_text": "wholeSat (\u2190 parseAmount text)",
+      "selection": [
+        "controls",
+        "fractional-cap"
+      ],
+      "assertion": "move synthetic success",
+      "failure": "AssertionError: move synthetic success fractional-cap",
+      "build": {
+        "command": [
+          "lake",
+          "build",
+          "cyberkrill",
+          "CyberkrillTests"
+        ],
+        "status": 0,
+        "seconds": 10.818
+      },
+      "red": {
+        "command": [
+          "python3",
+          "-B",
+          "test/move-utxos.py",
+          "controls",
+          "fractional-cap"
+        ],
+        "status": 1,
+        "seconds": 0.384
+      },
+      "restore_build": {
+        "command": [
+          "lake",
+          "build",
+          "cyberkrill",
+          "CyberkrillTests"
+        ],
+        "status": 0,
+        "seconds": 10.902
+      },
+      "green": {
+        "command": [
+          "python3",
+          "-B",
+          "test/move-utxos.py",
+          "controls",
+          "fractional-cap"
+        ],
+        "status": 0,
+        "seconds": 0.393
+      }
+    },
+    {
+      "property": "maximum-subsat",
+      "file": "Cyberkrill/MoveUtxos.lean",
+      "replace": "floorSat (\u2190 parseAmount text)",
+      "with_text": "pure (\u2190 parseAmount text)",
+      "selection": [
+        "refusals"
+      ],
+      "assertion": "move executable refusal/help",
+      "failure": "AssertionError: move executable refusal/help ['--max-amount', '0.1sat']",
+      "build": {
+        "command": [
+          "lake",
+          "build",
+          "cyberkrill",
+          "CyberkrillTests"
+        ],
+        "status": 0,
+        "seconds": 11.126
+      },
+      "red": {
+        "command": [
+          "python3",
+          "-B",
+          "test/move-utxos.py",
+          "refusals"
+        ],
+        "status": 1,
+        "seconds": 0.583
+      },
+      "restore_build": {
+        "command": [
+          "lake",
+          "build",
+          "cyberkrill",
+          "CyberkrillTests"
+        ],
+        "status": 0,
+        "seconds": 10.694
+      },
+      "green": {
+        "command": [
+          "python3",
+          "-B",
+          "test/move-utxos.py",
+          "refusals"
+        ],
+        "status": 0,
+        "seconds": 0.786
+      }
+    },
+    {
+      "property": "lookup-all",
+      "file": "Cyberkrill/MoveUtxos.lean",
+      "replace": "for input in inputs do",
+      "with_text": "for input in (if maximum.isSome then inputs.extract 0 1 else inputs) do",
+      "selection": [
+        "replay",
+        "overshoot"
+      ],
+      "assertion": "move CLI success",
+      "failure": "AssertionError: move CLI success overshoot: rpcHttp: HTTP 599",
+      "build": {
+        "command": [
+          "lake",
+          "build",
+          "cyberkrill",
+          "CyberkrillTests"
+        ],
+        "status": 0,
+        "seconds": 10.805
+      },
+      "red": {
+        "command": [
+          "python3",
+          "-B",
+          "test/move-utxos.py",
+          "replay",
+          "overshoot"
+        ],
+        "status": 1,
+        "seconds": 0.33
+      },
+      "restore_build": {
+        "command": [
+          "lake",
+          "build",
+          "cyberkrill",
+          "CyberkrillTests"
+        ],
+        "status": 0,
+        "seconds": 10.598
+      },
+      "green": {
+        "command": [
+          "python3",
+          "-B",
+          "test/move-utxos.py",
+          "replay",
+          "overshoot"
+        ],
+        "status": 0,
+        "seconds": 0.386
+      }
+    },
+    {
+      "property": "lookup-order",
+      "file": "Cyberkrill/MoveUtxos.lean",
+      "replace": "for input in inputs do",
+      "with_text": "for input in inputs.reverse do",
+      "selection": [
+        "replay",
+        "f64"
+      ],
+      "assertion": "move CLI success",
+      "failure": "AssertionError: move CLI success f64: rpcHttp: HTTP 599",
+      "build": {
+        "command": [
+          "lake",
+          "build",
+          "cyberkrill",
+          "CyberkrillTests"
+        ],
+        "status": 0,
+        "seconds": 10.71
+      },
+      "red": {
+        "command": [
+          "python3",
+          "-B",
+          "test/move-utxos.py",
+          "replay",
+          "f64"
+        ],
+        "status": 1,
+        "seconds": 0.335
+      },
+      "restore_build": {
+        "command": [
+          "lake",
+          "build",
+          "cyberkrill",
+          "CyberkrillTests"
+        ],
+        "status": 0,
+        "seconds": 10.604
+      },
+      "green": {
+        "command": [
+          "python3",
+          "-B",
+          "test/move-utxos.py",
+          "replay",
+          "f64"
+        ],
+        "status": 0,
+        "seconds": 0.338
+      }
+    },
+    {
+      "property": "lookup-index",
+      "file": "Cyberkrill/MoveUtxos.lean",
+      "replace": "let some output := outputs[index]? | throw .invalidResult",
+      "with_text": "let some output := outputs.find? (fun output => (output.getObjValAs? Nat \"n\").toOption == some index) | throw .invalidResult",
+      "selection": [
+        "controls",
+        "unrelated-fields"
+      ],
+      "assertion": "move synthetic success",
+      "failure": "AssertionError: move synthetic success unrelated-fields",
+      "build": {
+        "command": [
+          "lake",
+          "build",
+          "cyberkrill",
+          "CyberkrillTests"
+        ],
+        "status": 0,
+        "seconds": 11.009
+      },
+      "red": {
+        "command": [
+          "python3",
+          "-B",
+          "test/move-utxos.py",
+          "controls",
+          "unrelated-fields"
+        ],
+        "status": 1,
+        "seconds": 0.389
+      },
+      "restore_build": {
+        "command": [
+          "lake",
+          "build",
+          "cyberkrill",
+          "CyberkrillTests"
+        ],
+        "status": 0,
+        "seconds": 11.101
+      },
+      "green": {
+        "command": [
+          "python3",
+          "-B",
+          "test/move-utxos.py",
+          "controls",
+          "unrelated-fields"
+        ],
+        "status": 0,
+        "seconds": 0.331
+      }
+    },
+    {
+      "property": "lookup-precision",
+      "file": "Cyberkrill/MoveUtxos.lean",
+      "replace": "CoreRpc.amount value",
+      "with_text": "CoreRpc.amount value |>.map (fun amount => (\u27e8amount.msat.toUInt64.toFloat.toUInt64.toNat\u27e9 : Amount))",
+      "selection": [
+        "controls",
+        "exact-values"
+      ],
+      "assertion": "move synthetic",
+      "failure": "AssertionError: move synthetic success exact-values",
+      "build": {
+        "command": [
+          "lake",
+          "build",
+          "cyberkrill",
+          "CyberkrillTests"
+        ],
+        "status": 0,
+        "seconds": 10.814
+      },
+      "red": {
+        "command": [
+          "python3",
+          "-B",
+          "test/move-utxos.py",
+          "controls",
+          "exact-values"
+        ],
+        "status": 1,
+        "seconds": 0.332
+      },
+      "restore_build": {
+        "command": [
+          "lake",
+          "build",
+          "cyberkrill",
+          "CyberkrillTests"
+        ],
+        "status": 0,
+        "seconds": 10.695
+      },
+      "green": {
+        "command": [
+          "python3",
+          "-B",
+          "test/move-utxos.py",
+          "controls",
+          "exact-values"
+        ],
+        "status": 0,
+        "seconds": 0.334
+      }
+    },
+    {
+      "property": "no-global-dedup",
+      "file": "Cyberkrill/MoveUtxos.lean",
+      "replace": "  let mut values := #[]",
+      "with_text": "  let inputs := inputs.foldl (fun acc input => if acc.any (fun i => i.txid == input.txid && i.vout == input.vout) then acc else acc.push input) (#[] : Array CoreRpc.Input)\n  let mut values := #[]",
+      "selection": [
+        "controls",
+        "duplicate-input"
+      ],
+      "assertion": "move synthetic success",
+      "failure": "AssertionError: move synthetic success duplicate-input",
+      "build": {
+        "command": [
+          "lake",
+          "build",
+          "cyberkrill",
+          "CyberkrillTests"
+        ],
+        "status": 0,
+        "seconds": 10.913
+      },
+      "red": {
+        "command": [
+          "python3",
+          "-B",
+          "test/move-utxos.py",
+          "controls",
+          "duplicate-input"
+        ],
+        "status": 1,
+        "seconds": 0.335
+      },
+      "restore_build": {
+        "command": [
+          "lake",
+          "build",
+          "cyberkrill",
+          "CyberkrillTests"
+        ],
+        "status": 0,
+        "seconds": 10.695
+      },
+      "green": {
+        "command": [
+          "python3",
+          "-B",
+          "test/move-utxos.py",
+          "controls",
+          "duplicate-input"
+        ],
+        "status": 0,
+        "seconds": 0.332
+      }
+    },
+    {
+      "property": "uncapped-order",
+      "file": "Cyberkrill/MoveUtxos.lean",
+      "replace": "| none => values.toList",
+      "with_text": "| none => values.toList.reverse",
+      "selection": [
+        "controls",
+        "no-cap"
+      ],
+      "assertion": "move synthetic success",
+      "failure": "AssertionError: move synthetic success no-cap",
+      "build": {
+        "command": [
+          "lake",
+          "build",
+          "cyberkrill",
+          "CyberkrillTests"
+        ],
+        "status": 0,
+        "seconds": 10.7
+      },
+      "red": {
+        "command": [
+          "python3",
+          "-B",
+          "test/move-utxos.py",
+          "controls",
+          "no-cap"
+        ],
+        "status": 1,
+        "seconds": 0.387
+      },
+      "restore_build": {
+        "command": [
+          "lake",
+          "build",
+          "cyberkrill",
+          "CyberkrillTests"
+        ],
+        "status": 0,
+        "seconds": 10.713
+      },
+      "green": {
+        "command": [
+          "python3",
+          "-B",
+          "test/move-utxos.py",
+          "controls",
+          "no-cap"
+        ],
+        "status": 0,
+        "seconds": 0.33
+      }
+    },
+    {
+      "property": "stable-ties",
+      "file": "Cyberkrill/MoveUtxos.lean",
+      "replace": "a.2.msat \u2265 b.2.msat",
+      "with_text": "a.2.msat > b.2.msat",
+      "selection": [
+        "controls",
+        "overshoot"
+      ],
+      "assertion": "move synthetic success",
+      "failure": "AssertionError: move synthetic success overshoot",
+      "build": {
+        "command": [
+          "lake",
+          "build",
+          "cyberkrill",
+          "CyberkrillTests"
+        ],
+        "status": 0,
+        "seconds": 10.701
+      },
+      "red": {
+        "command": [
+          "python3",
+          "-B",
+          "test/move-utxos.py",
+          "controls",
+          "overshoot"
+        ],
+        "status": 1,
+        "seconds": 0.383
+      },
+      "restore_build": {
+        "command": [
+          "lake",
+          "build",
+          "cyberkrill",
+          "CyberkrillTests"
+        ],
+        "status": 0,
+        "seconds": 10.803
+      },
+      "green": {
+        "command": [
+          "python3",
+          "-B",
+          "test/move-utxos.py",
+          "controls",
+          "overshoot"
+        ],
+        "status": 0,
+        "seconds": 0.333
+      }
+    },
+    {
+      "property": "descending",
+      "file": "Cyberkrill/MoveUtxos.lean",
+      "replace": "a.2.msat \u2265 b.2.msat",
+      "with_text": "a.2.msat \u2264 b.2.msat",
+      "selection": [
+        "controls",
+        "below-largest"
+      ],
+      "assertion": "move synthetic success",
+      "failure": "AssertionError: move synthetic success below-largest",
+      "build": {
+        "command": [
+          "lake",
+          "build",
+          "cyberkrill",
+          "CyberkrillTests"
+        ],
+        "status": 0,
+        "seconds": 10.71
+      },
+      "red": {
+        "command": [
+          "python3",
+          "-B",
+          "test/move-utxos.py",
+          "controls",
+          "below-largest"
+        ],
+        "status": 1,
+        "seconds": 0.333
+      },
+      "restore_build": {
+        "command": [
+          "lake",
+          "build",
+          "cyberkrill",
+          "CyberkrillTests"
+        ],
+        "status": 0,
+        "seconds": 10.608
+      },
+      "green": {
+        "command": [
+          "python3",
+          "-B",
+          "test/move-utxos.py",
+          "controls",
+          "below-largest"
+        ],
+        "status": 0,
+        "seconds": 0.333
+      }
+    },
+    {
+      "property": "threshold-before-add",
+      "file": "Cyberkrill/MoveUtxos.lean",
+      "replace": "total.msat \u2265 cap.msat",
+      "with_text": "total.msat > cap.msat",
+      "selection": [
+        "controls",
+        "exact-cap"
+      ],
+      "assertion": "move synthetic success",
+      "failure": "AssertionError: move synthetic success exact-cap",
+      "build": {
+        "command": [
+          "lake",
+          "build",
+          "cyberkrill",
+          "CyberkrillTests"
+        ],
+        "status": 0,
+        "seconds": 10.7
+      },
+      "red": {
+        "command": [
+          "python3",
+          "-B",
+          "test/move-utxos.py",
+          "controls",
+          "exact-cap"
+        ],
+        "status": 1,
+        "seconds": 0.385
+      },
+      "restore_build": {
+        "command": [
+          "lake",
+          "build",
+          "cyberkrill",
+          "CyberkrillTests"
+        ],
+        "status": 0,
+        "seconds": 10.906
+      },
+      "green": {
+        "command": [
+          "python3",
+          "-B",
+          "test/move-utxos.py",
+          "controls",
+          "exact-cap"
+        ],
+        "status": 0,
+        "seconds": 0.332
+      }
+    },
+    {
+      "property": "no-clamp",
+      "file": "Cyberkrill/MoveUtxos.lean",
+      "replace": "let output : Amount := \u27e8total.msat - fee.msat\u27e9",
+      "with_text": "let output : Amount := \u27e8(maximum.map (fun cap => min cap.msat total.msat)).getD total.msat - fee.msat\u27e9",
+      "selection": [
+        "replay",
+        "overshoot"
+      ],
+      "assertion": "move complete JSON overshoot",
+      "failure": "AssertionError: move complete JSON overshoot",
+      "build": {
+        "command": [
+          "lake",
+          "build",
+          "cyberkrill",
+          "CyberkrillTests"
+        ],
+        "status": 0,
+        "seconds": 10.808
+      },
+      "red": {
+        "command": [
+          "python3",
+          "-B",
+          "test/move-utxos.py",
+          "replay",
+          "overshoot"
+        ],
+        "status": 1,
+        "seconds": 0.386
+      },
+      "restore_build": {
+        "command": [
+          "lake",
+          "build",
+          "cyberkrill",
+          "CyberkrillTests"
+        ],
+        "status": 0,
+        "seconds": 10.816
+      },
+      "green": {
+        "command": [
+          "python3",
+          "-B",
+          "test/move-utxos.py",
+          "replay",
+          "overshoot"
+        ],
+        "status": 0,
+        "seconds": 0.332
+      }
+    },
+    {
+      "property": "fee-selected-count",
+      "file": "Cyberkrill/MoveUtxos.lean",
+      "replace": "Fee.estimateWeight selected.size 1",
+      "with_text": "Fee.estimateWeight inputs.size 1",
+      "selection": [
+        "controls",
+        "capped-rate"
+      ],
+      "assertion": "move synthetic success",
+      "failure": "AssertionError: move synthetic success capped-rate",
+      "build": {
+        "command": [
+          "lake",
+          "build",
+          "cyberkrill",
+          "CyberkrillTests"
+        ],
+        "status": 0,
+        "seconds": 10.702
+      },
+      "red": {
+        "command": [
+          "python3",
+          "-B",
+          "test/move-utxos.py",
+          "controls",
+          "capped-rate"
+        ],
+        "status": 1,
+        "seconds": 0.333
+      },
+      "restore_build": {
+        "command": [
+          "lake",
+          "build",
+          "cyberkrill",
+          "CyberkrillTests"
+        ],
+        "status": 0,
+        "seconds": 10.795
+      },
+      "green": {
+        "command": [
+          "python3",
+          "-B",
+          "test/move-utxos.py",
+          "controls",
+          "capped-rate"
+        ],
+        "status": 0,
+        "seconds": 0.332
+      }
+    },
+    {
+      "property": "fee-one-output",
+      "file": "Cyberkrill/MoveUtxos.lean",
+      "replace": "Fee.estimateWeight selected.size 1",
+      "with_text": "Fee.estimateWeight selected.size 2",
+      "selection": [
+        "controls",
+        "fractional-rate"
+      ],
+      "assertion": "move synthetic success",
+      "failure": "AssertionError: move synthetic success fractional-rate",
+      "build": {
+        "command": [
+          "lake",
+          "build",
+          "cyberkrill",
+          "CyberkrillTests"
+        ],
+        "status": 0,
+        "seconds": 10.704
+      },
+      "red": {
+        "command": [
+          "python3",
+          "-B",
+          "test/move-utxos.py",
+          "controls",
+          "fractional-rate"
+        ],
+        "status": 1,
+        "seconds": 0.337
+      },
+      "restore_build": {
+        "command": [
+          "lake",
+          "build",
+          "cyberkrill",
+          "CyberkrillTests"
+        ],
+        "status": 0,
+        "seconds": 10.698
+      },
+      "green": {
+        "command": [
+          "python3",
+          "-B",
+          "test/move-utxos.py",
+          "controls",
+          "fractional-rate"
+        ],
+        "status": 0,
+        "seconds": 0.334
+      }
+    },
+    {
+      "property": "fee-absolute-floor",
+      "file": "Cyberkrill/MoveUtxos.lean",
+      "replace": "Amount.ofSats (fee.msat / 1000)",
+      "with_text": "Amount.ofSats ((fee.msat + 500) / 1000)",
+      "selection": [
+        "controls",
+        "fractional-fee"
+      ],
+      "assertion": "move synthetic success",
+      "failure": "AssertionError: move synthetic success fractional-fee",
+      "build": {
+        "command": [
+          "lake",
+          "build",
+          "cyberkrill",
+          "CyberkrillTests"
+        ],
+        "status": 0,
+        "seconds": 10.8
+      },
+      "red": {
+        "command": [
+          "python3",
+          "-B",
+          "test/move-utxos.py",
+          "controls",
+          "fractional-fee"
+        ],
+        "status": 1,
+        "seconds": 0.333
+      },
+      "restore_build": {
+        "command": [
+          "lake",
+          "build",
+          "cyberkrill",
+          "CyberkrillTests"
+        ],
+        "status": 0,
+        "seconds": 10.7
+      },
+      "green": {
+        "command": [
+          "python3",
+          "-B",
+          "test/move-utxos.py",
+          "controls",
+          "fractional-fee"
+        ],
+        "status": 0,
+        "seconds": 0.333
+      }
+    },
+    {
+      "property": "fee-subsat-allowed",
+      "file": "Cyberkrill/MoveUtxos.lean",
+      "replace": "pure (Amount.ofSats (fee.msat / 1000))",
+      "with_text": "pure (Amount.ofSats (max 1 (fee.msat / 1000)))",
+      "selection": [
+        "controls",
+        "subsat-fee"
+      ],
+      "assertion": "move synthetic success",
+      "failure": "AssertionError: move synthetic success subsat-fee",
+      "build": {
+        "command": [
+          "lake",
+          "build",
+          "cyberkrill",
+          "CyberkrillTests"
+        ],
+        "status": 0,
+        "seconds": 10.805
+      },
+      "red": {
+        "command": [
+          "python3",
+          "-B",
+          "test/move-utxos.py",
+          "controls",
+          "subsat-fee"
+        ],
+        "status": 1,
+        "seconds": 0.383
+      },
+      "restore_build": {
+        "command": [
+          "lake",
+          "build",
+          "cyberkrill",
+          "CyberkrillTests"
+        ],
+        "status": 0,
+        "seconds": 10.6
+      },
+      "green": {
+        "command": [
+          "python3",
+          "-B",
+          "test/move-utxos.py",
+          "controls",
+          "subsat-fee"
+        ],
+        "status": 0,
+        "seconds": 0.332
+      }
+    },
+    {
+      "property": "positive-output",
+      "file": "Cyberkrill/MoveUtxos.lean",
+      "replace": "unless total.msat > fee.msat do",
+      "with_text": "unless true do",
+      "selection": [
+        "controls",
+        "equal-fee"
+      ],
+      "assertion": "move synthetic refusal",
+      "failure": "AssertionError: move synthetic refusal equal-fee",
+      "build": {
+        "command": [
+          "lake",
+          "build",
+          "cyberkrill",
+          "CyberkrillTests"
+        ],
+        "status": 0,
+        "seconds": 10.805
+      },
+      "red": {
+        "command": [
+          "python3",
+          "-B",
+          "test/move-utxos.py",
+          "controls",
+          "equal-fee"
+        ],
+        "status": 1,
+        "seconds": 0.389
+      },
+      "restore_build": {
+        "command": [
+          "lake",
+          "build",
+          "cyberkrill",
+          "CyberkrillTests"
+        ],
+        "status": 0,
+        "seconds": 10.698
+      },
+      "green": {
+        "command": [
+          "python3",
+          "-B",
+          "test/move-utxos.py",
+          "controls",
+          "equal-fee"
+        ],
+        "status": 0,
+        "seconds": 0.333
+      }
+    },
+    {
+      "property": "psbt-original-spelling",
+      "file": "Cyberkrill/MoveUtxos.lean",
+      "replace": "unless (Base64.decode psbt).isSome do throw (.offline \"psbtBase64\")",
+      "with_text": "unless true do throw (.offline \"psbtBase64\")",
+      "selection": [
+        "controls",
+        "psbt-space-10"
+      ],
+      "assertion": "move synthetic refusal",
+      "failure": "AssertionError: move synthetic refusal psbt-space-10",
+      "build": {
+        "command": [
+          "lake",
+          "build",
+          "cyberkrill",
+          "CyberkrillTests"
+        ],
+        "status": 0,
+        "seconds": 10.797
+      },
+      "red": {
+        "command": [
+          "python3",
+          "-B",
+          "test/move-utxos.py",
+          "controls",
+          "psbt-space-10"
+        ],
+        "status": 1,
+        "seconds": 0.34
+      },
+      "restore_build": {
+        "command": [
+          "lake",
+          "build",
+          "cyberkrill",
+          "CyberkrillTests"
+        ],
+        "status": 0,
+        "seconds": 10.799
+      },
+      "green": {
+        "command": [
+          "python3",
+          "-B",
+          "test/move-utxos.py",
+          "controls",
+          "psbt-space-10"
+        ],
+        "status": 0,
+        "seconds": 0.336
+      }
+    },
+    {
+      "property": "psbt-curve",
+      "file": "Cyberkrill/MoveUtxos.lean",
+      "replace": "let _ \u2190 PsbtCli.parse psbt",
+      "with_text": "let _ := psbt",
+      "selection": [
+        "deep",
+        "curve"
+      ],
+      "assertion": "move synthetic refusal",
+      "failure": "AssertionError: move synthetic refusal curve",
+      "build": {
+        "command": [
+          "lake",
+          "build",
+          "cyberkrill",
+          "CyberkrillTests"
+        ],
+        "status": 0,
+        "seconds": 10.719
+      },
+      "red": {
+        "command": [
+          "python3",
+          "-B",
+          "test/move-utxos.py",
+          "deep",
+          "curve"
+        ],
+        "status": 1,
+        "seconds": 0.336
+      },
+      "restore_build": {
+        "command": [
+          "lake",
+          "build",
+          "cyberkrill",
+          "CyberkrillTests"
+        ],
+        "status": 0,
+        "seconds": 11.303
+      },
+      "green": {
+        "command": [
+          "python3",
+          "-B",
+          "test/move-utxos.py",
+          "deep",
+          "curve"
+        ],
+        "status": 0,
+        "seconds": 0.339
+      }
+    },
+    {
+      "property": "psbt-hash",
+      "file": "Cyberkrill/MoveUtxos.lean",
+      "replace": "let _ \u2190 PsbtCli.parse psbt",
+      "with_text": "let _ := psbt",
+      "selection": [
+        "deep",
+        "hash"
+      ],
+      "assertion": "move synthetic refusal",
+      "failure": "AssertionError: move synthetic refusal hash",
+      "build": {
+        "command": [
+          "lake",
+          "build",
+          "cyberkrill",
+          "CyberkrillTests"
+        ],
+        "status": 0,
+        "seconds": 10.606
+      },
+      "red": {
+        "command": [
+          "python3",
+          "-B",
+          "test/move-utxos.py",
+          "deep",
+          "hash"
+        ],
+        "status": 1,
+        "seconds": 0.335
+      },
+      "restore_build": {
+        "command": [
+          "lake",
+          "build",
+          "cyberkrill",
+          "CyberkrillTests"
+        ],
+        "status": 0,
+        "seconds": 10.699
+      },
+      "green": {
+        "command": [
+          "python3",
+          "-B",
+          "test/move-utxos.py",
+          "deep",
+          "hash"
+        ],
+        "status": 0,
+        "seconds": 0.333
+      }
+    },
+    {
+      "property": "psbt-same-point",
+      "file": "Cyberkrill/MoveUtxos.lean",
+      "replace": "let _ \u2190 PsbtCli.parse psbt",
+      "with_text": "let _ := psbt",
+      "selection": [
+        "deep",
+        "same-point"
+      ],
+      "assertion": "move synthetic refusal",
+      "failure": "AssertionError: move synthetic refusal same-point",
+      "build": {
+        "command": [
+          "lake",
+          "build",
+          "cyberkrill",
+          "CyberkrillTests"
+        ],
+        "status": 0,
+        "seconds": 10.603
+      },
+      "red": {
+        "command": [
+          "python3",
+          "-B",
+          "test/move-utxos.py",
+          "deep",
+          "same-point"
+        ],
+        "status": 1,
+        "seconds": 0.384
+      },
+      "restore_build": {
+        "command": [
+          "lake",
+          "build",
+          "cyberkrill",
+          "CyberkrillTests"
+        ],
+        "status": 0,
+        "seconds": 10.598
+      },
+      "green": {
+        "command": [
+          "python3",
+          "-B",
+          "test/move-utxos.py",
+          "deep",
+          "same-point"
+        ],
+        "status": 0,
+        "seconds": 0.334
+      }
+    },
+    {
+      "property": "writer-retained",
+      "file": "Cyberkrill/App.lean",
+      "replace": "    let .ok writer \u2190 prepareDecodeOutput services args.output | return .error .outputFailure\n    if args.feeRate.isNone",
+      "with_text": "    let .ok writer \u2190 prepareDecodeOutput services none | return .error .outputFailure\n    if args.feeRate.isNone",
+      "selection": [
+        "injected"
+      ],
+      "assertion": "move injected success",
+      "failure": "assertion failed: move injected success",
+      "build": {
+        "command": [
+          "lake",
+          "build",
+          "cyberkrill",
+          "CyberkrillTests"
+        ],
+        "status": 0,
+        "seconds": 10.009
+      },
+      "red": {
+        "command": [
+          "python3",
+          "-B",
+          "test/move-utxos.py",
+          "injected"
+        ],
+        "status": 1,
+        "seconds": 0.283
+      },
+      "restore_build": {
+        "command": [
+          "lake",
+          "build",
+          "cyberkrill",
+          "CyberkrillTests"
+        ],
+        "status": 0,
+        "seconds": 10.099
+      },
+      "green": {
+        "command": [
+          "python3",
+          "-B",
+          "test/move-utxos.py",
+          "injected"
+        ],
+        "status": 0,
+        "seconds": 0.282
+      }
+    },
+    {
+      "property": "raw-bytes",
+      "file": "Cyberkrill/App.lean",
+      "replace": "          services.writeOrdinaryFile path result.psbt",
+      "with_text": "          services.writeOrdinaryFile path (result.psbt ++ \"\\n\")",
+      "selection": [
+        "replay",
+        "raw"
+      ],
+      "assertion": "move raw bytes no newline",
+      "failure": "AssertionError: move raw bytes no newline",
+      "build": {
+        "command": [
+          "lake",
+          "build",
+          "cyberkrill",
+          "CyberkrillTests"
+        ],
+        "status": 0,
+        "seconds": 10.1
+      },
+      "red": {
+        "command": [
+          "python3",
+          "-B",
+          "test/move-utxos.py",
+          "replay",
+          "raw"
+        ],
+        "status": 1,
+        "seconds": 0.335
+      },
+      "restore_build": {
+        "command": [
+          "lake",
+          "build",
+          "cyberkrill",
+          "CyberkrillTests"
+        ],
+        "status": 0,
+        "seconds": 10.098
+      },
+      "green": {
+        "command": [
+          "python3",
+          "-B",
+          "test/move-utxos.py",
+          "replay",
+          "raw"
+        ],
+        "status": 0,
+        "seconds": 0.334
+      }
+    },
+    {
+      "property": "descriptor-dedup",
+      "file": "Cyberkrill/CoreRpc.lean",
+      "replace": "unless result.any (fun u => u.txid == value.txid && u.vout == value.vout) do",
+      "with_text": "if true then",
+      "selection": [
+        "expansions",
+        "scope-dedup"
+      ],
+      "assertion": "move expansion status",
+      "failure": "AssertionError: move expansion status scope-dedup: rpcHttp: HTTP 599",
+      "build": {
+        "command": [
+          "lake",
+          "build",
+          "cyberkrill",
+          "CyberkrillTests"
+        ],
+        "status": 0,
+        "seconds": 12.798
+      },
+      "red": {
+        "command": [
+          "python3",
+          "-B",
+          "test/move-utxos.py",
+          "expansions",
+          "scope-dedup"
+        ],
+        "status": 1,
+        "seconds": 0.332
+      },
+      "restore_build": {
+        "command": [
+          "lake",
+          "build",
+          "cyberkrill",
+          "CyberkrillTests"
+        ],
+        "status": 0,
+        "seconds": 12.9
+      },
+      "green": {
+        "command": [
+          "python3",
+          "-B",
+          "test/move-utxos.py",
+          "expansions",
+          "scope-dedup"
+        ],
+        "status": 0,
+        "seconds": 0.381
+      }
+    },
+    {
+      "property": "derive-fallback",
+      "file": "Cyberkrill/CoreRpc.lean",
+      "replace": "| .error _ => pure #[]",
+      "with_text": "| .error e => return .error e",
+      "selection": [
+        "expansions",
+        "derive-fallback"
+      ],
+      "assertion": "move expansion status",
+      "failure": "AssertionError: move expansion status derive-fallback: rpcError: Core rejected the request",
+      "build": {
+        "command": [
+          "lake",
+          "build",
+          "cyberkrill",
+          "CyberkrillTests"
+        ],
+        "status": 0,
+        "seconds": 12.804
+      },
+      "red": {
+        "command": [
+          "python3",
+          "-B",
+          "test/move-utxos.py",
+          "expansions",
+          "derive-fallback"
+        ],
+        "status": 1,
+        "seconds": 0.33
+      },
+      "restore_build": {
+        "command": [
+          "lake",
+          "build",
+          "cyberkrill",
+          "CyberkrillTests"
+        ],
+        "status": 0,
+        "seconds": 12.808
+      },
+      "green": {
+        "command": [
+          "python3",
+          "-B",
+          "test/move-utxos.py",
+          "expansions",
+          "derive-fallback"
+        ],
+        "status": 0,
+        "seconds": 0.332
+      }
+    },
+    {
+      "property": "implicit-cookie",
+      "file": "Cyberkrill/CoreRpc.lean",
+      "replace": "  return pairAuth flags.user flags.password",
+      "with_text": "  if flags.bitcoinDir.isNone then\n    if let some home \u2190 IO.getEnv \"HOME\" then\n      try\n        if let some auth := parseCookie (\u2190 IO.FS.readFile (System.FilePath.mk home / \".bitcoin\" / \".cookie\")) then return some auth\n      catch _ => pure ()\n  return pairAuth flags.user flags.password",
+      "selection": [
+        "auth",
+        "none"
+      ],
+      "assertion": "move auth secret suppression",
+      "failure": "AssertionError: move auth secret suppression none",
+      "build": {
+        "command": [
+          "lake",
+          "build",
+          "cyberkrill",
+          "CyberkrillTests"
+        ],
+        "status": 0,
+        "seconds": 12.801
+      },
+      "red": {
+        "command": [
+          "python3",
+          "-B",
+          "test/move-utxos.py",
+          "auth",
+          "none"
+        ],
+        "status": 1,
+        "seconds": 0.332
+      },
+      "restore_build": {
+        "command": [
+          "lake",
+          "build",
+          "cyberkrill",
+          "CyberkrillTests"
+        ],
+        "status": 0,
+        "seconds": 12.798
+      },
+      "green": {
+        "command": [
+          "python3",
+          "-B",
+          "test/move-utxos.py",
+          "auth",
+          "none"
+        ],
+        "status": 0,
+        "seconds": 0.337
+      }
+    },
+    {
+      "property": "expansion-size",
+      "file": "Cyberkrill/MoveUtxos.lean",
+      "replace": "PsbtCommands.expand client args.inputs",
+      "with_text": "PsbtCommands.expand { client with maxResponseBytes := 1048576 } args.inputs",
+      "selection": [
+        "limits",
+        "expansion-size"
+      ],
+      "assertion": "move inherited expansion-size",
+      "failure": "AssertionError: move inherited expansion-size: assertion failed: move fetch status",
+      "build": {
+        "command": [
+          "lake",
+          "build",
+          "cyberkrill",
+          "CyberkrillTests"
+        ],
+        "status": 0,
+        "seconds": 10.8
+      },
+      "red": {
+        "command": [
+          "python3",
+          "-B",
+          "test/move-utxos.py",
+          "limits",
+          "expansion-size"
+        ],
+        "status": 1,
+        "seconds": 0.385
+      },
+      "restore_build": {
+        "command": [
+          "lake",
+          "build",
+          "cyberkrill",
+          "CyberkrillTests"
+        ],
+        "status": 0,
+        "seconds": 10.799
+      },
+      "green": {
+        "command": [
+          "python3",
+          "-B",
+          "test/move-utxos.py",
+          "limits",
+          "expansion-size"
+        ],
+        "status": 0,
+        "seconds": 0.435
+      }
+    },
+    {
+      "property": "expansion-timeout",
+      "file": "Cyberkrill/MoveUtxos.lean",
+      "replace": "PsbtCommands.expand client args.inputs",
+      "with_text": "PsbtCommands.expand { client with totalTimeoutMs := 30000 } args.inputs",
+      "selection": [
+        "limits",
+        "expansion-timeout"
+      ],
+      "assertion": "move inherited expansion-timeout",
+      "failure": "AssertionError: move inherited expansion-timeout: assertion failed: move fetch status",
+      "build": {
+        "command": [
+          "lake",
+          "build",
+          "cyberkrill",
+          "CyberkrillTests"
+        ],
+        "status": 0,
+        "seconds": 10.701
+      },
+      "red": {
+        "command": [
+          "python3",
+          "-B",
+          "test/move-utxos.py",
+          "limits",
+          "expansion-timeout"
+        ],
+        "status": 1,
+        "seconds": 0.481
+      },
+      "restore_build": {
+        "command": [
+          "lake",
+          "build",
+          "cyberkrill",
+          "CyberkrillTests"
+        ],
+        "status": 0,
+        "seconds": 10.717
+      },
+      "green": {
+        "command": [
+          "python3",
+          "-B",
+          "test/move-utxos.py",
+          "limits",
+          "expansion-timeout"
+        ],
+        "status": 0,
+        "seconds": 0.584
+      }
+    },
+    {
+      "property": "lookup-size",
+      "file": "Cyberkrill/MoveUtxos.lean",
+      "replace": "client.call \"getrawtransaction\"",
+      "with_text": "({ client with maxResponseBytes := 1048576 } : CoreRpc.Client).call \"getrawtransaction\"",
+      "selection": [
+        "limits",
+        "lookup-size"
+      ],
+      "assertion": "move inherited lookup-size",
+      "failure": "AssertionError: move inherited lookup-size: assertion failed: move fetch status",
+      "build": {
+        "command": [
+          "lake",
+          "build",
+          "cyberkrill",
+          "CyberkrillTests"
+        ],
+        "status": 0,
+        "seconds": 10.808
+      },
+      "red": {
+        "command": [
+          "python3",
+          "-B",
+          "test/move-utxos.py",
+          "limits",
+          "lookup-size"
+        ],
+        "status": 1,
+        "seconds": 0.383
+      },
+      "restore_build": {
+        "command": [
+          "lake",
+          "build",
+          "cyberkrill",
+          "CyberkrillTests"
+        ],
+        "status": 0,
+        "seconds": 10.802
+      },
+      "green": {
+        "command": [
+          "python3",
+          "-B",
+          "test/move-utxos.py",
+          "limits",
+          "lookup-size"
+        ],
+        "status": 0,
+        "seconds": 0.436
+      }
+    },
+    {
+      "property": "lookup-timeout",
+      "file": "Cyberkrill/MoveUtxos.lean",
+      "replace": "client.call \"getrawtransaction\"",
+      "with_text": "({ client with totalTimeoutMs := 30000 } : CoreRpc.Client).call \"getrawtransaction\"",
+      "selection": [
+        "limits",
+        "lookup-timeout"
+      ],
+      "assertion": "move inherited lookup-timeout",
+      "failure": "AssertionError: move inherited lookup-timeout: assertion failed: move fetch status",
+      "build": {
+        "command": [
+          "lake",
+          "build",
+          "cyberkrill",
+          "CyberkrillTests"
+        ],
+        "status": 0,
+        "seconds": 10.698
+      },
+      "red": {
+        "command": [
+          "python3",
+          "-B",
+          "test/move-utxos.py",
+          "limits",
+          "lookup-timeout"
+        ],
+        "status": 1,
+        "seconds": 0.489
+      },
+      "restore_build": {
+        "command": [
+          "lake",
+          "build",
+          "cyberkrill",
+          "CyberkrillTests"
+        ],
+        "status": 0,
+        "seconds": 10.596
+      },
+      "green": {
+        "command": [
+          "python3",
+          "-B",
+          "test/move-utxos.py",
+          "limits",
+          "lookup-timeout"
+        ],
+        "status": 0,
+        "seconds": 0.581
+      }
+    },
+    {
+      "property": "final-size",
+      "file": "Cyberkrill/MoveUtxos.lean",
+      "replace": "client.createPsbt selected",
+      "with_text": "({ client with maxResponseBytes := 1048576 } : CoreRpc.Client).createPsbt selected",
+      "selection": [
+        "limits",
+        "final-size"
+      ],
+      "assertion": "move inherited final-size",
+      "failure": "AssertionError: move inherited final-size: assertion failed: move fetch status",
+      "build": {
+        "command": [
+          "lake",
+          "build",
+          "cyberkrill",
+          "CyberkrillTests"
+        ],
+        "status": 0,
+        "seconds": 10.703
+      },
+      "red": {
+        "command": [
+          "python3",
+          "-B",
+          "test/move-utxos.py",
+          "limits",
+          "final-size"
+        ],
+        "status": 1,
+        "seconds": 0.391
+      },
+      "restore_build": {
+        "command": [
+          "lake",
+          "build",
+          "cyberkrill",
+          "CyberkrillTests"
+        ],
+        "status": 0,
+        "seconds": 10.709
+      },
+      "green": {
+        "command": [
+          "python3",
+          "-B",
+          "test/move-utxos.py",
+          "limits",
+          "final-size"
+        ],
+        "status": 0,
+        "seconds": 0.441
+      }
+    },
+    {
+      "property": "final-timeout",
+      "file": "Cyberkrill/MoveUtxos.lean",
+      "replace": "client.createPsbt selected",
+      "with_text": "({ client with totalTimeoutMs := 30000 } : CoreRpc.Client).createPsbt selected",
+      "selection": [
+        "limits",
+        "final-timeout"
+      ],
+      "assertion": "move inherited final-timeout",
+      "failure": "AssertionError: move inherited final-timeout: assertion failed: move fetch status",
+      "build": {
+        "command": [
+          "lake",
+          "build",
+          "cyberkrill",
+          "CyberkrillTests"
+        ],
+        "status": 0,
+        "seconds": 10.816
+      },
+      "red": {
+        "command": [
+          "python3",
+          "-B",
+          "test/move-utxos.py",
+          "limits",
+          "final-timeout"
+        ],
+        "status": 1,
+        "seconds": 0.488
+      },
+      "restore_build": {
+        "command": [
+          "lake",
+          "build",
+          "cyberkrill",
+          "CyberkrillTests"
+        ],
+        "status": 0,
+        "seconds": 10.71
+      },
+      "green": {
+        "command": [
+          "python3",
+          "-B",
+          "test/move-utxos.py",
+          "limits",
+          "final-timeout"
+        ],
+        "status": 0,
+        "seconds": 0.583
+      }
+    },
+    {
+      "property": "missing-fee-after-open",
+      "file": "Cyberkrill/App.lean",
+      "replace": "    let .ok writer \u2190 prepareDecodeOutput services args.output | return .error .outputFailure\n    if args.feeRate.isNone && args.fee.isNone then\n      return .error (.onchain \"missingFee: Specify either --fee-rate or --fee\")\n",
+      "with_text": "    if args.feeRate.isNone && args.fee.isNone then\n      return .error (.onchain \"missingFee: Specify either --fee-rate or --fee\")\n    let .ok writer \u2190 prepareDecodeOutput services args.output | return .error .outputFailure\n",
+      "selection": [
+        "ordering",
+        "missing-fee"
+      ],
+      "assertion": "move runtime ordering missing-fee",
+      "failure": "assertion failed: move runtime ordering missing-fee",
+      "build": {
+        "command": [
+          "lake",
+          "build",
+          "cyberkrill",
+          "CyberkrillTests"
+        ],
+        "status": 0,
+        "seconds": 10.106
+      },
+      "red": {
+        "command": [
+          "python3",
+          "-B",
+          "test/move-utxos.py",
+          "ordering",
+          "missing-fee"
+        ],
+        "status": 1,
+        "seconds": 0.289
+      },
+      "restore_build": {
+        "command": [
+          "lake",
+          "build",
+          "cyberkrill",
+          "CyberkrillTests"
+        ],
+        "status": 0,
+        "seconds": 10.525
+      },
+      "green": {
+        "command": [
+          "python3",
+          "-B",
+          "test/move-utxos.py",
+          "ordering",
+          "missing-fee"
+        ],
+        "status": 0,
+        "seconds": 0.309
+      }
+    },
+    {
+      "property": "network-before-backend",
+      "file": "Cyberkrill/App.lean",
+      "replace": "      return .error (.onchain \"feeConflict: Specify only one fee method\")\n    unless ListUtxos.networkValid args.network do\n      return .error (.onchain \"invalidNetwork: Expected mainnet, bitcoin, testnet, signet or regtest\")\n    if args.walletFile.isSome then\n      return .error (.onchain \"unsupportedWalletFile: PSBT wallet-file routing requires BDK\")\n    if args.descriptor.isSome && args.rpc.bitcoinDir.isSome then\n      return .error (.onchain \"unsupportedBackend: descriptor with bitcoin-dir requires BDK\")\n",
+      "with_text": "      return .error (.onchain \"feeConflict: Specify only one fee method\")\n    if args.walletFile.isSome then\n      return .error (.onchain \"unsupportedWalletFile: PSBT wallet-file routing requires BDK\")\n    if args.descriptor.isSome && args.rpc.bitcoinDir.isSome then\n      return .error (.onchain \"unsupportedBackend: descriptor with bitcoin-dir requires BDK\")\n    unless ListUtxos.networkValid args.network do\n      return .error (.onchain \"invalidNetwork: Expected mainnet, bitcoin, testnet, signet or regtest\")\n",
+      "selection": [
+        "ordering",
+        "network-before-backend"
+      ],
+      "assertion": "move runtime ordering network-before-backend",
+      "failure": "assertion failed: move runtime ordering network-before-backend",
+      "build": {
+        "command": [
+          "lake",
+          "build",
+          "cyberkrill",
+          "CyberkrillTests"
+        ],
+        "status": 0,
+        "seconds": 10.326
+      },
+      "red": {
+        "command": [
+          "python3",
+          "-B",
+          "test/move-utxos.py",
+          "ordering",
+          "network-before-backend"
+        ],
+        "status": 1,
+        "seconds": 0.28
+      },
+      "restore_build": {
+        "command": [
+          "lake",
+          "build",
+          "cyberkrill",
+          "CyberkrillTests"
+        ],
+        "status": 0,
+        "seconds": 10.101
+      },
+      "green": {
+        "command": [
+          "python3",
+          "-B",
+          "test/move-utxos.py",
+          "ordering",
+          "network-before-backend"
+        ],
+        "status": 0,
+        "seconds": 0.282
+      }
+    },
+    {
+      "property": "wallet-no-directory",
+      "file": "Cyberkrill/App.lean",
+      "replace": "      return .error (.onchain \"feeConflict: Specify only one fee method\")\n    unless ListUtxos.networkValid args.network do\n      return .error (.onchain \"invalidNetwork: Expected mainnet, bitcoin, testnet, signet or regtest\")\n    if args.walletFile.isSome then",
+      "with_text": "      return .error (.onchain \"feeConflict: Specify only one fee method\")\n    unless ListUtxos.networkValid args.network do\n      return .error (.onchain \"invalidNetwork: Expected mainnet, bitcoin, testnet, signet or regtest\")\n    if args.walletFile.isSome && args.rpc.bitcoinDir.isSome then",
+      "selection": [
+        "injected"
+      ],
+      "assertion": "move injected wallet",
+      "failure": "assertion failed: move injected wallet",
+      "build": {
+        "command": [
+          "lake",
+          "build",
+          "cyberkrill",
+          "CyberkrillTests"
+        ],
+        "status": 0,
+        "seconds": 10.203
+      },
+      "red": {
+        "command": [
+          "python3",
+          "-B",
+          "test/move-utxos.py",
+          "injected"
+        ],
+        "status": 1,
+        "seconds": 0.288
+      },
+      "restore_build": {
+        "command": [
+          "lake",
+          "build",
+          "cyberkrill",
+          "CyberkrillTests"
+        ],
+        "status": 0,
+        "seconds": 10.113
+      },
+      "green": {
+        "command": [
+          "python3",
+          "-B",
+          "test/move-utxos.py",
+          "injected"
+        ],
+        "status": 0,
+        "seconds": 0.284
+      }
+    },
+    {
+      "property": "wallet-directory",
+      "file": "Cyberkrill/App.lean",
+      "replace": "      return .error (.onchain \"feeConflict: Specify only one fee method\")\n    unless ListUtxos.networkValid args.network do\n      return .error (.onchain \"invalidNetwork: Expected mainnet, bitcoin, testnet, signet or regtest\")\n    if args.walletFile.isSome then",
+      "with_text": "      return .error (.onchain \"feeConflict: Specify only one fee method\")\n    unless ListUtxos.networkValid args.network do\n      return .error (.onchain \"invalidNetwork: Expected mainnet, bitcoin, testnet, signet or regtest\")\n    if args.walletFile.isSome && args.rpc.bitcoinDir.isNone then",
+      "selection": [
+        "injected"
+      ],
+      "assertion": "move injected wallet-directory",
+      "failure": "assertion failed: move injected wallet-directory",
+      "build": {
+        "command": [
+          "lake",
+          "build",
+          "cyberkrill",
+          "CyberkrillTests"
+        ],
+        "status": 0,
+        "seconds": 10.1
+      },
+      "red": {
+        "command": [
+          "python3",
+          "-B",
+          "test/move-utxos.py",
+          "injected"
+        ],
+        "status": 1,
+        "seconds": 0.285
+      },
+      "restore_build": {
+        "command": [
+          "lake",
+          "build",
+          "cyberkrill",
+          "CyberkrillTests"
+        ],
+        "status": 0,
+        "seconds": 10.1
+      },
+      "green": {
+        "command": [
+          "python3",
+          "-B",
+          "test/move-utxos.py",
+          "injected"
+        ],
+        "status": 0,
+        "seconds": 0.283
+      }
+    },
+    {
+      "property": "descriptor-directory",
+      "file": "Cyberkrill/App.lean",
+      "replace": "      return .error (.onchain \"feeConflict: Specify only one fee method\")\n    unless ListUtxos.networkValid args.network do\n      return .error (.onchain \"invalidNetwork: Expected mainnet, bitcoin, testnet, signet or regtest\")\n    if args.walletFile.isSome then\n      return .error (.onchain \"unsupportedWalletFile: PSBT wallet-file routing requires BDK\")\n    if args.descriptor.isSome && args.rpc.bitcoinDir.isSome then",
+      "with_text": "      return .error (.onchain \"feeConflict: Specify only one fee method\")\n    unless ListUtxos.networkValid args.network do\n      return .error (.onchain \"invalidNetwork: Expected mainnet, bitcoin, testnet, signet or regtest\")\n    if args.walletFile.isSome then\n      return .error (.onchain \"unsupportedWalletFile: PSBT wallet-file routing requires BDK\")\n    if false then",
+      "selection": [
+        "injected"
+      ],
+      "assertion": "move injected bdk",
+      "failure": "assertion failed: move injected bdk",
+      "build": {
+        "command": [
+          "lake",
+          "build",
+          "cyberkrill",
+          "CyberkrillTests"
+        ],
+        "status": 0,
+        "seconds": 9.999
+      },
+      "red": {
+        "command": [
+          "python3",
+          "-B",
+          "test/move-utxos.py",
+          "injected"
+        ],
+        "status": 1,
+        "seconds": 0.281
+      },
+      "restore_build": {
+        "command": [
+          "lake",
+          "build",
+          "cyberkrill",
+          "CyberkrillTests"
+        ],
+        "status": 0,
+        "seconds": 9.997
+      },
+      "green": {
+        "command": [
+          "python3",
+          "-B",
+          "test/move-utxos.py",
+          "injected"
+        ],
+        "status": 0,
+        "seconds": 0.283
+      }
+    },
+    {
+      "property": "maximum-before-client-fiat",
+      "file": "Cyberkrill/App.lean",
+      "replace": "    let maximum \u2190 match args.maxAmount.mapM MoveUtxos.maximum with\n      | .error e => return .error e\n      | .ok maximum => pure maximum\n    let client \u2190 try services.coreClient args.rpc catch _ =>\n      return .error (.onchain \"rpcTransport: Cannot initialize Core client\")\n",
+      "with_text": "    let client \u2190 try services.coreClient args.rpc catch _ =>\n      return .error (.onchain \"rpcTransport: Cannot initialize Core client\")\n    let maximum \u2190 match args.maxAmount.mapM MoveUtxos.maximum with\n      | .error e => return .error e\n      | .ok maximum => pure maximum\n",
+      "selection": [
+        "ordering",
+        "fiat"
+      ],
+      "assertion": "move runtime ordering fiat",
+      "failure": "assertion failed: move runtime ordering fiat",
+      "build": {
+        "command": [
+          "lake",
+          "build",
+          "cyberkrill",
+          "CyberkrillTests"
+        ],
+        "status": 0,
+        "seconds": 10.002
+      },
+      "red": {
+        "command": [
+          "python3",
+          "-B",
+          "test/move-utxos.py",
+          "ordering",
+          "fiat"
+        ],
+        "status": 1,
+        "seconds": 0.282
+      },
+      "restore_build": {
+        "command": [
+          "lake",
+          "build",
+          "cyberkrill",
+          "CyberkrillTests"
+        ],
+        "status": 0,
+        "seconds": 10.094
+      },
+      "green": {
+        "command": [
+          "python3",
+          "-B",
+          "test/move-utxos.py",
+          "ordering",
+          "fiat"
+        ],
+        "status": 0,
+        "seconds": 0.281
+      }
+    },
+    {
+      "property": "maximum-before-client-floor",
+      "file": "Cyberkrill/App.lean",
+      "replace": "    let maximum \u2190 match args.maxAmount.mapM MoveUtxos.maximum with\n      | .error e => return .error e\n      | .ok maximum => pure maximum\n    let client \u2190 try services.coreClient args.rpc catch _ =>\n      return .error (.onchain \"rpcTransport: Cannot initialize Core client\")\n",
+      "with_text": "    let client \u2190 try services.coreClient args.rpc catch _ =>\n      return .error (.onchain \"rpcTransport: Cannot initialize Core client\")\n    let maximum \u2190 match args.maxAmount.mapM MoveUtxos.maximum with\n      | .error e => return .error e\n      | .ok maximum => pure maximum\n",
+      "selection": [
+        "ordering",
+        "floor"
+      ],
+      "assertion": "move runtime ordering floor",
+      "failure": "assertion failed: move runtime ordering floor",
+      "build": {
+        "command": [
+          "lake",
+          "build",
+          "cyberkrill",
+          "CyberkrillTests"
+        ],
+        "status": 0,
+        "seconds": 10.097
+      },
+      "red": {
+        "command": [
+          "python3",
+          "-B",
+          "test/move-utxos.py",
+          "ordering",
+          "floor"
+        ],
+        "status": 1,
+        "seconds": 0.284
+      },
+      "restore_build": {
+        "command": [
+          "lake",
+          "build",
+          "cyberkrill",
+          "CyberkrillTests"
+        ],
+        "status": 0,
+        "seconds": 10.001
+      },
+      "green": {
+        "command": [
+          "python3",
+          "-B",
+          "test/move-utxos.py",
+          "ordering",
+          "floor"
+        ],
+        "status": 0,
+        "seconds": 0.281
+      }
+    },
+    {
+      "property": "strict-raw-missing-identity",
+      "file": "Cyberkrill/CoreRpc.lean",
+      "replace": "txid := \u2190 string raw \"txid\", raw,",
+      "with_text": "txid := (string raw \"txid\").toOption.getD \"synthetic\", raw,",
+      "selection": [
+        "strict",
+        "missing-identity"
+      ],
+      "assertion": "move strict raw result",
+      "failure": "assertion failed: move strict raw result",
+      "build": {
+        "command": [
+          "lake",
+          "build",
+          "cyberkrill",
+          "CyberkrillTests"
+        ],
+        "status": 0,
+        "seconds": 12.909
+      },
+      "red": {
+        "command": [
+          "python3",
+          "-B",
+          "test/move-utxos.py",
+          "strict",
+          "missing-identity"
+        ],
+        "status": 1,
+        "seconds": 0.331
+      },
+      "restore_build": {
+        "command": [
+          "lake",
+          "build",
+          "cyberkrill",
+          "CyberkrillTests"
+        ],
+        "status": 0,
+        "seconds": 12.91
+      },
+      "green": {
+        "command": [
+          "python3",
+          "-B",
+          "test/move-utxos.py",
+          "strict",
+          "missing-identity"
+        ],
+        "status": 0,
+        "seconds": 0.334
+      }
+    },
+    {
+      "property": "strict-raw-malformed-identity",
+      "file": "Cyberkrill/CoreRpc.lean",
+      "replace": "txid := \u2190 string raw \"txid\", raw,",
+      "with_text": "txid := (string raw \"txid\").toOption.getD \"synthetic\", raw,",
+      "selection": [
+        "strict",
+        "malformed-identity"
+      ],
+      "assertion": "move strict raw result",
+      "failure": "assertion failed: move strict raw result",
+      "build": {
+        "command": [
+          "lake",
+          "build",
+          "cyberkrill",
+          "CyberkrillTests"
+        ],
+        "status": 0,
+        "seconds": 13.011
+      },
+      "red": {
+        "command": [
+          "python3",
+          "-B",
+          "test/move-utxos.py",
+          "strict",
+          "malformed-identity"
+        ],
+        "status": 1,
+        "seconds": 0.386
+      },
+      "restore_build": {
+        "command": [
+          "lake",
+          "build",
+          "cyberkrill",
+          "CyberkrillTests"
+        ],
+        "status": 0,
+        "seconds": 12.798
+      },
+      "green": {
+        "command": [
+          "python3",
+          "-B",
+          "test/move-utxos.py",
+          "strict",
+          "malformed-identity"
+        ],
+        "status": 0,
+        "seconds": 0.332
+      }
+    },
+    {
+      "property": "strict-raw-missing-unrelated",
+      "file": "Cyberkrill/CoreRpc.lean",
+      "replace": "do amount (\u2190 field output \"value\")",
+      "with_text": "pure (((field output \"value\").bind amount).toOption.getD (Amount.ofSats 0))",
+      "selection": [
+        "strict",
+        "missing-unrelated"
+      ],
+      "assertion": "move strict raw result",
+      "failure": "assertion failed: move strict raw result",
+      "build": {
+        "command": [
+          "lake",
+          "build",
+          "cyberkrill",
+          "CyberkrillTests"
+        ],
+        "status": 0,
+        "seconds": 12.797
+      },
+      "red": {
+        "command": [
+          "python3",
+          "-B",
+          "test/move-utxos.py",
+          "strict",
+          "missing-unrelated"
+        ],
+        "status": 1,
+        "seconds": 0.335
+      },
+      "restore_build": {
+        "command": [
+          "lake",
+          "build",
+          "cyberkrill",
+          "CyberkrillTests"
+        ],
+        "status": 0,
+        "seconds": 13.021
+      },
+      "green": {
+        "command": [
+          "python3",
+          "-B",
+          "test/move-utxos.py",
+          "strict",
+          "missing-unrelated"
+        ],
+        "status": 0,
+        "seconds": 0.338
+      }
+    },
+    {
+      "property": "strict-raw-malformed-unrelated",
+      "file": "Cyberkrill/CoreRpc.lean",
+      "replace": "do amount (\u2190 field output \"value\")",
+      "with_text": "pure (((field output \"value\").bind amount).toOption.getD (Amount.ofSats 0))",
+      "selection": [
+        "strict",
+        "malformed-unrelated"
+      ],
+      "assertion": "move strict raw result",
+      "failure": "assertion failed: move strict raw result",
+      "build": {
+        "command": [
+          "lake",
+          "build",
+          "cyberkrill",
+          "CyberkrillTests"
+        ],
+        "status": 0,
+        "seconds": 12.909
+      },
+      "red": {
+        "command": [
+          "python3",
+          "-B",
+          "test/move-utxos.py",
+          "strict",
+          "malformed-unrelated"
+        ],
+        "status": 1,
+        "seconds": 0.334
+      },
+      "restore_build": {
+        "command": [
+          "lake",
+          "build",
+          "cyberkrill",
+          "CyberkrillTests"
+        ],
+        "status": 0,
+        "seconds": 12.898
+      },
+      "green": {
+        "command": [
+          "python3",
+          "-B",
+          "test/move-utxos.py",
+          "strict",
+          "malformed-unrelated"
+        ],
+        "status": 0,
+        "seconds": 0.331
+      }
+    },
+    {
+      "property": "typed-before-open",
+      "file": "Cyberkrill/App.lean",
+      "replace": "| .error e => return \u2190 reportError services e",
+      "with_text": "| .error e =>\n      let _ \u2190 services.openOrdinaryFile \"json\"\n      return \u2190 reportError services e",
+      "selection": [
+        "ordering",
+        "typed-fee"
+      ],
+      "assertion": "move runtime ordering typed-fee",
+      "failure": "assertion failed: move runtime ordering typed-fee",
+      "build": {
+        "command": [
+          "lake",
+          "build",
+          "cyberkrill",
+          "CyberkrillTests"
+        ],
+        "status": 0,
+        "seconds": 10.814
+      },
+      "red": {
+        "command": [
+          "python3",
+          "-B",
+          "test/move-utxos.py",
+          "ordering",
+          "typed-fee"
+        ],
+        "status": 1,
+        "seconds": 0.35
+      },
+      "restore_build": {
+        "command": [
+          "lake",
+          "build",
+          "cyberkrill",
+          "CyberkrillTests"
+        ],
+        "status": 0,
+        "seconds": 10.639
+      },
+      "green": {
+        "command": [
+          "python3",
+          "-B",
+          "test/move-utxos.py",
+          "ordering",
+          "typed-fee"
+        ],
+        "status": 0,
+        "seconds": 0.284
+      }
+    },
+    {
+      "property": "fee-parser-exclusivity",
+      "file": "Cyberkrill/App.lean",
+      "replace": "    if p.hasFlag \"fee-rate\" && p.hasFlag \"fee\" then throw .invalidArguments",
+      "with_text": "    if false then throw .invalidArguments",
+      "selection": [
+        "ordering",
+        "fee-exclusive"
+      ],
+      "assertion": "move runtime ordering fee-exclusive",
+      "failure": "assertion failed: move runtime ordering fee-exclusive",
+      "build": {
+        "command": [
+          "lake",
+          "build",
+          "cyberkrill",
+          "CyberkrillTests"
+        ],
+        "status": 0,
+        "seconds": 9.997
+      },
+      "red": {
+        "command": [
+          "python3",
+          "-B",
+          "test/move-utxos.py",
+          "ordering",
+          "fee-exclusive"
+        ],
+        "status": 1,
+        "seconds": 0.282
+      },
+      "restore_build": {
+        "command": [
+          "lake",
+          "build",
+          "cyberkrill",
+          "CyberkrillTests"
+        ],
+        "status": 0,
+        "seconds": 10.108
+      },
+      "green": {
+        "command": [
+          "python3",
+          "-B",
+          "test/move-utxos.py",
+          "ordering",
+          "fee-exclusive"
+        ],
+        "status": 0,
+        "seconds": 0.364
+      }
+    },
+    {
+      "property": "typed-before-help",
+      "file": "Cyberkrill/App.lean",
+      "replace": "validateTypedArgs (args.head?.getD \"\") args.tail",
+      "with_text": "pure ()",
+      "selection": [
+        "refusals"
+      ],
+      "assertion": "move executable refusal/help",
+      "failure": "AssertionError: move executable refusal/help ['--max-amount', 'broken', '--help']",
+      "build": {
+        "command": [
+          "lake",
+          "build",
+          "cyberkrill",
+          "CyberkrillTests"
+        ],
+        "status": 0,
+        "seconds": 10.648
+      },
+      "red": {
+        "command": [
+          "python3",
+          "-B",
+          "test/move-utxos.py",
+          "refusals"
+        ],
+        "status": 1,
+        "seconds": 0.595
+      },
+      "restore_build": {
+        "command": [
+          "lake",
+          "build",
+          "cyberkrill",
+          "CyberkrillTests"
+        ],
+        "status": 0,
+        "seconds": 10.815
+      },
+      "green": {
+        "command": [
+          "python3",
+          "-B",
+          "test/move-utxos.py",
+          "refusals"
+        ],
+        "status": 0,
+        "seconds": 0.782
+      }
+    },
+    {
+      "property": "effective-help-before-typed",
+      "file": "Cyberkrill/App.lean",
+      "replace": "let args := throughHelp args",
+      "with_text": "validateTypedArgs (args.head?.getD \"\") args.tail\n  let args := throughHelp args",
+      "selection": [
+        "refusals"
+      ],
+      "assertion": "move executable refusal/help",
+      "failure": "AssertionError: move executable refusal/help ['--help', '--max-amount', 'broken']",
+      "build": {
+        "command": [
+          "lake",
+          "build",
+          "cyberkrill",
+          "CyberkrillTests"
+        ],
+        "status": 0,
+        "seconds": 10.212
+      },
+      "red": {
+        "command": [
+          "python3",
+          "-B",
+          "test/move-utxos.py",
+          "refusals"
+        ],
+        "status": 1,
+        "seconds": 0.632
+      },
+      "restore_build": {
+        "command": [
+          "lake",
+          "build",
+          "cyberkrill",
+          "CyberkrillTests"
+        ],
+        "status": 0,
+        "seconds": 10.309
+      },
+      "green": {
+        "command": [
+          "python3",
+          "-B",
+          "test/move-utxos.py",
+          "refusals"
+        ],
+        "status": 0,
+        "seconds": 0.786
+      }
+    },
+    {
+      "property": "existing-command-preprocessing",
+      "file": "Cyberkrill/App.lean",
+      "replace": "if command == \"onchain-move-utxos\" then\n    valueFlags ++",
+      "with_text": "if true then\n    valueFlags ++",
+      "selection": [
+        "preprocessing"
+      ],
+      "assertion": "move preserves existing preprocessing",
+      "failure": "AssertionError: move preserves existing preprocessing",
+      "build": {
+        "command": [
+          "lake",
+          "build",
+          "cyberkrill",
+          "CyberkrillTests"
+        ],
+        "status": 0,
+        "seconds": 10.499
+      },
+      "red": {
+        "command": [
+          "python3",
+          "-B",
+          "test/move-utxos.py",
+          "preprocessing"
+        ],
+        "status": 1,
+        "seconds": 0.286
+      },
+      "restore_build": {
+        "command": [
+          "lake",
+          "build",
+          "cyberkrill",
+          "CyberkrillTests"
+        ],
+        "status": 0,
+        "seconds": 10.308
+      },
+      "green": {
+        "command": [
+          "python3",
+          "-B",
+          "test/move-utxos.py",
+          "preprocessing"
+        ],
+        "status": 0,
+        "seconds": 0.736
+      }
+    },
+    {
+      "property": "history-publication",
+      "file": "test/evidence_history.py",
+      "replace": "record[\"pre_move_observation\"] = history",
+      "with_text": "record.pop(\"pre_move_observation\", None)",
+      "selection": [
+        "history"
+      ],
+      "assertion": "history publication retains landed observation",
+      "failure": "AssertionError: history publication retains landed observation",
+      "build": {
+        "command": [
+          "lake",
+          "build",
+          "cyberkrill",
+          "CyberkrillTests"
+        ],
+        "status": 0,
+        "seconds": 0.407
+      },
+      "red": {
+        "command": [
+          "python3",
+          "-B",
+          "test/move-utxos.py",
+          "history"
+        ],
+        "status": 1,
+        "seconds": 0.292
+      },
+      "restore_build": {
+        "command": [
+          "lake",
+          "build",
+          "cyberkrill",
+          "CyberkrillTests"
+        ],
+        "status": 0,
+        "seconds": 0.389
+      },
+      "green": {
+        "command": [
+          "python3",
+          "-B",
+          "test/move-utxos.py",
+          "history"
+        ],
+        "status": 0,
+        "seconds": 0.736
+      }
+    }
+  ],
+  "restored_full": {
+    "command": [
+      "python3",
+      "-B",
+      "test/move-utxos.py"
+    ],
+    "status": 0,
+    "seconds": 7.596
+  }
+}

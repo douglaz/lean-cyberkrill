@@ -13,6 +13,20 @@ from driver import fixtures
 
 def main():
     from importlib import import_module
+    # Landed observations remain distinct from actual current-source refreshes.
+    histories = {'attached-output-refresh.json': 'c6f818433d7bccd4caf3f642bf72b1c2da8a7c4dd56cfe34545977cb8eefd2b3', 'lightning-mutation-record.json': '56921d449ce69bfec4bb9c2362ff313c220650476808b56e87ee8bbb3a4ee4d3', 'list-utxos-lexical-mutation-record.json': '7428bdb1a6e2c115b3ccc6a3f699b453eef0aa5f974207195bd89fbdc1aabf82', 'list-utxos-mutation-record.json': 'e73be9f5fae88a1da5c0f55e7ee406577a0817c8a0163fe780c005658ce6f613', 'mutation-record.json': '212fc82cf71d7fb10ff6cb35203bea6cbff83e98d7e7c2134b2270bdc264c525', 'offline-mutation-record.json': '0c6d1a01a3ca5e0caa173458489a26841370f9fda2076151de65431bc6881fb0', 'output-regression-refresh.json': '6ba426c10f23ec7a4552e5d80048b9c5ddde36a12e12175b9c4b4bb44f4797f1', 'psbt-commands-mutation-record.json': 'f97e430515625daac7b9cb11d34912fc0b68b8f2eecf49e00bb8aea0b6067789', 'regression-refresh.json': '540bdb0f4b7ecc04abea192ef364f42954b72a2dfec65d0f575473696e0d583d', 'revision-mutation-record.json': '6bf012cef7ed9bc063fbe475e733b82cc5d7dc48221de3cc49dfd29e27f3afc4', 'rpc-client-mutation-record.json': 'fbf1f2cab997d9a191c219429e14c647f580f4c6b2e922dbb6e3edb3dee4dc3e'}
+    for name, expected in histories.items():
+        record = json.loads((APP / "test/golden" / name).read_bytes())
+        retained = record["pre_move_observation"]
+        digest = hashlib.sha256(json.dumps(retained, sort_keys=True, separators=(",", ":")).encode()).hexdigest()
+        assert digest == expected, "pre-move observation changed: " + name
+    print("retained pre-move evidence: 11/11 independently pinned observations")
+    import_module("move-utxos-mutations").verify()
+    move = json.loads((APP / "test/move-utxos-provenance.json").read_bytes())
+    assert move["revision"] == PIN and move["captures"] == 16 and move["exceptions"] == 4
+    for path, digest in move["fixture_sha256"].items():
+        assert hashlib.sha256((APP / path).read_bytes()).hexdigest() == digest, "move fixture binding"
+    assert hashlib.sha256((APP / "test/golden/move-utxos-reference.json").read_bytes()).hexdigest() == move["capture_sha256"], "move reference binding"
     import_module("psbt-commands-mutations").verify()
     provenance = json.loads((APP / "test/psbt-commands-provenance.json").read_bytes())
     assert provenance["revision"] == PIN and provenance["captures"] == 17

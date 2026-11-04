@@ -1,13 +1,14 @@
 {
   "source_sha256": {
-    "Cyberkrill/App.lean": "2c34598b24c9a4d199528ad4392edca14bf7b84bd0c9e978baee78574303a6d7",
-    "test/refresh-attached-output.py": "d2fbf51f11c6b17a92d10b95dd7a0ef26157093cb2ba6b7664b4af580c4321cd",
-    "CyberkrillTests.lean": "465b95792624b7ee1d48d5c5b332ec5513fa88a467b247a54444d7179c54cbc3",
+    "Cyberkrill/App.lean": "6f7edc73a36d4412e63bcf4696fd1af7c3da539be7d3252be40a5b099c923047",
+    "test/refresh-attached-output.py": "ffcbf9fa384db263ed24b52849d0bcad6182f6ad447c3850b6932db9b5f6f652",
+    "CyberkrillTests.lean": "3d28755d3577cc7669a5ed341274211cc5f353bda063bf65e149e4a3ef78c57d",
     "test/attached-output-regressions.py": "5c98053295b9b26b0decee9ba538766bd431363704a57974fefc7d9d140b07db",
     "CyberkrillTests/Capabilities.lean": "50172673976ead4aef29242efa591ed2237d2db4f60a6a323c2d5f9f4555fd66",
     "CyberkrillTests/Helpers.lean": "d4484cedac1da7a20e5bc0a05080c7d6c171e7ec49f7a64e3a80ad3d075bc70a",
     "CyberkrillTests/ListUtxos.lean": "e813ada4731e4e51a62ec49782301a1f0fe99ce07d375d7f474b17a60fb3380b",
     "CyberkrillTests/Mnemonic.lean": "49c85bcaf2327da760e08fb7fef4ea5071c4b29160481a578caa61e36200cb0e",
+    "CyberkrillTests/MoveUtxos.lean": "d551d8b7021775e97db187a3835c5eb8d8e77bba195df69c234c5cb375814386",
     "CyberkrillTests/Offline.lean": "e6243c51b6638c0bd777835b843459e955e2e7f6163e7bbac6bfe22230407a9d",
     "CyberkrillTests/Output.lean": "9912e5c699b4fb7c07ff5eaacd2d5d821d6585118cb17a0829b224c96965a966",
     "CyberkrillTests/PrivateOutput.lean": "a4412bb4cf4908cc777e39018cb2ac34fc12c697e373b90be3b6c1235514997f",
@@ -204,5 +205,422 @@
         "status": 0
       }
     }
-  ]
+  ],
+  "pre_move_observation": {
+    "source_sha256": {
+      "Cyberkrill/App.lean": "2c34598b24c9a4d199528ad4392edca14bf7b84bd0c9e978baee78574303a6d7",
+      "test/refresh-attached-output.py": "d2fbf51f11c6b17a92d10b95dd7a0ef26157093cb2ba6b7664b4af580c4321cd",
+      "CyberkrillTests.lean": "465b95792624b7ee1d48d5c5b332ec5513fa88a467b247a54444d7179c54cbc3",
+      "test/attached-output-regressions.py": "5c98053295b9b26b0decee9ba538766bd431363704a57974fefc7d9d140b07db",
+      "CyberkrillTests/Capabilities.lean": "50172673976ead4aef29242efa591ed2237d2db4f60a6a323c2d5f9f4555fd66",
+      "CyberkrillTests/Helpers.lean": "d4484cedac1da7a20e5bc0a05080c7d6c171e7ec49f7a64e3a80ad3d075bc70a",
+      "CyberkrillTests/ListUtxos.lean": "e813ada4731e4e51a62ec49782301a1f0fe99ce07d375d7f474b17a60fb3380b",
+      "CyberkrillTests/Mnemonic.lean": "49c85bcaf2327da760e08fb7fef4ea5071c4b29160481a578caa61e36200cb0e",
+      "CyberkrillTests/Offline.lean": "e6243c51b6638c0bd777835b843459e955e2e7f6163e7bbac6bfe22230407a9d",
+      "CyberkrillTests/Output.lean": "9912e5c699b4fb7c07ff5eaacd2d5d821d6585118cb17a0829b224c96965a966",
+      "CyberkrillTests/PrivateOutput.lean": "a4412bb4cf4908cc777e39018cb2ac34fc12c697e373b90be3b6c1235514997f",
+      "CyberkrillTests/PsbtCommands.lean": "54c20a78aa5164f7a78b1939d6167b5c882c8ecaea9f6fb932ddd6e4f9281310",
+      "CyberkrillTests/Rpc.lean": "3f1887f1dad6d82d421e7bbeecaea6486431b33ba134051d07d5d828809419bf",
+      "CyberkrillTests/Support.lean": "80dbdfd22c0478dde791bfc46ae73418a8cf838f7728bb08f248291cdb3a179c"
+    },
+    "replace": "(args.head?.getD \"\") :: outputParserArgs args.tail else args",
+    "with_text": "(args.head?.getD \"\") :: args.tail else args",
+    "build": {
+      "command": [
+        "lake",
+        "build",
+        "cyberkrill",
+        "CyberkrillTests"
+      ],
+      "status": 0
+    },
+    "restore_build": {
+      "command": [
+        "lake",
+        "build",
+        "cyberkrill",
+        "CyberkrillTests"
+      ],
+      "status": 0
+    },
+    "checks": [
+      {
+        "case": 0,
+        "token": "-o-name=a",
+        "red": {
+          "command": [
+            ".lake/build/bin/CyberkrillTests",
+            "--output-equals",
+            "0"
+          ],
+          "status": 1
+        },
+        "detecting_assertion": "output equals 0 status",
+        "green": {
+          "command": [
+            ".lake/build/bin/CyberkrillTests",
+            "--output-equals",
+            "0"
+          ],
+          "status": 0
+        }
+      },
+      {
+        "case": 1,
+        "token": "-ofoo=bar",
+        "red": {
+          "command": [
+            ".lake/build/bin/CyberkrillTests",
+            "--output-equals",
+            "1"
+          ],
+          "status": 1
+        },
+        "detecting_assertion": "output equals 1 status",
+        "green": {
+          "command": [
+            ".lake/build/bin/CyberkrillTests",
+            "--output-equals",
+            "1"
+          ],
+          "status": 0
+        }
+      },
+      {
+        "case": 2,
+        "token": "-oordinary=name",
+        "red": {
+          "command": [
+            ".lake/build/bin/CyberkrillTests",
+            "--output-equals",
+            "2"
+          ],
+          "status": 1
+        },
+        "detecting_assertion": "output equals 2 status",
+        "green": {
+          "command": [
+            ".lake/build/bin/CyberkrillTests",
+            "--output-equals",
+            "2"
+          ],
+          "status": 0
+        }
+      },
+      {
+        "case": 3,
+        "token": "-o-name=a=b",
+        "red": {
+          "command": [
+            ".lake/build/bin/CyberkrillTests",
+            "--output-equals",
+            "3"
+          ],
+          "status": 1
+        },
+        "detecting_assertion": "output equals 3 status",
+        "green": {
+          "command": [
+            ".lake/build/bin/CyberkrillTests",
+            "--output-equals",
+            "3"
+          ],
+          "status": 0
+        }
+      },
+      {
+        "case": 4,
+        "token": "-o=-name=a",
+        "red": {
+          "command": [
+            ".lake/build/bin/CyberkrillTests",
+            "--output-equals",
+            "4"
+          ],
+          "status": 0
+        },
+        "detecting_assertion": "",
+        "green": {
+          "command": [
+            ".lake/build/bin/CyberkrillTests",
+            "--output-equals",
+            "4"
+          ],
+          "status": 0
+        }
+      },
+      {
+        "case": 5,
+        "token": "--output=-name=a",
+        "red": {
+          "command": [
+            ".lake/build/bin/CyberkrillTests",
+            "--output-equals",
+            "5"
+          ],
+          "status": 0
+        },
+        "detecting_assertion": "",
+        "green": {
+          "command": [
+            ".lake/build/bin/CyberkrillTests",
+            "--output-equals",
+            "5"
+          ],
+          "status": 0
+        }
+      },
+      {
+        "case": 6,
+        "token": "-o=foo=bar=baz",
+        "red": {
+          "command": [
+            ".lake/build/bin/CyberkrillTests",
+            "--output-equals",
+            "6"
+          ],
+          "status": 0
+        },
+        "detecting_assertion": "",
+        "green": {
+          "command": [
+            ".lake/build/bin/CyberkrillTests",
+            "--output-equals",
+            "6"
+          ],
+          "status": 0
+        }
+      },
+      {
+        "case": 7,
+        "token": "--output=foo=bar=baz",
+        "red": {
+          "command": [
+            ".lake/build/bin/CyberkrillTests",
+            "--output-equals",
+            "7"
+          ],
+          "status": 0
+        },
+        "detecting_assertion": "",
+        "green": {
+          "command": [
+            ".lake/build/bin/CyberkrillTests",
+            "--output-equals",
+            "7"
+          ],
+          "status": 0
+        }
+      }
+    ]
+  },
+  "previous_move_observation": {
+    "source_sha256": {
+      "Cyberkrill/App.lean": "dd0f3b0fb528e14361936d1228015b141eb33ea6cbf5106615a1654197fd8ee4",
+      "test/refresh-attached-output.py": "d2fbf51f11c6b17a92d10b95dd7a0ef26157093cb2ba6b7664b4af580c4321cd",
+      "CyberkrillTests.lean": "c9c1cb1df6c52105e55ce96bbd9ae004f87278ff337d3c274a21abae9329880a",
+      "test/attached-output-regressions.py": "5c98053295b9b26b0decee9ba538766bd431363704a57974fefc7d9d140b07db",
+      "CyberkrillTests/Capabilities.lean": "50172673976ead4aef29242efa591ed2237d2db4f60a6a323c2d5f9f4555fd66",
+      "CyberkrillTests/Helpers.lean": "d4484cedac1da7a20e5bc0a05080c7d6c171e7ec49f7a64e3a80ad3d075bc70a",
+      "CyberkrillTests/ListUtxos.lean": "e813ada4731e4e51a62ec49782301a1f0fe99ce07d375d7f474b17a60fb3380b",
+      "CyberkrillTests/Mnemonic.lean": "49c85bcaf2327da760e08fb7fef4ea5071c4b29160481a578caa61e36200cb0e",
+      "CyberkrillTests/MoveUtxos.lean": "21c75970bc0e8eaa89faf1599bc4e369bb71af676110f92b6eb9a079ca478c75",
+      "CyberkrillTests/Offline.lean": "e6243c51b6638c0bd777835b843459e955e2e7f6163e7bbac6bfe22230407a9d",
+      "CyberkrillTests/Output.lean": "9912e5c699b4fb7c07ff5eaacd2d5d821d6585118cb17a0829b224c96965a966",
+      "CyberkrillTests/PrivateOutput.lean": "a4412bb4cf4908cc777e39018cb2ac34fc12c697e373b90be3b6c1235514997f",
+      "CyberkrillTests/PsbtCommands.lean": "54c20a78aa5164f7a78b1939d6167b5c882c8ecaea9f6fb932ddd6e4f9281310",
+      "CyberkrillTests/Rpc.lean": "3f1887f1dad6d82d421e7bbeecaea6486431b33ba134051d07d5d828809419bf",
+      "CyberkrillTests/Support.lean": "80dbdfd22c0478dde791bfc46ae73418a8cf838f7728bb08f248291cdb3a179c"
+    },
+    "replace": "(args.head?.getD \"\") :: outputParserArgs args.tail else args",
+    "with_text": "(args.head?.getD \"\") :: args.tail else args",
+    "build": {
+      "command": [
+        "lake",
+        "build",
+        "cyberkrill",
+        "CyberkrillTests"
+      ],
+      "status": 0
+    },
+    "restore_build": {
+      "command": [
+        "lake",
+        "build",
+        "cyberkrill",
+        "CyberkrillTests"
+      ],
+      "status": 0
+    },
+    "checks": [
+      {
+        "case": 0,
+        "token": "-o-name=a",
+        "red": {
+          "command": [
+            ".lake/build/bin/CyberkrillTests",
+            "--output-equals",
+            "0"
+          ],
+          "status": 1
+        },
+        "detecting_assertion": "output equals 0 status",
+        "green": {
+          "command": [
+            ".lake/build/bin/CyberkrillTests",
+            "--output-equals",
+            "0"
+          ],
+          "status": 0
+        }
+      },
+      {
+        "case": 1,
+        "token": "-ofoo=bar",
+        "red": {
+          "command": [
+            ".lake/build/bin/CyberkrillTests",
+            "--output-equals",
+            "1"
+          ],
+          "status": 1
+        },
+        "detecting_assertion": "output equals 1 status",
+        "green": {
+          "command": [
+            ".lake/build/bin/CyberkrillTests",
+            "--output-equals",
+            "1"
+          ],
+          "status": 0
+        }
+      },
+      {
+        "case": 2,
+        "token": "-oordinary=name",
+        "red": {
+          "command": [
+            ".lake/build/bin/CyberkrillTests",
+            "--output-equals",
+            "2"
+          ],
+          "status": 1
+        },
+        "detecting_assertion": "output equals 2 status",
+        "green": {
+          "command": [
+            ".lake/build/bin/CyberkrillTests",
+            "--output-equals",
+            "2"
+          ],
+          "status": 0
+        }
+      },
+      {
+        "case": 3,
+        "token": "-o-name=a=b",
+        "red": {
+          "command": [
+            ".lake/build/bin/CyberkrillTests",
+            "--output-equals",
+            "3"
+          ],
+          "status": 1
+        },
+        "detecting_assertion": "output equals 3 status",
+        "green": {
+          "command": [
+            ".lake/build/bin/CyberkrillTests",
+            "--output-equals",
+            "3"
+          ],
+          "status": 0
+        }
+      },
+      {
+        "case": 4,
+        "token": "-o=-name=a",
+        "red": {
+          "command": [
+            ".lake/build/bin/CyberkrillTests",
+            "--output-equals",
+            "4"
+          ],
+          "status": 0
+        },
+        "detecting_assertion": "",
+        "green": {
+          "command": [
+            ".lake/build/bin/CyberkrillTests",
+            "--output-equals",
+            "4"
+          ],
+          "status": 0
+        }
+      },
+      {
+        "case": 5,
+        "token": "--output=-name=a",
+        "red": {
+          "command": [
+            ".lake/build/bin/CyberkrillTests",
+            "--output-equals",
+            "5"
+          ],
+          "status": 0
+        },
+        "detecting_assertion": "",
+        "green": {
+          "command": [
+            ".lake/build/bin/CyberkrillTests",
+            "--output-equals",
+            "5"
+          ],
+          "status": 0
+        }
+      },
+      {
+        "case": 6,
+        "token": "-o=foo=bar=baz",
+        "red": {
+          "command": [
+            ".lake/build/bin/CyberkrillTests",
+            "--output-equals",
+            "6"
+          ],
+          "status": 0
+        },
+        "detecting_assertion": "",
+        "green": {
+          "command": [
+            ".lake/build/bin/CyberkrillTests",
+            "--output-equals",
+            "6"
+          ],
+          "status": 0
+        }
+      },
+      {
+        "case": 7,
+        "token": "--output=foo=bar=baz",
+        "red": {
+          "command": [
+            ".lake/build/bin/CyberkrillTests",
+            "--output-equals",
+            "7"
+          ],
+          "status": 0
+        },
+        "detecting_assertion": "",
+        "green": {
+          "command": [
+            ".lake/build/bin/CyberkrillTests",
+            "--output-equals",
+            "7"
+          ],
+          "status": 0
+        }
+      }
+    ]
+  }
 }

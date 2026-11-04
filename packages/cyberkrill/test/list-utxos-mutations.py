@@ -13,6 +13,7 @@ import sys
 import tempfile
 import time
 
+from evidence_history import publish_history
 from cases import APP
 from network import run_owned
 
@@ -84,13 +85,13 @@ def edits():
     ]
     split_guard = '''else if ["--descriptor", "--addresses", "--wallet-file", "--rpc-url", "--bitcoin-dir",
         "--rpc-user", "--rpc-password", "--inputs", "--outputs", "--psbt-output", "--estimate-mode"].contains flag then
-      (!(value.startsWith "-") || value == "-") && outputArgsValid rest'''
+      (!(value.startsWith "-") || value == "-") && outputArgsValid valueFlags rest'''
     rows += [
         ("split-refusal", app, split_guard, split_guard.replace('(!(value.startsWith "-") || value == "-") && ', ''), ["split"], "list split refusal side effects"),
         ("split-attached", app, 'let sources := ["descriptor", "addresses", "wallet-file"].filter p.hasFlag',
          'if (flag "descriptor").any (·.startsWith "-") then throw .invalidArguments\n    let sources := ["descriptor", "addresses", "wallet-file"].filter p.hasFlag', ["split"], "list attached value acceptance"),
         ("split-literal-dash", app, split_guard, split_guard.replace(' || value == "-"', ''), ["split"], "list split dash/empty acceptance"),
-        ("split-empty", app, split_guard, split_guard.replace('&& outputArgsValid rest', '&& !value.isEmpty && outputArgsValid rest'), ["split"], "list split dash/empty acceptance"),
+        ("split-empty", app, split_guard, split_guard.replace('&& outputArgsValid valueFlags rest', '&& !value.isEmpty && outputArgsValid valueFlags rest'), ["split"], "list split dash/empty acceptance"),
         ("attached-value-bytes", app, 'rpc, descriptor := flag "descriptor",', 'rpc, descriptor := (flag "descriptor").map (fun value => (value.splitOn "=").head!),', ["split"], "list attached value bytes"),
         ("positional-acceptance", reader, '| .arr values => do\n        unless', '| .arr values => do\n        if true then throw "sequence refused"\n        unless', ["positional", "acceptance"], "wallet positional acceptance"),
         ("positional-short-arity", reader, 'values.size == 3', 'values.size ≤ 3', ["positional", "arity-short"], "wallet positional arity-short"),
@@ -231,7 +232,7 @@ def main():
             print(name + ": build/red/restore/green 0/1/0/0", flush=True)
         full = command("restored-full", ["python3", "-B", "test/list-utxos.py"], 0)
         assert fingerprints() == hashes, "list exact final restoration"
-        DEST.write_text(json.dumps(dict(pre_psbt_observation=pre_psbt, count=len(records), source_sha256=hashes, baseline=baseline, checks=records, restored_full=full, previous_observation=previous, schema_observation=schema), indent=2) + "\n")
+        publish_history(DEST, json.dumps(dict(pre_psbt_observation=pre_psbt, count=len(records), source_sha256=hashes, baseline=baseline, checks=records, restored_full=full, previous_observation=previous, schema_observation=schema), indent=2) + "\n")
         verify()
     except SystemExit:
         # Cancellation is terminal. Cleanup has reaped the command; restore

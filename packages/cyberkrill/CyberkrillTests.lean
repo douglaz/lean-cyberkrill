@@ -11,6 +11,7 @@ import CyberkrillTests.Offline
 import CyberkrillTests.Rpc
 import CyberkrillTests.ListUtxos
 import CyberkrillTests.PsbtCommands
+import CyberkrillTests.MoveUtxos
 
 open CyberkrillTests
 
@@ -29,6 +30,10 @@ private def suite (name : String) (action : IO Unit) : IO Unit := do
 def main (args : List String) : IO UInt32 := do
   try
     match args with
+    | ["--move-fetch"] => moveFetch
+    | ["--move-injected"] => moveInjected
+    | ["--move-ordering", name] => moveOrdering name
+    | ["--move-raw"] => moveRaw
     | ["--psbt-fetch"] => psbtFetch
     | ["--psbt-injected"] => psbtInjected
     | ["--wallet-reader"] => walletReader
@@ -54,6 +59,12 @@ def main (args : List String) : IO UInt32 := do
       outputEquals i
     | ["--check", name] => helpers name; capabilities name
     | [] =>
+      suite "move injection" moveInjected
+      suite "move CLI replay driver" do
+        let result ← IO.Process.output { cmd := "python3", args := #["-B", "test/move-utxos.py"] }
+        (← IO.getStdout).putStr result.stdout
+        (← IO.getStderr).putStr result.stderr
+        check "move CLI replay driver" (result.exitCode == 0)
       suite "PSBT injection" psbtInjected
       suite "PSBT commands replay driver" do
         let result ← IO.Process.output { cmd := "python3", args := #["-B", "test/psbt-commands.py"] }

@@ -43,8 +43,126 @@ commands, shared whole-sat/explicit-fee helpers, real curve capability wiring,
 and an offline exact-decimal golden comparator. Phase 7b adds offline BOLT11
 invoice decoding/signing and LNURL decoding. Phase 7c adds invite decoding,
 invite encoding and PSBT inspection. Phase 8b adds Core UTXO listing and the
-public frozenkrill reader. Phase 8c adds Core PSBT creation and funded PSBT creation;
+public frozenkrill reader. Phase 8c adds Core PSBT creation, funded PSBT creation and UTXO consolidation;
 `plan.md` is the plan for v1.
+
+## Phase 8c: Core UTXO consolidation
+
+`onchain-move-utxos` accepts required repeated `--inputs`, required
+`--destination`, one of `--fee-rate` or absolute `--fee`, optional
+`--max-amount` and `--network`, shared RPC flags, `-o/--output` and
+`--psbt-output`. Fee examples are `2.5sats` and `1000sat`; bare fee values
+give `feeUnitRequired` with the `15sats` example. Ordinary amounts, including
+the selection threshold, retain bare BTC. Both fee methods conflict during
+parsing. A missing fee is a runtime `missingFee` error after ordinary JSON
+output opens. Typed fee and maximum grammar errors precede dispatch; an
+earlier effective help token wins. Split and attached inputs preserve order.
+
+`Cyberkrill.MoveUtxos.fetch` reuses one supplied client and
+`PsbtCommands.expand`. Every expanded outpoint gets its own
+`getrawtransaction [txid,true]` call, in original order, before selection.
+Requested values are read by array index; missing transaction identity and
+unusable unrelated outputs do not impose additional command requirements.
+The existing strict raw-transaction API continues to validate all outputs
+and the transaction id. Descriptor imports ignore failures, visit receiving
+before change, derive `[0,99]`, and preserve first-seen order within each
+invocation. Failed derivation still lists with an empty address array.
+Separate expansions and explicit inputs retain duplicates. Import timestamp
+`now` does not rescan historical transactions.
+
+Without a maximum all inputs retain their order. With a maximum, `floorSat`
+floors the threshold; nonzero amounts below one sat fail. Stable descending
+selection tests the accumulated total before adding the next input. Zero
+selects nothing and gives `emptySelection`; a threshold above available funds
+selects all. The sole output is **the full selected total minus the fee**,
+including every satoshi of overshoot. There is no clamp or change output.
+Selection, totals and wire values use exact `Bitcoin.Amount`, never Float.
+Rate fees use the unchanged P2WPKH_MAX/22-byte-output estimator, selected
+input count and one output, ceil virtual bytes and binary64 fee rounding.
+Absolute fees truncate msat/1000, including zero and sub-satoshi fees.
+A selected total less than or equal to the fee gives `insufficientFunds`
+before `createpsbt`.
+
+The final request is `[selectedInputs,{destination:exactBTC},0,false]`;
+JSON contains `psbt`, integer `fee_sats` and null `change_position`.
+The original returned Base64 must pass strict spelling and the real PSBT
+curve/hash/same-point checks. Only then is raw Base64 written, without a
+newline, before JSON through the original retained writer. JSON has no added
+newline; file output leaves stdout empty. These are ordinary files.
+Aliased JSON/raw paths succeed with complete JSON left in the shared file.
+Runtime order is output open, fee presence, network, backend, floored
+maximum, client/requests, raw write, JSON write. Later failures may leave JSON
+truncated; invalid PSBTs leave raw output untouched.
+
+Networks are case-insensitive mainnet/bitcoin, testnet, signet and regtest;
+tests connect only to the isolated replay stub. Fiat maxima give
+`fiatNotSupported` without price lookup or client initialization.
+`--wallet-file` is refused with or without a directory. The pinned reference
+reads that file even when Core later ignores its descriptor
+(`cyberkrill/src/main.rs:1859–1881`); the port refuses both routes.
+`--descriptor` plus `--bitcoin-dir` requires BDK and is refused; a standalone
+descriptor flag is accepted and ignored. Electrum and Esplora remain
+unsupported. The BDK hardcoded endpoint (`bdk_wallet.rs:254–259`) is never
+executed by capture or refusal tests.
+
+Sixteen actual CLI captures against cyberkrill
+[`27cad1f`](https://github.com/douglaz/cyberkrill/tree/27cad1faba86260b06665a89f0af5134d23525c2)
+cover explicit and descriptor inputs, no cap, exact/above caps, both fee
+methods, cookie and relative-cookie authentication, ordinary files and aliases.
+Four precise exceptions are pinned: two reference-success bare-fee inputs
+become port refusals with zero requests; overshoot sends `0.5999834` rather
+than the reference's clamped `0.4999834`; and the existing f64
+`0.6999833999999999` request receives Core -3 `Invalid amount`, while exact
+`0.6999834` succeeds. The absolute bare `0.00001` and rate bare
+`0.00000009091` both match the recorded 1000-satoshi request in the reference;
+explicit `1000sat` and `9.091sats` prove the paired successes.
+Every comparison retains complete JSON values, array order, separate
+stdout/stderr/status and file bytes. The pin and four outcomes are not blanket
+parity waivers.
+
+The new `move-unclamped` case was generated by the manual producer with
+Core 31.1.0 in the pinned recording shell, inside a disposable regtest
+namespace. It adds 14 selectors, replies and auth controls. The original
+nine cases, shared public fixtures and cookie remain byte-identical to
+landed master. Totals are ten cases, eleven methods, 98 selectors, 104
+authorized replies and 98 auth controls. No test starts a live node.
+`test/move-utxos-provenance.json` binds the actual captures and recorded
+public fixtures; CLI/core source is MIT. Existing frozenkrill MIT and
+fedimint-lite's MIT option remain as attributed in their sidecars.
+
+The registered suite includes 38 injection/selection/lookup checks, 29
+synthetic numeric/spelling controls, 20 executable grammar/help/refusals,
+three deep PSBT derivatives, three descriptor controls, twelve paired
+size/deadline checks, five auth failures and an ordered JSON/raw FIFO flow.
+Synthetic replies use recorded PSBT payloads or explicitly labeled corruptions;
+they claim no additional Core captures. Five synthetic strict/narrow raw-response
+controls cover missing and malformed identity, missing and unusable unrelated
+values, and a valid strict response, retaining requested-array-index behavior.
+Eighteen parse-only controls retain creation's typed/help precedence when an
+unsupported move-only flag precedes a typed fee or help token.
+The move mutation producer exercises 57 named selections, including independent
+wallet routing refusals, parser exclusivity, writer/fee/network/maximum/client
+ordering, strict-wrapper rejection and history publication. Each detecting
+selection requires compiled build/red/restored-build/green statuses 0/1/0/0
+and a restored full suite. The earlier 40-selection execution remains distinct
+from the expanded run; neither substitutes for final-source validation.
+
+All eleven affected existing evidence producers publish through
+`test/evidence_history.py`. It preserves the independently pinned landed
+observation in `pre_move_observation`, keeps earlier move-refresh executions
+separate, and publishes current executed evidence only after success. The
+registered publication controls exercise first and repeated refreshes and
+refusal of damaged history. The advertised producers can be rerun directly;
+no private refresh script is required. Current source bindings and detecting
+runs remain separate from the retained creation, listing, client and offline
+observations.
+
+Upstream [#156](https://github.com/douglaz/cyberkrill/issues/156)'s BDK default
+near 1 sat/vB, possible change, low-rate failure and incorrect reported fee
+are not a fee oracle. The selected-total destination rule governs.
+The seven plan §3 parity exceptions, deferred URL/invoice decisions and
+bech32 proof stop remain unchanged. The supervisor's documented second-late-signal
+status-record limitation remains; incomplete attempts never count as passing.
 
 ## Phase 8c: Core PSBT creation commands
 
@@ -129,7 +247,7 @@ Both commands reject `--wallet-file` with or without a directory, and reject
 port-only tests: the pinned BDK path hardcodes port 8332
 (`main.rs:1617–1638,1726–1748`, `bdk_wallet.rs:254–259`). A descriptor supplied
 without a directory is accepted and ignored. Electrum/Esplora remain unsupported.
-No fiat capture, BDK route, wallet-file PSBT route or move handler is executed.
+That creation-only capture executed no fiat, BDK, wallet-file PSBT or move route.
 
 The implementation follows the complete MIT source bodies in
 [cyberkrill at the pinned revision](https://github.com/douglaz/cyberkrill/tree/27cad1faba86260b06665a89f0af5134d23525c2),
@@ -208,9 +326,8 @@ approximately 1sat/vB, could add change or fail in its low-rate band, and report
 an incorrect fee. Its fee/change is not an oracle; destination calculation
 governs. The retained move-f64 request `0.6999833999999999` produces Core -3
 `Invalid amount`; exact `0.6999834` succeeds. Neither variant is normalized or
-clamped, and these are existing recording checks, not a new move handler test.
-Selected-total-minus-computed-fee without clamping and `--fee` handler goldens
-remain the separate move task (`xxl`). The deferred URL and invoice decisions
+clamped. Those creation-phase observations remain historical; the move section
+above adds actual handler captures for the destination rule and absolute fees. The deferred URL and invoice decisions
 and the bech32 proof stop are unchanged.
 
 ## Phase 8b: Core UTXO listing and frozenkrill exports
@@ -297,7 +414,7 @@ refused even with an explicit RPC URL. The reference selects BDK in
 `cyberkrill/src/main.rs:1506`, whose `cyberkrill-core/src/bdk_wallet.rs:254`
 uses a hardcoded endpoint. Address and wallet-file cookie authentication remain
 supported. Electrum/Esplora remain unsupported. The two creation handlers and their
-wallet-file refusals are documented above; the move handler remains deferred.
+wallet-file refusals and the move handler are documented above.
 
 Behavior is independently reimplemented from
 [cyberkrill at the parity revision](https://github.com/douglaz/cyberkrill/tree/27cad1faba86260b06665a89f0af5134d23525c2)
@@ -416,8 +533,8 @@ does not supply a fee/change oracle. The settled output follows the destination
 calculation rather than that observed fee. The recorded Core binary64 output
 `0.6999833999999999` returns RPC -3 `Invalid amount`, while exact
 `0.6999834` succeeds; both requests/outcomes remain checked. Full selected
-total minus computed fee without clamping and `--fee` handler goldens remain
-the separate move task. The two creation handlers now test explicit fee units
+total minus computed fee without clamping and `--fee` handler goldens now
+have the separate move captures above. The two creation handlers test explicit fee units
 and collapse duplicate destinations before estimation, as documented above.
 
 ## Phase 8a: Core RPC client and shared connection flags (2 of 2)
@@ -459,7 +576,7 @@ PSBT outputs use an address-keyed JSON object, as in the pinned reference.
 Repeated addresses retain the last supplied amount rather than accumulating
 amounts or producing multiple outputs.
 Core UTXO listing is registered in Phase 8b; the two creation handlers and
-their fee-rate goldens are implemented above. The move handler remains deferred.
+their fee-rate goldens and the move handler are implemented above.
 Offline commands have no RPC flags.
 
 `Cyberkrill.RpcFlags.flags` is the common `Cli.Flag` array, with `ofParsed`
@@ -509,8 +626,8 @@ Both Phase 8c caveats still apply. The recorded f64 request
 numeric `0.6999834` succeeds; the client replays both without doing f64
 arithmetic. [#156](https://github.com/douglaz/cyberkrill/issues/156)'s pinned
 BDK default of approximately 1 sat/vB, possible change, and low-rate failures
-are not a fee oracle. There is no BDK fee-match claim here. The settled future
-move handler will use selected-total-minus-computed-fee without a clamp.
+are not a fee oracle. There is no BDK fee-match claim here. The move handler
+uses selected-total-minus-computed-fee without a clamp.
 
 ### Client replay and safety inventories
 
@@ -941,10 +1058,11 @@ selectors and actual producer response envelopes. The fallback uses explicit
 ordered accumulation and shortest decimal serialization, avoiding Python's
 compensated `sum` for the reference calculation. Replay never uses binary64.
 
-The overshoot fixture selects 60M sats against a 50M-sat cap and records the
-pinned Core route's clamped destination. The settled future port keeps
-largest-first selection and sends selected-total-minus-computed-fee without the
-clamp. Its handler and port-only golden belong to later work. Separately,
+The original overshoot fixture selects 60M sats against a 50M-sat cap and
+records the pinned Core route's clamped destination. The new move handler and
+`move-unclamped` case above keep largest-first selection and send the full
+selected total minus the computed fee. The recording-only observations below
+preceded that handler. Separately,
 [#156](https://github.com/douglaz/cyberkrill/issues/156)'s pinned BDK builder
 computes a fee but never applies it (`bdk_wallet.rs:888-912`); its approximately
 1 sat/vB default, low-rate failures and possible change are not a fee oracle.
@@ -1265,12 +1383,11 @@ still match while the precisely named userinfo/IPv6/IPv4/IDNA/scheme refusals
 remain reference-success/port-exit-1 exceptions. Bare fees still fail with
 `feeUnitRequired` before a consumer, with `15sats` as the explicit-unit example;
 the two creation handlers have three actual bare-fee captures, plus the six
-command-specific exact-amount pins described in Phase 8c. The move handler
-remains deferred. Private mnemonic output still uses
+command-specific exact-amount pins described in Phase 8c. The move section
+adds two actual bare-fee refusals, full-total and f64 exception pins. Private mnemonic output still uses
 exclusive owner-only creation and `outputPathExists`, with its five controlled
-public-entropy captures and unchanged refusal pins. The planned move-utxos
-whole-selected-value decision belongs to its future command and has no new
-execution claim here. No exception permits unrelated fields, keys, numbers,
+public-entropy captures and unchanged refusal pins. The move section records
+the separate whole-selected-value handler evidence. No exception permits unrelated fields, keys, numbers,
 statuses, streams, error identities or unused entries.
 
 ### Phase 7c validation
@@ -8699,7 +8816,7 @@ the merged exception to the pinned reference, whose bare fees mean BTC;
 upstream #154's subsequent fix does not change the parity pin. Prior fee
 evidence remains parser-only. The two Phase 8c creation handlers now have actual
 offline fee-rate captures, including `2.5sats` successes and the named bare-fee
-refusal. Absolute `--fee` and move-handler goldens remain the separate `xxl` task.
+refusal. Absolute `--fee` and move-handler goldens are described in Phase 8c.
 
 `Cyberkrill.Capabilities` supplies the actual four Bitcoin curve functions,
 RIPEMD-160/HASH160 values and `bolt11Curve secret`. The signer closes over
@@ -8792,7 +8909,8 @@ The recorded Core move request `0.6999833999999999` fails with RPC -3 while
 exact `0.6999834` succeeds. Both variants remain asserted for 8c, whose BDK
 default-fee/change outcomes are not a fee oracle; the settled output follows
 the destination calculation. No-clamp destination
-calculation and absolute `--fee` handler goldens remain the separate `xxl` task.
+calculation and absolute `--fee` handler goldens now have their own Phase 8c
+move captures and four precise exception pins.
 The two creation handlers now cover explicit fee units and actual offline
 fee-rate captures. Duplicate-address maps collapse last-value-wins before
 counting distinct outputs for creation's informational fee; no fee is deducted.

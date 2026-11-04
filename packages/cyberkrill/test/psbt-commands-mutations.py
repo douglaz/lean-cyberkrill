@@ -13,6 +13,7 @@ import sys
 import tempfile
 import time
 
+from evidence_history import publish_history
 from cases import APP, ROOT
 from network import run_owned
 
@@ -216,7 +217,7 @@ def main():
             print(name+": build/red/restore/green 0/1/0/0", flush=True)
         full = command("restored-full", tests, 0)
         assert source == fingerprints(), "PSBT final source restoration"
-        DEST.write_text(json.dumps(dict(pre_repair_observation=history,
+        publish_history(DEST, json.dumps(dict(pre_repair_observation=history,
             pre_whitespace_observation=prior.get("pre_whitespace_observation", prior),
             pre_scanner_observation=pre_scanner,
             source_sha256=source, checks=checks, initial_build=initial_build,

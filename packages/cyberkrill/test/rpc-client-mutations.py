@@ -12,6 +12,7 @@ import subprocess
 import sys
 import types
 
+from evidence_history import publish_history
 from cases import APP
 import network
 
@@ -199,15 +200,17 @@ def fingerprints():
 
 def command(label, args, expected, assertion=None):
     # Write while the child runs so a crash or outer timeout retains its output.
+    limit = 600 if args == ["lake", "test"] else 180
+    bounded = ["timeout", "--foreground", str(limit), *args]
     with (LOGS / (label + ".stdout")).open("wb") as stdout, (LOGS / (label + ".stderr")).open("wb") as stderr:
-        proc = subprocess.run(["timeout", "--foreground", "180", *args], cwd=APP, stdin=subprocess.DEVNULL,
-                              stdout=stdout, stderr=stderr, timeout=190)
+        proc = subprocess.run(bounded, cwd=APP, stdin=subprocess.DEVNULL,
+                              stdout=stdout, stderr=stderr, timeout=limit+10)
     (LOGS / (label + ".status")).write_text(str(proc.returncode) + "\n")
     output = ((LOGS / (label + ".stdout")).read_bytes() + (LOGS / (label + ".stderr")).read_bytes()).decode()
     assert proc.returncode == expected, "mutation status " + label + " " + str(proc.returncode) + ": " + output
     if assertion:
         assert assertion in output and ("AssertionError:" in output or "assertion failed:" in output), "mutation detecting assertion " + label + ": " + output
-    return dict(command=["timeout", "--foreground", "180", *args], status=proc.returncode, streams=str(LOGS.relative_to(APP)) + "/" + label)
+    return dict(command=bounded, status=proc.returncode, streams=str(LOGS.relative_to(APP)) + "/" + label)
 
 
 def network_variant(index):
@@ -342,7 +345,7 @@ def main():
             print(name + ": red/green 1/0", flush=True)
         full = command("restored-full", ["lake", "test"], 0)
         assert fingerprints() == hashes, "RPC exact source restoration"
-        DEST.write_text(json.dumps(dict(pre_psbt_observation=pre_psbt, count=len(records), source_sha256=hashes, checks=records, restored_full=full,
+        publish_history(DEST, json.dumps(dict(pre_psbt_observation=pre_psbt, count=len(records), source_sha256=hashes, checks=records, restored_full=full,
                                        previous_observation=previous, corrected_observation=corrected,
                                        nested_observation=nested, late_cleanup_observation=late, deadline_adoption_observation=deadline,
                                        pre_list_observation=pre_list), indent=2) + "\n")

@@ -73,7 +73,7 @@ def splitOutputs (s : String) : Array String := Id.run do
     index := index + 1
   return entries.push (String.ofList current.reverse)
 
-private def fiatValid (s : String) : Bool := Id.run do
+def fiatValid (s : String) : Bool := Id.run do
   unless recognizableFiat s do return false
   let cs := (Amount.trimInput s).toList
   let suffix := cs.reverse.takeWhile (fun c => !(asciiDigit c || c == '.' || c == ','))

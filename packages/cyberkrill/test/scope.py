@@ -12,8 +12,8 @@ from datetime import datetime
 
 from cases import APP, ROOT
 
-BASE = "1740dafe5abb36c2d609cda3cdc2906040732642"
-ISSUE = "lck-phase-8c-psbt-rpc-commands-85g"
+BASE = "01879167f2f6b7ace2a286987a14a2104a48f912"
+ISSUE = "lck-phase-8c-move-utxos-xxl"
 # Fixed observations for fixtures first introduced by this phase. Never derive
 # these expected values from HEAD, the index, or the current fixture bytes.
 HISTORICAL_DIGESTS = {
@@ -60,37 +60,47 @@ def check_lifecycle(original, current):
 
 def main():
     allowed = {"README.md", ".beads/issues.jsonl"}
-    # Each path has a command integration or actual evidence-refresh purpose.
+    # Explicit move integration and actual changed-source evidence refreshes.
     allowed |= {"packages/cyberkrill/" + p for p in [
-        "Cyberkrill/App.lean",  # Two parsers, retained ordinary writer and dispatch.
-        "Cyberkrill/PsbtCommands.lean",  # Exact outputs, expansion, change and validation.
-        "Cyberkrill/CoreRpc.lean",  # Separate funded command defaults; strict API retained.
-        "CyberkrillTests.lean", "CyberkrillTests/PsbtCommands.lean",  # Test registration/injection.
-        "test/psbt-commands.py", "test/psbt-commands-mutations.py",  # Handler replay and detecting edits.
-        "test/psbt-commands-provenance.json",  # Pinned source/licence and recorded input binding.
-        "test/scope.py", "test/validate.py",  # Phase boundary, registration and source count.
-        "test/revision-mutate.py", "test/carried-regressions.py", "test/verify.py",  # Affected evidence integration.
-        "test/rpc-client.py",  # New fractional replay and opt-in stage delays; original 75 replies retained.
-        "test/list-utxos-mutations.py", "test/list-utxos-lexical-mutations.py",  # Preserve each pre-PSBT observation during actual refresh.
-        "test/rpc-client-mutations.py",  # Preserve historical/current observations on client refresh.
-        "test/rpc-recording-cases.json",  # New fractional funded request only.
-        "test/generate-rpc-recordings.py",  # Fractional rate in new case only.
-        "test/rpc-recordings.py",  # Independently pin the new case alongside the original eight.
-        "test/recordings/funded-fractional.json",  # Actual Core fractional funded capture.
+        "Cyberkrill/App.lean",  # Move registration, ordered parser and ordinary writer dispatch.
+        "Cyberkrill/MoveUtxos.lean",  # Exact lookup, stable selection, local fee, validation.
+        "Cyberkrill/PsbtCommands.lean",  # Export existing fiat grammar; creation behavior unchanged.
+        "CyberkrillTests.lean", "CyberkrillTests/MoveUtxos.lean",  # Registered move checks and client injection.
+        "test/move-utxos.py", "test/move-utxos-mutations.py",  # Handler replay and compiled detecting edits.
+        "test/move-utxos-provenance.json",  # Pinned source and actual reference capture bindings.
+        "test/scope.py", "test/validate.py", "test/verify.py",  # Phase scope, registration, source count.
+        "test/rpc-client.py",  # Replay new real Core responses alongside the original 90.
+        "test/rpc-recording-cases.json",  # Named new overshoot request only.
+        "test/generate-rpc-recordings.py",  # Additional exact request in the new case only.
+        "test/rpc-recordings.py",  # Independent new-case shape and inventory.
+        "test/recordings/move-unclamped.json",  # New real Core no-clamp success; old cases untouched.
+        "test/list-utxos-mutations.py", "test/list-utxos-lexical-mutations.py",
+        "test/rpc-client-mutations.py",  # Finite full-suite allowance for the added move replay.
+        "test/offline-mutate.py",  # Measured full-suite allowance and retained timeout diagnostics.
+        "test/evidence_history.py",  # Shared publication boundary retains fixed pre-move observations.
+        "test/mutate.py",  # Publish refreshed App/test bindings without losing landed evidence.
+        "test/lightning-mutate.py",  # Publish refreshed App/test bindings with retained history.
+        "test/revision-mutate.py",  # Publish refreshed parser/scope bindings with retained history.
+        "test/refresh-regressions.py",  # Preserve landed observations on every regression refresh.
+        "test/output-regressions.py",  # Preserve history on the advertised output refresh path.
+        "test/refresh-attached-output.py",  # Preserve history on the advertised attached-output refresh.
+        "test/psbt-commands-mutations.py",  # Preserve creation history through the move integration refresh.
+
     ]}
     allowed |= {"packages/cyberkrill/test/golden/" + p for p in [
-        "psbt-commands-reference.json", "psbt-commands-mutation-record.json",  # Actual new captures/reds.
+        "move-utxos-reference.json", "move-utxos-mutation-record.json",  # Actual new captures and compiled reds.
+        "psbt-commands-mutation-record.json",  # Actual App/test-registration/client-source refresh.
         "mutation-record.json", "lightning-mutation-record.json", "revision-mutation-record.json",
         "offline-mutation-record.json", "rpc-client-mutation-record.json",
         "list-utxos-mutation-record.json", "list-utxos-lexical-mutation-record.json",
-        "list-utxos-lifecycle-record.json",  # Actual lifecycle rerun binds the amended refresh producers.
+        "list-utxos-lifecycle-record.json",  # Actual amended-source lifecycle replay.
         "regression-refresh.json", "output-regression-refresh.json", "attached-output-refresh.json",
-        "offline-history-recapture.json",  # Refreshed only by their actual affected producers.
+        "offline-history-recapture.json",  # Actual App/test/phase-boundary refreshes.
     ]}
     changed = set(filter(None, git("diff", BASE, "--name-only", "-z").decode().split("\0")))
     new = set(filter(None, git("ls-files", "--others", "--exclude-standard", "-z").decode().split("\0")))
     base_paths = set(git("ls-tree", "-r", "--name-only", BASE).decode().splitlines())
-    assert changed | new <= allowed, "path outside PSBT command scope: " + repr(sorted((changed | new) - allowed))
+    assert changed | new <= allowed, "path outside move command scope: " + repr(sorted((changed | new) - allowed))
     # Equality against the base for each unrelated issue includes every field.
     def issues(data):
         rows = [json.loads(line) for line in data.splitlines()]
@@ -101,6 +111,13 @@ def main():
     current = issues((ROOT / ".beads/issues.jsonl").read_bytes())
     assert original.keys() == current.keys(), "issue identity set"
     assert all(original[k] == current[k] for k in original if k != ISSUE), "unrelated issue changed"
+    def raw_issues(data):
+        return {json.loads(line)["id"]: line for line in data.splitlines(keepends=True)}
+    original_raw = raw_issues(git("show", BASE + ":.beads/issues.jsonl"))
+    # Check original export bytes independently of parsed lifecycle fields.
+    with (ROOT / ".beads/issues.jsonl").open("rb") as exported:
+        current_raw = raw_issues(exported.read())
+    assert all(original_raw[k] == current_raw[k] for k in original_raw if k != ISSUE), "unrelated raw issue bytes changed"
     amended = current[ISSUE]
     check_lifecycle(original[ISSUE], amended)
     # These files must retain the original observations, not refreshed hashes.

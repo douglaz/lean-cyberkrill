@@ -1,0 +1,29 @@
+{
+  "revision": "27cad1faba86260b06665a89f0af5134d23525c2",
+  "sources": [
+    {
+      "url": "https://github.com/douglaz/cyberkrill",
+      "revision": "27cad1faba86260b06665a89f0af5134d23525c2",
+      "path": "cyberkrill/src/main.rs",
+      "licence": "MIT",
+      "sha256": "184feb3b1de3af7f961ba4f936d2d2137d199686fa4a59079377fbb9cd2ce9ed",
+      "changes": "Read command and client behavior; captured CLI against recorded Core replies"
+    },
+    {
+      "url": "https://github.com/douglaz/cyberkrill",
+      "revision": "27cad1faba86260b06665a89f0af5134d23525c2",
+      "path": "cyberkrill-core/src/bitcoin_rpc.rs",
+      "licence": "MIT",
+      "sha256": "84e58ce11c94bc70e3c20469a95b8e87c7a1d8d695dcd23d647da5a5db723987",
+      "changes": "Read command and client behavior; captured CLI against recorded Core replies"
+    }
+  ],
+  "captures": 16,
+  "exceptions": 4,
+  "fixture_sha256": {
+    "test/recordings/move-success.json": "6ba7e762d31e19cb68825db6a6901afa91c107700f61cc1bd9ef1fbe1a1b49c9",
+    "test/recordings/move-f64.json": "71bf4924f57b7db1a3b7e8843d6a04c7e86bcd741692cbd3f16d3afe57e2b641",
+    "test/recordings/move-unclamped.json": "dd1012e9a75525187d8858adde5409415e2874711b5303c54688f1b04b7e6403"
+  },
+  "capture_sha256": "4c8b1d595e7ca7206556d9908b675f5f3676edb5562ae897b4eb7516aafc8da0"
+}

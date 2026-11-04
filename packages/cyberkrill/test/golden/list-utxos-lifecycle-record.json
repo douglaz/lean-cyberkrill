@@ -1,8 +1,8 @@
 {
   "source_sha256": {
     "test/list-utxos-lifecycle.py": "387c1e8dd627e98175a95047fc4cba825f53697b9cfde7000f931907b4a4ec36",
-    "test/list-utxos-mutations.py": "c4f512d8afe8c94c4cda62c1c402c7745fe8de8c89b16b203163142d962b5b17",
-    "test/list-utxos-lexical-mutations.py": "5f58c477669913098f0fbe7dca23d3bee61ef22e1c7e7e000f7e0cd87f40490a",
+    "test/list-utxos-mutations.py": "e87809fde6cffb2d8c2a45a062be4232c9d688545bd0c8861f941ff2836ee817",
+    "test/list-utxos-lexical-mutations.py": "b30f5950de94d00df7908c4ed07dc12c7dfbe83c26a2b84de66a9be86ee698c0",
     "test/network.py": "053bc627decb80b256efe256fb5aa4b81027c93693e3dd9c9c630b689cb98297",
     "test/gate.py": "eedecf0a183ba3eeefccc86f54fabb771f58dae820178d779500260ef18d2871"
   },
