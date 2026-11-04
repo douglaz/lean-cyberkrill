@@ -5736,14 +5736,3115 @@
       "seconds": 13.353
     }
   },
+  "pre_scanner_observation": {
+    "source_sha256": {
+      "Cyberkrill/App.lean": "2c34598b24c9a4d199528ad4392edca14bf7b84bd0c9e978baee78574303a6d7",
+      "Cyberkrill/CoreRpc.lean": "63fab1a1540c05eac769322a77fc799dc86cdb210da98a35696f8f46d3848a6d",
+      "Cyberkrill/PsbtCommands.lean": "a77e29dc3b22037ee5a5cd94d88e93208e6b54e227ecc152e512c981fa8c0231",
+      "CyberkrillTests.lean": "465b95792624b7ee1d48d5c5b332ec5513fa88a467b247a54444d7179c54cbc3",
+      "CyberkrillTests/PsbtCommands.lean": "54c20a78aa5164f7a78b1939d6167b5c882c8ecaea9f6fb932ddd6e4f9281310",
+      "test/psbt-commands.py": "f5c76b9299667aa5d42ae7c0da73412833092466abb8620f6a5276deb22c643e",
+      "test/psbt-commands-mutations.py": "05d7c5792a56a296cd783264291f61bfa18e770abe91fd318fd0bd2af01e5c5f",
+      "test/psbt-commands-provenance.json": "272fac5bb92cdb4dfa0029fd2a11d01e3c99af607bfaba7d4237a52547335eeb",
+      "test/golden/psbt-commands-reference.json": "9f177beb9ebcc3b2bb92c36b00e635e856f2771178d50df6da50742d8407e99e",
+      "test/rpc-client.py": "997bdbd1f1a74c00793d63f8f31a4157c389be576c2399c3dc94d01ac296d514"
+    },
+    "checks": [
+      {
+        "property": "explicit-order",
+        "file": "Cyberkrill/PsbtCommands.lean",
+        "replace": "result := result.push { txid := parts[0]!, vout }",
+        "with_text": "result := #[{ txid := parts[0]!, vout }] ++ result",
+        "selection": [
+          "replay",
+          "create-explicit-1sat"
+        ],
+        "assertion": "PSBT CLI success",
+        "failure": "AssertionError: PSBT CLI success create-explicit-1sat: rpcHttp: HTTP 599",
+        "build": {
+          "command": [
+            "lake",
+            "build",
+            "cyberkrill",
+            "CyberkrillTests"
+          ],
+          "status": 0,
+          "seconds": 11.115
+        },
+        "red": {
+          "command": [
+            "python3",
+            "-B",
+            "test/psbt-commands.py",
+            "replay",
+            "create-explicit-1sat"
+          ],
+          "status": 1,
+          "seconds": 0.33
+        },
+        "restore_build": {
+          "command": [
+            "lake",
+            "build",
+            "cyberkrill",
+            "CyberkrillTests"
+          ],
+          "status": 0,
+          "seconds": 11.007
+        },
+        "green": {
+          "command": [
+            "python3",
+            "-B",
+            "test/psbt-commands.py",
+            "replay",
+            "create-explicit-1sat"
+          ],
+          "status": 0,
+          "seconds": 0.327
+        }
+      },
+      {
+        "property": "expansion-empty",
+        "file": "Cyberkrill/PsbtCommands.lean",
+        "replace": "if result.isEmpty then return .error",
+        "with_text": "if false then return .error",
+        "selection": [
+          "probes",
+          "empty-expansion"
+        ],
+        "assertion": "PSBT probe request order/stopping",
+        "failure": "AssertionError: PSBT probe request order/stopping empty-expansion",
+        "build": {
+          "command": [
+            "lake",
+            "build",
+            "cyberkrill",
+            "CyberkrillTests"
+          ],
+          "status": 0,
+          "seconds": 11.111
+        },
+        "red": {
+          "command": [
+            "python3",
+            "-B",
+            "test/psbt-commands.py",
+            "probes",
+            "empty-expansion"
+          ],
+          "status": 1,
+          "seconds": 0.394
+        },
+        "restore_build": {
+          "command": [
+            "lake",
+            "build",
+            "cyberkrill",
+            "CyberkrillTests"
+          ],
+          "status": 0,
+          "seconds": 11.211
+        },
+        "green": {
+          "command": [
+            "python3",
+            "-B",
+            "test/psbt-commands.py",
+            "probes",
+            "empty-expansion"
+          ],
+          "status": 0,
+          "seconds": 0.331
+        }
+      },
+      {
+        "property": "dedup-scope",
+        "file": "Cyberkrill/PsbtCommands.lean",
+        "replace": "result := result.push { txid := u.txid, vout := u.vout }",
+        "with_text": "if !result.any (fun i => i.txid == u.txid && i.vout == u.vout) then result := result.push { txid := u.txid, vout := u.vout }",
+        "selection": [
+          "probes",
+          "scope-dedup"
+        ],
+        "assertion": "PSBT probe request order/stopping",
+        "failure": "AssertionError: PSBT probe request order/stopping scope-dedup",
+        "build": {
+          "command": [
+            "lake",
+            "build",
+            "cyberkrill",
+            "CyberkrillTests"
+          ],
+          "status": 0,
+          "seconds": 11.308
+        },
+        "red": {
+          "command": [
+            "python3",
+            "-B",
+            "test/psbt-commands.py",
+            "probes",
+            "scope-dedup"
+          ],
+          "status": 1,
+          "seconds": 0.377
+        },
+        "restore_build": {
+          "command": [
+            "lake",
+            "build",
+            "cyberkrill",
+            "CyberkrillTests"
+          ],
+          "status": 0,
+          "seconds": 11.227
+        },
+        "green": {
+          "command": [
+            "python3",
+            "-B",
+            "test/psbt-commands.py",
+            "probes",
+            "scope-dedup"
+          ],
+          "status": 0,
+          "seconds": 0.326
+        }
+      },
+      {
+        "property": "last-value",
+        "file": "Cyberkrill/PsbtCommands.lean",
+        "replace": "outputs.filter (fun (key, _) => key != address)",
+        "with_text": "outputs.filter (fun (key, _) => key != address || key == address)",
+        "selection": [
+          "replay",
+          "create-duplicate"
+        ],
+        "assertion": "PSBT full JSON/null/fee shape",
+        "failure": "AssertionError: PSBT full JSON/null/fee shape create-duplicate",
+        "build": {
+          "command": [
+            "lake",
+            "build",
+            "cyberkrill",
+            "CyberkrillTests"
+          ],
+          "status": 0,
+          "seconds": 10.897
+        },
+        "red": {
+          "command": [
+            "python3",
+            "-B",
+            "test/psbt-commands.py",
+            "replay",
+            "create-duplicate"
+          ],
+          "status": 1,
+          "seconds": 0.326
+        },
+        "restore_build": {
+          "command": [
+            "lake",
+            "build",
+            "cyberkrill",
+            "CyberkrillTests"
+          ],
+          "status": 0,
+          "seconds": 11.006
+        },
+        "green": {
+          "command": [
+            "python3",
+            "-B",
+            "test/psbt-commands.py",
+            "replay",
+            "create-duplicate"
+          ],
+          "status": 0,
+          "seconds": 0.331
+        }
+      },
+      {
+        "property": "fee-distinct-count",
+        "file": "Cyberkrill/PsbtCommands.lean",
+        "replace": "Fee.estimateWeight inputs.size outputs.size",
+        "with_text": "Fee.estimateWeight inputs.size (outputs.size + 1)",
+        "selection": [
+          "replay",
+          "create-duplicate"
+        ],
+        "assertion": "PSBT full JSON/null/fee shape",
+        "failure": "AssertionError: PSBT full JSON/null/fee shape create-duplicate",
+        "build": {
+          "command": [
+            "lake",
+            "build",
+            "cyberkrill",
+            "CyberkrillTests"
+          ],
+          "status": 0,
+          "seconds": 11.005
+        },
+        "red": {
+          "command": [
+            "python3",
+            "-B",
+            "test/psbt-commands.py",
+            "replay",
+            "create-duplicate"
+          ],
+          "status": 1,
+          "seconds": 0.325
+        },
+        "restore_build": {
+          "command": [
+            "lake",
+            "build",
+            "cyberkrill",
+            "CyberkrillTests"
+          ],
+          "status": 0,
+          "seconds": 10.8
+        },
+        "green": {
+          "command": [
+            "python3",
+            "-B",
+            "test/psbt-commands.py",
+            "replay",
+            "create-duplicate"
+          ],
+          "status": 0,
+          "seconds": 0.327
+        }
+      },
+      {
+        "property": "whole-sat",
+        "file": "Cyberkrill/PsbtCommands.lean",
+        "replace": "if let some value := value then let _ \u2190 exactWholeSat value",
+        "with_text": "if let some value := value then let _ := value",
+        "selection": [
+          "refusals"
+        ],
+        "assertion": "PSBT output grammar/precedence",
+        "failure": "AssertionError: PSBT output grammar/precedence",
+        "build": {
+          "command": [
+            "lake",
+            "build",
+            "cyberkrill",
+            "CyberkrillTests"
+          ],
+          "status": 0,
+          "seconds": 10.902
+        },
+        "red": {
+          "command": [
+            "python3",
+            "-B",
+            "test/psbt-commands.py",
+            "refusals"
+          ],
+          "status": 1,
+          "seconds": 0.627
+        },
+        "restore_build": {
+          "command": [
+            "lake",
+            "build",
+            "cyberkrill",
+            "CyberkrillTests"
+          ],
+          "status": 0,
+          "seconds": 10.998
+        },
+        "green": {
+          "command": [
+            "python3",
+            "-B",
+            "test/psbt-commands.py",
+            "refusals"
+          ],
+          "status": 0,
+          "seconds": 1.533
+        }
+      },
+      {
+        "property": "fiat-precision-order",
+        "file": "Cyberkrill/PsbtCommands.lean",
+        "replace": "if let some value := value then let _ \u2190 exactWholeSat value",
+        "with_text": "if let some value := value then let _ := value",
+        "selection": [
+          "injected"
+        ],
+        "assertion": "PSBT fiat classification/precedence destination:1msat",
+        "failure": "AssertionError: Lean RPC test: assertion failed: PSBT fiat classification/precedence destination:1msat,other:123,45,678INR",
+        "build": {
+          "command": [
+            "lake",
+            "build",
+            "cyberkrill",
+            "CyberkrillTests"
+          ],
+          "status": 0,
+          "seconds": 11.124
+        },
+        "red": {
+          "command": [
+            "python3",
+            "-B",
+            "test/psbt-commands.py",
+            "injected"
+          ],
+          "status": 1,
+          "seconds": 0.278
+        },
+        "restore_build": {
+          "command": [
+            "lake",
+            "build",
+            "cyberkrill",
+            "CyberkrillTests"
+          ],
+          "status": 0,
+          "seconds": 11.106
+        },
+        "green": {
+          "command": [
+            "python3",
+            "-B",
+            "test/psbt-commands.py",
+            "injected"
+          ],
+          "status": 0,
+          "seconds": 0.277
+        }
+      },
+      {
+        "property": "fiat-grouping",
+        "file": "Cyberkrill/PsbtCommands.lean",
+        "replace": "c == ',' && !fiatComma current remaining",
+        "with_text": "c == ','",
+        "selection": [
+          "injected"
+        ],
+        "assertion": "PSBT fiat has no client or child",
+        "failure": "AssertionError: Lean RPC test: assertion failed: PSBT fiat has no client or child",
+        "build": {
+          "command": [
+            "lake",
+            "build",
+            "cyberkrill",
+            "CyberkrillTests"
+          ],
+          "status": 0,
+          "seconds": 11.106
+        },
+        "red": {
+          "command": [
+            "python3",
+            "-B",
+            "test/psbt-commands.py",
+            "injected"
+          ],
+          "status": 1,
+          "seconds": 0.277
+        },
+        "restore_build": {
+          "command": [
+            "lake",
+            "build",
+            "cyberkrill",
+            "CyberkrillTests"
+          ],
+          "status": 0,
+          "seconds": 11.005
+        },
+        "green": {
+          "command": [
+            "python3",
+            "-B",
+            "test/psbt-commands.py",
+            "injected"
+          ],
+          "status": 0,
+          "seconds": 0.28
+        }
+      },
+      {
+        "property": "change-first-unused",
+        "file": "Cyberkrill/PsbtCommands.lean",
+        "replace": "| .ok false => return .ok (some address)",
+        "with_text": "| .ok false => return .ok none",
+        "selection": [
+          "replay",
+          "funded-unit"
+        ],
+        "assertion": "PSBT CLI success",
+        "failure": "AssertionError: PSBT CLI success funded-unit: rpcHttp: HTTP 599",
+        "build": {
+          "command": [
+            "lake",
+            "build",
+            "cyberkrill",
+            "CyberkrillTests"
+          ],
+          "status": 0,
+          "seconds": 11.208
+        },
+        "red": {
+          "command": [
+            "python3",
+            "-B",
+            "test/psbt-commands.py",
+            "replay",
+            "funded-unit"
+          ],
+          "status": 1,
+          "seconds": 0.327
+        },
+        "restore_build": {
+          "command": [
+            "lake",
+            "build",
+            "cyberkrill",
+            "CyberkrillTests"
+          ],
+          "status": 0,
+          "seconds": 11.303
+        },
+        "green": {
+          "command": [
+            "python3",
+            "-B",
+            "test/psbt-commands.py",
+            "replay",
+            "funded-unit"
+          ],
+          "status": 0,
+          "seconds": 0.33
+        }
+      },
+      {
+        "property": "change-used",
+        "file": "Cyberkrill/PsbtCommands.lean",
+        "replace": "a.msat > 0",
+        "with_text": "a.msat > 3000000000",
+        "selection": [
+          "replay",
+          "funded-unit"
+        ],
+        "assertion": "PSBT CLI success",
+        "failure": "AssertionError: PSBT CLI success funded-unit: rpcHttp: HTTP 599",
+        "build": {
+          "command": [
+            "lake",
+            "build",
+            "cyberkrill",
+            "CyberkrillTests"
+          ],
+          "status": 0,
+          "seconds": 11.109
+        },
+        "red": {
+          "command": [
+            "python3",
+            "-B",
+            "test/psbt-commands.py",
+            "replay",
+            "funded-unit"
+          ],
+          "status": 1,
+          "seconds": 0.331
+        },
+        "restore_build": {
+          "command": [
+            "lake",
+            "build",
+            "cyberkrill",
+            "CyberkrillTests"
+          ],
+          "status": 0,
+          "seconds": 11.002
+        },
+        "green": {
+          "command": [
+            "python3",
+            "-B",
+            "test/psbt-commands.py",
+            "replay",
+            "funded-unit"
+          ],
+          "status": 0,
+          "seconds": 0.335
+        }
+      },
+      {
+        "property": "change-bound",
+        "file": "Cyberkrill/PsbtCommands.lean",
+        "replace": "for index in [:200]",
+        "with_text": "for index in [:199]",
+        "selection": [
+          "probes",
+          "bound"
+        ],
+        "assertion": "PSBT probe request order/stopping",
+        "failure": "AssertionError: PSBT probe request order/stopping bound",
+        "build": {
+          "command": [
+            "lake",
+            "build",
+            "cyberkrill",
+            "CyberkrillTests"
+          ],
+          "status": 0,
+          "seconds": 11.009
+        },
+        "red": {
+          "command": [
+            "python3",
+            "-B",
+            "test/psbt-commands.py",
+            "probes",
+            "bound"
+          ],
+          "status": 1,
+          "seconds": 0.53
+        },
+        "restore_build": {
+          "command": [
+            "lake",
+            "build",
+            "cyberkrill",
+            "CyberkrillTests"
+          ],
+          "status": 0,
+          "seconds": 11.107
+        },
+        "green": {
+          "command": [
+            "python3",
+            "-B",
+            "test/psbt-commands.py",
+            "probes",
+            "bound"
+          ],
+          "status": 0,
+          "seconds": 0.529
+        }
+      },
+      {
+        "property": "change-failed-derivation",
+        "file": "Cyberkrill/PsbtCommands.lean",
+        "replace": "if let .ok address \u2190 derive client indexed then",
+        "with_text": "if let .ok address \u2190 derive client (if index == 0 then indexed else \"disabled\") then",
+        "selection": [
+          "probes",
+          "failed-derivation"
+        ],
+        "assertion": "PSBT probe status",
+        "failure": "AssertionError: PSBT probe status failed-derivation: rpcHttp: HTTP 599",
+        "build": {
+          "command": [
+            "lake",
+            "build",
+            "cyberkrill",
+            "CyberkrillTests"
+          ],
+          "status": 0,
+          "seconds": 11.321
+        },
+        "red": {
+          "command": [
+            "python3",
+            "-B",
+            "test/psbt-commands.py",
+            "probes",
+            "failed-derivation"
+          ],
+          "status": 1,
+          "seconds": 0.428
+        },
+        "restore_build": {
+          "command": [
+            "lake",
+            "build",
+            "cyberkrill",
+            "CyberkrillTests"
+          ],
+          "status": 0,
+          "seconds": 11.097
+        },
+        "green": {
+          "command": [
+            "python3",
+            "-B",
+            "test/psbt-commands.py",
+            "probes",
+            "failed-derivation"
+          ],
+          "status": 0,
+          "seconds": 0.329
+        }
+      },
+      {
+        "property": "received-fallback",
+        "file": "Cyberkrill/PsbtCommands.lean",
+        "replace": "return (\u2190 client.call \"listunspent\"",
+        "with_text": "return (\u2190 client.call \"disabled-listunspent\"",
+        "selection": [
+          "probes",
+          "fallback"
+        ],
+        "assertion": "PSBT probe status",
+        "failure": "AssertionError: PSBT probe status fallback: rpcHttp: HTTP 599",
+        "build": {
+          "command": [
+            "lake",
+            "build",
+            "cyberkrill",
+            "CyberkrillTests"
+          ],
+          "status": 0,
+          "seconds": 11.121
+        },
+        "red": {
+          "command": [
+            "python3",
+            "-B",
+            "test/psbt-commands.py",
+            "probes",
+            "fallback"
+          ],
+          "status": 1,
+          "seconds": 0.328
+        },
+        "restore_build": {
+          "command": [
+            "lake",
+            "build",
+            "cyberkrill",
+            "CyberkrillTests"
+          ],
+          "status": 0,
+          "seconds": 11.002
+        },
+        "green": {
+          "command": [
+            "python3",
+            "-B",
+            "test/psbt-commands.py",
+            "probes",
+            "fallback"
+          ],
+          "status": 0,
+          "seconds": 0.329
+        }
+      },
+      {
+        "property": "received-default",
+        "file": "Cyberkrill/PsbtCommands.lean",
+        "replace": "| .ok _ => return .ok false",
+        "with_text": "| .ok _ => return .ok true",
+        "selection": [
+          "probes",
+          "received-default"
+        ],
+        "assertion": "PSBT probe status",
+        "failure": "AssertionError: PSBT probe status received-default: rpcHttp: HTTP 599",
+        "build": {
+          "command": [
+            "lake",
+            "build",
+            "cyberkrill",
+            "CyberkrillTests"
+          ],
+          "status": 0,
+          "seconds": 11.103
+        },
+        "red": {
+          "command": [
+            "python3",
+            "-B",
+            "test/psbt-commands.py",
+            "probes",
+            "received-default"
+          ],
+          "status": 1,
+          "seconds": 0.327
+        },
+        "restore_build": {
+          "command": [
+            "lake",
+            "build",
+            "cyberkrill",
+            "CyberkrillTests"
+          ],
+          "status": 0,
+          "seconds": 11.006
+        },
+        "green": {
+          "command": [
+            "python3",
+            "-B",
+            "test/psbt-commands.py",
+            "probes",
+            "received-default"
+          ],
+          "status": 0,
+          "seconds": 0.326
+        }
+      },
+      {
+        "property": "fallback-default",
+        "file": "Cyberkrill/PsbtCommands.lean",
+        "replace": "| .error _ => false)",
+        "with_text": "| .error _ => true)",
+        "selection": [
+          "probes",
+          "list-default"
+        ],
+        "assertion": "PSBT probe status",
+        "failure": "AssertionError: PSBT probe status list-default: rpcHttp: HTTP 599",
+        "build": {
+          "command": [
+            "lake",
+            "build",
+            "cyberkrill",
+            "CyberkrillTests"
+          ],
+          "status": 0,
+          "seconds": 10.913
+        },
+        "red": {
+          "command": [
+            "python3",
+            "-B",
+            "test/psbt-commands.py",
+            "probes",
+            "list-default"
+          ],
+          "status": 1,
+          "seconds": 0.327
+        },
+        "restore_build": {
+          "command": [
+            "lake",
+            "build",
+            "cyberkrill",
+            "CyberkrillTests"
+          ],
+          "status": 0,
+          "seconds": 10.997
+        },
+        "green": {
+          "command": [
+            "python3",
+            "-B",
+            "test/psbt-commands.py",
+            "probes",
+            "list-default"
+          ],
+          "status": 0,
+          "seconds": 0.333
+        }
+      },
+      {
+        "property": "options-omission",
+        "file": "Cyberkrill/CoreRpc.lean",
+        "replace": "if options.isEmpty then #[] else #[Json.mkObj options]",
+        "with_text": "if false then #[] else #[Json.mkObj options]",
+        "selection": [
+          "synthetic",
+          "defaults"
+        ],
+        "assertion": "PSBT synthetic defaults",
+        "failure": "AssertionError: PSBT synthetic defaults",
+        "build": {
+          "command": [
+            "lake",
+            "build",
+            "cyberkrill",
+            "CyberkrillTests"
+          ],
+          "status": 0,
+          "seconds": 12.103
+        },
+        "red": {
+          "command": [
+            "python3",
+            "-B",
+            "test/psbt-commands.py",
+            "synthetic",
+            "defaults"
+          ],
+          "status": 1,
+          "seconds": 0.328
+        },
+        "restore_build": {
+          "command": [
+            "lake",
+            "build",
+            "cyberkrill",
+            "CyberkrillTests"
+          ],
+          "status": 0,
+          "seconds": 12.106
+        },
+        "green": {
+          "command": [
+            "python3",
+            "-B",
+            "test/psbt-commands.py",
+            "synthetic",
+            "defaults"
+          ],
+          "status": 0,
+          "seconds": 0.328
+        }
+      },
+      {
+        "property": "funded-zero-default",
+        "file": "Cyberkrill/CoreRpc.lean",
+        "replace": "| _ => pure (Amount.ofSats 0)",
+        "with_text": "| _ => pure (Amount.ofSats 1)",
+        "selection": [
+          "synthetic",
+          "defaults"
+        ],
+        "assertion": "PSBT synthetic defaults/conversion",
+        "failure": "AssertionError: PSBT synthetic defaults/conversion defaults",
+        "build": {
+          "command": [
+            "lake",
+            "build",
+            "cyberkrill",
+            "CyberkrillTests"
+          ],
+          "status": 0,
+          "seconds": 12.202
+        },
+        "red": {
+          "command": [
+            "python3",
+            "-B",
+            "test/psbt-commands.py",
+            "synthetic",
+            "defaults"
+          ],
+          "status": 1,
+          "seconds": 0.333
+        },
+        "restore_build": {
+          "command": [
+            "lake",
+            "build",
+            "cyberkrill",
+            "CyberkrillTests"
+          ],
+          "status": 0,
+          "seconds": 12.31
+        },
+        "green": {
+          "command": [
+            "python3",
+            "-B",
+            "test/psbt-commands.py",
+            "synthetic",
+            "defaults"
+          ],
+          "status": 0,
+          "seconds": 0.327
+        }
+      },
+      {
+        "property": "funded-position-conversion",
+        "file": "Cyberkrill/CoreRpc.lean",
+        "replace": "(position + 2147483648) % 4294967296 - 2147483648",
+        "with_text": "position",
+        "selection": [
+          "synthetic",
+          "position-wrap"
+        ],
+        "assertion": "PSBT synthetic defaults/conversion",
+        "failure": "AssertionError: PSBT synthetic defaults/conversion position-wrap",
+        "build": {
+          "command": [
+            "lake",
+            "build",
+            "cyberkrill",
+            "CyberkrillTests"
+          ],
+          "status": 0,
+          "seconds": 12.314
+        },
+        "red": {
+          "command": [
+            "python3",
+            "-B",
+            "test/psbt-commands.py",
+            "synthetic",
+            "position-wrap"
+          ],
+          "status": 1,
+          "seconds": 0.329
+        },
+        "restore_build": {
+          "command": [
+            "lake",
+            "build",
+            "cyberkrill",
+            "CyberkrillTests"
+          ],
+          "status": 0,
+          "seconds": 12.112
+        },
+        "green": {
+          "command": [
+            "python3",
+            "-B",
+            "test/psbt-commands.py",
+            "synthetic",
+            "position-wrap"
+          ],
+          "status": 0,
+          "seconds": 0.332
+        }
+      },
+      {
+        "property": "retained-writer",
+        "file": "Cyberkrill/App.lean",
+        "replace": "prepareDecodeOutput services args.output | return .error .outputFailure\n    unless ListUtxos.networkValid args.network do",
+        "with_text": "prepareDecodeOutput services none | return .error .outputFailure\n    unless ListUtxos.networkValid args.network do",
+        "selection": [
+          "injected"
+        ],
+        "assertion": "PSBT retained single writer/raw before JSON",
+        "failure": "AssertionError: Lean RPC test: assertion failed: PSBT retained single writer/raw before JSON",
+        "build": {
+          "command": [
+            "lake",
+            "build",
+            "cyberkrill",
+            "CyberkrillTests"
+          ],
+          "status": 0,
+          "seconds": 10.022
+        },
+        "red": {
+          "command": [
+            "python3",
+            "-B",
+            "test/psbt-commands.py",
+            "injected"
+          ],
+          "status": 1,
+          "seconds": 0.275
+        },
+        "restore_build": {
+          "command": [
+            "lake",
+            "build",
+            "cyberkrill",
+            "CyberkrillTests"
+          ],
+          "status": 0,
+          "seconds": 9.907
+        },
+        "green": {
+          "command": [
+            "python3",
+            "-B",
+            "test/psbt-commands.py",
+            "injected"
+          ],
+          "status": 0,
+          "seconds": 0.282
+        }
+      },
+      {
+        "property": "raw-write",
+        "file": "Cyberkrill/App.lean",
+        "replace": "try services.writeOrdinaryFile path result.psbt catch _ => return .error .outputFailure",
+        "with_text": "try services.writeOrdinaryFile path (result.psbt ++ \"\\n\") catch _ => return .error .outputFailure",
+        "selection": [
+          "replay",
+          "create-raw"
+        ],
+        "assertion": "PSBT raw bytes no newline",
+        "failure": "AssertionError: PSBT raw bytes no newline",
+        "build": {
+          "command": [
+            "lake",
+            "build",
+            "cyberkrill",
+            "CyberkrillTests"
+          ],
+          "status": 0,
+          "seconds": 9.8
+        },
+        "red": {
+          "command": [
+            "python3",
+            "-B",
+            "test/psbt-commands.py",
+            "replay",
+            "create-raw"
+          ],
+          "status": 1,
+          "seconds": 0.326
+        },
+        "restore_build": {
+          "command": [
+            "lake",
+            "build",
+            "cyberkrill",
+            "CyberkrillTests"
+          ],
+          "status": 0,
+          "seconds": 9.792
+        },
+        "green": {
+          "command": [
+            "python3",
+            "-B",
+            "test/psbt-commands.py",
+            "replay",
+            "create-raw"
+          ],
+          "status": 0,
+          "seconds": 0.333
+        }
+      },
+      {
+        "property": "expansion-size",
+        "file": "Cyberkrill/PsbtCommands.lean",
+        "replace": "let inputs \u2190 match \u2190 expand client args.inputs with",
+        "with_text": "let inputs \u2190 match \u2190 expand { client with maxResponseBytes := 1048576 } args.inputs with",
+        "selection": [
+          "limits",
+          "funded-expansion-size"
+        ],
+        "assertion": "PSBT inherited funded-expansion-size",
+        "failure": "AssertionError: PSBT inherited funded-expansion-size",
+        "build": {
+          "command": [
+            "lake",
+            "build",
+            "cyberkrill",
+            "CyberkrillTests"
+          ],
+          "status": 0,
+          "seconds": 10.804
+        },
+        "red": {
+          "command": [
+            "python3",
+            "-B",
+            "test/psbt-commands.py",
+            "limits",
+            "funded-expansion-size"
+          ],
+          "status": 1,
+          "seconds": 0.328
+        },
+        "restore_build": {
+          "command": [
+            "lake",
+            "build",
+            "cyberkrill",
+            "CyberkrillTests"
+          ],
+          "status": 0,
+          "seconds": 11.106
+        },
+        "green": {
+          "command": [
+            "python3",
+            "-B",
+            "test/psbt-commands.py",
+            "limits",
+            "funded-expansion-size"
+          ],
+          "status": 0,
+          "seconds": 0.431
+        }
+      },
+      {
+        "property": "probe-size",
+        "file": "Cyberkrill/PsbtCommands.lean",
+        "replace": "rpc (changeAddress client args.inputs)",
+        "with_text": "rpc (changeAddress { client with maxResponseBytes := 1048576 } args.inputs)",
+        "selection": [
+          "limits",
+          "funded-probe-size"
+        ],
+        "assertion": "PSBT inherited funded-probe-size",
+        "failure": "AssertionError: PSBT PSBT inherited funded-probe-size ordered requests/stopping",
+        "build": {
+          "command": [
+            "lake",
+            "build",
+            "cyberkrill",
+            "CyberkrillTests"
+          ],
+          "status": 0,
+          "seconds": 11.021
+        },
+        "red": {
+          "command": [
+            "python3",
+            "-B",
+            "test/psbt-commands.py",
+            "limits",
+            "funded-probe-size"
+          ],
+          "status": 1,
+          "seconds": 0.326
+        },
+        "restore_build": {
+          "command": [
+            "lake",
+            "build",
+            "cyberkrill",
+            "CyberkrillTests"
+          ],
+          "status": 0,
+          "seconds": 10.789
+        },
+        "green": {
+          "command": [
+            "python3",
+            "-B",
+            "test/psbt-commands.py",
+            "limits",
+            "funded-probe-size"
+          ],
+          "status": 0,
+          "seconds": 0.424
+        }
+      },
+      {
+        "property": "final-size",
+        "file": "Cyberkrill/PsbtCommands.lean",
+        "replace": "client.walletCreateFundedPsbtCommand inputs outputs options",
+        "with_text": "({ client with maxResponseBytes := 1048576 } : CoreRpc.Client).walletCreateFundedPsbtCommand inputs outputs options",
+        "selection": [
+          "limits",
+          "funded-final-size"
+        ],
+        "assertion": "PSBT inherited funded-final-size",
+        "failure": "AssertionError: PSBT inherited funded-final-size",
+        "build": {
+          "command": [
+            "lake",
+            "build",
+            "cyberkrill",
+            "CyberkrillTests"
+          ],
+          "status": 0,
+          "seconds": 10.692
+        },
+        "red": {
+          "command": [
+            "python3",
+            "-B",
+            "test/psbt-commands.py",
+            "limits",
+            "funded-final-size"
+          ],
+          "status": 1,
+          "seconds": 0.326
+        },
+        "restore_build": {
+          "command": [
+            "lake",
+            "build",
+            "cyberkrill",
+            "CyberkrillTests"
+          ],
+          "status": 0,
+          "seconds": 10.798
+        },
+        "green": {
+          "command": [
+            "python3",
+            "-B",
+            "test/psbt-commands.py",
+            "limits",
+            "funded-final-size"
+          ],
+          "status": 0,
+          "seconds": 0.432
+        }
+      },
+      {
+        "property": "full-validation-curve",
+        "file": "Cyberkrill/PsbtCommands.lean",
+        "replace": "let _ \u2190 PsbtCli.parse psbt",
+        "with_text": "let _ := psbt",
+        "selection": [
+          "deep",
+          "curve"
+        ],
+        "assertion": "PSBT full validation curve",
+        "failure": "AssertionError: PSBT full validation curve",
+        "build": {
+          "command": [
+            "lake",
+            "build",
+            "cyberkrill",
+            "CyberkrillTests"
+          ],
+          "status": 0,
+          "seconds": 10.995
+        },
+        "red": {
+          "command": [
+            "python3",
+            "-B",
+            "test/psbt-commands.py",
+            "deep",
+            "curve"
+          ],
+          "status": 1,
+          "seconds": 0.331
+        },
+        "restore_build": {
+          "command": [
+            "lake",
+            "build",
+            "cyberkrill",
+            "CyberkrillTests"
+          ],
+          "status": 0,
+          "seconds": 10.795
+        },
+        "green": {
+          "command": [
+            "python3",
+            "-B",
+            "test/psbt-commands.py",
+            "deep",
+            "curve"
+          ],
+          "status": 0,
+          "seconds": 0.325
+        }
+      },
+      {
+        "property": "full-validation-hash",
+        "file": "Cyberkrill/PsbtCommands.lean",
+        "replace": "let _ \u2190 PsbtCli.parse psbt",
+        "with_text": "let _ := psbt",
+        "selection": [
+          "deep",
+          "hash"
+        ],
+        "assertion": "PSBT full validation hash",
+        "failure": "AssertionError: PSBT full validation hash",
+        "build": {
+          "command": [
+            "lake",
+            "build",
+            "cyberkrill",
+            "CyberkrillTests"
+          ],
+          "status": 0,
+          "seconds": 10.695
+        },
+        "red": {
+          "command": [
+            "python3",
+            "-B",
+            "test/psbt-commands.py",
+            "deep",
+            "hash"
+          ],
+          "status": 1,
+          "seconds": 0.324
+        },
+        "restore_build": {
+          "command": [
+            "lake",
+            "build",
+            "cyberkrill",
+            "CyberkrillTests"
+          ],
+          "status": 0,
+          "seconds": 10.715
+        },
+        "green": {
+          "command": [
+            "python3",
+            "-B",
+            "test/psbt-commands.py",
+            "deep",
+            "hash"
+          ],
+          "status": 0,
+          "seconds": 0.323
+        }
+      },
+      {
+        "property": "full-validation-same-point",
+        "file": "Cyberkrill/PsbtCommands.lean",
+        "replace": "let _ \u2190 PsbtCli.parse psbt",
+        "with_text": "let _ := psbt",
+        "selection": [
+          "deep",
+          "same-point"
+        ],
+        "assertion": "PSBT full validation same-point",
+        "failure": "AssertionError: PSBT full validation same-point",
+        "build": {
+          "command": [
+            "lake",
+            "build",
+            "cyberkrill",
+            "CyberkrillTests"
+          ],
+          "status": 0,
+          "seconds": 10.602
+        },
+        "red": {
+          "command": [
+            "python3",
+            "-B",
+            "test/psbt-commands.py",
+            "deep",
+            "same-point"
+          ],
+          "status": 1,
+          "seconds": 0.325
+        },
+        "restore_build": {
+          "command": [
+            "lake",
+            "build",
+            "cyberkrill",
+            "CyberkrillTests"
+          ],
+          "status": 0,
+          "seconds": 10.692
+        },
+        "green": {
+          "command": [
+            "python3",
+            "-B",
+            "test/psbt-commands.py",
+            "deep",
+            "same-point"
+          ],
+          "status": 0,
+          "seconds": 0.324
+        }
+      },
+      {
+        "property": "funded-position-lexeme",
+        "file": "Cyberkrill/CoreRpc.lean",
+        "replace": "if positionInteger body then value else",
+        "with_text": "if true then value else",
+        "selection": [
+          "numeric",
+          "exponent"
+        ],
+        "assertion": "PSBT numeric value exponent",
+        "failure": "AssertionError: PSBT numeric value exponent",
+        "build": {
+          "command": [
+            "lake",
+            "build",
+            "cyberkrill",
+            "CyberkrillTests"
+          ],
+          "status": 0,
+          "seconds": 11.705
+        },
+        "red": {
+          "command": [
+            "python3",
+            "-B",
+            "test/psbt-commands.py",
+            "numeric",
+            "exponent"
+          ],
+          "status": 1,
+          "seconds": 0.327
+        },
+        "restore_build": {
+          "command": [
+            "lake",
+            "build",
+            "cyberkrill",
+            "CyberkrillTests"
+          ],
+          "status": 0,
+          "seconds": 11.701
+        },
+        "green": {
+          "command": [
+            "python3",
+            "-B",
+            "test/psbt-commands.py",
+            "numeric",
+            "exponent"
+          ],
+          "status": 0,
+          "seconds": 0.325
+        }
+      },
+      {
+        "property": "funded-whole-fee",
+        "file": "Cyberkrill/PsbtCommands.lean",
+        "replace": "let fee \u2190 exactWholeSat result.fee",
+        "with_text": "let fee \u2190 pure result.fee",
+        "selection": [
+          "numeric",
+          "msat-fee"
+        ],
+        "assertion": "PSBT numeric status msat-fee",
+        "failure": "AssertionError: PSBT numeric status msat-fee",
+        "build": {
+          "command": [
+            "lake",
+            "build",
+            "cyberkrill",
+            "CyberkrillTests"
+          ],
+          "status": 0,
+          "seconds": 10.795
+        },
+        "red": {
+          "command": [
+            "python3",
+            "-B",
+            "test/psbt-commands.py",
+            "numeric",
+            "msat-fee"
+          ],
+          "status": 1,
+          "seconds": 0.33
+        },
+        "restore_build": {
+          "command": [
+            "lake",
+            "build",
+            "cyberkrill",
+            "CyberkrillTests"
+          ],
+          "status": 0,
+          "seconds": 10.599
+        },
+        "green": {
+          "command": [
+            "python3",
+            "-B",
+            "test/psbt-commands.py",
+            "numeric",
+            "msat-fee"
+          ],
+          "status": 0,
+          "seconds": 0.324
+        }
+      },
+      {
+        "property": "funded-fee-bound",
+        "file": "Cyberkrill/PsbtCommands.lean",
+        "replace": "unless fee.msat / 1000 \u2264 18446744073709551615 do",
+        "with_text": "unless true do",
+        "selection": [
+          "numeric",
+          "u64-fee-overflow"
+        ],
+        "assertion": "PSBT numeric status u64-fee-overflow",
+        "failure": "AssertionError: PSBT numeric status u64-fee-overflow",
+        "build": {
+          "command": [
+            "lake",
+            "build",
+            "cyberkrill",
+            "CyberkrillTests"
+          ],
+          "status": 0,
+          "seconds": 10.697
+        },
+        "red": {
+          "command": [
+            "python3",
+            "-B",
+            "test/psbt-commands.py",
+            "numeric",
+            "u64-fee-overflow"
+          ],
+          "status": 1,
+          "seconds": 0.329
+        },
+        "restore_build": {
+          "command": [
+            "lake",
+            "build",
+            "cyberkrill",
+            "CyberkrillTests"
+          ],
+          "status": 0,
+          "seconds": 10.704
+        },
+        "green": {
+          "command": [
+            "python3",
+            "-B",
+            "test/psbt-commands.py",
+            "numeric",
+            "u64-fee-overflow"
+          ],
+          "status": 0,
+          "seconds": 0.333
+        }
+      },
+      {
+        "property": "rpc-original-spelling-create",
+        "file": "Cyberkrill/PsbtCommands.lean",
+        "replace": "unless (Base64.decode psbt).isSome do throw (.offline \"psbtBase64\")",
+        "with_text": "unless true do throw (.offline \"psbtBase64\")",
+        "selection": [
+          "spelling",
+          "create-newline"
+        ],
+        "assertion": "PSBT original spelling rejection",
+        "failure": "AssertionError: PSBT original spelling rejection newline",
+        "build": {
+          "command": [
+            "lake",
+            "build",
+            "cyberkrill",
+            "CyberkrillTests"
+          ],
+          "status": 0,
+          "seconds": 10.803
+        },
+        "red": {
+          "command": [
+            "python3",
+            "-B",
+            "test/psbt-commands.py",
+            "spelling",
+            "create-newline"
+          ],
+          "status": 1,
+          "seconds": 0.324
+        },
+        "restore_build": {
+          "command": [
+            "lake",
+            "build",
+            "cyberkrill",
+            "CyberkrillTests"
+          ],
+          "status": 0,
+          "seconds": 10.798
+        },
+        "green": {
+          "command": [
+            "python3",
+            "-B",
+            "test/psbt-commands.py",
+            "spelling",
+            "create-newline"
+          ],
+          "status": 0,
+          "seconds": 0.424
+        }
+      },
+      {
+        "property": "rpc-original-spelling-funded",
+        "file": "Cyberkrill/PsbtCommands.lean",
+        "replace": "unless (Base64.decode psbt).isSome do throw (.offline \"psbtBase64\")",
+        "with_text": "unless true do throw (.offline \"psbtBase64\")",
+        "selection": [
+          "spelling",
+          "funded-newline"
+        ],
+        "assertion": "PSBT original spelling rejection",
+        "failure": "AssertionError: PSBT original spelling rejection newline",
+        "build": {
+          "command": [
+            "lake",
+            "build",
+            "cyberkrill",
+            "CyberkrillTests"
+          ],
+          "status": 0,
+          "seconds": 10.7
+        },
+        "red": {
+          "command": [
+            "python3",
+            "-B",
+            "test/psbt-commands.py",
+            "spelling",
+            "funded-newline"
+          ],
+          "status": 1,
+          "seconds": 0.325
+        },
+        "restore_build": {
+          "command": [
+            "lake",
+            "build",
+            "cyberkrill",
+            "CyberkrillTests"
+          ],
+          "status": 0,
+          "seconds": 10.696
+        },
+        "green": {
+          "command": [
+            "python3",
+            "-B",
+            "test/psbt-commands.py",
+            "spelling",
+            "funded-newline"
+          ],
+          "status": 0,
+          "seconds": 0.43
+        }
+      },
+      {
+        "property": "fiat-indian-leading-three",
+        "file": "Cyberkrill/PsbtCommands.lean",
+        "replace": "groups.length \u2265 3 && groups.head!.length \u2264 3",
+        "with_text": "groups.length \u2265 3 && groups.head!.length \u2264 2",
+        "selection": [
+          "injected"
+        ],
+        "assertion": "PSBT fiat classification/precedence destination:123,45,678INR",
+        "failure": "AssertionError: Lean RPC test: assertion failed: PSBT fiat classification/precedence destination:123,45,678INR",
+        "build": {
+          "command": [
+            "lake",
+            "build",
+            "cyberkrill",
+            "CyberkrillTests"
+          ],
+          "status": 0,
+          "seconds": 10.794
+        },
+        "red": {
+          "command": [
+            "python3",
+            "-B",
+            "test/psbt-commands.py",
+            "injected"
+          ],
+          "status": 1,
+          "seconds": 0.277
+        },
+        "restore_build": {
+          "command": [
+            "lake",
+            "build",
+            "cyberkrill",
+            "CyberkrillTests"
+          ],
+          "status": 0,
+          "seconds": 10.693
+        },
+        "green": {
+          "command": [
+            "python3",
+            "-B",
+            "test/psbt-commands.py",
+            "injected"
+          ],
+          "status": 0,
+          "seconds": 0.277
+        }
+      },
+      {
+        "property": "fiat-finite-exponent",
+        "file": "Cyberkrill/PsbtCommands.lean",
+        "replace": "unless exponentParts.length \u2264 2 do return false",
+        "with_text": "unless exponentParts.length == 1 do return false",
+        "selection": [
+          "injected"
+        ],
+        "assertion": "PSBT fiat classification/precedence destination:1e5USD",
+        "failure": "AssertionError: Lean RPC test: assertion failed: PSBT fiat classification/precedence destination:1e5USD",
+        "build": {
+          "command": [
+            "lake",
+            "build",
+            "cyberkrill",
+            "CyberkrillTests"
+          ],
+          "status": 0,
+          "seconds": 10.794
+        },
+        "red": {
+          "command": [
+            "python3",
+            "-B",
+            "test/psbt-commands.py",
+            "injected"
+          ],
+          "status": 1,
+          "seconds": 0.275
+        },
+        "restore_build": {
+          "command": [
+            "lake",
+            "build",
+            "cyberkrill",
+            "CyberkrillTests"
+          ],
+          "status": 0,
+          "seconds": 10.8
+        },
+        "green": {
+          "command": [
+            "python3",
+            "-B",
+            "test/psbt-commands.py",
+            "injected"
+          ],
+          "status": 0,
+          "seconds": 0.277
+        }
+      },
+      {
+        "property": "fiat-before-precision",
+        "file": "Cyberkrill/PsbtCommands.lean",
+        "replace": "for (_, value) in parsed do",
+        "with_text": "if parsed.any (fun (_, value) => value.isNone) then throw .fiatNotSupported\n  for (_, value) in parsed do",
+        "selection": [
+          "injected"
+        ],
+        "assertion": "PSBT fiat classification/precedence destination:1msat",
+        "failure": "AssertionError: Lean RPC test: assertion failed: PSBT fiat classification/precedence destination:1msat,other:123,45,678INR",
+        "build": {
+          "command": [
+            "lake",
+            "build",
+            "cyberkrill",
+            "CyberkrillTests"
+          ],
+          "status": 0,
+          "seconds": 10.694
+        },
+        "red": {
+          "command": [
+            "python3",
+            "-B",
+            "test/psbt-commands.py",
+            "injected"
+          ],
+          "status": 1,
+          "seconds": 0.277
+        },
+        "restore_build": {
+          "command": [
+            "lake",
+            "build",
+            "cyberkrill",
+            "CyberkrillTests"
+          ],
+          "status": 0,
+          "seconds": 10.691
+        },
+        "green": {
+          "command": [
+            "python3",
+            "-B",
+            "test/psbt-commands.py",
+            "injected"
+          ],
+          "status": 0,
+          "seconds": 0.274
+        }
+      },
+      {
+        "property": "colon-core-boundary",
+        "file": "Cyberkrill/PsbtCommands.lean",
+        "replace": "if outputs.any (fun (address, _) => address.contains ':') then return .error invalidOutput",
+        "with_text": "if false then return .error invalidOutput",
+        "selection": [
+          "boundaries",
+          "colon"
+        ],
+        "assertion": "PSBT colon boundary refusal",
+        "failure": "AssertionError: PSBT colon boundary refusal",
+        "build": {
+          "command": [
+            "lake",
+            "build",
+            "cyberkrill",
+            "CyberkrillTests"
+          ],
+          "status": 0,
+          "seconds": 10.694
+        },
+        "red": {
+          "command": [
+            "python3",
+            "-B",
+            "test/psbt-commands.py",
+            "boundaries",
+            "colon"
+          ],
+          "status": 1,
+          "seconds": 0.327
+        },
+        "restore_build": {
+          "command": [
+            "lake",
+            "build",
+            "cyberkrill",
+            "CyberkrillTests"
+          ],
+          "status": 0,
+          "seconds": 10.797
+        },
+        "green": {
+          "command": [
+            "python3",
+            "-B",
+            "test/psbt-commands.py",
+            "boundaries",
+            "colon"
+          ],
+          "status": 0,
+          "seconds": 0.426
+        }
+      },
+      {
+        "property": "output-float-roundtrip",
+        "file": "Cyberkrill/CoreRpc.lean",
+        "replace": ".num \u27e8Int.ofNat value.msat, if value.msat == 0 then 0 else 11\u27e9",
+        "with_text": ".num \u27e8Int.ofNat value.msat.toUInt64.toFloat.toUInt64.toNat, 11\u27e9",
+        "selection": [
+          "exact",
+          "create-wire"
+        ],
+        "assertion": "PSBT precise exact requests/stopping",
+        "failure": "AssertionError: PSBT precise exact requests/stopping create-wire",
+        "build": {
+          "command": [
+            "lake",
+            "build",
+            "cyberkrill",
+            "CyberkrillTests"
+          ],
+          "status": 0,
+          "seconds": 13.799
+        },
+        "red": {
+          "command": [
+            "python3",
+            "-B",
+            "test/psbt-commands.py",
+            "exact",
+            "create-wire"
+          ],
+          "status": 1,
+          "seconds": 0.381
+        },
+        "restore_build": {
+          "command": [
+            "lake",
+            "build",
+            "cyberkrill",
+            "CyberkrillTests"
+          ],
+          "status": 0,
+          "seconds": 14.321
+        },
+        "green": {
+          "command": [
+            "python3",
+            "-B",
+            "test/psbt-commands.py",
+            "exact",
+            "create-wire"
+          ],
+          "status": 0,
+          "seconds": 0.329
+        }
+      },
+      {
+        "property": "funded-expansion-timeout",
+        "file": "Cyberkrill/PsbtCommands.lean",
+        "replace": "expand client args.inputs",
+        "with_text": "expand { client with totalTimeoutMs := 30000 } args.inputs",
+        "selection": [
+          "limits",
+          "funded-expansion-timeout"
+        ],
+        "assertion": "PSBT inherited funded-expansion-timeout",
+        "failure": "AssertionError: PSBT inherited funded-expansion-timeout",
+        "build": {
+          "command": [
+            "lake",
+            "build",
+            "cyberkrill",
+            "CyberkrillTests"
+          ],
+          "status": 0,
+          "seconds": 10.69
+        },
+        "red": {
+          "command": [
+            "python3",
+            "-B",
+            "test/psbt-commands.py",
+            "limits",
+            "funded-expansion-timeout"
+          ],
+          "status": 1,
+          "seconds": 0.673
+        },
+        "restore_build": {
+          "command": [
+            "lake",
+            "build",
+            "cyberkrill",
+            "CyberkrillTests"
+          ],
+          "status": 0,
+          "seconds": 10.697
+        },
+        "green": {
+          "command": [
+            "python3",
+            "-B",
+            "test/psbt-commands.py",
+            "limits",
+            "funded-expansion-timeout"
+          ],
+          "status": 0,
+          "seconds": 0.975
+        }
+      },
+      {
+        "property": "funded-probe-timeout",
+        "file": "Cyberkrill/PsbtCommands.lean",
+        "replace": "changeAddress client args.inputs",
+        "with_text": "changeAddress { client with totalTimeoutMs := 30000 } args.inputs",
+        "selection": [
+          "limits",
+          "funded-probe-timeout"
+        ],
+        "assertion": "PSBT inherited funded-probe-timeout",
+        "failure": "AssertionError: PSBT PSBT inherited funded-probe-timeout ordered requests/stopping",
+        "build": {
+          "command": [
+            "lake",
+            "build",
+            "cyberkrill",
+            "CyberkrillTests"
+          ],
+          "status": 0,
+          "seconds": 10.695
+        },
+        "red": {
+          "command": [
+            "python3",
+            "-B",
+            "test/psbt-commands.py",
+            "limits",
+            "funded-probe-timeout"
+          ],
+          "status": 1,
+          "seconds": 0.675
+        },
+        "restore_build": {
+          "command": [
+            "lake",
+            "build",
+            "cyberkrill",
+            "CyberkrillTests"
+          ],
+          "status": 0,
+          "seconds": 10.797
+        },
+        "green": {
+          "command": [
+            "python3",
+            "-B",
+            "test/psbt-commands.py",
+            "limits",
+            "funded-probe-timeout"
+          ],
+          "status": 0,
+          "seconds": 1.127
+        }
+      },
+      {
+        "property": "funded-final-timeout",
+        "file": "Cyberkrill/PsbtCommands.lean",
+        "replace": "client.walletCreateFundedPsbtCommand inputs outputs options",
+        "with_text": "({ client with totalTimeoutMs := 30000 } : CoreRpc.Client).walletCreateFundedPsbtCommand inputs outputs options",
+        "selection": [
+          "limits",
+          "funded-final-timeout"
+        ],
+        "assertion": "PSBT inherited funded-final-timeout",
+        "failure": "AssertionError: PSBT inherited funded-final-timeout",
+        "build": {
+          "command": [
+            "lake",
+            "build",
+            "cyberkrill",
+            "CyberkrillTests"
+          ],
+          "status": 0,
+          "seconds": 10.591
+        },
+        "red": {
+          "command": [
+            "python3",
+            "-B",
+            "test/psbt-commands.py",
+            "limits",
+            "funded-final-timeout"
+          ],
+          "status": 1,
+          "seconds": 0.679
+        },
+        "restore_build": {
+          "command": [
+            "lake",
+            "build",
+            "cyberkrill",
+            "CyberkrillTests"
+          ],
+          "status": 0,
+          "seconds": 10.701
+        },
+        "green": {
+          "command": [
+            "python3",
+            "-B",
+            "test/psbt-commands.py",
+            "limits",
+            "funded-final-timeout"
+          ],
+          "status": 0,
+          "seconds": 0.975
+        }
+      },
+      {
+        "property": "create-expansion-timeout",
+        "file": "Cyberkrill/PsbtCommands.lean",
+        "replace": "expand client args.inputs",
+        "with_text": "expand { client with totalTimeoutMs := 30000 } args.inputs",
+        "selection": [
+          "limits",
+          "create-expansion-timeout"
+        ],
+        "assertion": "PSBT inherited create-expansion-timeout",
+        "failure": "AssertionError: PSBT inherited create-expansion-timeout",
+        "build": {
+          "command": [
+            "lake",
+            "build",
+            "cyberkrill",
+            "CyberkrillTests"
+          ],
+          "status": 0,
+          "seconds": 10.897
+        },
+        "red": {
+          "command": [
+            "python3",
+            "-B",
+            "test/psbt-commands.py",
+            "limits",
+            "create-expansion-timeout"
+          ],
+          "status": 1,
+          "seconds": 0.683
+        },
+        "restore_build": {
+          "command": [
+            "lake",
+            "build",
+            "cyberkrill",
+            "CyberkrillTests"
+          ],
+          "status": 0,
+          "seconds": 10.804
+        },
+        "green": {
+          "command": [
+            "python3",
+            "-B",
+            "test/psbt-commands.py",
+            "limits",
+            "create-expansion-timeout"
+          ],
+          "status": 0,
+          "seconds": 0.976
+        }
+      },
+      {
+        "property": "create-final-timeout",
+        "file": "Cyberkrill/PsbtCommands.lean",
+        "replace": "client.createPsbt inputs outputs",
+        "with_text": "({ client with totalTimeoutMs := 30000 } : CoreRpc.Client).createPsbt inputs outputs",
+        "selection": [
+          "limits",
+          "create-final-timeout"
+        ],
+        "assertion": "PSBT inherited create-final-timeout",
+        "failure": "AssertionError: PSBT inherited create-final-timeout",
+        "build": {
+          "command": [
+            "lake",
+            "build",
+            "cyberkrill",
+            "CyberkrillTests"
+          ],
+          "status": 0,
+          "seconds": 10.795
+        },
+        "red": {
+          "command": [
+            "python3",
+            "-B",
+            "test/psbt-commands.py",
+            "limits",
+            "create-final-timeout"
+          ],
+          "status": 1,
+          "seconds": 0.68
+        },
+        "restore_build": {
+          "command": [
+            "lake",
+            "build",
+            "cyberkrill",
+            "CyberkrillTests"
+          ],
+          "status": 0,
+          "seconds": 10.795
+        },
+        "green": {
+          "command": [
+            "python3",
+            "-B",
+            "test/psbt-commands.py",
+            "limits",
+            "create-final-timeout"
+          ],
+          "status": 0,
+          "seconds": 0.976
+        }
+      },
+      {
+        "property": "create-expansion-size",
+        "file": "Cyberkrill/PsbtCommands.lean",
+        "replace": "let inputs \u2190 match \u2190 expand client args.inputs with",
+        "with_text": "let inputs \u2190 match \u2190 expand { client with maxResponseBytes := 1048576 } args.inputs with",
+        "selection": [
+          "limits",
+          "create-expansion-size"
+        ],
+        "assertion": "PSBT inherited create-expansion-size",
+        "failure": "AssertionError: PSBT inherited create-expansion-size",
+        "build": {
+          "command": [
+            "lake",
+            "build",
+            "cyberkrill",
+            "CyberkrillTests"
+          ],
+          "status": 0,
+          "seconds": 10.796
+        },
+        "red": {
+          "command": [
+            "python3",
+            "-B",
+            "test/psbt-commands.py",
+            "limits",
+            "create-expansion-size"
+          ],
+          "status": 1,
+          "seconds": 0.327
+        },
+        "restore_build": {
+          "command": [
+            "lake",
+            "build",
+            "cyberkrill",
+            "CyberkrillTests"
+          ],
+          "status": 0,
+          "seconds": 10.697
+        },
+        "green": {
+          "command": [
+            "python3",
+            "-B",
+            "test/psbt-commands.py",
+            "limits",
+            "create-expansion-size"
+          ],
+          "status": 0,
+          "seconds": 0.428
+        }
+      },
+      {
+        "property": "create-final-size",
+        "file": "Cyberkrill/PsbtCommands.lean",
+        "replace": "client.createPsbt inputs outputs",
+        "with_text": "({ client with maxResponseBytes := 1048576 } : CoreRpc.Client).createPsbt inputs outputs",
+        "selection": [
+          "limits",
+          "create-final-size"
+        ],
+        "assertion": "PSBT inherited create-final-size",
+        "failure": "AssertionError: PSBT inherited create-final-size",
+        "build": {
+          "command": [
+            "lake",
+            "build",
+            "cyberkrill",
+            "CyberkrillTests"
+          ],
+          "status": 0,
+          "seconds": 10.701
+        },
+        "red": {
+          "command": [
+            "python3",
+            "-B",
+            "test/psbt-commands.py",
+            "limits",
+            "create-final-size"
+          ],
+          "status": 1,
+          "seconds": 0.324
+        },
+        "restore_build": {
+          "command": [
+            "lake",
+            "build",
+            "cyberkrill",
+            "CyberkrillTests"
+          ],
+          "status": 0,
+          "seconds": 10.696
+        },
+        "green": {
+          "command": [
+            "python3",
+            "-B",
+            "test/psbt-commands.py",
+            "limits",
+            "create-final-size"
+          ],
+          "status": 0,
+          "seconds": 0.423
+        }
+      },
+      {
+        "property": "nonmultipath-probing",
+        "file": "Cyberkrill/PsbtCommands.lean",
+        "replace": "descriptorLike input && parts.length > 1",
+        "with_text": "descriptorLike input",
+        "selection": [
+          "boundaries",
+          "nonmultipath"
+        ],
+        "assertion": "PSBT nonmultipath descriptor no change probe/empty options omitted",
+        "failure": "AssertionError: PSBT nonmultipath descriptor no change probe/empty options omitted",
+        "build": {
+          "command": [
+            "lake",
+            "build",
+            "cyberkrill",
+            "CyberkrillTests"
+          ],
+          "status": 0,
+          "seconds": 10.805
+        },
+        "red": {
+          "command": [
+            "python3",
+            "-B",
+            "test/psbt-commands.py",
+            "boundaries",
+            "nonmultipath"
+          ],
+          "status": 1,
+          "seconds": 0.377
+        },
+        "restore_build": {
+          "command": [
+            "lake",
+            "build",
+            "cyberkrill",
+            "CyberkrillTests"
+          ],
+          "status": 0,
+          "seconds": 10.797
+        },
+        "green": {
+          "command": [
+            "python3",
+            "-B",
+            "test/psbt-commands.py",
+            "boundaries",
+            "nonmultipath"
+          ],
+          "status": 0,
+          "seconds": 0.325
+        }
+      },
+      {
+        "property": "exact-output-submillisatoshi",
+        "file": "Cyberkrill/PsbtCommands.lean",
+        "replace": "match parseAmount value with",
+        "with_text": "match parseAmount (if value == \"1000000.0004sat\" then \"1000000sat\" else value) with",
+        "selection": [
+          "exact",
+          "create-rounded"
+        ],
+        "assertion": "PSBT precise exact requests/stopping",
+        "failure": "AssertionError: PSBT precise exact requests/stopping create-rounded",
+        "build": {
+          "command": [
+            "lake",
+            "build",
+            "cyberkrill",
+            "CyberkrillTests"
+          ],
+          "status": 0,
+          "seconds": 10.805
+        },
+        "red": {
+          "command": [
+            "python3",
+            "-B",
+            "test/psbt-commands.py",
+            "exact",
+            "create-rounded"
+          ],
+          "status": 1,
+          "seconds": 0.325
+        },
+        "restore_build": {
+          "command": [
+            "lake",
+            "build",
+            "cyberkrill",
+            "CyberkrillTests"
+          ],
+          "status": 0,
+          "seconds": 10.698
+        },
+        "green": {
+          "command": [
+            "python3",
+            "-B",
+            "test/psbt-commands.py",
+            "exact",
+            "create-rounded"
+          ],
+          "status": 0,
+          "seconds": 0.325
+        }
+      },
+      {
+        "property": "exact-probe-negative",
+        "file": "Cyberkrill/PsbtCommands.lean",
+        "replace": "(CoreRpc.amount (.num n)).map (fun a => a.msat > 0)",
+        "with_text": ".ok (n.toFloat > 0)",
+        "selection": [
+          "exact",
+          "funded-negative-probe"
+        ],
+        "assertion": "PSBT precise exact requests/stopping",
+        "failure": "AssertionError: PSBT precise exact requests/stopping funded-negative-probe",
+        "build": {
+          "command": [
+            "lake",
+            "build",
+            "cyberkrill",
+            "CyberkrillTests"
+          ],
+          "status": 0,
+          "seconds": 10.702
+        },
+        "red": {
+          "command": [
+            "python3",
+            "-B",
+            "test/psbt-commands.py",
+            "exact",
+            "funded-negative-probe"
+          ],
+          "status": 1,
+          "seconds": 0.328
+        },
+        "restore_build": {
+          "command": [
+            "lake",
+            "build",
+            "cyberkrill",
+            "CyberkrillTests"
+          ],
+          "status": 0,
+          "seconds": 10.793
+        },
+        "green": {
+          "command": [
+            "python3",
+            "-B",
+            "test/psbt-commands.py",
+            "exact",
+            "funded-negative-probe"
+          ],
+          "status": 0,
+          "seconds": 0.324
+        }
+      },
+      {
+        "property": "exact-probe-tiny",
+        "file": "Cyberkrill/PsbtCommands.lean",
+        "replace": "(CoreRpc.amount (.num n)).map (fun a => a.msat > 0)",
+        "with_text": ".ok (n.toFloat > 0)",
+        "selection": [
+          "exact",
+          "funded-tiny-probe"
+        ],
+        "assertion": "PSBT precise exact requests/stopping",
+        "failure": "AssertionError: PSBT precise exact requests/stopping funded-tiny-probe",
+        "build": {
+          "command": [
+            "lake",
+            "build",
+            "cyberkrill",
+            "CyberkrillTests"
+          ],
+          "status": 0,
+          "seconds": 10.799
+        },
+        "red": {
+          "command": [
+            "python3",
+            "-B",
+            "test/psbt-commands.py",
+            "exact",
+            "funded-tiny-probe"
+          ],
+          "status": 1,
+          "seconds": 0.325
+        },
+        "restore_build": {
+          "command": [
+            "lake",
+            "build",
+            "cyberkrill",
+            "CyberkrillTests"
+          ],
+          "status": 0,
+          "seconds": 10.796
+        },
+        "green": {
+          "command": [
+            "python3",
+            "-B",
+            "test/psbt-commands.py",
+            "exact",
+            "funded-tiny-probe"
+          ],
+          "status": 0,
+          "seconds": 0.327
+        }
+      },
+      {
+        "property": "fiat-suffix-create-nbsp",
+        "file": "Cyberkrill/PsbtCommands.lean",
+        "replace": "drop unit.length |>.dropWhile Amount.rustWhitespace",
+        "with_text": "drop unit.length |>.dropWhile asciiSpace",
+        "selection": [
+          "whitespace",
+          "create-nbsp"
+        ],
+        "assertion": "PSBT scanner whitespace create-nbsp",
+        "failure": "AssertionError: Lean RPC test: assertion failed: PSBT scanner whitespace create-nbsp",
+        "build": {
+          "command": [
+            "lake",
+            "build",
+            "cyberkrill",
+            "CyberkrillTests"
+          ],
+          "status": 0,
+          "seconds": 10.692
+        },
+        "red": {
+          "command": [
+            "python3",
+            "-B",
+            "test/psbt-commands.py",
+            "whitespace",
+            "create-nbsp"
+          ],
+          "status": 1,
+          "seconds": 0.275
+        },
+        "restore_build": {
+          "command": [
+            "lake",
+            "build",
+            "cyberkrill",
+            "CyberkrillTests"
+          ],
+          "status": 0,
+          "seconds": 10.701
+        },
+        "green": {
+          "command": [
+            "python3",
+            "-B",
+            "test/psbt-commands.py",
+            "whitespace",
+            "create-nbsp"
+          ],
+          "status": 0,
+          "seconds": 0.278
+        }
+      },
+      {
+        "property": "fiat-suffix-create-precedence",
+        "file": "Cyberkrill/PsbtCommands.lean",
+        "replace": "drop unit.length |>.dropWhile Amount.rustWhitespace",
+        "with_text": "drop unit.length |>.dropWhile asciiSpace",
+        "selection": [
+          "whitespace",
+          "create-precedence"
+        ],
+        "assertion": "PSBT scanner whitespace create-precedence",
+        "failure": "AssertionError: Lean RPC test: assertion failed: PSBT scanner whitespace create-precedence",
+        "build": {
+          "command": [
+            "lake",
+            "build",
+            "cyberkrill",
+            "CyberkrillTests"
+          ],
+          "status": 0,
+          "seconds": 10.797
+        },
+        "red": {
+          "command": [
+            "python3",
+            "-B",
+            "test/psbt-commands.py",
+            "whitespace",
+            "create-precedence"
+          ],
+          "status": 1,
+          "seconds": 0.275
+        },
+        "restore_build": {
+          "command": [
+            "lake",
+            "build",
+            "cyberkrill",
+            "CyberkrillTests"
+          ],
+          "status": 0,
+          "seconds": 10.704
+        },
+        "green": {
+          "command": [
+            "python3",
+            "-B",
+            "test/psbt-commands.py",
+            "whitespace",
+            "create-precedence"
+          ],
+          "status": 0,
+          "seconds": 0.273
+        }
+      },
+      {
+        "property": "fiat-suffix-create-unicode-separator",
+        "file": "Cyberkrill/PsbtCommands.lean",
+        "replace": "drop unit.length |>.dropWhile Amount.rustWhitespace",
+        "with_text": "drop unit.length |>.dropWhile asciiSpace",
+        "selection": [
+          "whitespace",
+          "create-unicode-separator"
+        ],
+        "assertion": "PSBT scanner whitespace create-unicode-separator",
+        "failure": "AssertionError: Lean RPC test: assertion failed: PSBT scanner whitespace create-unicode-separator",
+        "build": {
+          "command": [
+            "lake",
+            "build",
+            "cyberkrill",
+            "CyberkrillTests"
+          ],
+          "status": 0,
+          "seconds": 10.79
+        },
+        "red": {
+          "command": [
+            "python3",
+            "-B",
+            "test/psbt-commands.py",
+            "whitespace",
+            "create-unicode-separator"
+          ],
+          "status": 1,
+          "seconds": 0.276
+        },
+        "restore_build": {
+          "command": [
+            "lake",
+            "build",
+            "cyberkrill",
+            "CyberkrillTests"
+          ],
+          "status": 0,
+          "seconds": 10.799
+        },
+        "green": {
+          "command": [
+            "python3",
+            "-B",
+            "test/psbt-commands.py",
+            "whitespace",
+            "create-unicode-separator"
+          ],
+          "status": 0,
+          "seconds": 0.275
+        }
+      },
+      {
+        "property": "fiat-ascii-create-vertical-tab",
+        "file": "Cyberkrill/PsbtCommands.lean",
+        "replace": "[' ', '\\t', '\\r', '\\n', '\\x0c'].contains c",
+        "with_text": "[' ', '\\t', '\\r', '\\n', '\\x0b', '\\x0c'].contains c",
+        "selection": [
+          "whitespace",
+          "create-vertical-tab"
+        ],
+        "assertion": "PSBT scanner whitespace create-vertical-tab",
+        "failure": "AssertionError: Lean RPC test: assertion failed: PSBT scanner whitespace create-vertical-tab",
+        "build": {
+          "command": [
+            "lake",
+            "build",
+            "cyberkrill",
+            "CyberkrillTests"
+          ],
+          "status": 0,
+          "seconds": 10.795
+        },
+        "red": {
+          "command": [
+            "python3",
+            "-B",
+            "test/psbt-commands.py",
+            "whitespace",
+            "create-vertical-tab"
+          ],
+          "status": 1,
+          "seconds": 0.276
+        },
+        "restore_build": {
+          "command": [
+            "lake",
+            "build",
+            "cyberkrill",
+            "CyberkrillTests"
+          ],
+          "status": 0,
+          "seconds": 10.696
+        },
+        "green": {
+          "command": [
+            "python3",
+            "-B",
+            "test/psbt-commands.py",
+            "whitespace",
+            "create-vertical-tab"
+          ],
+          "status": 0,
+          "seconds": 0.275
+        }
+      },
+      {
+        "property": "implicit-cookie-create",
+        "file": "Cyberkrill/CoreRpc.lean",
+        "replace": "  return pairAuth flags.user flags.password",
+        "with_text": "  if flags.bitcoinDir.isNone && flags.user.isNone && flags.password.isNone then\n    if let some home \u2190 IO.getEnv \"LCK_TEST_COOKIE_HOME\" then\n      if (\u2190 IO.getEnv \"HOME\") == some home then\n        try\n          if let some auth := parseCookie (\u2190 IO.FS.readFile (System.FilePath.mk home / \".bitcoin\" / \".cookie\")) then\n            return some auth\n        catch _ => pure ()\n  return pairAuth flags.user flags.password",
+        "selection": [
+          "boundaries",
+          "auth-create-none"
+        ],
+        "assertion": "PSBT handler auth failure secret suppression",
+        "failure": "AssertionError: PSBT handler auth failure secret suppression",
+        "build": {
+          "command": [
+            "lake",
+            "build",
+            "cyberkrill",
+            "CyberkrillTests"
+          ],
+          "status": 0,
+          "seconds": 11.805
+        },
+        "red": {
+          "command": [
+            "python3",
+            "-B",
+            "test/psbt-commands.py",
+            "boundaries",
+            "auth-create-none"
+          ],
+          "status": 1,
+          "seconds": 0.324
+        },
+        "restore_build": {
+          "command": [
+            "lake",
+            "build",
+            "cyberkrill",
+            "CyberkrillTests"
+          ],
+          "status": 0,
+          "seconds": 11.896
+        },
+        "green": {
+          "command": [
+            "python3",
+            "-B",
+            "test/psbt-commands.py",
+            "boundaries",
+            "auth-create-none"
+          ],
+          "status": 0,
+          "seconds": 0.325
+        }
+      },
+      {
+        "property": "fiat-suffix-funded-nbsp",
+        "file": "Cyberkrill/PsbtCommands.lean",
+        "replace": "drop unit.length |>.dropWhile Amount.rustWhitespace",
+        "with_text": "drop unit.length |>.dropWhile asciiSpace",
+        "selection": [
+          "whitespace",
+          "funded-nbsp"
+        ],
+        "assertion": "PSBT scanner whitespace funded-nbsp",
+        "failure": "AssertionError: Lean RPC test: assertion failed: PSBT scanner whitespace funded-nbsp",
+        "build": {
+          "command": [
+            "lake",
+            "build",
+            "cyberkrill",
+            "CyberkrillTests"
+          ],
+          "status": 0,
+          "seconds": 10.694
+        },
+        "red": {
+          "command": [
+            "python3",
+            "-B",
+            "test/psbt-commands.py",
+            "whitespace",
+            "funded-nbsp"
+          ],
+          "status": 1,
+          "seconds": 0.273
+        },
+        "restore_build": {
+          "command": [
+            "lake",
+            "build",
+            "cyberkrill",
+            "CyberkrillTests"
+          ],
+          "status": 0,
+          "seconds": 10.699
+        },
+        "green": {
+          "command": [
+            "python3",
+            "-B",
+            "test/psbt-commands.py",
+            "whitespace",
+            "funded-nbsp"
+          ],
+          "status": 0,
+          "seconds": 0.277
+        }
+      },
+      {
+        "property": "fiat-suffix-funded-precedence",
+        "file": "Cyberkrill/PsbtCommands.lean",
+        "replace": "drop unit.length |>.dropWhile Amount.rustWhitespace",
+        "with_text": "drop unit.length |>.dropWhile asciiSpace",
+        "selection": [
+          "whitespace",
+          "funded-precedence"
+        ],
+        "assertion": "PSBT scanner whitespace funded-precedence",
+        "failure": "AssertionError: Lean RPC test: assertion failed: PSBT scanner whitespace funded-precedence",
+        "build": {
+          "command": [
+            "lake",
+            "build",
+            "cyberkrill",
+            "CyberkrillTests"
+          ],
+          "status": 0,
+          "seconds": 10.697
+        },
+        "red": {
+          "command": [
+            "python3",
+            "-B",
+            "test/psbt-commands.py",
+            "whitespace",
+            "funded-precedence"
+          ],
+          "status": 1,
+          "seconds": 0.28
+        },
+        "restore_build": {
+          "command": [
+            "lake",
+            "build",
+            "cyberkrill",
+            "CyberkrillTests"
+          ],
+          "status": 0,
+          "seconds": 10.699
+        },
+        "green": {
+          "command": [
+            "python3",
+            "-B",
+            "test/psbt-commands.py",
+            "whitespace",
+            "funded-precedence"
+          ],
+          "status": 0,
+          "seconds": 0.274
+        }
+      },
+      {
+        "property": "fiat-suffix-funded-unicode-separator",
+        "file": "Cyberkrill/PsbtCommands.lean",
+        "replace": "drop unit.length |>.dropWhile Amount.rustWhitespace",
+        "with_text": "drop unit.length |>.dropWhile asciiSpace",
+        "selection": [
+          "whitespace",
+          "funded-unicode-separator"
+        ],
+        "assertion": "PSBT scanner whitespace funded-unicode-separator",
+        "failure": "AssertionError: Lean RPC test: assertion failed: PSBT scanner whitespace funded-unicode-separator",
+        "build": {
+          "command": [
+            "lake",
+            "build",
+            "cyberkrill",
+            "CyberkrillTests"
+          ],
+          "status": 0,
+          "seconds": 10.795
+        },
+        "red": {
+          "command": [
+            "python3",
+            "-B",
+            "test/psbt-commands.py",
+            "whitespace",
+            "funded-unicode-separator"
+          ],
+          "status": 1,
+          "seconds": 0.275
+        },
+        "restore_build": {
+          "command": [
+            "lake",
+            "build",
+            "cyberkrill",
+            "CyberkrillTests"
+          ],
+          "status": 0,
+          "seconds": 10.697
+        },
+        "green": {
+          "command": [
+            "python3",
+            "-B",
+            "test/psbt-commands.py",
+            "whitespace",
+            "funded-unicode-separator"
+          ],
+          "status": 0,
+          "seconds": 0.274
+        }
+      },
+      {
+        "property": "fiat-ascii-funded-vertical-tab",
+        "file": "Cyberkrill/PsbtCommands.lean",
+        "replace": "[' ', '\\t', '\\r', '\\n', '\\x0c'].contains c",
+        "with_text": "[' ', '\\t', '\\r', '\\n', '\\x0b', '\\x0c'].contains c",
+        "selection": [
+          "whitespace",
+          "funded-vertical-tab"
+        ],
+        "assertion": "PSBT scanner whitespace funded-vertical-tab",
+        "failure": "AssertionError: Lean RPC test: assertion failed: PSBT scanner whitespace funded-vertical-tab",
+        "build": {
+          "command": [
+            "lake",
+            "build",
+            "cyberkrill",
+            "CyberkrillTests"
+          ],
+          "status": 0,
+          "seconds": 10.694
+        },
+        "red": {
+          "command": [
+            "python3",
+            "-B",
+            "test/psbt-commands.py",
+            "whitespace",
+            "funded-vertical-tab"
+          ],
+          "status": 1,
+          "seconds": 0.276
+        },
+        "restore_build": {
+          "command": [
+            "lake",
+            "build",
+            "cyberkrill",
+            "CyberkrillTests"
+          ],
+          "status": 0,
+          "seconds": 10.798
+        },
+        "green": {
+          "command": [
+            "python3",
+            "-B",
+            "test/psbt-commands.py",
+            "whitespace",
+            "funded-vertical-tab"
+          ],
+          "status": 0,
+          "seconds": 0.276
+        }
+      },
+      {
+        "property": "implicit-cookie-funded",
+        "file": "Cyberkrill/CoreRpc.lean",
+        "replace": "  return pairAuth flags.user flags.password",
+        "with_text": "  if flags.bitcoinDir.isNone && flags.user.isNone && flags.password.isNone then\n    if let some home \u2190 IO.getEnv \"LCK_TEST_COOKIE_HOME\" then\n      if (\u2190 IO.getEnv \"HOME\") == some home then\n        try\n          if let some auth := parseCookie (\u2190 IO.FS.readFile (System.FilePath.mk home / \".bitcoin\" / \".cookie\")) then\n            return some auth\n        catch _ => pure ()\n  return pairAuth flags.user flags.password",
+        "selection": [
+          "boundaries",
+          "auth-funded-none"
+        ],
+        "assertion": "PSBT handler auth failure secret suppression",
+        "failure": "AssertionError: PSBT handler auth failure secret suppression",
+        "build": {
+          "command": [
+            "lake",
+            "build",
+            "cyberkrill",
+            "CyberkrillTests"
+          ],
+          "status": 0,
+          "seconds": 11.796
+        },
+        "red": {
+          "command": [
+            "python3",
+            "-B",
+            "test/psbt-commands.py",
+            "boundaries",
+            "auth-funded-none"
+          ],
+          "status": 1,
+          "seconds": 0.327
+        },
+        "restore_build": {
+          "command": [
+            "lake",
+            "build",
+            "cyberkrill",
+            "CyberkrillTests"
+          ],
+          "status": 0,
+          "seconds": 11.698
+        },
+        "green": {
+          "command": [
+            "python3",
+            "-B",
+            "test/psbt-commands.py",
+            "boundaries",
+            "auth-funded-none"
+          ],
+          "status": 0,
+          "seconds": 0.324
+        }
+      }
+    ],
+    "initial_build": {
+      "command": [
+        "lake",
+        "build",
+        "cyberkrill",
+        "CyberkrillTests"
+      ],
+      "status": 0,
+      "seconds": 0.402
+    },
+    "initial_green": {
+      "command": [
+        "python3",
+        "-B",
+        "test/psbt-commands.py"
+      ],
+      "status": 0,
+      "seconds": 13.35
+    },
+    "restored_full": {
+      "command": [
+        "python3",
+        "-B",
+        "test/psbt-commands.py"
+      ],
+      "status": 0,
+      "seconds": 13.246
+    }
+  },
   "source_sha256": {
     "Cyberkrill/App.lean": "2c34598b24c9a4d199528ad4392edca14bf7b84bd0c9e978baee78574303a6d7",
     "Cyberkrill/CoreRpc.lean": "63fab1a1540c05eac769322a77fc799dc86cdb210da98a35696f8f46d3848a6d",
-    "Cyberkrill/PsbtCommands.lean": "a77e29dc3b22037ee5a5cd94d88e93208e6b54e227ecc152e512c981fa8c0231",
+    "Cyberkrill/PsbtCommands.lean": "fffe4cf0417f2501d783e4ad9f9135152b655c3e8a4bfad618010eb03f443222",
     "CyberkrillTests.lean": "465b95792624b7ee1d48d5c5b332ec5513fa88a467b247a54444d7179c54cbc3",
     "CyberkrillTests/PsbtCommands.lean": "54c20a78aa5164f7a78b1939d6167b5c882c8ecaea9f6fb932ddd6e4f9281310",
-    "test/psbt-commands.py": "f5c76b9299667aa5d42ae7c0da73412833092466abb8620f6a5276deb22c643e",
-    "test/psbt-commands-mutations.py": "05d7c5792a56a296cd783264291f61bfa18e770abe91fd318fd0bd2af01e5c5f",
+    "test/psbt-commands.py": "1c8e24831cada3ff40e53b4196282bde3004fcb5bc7e9865d5d15bc867ba6a04",
+    "test/psbt-commands-mutations.py": "eefea92d2bf3c253bdad6d689535fd83d914a15daef79156f8e60ebab6b6b9c5",
     "test/psbt-commands-provenance.json": "272fac5bb92cdb4dfa0029fd2a11d01e3c99af607bfaba7d4237a52547335eeb",
     "test/golden/psbt-commands-reference.json": "9f177beb9ebcc3b2bb92c36b00e635e856f2771178d50df6da50742d8407e99e",
     "test/rpc-client.py": "997bdbd1f1a74c00793d63f8f31a4157c389be576c2399c3dc94d01ac296d514"
@@ -5768,7 +8869,7 @@
           "CyberkrillTests"
         ],
         "status": 0,
-        "seconds": 11.115
+        "seconds": 11.42
       },
       "red": {
         "command": [
@@ -5779,7 +8880,7 @@
           "create-explicit-1sat"
         ],
         "status": 1,
-        "seconds": 0.33
+        "seconds": 0.332
       },
       "restore_build": {
         "command": [
@@ -5789,7 +8890,7 @@
           "CyberkrillTests"
         ],
         "status": 0,
-        "seconds": 11.007
+        "seconds": 11.331
       },
       "green": {
         "command": [
@@ -5800,7 +8901,7 @@
           "create-explicit-1sat"
         ],
         "status": 0,
-        "seconds": 0.327
+        "seconds": 0.326
       }
     },
     {
@@ -5822,7 +8923,7 @@
           "CyberkrillTests"
         ],
         "status": 0,
-        "seconds": 11.111
+        "seconds": 11.002
       },
       "red": {
         "command": [
@@ -5833,7 +8934,7 @@
           "empty-expansion"
         ],
         "status": 1,
-        "seconds": 0.394
+        "seconds": 0.326
       },
       "restore_build": {
         "command": [
@@ -5843,7 +8944,7 @@
           "CyberkrillTests"
         ],
         "status": 0,
-        "seconds": 11.211
+        "seconds": 10.897
       },
       "green": {
         "command": [
@@ -5854,7 +8955,7 @@
           "empty-expansion"
         ],
         "status": 0,
-        "seconds": 0.331
+        "seconds": 0.325
       }
     },
     {
@@ -5876,7 +8977,7 @@
           "CyberkrillTests"
         ],
         "status": 0,
-        "seconds": 11.308
+        "seconds": 10.906
       },
       "red": {
         "command": [
@@ -5887,7 +8988,7 @@
           "scope-dedup"
         ],
         "status": 1,
-        "seconds": 0.377
+        "seconds": 0.329
       },
       "restore_build": {
         "command": [
@@ -5897,7 +8998,7 @@
           "CyberkrillTests"
         ],
         "status": 0,
-        "seconds": 11.227
+        "seconds": 10.695
       },
       "green": {
         "command": [
@@ -5930,7 +9031,7 @@
           "CyberkrillTests"
         ],
         "status": 0,
-        "seconds": 10.897
+        "seconds": 11.3
       },
       "red": {
         "command": [
@@ -5941,7 +9042,7 @@
           "create-duplicate"
         ],
         "status": 1,
-        "seconds": 0.326
+        "seconds": 0.332
       },
       "restore_build": {
         "command": [
@@ -5951,7 +9052,7 @@
           "CyberkrillTests"
         ],
         "status": 0,
-        "seconds": 11.006
+        "seconds": 11.112
       },
       "green": {
         "command": [
@@ -5962,7 +9063,7 @@
           "create-duplicate"
         ],
         "status": 0,
-        "seconds": 0.331
+        "seconds": 0.328
       }
     },
     {
@@ -5984,7 +9085,7 @@
           "CyberkrillTests"
         ],
         "status": 0,
-        "seconds": 11.005
+        "seconds": 10.799
       },
       "red": {
         "command": [
@@ -6005,7 +9106,7 @@
           "CyberkrillTests"
         ],
         "status": 0,
-        "seconds": 10.8
+        "seconds": 10.802
       },
       "green": {
         "command": [
@@ -6016,7 +9117,7 @@
           "create-duplicate"
         ],
         "status": 0,
-        "seconds": 0.327
+        "seconds": 0.324
       }
     },
     {
@@ -6037,7 +9138,7 @@
           "CyberkrillTests"
         ],
         "status": 0,
-        "seconds": 10.902
+        "seconds": 10.793
       },
       "red": {
         "command": [
@@ -6057,7 +9158,7 @@
           "CyberkrillTests"
         ],
         "status": 0,
-        "seconds": 10.998
+        "seconds": 11.001
       },
       "green": {
         "command": [
@@ -6067,7 +9168,7 @@
           "refusals"
         ],
         "status": 0,
-        "seconds": 1.533
+        "seconds": 1.528
       }
     },
     {
@@ -6088,7 +9189,7 @@
           "CyberkrillTests"
         ],
         "status": 0,
-        "seconds": 11.124
+        "seconds": 11.0
       },
       "red": {
         "command": [
@@ -6098,7 +9199,7 @@
           "injected"
         ],
         "status": 1,
-        "seconds": 0.278
+        "seconds": 0.281
       },
       "restore_build": {
         "command": [
@@ -6108,7 +9209,7 @@
           "CyberkrillTests"
         ],
         "status": 0,
-        "seconds": 11.106
+        "seconds": 10.803
       },
       "green": {
         "command": [
@@ -6118,13 +9219,13 @@
           "injected"
         ],
         "status": 0,
-        "seconds": 0.277
+        "seconds": 0.275
       }
     },
     {
       "property": "fiat-grouping",
       "file": "Cyberkrill/PsbtCommands.lean",
-      "replace": "c == ',' && !fiatComma current remaining",
+      "replace": "c == ',' && !(index < protectedUntil)",
       "with_text": "c == ','",
       "selection": [
         "injected"
@@ -6139,7 +9240,7 @@
           "CyberkrillTests"
         ],
         "status": 0,
-        "seconds": 11.106
+        "seconds": 11.096
       },
       "red": {
         "command": [
@@ -6149,7 +9250,7 @@
           "injected"
         ],
         "status": 1,
-        "seconds": 0.277
+        "seconds": 0.281
       },
       "restore_build": {
         "command": [
@@ -6159,7 +9260,7 @@
           "CyberkrillTests"
         ],
         "status": 0,
-        "seconds": 11.005
+        "seconds": 11.115
       },
       "green": {
         "command": [
@@ -6169,7 +9270,7 @@
           "injected"
         ],
         "status": 0,
-        "seconds": 0.28
+        "seconds": 0.283
       }
     },
     {
@@ -6191,7 +9292,7 @@
           "CyberkrillTests"
         ],
         "status": 0,
-        "seconds": 11.208
+        "seconds": 11.613
       },
       "red": {
         "command": [
@@ -6202,7 +9303,7 @@
           "funded-unit"
         ],
         "status": 1,
-        "seconds": 0.327
+        "seconds": 0.381
       },
       "restore_build": {
         "command": [
@@ -6212,7 +9313,7 @@
           "CyberkrillTests"
         ],
         "status": 0,
-        "seconds": 11.303
+        "seconds": 11.318
       },
       "green": {
         "command": [
@@ -6223,7 +9324,7 @@
           "funded-unit"
         ],
         "status": 0,
-        "seconds": 0.33
+        "seconds": 0.39
       }
     },
     {
@@ -6245,7 +9346,7 @@
           "CyberkrillTests"
         ],
         "status": 0,
-        "seconds": 11.109
+        "seconds": 11.215
       },
       "red": {
         "command": [
@@ -6256,7 +9357,7 @@
           "funded-unit"
         ],
         "status": 1,
-        "seconds": 0.331
+        "seconds": 0.333
       },
       "restore_build": {
         "command": [
@@ -6266,7 +9367,7 @@
           "CyberkrillTests"
         ],
         "status": 0,
-        "seconds": 11.002
+        "seconds": 11.426
       },
       "green": {
         "command": [
@@ -6277,7 +9378,7 @@
           "funded-unit"
         ],
         "status": 0,
-        "seconds": 0.335
+        "seconds": 0.382
       }
     },
     {
@@ -6299,7 +9400,7 @@
           "CyberkrillTests"
         ],
         "status": 0,
-        "seconds": 11.009
+        "seconds": 11.215
       },
       "red": {
         "command": [
@@ -6320,7 +9421,7 @@
           "CyberkrillTests"
         ],
         "status": 0,
-        "seconds": 11.107
+        "seconds": 11.222
       },
       "green": {
         "command": [
@@ -6331,7 +9432,7 @@
           "bound"
         ],
         "status": 0,
-        "seconds": 0.529
+        "seconds": 0.533
       }
     },
     {
@@ -6353,7 +9454,7 @@
           "CyberkrillTests"
         ],
         "status": 0,
-        "seconds": 11.321
+        "seconds": 11.319
       },
       "red": {
         "command": [
@@ -6374,7 +9475,7 @@
           "CyberkrillTests"
         ],
         "status": 0,
-        "seconds": 11.097
+        "seconds": 11.322
       },
       "green": {
         "command": [
@@ -6385,7 +9486,7 @@
           "failed-derivation"
         ],
         "status": 0,
-        "seconds": 0.329
+        "seconds": 0.328
       }
     },
     {
@@ -6407,7 +9508,7 @@
           "CyberkrillTests"
         ],
         "status": 0,
-        "seconds": 11.121
+        "seconds": 11.734
       },
       "red": {
         "command": [
@@ -6418,7 +9519,7 @@
           "fallback"
         ],
         "status": 1,
-        "seconds": 0.328
+        "seconds": 0.527
       },
       "restore_build": {
         "command": [
@@ -6428,7 +9529,7 @@
           "CyberkrillTests"
         ],
         "status": 0,
-        "seconds": 11.002
+        "seconds": 15.245
       },
       "green": {
         "command": [
@@ -6439,7 +9540,7 @@
           "fallback"
         ],
         "status": 0,
-        "seconds": 0.329
+        "seconds": 0.403
       }
     },
     {
@@ -6461,7 +9562,7 @@
           "CyberkrillTests"
         ],
         "status": 0,
-        "seconds": 11.103
+        "seconds": 15.821
       },
       "red": {
         "command": [
@@ -6472,7 +9573,7 @@
           "received-default"
         ],
         "status": 1,
-        "seconds": 0.327
+        "seconds": 0.461
       },
       "restore_build": {
         "command": [
@@ -6482,7 +9583,7 @@
           "CyberkrillTests"
         ],
         "status": 0,
-        "seconds": 11.006
+        "seconds": 15.929
       },
       "green": {
         "command": [
@@ -6493,7 +9594,7 @@
           "received-default"
         ],
         "status": 0,
-        "seconds": 0.326
+        "seconds": 0.471
       }
     },
     {
@@ -6515,7 +9616,7 @@
           "CyberkrillTests"
         ],
         "status": 0,
-        "seconds": 10.913
+        "seconds": 15.801
       },
       "red": {
         "command": [
@@ -6526,7 +9627,7 @@
           "list-default"
         ],
         "status": 1,
-        "seconds": 0.327
+        "seconds": 0.552
       },
       "restore_build": {
         "command": [
@@ -6536,7 +9637,7 @@
           "CyberkrillTests"
         ],
         "status": 0,
-        "seconds": 10.997
+        "seconds": 15.54
       },
       "green": {
         "command": [
@@ -6547,7 +9648,7 @@
           "list-default"
         ],
         "status": 0,
-        "seconds": 0.333
+        "seconds": 0.407
       }
     },
     {
@@ -6569,7 +9670,7 @@
           "CyberkrillTests"
         ],
         "status": 0,
-        "seconds": 12.103
+        "seconds": 17.235
       },
       "red": {
         "command": [
@@ -6580,7 +9681,7 @@
           "defaults"
         ],
         "status": 1,
-        "seconds": 0.328
+        "seconds": 0.418
       },
       "restore_build": {
         "command": [
@@ -6590,7 +9691,7 @@
           "CyberkrillTests"
         ],
         "status": 0,
-        "seconds": 12.106
+        "seconds": 17.232
       },
       "green": {
         "command": [
@@ -6601,7 +9702,7 @@
           "defaults"
         ],
         "status": 0,
-        "seconds": 0.328
+        "seconds": 0.469
       }
     },
     {
@@ -6623,7 +9724,7 @@
           "CyberkrillTests"
         ],
         "status": 0,
-        "seconds": 12.202
+        "seconds": 17.04
       },
       "red": {
         "command": [
@@ -6634,7 +9735,7 @@
           "defaults"
         ],
         "status": 1,
-        "seconds": 0.333
+        "seconds": 0.446
       },
       "restore_build": {
         "command": [
@@ -6644,7 +9745,7 @@
           "CyberkrillTests"
         ],
         "status": 0,
-        "seconds": 12.31
+        "seconds": 16.192
       },
       "green": {
         "command": [
@@ -6655,7 +9756,7 @@
           "defaults"
         ],
         "status": 0,
-        "seconds": 0.327
+        "seconds": 0.417
       }
     },
     {
@@ -6677,7 +9778,7 @@
           "CyberkrillTests"
         ],
         "status": 0,
-        "seconds": 12.314
+        "seconds": 12.563
       },
       "red": {
         "command": [
@@ -6688,7 +9789,7 @@
           "position-wrap"
         ],
         "status": 1,
-        "seconds": 0.329
+        "seconds": 0.328
       },
       "restore_build": {
         "command": [
@@ -6698,7 +9799,7 @@
           "CyberkrillTests"
         ],
         "status": 0,
-        "seconds": 12.112
+        "seconds": 13.215
       },
       "green": {
         "command": [
@@ -6709,7 +9810,7 @@
           "position-wrap"
         ],
         "status": 0,
-        "seconds": 0.332
+        "seconds": 0.328
       }
     },
     {
@@ -6730,7 +9831,7 @@
           "CyberkrillTests"
         ],
         "status": 0,
-        "seconds": 10.022
+        "seconds": 10.726
       },
       "red": {
         "command": [
@@ -6740,7 +9841,7 @@
           "injected"
         ],
         "status": 1,
-        "seconds": 0.275
+        "seconds": 0.278
       },
       "restore_build": {
         "command": [
@@ -6750,7 +9851,7 @@
           "CyberkrillTests"
         ],
         "status": 0,
-        "seconds": 9.907
+        "seconds": 10.408
       },
       "green": {
         "command": [
@@ -6760,7 +9861,7 @@
           "injected"
         ],
         "status": 0,
-        "seconds": 0.282
+        "seconds": 0.28
       }
     },
     {
@@ -6782,7 +9883,7 @@
           "CyberkrillTests"
         ],
         "status": 0,
-        "seconds": 9.8
+        "seconds": 10.519
       },
       "red": {
         "command": [
@@ -6793,7 +9894,7 @@
           "create-raw"
         ],
         "status": 1,
-        "seconds": 0.326
+        "seconds": 0.386
       },
       "restore_build": {
         "command": [
@@ -6803,7 +9904,7 @@
           "CyberkrillTests"
         ],
         "status": 0,
-        "seconds": 9.792
+        "seconds": 10.453
       },
       "green": {
         "command": [
@@ -6814,7 +9915,7 @@
           "create-raw"
         ],
         "status": 0,
-        "seconds": 0.333
+        "seconds": 0.33
       }
     },
     {
@@ -6836,7 +9937,7 @@
           "CyberkrillTests"
         ],
         "status": 0,
-        "seconds": 10.804
+        "seconds": 11.72
       },
       "red": {
         "command": [
@@ -6847,7 +9948,7 @@
           "funded-expansion-size"
         ],
         "status": 1,
-        "seconds": 0.328
+        "seconds": 0.383
       },
       "restore_build": {
         "command": [
@@ -6857,7 +9958,7 @@
           "CyberkrillTests"
         ],
         "status": 0,
-        "seconds": 11.106
+        "seconds": 11.217
       },
       "green": {
         "command": [
@@ -6868,7 +9969,7 @@
           "funded-expansion-size"
         ],
         "status": 0,
-        "seconds": 0.431
+        "seconds": 0.433
       }
     },
     {
@@ -6890,7 +9991,7 @@
           "CyberkrillTests"
         ],
         "status": 0,
-        "seconds": 11.021
+        "seconds": 11.518
       },
       "red": {
         "command": [
@@ -6901,7 +10002,7 @@
           "funded-probe-size"
         ],
         "status": 1,
-        "seconds": 0.326
+        "seconds": 0.382
       },
       "restore_build": {
         "command": [
@@ -6911,7 +10012,7 @@
           "CyberkrillTests"
         ],
         "status": 0,
-        "seconds": 10.789
+        "seconds": 11.536
       },
       "green": {
         "command": [
@@ -6922,7 +10023,7 @@
           "funded-probe-size"
         ],
         "status": 0,
-        "seconds": 0.424
+        "seconds": 0.434
       }
     },
     {
@@ -6944,7 +10045,7 @@
           "CyberkrillTests"
         ],
         "status": 0,
-        "seconds": 10.692
+        "seconds": 11.621
       },
       "red": {
         "command": [
@@ -6955,7 +10056,7 @@
           "funded-final-size"
         ],
         "status": 1,
-        "seconds": 0.326
+        "seconds": 0.394
       },
       "restore_build": {
         "command": [
@@ -6965,7 +10066,7 @@
           "CyberkrillTests"
         ],
         "status": 0,
-        "seconds": 10.798
+        "seconds": 11.613
       },
       "green": {
         "command": [
@@ -6976,7 +10077,7 @@
           "funded-final-size"
         ],
         "status": 0,
-        "seconds": 0.432
+        "seconds": 0.437
       }
     },
     {
@@ -6998,7 +10099,7 @@
           "CyberkrillTests"
         ],
         "status": 0,
-        "seconds": 10.995
+        "seconds": 11.527
       },
       "red": {
         "command": [
@@ -7009,7 +10110,7 @@
           "curve"
         ],
         "status": 1,
-        "seconds": 0.331
+        "seconds": 0.332
       },
       "restore_build": {
         "command": [
@@ -7019,7 +10120,7 @@
           "CyberkrillTests"
         ],
         "status": 0,
-        "seconds": 10.795
+        "seconds": 11.217
       },
       "green": {
         "command": [
@@ -7030,7 +10131,7 @@
           "curve"
         ],
         "status": 0,
-        "seconds": 0.325
+        "seconds": 0.33
       }
     },
     {
@@ -7052,7 +10153,7 @@
           "CyberkrillTests"
         ],
         "status": 0,
-        "seconds": 10.695
+        "seconds": 11.219
       },
       "red": {
         "command": [
@@ -7063,7 +10164,7 @@
           "hash"
         ],
         "status": 1,
-        "seconds": 0.324
+        "seconds": 0.384
       },
       "restore_build": {
         "command": [
@@ -7073,7 +10174,7 @@
           "CyberkrillTests"
         ],
         "status": 0,
-        "seconds": 10.715
+        "seconds": 11.332
       },
       "green": {
         "command": [
@@ -7084,7 +10185,7 @@
           "hash"
         ],
         "status": 0,
-        "seconds": 0.323
+        "seconds": 0.333
       }
     },
     {
@@ -7106,7 +10207,7 @@
           "CyberkrillTests"
         ],
         "status": 0,
-        "seconds": 10.602
+        "seconds": 11.131
       },
       "red": {
         "command": [
@@ -7117,7 +10218,7 @@
           "same-point"
         ],
         "status": 1,
-        "seconds": 0.325
+        "seconds": 0.327
       },
       "restore_build": {
         "command": [
@@ -7127,7 +10228,7 @@
           "CyberkrillTests"
         ],
         "status": 0,
-        "seconds": 10.692
+        "seconds": 11.218
       },
       "green": {
         "command": [
@@ -7138,7 +10239,7 @@
           "same-point"
         ],
         "status": 0,
-        "seconds": 0.324
+        "seconds": 0.334
       }
     },
     {
@@ -7160,7 +10261,7 @@
           "CyberkrillTests"
         ],
         "status": 0,
-        "seconds": 11.705
+        "seconds": 12.616
       },
       "red": {
         "command": [
@@ -7171,7 +10272,7 @@
           "exponent"
         ],
         "status": 1,
-        "seconds": 0.327
+        "seconds": 0.419
       },
       "restore_build": {
         "command": [
@@ -7181,7 +10282,7 @@
           "CyberkrillTests"
         ],
         "status": 0,
-        "seconds": 11.701
+        "seconds": 12.614
       },
       "green": {
         "command": [
@@ -7192,7 +10293,7 @@
           "exponent"
         ],
         "status": 0,
-        "seconds": 0.325
+        "seconds": 0.337
       }
     },
     {
@@ -7214,7 +10315,7 @@
           "CyberkrillTests"
         ],
         "status": 0,
-        "seconds": 10.795
+        "seconds": 11.326
       },
       "red": {
         "command": [
@@ -7225,7 +10326,7 @@
           "msat-fee"
         ],
         "status": 1,
-        "seconds": 0.33
+        "seconds": 0.333
       },
       "restore_build": {
         "command": [
@@ -7235,7 +10336,7 @@
           "CyberkrillTests"
         ],
         "status": 0,
-        "seconds": 10.599
+        "seconds": 11.212
       },
       "green": {
         "command": [
@@ -7246,7 +10347,7 @@
           "msat-fee"
         ],
         "status": 0,
-        "seconds": 0.324
+        "seconds": 0.328
       }
     },
     {
@@ -7268,7 +10369,7 @@
           "CyberkrillTests"
         ],
         "status": 0,
-        "seconds": 10.697
+        "seconds": 11.315
       },
       "red": {
         "command": [
@@ -7279,7 +10380,7 @@
           "u64-fee-overflow"
         ],
         "status": 1,
-        "seconds": 0.329
+        "seconds": 0.331
       },
       "restore_build": {
         "command": [
@@ -7289,7 +10390,7 @@
           "CyberkrillTests"
         ],
         "status": 0,
-        "seconds": 10.704
+        "seconds": 11.215
       },
       "green": {
         "command": [
@@ -7300,7 +10401,7 @@
           "u64-fee-overflow"
         ],
         "status": 0,
-        "seconds": 0.333
+        "seconds": 0.331
       }
     },
     {
@@ -7322,7 +10423,7 @@
           "CyberkrillTests"
         ],
         "status": 0,
-        "seconds": 10.803
+        "seconds": 11.213
       },
       "red": {
         "command": [
@@ -7333,7 +10434,7 @@
           "create-newline"
         ],
         "status": 1,
-        "seconds": 0.324
+        "seconds": 0.4
       },
       "restore_build": {
         "command": [
@@ -7343,7 +10444,7 @@
           "CyberkrillTests"
         ],
         "status": 0,
-        "seconds": 10.798
+        "seconds": 11.213
       },
       "green": {
         "command": [
@@ -7354,7 +10455,7 @@
           "create-newline"
         ],
         "status": 0,
-        "seconds": 0.424
+        "seconds": 0.431
       }
     },
     {
@@ -7376,7 +10477,7 @@
           "CyberkrillTests"
         ],
         "status": 0,
-        "seconds": 10.7
+        "seconds": 11.21
       },
       "red": {
         "command": [
@@ -7387,7 +10488,7 @@
           "funded-newline"
         ],
         "status": 1,
-        "seconds": 0.325
+        "seconds": 0.331
       },
       "restore_build": {
         "command": [
@@ -7397,7 +10498,7 @@
           "CyberkrillTests"
         ],
         "status": 0,
-        "seconds": 10.696
+        "seconds": 11.424
       },
       "green": {
         "command": [
@@ -7408,7 +10509,7 @@
           "funded-newline"
         ],
         "status": 0,
-        "seconds": 0.43
+        "seconds": 0.435
       }
     },
     {
@@ -7429,7 +10530,7 @@
           "CyberkrillTests"
         ],
         "status": 0,
-        "seconds": 10.794
+        "seconds": 11.449
       },
       "red": {
         "command": [
@@ -7439,7 +10540,7 @@
           "injected"
         ],
         "status": 1,
-        "seconds": 0.277
+        "seconds": 0.289
       },
       "restore_build": {
         "command": [
@@ -7449,7 +10550,7 @@
           "CyberkrillTests"
         ],
         "status": 0,
-        "seconds": 10.693
+        "seconds": 11.309
       },
       "green": {
         "command": [
@@ -7459,7 +10560,7 @@
           "injected"
         ],
         "status": 0,
-        "seconds": 0.277
+        "seconds": 0.279
       }
     },
     {
@@ -7480,7 +10581,7 @@
           "CyberkrillTests"
         ],
         "status": 0,
-        "seconds": 10.794
+        "seconds": 11.318
       },
       "red": {
         "command": [
@@ -7490,7 +10591,7 @@
           "injected"
         ],
         "status": 1,
-        "seconds": 0.275
+        "seconds": 0.28
       },
       "restore_build": {
         "command": [
@@ -7500,7 +10601,7 @@
           "CyberkrillTests"
         ],
         "status": 0,
-        "seconds": 10.8
+        "seconds": 11.531
       },
       "green": {
         "command": [
@@ -7510,7 +10611,7 @@
           "injected"
         ],
         "status": 0,
-        "seconds": 0.277
+        "seconds": 0.278
       }
     },
     {
@@ -7531,7 +10632,7 @@
           "CyberkrillTests"
         ],
         "status": 0,
-        "seconds": 10.694
+        "seconds": 11.423
       },
       "red": {
         "command": [
@@ -7541,7 +10642,7 @@
           "injected"
         ],
         "status": 1,
-        "seconds": 0.277
+        "seconds": 0.281
       },
       "restore_build": {
         "command": [
@@ -7551,7 +10652,7 @@
           "CyberkrillTests"
         ],
         "status": 0,
-        "seconds": 10.691
+        "seconds": 11.535
       },
       "green": {
         "command": [
@@ -7561,7 +10662,7 @@
           "injected"
         ],
         "status": 0,
-        "seconds": 0.274
+        "seconds": 0.33
       }
     },
     {
@@ -7583,7 +10684,7 @@
           "CyberkrillTests"
         ],
         "status": 0,
-        "seconds": 10.694
+        "seconds": 11.738
       },
       "red": {
         "command": [
@@ -7594,7 +10695,7 @@
           "colon"
         ],
         "status": 1,
-        "seconds": 0.327
+        "seconds": 0.381
       },
       "restore_build": {
         "command": [
@@ -7604,7 +10705,7 @@
           "CyberkrillTests"
         ],
         "status": 0,
-        "seconds": 10.797
+        "seconds": 11.223
       },
       "green": {
         "command": [
@@ -7615,7 +10716,7 @@
           "colon"
         ],
         "status": 0,
-        "seconds": 0.426
+        "seconds": 0.444
       }
     },
     {
@@ -7637,7 +10738,7 @@
           "CyberkrillTests"
         ],
         "status": 0,
-        "seconds": 13.799
+        "seconds": 14.24
       },
       "red": {
         "command": [
@@ -7648,7 +10749,7 @@
           "create-wire"
         ],
         "status": 1,
-        "seconds": 0.381
+        "seconds": 0.426
       },
       "restore_build": {
         "command": [
@@ -7658,7 +10759,7 @@
           "CyberkrillTests"
         ],
         "status": 0,
-        "seconds": 14.321
+        "seconds": 14.619
       },
       "green": {
         "command": [
@@ -7669,7 +10770,7 @@
           "create-wire"
         ],
         "status": 0,
-        "seconds": 0.329
+        "seconds": 0.332
       }
     },
     {
@@ -7691,7 +10792,7 @@
           "CyberkrillTests"
         ],
         "status": 0,
-        "seconds": 10.69
+        "seconds": 11.517
       },
       "red": {
         "command": [
@@ -7702,7 +10803,7 @@
           "funded-expansion-timeout"
         ],
         "status": 1,
-        "seconds": 0.673
+        "seconds": 0.739
       },
       "restore_build": {
         "command": [
@@ -7712,7 +10813,7 @@
           "CyberkrillTests"
         ],
         "status": 0,
-        "seconds": 10.697
+        "seconds": 11.83
       },
       "green": {
         "command": [
@@ -7723,7 +10824,7 @@
           "funded-expansion-timeout"
         ],
         "status": 0,
-        "seconds": 0.975
+        "seconds": 0.979
       }
     },
     {
@@ -7745,7 +10846,7 @@
           "CyberkrillTests"
         ],
         "status": 0,
-        "seconds": 10.695
+        "seconds": 11.206
       },
       "red": {
         "command": [
@@ -7756,7 +10857,7 @@
           "funded-probe-timeout"
         ],
         "status": 1,
-        "seconds": 0.675
+        "seconds": 0.735
       },
       "restore_build": {
         "command": [
@@ -7766,7 +10867,7 @@
           "CyberkrillTests"
         ],
         "status": 0,
-        "seconds": 10.797
+        "seconds": 11.326
       },
       "green": {
         "command": [
@@ -7777,7 +10878,7 @@
           "funded-probe-timeout"
         ],
         "status": 0,
-        "seconds": 1.127
+        "seconds": 1.183
       }
     },
     {
@@ -7799,7 +10900,7 @@
           "CyberkrillTests"
         ],
         "status": 0,
-        "seconds": 10.591
+        "seconds": 11.31
       },
       "red": {
         "command": [
@@ -7810,7 +10911,7 @@
           "funded-final-timeout"
         ],
         "status": 1,
-        "seconds": 0.679
+        "seconds": 0.732
       },
       "restore_build": {
         "command": [
@@ -7820,7 +10921,7 @@
           "CyberkrillTests"
         ],
         "status": 0,
-        "seconds": 10.701
+        "seconds": 11.418
       },
       "green": {
         "command": [
@@ -7831,7 +10932,7 @@
           "funded-final-timeout"
         ],
         "status": 0,
-        "seconds": 0.975
+        "seconds": 0.985
       }
     },
     {
@@ -7853,7 +10954,7 @@
           "CyberkrillTests"
         ],
         "status": 0,
-        "seconds": 10.897
+        "seconds": 12.125
       },
       "red": {
         "command": [
@@ -7864,7 +10965,7 @@
           "create-expansion-timeout"
         ],
         "status": 1,
-        "seconds": 0.683
+        "seconds": 0.741
       },
       "restore_build": {
         "command": [
@@ -7874,7 +10975,7 @@
           "CyberkrillTests"
         ],
         "status": 0,
-        "seconds": 10.804
+        "seconds": 11.945
       },
       "green": {
         "command": [
@@ -7885,7 +10986,7 @@
           "create-expansion-timeout"
         ],
         "status": 0,
-        "seconds": 0.976
+        "seconds": 0.982
       }
     },
     {
@@ -7907,7 +11008,7 @@
           "CyberkrillTests"
         ],
         "status": 0,
-        "seconds": 10.795
+        "seconds": 11.727
       },
       "red": {
         "command": [
@@ -7918,7 +11019,7 @@
           "create-final-timeout"
         ],
         "status": 1,
-        "seconds": 0.68
+        "seconds": 0.731
       },
       "restore_build": {
         "command": [
@@ -7928,7 +11029,7 @@
           "CyberkrillTests"
         ],
         "status": 0,
-        "seconds": 10.795
+        "seconds": 11.324
       },
       "green": {
         "command": [
@@ -7939,7 +11040,7 @@
           "create-final-timeout"
         ],
         "status": 0,
-        "seconds": 0.976
+        "seconds": 0.987
       }
     },
     {
@@ -7961,7 +11062,7 @@
           "CyberkrillTests"
         ],
         "status": 0,
-        "seconds": 10.796
+        "seconds": 11.53
       },
       "red": {
         "command": [
@@ -7972,7 +11073,7 @@
           "create-expansion-size"
         ],
         "status": 1,
-        "seconds": 0.327
+        "seconds": 0.329
       },
       "restore_build": {
         "command": [
@@ -7982,7 +11083,7 @@
           "CyberkrillTests"
         ],
         "status": 0,
-        "seconds": 10.697
+        "seconds": 11.619
       },
       "green": {
         "command": [
@@ -7993,7 +11094,7 @@
           "create-expansion-size"
         ],
         "status": 0,
-        "seconds": 0.428
+        "seconds": 0.432
       }
     },
     {
@@ -8015,7 +11116,7 @@
           "CyberkrillTests"
         ],
         "status": 0,
-        "seconds": 10.701
+        "seconds": 11.307
       },
       "red": {
         "command": [
@@ -8026,7 +11127,7 @@
           "create-final-size"
         ],
         "status": 1,
-        "seconds": 0.324
+        "seconds": 0.383
       },
       "restore_build": {
         "command": [
@@ -8036,7 +11137,7 @@
           "CyberkrillTests"
         ],
         "status": 0,
-        "seconds": 10.696
+        "seconds": 11.424
       },
       "green": {
         "command": [
@@ -8047,7 +11148,7 @@
           "create-final-size"
         ],
         "status": 0,
-        "seconds": 0.423
+        "seconds": 0.438
       }
     },
     {
@@ -8069,7 +11170,7 @@
           "CyberkrillTests"
         ],
         "status": 0,
-        "seconds": 10.805
+        "seconds": 11.624
       },
       "red": {
         "command": [
@@ -8080,7 +11181,7 @@
           "nonmultipath"
         ],
         "status": 1,
-        "seconds": 0.377
+        "seconds": 0.428
       },
       "restore_build": {
         "command": [
@@ -8090,7 +11191,7 @@
           "CyberkrillTests"
         ],
         "status": 0,
-        "seconds": 10.797
+        "seconds": 11.411
       },
       "green": {
         "command": [
@@ -8101,7 +11202,7 @@
           "nonmultipath"
         ],
         "status": 0,
-        "seconds": 0.325
+        "seconds": 0.341
       }
     },
     {
@@ -8123,7 +11224,7 @@
           "CyberkrillTests"
         ],
         "status": 0,
-        "seconds": 10.805
+        "seconds": 11.601
       },
       "red": {
         "command": [
@@ -8134,7 +11235,7 @@
           "create-rounded"
         ],
         "status": 1,
-        "seconds": 0.325
+        "seconds": 0.381
       },
       "restore_build": {
         "command": [
@@ -8144,7 +11245,7 @@
           "CyberkrillTests"
         ],
         "status": 0,
-        "seconds": 10.698
+        "seconds": 11.429
       },
       "green": {
         "command": [
@@ -8155,7 +11256,7 @@
           "create-rounded"
         ],
         "status": 0,
-        "seconds": 0.325
+        "seconds": 0.328
       }
     },
     {
@@ -8177,7 +11278,7 @@
           "CyberkrillTests"
         ],
         "status": 0,
-        "seconds": 10.702
+        "seconds": 11.619
       },
       "red": {
         "command": [
@@ -8188,7 +11289,7 @@
           "funded-negative-probe"
         ],
         "status": 1,
-        "seconds": 0.328
+        "seconds": 0.379
       },
       "restore_build": {
         "command": [
@@ -8198,7 +11299,7 @@
           "CyberkrillTests"
         ],
         "status": 0,
-        "seconds": 10.793
+        "seconds": 11.529
       },
       "green": {
         "command": [
@@ -8209,7 +11310,7 @@
           "funded-negative-probe"
         ],
         "status": 0,
-        "seconds": 0.324
+        "seconds": 0.336
       }
     },
     {
@@ -8231,7 +11332,7 @@
           "CyberkrillTests"
         ],
         "status": 0,
-        "seconds": 10.799
+        "seconds": 11.418
       },
       "red": {
         "command": [
@@ -8242,7 +11343,7 @@
           "funded-tiny-probe"
         ],
         "status": 1,
-        "seconds": 0.325
+        "seconds": 0.381
       },
       "restore_build": {
         "command": [
@@ -8252,7 +11353,7 @@
           "CyberkrillTests"
         ],
         "status": 0,
-        "seconds": 10.796
+        "seconds": 11.31
       },
       "green": {
         "command": [
@@ -8263,7 +11364,7 @@
           "funded-tiny-probe"
         ],
         "status": 0,
-        "seconds": 0.327
+        "seconds": 0.395
       }
     },
     {
@@ -8285,7 +11386,7 @@
           "CyberkrillTests"
         ],
         "status": 0,
-        "seconds": 10.692
+        "seconds": 11.323
       },
       "red": {
         "command": [
@@ -8296,7 +11397,7 @@
           "create-nbsp"
         ],
         "status": 1,
-        "seconds": 0.275
+        "seconds": 0.282
       },
       "restore_build": {
         "command": [
@@ -8306,7 +11407,7 @@
           "CyberkrillTests"
         ],
         "status": 0,
-        "seconds": 10.701
+        "seconds": 11.422
       },
       "green": {
         "command": [
@@ -8317,7 +11418,7 @@
           "create-nbsp"
         ],
         "status": 0,
-        "seconds": 0.278
+        "seconds": 0.285
       }
     },
     {
@@ -8339,7 +11440,7 @@
           "CyberkrillTests"
         ],
         "status": 0,
-        "seconds": 10.797
+        "seconds": 11.414
       },
       "red": {
         "command": [
@@ -8350,7 +11451,7 @@
           "create-precedence"
         ],
         "status": 1,
-        "seconds": 0.275
+        "seconds": 0.281
       },
       "restore_build": {
         "command": [
@@ -8360,7 +11461,7 @@
           "CyberkrillTests"
         ],
         "status": 0,
-        "seconds": 10.704
+        "seconds": 11.308
       },
       "green": {
         "command": [
@@ -8371,7 +11472,7 @@
           "create-precedence"
         ],
         "status": 0,
-        "seconds": 0.273
+        "seconds": 0.284
       }
     },
     {
@@ -8393,7 +11494,7 @@
           "CyberkrillTests"
         ],
         "status": 0,
-        "seconds": 10.79
+        "seconds": 11.325
       },
       "red": {
         "command": [
@@ -8404,7 +11505,7 @@
           "create-unicode-separator"
         ],
         "status": 1,
-        "seconds": 0.276
+        "seconds": 0.284
       },
       "restore_build": {
         "command": [
@@ -8414,7 +11515,7 @@
           "CyberkrillTests"
         ],
         "status": 0,
-        "seconds": 10.799
+        "seconds": 11.343
       },
       "green": {
         "command": [
@@ -8425,7 +11526,7 @@
           "create-unicode-separator"
         ],
         "status": 0,
-        "seconds": 0.275
+        "seconds": 0.281
       }
     },
     {
@@ -8447,7 +11548,7 @@
           "CyberkrillTests"
         ],
         "status": 0,
-        "seconds": 10.795
+        "seconds": 11.715
       },
       "red": {
         "command": [
@@ -8458,7 +11559,7 @@
           "create-vertical-tab"
         ],
         "status": 1,
-        "seconds": 0.276
+        "seconds": 0.279
       },
       "restore_build": {
         "command": [
@@ -8468,7 +11569,7 @@
           "CyberkrillTests"
         ],
         "status": 0,
-        "seconds": 10.696
+        "seconds": 11.218
       },
       "green": {
         "command": [
@@ -8479,7 +11580,7 @@
           "create-vertical-tab"
         ],
         "status": 0,
-        "seconds": 0.275
+        "seconds": 0.281
       }
     },
     {
@@ -8501,7 +11602,7 @@
           "CyberkrillTests"
         ],
         "status": 0,
-        "seconds": 11.805
+        "seconds": 12.92
       },
       "red": {
         "command": [
@@ -8512,7 +11613,7 @@
           "auth-create-none"
         ],
         "status": 1,
-        "seconds": 0.324
+        "seconds": 0.376
       },
       "restore_build": {
         "command": [
@@ -8522,7 +11623,7 @@
           "CyberkrillTests"
         ],
         "status": 0,
-        "seconds": 11.896
+        "seconds": 12.523
       },
       "green": {
         "command": [
@@ -8533,7 +11634,7 @@
           "auth-create-none"
         ],
         "status": 0,
-        "seconds": 0.325
+        "seconds": 0.382
       }
     },
     {
@@ -8555,7 +11656,7 @@
           "CyberkrillTests"
         ],
         "status": 0,
-        "seconds": 10.694
+        "seconds": 11.317
       },
       "red": {
         "command": [
@@ -8566,7 +11667,7 @@
           "funded-nbsp"
         ],
         "status": 1,
-        "seconds": 0.273
+        "seconds": 0.284
       },
       "restore_build": {
         "command": [
@@ -8576,7 +11677,7 @@
           "CyberkrillTests"
         ],
         "status": 0,
-        "seconds": 10.699
+        "seconds": 11.512
       },
       "green": {
         "command": [
@@ -8587,7 +11688,7 @@
           "funded-nbsp"
         ],
         "status": 0,
-        "seconds": 0.277
+        "seconds": 0.286
       }
     },
     {
@@ -8609,7 +11710,7 @@
           "CyberkrillTests"
         ],
         "status": 0,
-        "seconds": 10.697
+        "seconds": 11.319
       },
       "red": {
         "command": [
@@ -8620,7 +11721,7 @@
           "funded-precedence"
         ],
         "status": 1,
-        "seconds": 0.28
+        "seconds": 0.284
       },
       "restore_build": {
         "command": [
@@ -8630,7 +11731,7 @@
           "CyberkrillTests"
         ],
         "status": 0,
-        "seconds": 10.699
+        "seconds": 11.414
       },
       "green": {
         "command": [
@@ -8641,7 +11742,7 @@
           "funded-precedence"
         ],
         "status": 0,
-        "seconds": 0.274
+        "seconds": 0.284
       }
     },
     {
@@ -8663,7 +11764,7 @@
           "CyberkrillTests"
         ],
         "status": 0,
-        "seconds": 10.795
+        "seconds": 11.424
       },
       "red": {
         "command": [
@@ -8674,7 +11775,7 @@
           "funded-unicode-separator"
         ],
         "status": 1,
-        "seconds": 0.275
+        "seconds": 0.282
       },
       "restore_build": {
         "command": [
@@ -8684,7 +11785,7 @@
           "CyberkrillTests"
         ],
         "status": 0,
-        "seconds": 10.697
+        "seconds": 11.512
       },
       "green": {
         "command": [
@@ -8695,7 +11796,7 @@
           "funded-unicode-separator"
         ],
         "status": 0,
-        "seconds": 0.274
+        "seconds": 0.284
       }
     },
     {
@@ -8717,7 +11818,7 @@
           "CyberkrillTests"
         ],
         "status": 0,
-        "seconds": 10.694
+        "seconds": 12.147
       },
       "red": {
         "command": [
@@ -8728,7 +11829,7 @@
           "funded-vertical-tab"
         ],
         "status": 1,
-        "seconds": 0.276
+        "seconds": 0.342
       },
       "restore_build": {
         "command": [
@@ -8738,7 +11839,7 @@
           "CyberkrillTests"
         ],
         "status": 0,
-        "seconds": 10.798
+        "seconds": 12.154
       },
       "green": {
         "command": [
@@ -8749,7 +11850,7 @@
           "funded-vertical-tab"
         ],
         "status": 0,
-        "seconds": 0.276
+        "seconds": 0.279
       }
     },
     {
@@ -8771,7 +11872,7 @@
           "CyberkrillTests"
         ],
         "status": 0,
-        "seconds": 11.796
+        "seconds": 13.15
       },
       "red": {
         "command": [
@@ -8782,7 +11883,7 @@
           "auth-funded-none"
         ],
         "status": 1,
-        "seconds": 0.327
+        "seconds": 0.386
       },
       "restore_build": {
         "command": [
@@ -8792,7 +11893,7 @@
           "CyberkrillTests"
         ],
         "status": 0,
-        "seconds": 11.698
+        "seconds": 13.444
       },
       "green": {
         "command": [
@@ -8803,7 +11904,7 @@
           "auth-funded-none"
         ],
         "status": 0,
-        "seconds": 0.324
+        "seconds": 0.34
       }
     }
   ],
@@ -8815,7 +11916,7 @@
       "CyberkrillTests"
     ],
     "status": 0,
-    "seconds": 0.402
+    "seconds": 0.431
   },
   "initial_green": {
     "command": [
@@ -8824,7 +11925,7 @@
       "test/psbt-commands.py"
     ],
     "status": 0,
-    "seconds": 13.35
+    "seconds": 14.955
   },
   "restored_full": {
     "command": [
@@ -8833,6 +11934,6 @@
       "test/psbt-commands.py"
     ],
     "status": 0,
-    "seconds": 13.246
+    "seconds": 13.7
   }
 }

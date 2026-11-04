@@ -13,6 +13,7 @@ from pathlib import Path
 import subprocess
 import sys
 import tempfile
+import time
 
 from cases import APP, ROOT, PIN, BUILD
 from compare import differences, exact_json
@@ -686,6 +687,33 @@ def fifo():
     print("PSBT controlled FIFOs: 2/2 retained JSON writers, raw-before-JSON, no reopen; all children reaped", flush=True)
 
 
+def scanner(only=None):
+    """Large argv entries and repeated grouped commas must fail promptly before RPC."""
+    parent = APP / ".lake/validation/psbt-scanner"; parent.mkdir(parents=True, exist_ok=True)
+    count = 0
+    with tempfile.TemporaryDirectory(dir=parent) as directory:
+        with C.responder(HERE / "recordings/multipath-create.json") as (base, log, _):
+            for kind in ["create", "funded"]:
+                command = "onchain-create-funded-psbt" if kind == "funded" else "onchain-create-psbt"
+                for name, outputs, error in [
+                    ("long-entry", "a" * 100000, b"invalidOutputs:"),
+                    ("many-commas", "destination:" + "," * 20000 + "1btc", b"invalidNumber:")]:
+                    selected = kind + "-" + name
+                    if only and only != selected: continue
+                    args = [command, "--inputs", "synthetic:0", "--outputs", outputs, "--rpc-url", base]
+                    start = time.monotonic()
+                    proc = network.checked_run(EXE, args, stub_url=base, cwd=directory,
+                                               capture_output=True, timeout=60)
+                    elapsed = time.monotonic() - start
+                    assert proc.returncode == 1 and proc.stdout == b"" and proc.stderr.startswith(error), "PSBT scanner exact refusal " + selected
+                    assert observed(log) == [], "PSBT scanner zero RPC " + selected
+                    print(f"PSBT scanner {selected}: {elapsed:.3f}s", flush=True)
+                    assert elapsed < 3, "PSBT scanner bounded work " + selected
+                    count += 1
+    assert count == (1 if only else 4), "PSBT scanner long inventory"
+    print(f"PSBT scanner argv bounds: {count} exact refusals; zero RPC; long entries and repeated commas", flush=True)
+
+
 def replay():
     captures = json.loads(DEST.read_bytes())
     assert captures["revision"] == PIN and len(captures["captures"]) == 17, "PSBT reference capture inventory"
@@ -785,10 +813,11 @@ def main():
     if args[:1] == ["limits"]: limits(args[1] if len(args) > 1 else None); return 0
     if args[:1] == ["boundaries"]: boundaries(args[1] if len(args) > 1 else None); return 0
     if args == ["fifo"]: fifo(); return 0
+    if args[:1] == ["scanner"]: scanner(args[1] if len(args) > 1 else None); return 0
     if args[:1] == ["numeric"]: numeric(args[1] if len(args) > 1 else None); return 0
     if args[:1] == ["exact"]: exact(args[1] if len(args) > 1 else None); return 0
     assert args == [], "PSBT test selector"
-    replay(); synthetic(); refusals(); deep_validation(); spelling(); probes(); limits(); boundaries(); fifo(); numeric(); exact()
+    replay(); synthetic(); refusals(); deep_validation(); spelling(); probes(); limits(); boundaries(); fifo(); numeric(); exact(); scanner()
     print(C.run(["--psbt-injected"]), end="")
     return 0
 

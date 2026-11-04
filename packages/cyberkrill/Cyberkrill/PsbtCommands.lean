@@ -40,34 +40,38 @@ private def asciiSpace (c : Char) : Bool := [' ', '\t', '\r', '\n', '\x0c'].cont
 private def asciiDigit (c : Char) : Bool := '0' ≤ c && c ≤ '9'
 private def asciiLetter (c : Char) : Bool := ('a' ≤ c && c ≤ 'z') || ('A' ≤ c && c ≤ 'Z')
 
--- The separator scanner recognizes a prospective fiat number before validating
--- its grouping. A comma within that number belongs to the same output entry.
-private def fiatComma (before remaining : List Char) : Bool := Id.run do
-  let parts := (String.ofList before).splitOn ":"
-  unless parts.length > 1 do return false
-  let candidate := parts.getLast!.toList ++ remaining
-  let number := candidate.dropWhile asciiSpace |>.takeWhile (fun c => asciiDigit c || c == '.' || c == ',')
-  unless number.any asciiDigit do return false
-  let start := (candidate.takeWhile asciiSpace).length
-  let comma := parts.getLast!.length
-  unless start ≤ comma && comma < start + number.length do return false
-  let afterNumber := candidate.dropWhile asciiSpace |>.drop number.length
-  let unit := afterNumber.dropWhile asciiSpace |>.takeWhile asciiLetter
-  unless unit.length == 3 do return false
+-- Find the prospective fiat number once after each colon, before validating
+-- grouping. Commas within that span belong to the same output entry. Four
+-- letters suffice to distinguish a three-letter unit from a longer suffix.
+private def fiatNumberEnd (remaining : List Char) : Option Nat := Id.run do
+  let spaces := (remaining.takeWhile asciiSpace).length
+  let number := remaining.drop spaces |>.takeWhile (fun c => asciiDigit c || c == '.' || c == ',')
+  unless number.any asciiDigit do return none
+  let afterNumber := remaining.drop (spaces + number.length)
+  let unit := afterNumber.dropWhile asciiSpace |>.take 4 |>.takeWhile asciiLetter
+  unless unit.length == 3 do return none
   let tail := afterNumber.dropWhile asciiSpace |>.drop unit.length |>.dropWhile Amount.rustWhitespace
-  return tail.isEmpty || tail.head? == some ','
+  unless tail.isEmpty || tail.head? == some ',' do return none
+  return some (spaces + number.length)
 
 def splitOutputs (s : String) : Array String := Id.run do
   let mut entries := #[]
   let mut current := []
   let mut remaining := s.toList
-  for c in s.toList do
-    if c == ',' && !fiatComma current remaining then
-      entries := entries.push (String.ofList current)
-      current := []
-    else current := current ++ [c]
+  let mut index := 0
+  let mut protectedUntil := 0
+  for c in remaining do
     remaining := remaining.drop 1
-  return entries.push (String.ofList current)
+    if c == ',' && !(index < protectedUntil) then
+      entries := entries.push (String.ofList current.reverse)
+      current := []
+      protectedUntil := 0
+    else
+      current := c :: current
+      if c == ':' then
+        protectedUntil := (fiatNumberEnd remaining).map (index + 1 + ·) |>.getD 0
+    index := index + 1
+  return entries.push (String.ofList current.reverse)
 
 private def fiatValid (s : String) : Bool := Id.run do
   unless recognizableFiat s do return false

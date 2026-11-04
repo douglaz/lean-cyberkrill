@@ -18,6 +18,7 @@ from network import run_owned
 
 DEST = APP / "test/golden/psbt-commands-mutation-record.json"
 LOGS = APP / ".lake/validation/psbt-mutations" / str(time.time_ns())
+PRE_SCANNER_SHA256 = "7106f60a6fbfb042812ba6f35c1b589e8e770c9920d2cd4ee4f852eff300edc1"
 
 
 def mutations():
@@ -35,7 +36,7 @@ def mutations():
         ("fee-distinct-count", source, 'Fee.estimateWeight inputs.size outputs.size', 'Fee.estimateWeight inputs.size (outputs.size + 1)', ["replay", "create-duplicate"], "PSBT full JSON/null/fee shape"),
         ("whole-sat", source, 'if let some value := value then let _ ← exactWholeSat value', 'if let some value := value then let _ := value', ["refusals"], "PSBT output grammar/precedence"),
         ("fiat-precision-order", source, 'if let some value := value then let _ ← exactWholeSat value', 'if let some value := value then let _ := value', ["injected"], "PSBT fiat classification/precedence destination:1msat"),
-        ("fiat-grouping", source, 'c == \',\' && !fiatComma current remaining', 'c == \',\'', ["injected"], "PSBT fiat has no client or child"),
+        ("fiat-grouping", source, 'c == \',\' && !(index < protectedUntil)', 'c == \',\'', ["injected"], "PSBT fiat has no client or child"),
         ("change-first-unused", source, '| .ok false => return .ok (some address)', '| .ok false => return .ok none', ["replay", "funded-unit"], "PSBT CLI success"),
         ("change-used", source, 'a.msat > 0', 'a.msat > 3000000000', ["replay", "funded-unit"], "PSBT CLI success"),
         ("change-bound", source, 'for index in [:200]', 'for index in [:199]', ["probes", "bound"], "PSBT probe request order/stopping"),
@@ -141,6 +142,8 @@ def fingerprints():
 
 def verify():
     record = json.loads(DEST.read_bytes())
+    retained = record["pre_scanner_observation"]
+    assert hashlib.sha256((json.dumps(retained, indent=2)+"\n").encode()).hexdigest() == PRE_SCANNER_SHA256, "retained pre-scanner observation"
     assert record["source_sha256"] == fingerprints(), "PSBT stale mutation evidence"
     rows = mutations()
     assert len(record["checks"]) == len(rows) == 57, "PSBT mutation selection inventory"
@@ -159,6 +162,8 @@ def main():
     assert not sys.argv[1:]
     LOGS.mkdir(parents=True, exist_ok=True)
     prior = json.loads(DEST.read_bytes())
+    pre_scanner = prior.get("pre_scanner_observation", {k: v for k, v in prior.items() if not k.endswith("_observation")})
+    assert hashlib.sha256((json.dumps(pre_scanner, indent=2)+"\n").encode()).hexdigest() == PRE_SCANNER_SHA256, "original pre-scanner observation"
     history = prior.get("pre_repair_observation", prior)
     originals = {path: (APP / path).read_bytes() for _, path, *_ in mutations()}
     source = fingerprints()
@@ -213,6 +218,7 @@ def main():
         assert source == fingerprints(), "PSBT final source restoration"
         DEST.write_text(json.dumps(dict(pre_repair_observation=history,
             pre_whitespace_observation=prior.get("pre_whitespace_observation", prior),
+            pre_scanner_observation=pre_scanner,
             source_sha256=source, checks=checks, initial_build=initial_build,
             initial_green=initial_green, restored_full=full), indent=2)+"\n")
         verify()
