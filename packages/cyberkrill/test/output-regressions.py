@@ -11,7 +11,7 @@ import subprocess
 import sys
 import time
 
-from evidence_history import publish_history
+from evidence import write_record
 from cases import APP
 from driver import EXE, TEST, run
 
@@ -100,9 +100,7 @@ def refresh():
             row["green"] = command(f"green-{i}", [".lake/build/bin/CyberkrillTests", "--output-refusal", str(i)], 0)
         final = command("boundaries", [".lake/build/bin/CyberkrillTests", "--output-boundaries"], 0)
         assert fingerprints(bound) == hashes, "output sources restored exactly"
-        publish_history(Path("test/golden/output-regression-refresh.json"), json.dumps(dict(
-            source_sha256=hashes, file=str(path), replace=old, with_text=new,
-            build=compiled, restore_build=restored, checks=rows, restored_all=final), indent=2) + "\n")
+        write_record(Path('test/golden/output-regression-refresh.json'), json.dumps(dict(source_sha256=hashes, file=str(path), replace=old, with_text=new, build=compiled, restore_build=restored, checks=rows, restored_all=final), indent=2) + '\n')
         print("current output evidence: 18/18 runtime reds; 18/18 restored greens; all boundaries green", flush=True)
     finally:
         write(original)

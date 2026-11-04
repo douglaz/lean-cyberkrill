@@ -12,7 +12,7 @@ import subprocess
 import sys
 import time
 
-from evidence_history import publish_history
+from evidence import write_record
 from cases import APP
 from network import run_owned
 
@@ -277,7 +277,7 @@ def main():
         assert fingerprints() == hashes, "offline final exact source restoration"
         record=dict(count=len(records),executions=sum(len(r["checks"]) for r in records),
                     source_sha256=hashes,mutations=records,restored_full=full)
-        publish_history(APP/"test/golden/offline-mutation-record.json", json.dumps(record,indent=2)+"\n")
+        write_record(APP / 'test/golden/offline-mutation-record.json', json.dumps(record, indent=2) + '\n')
     finally:
         restore()
         # Even a failed experiment leaves executable artifacts built from the

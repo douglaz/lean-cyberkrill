@@ -11,7 +11,7 @@ import subprocess
 import sys
 import time
 
-from evidence_history import publish_history
+from evidence import write_record
 from cases import APP
 
 AMOUNTS = "Cyberkrill/Amounts.lean"
@@ -153,7 +153,7 @@ def main():
         assert {str(p): digest(p) for p in fingerprint_paths} == fingerprints
         record = dict(count=len(records), source_sha256=fingerprints, mutations=records,
                       restored_full=dict(command=["timeout", "--foreground", "180", "lake", "test"], status=0, seconds=elapsed))
-        publish_history(Path("test/golden/mutation-record.json"), json.dumps(record, indent=2) + "\n")
+        write_record(Path('test/golden/mutation-record.json'), json.dumps(record, indent=2) + '\n')
         print("independent mutations: 26/26; restored full suite: exit 0", flush=True)
     finally:
         restore()

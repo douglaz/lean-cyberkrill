@@ -13,14 +13,12 @@ import sys
 import tempfile
 import time
 
-from evidence_history import publish_history
+from evidence import write_record
 from cases import APP
 from network import run_owned
 
 DEST = APP / "test/golden/list-utxos-mutation-record.json"
 LOGS = APP / ".lake/validation/list-utxos-mutations" / str(time.time_ns())
-PREVIOUS_SHA256 = "d0b4914d0a123e5a85dc6d53a732d71712ca18b41f07e27f78a0c2445dcc917a"
-SCHEMA_SHA256 = "c8935d83811d4535fbb9fd0c70bb51ba0c5b1e07fbdec8e384c79304da98ef65"
 CANCELLED = None
 
 
@@ -166,23 +164,16 @@ def command(label, args, status, assertion=None):
                 stderr_sha256=hashlib.sha256(streams["stderr"].encode()).hexdigest())
 
 
-PRE_PSBT_SHA256 = '9f629d18f9069aa28d941ee616259a466f95a6d1d87b69f92699f8dd441a3837'
 
 def verify():
     record = json.loads(DEST.read_bytes())
-    retained = record["pre_psbt_observation"]
-    assert hashlib.sha256((json.dumps(retained, indent=2) + "\n").encode()).hexdigest() == PRE_PSBT_SHA256, "retained pre-PSBT observation"
-    previous = record["previous_observation"]
-    assert previous["count"] == 33 and hashlib.sha256((json.dumps(previous, indent=2) + "\n").encode()).hexdigest() == PREVIOUS_SHA256, "retained 33-edit list observation"
-    schema = record["schema_observation"]
-    assert schema["count"] == 43 and hashlib.sha256((json.dumps(schema, indent=2) + "\n").encode()).hexdigest() == SCHEMA_SHA256, "retained 43-edit schema observation"
     assert record["source_sha256"] == fingerprints(), "stale list mutation evidence"
     assert record["count"] == len(record["checks"]) == len(edits()) == 63, "list mutation inventory"
     for row, (name, path, old, new, selected, assertion) in zip(record["checks"], edits()):
         assert (row["property"], row["file"], row["replace"], row["with_text"], row["assertion"]) == (name, path, old, new, assertion)
         assert [row[k]["status"] for k in ["build", "red", "restore_build", "green"]] == [0, 1, 0, 0]
     assert record["baseline"]["status"] == record["restored_full"]["status"] == 0
-    print("list mutation evidence: 63 compiled edits; 63 named runtime reds; 63 restored greens; prior 33/43 observations retained")
+    print("list mutation evidence: 63 compiled edits; 63 named runtime reds; 63 restored greens")
 
 
 def main():
@@ -192,13 +183,6 @@ def main():
     CANCELLED = None
     LOGS.mkdir(parents=True, exist_ok=True)
     hashes = fingerprints()
-    prior = json.loads(DEST.read_bytes())
-    pre_psbt = prior.get("pre_psbt_observation", {k: v for k, v in prior.items() if not k.endswith("_observation")})
-    assert hashlib.sha256((json.dumps(pre_psbt, indent=2) + "\n").encode()).hexdigest() == PRE_PSBT_SHA256, "original pre-PSBT observation"
-    schema = prior.get("schema_observation", prior)
-    assert hashlib.sha256((json.dumps(schema, indent=2) + "\n").encode()).hexdigest() == SCHEMA_SHA256
-    previous = prior.get("previous_observation", prior)
-    assert hashlib.sha256((json.dumps(previous, indent=2) + "\n").encode()).hexdigest() == PREVIOUS_SHA256
     originals = {APP / p: (APP / p).read_bytes() for _, p, *_ in edits()}
     managed = [signal.SIGHUP, signal.SIGINT, signal.SIGQUIT, signal.SIGTERM]
     def restore():
@@ -232,7 +216,7 @@ def main():
             print(name + ": build/red/restore/green 0/1/0/0", flush=True)
         full = command("restored-full", ["python3", "-B", "test/list-utxos.py"], 0)
         assert fingerprints() == hashes, "list exact final restoration"
-        publish_history(DEST, json.dumps(dict(pre_psbt_observation=pre_psbt, count=len(records), source_sha256=hashes, baseline=baseline, checks=records, restored_full=full, previous_observation=previous, schema_observation=schema), indent=2) + "\n")
+        write_record(DEST, json.dumps(dict(count=len(records), source_sha256=hashes, baseline=baseline, checks=records, restored_full=full), indent=2) + '\n')
         verify()
     except SystemExit:
         # Cancellation is terminal. Cleanup has reaped the command; restore

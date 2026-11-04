@@ -14,13 +14,9 @@ from cases import APP, ROOT
 
 BASE = "01879167f2f6b7ace2a286987a14a2104a48f912"
 ISSUE = "lck-phase-8c-move-utxos-xxl"
-# Fixed observations for fixtures first introduced by this phase. Never derive
+# Fixed reference fixtures. Never derive
 # these expected values from HEAD, the index, or the current fixture bytes.
-HISTORICAL_DIGESTS = {
-    "revision-regression-record.json": "60c8074b198e76e211b17deb1cfcec57fc644b0aa1f184356dd846698d135379",
-    "regression-record.json": "679f3cb08ecb804ea9b46572254c56a22e766599fc8c650b780eb7e125bdf336",
-    "output-regression-record.json": "c0fa1d361be244360425341420975fab01e8f013198dfa59f48b41f5db7a930f",
-    "attached-output-regression-record.json": "451f10beafae7da7bce1c83d3e09f7181567dbc6389e409e79a1229b723483ca",
+FIXTURE_DIGESTS = {
     "reference.json": "1e7958dae384cc6811f6ab42d2b7b1a8549a0abee4ae441017b104e89d2004b0",
     "provenance.json": "a1632beec123567b9af6f4835038e8e20598055bfa27f0fdbb167e2f0524dcc3",
     "capture-digests.json": "df828cadece40a7a6a028863660384548de4efa488198373e3076c343e431bf6",
@@ -59,8 +55,8 @@ def check_lifecycle(original, current):
 
 
 def main():
-    allowed = {"README.md", ".beads/issues.jsonl"}
-    # Explicit move integration and actual changed-source evidence refreshes.
+    allowed = {"README.md", "AGENTS.md", ".beads/issues.jsonl"}
+    # Move integration and latest-only evidence maintenance.
     allowed |= {"packages/cyberkrill/" + p for p in [
         "Cyberkrill/App.lean",  # Move registration, ordered parser and ordinary writer dispatch.
         "Cyberkrill/MoveUtxos.lean",  # Exact lookup, stable selection, local fee, validation.
@@ -77,14 +73,16 @@ def main():
         "test/list-utxos-mutations.py", "test/list-utxos-lexical-mutations.py",
         "test/rpc-client-mutations.py",  # Finite full-suite allowance for the added move replay.
         "test/offline-mutate.py",  # Measured full-suite allowance and retained timeout diagnostics.
-        "test/evidence_history.py",  # Shared publication boundary retains fixed pre-move observations.
-        "test/mutate.py",  # Publish refreshed App/test bindings without losing landed evidence.
-        "test/lightning-mutate.py",  # Publish refreshed App/test bindings with retained history.
-        "test/revision-mutate.py",  # Publish refreshed parser/scope bindings with retained history.
-        "test/refresh-regressions.py",  # Preserve landed observations on every regression refresh.
-        "test/output-regressions.py",  # Preserve history on the advertised output refresh path.
-        "test/refresh-attached-output.py",  # Preserve history on the advertised attached-output refresh.
-        "test/psbt-commands-mutations.py",  # Preserve creation history through the move integration refresh.
+        "test/evidence.py",  # Atomic replacement with latest-run content only.
+        "test/evidence_history.py",  # Remove the obsolete nested-history writer.
+        "test/list-utxos-lifecycle.py",  # Remove old-run snapshot preservation.
+        "test/mutate.py",  # Publish refreshed App/test bindings with latest-run records.
+        "test/lightning-mutate.py",  # Publish refreshed App/test bindings with latest-run records.
+        "test/revision-mutate.py",  # Publish refreshed parser/scope bindings with latest-run records.
+        "test/refresh-regressions.py",  # Replace the regression record on each refresh.
+        "test/output-regressions.py",  # Replace the output record on each refresh.
+        "test/refresh-attached-output.py",  # Replace the attached-output record on each refresh.
+        "test/psbt-commands-mutations.py",  # Replace the creation record on each completed campaign.
 
     ]}
     allowed |= {"packages/cyberkrill/test/golden/" + p for p in [
@@ -96,6 +94,7 @@ def main():
         "list-utxos-lifecycle-record.json",  # Actual amended-source lifecycle replay.
         "regression-refresh.json", "output-regression-refresh.json", "attached-output-refresh.json",
         "offline-history-recapture.json",  # Actual App/test/phase-boundary refreshes.
+        "offline-validation.json",  # Remove obsolete prior-attempt notes only.
     ]}
     changed = set(filter(None, git("diff", BASE, "--name-only", "-z").decode().split("\0")))
     new = set(filter(None, git("ls-files", "--others", "--exclude-standard", "-z").decode().split("\0")))
@@ -120,8 +119,8 @@ def main():
     assert all(original_raw[k] == current_raw[k] for k in original_raw if k != ISSUE), "unrelated raw issue bytes changed"
     amended = current[ISSUE]
     check_lifecycle(original[ISSUE], amended)
-    # These files must retain the original observations, not refreshed hashes.
-    for path, expected in HISTORICAL_DIGESTS.items():
+    # Reference captures and fixture provenance remain fixed.
+    for path, expected in FIXTURE_DIGESTS.items():
         relative = "packages/cyberkrill/test/golden/" + path
         data = (ROOT / relative).read_bytes()
         if relative in base_paths:
@@ -147,6 +146,7 @@ def main():
     attribution = re.compile(r"\bco[d]ex\b|\bclau[d]e\b|\bg[p]t-[0-9]|\bchat[g]pt\b|\bgr[o]k\b|\bfa[b]le\b|\bop[u]s\b|\bas[t]ra\b|Co-auth[o]red-by:", re.I)
     header = "Copyright (c) 2026 lean-cyberkrill developers. Released under the MIT License or the"
     for relative in public_paths:
+        if not (ROOT / relative).exists(): continue
         text = (ROOT / relative).read_text(encoding="utf-8")
         # README retains earlier historical text: audit its additions only.
         if relative == "README.md":
@@ -157,7 +157,7 @@ def main():
         if Path(relative).suffix in [".lean", ".py", ".c"]:
             assert any(header in line for line in text.splitlines()[:4]), "authored file licence header: " + relative
     print(f"scope: {len(changed | new)} allowed paths; 58/58 unrelated issues unchanged; claim/closure valid")
-    print("historical captures/records unchanged; seven packages/link gates retained; whitespace/public-text checks passed")
+    print("reference captures/fixtures unchanged; seven packages/link gates retained; whitespace/public-text checks passed")
 
 
 if __name__ == "__main__":

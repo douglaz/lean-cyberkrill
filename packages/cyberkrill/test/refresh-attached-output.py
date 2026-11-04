@@ -10,7 +10,7 @@ from pathlib import Path
 import signal
 import subprocess
 
-from evidence_history import publish_history
+from evidence import write_record
 from cases import APP
 
 
@@ -68,8 +68,7 @@ def main():
     for row in rows:
         row["green"], _ = command("green-" + str(row["case"]), row["red"]["command"], 0)
     assert {str(p):hashlib.sha256(p.read_bytes()).hexdigest() for p in bound} == hashes
-    publish_history(Path("test/golden/attached-output-refresh.json"), json.dumps(dict(source_sha256=hashes,
-        replace=old, with_text=new, build=compiled, restore_build=restored, checks=rows), indent=2) + "\n", encoding="utf-8")
+    write_record(Path('test/golden/attached-output-refresh.json'), json.dumps(dict(source_sha256=hashes, replace=old, with_text=new, build=compiled, restore_build=restored, checks=rows), indent=2) + '\n', encoding='utf-8')
     print("current attached output: 4/4 runtime reds, 4/4 controls, 8/8 restored greens")
 
 

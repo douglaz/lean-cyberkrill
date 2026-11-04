@@ -12,7 +12,7 @@ import subprocess
 import sys
 import time
 
-from evidence_history import publish_history
+from evidence import write_record
 from cases import APP
 import revisions
 
@@ -148,7 +148,7 @@ def main():
         assert proc.returncode == 0, "all nine synthetic scope cases restored green"
         assert fingerprints() == hashes, "final exact production/test/checker restoration"
         record = dict(count=len(records), source_sha256=hashes, mutations=records, restored_full=full, regressions_green=regressions, scope_green=scope)
-        publish_history(APP / "test/golden/revision-mutation-record.json", json.dumps(record, indent=2) + "\n")
+        write_record(APP / 'test/golden/revision-mutation-record.json', json.dumps(record, indent=2) + '\n')
     finally: restore()
     verify()
 

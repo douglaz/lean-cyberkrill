@@ -108,7 +108,6 @@ def mutations():
         ("typed-before-help",app,'validateTypedArgs (args.head?.getD "") args.tail','pure ()',["refusals"],"move executable refusal/help"),
         ("effective-help-before-typed",app,'let args := throughHelp args','validateTypedArgs (args.head?.getD "") args.tail\n  let args := throughHelp args',["refusals"],"move executable refusal/help"),
         ("existing-command-preprocessing",app,'if command == "onchain-move-utxos" then\n    valueFlags ++','if true then\n    valueFlags ++',["preprocessing"],"move preserves existing preprocessing"),
-        ("history-publication","test/evidence_history.py",'record["pre_move_observation"] = history','record.pop("pre_move_observation", None)',["history"],"history publication retains landed observation"),
     ]
     return rows
 
@@ -118,29 +117,27 @@ def fingerprints():
     paths=["Cyberkrill/App.lean","Cyberkrill/MoveUtxos.lean","Cyberkrill/Amounts.lean","Cyberkrill/CoreRpc.lean",
         "Cyberkrill/PsbtCommands.lean","CyberkrillTests.lean","CyberkrillTests/MoveUtxos.lean",
         "test/move-utxos.py","test/move-utxos-mutations.py","test/move-utxos-provenance.json",
-        "test/golden/move-utxos-reference.json","test/scope.py","test/evidence_history.py"]
+        "test/golden/move-utxos-reference.json","test/scope.py","test/evidence.py"]
     return {p:hashlib.sha256((APP/p).read_bytes()).hexdigest() for p in paths}
 
 
 def verify():
     record=json.loads(DEST.read_bytes());rows=mutations()
-    retained=record["previous_observation"]
-    assert len(retained["checks"])==40 and hashlib.sha256(json.dumps(retained,sort_keys=True,separators=(",",":")).encode()).hexdigest()=="15c80577c6a6869882d5ab658c438a979b6b7a6276c763f6019546141af90573", "move retained 40-selection observation"
-    assert len(rows)==len(record["checks"])==57,"move detecting selection inventory"
+    assert len(rows)==len(record["checks"])==56,"move detecting selection inventory"
     assert record["source_sha256"]==fingerprints(),"move stale mutation evidence"
     for check,row in zip(record["checks"],rows):
         assert [check[k] for k in ["property","file","replace","with_text","selection","assertion"]]==list(row),"move mutation identity"
         assert check["build"]["status"]==check["restore_build"]["status"]==check["green"]["status"]==0,"move mutation compiled/restored"
         assert check["red"]["status"]==1 and row[-1] in check["failure"],"move intended runtime red"
     assert record["initial_build"]["status"]==record["initial_green"]["status"]==record["restored_full"]["status"]==0
-    print(f"move mutation evidence: {len(rows)}/57 compiled changes/runtime reds, exact restoration and greens",flush=True)
+    print(f"move mutation evidence: {len(rows)}/56 compiled changes/runtime reds, exact restoration and greens",flush=True)
 
 
 def main():
     if sys.argv[1:]==["--verify"]:verify();return 0
     assert not sys.argv[1:]
     logs=APP/".lake/validation/move-mutations"/str(time.time_ns());logs.mkdir(parents=True)
-    rows=mutations();originals={p:(APP/p).read_bytes() for _,p,*_ in rows};source=fingerprints();prior=json.loads(DEST.read_bytes())
+    rows=mutations();originals={p:(APP/p).read_bytes() for _,p,*_ in rows};source=fingerprints()
     managed=[signal.SIGHUP,signal.SIGINT,signal.SIGTERM,signal.SIGQUIT]
     def interrupted(signum,_):raise InterruptedError("move mutation interrupted")
     handlers={sig:signal.signal(sig,interrupted) for sig in managed}
@@ -182,7 +179,7 @@ def main():
             print(name+": build/red/restore/green 0/1/0/0",flush=True)
         full,_=command("restored-full",tests,0)
         assert fingerprints()==source,"move final source restoration"
-        DEST.write_text(json.dumps(dict(previous_observation=prior.get("previous_observation",prior),source_sha256=source,initial_build=initial_build,initial_green=initial_green,checks=checks,restored_full=full),indent=2)+"\n")
+        DEST.write_text(json.dumps(dict(source_sha256=source, initial_build=initial_build, initial_green=initial_green, checks=checks, restored_full=full), indent=2) + '\n')
         verify();complete=True
     finally:
         restore()

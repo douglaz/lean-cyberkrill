@@ -573,9 +573,6 @@ def main():
         result=subprocess.run([str(TEST),"--move-ordering",args[1] if len(args)>1 else ""],capture_output=True,timeout=30)
         sys.stdout.buffer.write(result.stdout);sys.stderr.buffer.write(result.stderr)
         return result.returncode
-    elif args==["history"]:
-        from evidence_history import selftest
-        selftest()
     elif args==["refusals"]:refusals()
     elif args==["fifo"]:fifo()
     elif args==["injected"]:

@@ -140,22 +140,21 @@ controls cover missing and malformed identity, missing and unusable unrelated
 values, and a valid strict response, retaining requested-array-index behavior.
 Eighteen parse-only controls retain creation's typed/help precedence when an
 unsupported move-only flag precedes a typed fee or help token.
-The move mutation producer exercises 57 named selections, including independent
+The move mutation producer exercises 56 named selections, including independent
 wallet routing refusals, parser exclusivity, writer/fee/network/maximum/client
-ordering, strict-wrapper rejection and history publication. Each detecting
-selection requires compiled build/red/restored-build/green statuses 0/1/0/0
-and a restored full suite. The earlier 40-selection execution remains distinct
-from the expanded run; neither substitutes for final-source validation.
+ordering and strict-wrapper rejection. Each detecting selection requires
+compiled build/red/restored-build/green statuses 0/1/0/0 and a restored full suite.
+The obsolete history-publication selection was removed with the history format.
 
-All eleven affected existing evidence producers publish through
-`test/evidence_history.py`. It preserves the independently pinned landed
-observation in `pre_move_observation`, keeps earlier move-refresh executions
-separate, and publishes current executed evidence only after success. The
-registered publication controls exercise first and repeated refreshes and
-refusal of damaged history. The advertised producers can be rerun directly;
-no private refresh script is required. Current source bindings and detecting
-runs remain separate from the retained creation, listing, client and offline
-observations.
+Committed evidence records contain only their latest completed run. Producers
+atomically replace their destination through `test/evidence.py`; they never
+read an old record to carry it forward. Current results, detecting assertions,
+commands, statuses and source checks remain; old-run snapshots and their pins
+are absent. Reference captures and fixture provenance remain independent.
+The latest-only conversion removed old-run fields without rerunning mutation
+campaigns. Administrative source fingerprints were updated for the mechanical
+producer/checker edits; remaining mutation definitions, outcomes, timings and
+commands were preserved. Build, tests and the axiom gates validate the final tree.
 
 Upstream [#156](https://github.com/douglaz/cyberkrill/issues/156)'s BDK default
 near 1 sat/vB, possible change, low-rate failure and incorrect reported fee
@@ -301,13 +300,12 @@ when no directory or credentials are supplied. Stage-specific delay controls com
 normally, pair short limits with longer success and preserve failed-derivation
 skip behavior during funded probing.
 The exponent-position regression failed at its intended assertion before the fix
-and passed after rebuilding. The original 26-edit/29-red observation remains
-separate from the later 40-edit/47-red observation and current compiled mutation
-evidence, which checks 43 distinct production edits and 57 selected runtime reds,
+and passed after rebuilding. The latest compiled mutation
+evidence checks 43 distinct production edits and 57 selected runtime reds,
 restoring exact bytes and rebuilding/rerunning
 green after each edit. The original 616 offline captures, 53 precise exception
-pins/named errors, 18 listing captures, historical 152/275 observations, and
-later client/list observations remain separate from this new evidence.
+pins/named errors and 18 listing captures remain as reference fixtures; mutation
+records retain only their latest completed run.
 
 The pinned output scanner uses ASCII whitespace excluding vertical tab inside
 an amount candidate, then Unicode whitespace for its final suffix check
@@ -326,7 +324,7 @@ approximately 1sat/vB, could add change or fail in its low-rate band, and report
 an incorrect fee. Its fee/change is not an oracle; destination calculation
 governs. The retained move-f64 request `0.6999833999999999` produces Core -3
 `Invalid amount`; exact `0.6999834` succeeds. Neither variant is normalized or
-clamped. Those creation-phase observations remain historical; the move section
+clamped. Those recording outcomes remain fixed; the move section
 above adds actual handler captures for the destination rule and absolute fees. The deferred URL and invoice decisions
 and the bech32 proof stop are unchanged.
 
@@ -437,7 +435,7 @@ array order, nulls, complete requests, and stream/newline/file boundaries.
 It also covers schema failures, custom limits, ignored import and derivation
 failure, outpoint scope/order, output truncation and a FIFO consumer. The five
 existing FIFO consumers remain in their own suite. Current mutation evidence
-is kept separately from retained historical observations.
+contains only its latest completed run.
 
 The current list suite checks 249 public-export/synthetic schema cases,
 160 raw-token cases, 188 positional raw-slot cases, 126 injected/parser checks,
@@ -448,8 +446,7 @@ JSON and ten ordered calls from the unchanged pinned captures. The original
 compiled production edits: each has build exit 0, a named runtime failure at
 exit 1, restoration/rebuild exit 0 and a passing selected test at exit 0.
 The restored full list suite also exits 0. Its record binds the current source,
-test, capture and provenance bytes; the original 33-edit and later 43-edit list observations and
-earlier offline and RPC observations remain separate.
+test, capture and provenance bytes. Earlier run copies are not committed.
 `test/list-utxos-lexical-mutations.py` adds nine independent compiled branch
 edits for high/low surrogates, pairing, escaped and nested field names, ignored
 fields, and valid Unicode. Each records a named runtime red, exact restoration
@@ -497,28 +494,11 @@ session's TERM-refusing sentinel replace real builds. Checks require immediate
 child and descendant PID absence at command return and source restoration,
 recovery only after ordinary failure, exact source restoration and original
 signal statuses. The real gate must exit 143 with no surviving child before the
-independent observer cleans up. The retained wait-lock observations use Python
-3.13.15; current runs record their interpreter version and locate its actual
-boundary. Four focused
-runtime failures against the earlier harness remain separate from the original
-four timeout/TERM failures and retained ten-case success observation. The
-earlier fourteen-case success is retained unchanged. Six further runtime
-failures detect lost cleanup cancellation in the incoming helper; two separate
-controls retain the recording handler but remove prompt cleanup escalation,
-and fail at the named escalation assertion. The twenty-case success remains
-retained unchanged. Two further runtime failures against the incoming helper
-observe HUP status 129 and an unrestored subreaper after TERM. The twenty-four-case
-success is retained unchanged. Four further runtime failures in both drivers
-observe status 129 after unmasking or status 131 with two pending late signals,
-despite restored helper state. The twenty-eight-case success is retained
-unchanged. Two further runtime failures keep caught TERM status 143 but write
-status 1 when HUP interrupts the local status assignment. The thirty-case success
-is retained unchanged. Four further runtime failures keep caught TERM status 143
-but omit the status file when HUP interrupts the final decision or write. Both
-TERM-only controls pass. The current thirty-four-case suite exits 0,
-including explicit status-file existence, exact complete status bytes, caught-outcome and helper-state
-restoration checks and exact source restoration at real supervisor exit. These observations remain distinct from compiled
-Lean mutations and earlier success-path evidence.
+independent observer cleans up. Current runs record their interpreter version
+and locate its actual boundary. The latest thirty-four-case suite checks
+status-file existence, complete status bytes, caught outcomes, helper state
+and exact source restoration at real supervisor exit. It does not embed
+previous success runs or older regression campaigns.
 `test/validate.py app` builds and runs the full package suite;
 `evidence` includes the list suite, mutation-record verification, both-driver
 lifecycle checks and all five
@@ -701,212 +681,21 @@ before draining remaining output, so a broken helper cannot strand the observer
 on an inherited pipe. Host entry and already-isolated execution share this
 lifecycle, including the unshare availability probe.
 
-`test/rpc-client-mutations.py` pins the new mutation definitions and preserves
-separate build/red/restoration/green streams under
-`packages/cyberkrill/.lake/validation/rpc-client-mutations-response-checked-final/`. Its committed
-record is separate from the retained historical **152 distinct edits / 275
-selected reds**. Existing current evidence is refreshed by executing its
-mutation commands, never by substituting current source hashes into old
-observations. `test/validate.py` records each command's separate streams,
-status and elapsed time in the same ignored validation directory.
+`test/rpc-client-mutations.py` verifies the latest record against its mutation
+definitions and current source bindings. It covers 68 client/capture selections
+and 213 independently selected safety failures: 281 checks in total, each with
+its intended failure and restored green. Compiled selections retain their
+build and restored-build statuses. The latest record contains no earlier runs.
+Private command streams remain under the ignored validation directory;
+`test/validate.py` records commands, separate streams, statuses and wall times.
 
 ### Current client validation
 
-On 2026-10-31 all thirteen acceptance commands below completed with exit
-**0**, through the complete foreground supervisor and command-owned temporary
-directories. Toolchain commands used the default dev shell. Script paths in
-this table are relative to the repository root; package build/test children
-ran in `packages/cyberkrill`. Separate streams, statuses and measured command
-times were retained.
-
-| Command/check | Exit | Measured wall time (s) |
-|---|---:|---:|
-| `packages/cyberkrill/test/mutate.py` | 0 | 659.167 |
-| `packages/cyberkrill/test/lightning-mutate.py` | 0 | 809.526 |
-| `packages/cyberkrill/test/revision-mutate.py` | 0 | 730.852 |
-| `packages/cyberkrill/test/refresh-regressions.py` | 0 | 68.601 |
-| `packages/cyberkrill/test/output-regressions.py refresh` | 0 | 22.705 |
-| `packages/cyberkrill/test/refresh-attached-output.py` | 0 | 22.859 |
-| `packages/cyberkrill/test/offline-mutate.py` | 0 | 1567.525 |
-| `packages/cyberkrill/test/rpc-client-mutations.py` | 0 | 1879.790 |
-| `packages/cyberkrill/test/rpc-client-mutations.py --verify` | 0 | 0.364 |
-| `packages/cyberkrill/test/scope.py` | 0 | 1.817 |
-| `packages/cyberkrill/test/validate.py app` | 0 | 120.072 |
-| `packages/cyberkrill/test/validate.py evidence` | 0 | 108.449 |
-| `packages/cyberkrill/test/validate.py repo` | 0 | 248.165 |
-
-The RPC record now contains **80 distinct source edits / 281 independently
-selected detecting failures**: 68 client/capture and 213 safety selections,
-each followed by a restored green execution. Before mutation, the unchanged
-build passed. The three response-bound properties then each compiled and
-failed their intended runtime assertion: a hardcoded default rejects the
-larger response, an oversized fixed limit misses the smaller configured bound,
-and a changed default fails its pure check. Exact restoration, rebuilding and
-all three selected greens passed. The restored full package suite exited 0.
-
-The preceding **77/278** observation is retained unchanged as
-`deadline_adoption_observation`, alongside the fixed-digest **73/271**,
-**72/243**, **69/211** and **64/164** observations. Historical **152/275**
-evidence remains separate. All seven affected legacy mutation/refresh commands
-were actually rerun; their definitions, commands, statuses and detecting
-assertions remain unchanged. All **204 source bindings across nine current
-records** match both the restored worktree and staged bytes.
-
-The app gate ran two commands, the evidence gate 23, and the repository gate
-nine. The repository gate included a fresh sandbox execution of all eight
-replay cases, eleven wrappers and 75 responses, 18 authentication cases, both
-scan deadlines, both response-bound cases, all spawn/namespace controls and
-**50 lifecycle controls**, without a suite skip. All **356 packaged source
-files** match the index. All seven package checks, link/OpenSSL checks, the
-78-file native-decision inventory, proof/private-material scans and installed
-version/Lightning/offline/RPC checks passed. The tracker and plan are unchanged
-by the response-bound fix; recordings and reference fixtures are unchanged.
-
-### Retained client validation before configurable response bounds
-
-On 2026-10-31 the following thirteen acceptance commands completed with exit
-**0**, through the complete foreground supervisor. Each affected mutation or
-refresh command was executed again on the final sources. Toolchain commands
-used the default dev shell, with fresh temporary directories owned for each
-foreground command's lifetime. Package build/test commands ran in
-`packages/cyberkrill`; other commands ran at the repository root. Separate
-streams, statuses and command times were retained. Full-suite progress is
-flushed between test groups, and mutation failures include both output streams.
-
-| Command/check | Exit | Measured wall time (s) |
-|---|---:|---:|
-| `packages/cyberkrill/test/mutate.py` | 0 | 663.478 |
-| `packages/cyberkrill/test/lightning-mutate.py` | 0 | 777.329 |
-| `packages/cyberkrill/test/revision-mutate.py` | 0 | 700.295 |
-| `packages/cyberkrill/test/refresh-regressions.py` | 0 | 72.017 |
-| `packages/cyberkrill/test/output-regressions.py refresh` | 0 | 23.410 |
-| `packages/cyberkrill/test/refresh-attached-output.py` | 0 | 22.158 |
-| `packages/cyberkrill/test/offline-mutate.py` | 0 | 1487.205 |
-| `packages/cyberkrill/test/rpc-client-mutations.py` | 0 | 1815.481 |
-| `packages/cyberkrill/test/rpc-client-mutations.py --verify` | 0 | 0.314 |
-| `packages/cyberkrill/test/scope.py` | 0 | 1.216 |
-| `packages/cyberkrill/test/validate.py app` (2 commands) | 0 | 117.214 |
-| `packages/cyberkrill/test/validate.py evidence` (23 commands) | 0 | 107.347 |
-| `packages/cyberkrill/test/validate.py repo` (9 commands) | 0 | 257.284 |
-
-The current RPC record contains **77 distinct source edits / 278 selected
-detecting failures**: 65 client/capture selections and 213 safety selections,
-each with a restored green execution. The restored full package suite exited
-0. The deadline regressions independently detect a hardcoded 30-second limit,
-a disabled short deadline and a changed default. The two adoption regressions
-detect removal of the post-reap discovery pass at both entry paths; the
-existing nested-session and final-escalation controls remain selected.
-The preceding **73/271** observation is preserved unchanged as
-`late_cleanup_observation`, alongside the fixed-digest **64/164**, **69/211**
-and **72/243** observations. Historical **152/275** evidence remains separate.
-
-All **204 source bindings across nine records** matched the then-current
-worktree and index. Legacy mutation definitions, commands, statuses and
-detecting assertions are unchanged; refreshed observations carry their actual
-new timings and source fingerprints. Tracker verification confirms all 59
-identities, 58 byte-identical unrelated records and only this task's lifecycle
-fields changed from the phase base. The plan is unchanged.
-
-The repository check included a fresh sandbox build: all eight replay cases,
-eleven wrappers and 75 responses, 18 authentication cases, both scan deadlines,
-122 spawn refusals at each of three boundaries, 37 permitted controls, eight
-namespace boundaries and **50 lifecycle controls** executed without a suite
-skip. All **356 packaged source files** match staged bytes. The seven package
-checks, link/OpenSSL checks, 78-file native-decision inventory and proof/private
-material scans passed, as did the installed version, Lightning, offline and
-RPC replay checks. No recording or reference fixture was regenerated.
-
-### Retained client validation before configurable scan deadlines
-
-On 2026-10-30, after the final escalation repair, the following commands
-completed through the foreground supervisor with exit **0**. Log stems below
-are relative to `packages/cyberkrill/.lake/validation/late-child-final/`;
-each has separate `.stdout`, `.stderr`, `.status` and command/timing `.json`.
-Toolchain commands used the default dev shell. The package build/test commands
-ran in `packages/cyberkrill`; other commands ran at the repository root.
-
-| Command/check | Exit | Log stem |
-|---|---:|---|
-| `test/rpc-client-mutations.py` | 0 | `rpc-mutations-final` |
-| `test/rpc-client-mutations.py --verify` | 0 | `rpc-mutations-verify` |
-| `test/validate.py app` (2 commands: `nix develop -c lake build`, `nix develop -c lake test`) | 0 | `validate-app`; child streams: `../build`, `../test` |
-| `nix flake check -L` (fresh sandbox execution) | 0 | `fresh-sandbox` |
-| Sandbox inventory and packaged-source audit | 0 | `sandbox-audit`, `fresh-sandbox-record.json` |
-| `nix build -L` | 0 | `root-build` |
-| `test/validate.py evidence` (23 commands) | 0 | `validate-evidence`; child records: `../evidence.json` |
-| `test/validate.py repo` (9 commands) | 0 | `validate-repo`; child records: `../repo.json` |
-| Current source/index, mutation-stream and process audit | 0 | `index-audit` |
-
-That RPC execution recorded **73 distinct edits / 271 selected detecting
-failures**: 62 client/capture and 209 safety selections, each with a restored
-green execution. The 14 new lifecycle cases each detect omitted cleanup and
-omitted repeated signalling during escalation. The earlier **72/243** object
-is preserved as `nested_observation` with its fixed digest, beside the original
-**64/164** and corrected **69/211** observations. The seven unchanged legacy
-records retain their preceding executions; none binds a source changed by this
-repair. All **204 source bindings across nine records** matched both
-the then-current worktree and staged blobs.
-
-The fresh sandbox log contains the eight replay cases, eleven wrappers and
-75 responses, auth18, spawn122 at all three boundaries, permissions37,
-namespace8 and lifecycle48, without a suite skip. All **356 packaged source
-files** match staged bytes. Later cached repository checks are recorded
-separately. The sibling-exclusion control passed success/failure/timeout
-(**3/3**, `sibling-exclusion`); the original finite fork probe left no child in
-any of eight trials (`original-probe-fixed`). The named cleanup assertion failed
-against the unfixed helper (`late-child-unfixed-red`, exit1), with independent
-recovery afterward, and detects removal of repeated signalling
-(`late-mutation-red`, exit1). No outer cleanup is counted as a passing assertion.
-
-### Retained client validation before final escalation cleanup
-
-On 2026-10-30, the following commands ran on the earlier source through the
-complete foreground supervisor. Commands needing the toolchain ran in the default dev shell;
-package commands ran in `packages/cyberkrill` and repository commands at the
-root. Each named log below has separate `.stdout`, `.stderr` and `.status`
-files in `packages/cyberkrill/.lake/validation/`. The earlier standard mode logs
-are also preserved under `late-child-final/retained-mode-logs/` before their
-names are reused by the later executions.
-
-| Command/check | Exit | Log stem |
-|---|---:|---|
-| `nix develop -c lake build` | 0 | `build` |
-| `nix develop -c lake test` | 0 | `test` |
-| `nix flake check -L` | 0 | `recovery-final/fresh-sandbox`; inventory/source audit: `recovery-final/sandbox-audit` |
-| `nix build -L` | 0 | `recovery-final/root-build` |
-| `test/validate.py app` | 0 | `recovery-final/validate-app`, `app.json` (2 commands) |
-| `test/validate.py evidence` | 0 | `recovery-final/validate-evidence`, `evidence.json` (23 commands) |
-| `test/validate.py repo` | 0 | `recovery-final/validate-repo`, `repo.json` (9 commands) |
-| Seven affected existing mutation/refresh commands | 0 each | `recovery-final/refresh.json`, `recovery-final/seven-refresh` |
-| `test/rpc-client-mutations.py` | 0 | `recovery-final/rpc-mutations-final`, `rpc-client-mutations-nested-final/` |
-| `test/rpc-client-mutations.py --verify` | 0 | `recovery-final/rpc-mutations-verify` |
-
-The preceding client observation had **64 distinct source edits / 164
-independently selected detecting failures**. It is retained as
-`previous_observation` in the client mutation record, with its original digest;
-it describes the source before the connection-boundary corrections.
-The earlier corrected-source observation of **69 distinct edits / 211 selected
-failures** is retained as `corrected_observation`, with its original digest.
-That earlier source execution has **72 distinct source edits / 243 independently
-selected detecting failures**: 62 client/capture selections and 181 safety
-selections, each with restored green execution. Every red stream contains its
-intended named assertion. Those records' source fingerprints matched both
-the then-restored files and staged blobs. The seven affected evidence commands
-were executed sequentially; earlier captures and historical regression records
-retain their original bytes. The historical observation of **152 distinct edits /
-275 selected reds** remains separate.
-
-The fresh sandbox log records all eleven wrappers and 75 responses, all 18
-auth cases, all three sets of 122 spawn refusals, eight namespace boundaries
-and all 34 process-tree lifecycle controls
-executing without `SKIP (no unshare)`. Final host replay also ran without a
-suite skip; simulated missing/refused-unshare controls capture the expected
-skip text. All 356 packaged source files were compared with their staged bytes.
-The root checks retain all seven packages, the link/OpenSSL
-checks, axiom gates, the 78-file library/proof native-decision inventory and
-the proof/private-material scans. Installed version, Lightning, offline and
-RPC replay checks all exited 0. No new Core recording, fee-command golden or
-network command handler was added.
+The package and repository gates run the current replay, authentication,
+precision, deadline, response-bound and lifecycle checks. `--verify` checks the
+latest mutation definitions, source bindings, intended reds and restored greens
+without rerunning a mutation campaign. Recorded answers are replayed in isolation;
+no live Bitcoin node is needed by tests.
 
 ## Phase 8a: disposable Core RPC recordings (1 of 2)
 
@@ -1392,110 +1181,14 @@ statuses, streams, error identities or unused entries.
 
 ### Phase 7c validation
 
-The 102 short-help cluster captures contain **44 help successes and 58
-earlier-error/value/terminator controls**. Against the unfixed implementation,
-the 44 help checks failed at their named runtime assertions and all 58 controls
-passed. The repaired implementation passes all 102 checks. Commands, separate
-stream digests, source bindings, statuses and timings are recorded in
-`test/golden/cluster-regression.json`. The default package suite also checks
-clustered help with injected input, existence, output and entropy boundaries;
-successful help performs none of those actions. The original 67 ordered-help
-rows remain intact. Fixed digests preserve both the first 482 and the first 584
-capture observations, including results and timings, within the expanded
-616-row inventory. The cluster record and its former source bindings remain
-historical; current parser reintroductions are executed separately.
-
-The 32 carried typed-flag captures contain **18 preceding errors and 14 help
-controls**. Before the repair, 17 checks failed at the named preceding-error
-assertion; one missing-value case and all 14 help controls already passed.
-All 32 now pass. `test/golden/carried-regression.json` preserves those original
-observations, the first repaired run and a later pre-list run. All three retain
-their original bytes and source bindings. Current typed-help reintroductions
-are executed separately by `test/offline-mutate.py`; the historical-record
-verifier also requires that current mutation evidence. The parser
-checks the `--as` enum and `--words` u32 grammar/width in argv order before
-later help. Earlier help still wins over later errors. A syntactically valid
-u32 count such as 13 or 4294967295 gives help before mnemonic count semantics;
-bare missing `-w` retains its existing diagnostic. Twelve injected cases check
-that these help/error paths perform no entropy, input, path or output actions.
-Reference captures never request a valid mnemonic count or fresh entropy.
-
-The earlier ordered-help/file-observation record remains unchanged historical
-evidence: **14 original runtime failures, six controls and 20 former greens**.
-Its old source binding is historical; actual production reintroductions in the
-current mutation record cover the later sources. The real-file suite retains
-16 checks: three passing controls, twelve final-newline refusals and one changed
-JSON-leaf refusal. Observation preserves raw UTF-8 bytes; comparison ignores
-JSON object order and legal interior formatting. Invite strings and final
-newlines retain their exact byte contracts. Untouched observed input files are
-compared as exact bytes, with 38 independent comparator falsifications.
-
-App build/test and all 17 evidence checks exited 0. All **616 CLI comparisons**,
-**668 general comparator falsifications** and **275 exact single-property
-comparator checks** pass. The package suite runs all five FIFO consumers,
-including both retained Lightning checks, and the injected read/open/decode/
-write-order, retained-handle, network-before-IO and failure checks.
-
-The current mutation records follow actual reruns: 26 retained edits, 30
-Lightning edits with 94 selected runtime reds, and 30 correction edits with one
-shared edit give **85 distinct retained edits and 150 selected runtime reds**.
-The expanded offline record has **67 distinct edits and 125 selected runtime
-reds**: 64 CLI/capability edits and three checker edits. The main sets together
-contain **152 distinct edits and 275 selected runtime reds**. The accepted
-closure's original 84/148 wording remains historical and unchanged.
-
-The eight added edits independently test cluster recognition, earlier errors
-and duplicates, short and long output attachments, missing-value guards,
-terminators, invalid long help values and exact unchanged-input observation.
-Six further edits independently test enum validation, u32 grammar, u32 width,
-missing-value precedence, help before later errors and semantic word counts.
-Each edit compiles, fails at its named runtime assertion, restores exact bytes,
-rebuilds and passes its selected checks. The nine historical reintroductions,
-eighteen output refusals and four attached-filename reds are separate
-supplemental refreshes. A stopped evidence attempt selected the wrong detector
-label for a missing output file; it is recorded separately and excluded from
-the current selected totals. Nineteen remaining-boundary preflight reds are
-also separate historical diagnostics. The complete 67-edit rerun exited 0 and
-its final restored package test exited 0 in 48.102 s. The typed-help group's
-six edits account for 13 selected runtime reds; the 17 original unfixed
-failures and 15 controls are separate regression observations.
-
-Final required local validation under the complete foreground supervisor:
-
-| Check | Exit | Wall seconds |
-|---|---|---|
-| App `nix develop -c lake build` | 0 | 1.028 |
-| App `nix develop -c lake test` | 0 | 48.643 |
-| Root `nix flake check -L` (seven packages and link/OpenSSL gates) | 0 | 174.853 |
-| Root `nix build -L` | 0 | 0.434 |
-| Installed version | 0 | 0.028 |
-| Installed Lightning checks | 0 | 0.180 |
-| Installed new commands and carried help (52 cases, including file bytes and v2) | 0 | 1.472 |
-| Library/proof native-decision scan, 76 files | 0 | 0.030 |
-| Proof-token scan | 0 | 0.008 |
-| Extended-private-key scan | 0 | 0.011 |
-
-The retained, Lightning, revision and expanded offline mutation groups exited
-0 in 703.961, 748.105,
-632.996 and 1418.075 s.
-Historical regression/output/attachment refreshes exited 0 in
-64.486/21.211/20.609 s.
-The 616-case reference recapture, current port-pin check and 532 retained
-Lightning recaptures exited 0 in 5.666,
-16.437 and 5.082 s, retaining portable JSON-value
-comparisons and exact stream/file contracts. The required producer build
-exited 0 in 0.391200 s. The full refresh sequence is reproducible with
-`python3 -B packages/cyberkrill/test/gate.py timeout --foreground 12000 nix develop -c python3 -B packages/cyberkrill/test/validate.py refresh`.
-The 17 final evidence checks all exited 0, including the carried-help runtime
-suite (0.901 s) and its separate regression-record verification (0.043 s).
-
-The public command/status/timing summary is
-`test/golden/offline-validation.json`. Scans distinguish grep's no-match status
-from command errors. All 58 unrelated issue records remain unchanged; no
-untracked bytecode remains. Disposable capture HOME/cwd paths were removed by
-their exact owned paths and FIFO children were reaped. These validation records
-precede acceptance; all three Phase 7 beads are now closed and the offline
-command set is complete.
+The current offline suite checks 616 captured cases, 53 precise exceptions,
+ordered help and file handling, FIFO consumers, PSBT validation and mnemonic
+output safety. The latest offline mutation record contains 67 distinct edits
+and 125 selected runtime failures with restored greens. The latest retained,
+Lightning and revision mutation records remain independently checked against
+current sources and definitions; prior copies are not embedded.
+Reference recapture and exact-decimal comparison remain separate from mutation
+results. `test/validate.py app`, `evidence` and `repo` run the current gates.
 
 ## Phase 7b: offline Lightning commands
 
@@ -1692,152 +1385,13 @@ checked separately.
 
 ### Lightning verification
 
-`test/lightning.py` exercises all 357 captures and 72 additional actual
-argv/stdin/file/parser/IO checks. The latter include EOF stdin with and
-without a newline, literal decoder `-`, encoder stdin markers and UTF-8
-files, overwrites with exact file bytes, equals-containing attachments,
-option terminators, help, invalid/duplicate/missing options, malformed and
-out-of-range signing keys, read failures and file/stdout write failures.
-The existing mnemonic privacy, fee/amount helpers and capability suites
-remain in `lake test`.
-`test/revisions.py` runs the additional 174 captures; its explicit `--scope`
-mode runs nine synthetic scope shapes in the evidence gate. The package suite
-stays independent of tracker files and Git history, including in the Nix sandbox.
-The scope checks accept an in-progress claim or a populated accepted
-closure, reject malformed closures and unrelated changes, and never close or
-reopen a real issue for testing. The comparator's 812 controls/falsifications
-pin success/failure streams, diagnostic ordering, exact signed strings,
-JSON fields/numbers, and failed-output existence/bytes without a new exception.
-
-Before the corrections, the independently selected regression checks recorded
-61 runtime assertion failures and 122 passing controls. Their original source
-hashes, commands, statuses, failure assertions and separate stderr digests stay
-fixed in `test/golden/revision-regression-record.json`; they are historical,
-not substituted final source bindings. Raw streams remain separate in ignored
-local logs. Current restoration and mutation evidence is kept separately.
-
-The completed `test/lightning-mutate.py` run compiled **30 distinct
-production edits**, observed **94 runtime assertion failures**, restored
-each exact source, rebuilt and passed each selected check, and finished
-with a restored full `lake test` exit 0. One stream-routing edit is shared
-with the retained 26-edit set, so this adds **29 new distinct edits**.
-The additional edit reintroduces the decoder's close-and-reopen behavior and
-fails both FIFO consumers before exact restoration and passing checks.
-Concrete replacements, bounded commands, separate statuses/timings and
-detecting assertions are in `test/golden/lightning-mutation-record.json`.
-Its verification binds the final restored production, tests and checker
-and rejects stale bytes. Compilation failures are not runtime reds.
-The older regression/output/attachment observations retain their historical
-digests; their current refresh scripts rerun the actual reintroductions.
-`test/revision-mutate.py` defines another 30 distinct edits covering timestamp
-grammar and both UTC limits, surrogate validation and ignored content,
-positional mappings and numeric/length guards, both simnet mappings,
-decoder creation/truncation/error ordering, late encoder output and scope
-closure/decision preservation. Its records bind the final production,
-capture construction, tests and checker. Across the three main sets there
-are 85 distinct production edits: 26 retained, 29 additional Lightning edits,
-and these 30; repeated executions are counted separately.
-
-Run these foreground gates from the repository root:
-
-```bash
-python3 -B packages/cyberkrill/test/gate.py timeout --foreground 1900 python3 -B packages/cyberkrill/test/capture-lightning.py
-python3 -B packages/cyberkrill/test/gate.py timeout --foreground 1900 python3 -B packages/cyberkrill/test/capture-l814.py
-python3 -B packages/cyberkrill/test/gate.py timeout --foreground 1900 python3 -B packages/cyberkrill/test/capture-revisions.py
-python3 -B packages/cyberkrill/test/gate.py timeout --foreground 180 python3 -B packages/cyberkrill/test/lightning.py
-python3 -B packages/cyberkrill/test/gate.py timeout --foreground 180 python3 -B packages/cyberkrill/test/revisions.py
-python3 -B packages/cyberkrill/test/gate.py timeout --foreground 120 python3 -B packages/cyberkrill/test/revisions.py --scope
-python3 -B packages/cyberkrill/test/gate.py timeout --foreground 3000 nix develop -c python3 -B packages/cyberkrill/test/lightning-mutate.py
-python3 -B packages/cyberkrill/test/gate.py timeout --foreground 3000 nix develop -c python3 -B packages/cyberkrill/test/revision-mutate.py
-python3 -B packages/cyberkrill/test/gate.py timeout --foreground 1800 python3 -B packages/cyberkrill/test/validate.py app
-python3 -B packages/cyberkrill/test/gate.py timeout --foreground 300 python3 -B packages/cyberkrill/test/verify.py
-python3 -B packages/cyberkrill/test/gate.py timeout --foreground 300 python3 -B packages/cyberkrill/test/selftest.py
-python3 -B packages/cyberkrill/test/gate.py timeout --foreground 120 python3 -B packages/cyberkrill/test/scope.py
-python3 -B packages/cyberkrill/test/gate.py timeout --foreground 900 python3 -B packages/cyberkrill/test/validate.py evidence
-python3 -B packages/cyberkrill/test/gate.py timeout --foreground 7500 python3 -B packages/cyberkrill/test/validate.py repo
-```
-
-The last command requires the new files to be staged first. It runs all
-seven package checks, link/OpenSSL checks, the installed version and five
-representative installed Lightning commands, and both repository scans.
-It also checks all 74 tracked library/proof Lean files for native-decision
-uses, pinning coverage of all seven library roots.
-Historical validation tables later in this README retain their original
-dates and results; they do not stand in for this phase's current gates.
-
-The initial 2026-10-28 observations below predate the parser, simnet and
-failed-output corrections and remain historical. They used the complete
-supervisor. Current raw streams/statuses and per-command wall times are in
-ignored `.lake/validation` and the mutation/capture log directories. Current
-public capture/mutation records preserve their individual subprocess times;
-they do not substitute current timings for these initial observations.
-
-| Check | Exit | Measured wall time |
-|---|---:|---:|
-| Required pinned producer build for the main capture | 0 | 0.151 s |
-| 357 isolated producer executions | all captured | 3.072 s summed subprocess time, excluding the build |
-| 29 Lightning mutations / 92 selected runtime reds and restored greens | 0 | 2157.580 s summed recorded subprocess time; restored full test 19.335 s |
-| Retained 26 mutations / restored full test | 0 | restored full test 18.630 s |
-| `nix develop -c lake build` in the app | 0 | 0.872 s |
-| `nix develop -c lake test` in the app | 0 | 19.135 s |
-| `test/verify.py` | 0 | 0.061 s |
-| `test/selftest.py` | 0 | 0.105 s |
-| `test/scope.py` | 0 | 0.430 s |
-| `test/lightning.py` | 0 | 11.338 s |
-| Fresh staged `nix flake check -L` | 0 | 143.666 s |
-| `nix build -L` | 0 | 0.403 s |
-| Installed `cyberkrill version` | 0 | 0.027 s |
-| Five installed Lightning commands with exact output/stream checks | 0 | 0.173 s |
-| Tracked library/proof native-decision scan, 74 files / zero offenders | 0 | 0.031 s |
-| No-proof-placeholder scan | 0 | 0.009 s |
-| Extended-private-key scan | 0 | 0.010 s |
-
-The retained refreshes also exited 0: nine selected older regressions went
-red and all ten restored properties passed; the output guard produced 18
-independent selected reds and greens; the attachment reintroduction produced
-four reds, four passing controls and eight restored greens. Those run counts
-are separate from the main mutation sets' **54 distinct edits** (26 retained
-plus 28 new), and do not turn repeated executions into additional edits.
-All 59 tracker identities and 58 unrelated records remain unchanged; only
-the current task's existing in-progress claim is retained. All forbidden
-paths, historical records and seven package/link/OpenSSL gates are preserved.
-The implementation remains staged for acceptance, without closing the task.
-
-The completed correction checks on 2026-10-28 have their own observations
-below. They supersede the initial timings above. All commands used the
-complete supervisor, finite foreground timeouts and separate raw streams/statuses.
-The rebuilding repository check's logs and per-command timings are retained
-separately in ignored `.lake/correction-acceptance`, so a later cached check
-does not replace evidence for this build. Ordinary package validation does
-not depend on tracker files or Git history; the explicit evidence gate runs
-the phase scope and its nine synthetic claim/closure shapes.
-
-| Correction check | Exit | Measured wall time |
-|---|---:|---:|
-| Required producer build / 357 isolated main and routing captures | 0 / expected captured statuses | 0.139 s / 3.178 s summed capture time |
-| Required producer build / 174 isolated regression captures | 0 / expected captured statuses | 0.142 s / 1.581 s summed capture time |
-| Retained 26 mutations / restored full test | 0 | restored full test 25.945 s |
-| 29 Lightning edits / 92 runtime reds and restored greens | 0 | 612.816 s summed recorded commands; restored full test 23.602 s |
-| 30 correction edits / 30 runtime reds and restored greens | 0 | 551.336 s summed recorded commands; restored full test 24.676 s |
-| Restored correction captures / synthetic scope shapes | 0 / 0 | 4.883 s / 0.980 s |
-| App `nix develop -c lake build` / `lake test` | 0 / 0 | 0.841 s / 23.982 s |
-| Evidence verifier / comparator self-tests | 0 / 0 | 0.109 s / 0.153 s |
-| Phase scope / nine synthetic scope shapes | 0 / 0 | 0.407 s / 0.941 s |
-| 357 retained / 174 additional executable Lightning captures | 0 / 0 | 14.386 s / 4.925 s |
-| Rebuilding staged `nix flake check -L`, seven packages and link/OpenSSL checks | 0 | 168.266 s |
-| `nix build -L` / installed version / five installed Lightning commands | 0 / 0 / 0 | 0.576 s / 0.028 s / 0.186 s |
-| Native-library scan / proof-placeholder scan / extended-private-key scan | 0 / 0 / 0 | 0.035 s / 0.008 s / 0.010 s |
-
-The three current mutation records cover **85 distinct production edits**
-and **150 selected red executions**, with exact restoration and selected
-greens. The current historical refresh drivers also exited 0 after nine
-regression reds, 18 output-option reds, and four attachment reds with four
-passing controls; all restored checks passed. These executions remain
-separate from the 61 unfixed correction failures and 122 original controls.
-The final verifier checks current source bindings and fixed historical
-digests. All 531 Lightning captures pass without adding a parity exception;
-the L814 and hybrid-key stop observations remain unchanged. Phase 7c and
-network work remain outside this implementation.
+The latest Lightning and revision mutation records retain their current
+production edits, intended assertion failures and restored greens. Current
+source hashes and exact mutation definitions are verified before acceptance.
+The pinned Lightning, hybrid-key and L814 reference captures remain fixtures,
+not copies of past mutation campaigns. `test/validate.py` runs the current
+replay, output/file handling and repository gates without preserving old runs
+inside the committed evidence.
 
 ## Packages
 

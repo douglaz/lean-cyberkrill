@@ -38,7 +38,6 @@ def main():
                   ("test", APP, ["nix", "develop", "-c", "lake", "test"], 600)]
     elif mode == "evidence":
         checks = [
-            ("history-publication", ROOT, ["python3", "-B", "packages/cyberkrill/test/evidence_history.py"], 120),
             ("move-scope-bytes", ROOT, ["python3", "-B", "packages/cyberkrill/test/move-utxos.py", "scope-bytes"], 120),
             ("move-utxos", ROOT, ["python3", "-B", "packages/cyberkrill/test/move-utxos.py"], 240),
             ("move-utxos-mutations", ROOT, ["python3", "-B", "packages/cyberkrill/test/move-utxos-mutations.py", "--verify"], 120),

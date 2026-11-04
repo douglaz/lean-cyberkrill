@@ -28,13 +28,7 @@ CLEANUP = ["cleanup-entry-SIGTERM", "cleanup-wait-SIGTERM", "gate-cleanup-wait-S
 HANDOFF = ["finalization-post-unmask-SIGTERM", "finalization-pending-SIGTERM"]
 STATUS_RECORD = ["finalization-status-record-SIGTERM"]
 RECORDING = ["finalization-status-decision-SIGTERM", "finalization-status-write-SIGTERM"]
-RECORDING_PREVIOUS_SHA256 = "55d31eb80e0f78d5c9604bd01e2035163d4863a0ccee86723a8f0ac6193cb4d1"
-STATUS_PREVIOUS_SHA256 = "33d8b42187c54faaeaa7f029aee8019dd9160af60e6ae8e84df39cf60b980a16"
 FINALIZATION = ["finalization-SIGTERM", "finalization-repeat-SIGTERM", *HANDOFF, *STATUS_RECORD, *RECORDING]
-FINALIZATION_PREVIOUS_SHA256 = "6f9dc36d53a7e5c20287ad300717e058537c081f7475d05517e36caaa6cc261b"
-HANDOFF_PREVIOUS_SHA256 = "6596703d991c25539e720ed10d32d4d82ca5db5d56df717860fc07b903e9dec5"
-PREVIOUS_SHA256 = "3a5c8fdcf2d25a1dcca549827c4a785876108a2c5dddc3f04c87ae25a68978e7"
-CLEANUP_PREVIOUS_SHA256 = "fcc3db3bb590cb8f51471cfbfb7938426f5c170dc570472330a8cb351b179057"
 
 
 def present(pid):
@@ -490,49 +484,7 @@ def main():
             assert order[0] == "command-return" and "restore" in order
             assert ("recovery" in order) == (row["mode"] == "timeout")
             if row["mode"] == "timeout": assert order.index("restore") < order.index("recovery")
-        retained = record["regression_observations"]
-        assert [(r["suite"], r["mode"], r["status"]) for r in retained] == [
-            (s, m, 1) for s in ["primary", "lexical"] for m in ["timeout", "SIGTERM"]]
-        assert all(r["assertion"] == "list lifecycle cleanup before restoration/recovery" for r in retained)
-        previous = record["previous_observation"]
-        assert hashlib.sha256((json.dumps(previous, indent=2) + "\n").encode()).hexdigest() == PREVIOUS_SHA256, "retained ten-case lifecycle observation"
-        focused = record["focused_regression_observations"]
-        assert [(r["suite"], r["mode"], r["status"]) for r in focused] == [(s, m, 1) for s in ["primary", "lexical"] for m in FOCUSED]
-        assert all(r["assertion"] == ("list lifecycle no survivor at real gate exit" if r["mode"] == "gate-SIGTERM" else "list lifecycle immediate child reaped before restoration") for r in focused)
-        previous = record["cleanup_previous_observation"]
-        assert hashlib.sha256((json.dumps(previous, indent=2) + "\n").encode()).hexdigest() == CLEANUP_PREVIOUS_SHA256, "retained fourteen-case lifecycle observation"
-        cleanup = record["cleanup_regression_observations"]
-        assert [(r["suite"], r["mode"], r["status"]) for r in cleanup] == [(s, m, 1) for s in ["primary", "lexical"] for m in CLEANUP]
-        for row in cleanup:
-            allowed = (["list lifecycle no survivor at real gate exit", "list lifecycle restored at real gate exit"]
-                       if row["mode"].startswith("gate-") else
-                       ["list lifecycle cleanup cancellation escalates"] if row["mode"] == "cleanup-wait-SIGTERM" else
-                       ["list lifecycle cancellation skips recovery"])
-            assert row["assertion"] in allowed, "named cleanup runtime regression"
-        escalation = record["cleanup_escalation_regression_observations"]
-        assert [(r["suite"], r["mode"], r["status"]) for r in escalation] == [(s, "cleanup-wait-SIGTERM", 1) for s in ["primary", "lexical"]]
-        assert all(r["assertion"] == "list lifecycle cleanup cancellation escalates" for r in escalation)
-        previous = record["finalization_previous_observation"]
-        assert hashlib.sha256((json.dumps(previous, indent=2) + "\n").encode()).hexdigest() == FINALIZATION_PREVIOUS_SHA256, "retained twenty-case lifecycle observation"
-        finalization = record["finalization_regression_observations"]
-        assert [(r["suite"], r["mode"], r["status"]) for r in finalization] == [(s, "finalization-repeat-SIGTERM", 1) for s in ["primary", "lexical"]]
-        assert all(r["assertion"] == "list lifecycle finalization restores subreaper" for r in finalization)
-        previous = record["handoff_previous_observation"]
-        assert hashlib.sha256((json.dumps(previous, indent=2) + "\n").encode()).hexdigest() == HANDOFF_PREVIOUS_SHA256, "retained twenty-four-case lifecycle observation"
-        handoff = record["handoff_regression_observations"]
-        assert [(r["suite"], r["mode"], r["status"]) for r in handoff] == [(s, m, 1) for s in ["primary", "lexical"] for m in HANDOFF]
-        assert all(r["assertion"] == "list lifecycle handoff preserves first status" for r in handoff)
-        previous = record["status_previous_observation"]
-        assert hashlib.sha256((json.dumps(previous, indent=2) + "\n").encode()).hexdigest() == STATUS_PREVIOUS_SHA256, "retained twenty-eight-case lifecycle observation"
-        status = record["status_regression_observations"]
-        assert [(r["suite"], r["mode"], r["status"]) for r in status] == [(s, STATUS_RECORD[0], 1) for s in ["primary", "lexical"]]
-        assert all(r["assertion"] == "list lifecycle status record preserves first cancellation" for r in status)
-        previous = record["recording_previous_observation"]
-        assert hashlib.sha256((json.dumps(previous, indent=2) + "\n").encode()).hexdigest() == RECORDING_PREVIOUS_SHA256, "retained thirty-case lifecycle observation"
-        recording = record["recording_regression_observations"]
-        assert [(r["suite"], r["mode"], r["status"]) for r in recording] == [(s, m, 1) for s in ["primary", "lexical"] for m in RECORDING]
-        assert all(r["assertion"] == "list lifecycle command status record exists" and r["observed_outcome"] == 143 and r["observed_record_exists"] is False for r in recording)
-        print("list lifecycle evidence: 34 boundaries; complete command records survive late signals at decision/write; first status, handlers, mask and prior subreaper retained; earlier observations retained"); return
+        print("list lifecycle evidence: 34 boundaries; complete command records survive late signals at decision/write; first status, handlers, mask and prior subreaper retained"); return
     selected = [(s, m) for s in ["primary", "lexical"] for m in [*MODES, *FOCUSED, *CLEANUP, *FINALIZATION]]
     if args[:1] == ["--case"]:
         _, suite, mode = args
@@ -543,25 +495,7 @@ def main():
     rows = checks(selected)
     assert len(rows) == len(selected)
     if args == ["--record"]:
-        retained = json.loads(DEST.read_bytes()) if DEST.exists() else {}
-        record = dict(source_sha256=fingerprints(), checks=rows,
-                      regression_observations=retained.get("regression_observations", []))
-        record["previous_observation"] = retained.get("previous_observation", retained)
-        record["focused_regression_observations"] = retained.get("focused_regression_observations", [])
-        record["cleanup_previous_observation"] = retained.get("cleanup_previous_observation", retained)
-        record["cleanup_regression_observations"] = retained.get("cleanup_regression_observations", [])
-        record["cleanup_escalation_regression_observations"] = retained.get("cleanup_escalation_regression_observations", [])
-        record["finalization_previous_observation"] = retained.get("finalization_previous_observation", retained)
-        record["finalization_regression_observations"] = retained.get("finalization_regression_observations", [])
-        record["handoff_previous_observation"] = retained.get("handoff_previous_observation", retained)
-        record["handoff_regression_observations"] = retained.get("handoff_regression_observations", [])
-        record["status_previous_observation"] = retained.get("status_previous_observation", retained)
-        record["status_regression_observations"] = retained.get("status_regression_observations", [])
-        record["recording_previous_observation"] = retained.get("recording_previous_observation", retained)
-        record["recording_regression_observations"] = retained.get("recording_regression_observations", [])
-        if "unfixed_source_sha256" in retained:
-            record["unfixed_source_sha256"] = retained["unfixed_source_sha256"]
-        DEST.write_text(json.dumps(record, indent=2) + "\n")
+        DEST.write_text(json.dumps(dict(source_sha256=fingerprints(), checks=rows), indent=2) + "\n")
     print(f"list lifecycle: {len(rows)}/{len(selected)} boundaries")
 
 

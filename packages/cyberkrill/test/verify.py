@@ -11,16 +11,20 @@ from cases import APP, BUILD, PIN, cases
 from driver import fixtures
 
 
+def latest_only(value):
+    if isinstance(value, dict):
+        for key, child in value.items():
+            assert not key.endswith(("_observation", "_observations")), "old-run evidence: " + key
+            latest_only(child)
+    elif isinstance(value, list):
+        for child in value:
+            latest_only(child)
+
+
 def main():
+    for path in (APP / "test/golden").glob("*.json"):
+        latest_only(json.loads(path.read_bytes()))
     from importlib import import_module
-    # Landed observations remain distinct from actual current-source refreshes.
-    histories = {'attached-output-refresh.json': 'c6f818433d7bccd4caf3f642bf72b1c2da8a7c4dd56cfe34545977cb8eefd2b3', 'lightning-mutation-record.json': '56921d449ce69bfec4bb9c2362ff313c220650476808b56e87ee8bbb3a4ee4d3', 'list-utxos-lexical-mutation-record.json': '7428bdb1a6e2c115b3ccc6a3f699b453eef0aa5f974207195bd89fbdc1aabf82', 'list-utxos-mutation-record.json': 'e73be9f5fae88a1da5c0f55e7ee406577a0817c8a0163fe780c005658ce6f613', 'mutation-record.json': '212fc82cf71d7fb10ff6cb35203bea6cbff83e98d7e7c2134b2270bdc264c525', 'offline-mutation-record.json': '0c6d1a01a3ca5e0caa173458489a26841370f9fda2076151de65431bc6881fb0', 'output-regression-refresh.json': '6ba426c10f23ec7a4552e5d80048b9c5ddde36a12e12175b9c4b4bb44f4797f1', 'psbt-commands-mutation-record.json': 'f97e430515625daac7b9cb11d34912fc0b68b8f2eecf49e00bb8aea0b6067789', 'regression-refresh.json': '540bdb0f4b7ecc04abea192ef364f42954b72a2dfec65d0f575473696e0d583d', 'revision-mutation-record.json': '6bf012cef7ed9bc063fbe475e733b82cc5d7dc48221de3cc49dfd29e27f3afc4', 'rpc-client-mutation-record.json': 'fbf1f2cab997d9a191c219429e14c647f580f4c6b2e922dbb6e3edb3dee4dc3e'}
-    for name, expected in histories.items():
-        record = json.loads((APP / "test/golden" / name).read_bytes())
-        retained = record["pre_move_observation"]
-        digest = hashlib.sha256(json.dumps(retained, sort_keys=True, separators=(",", ":")).encode()).hexdigest()
-        assert digest == expected, "pre-move observation changed: " + name
-    print("retained pre-move evidence: 11/11 independently pinned observations")
     import_module("move-utxos-mutations").verify()
     move = json.loads((APP / "test/move-utxos-provenance.json").read_bytes())
     assert move["revision"] == PIN and move["captures"] == 16 and move["exceptions"] == 4
@@ -36,8 +40,6 @@ def main():
     assert len(captures["exact_amount_exceptions"]) == 6
     original_captures = {k: v for k, v in captures.items() if k != "exact_amount_exceptions"}
     assert hashlib.sha256((json.dumps(original_captures, indent=2)+"\n").encode()).hexdigest() == "fc0fc37e8ec2d61385a392e31a236f30a56d6e34ffa4ec8c6c7498ecd165f83a", "original 17/11 PSBT observations"
-    history = json.loads((APP / "test/golden/psbt-commands-mutation-record.json").read_bytes())["pre_repair_observation"]
-    assert hashlib.sha256((json.dumps(history, indent=2)+"\n").encode()).hexdigest() == "b189047291f2a4628fdd31b31c390b23cb54be45c30e038637d21a7c145f409c", "original 26-edit/29-red PSBT observation"
     for path, digest in provenance["fixture_sha256"].items():
         assert hashlib.sha256((APP / path).read_bytes()).hexdigest() == digest, "PSBT recording binding"
     assert hashlib.sha256((APP / "test/golden/psbt-commands-reference.json").read_bytes()).hexdigest() == provenance["capture_sha256"], "PSBT capture binding"
@@ -61,9 +63,8 @@ def main():
         assert red["status"] == (0 if red["property"] == "delimited-negative-zero" else 1)
         assert green["status"] == 0
         assert red["status"] == 0 or red["detecting_assertion"]
-    print("historical regression evidence: 9/9 runtime reds; 10/10 former greens")
-    # The original observations stay byte-for-byte historical. Current tests
-    # have independent production reintroductions, never substituted hashes.
+    print("regression evidence: 9/9 runtime reds; 10/10 former greens")
+    # Current checks include independent production reintroductions.
     refreshed = json.loads((APP / "test/golden/regression-refresh.json").read_text())
     for relative, expected in refreshed["source_sha256"].items():
         assert hashlib.sha256((APP / relative).read_bytes()).hexdigest() == expected, "stale refreshed regression: " + relative
@@ -87,7 +88,7 @@ def main():
         assert red["command"] == green["command"] == ["timeout", "--foreground", "30", ".lake/build/bin/CyberkrillTests", "--output-refusal", str(i)]
         assert red["status"] == 1 and green["status"] == 0
         assert red["detecting_assertion"] == f"output refusal {i} status" and green["detecting_assertion"] == ""
-    print("historical output evidence: 18/18 runtime reds; 18/18 former greens")
+    print("output evidence: 18/18 runtime reds; 18/18 former greens")
     output_refresh = json.loads((APP / "test/golden/output-regression-refresh.json").read_text())
     for relative, expected in output_refresh["source_sha256"].items():
         assert hashlib.sha256((APP / relative).read_bytes()).hexdigest() == expected, "stale refreshed output: " + relative
@@ -114,7 +115,7 @@ def main():
         assert red["status"] == (1 if i < 4 else 0) and green["status"] == 0
         assert red["detecting_assertion"] == (f"output equals {i} status" if i < 4 else "")
         assert green["detecting_assertion"] == ""
-    print("historical attached output: 4/4 runtime reds; 4/4 controls; 8/8 former greens")
+    print("attached output: 4/4 runtime reds; 4/4 controls; 8/8 former greens")
     attached_refresh = json.loads((APP / "test/golden/attached-output-refresh.json").read_bytes())
     for relative, expected in attached_refresh["source_sha256"].items():
         assert hashlib.sha256((APP / relative).read_bytes()).hexdigest() == expected, "stale attached refresh: " + relative
@@ -155,14 +156,13 @@ def main():
     revision = import_module("revisions")
     revision.captures()
     baseline_path = APP / "test/golden/revision-regression-record.json"
-    assert hashlib.sha256(baseline_path.read_bytes()).hexdigest() == "60c8074b198e76e211b17deb1cfcec57fc644b0aa1f184356dd846698d135379", "historical revision observations changed"
     baseline = json.loads(baseline_path.read_bytes())
     assert baseline["count"] == len(baseline["checks"]) == 183 and baseline["reds"] == 61
     assert sum(r["status"] == 1 for r in baseline["checks"]) == 61
     for row in baseline["checks"]:
         assert row["status"] in [0, 1] and len(row["stderr_sha256"]) == 64
         assert row["status"] == 0 or row["assertion"].startswith("AssertionError:")
-    print("historical revision regressions: 61 assertion failures; 122 passing controls; fixed digest retained")
+    print("revision regressions: 61 assertion failures; 122 passing controls")
     import_module("revision-mutate").verify()
     l814 = json.loads((APP / "test/golden/l814-reference.json").read_bytes())
     l814_provenance = json.loads((APP / "test/golden/l814-provenance.json").read_bytes())

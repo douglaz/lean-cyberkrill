@@ -10,7 +10,7 @@ import signal
 import subprocess
 import time
 
-from evidence_history import publish_history
+from evidence import write_record
 from cases import APP
 
 
@@ -112,8 +112,7 @@ def main():
         p, final = command("final-ten", ["python3", "-B", "test/regressions.py"])
         assert p.returncode == 0, "all ten final regression checks"
         assert fingerprints() == hashes, "regression sources restored exactly"
-        publish_history(Path("test/golden/regression-refresh.json"), json.dumps(dict(
-            source_sha256=hashes, count=9, reintroductions=records, restored_all=final), indent=2) + "\n")
+        write_record(Path('test/golden/regression-refresh.json'), json.dumps(dict(source_sha256=hashes, count=9, reintroductions=records, restored_all=final), indent=2) + '\n')
         print("current regression evidence: 9/9 runtime reds; 10/10 final greens", flush=True)
     finally:
         restore()
