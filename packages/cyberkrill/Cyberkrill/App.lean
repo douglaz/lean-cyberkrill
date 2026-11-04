@@ -11,6 +11,7 @@ import Cyberkrill.Invite
 import Cyberkrill.Psbt
 import Cyberkrill.ListUtxos
 import Cyberkrill.PsbtCommands
+import Cyberkrill.MoveUtxos
 
 namespace Cyberkrill
 
@@ -28,6 +29,7 @@ inductive Command where
   | decodePsbt (input : Option String) (network : String) (output : Option String)
   | listUtxos (args : ListUtxos.Args)
   | createPsbt (args : PsbtCommands.Args)
+  | moveUtxos (args : MoveUtxos.Args)
   | help (text : String)
 
 private def psbtFlags (funded : Bool) : Array Cli.Flag :=
@@ -47,6 +49,19 @@ private def parser : Cli.Cmd :=
   Cli.Cmd.mk "cyberkrill" none "Bitcoin, Lightning and Fedimint tools"
     (run := fun _ => pure 0)
     (subCmds := #[
+      Cli.Cmd.mk "onchain-move-utxos" none "Consolidate selected UTXOs using Bitcoin Core RPC"
+        (flags := RpcFlags.flags ++ #[
+          ⟨none, "descriptor", "Accepted without a directory; requires BDK with bitcoin-dir", String⟩,
+          ⟨none, "wallet-file", "Unsupported on PSBT commands", String⟩,
+          ⟨none, "network", "mainnet (default), bitcoin, testnet, signet or regtest", String⟩,
+          ⟨none, "inputs", "Required repeatable txid:vout or output descriptor", String⟩,
+          ⟨none, "destination", "Required sole destination", String⟩,
+          ⟨none, "max-amount", "Selection threshold, floored to whole sats; bare values are BTC", String⟩,
+          ⟨none, "fee-rate", "Rate with an explicit Bitcoin unit, for example 2.5sats", String⟩,
+          ⟨none, "fee", "Absolute fee with an explicit Bitcoin unit, for example 1000sats", String⟩,
+          ⟨some "o", "output", "Write JSON to a file", String⟩,
+          ⟨none, "psbt-output", "Write raw Base64 PSBT without a newline", String⟩])
+        (run := fun _ => pure 0),
       Cli.Cmd.mk "onchain-create-psbt" none "Create a PSBT using Bitcoin Core RPC"
         (flags := psbtFlags false) (run := fun _ => pure 0),
       Cli.Cmd.mk "onchain-create-funded-psbt" none "Create a funded PSBT using Bitcoin Core RPC"
@@ -115,64 +130,74 @@ private def valueFlags : List String :=
    "--rpc-user", "--rpc-password", "--min-conf", "--max-conf", "--inputs", "--outputs",
    "--fee-rate", "--psbt-output", "--conf-target", "--estimate-mode"]
 
-private def outputArgsValid : List String → Bool
+private def commandValueFlags (command : String) : List String :=
+  if command == "onchain-move-utxos" then
+    valueFlags ++ ["--fee", "--destination", "--max-amount"]
+  else valueFlags
+
+private def outputArgsValid (valueFlags : List String) : List String → Bool
   | "--" :: _ => true
   | flag :: value :: rest =>
     if flag == "-o" || flag == "--output" then
-      (!(value.startsWith "-") || value == "-") && outputArgsValid rest
-    else if flag == "-w" || flag == "--words" then outputArgsValid rest
+      (!(value.startsWith "-") || value == "-") && outputArgsValid valueFlags rest
+    else if flag == "-w" || flag == "--words" then outputArgsValid valueFlags rest
     else if flag == "-k" || flag == "--private-key" then
-      (!(value.startsWith "-") || value == "-") && outputArgsValid rest
+      (!(value.startsWith "-") || value == "-") && outputArgsValid valueFlags rest
     else if flag == "--network" then
-      (!(value.startsWith "-") || value == "-") && outputArgsValid rest
+      (!(value.startsWith "-") || value == "-") && outputArgsValid valueFlags rest
+    else if (flag == "--destination" || flag == "--max-amount") && valueFlags.contains flag then
+      (!(value.startsWith "-") || value == "-") && outputArgsValid valueFlags rest
     else if ["--descriptor", "--addresses", "--wallet-file", "--rpc-url", "--bitcoin-dir",
         "--rpc-user", "--rpc-password", "--inputs", "--outputs", "--psbt-output", "--estimate-mode"].contains flag then
-      (!(value.startsWith "-") || value == "-") && outputArgsValid rest
-    else if valueFlags.contains flag then outputArgsValid rest
-    else outputArgsValid (value :: rest)
+      (!(value.startsWith "-") || value == "-") && outputArgsValid valueFlags rest
+    else if valueFlags.contains flag then outputArgsValid valueFlags rest
+    else outputArgsValid valueFlags (value :: rest)
   | _ => true
 
 -- The dependency reads '=' before short-prefix values. Insert only the option
 -- separator in short attachments; every byte after '-o' remains filename data.
 -- Leave consumed whitespace operands and everything after '--' untouched.
-private def outputParserArgs : List String → List String
+private def outputParserArgs (valueFlags : List String) : List String → List String
   | "--" :: rest => "--" :: rest
   | flag :: rest =>
     if valueFlags.contains flag then
       match rest with
-      | value :: tail => flag :: value :: outputParserArgs tail
+      | value :: tail => flag :: value :: outputParserArgs valueFlags tail
       | [] => [flag]
     else
       let flag := if (flag.startsWith "-o" || flag.startsWith "-k") &&
           !(flag.startsWith "-o=" || flag.startsWith "-k=") && flag.contains '=' then
         (flag.take 2).toString ++ "=" ++ (flag.drop 2).toString else flag
-      flag :: outputParserArgs rest
+      flag :: outputParserArgs valueFlags rest
   | [] => []
 
 -- Help ends parsing at its position. Whitespace option operands and the
 -- terminator shield help-looking filenames; output attachments remain data.
 -- Short help ends its cluster immediately, ignoring the remaining bytes.
-private def throughHelp : List String → List String
+private def throughHelp (valueFlags : List String) : List String → List String
   | "--" :: rest => "--" :: rest
   | flag :: rest =>
     if flag == "--help" || flag.startsWith "-h" then ["-h"]
     else if valueFlags.contains flag then
       match rest with
-      | value :: tail => flag :: value :: throughHelp tail
+      | value :: tail => flag :: value :: throughHelp valueFlags tail
       | [] => [flag]
-    else flag :: throughHelp rest
+    else flag :: throughHelp valueFlags rest
   | [] => []
 
 -- These two flags are strings in the dependency parser, but their reference
 -- types are an enum and u32. Check their parse-time values in argv order,
 -- before a later help return. Mnemonic count semantics stay in execution.
 private def validateTypedArgs (command : String) (args : List String) : Except Error Unit := do
-  if command == "onchain-create-psbt" || command == "onchain-create-funded-psbt" then
+  let valueFlags := commandValueFlags command
+  if command == "onchain-create-psbt" || command == "onchain-create-funded-psbt" ||
+      command == "onchain-move-utxos" then
     let mut pending : Option String := none
     let mut shield := false
     for flag in args do
       if let some name := pending then
-        if name == "--fee-rate" then let _ ← parseFee flag
+        if name == "--fee-rate" || name == "--fee" then let _ ← parseFee flag
+        else if name == "--max-amount" then MoveUtxos.validateMax flag
         else unless (PsbtCommands.unsigned32 flag).isSome do
           throw (.onchain "invalidConfTarget: Expected an unsigned 32-bit decimal")
         pending := none
@@ -180,11 +205,14 @@ private def validateTypedArgs (command : String) (args : List String) : Except E
       else if flag == "--" || flag == "-h" then return
       else
         let name := (flag.splitOn "=").head!
-        if name == "--fee-rate" || (command == "onchain-create-funded-psbt" && name == "--conf-target") then
+        if name == "--fee-rate" ||
+            (command == "onchain-move-utxos" && (name == "--fee" || name == "--max-amount")) ||
+            (command == "onchain-create-funded-psbt" && name == "--conf-target") then
           if flag == name then pending := some name
           else
             let value := String.intercalate "=" (flag.splitOn "=").tail
-            if name == "--fee-rate" then let _ ← parseFee value
+            if name == "--fee-rate" || name == "--fee" then let _ ← parseFee value
+            else if name == "--max-amount" then MoveUtxos.validateMax value
             else unless (PsbtCommands.unsigned32 value).isSome do
               throw (.onchain "invalidConfTarget: Expected an unsigned 32-bit decimal")
         else if valueFlags.contains flag then shield := true
@@ -238,38 +266,43 @@ private def validateTypedArgs (command : String) (args : List String) : Except E
 -- Cli rejects duplicate flags. Collect only this repeatable option ourselves,
 -- respecting consumed values and the option terminator; other duplicates retain
 -- Cli's refusal. Required arguments are checked after effective help.
-private def collectInputs : List String → Except Error (List String × Array String)
+private def collectInputs (valueFlags : List String) : List String → Except Error (List String × Array String)
   | "--" :: rest => .ok ("--" :: rest, #[])
   | "--inputs" :: value :: rest => do
-    let (args, inputs) ← collectInputs rest
+    let (args, inputs) ← collectInputs valueFlags rest
     return (args, #[value] ++ inputs)
   | ["--inputs"] => .error .invalidArguments
   | flag :: rest => do
     if flag.startsWith "--inputs=" then
-      let (args, inputs) ← collectInputs rest
+      let (args, inputs) ← collectInputs valueFlags rest
       return (args, #[(flag.drop 9).toString] ++ inputs)
     else if valueFlags.contains flag then
       match rest with
       | value :: tail =>
-        let (args, inputs) ← collectInputs tail
+        let (args, inputs) ← collectInputs valueFlags tail
         return (flag :: value :: args, inputs)
       | [] => return ([flag], #[])
     else
-      let (args, inputs) ← collectInputs rest
+      let (args, inputs) ← collectInputs valueFlags rest
       return (flag :: args, inputs)
   | [] => .ok ([], #[])
 
 def parseCommand (args : List String) : Except Error Command := do
+  let flags := commandValueFlags (args.head?.getD "")
+  let throughHelp := throughHelp flags
+  let outputArgsValid := outputArgsValid flags
+  let outputParserArgs := outputParserArgs flags
+  let collectInputs := collectInputs flags
   let args := throughHelp args
   validateTypedArgs (args.head?.getD "") args.tail
   let routed := ["generate-mnemonic", "ln-decode-invoice", "ln-decode-lnurl", "ln-encode-invoice",
     "fm-decode-invite", "fm-encode-invite", "onchain-decode-psbt", "onchain-list-utxos",
-    "onchain-create-psbt", "onchain-create-funded-psbt"].contains
+    "onchain-create-psbt", "onchain-create-funded-psbt", "onchain-move-utxos"].contains
     (args.head?.getD "")
   if routed then
     unless outputArgsValid args.tail do throw .invalidArguments
   let args := if routed then (args.head?.getD "") :: outputParserArgs args.tail else args
-  let psbt := ["onchain-create-psbt", "onchain-create-funded-psbt"].contains (args.head?.getD "")
+  let psbt := ["onchain-create-psbt", "onchain-create-funded-psbt", "onchain-move-utxos"].contains (args.head?.getD "")
   let (operands, inputs) ← if psbt then collectInputs args.tail else pure (args.tail, #[])
   let args := if psbt then args.head! :: operands else args
   let (cmd, p) ← (parser.parse args).mapError fun _ => Error.invalidArguments
@@ -277,6 +310,19 @@ def parseCommand (args : List String) : Except Error Command := do
   if p.hasFlag "help" || args.isEmpty then return .help cmd.help
   let flag := fun name => (p.flag? name).map (·.value)
   match cmd.meta.name with
+  | "onchain-move-utxos" =>
+    if inputs.isEmpty then throw .invalidArguments
+    let some destination := flag "destination" | throw .invalidArguments
+    if p.hasFlag "fee-rate" && p.hasFlag "fee" then throw .invalidArguments
+    if p.hasFlag "descriptor" && p.hasFlag "wallet-file" then throw .invalidArguments
+    let rpc ← RpcFlags.ofParsed p |>.mapError Error.onchain
+    let rate ← (flag "fee-rate").mapM parseFee
+    let fee ← (flag "fee").mapM parseFee
+    return .moveUtxos {
+      inputs, destination, rpc, feeRate := rate, fee,
+      maxAmount := flag "max-amount", descriptor := flag "descriptor",
+      walletFile := flag "wallet-file", network := (flag "network").getD "mainnet",
+      output := flag "output", psbtOutput := flag "psbt-output" }
   | "onchain-create-psbt" | "onchain-create-funded-psbt" =>
     let funded := cmd.meta.name == "onchain-create-funded-psbt"
     if !funded && inputs.isEmpty then throw .invalidArguments
@@ -350,6 +396,7 @@ structure Services where
   coreClient : RpcFlags → IO CoreRpc.Client := CoreRpc.Client.ofFlags
   listUtxos : CoreRpc.Client → ListUtxos.Args → Option Frozenkrill.Wallet → IO (Except CoreRpc.Error Json) := ListUtxos.fetch
   psbt : CoreRpc.Client → PsbtCommands.Args → Array (String × Bitcoin.Amount) → IO (Except Error PsbtCommands.Result) := PsbtCommands.fetch
+  move : CoreRpc.Client → MoveUtxos.Args → Option Bitcoin.Amount → IO (Except Error PsbtCommands.Result) := MoveUtxos.fetch
   writeOrdinaryFile : String → String → IO Unit := fun path text => IO.FS.writeFile path text
 
 def productionServices : Services where
@@ -409,6 +456,31 @@ private def prepareDecodeOutput (services : Services) (path : Option String) :
   catch _ => return .error .outputFailure
 
 def execute (version : String) (services : Services) : Command → IO (Except Error Output)
+  | .moveUtxos args => do
+    let .ok writer ← prepareDecodeOutput services args.output | return .error .outputFailure
+    if args.feeRate.isNone && args.fee.isNone then
+      return .error (.onchain "missingFee: Specify either --fee-rate or --fee")
+    if args.feeRate.isSome && args.fee.isSome then
+      return .error (.onchain "feeConflict: Specify only one fee method")
+    unless ListUtxos.networkValid args.network do
+      return .error (.onchain "invalidNetwork: Expected mainnet, bitcoin, testnet, signet or regtest")
+    if args.walletFile.isSome then
+      return .error (.onchain "unsupportedWalletFile: PSBT wallet-file routing requires BDK")
+    if args.descriptor.isSome && args.rpc.bitcoinDir.isSome then
+      return .error (.onchain "unsupportedBackend: descriptor with bitcoin-dir requires BDK")
+    let maximum ← match args.maxAmount.mapM MoveUtxos.maximum with
+      | .error e => return .error e
+      | .ok maximum => pure maximum
+    let client ← try services.coreClient args.rpc catch _ =>
+      return .error (.onchain "rpcTransport: Cannot initialize Core client")
+    match ← services.move client args maximum with
+    | .error e => return .error e
+    | .ok result =>
+      if let some path := args.psbtOutput then
+        try
+          services.writeOrdinaryFile path result.psbt
+        catch _ => return .error .outputFailure
+      return .ok (lightningOutput result.json.pretty writer false)
   | .createPsbt args => do
     let .ok writer ← prepareDecodeOutput services args.output | return .error .outputFailure
     unless ListUtxos.networkValid args.network do

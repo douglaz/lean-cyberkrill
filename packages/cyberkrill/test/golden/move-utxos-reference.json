@@ -1,0 +1,204 @@
+{
+  "upstream": "https://github.com/douglaz/cyberkrill",
+  "revision": "27cad1faba86260b06665a89f0af5134d23525c2",
+  "captures": [
+    {
+      "name": "absolute",
+      "status": 0,
+      "stdout": "{\n  \"psbt\": \"cHNidP8BAFICAAAAATJBqk6JRav18ZVdRXiwTTBk+bgpkXX6Zs3LbAlnmRleAAAAAAD/////ARhWYgIAAAAAFgAUH6GGbf5fX/aL4928Oe8F/aNNE6MAAAAAAAAA\",\n  \"fee_sats\": 1000,\n  \"change_position\": null\n}",
+      "stderr": "",
+      "files": {
+        "output.json": null,
+        "raw.psbt": null,
+        "shared.json": null
+      },
+      "requests": "[[\"getrawtransaction\",[\"5e199967096ccbcd66fa759129b8f964304db078455d95f1f5ab45894eaa4132\",true]],[\"createpsbt\",[[{\"txid\":\"5e199967096ccbcd66fa759129b8f964304db078455d95f1f5ab45894eaa4132\",\"vout\":0}],{\"bcrt1qr7scvm07ta0ldzlrmk7rnmc9lk356yarcts3za\":0.39999},0,false]]]"
+    },
+    {
+      "name": "absolute-bare",
+      "status": 0,
+      "stdout": "{\n  \"psbt\": \"cHNidP8BAFICAAAAATJBqk6JRav18ZVdRXiwTTBk+bgpkXX6Zs3LbAlnmRleAAAAAAD/////ARhWYgIAAAAAFgAUH6GGbf5fX/aL4928Oe8F/aNNE6MAAAAAAAAA\",\n  \"fee_sats\": 1000,\n  \"change_position\": null\n}",
+      "stderr": "",
+      "files": {
+        "output.json": null,
+        "raw.psbt": null,
+        "shared.json": null
+      },
+      "requests": "[[\"getrawtransaction\",[\"5e199967096ccbcd66fa759129b8f964304db078455d95f1f5ab45894eaa4132\",true]],[\"createpsbt\",[[{\"txid\":\"5e199967096ccbcd66fa759129b8f964304db078455d95f1f5ab45894eaa4132\",\"vout\":0}],{\"bcrt1qr7scvm07ta0ldzlrmk7rnmc9lk356yarcts3za\":0.39999},0,false]]]"
+    },
+    {
+      "name": "rate",
+      "status": 0,
+      "stdout": "{\n  \"psbt\": \"cHNidP8BAFICAAAAATJBqk6JRav18ZVdRXiwTTBk+bgpkXX6Zs3LbAlnmRleAAAAAAD/////ARhWYgIAAAAAFgAUH6GGbf5fX/aL4928Oe8F/aNNE6MAAAAAAAAA\",\n  \"fee_sats\": 1000,\n  \"change_position\": null\n}",
+      "stderr": "",
+      "files": {
+        "output.json": null,
+        "raw.psbt": null,
+        "shared.json": null
+      },
+      "requests": "[[\"getrawtransaction\",[\"5e199967096ccbcd66fa759129b8f964304db078455d95f1f5ab45894eaa4132\",true]],[\"createpsbt\",[[{\"txid\":\"5e199967096ccbcd66fa759129b8f964304db078455d95f1f5ab45894eaa4132\",\"vout\":0}],{\"bcrt1qr7scvm07ta0ldzlrmk7rnmc9lk356yarcts3za\":0.39999},0,false]]]"
+    },
+    {
+      "name": "rate-bare",
+      "status": 0,
+      "stdout": "{\n  \"psbt\": \"cHNidP8BAFICAAAAATJBqk6JRav18ZVdRXiwTTBk+bgpkXX6Zs3LbAlnmRleAAAAAAD/////ARhWYgIAAAAAFgAUH6GGbf5fX/aL4928Oe8F/aNNE6MAAAAAAAAA\",\n  \"fee_sats\": 1000,\n  \"change_position\": null\n}",
+      "stderr": "",
+      "files": {
+        "output.json": null,
+        "raw.psbt": null,
+        "shared.json": null
+      },
+      "requests": "[[\"getrawtransaction\",[\"5e199967096ccbcd66fa759129b8f964304db078455d95f1f5ab45894eaa4132\",true]],[\"createpsbt\",[[{\"txid\":\"5e199967096ccbcd66fa759129b8f964304db078455d95f1f5ab45894eaa4132\",\"vout\":0}],{\"bcrt1qr7scvm07ta0ldzlrmk7rnmc9lk356yarcts3za\":0.39999},0,false]]]"
+    },
+    {
+      "name": "cap-exact",
+      "status": 0,
+      "stdout": "{\n  \"psbt\": \"cHNidP8BAFICAAAAATJBqk6JRav18ZVdRXiwTTBk+bgpkXX6Zs3LbAlnmRleAAAAAAD/////ARhWYgIAAAAAFgAUH6GGbf5fX/aL4928Oe8F/aNNE6MAAAAAAAAA\",\n  \"fee_sats\": 1000,\n  \"change_position\": null\n}",
+      "stderr": "",
+      "files": {
+        "output.json": null,
+        "raw.psbt": null,
+        "shared.json": null
+      },
+      "requests": "[[\"getrawtransaction\",[\"5e199967096ccbcd66fa759129b8f964304db078455d95f1f5ab45894eaa4132\",true]],[\"createpsbt\",[[{\"txid\":\"5e199967096ccbcd66fa759129b8f964304db078455d95f1f5ab45894eaa4132\",\"vout\":0}],{\"bcrt1qr7scvm07ta0ldzlrmk7rnmc9lk356yarcts3za\":0.39999},0,false]]]"
+    },
+    {
+      "name": "cap-above",
+      "status": 0,
+      "stdout": "{\n  \"psbt\": \"cHNidP8BAFICAAAAATJBqk6JRav18ZVdRXiwTTBk+bgpkXX6Zs3LbAlnmRleAAAAAAD/////ARhWYgIAAAAAFgAUH6GGbf5fX/aL4928Oe8F/aNNE6MAAAAAAAAA\",\n  \"fee_sats\": 1000,\n  \"change_position\": null\n}",
+      "stderr": "",
+      "files": {
+        "output.json": null,
+        "raw.psbt": null,
+        "shared.json": null
+      },
+      "requests": "[[\"getrawtransaction\",[\"5e199967096ccbcd66fa759129b8f964304db078455d95f1f5ab45894eaa4132\",true]],[\"createpsbt\",[[{\"txid\":\"5e199967096ccbcd66fa759129b8f964304db078455d95f1f5ab45894eaa4132\",\"vout\":0}],{\"bcrt1qr7scvm07ta0ldzlrmk7rnmc9lk356yarcts3za\":0.39999},0,false]]]"
+    },
+    {
+      "name": "standalone-descriptor",
+      "status": 0,
+      "stdout": "{\n  \"psbt\": \"cHNidP8BAFICAAAAATJBqk6JRav18ZVdRXiwTTBk+bgpkXX6Zs3LbAlnmRleAAAAAAD/////ARhWYgIAAAAAFgAUH6GGbf5fX/aL4928Oe8F/aNNE6MAAAAAAAAA\",\n  \"fee_sats\": 1000,\n  \"change_position\": null\n}",
+      "stderr": "",
+      "files": {
+        "output.json": null,
+        "raw.psbt": null,
+        "shared.json": null
+      },
+      "requests": "[[\"getrawtransaction\",[\"5e199967096ccbcd66fa759129b8f964304db078455d95f1f5ab45894eaa4132\",true]],[\"createpsbt\",[[{\"txid\":\"5e199967096ccbcd66fa759129b8f964304db078455d95f1f5ab45894eaa4132\",\"vout\":0}],{\"bcrt1qr7scvm07ta0ldzlrmk7rnmc9lk356yarcts3za\":0.39999},0,false]]]"
+    },
+    {
+      "name": "cookie",
+      "status": 0,
+      "stdout": "{\n  \"psbt\": \"cHNidP8BAFICAAAAATJBqk6JRav18ZVdRXiwTTBk+bgpkXX6Zs3LbAlnmRleAAAAAAD/////ARhWYgIAAAAAFgAUH6GGbf5fX/aL4928Oe8F/aNNE6MAAAAAAAAA\",\n  \"fee_sats\": 1000,\n  \"change_position\": null\n}",
+      "stderr": "",
+      "files": {
+        "output.json": null,
+        "raw.psbt": null,
+        "shared.json": null
+      },
+      "requests": "[[\"getrawtransaction\",[\"5e199967096ccbcd66fa759129b8f964304db078455d95f1f5ab45894eaa4132\",true]],[\"createpsbt\",[[{\"txid\":\"5e199967096ccbcd66fa759129b8f964304db078455d95f1f5ab45894eaa4132\",\"vout\":0}],{\"bcrt1qr7scvm07ta0ldzlrmk7rnmc9lk356yarcts3za\":0.39999},0,false]]]"
+    },
+    {
+      "name": "relative-cookie",
+      "status": 0,
+      "stdout": "{\n  \"psbt\": \"cHNidP8BAFICAAAAATJBqk6JRav18ZVdRXiwTTBk+bgpkXX6Zs3LbAlnmRleAAAAAAD/////ARhWYgIAAAAAFgAUH6GGbf5fX/aL4928Oe8F/aNNE6MAAAAAAAAA\",\n  \"fee_sats\": 1000,\n  \"change_position\": null\n}",
+      "stderr": "",
+      "files": {
+        "output.json": null,
+        "raw.psbt": null,
+        "shared.json": null
+      },
+      "requests": "[[\"getrawtransaction\",[\"5e199967096ccbcd66fa759129b8f964304db078455d95f1f5ab45894eaa4132\",true]],[\"createpsbt\",[[{\"txid\":\"5e199967096ccbcd66fa759129b8f964304db078455d95f1f5ab45894eaa4132\",\"vout\":0}],{\"bcrt1qr7scvm07ta0ldzlrmk7rnmc9lk356yarcts3za\":0.39999},0,false]]]"
+    },
+    {
+      "name": "json",
+      "status": 0,
+      "stdout": "",
+      "stderr": "",
+      "files": {
+        "output.json": "{\n  \"psbt\": \"cHNidP8BAFICAAAAATJBqk6JRav18ZVdRXiwTTBk+bgpkXX6Zs3LbAlnmRleAAAAAAD/////ARhWYgIAAAAAFgAUH6GGbf5fX/aL4928Oe8F/aNNE6MAAAAAAAAA\",\n  \"fee_sats\": 1000,\n  \"change_position\": null\n}",
+        "raw.psbt": null,
+        "shared.json": null
+      },
+      "requests": "[[\"getrawtransaction\",[\"5e199967096ccbcd66fa759129b8f964304db078455d95f1f5ab45894eaa4132\",true]],[\"createpsbt\",[[{\"txid\":\"5e199967096ccbcd66fa759129b8f964304db078455d95f1f5ab45894eaa4132\",\"vout\":0}],{\"bcrt1qr7scvm07ta0ldzlrmk7rnmc9lk356yarcts3za\":0.39999},0,false]]]"
+    },
+    {
+      "name": "raw",
+      "status": 0,
+      "stdout": "{\n  \"psbt\": \"cHNidP8BAFICAAAAATJBqk6JRav18ZVdRXiwTTBk+bgpkXX6Zs3LbAlnmRleAAAAAAD/////ARhWYgIAAAAAFgAUH6GGbf5fX/aL4928Oe8F/aNNE6MAAAAAAAAA\",\n  \"fee_sats\": 1000,\n  \"change_position\": null\n}",
+      "stderr": "",
+      "files": {
+        "output.json": null,
+        "raw.psbt": "cHNidP8BAFICAAAAATJBqk6JRav18ZVdRXiwTTBk+bgpkXX6Zs3LbAlnmRleAAAAAAD/////ARhWYgIAAAAAFgAUH6GGbf5fX/aL4928Oe8F/aNNE6MAAAAAAAAA",
+        "shared.json": null
+      },
+      "requests": "[[\"getrawtransaction\",[\"5e199967096ccbcd66fa759129b8f964304db078455d95f1f5ab45894eaa4132\",true]],[\"createpsbt\",[[{\"txid\":\"5e199967096ccbcd66fa759129b8f964304db078455d95f1f5ab45894eaa4132\",\"vout\":0}],{\"bcrt1qr7scvm07ta0ldzlrmk7rnmc9lk356yarcts3za\":0.39999},0,false]]]"
+    },
+    {
+      "name": "both",
+      "status": 0,
+      "stdout": "",
+      "stderr": "",
+      "files": {
+        "output.json": "{\n  \"psbt\": \"cHNidP8BAFICAAAAATJBqk6JRav18ZVdRXiwTTBk+bgpkXX6Zs3LbAlnmRleAAAAAAD/////ARhWYgIAAAAAFgAUH6GGbf5fX/aL4928Oe8F/aNNE6MAAAAAAAAA\",\n  \"fee_sats\": 1000,\n  \"change_position\": null\n}",
+        "raw.psbt": "cHNidP8BAFICAAAAATJBqk6JRav18ZVdRXiwTTBk+bgpkXX6Zs3LbAlnmRleAAAAAAD/////ARhWYgIAAAAAFgAUH6GGbf5fX/aL4928Oe8F/aNNE6MAAAAAAAAA",
+        "shared.json": null
+      },
+      "requests": "[[\"getrawtransaction\",[\"5e199967096ccbcd66fa759129b8f964304db078455d95f1f5ab45894eaa4132\",true]],[\"createpsbt\",[[{\"txid\":\"5e199967096ccbcd66fa759129b8f964304db078455d95f1f5ab45894eaa4132\",\"vout\":0}],{\"bcrt1qr7scvm07ta0ldzlrmk7rnmc9lk356yarcts3za\":0.39999},0,false]]]"
+    },
+    {
+      "name": "alias",
+      "status": 0,
+      "stdout": "",
+      "stderr": "",
+      "files": {
+        "output.json": null,
+        "raw.psbt": null,
+        "shared.json": "{\n  \"psbt\": \"cHNidP8BAFICAAAAATJBqk6JRav18ZVdRXiwTTBk+bgpkXX6Zs3LbAlnmRleAAAAAAD/////ARhWYgIAAAAAFgAUH6GGbf5fX/aL4928Oe8F/aNNE6MAAAAAAAAA\",\n  \"fee_sats\": 1000,\n  \"change_position\": null\n}"
+      },
+      "requests": "[[\"getrawtransaction\",[\"5e199967096ccbcd66fa759129b8f964304db078455d95f1f5ab45894eaa4132\",true]],[\"createpsbt\",[[{\"txid\":\"5e199967096ccbcd66fa759129b8f964304db078455d95f1f5ab45894eaa4132\",\"vout\":0}],{\"bcrt1qr7scvm07ta0ldzlrmk7rnmc9lk356yarcts3za\":0.39999},0,false]]]"
+    },
+    {
+      "name": "descriptor-exact-cap",
+      "status": 0,
+      "stdout": "{\n  \"psbt\": \"cHNidP8BAHsCAAAAApkLZyvX4qeULYpLRCJe9WzV6LtCI/VLTyD2EQGmiWC5AQAAAAD/////dIPmESWjDYIGm0w4HnqVJklV0PXXvl86u4TQXEVlUY4BAAAAAP////8BhICTAwAAAAAWABQfoYZt/l9f9ovj3bw57wX9o00TowAAAAAAAAAA\",\n  \"fee_sats\": 1660,\n  \"change_position\": null\n}",
+      "stderr": "",
+      "files": {
+        "output.json": null,
+        "raw.psbt": null,
+        "shared.json": null
+      },
+      "requests": "[[\"getdescriptorinfo\",[\"wpkh([73c5da0a/84'/1'/0']tpubDC8msFGeGuwnKG9Upg7DM2b4DaRqg3CUZa5g8v2SRQ6K4NSkxUgd7HsL2XVWbVm39yBA4LAxysQAm397zwQSQoQgewGiYZqrA9DsP4zbQ1M/<0;1>/*)\"]],[\"importdescriptors\",[[{\"desc\":\"wpkh([73c5da0a/84'/1'/0']tpubDC8msFGeGuwnKG9Upg7DM2b4DaRqg3CUZa5g8v2SRQ6K4NSkxUgd7HsL2XVWbVm39yBA4LAxysQAm397zwQSQoQgewGiYZqrA9DsP4zbQ1M/0/*)#2ag6nxcd\",\"label\":\"cyberkrill_import\",\"range\":[0,1000],\"timestamp\":\"now\",\"watchonly\":true}]]],[\"getdescriptorinfo\",[\"wpkh([73c5da0a/84'/1'/0']tpubDC8msFGeGuwnKG9Upg7DM2b4DaRqg3CUZa5g8v2SRQ6K4NSkxUgd7HsL2XVWbVm39yBA4LAxysQAm397zwQSQoQgewGiYZqrA9DsP4zbQ1M/0/*)\"]],[\"deriveaddresses\",[\"wpkh([73c5da0a/84'/1'/0']tpubDC8msFGeGuwnKG9Upg7DM2b4DaRqg3CUZa5g8v2SRQ6K4NSkxUgd7HsL2XVWbVm39yBA4LAxysQAm397zwQSQoQgewGiYZqrA9DsP4zbQ1M/0/*)#2ag6nxcd\",[0,99]]],[\"listunspent\",[0,9999999,[\"bcrt1q6rz28mcfaxtmd6v789l9rrlrusdprr9pz3cppk\",\"bcrt1qd7spv5q28348xl4myc8zmh983w5jx32cs707jh\",\"bcrt1qxdyjf6h5d6qxap4n2dap97q4j5ps6ua8jkxz0z\",\"bcrt1qynpgs6wap6h9uvy7j0xlesew2w82qn039tzepj\",\"bcrt1q677973lw0w796gttpy52f296jqaaksz0kadvlr\",\"bcrt1qr7scvm07ta0ldzlrmk7rnmc9lk356yarcts3za\",\"bcrt1q4e9q5taxnsvc6m0uxv6h75mkzvnkxeqk6l90u2\",\"bcrt1qfsryn6hh2yhpxpp7m9dh54x89wettyfkhat7dd\",\"bcrt1qk9ca9jh7a2muk2venu26qsc2an5cvnwpmze5gq\",\"bcrt1ql483wsftk62xvt4k5w608h2w9yy2nrnmskm03v\",\"bcrt1qz62u6t0px5tpyplrxuh2zyw6ycejyt9j0w3j4s\",\"bcrt1qextge928njsn94qu5jhc80uyx3wpz0fjz6q5yu\",\"bcrt1qevqc0f9vv69y8l5328heyap7vh4sm3pfut46qs\",\"bcrt1qdl5kf4928qng9t28cntwslha9ppwxdccm428up\",\"bcrt1qqs2f8gy3d42pwj68yk7y42fa8cfr59upm2dccc\",\"bcrt1qhtwqm3x7wn0zteznkkzpamzrm345js9k0v2twy\",\"bcrt1qfvczjgwnc6l4tr4ee8vlffr6hznf7u28y6z8n7\",\"bcrt1q8sh5sqh7lml070lxt540408xuhklxkvyf6egnz\",\"bcrt1q7lttzr63l6z89rys3c8zh9rt6aj78fel0grgng\",\"bcrt1q4kestxh2w7r7h5hxvn4pn2qv2dldvylgsnj8p2\",\"bcrt1qgatph3xrdjvcq63xhwct77m2ufn93stndghrwd\",\"bcrt1q8knm24ect26h96563dwvtnjf07xmysr6v9cwyg\",\"bcrt1q0kndjc0j8h5z7flcwlr85cxh2v2vhya5u7thvx\",\"bcrt1qwezdf0j0gaw76pmqgf9m4y8gt3mvjd5wxx2w8x\",\"bcrt1qtete9uxxuf7nj9g04ujn2fnndhxkfps59g30uh\",\"bcrt1qpucph20u5ynsr4hrk8ymq3g6zhtfa440xef87e\",\"bcrt1q0p62fkary6yya826cl84ev06sltazumv5cdmqt\",\"bcrt1qau3wsexzy20ryswt9zp4gca6ndcs5ve2vzh8s5\",\"bcrt1qq5d5fmq8u5appwlph3nwypf0adkuje6sh697hy\",\"bcrt1q7xp7ztknv2c7hf0kut4rgef8gg884rkqka28kk\",\"bcrt1q5773udpj2raf40a9avfnf47hlv35vxtnmkxaq6\",\"bcrt1qv5zuz0g6nlsl4hqnmyeeh7473hee8txwkfw944\",\"bcrt1qra9cr8uc7h2rq9w4ussnftdu4aaqmwtnypjarg\",\"bcrt1q4627jf4h68hse4h7uekd7apr95d7zlfwwsy5ds\",\"bcrt1qavzj042gwd09c3ut0ffwlqzvuwawdu3fnhpacy\",\"bcrt1qhyvyxgmsw7ymd7gfmxf3rfzpxg3q8w273836ps\",\"bcrt1qf5r3mzf66hh7aakv8s38m080204tcf5qtacfea\",\"bcrt1q9xrdsafgjaaj6vr56flntmemkut8z2ng0f4t2a\",\"bcrt1qeugphn0uu4nfvpzlv55djghjwqgtnx2p49gr82\",\"bcrt1quvlh9a2jqxf7lh67uwvnlpvup4xx8kzzcqlpl4\",\"bcrt1qg9teye5tus5wvudkvmt5jausqz999sud6kcdwp\",\"bcrt1q2wjcv6p5p74hssu5wjwzplg969sk6zfec4mflh\",\"bcrt1q3kfjt3cdd9lv9gtu9ssg2uzqvkeuppaqv2upea\",\"bcrt1qlxhdzn8ln7am820f40ummh3ummse9wqeflasgt\",\"bcrt1qc34ccq0hfhsa469ung9k34sm0ry302du4f6slt\",\"bcrt1q0s9nprh54afplxntfftu7uh83a8dpunq7m4ra3\",\"bcrt1qrcv8564ws4he3zg6lstrmv75cxplmcszqt8ca3\",\"bcrt1qvgpzkuaw6kah78j8fvyg4m4lpaygw694z9xyqe\",\"bcrt1q3rgdejh5c67ft3n2csx9n43las9h6pzkxpcx3j\",\"bcrt1qpu4jhtueqmr5xnwy49nykpy9fw5h5lmwwe6aep\",\"bcrt1q9jesrwjyeczwj7xcpmd4wu9a20qgkv3gnx5zpt\",\"bcrt1qd2v4m2hew0yreppqp8dnaum7n8v4t9h849nt5j\",\"bcrt1qdkum0mxxsj55q2lrn4e6vw8e8a6q45gucaeq4s\",\"bcrt1qr44x54vygyy255l8atn3jmuq7n839cs6lql4uf\",\"bcrt1q5tly4gjp0rvzj8pnemw7a0xay4788hkzz2u3gh\",\"bcrt1qawsat2xx7jn24xv52jw3e32xynahq84yfn87v4\",\"bcrt1q75vfwyfnsad47n03adfvc2d4ctka0ygkyqpdyh\",\"bcrt1qaxcnjvtqdqzr7lt4n7tztdmj9wfv2nze82d7xh\",\"bcrt1qjydepz55pqpppks6zxsg4y75urcx4telsza0lf\",\"bcrt1qsakeys0lqusna08kfzz0q8l4vwy8983dn6jgmc\",\"bcrt1q6qnse6kp7j87r3694676q0vp8j4j6rllkngm37\",\"bcrt1q0h9a9jne7g2auulzyre2g3xkwlzkunyvrlwx6k\",\"bcrt1q8dqhxepsyvke78u8zrjdsds9zvxhyu6cc7d89k\",\"bcrt1qsgeq6fuvraz2jjl4vpzdvv0lnksusrmqnt3m9q\",\"bcrt1q6sx7pd6kuypq2fwwugs64j475xjwqut5v599kw\",\"bcrt1q6sphl9zr3zg88vdsxqnewmnalsek2g5p0cjpcw\",\"bcrt1qsz6g8vxdchq9sppqrrka3myeqws6gs4zxah9q9\",\"bcrt1q5ak8nrmj9fc62fjwl7y8gw77w3xl44f98slzz9\",\"bcrt1q6t8krff0kxw2rrr2sqda3y9apvdr3y425mdz6k\",\"bcrt1q4tpzxlfq7l3awyfej96x9srw6zd8n9unqwxcah\",\"bcrt1qh5evrh068epdh4dyyvx4n7v79vwlhdxwfwpe3c\",\"bcrt1q6lrd9ehdpy3w4xapfgypp6rgkcw0g6v5ayzn6t\",\"bcrt1qhwgf9ruzhaahm7vm6autsa6k3hgmrs4fyrywm3\",\"bcrt1qm95swsj2s5r2a565z6reu8fpketpjjeegg0z0p\",\"bcrt1qwm5tnterf0rumfa8grjatza7567hpn779rctsv\",\"bcrt1q8xjgtkq32f6gc7zl58a8g2zpdqpvt3le7tp0u7\",\"bcrt1qlennkxdx6p2d3hs2sm5vdkngcukvp96ygrugnn\",\"bcrt1qskupy4p7c3ez3wrnqf2aev4wlrvzwaadrav0pw\",\"bcrt1q5l8th570prksqm3m3xuh8ksy5st8h635jvnsxs\",\"bcrt1qrfdhr5dxzqt8e76emh57ads3ztajctpqyslhzm\",\"bcrt1q8xw3r69uxmr8vr9hhxljfr9r5hkrd4aggqph2q\",\"bcrt1q2gvkwk95983v9nv2lzrvl39qmyycqtzpch2d5w\",\"bcrt1q8dnjyfn3d67a42a0heprrtv875mq5ngrfdy49w\",\"bcrt1qdzl8uw5c37d8fdcgmvn8ke2w6c4tcfguet0xdz\",\"bcrt1q98k3vere6c6r06wjq7zvev6vkmrkyyg86x8pms\",\"bcrt1qex4aze0tgkz8es7gm4t4mzj2fjw62map24zv04\",\"bcrt1qcd38x9gqwmgrcg4tf97kvrlmlrj0n2upcvjm8c\",\"bcrt1qfd6v535qqyypcacnpcctlwtr2jk0nwy3u9ztqq\",\"bcrt1qlmmfkfl7hthuvgyv75ucrkrlgdd3nx7m2z44px\",\"bcrt1qthd4nfemc8zw8ntzp34xz9vtaexffghcjvjzam\",\"bcrt1qcg0es6dft6wzdptv2n5epjd89tahjkaeuz940z\",\"bcrt1q8t2267szq8r232u4d5swpwqrd005fk2y7ptncu\",\"bcrt1q0exlultsykngwgegzhd96lmap5vh4uzzasl3ne\",\"bcrt1qk0y83lukmwsyad9suzqtqfwaqkmcu22n2vwac5\",\"bcrt1qtqp7evx3xjd3rupwqmq8e8x6z3ufx0m9xwkps6\",\"bcrt1q8sm7ac5rqucea6v5aw9y6exjmf5qyhlwmpn44n\",\"bcrt1qkdhnvelr3kgkt254g893vydqr4z2yd98tz3tfr\",\"bcrt1qjvl2mdwlzg3u64lrazftlve4je5pcvlxqxkqr7\",\"bcrt1qdnh6df2308a6qk6a2qqr9ggnu4sxpur0cvnr0x\",\"bcrt1q2luf4dpr7rgp0m6cgqca68rl4ph9nc5zw3kcht\"]]],[\"getdescriptorinfo\",[\"wpkh([73c5da0a/84'/1'/0']tpubDC8msFGeGuwnKG9Upg7DM2b4DaRqg3CUZa5g8v2SRQ6K4NSkxUgd7HsL2XVWbVm39yBA4LAxysQAm397zwQSQoQgewGiYZqrA9DsP4zbQ1M/1/*)\"]],[\"deriveaddresses\",[\"wpkh([73c5da0a/84'/1'/0']tpubDC8msFGeGuwnKG9Upg7DM2b4DaRqg3CUZa5g8v2SRQ6K4NSkxUgd7HsL2XVWbVm39yBA4LAxysQAm397zwQSQoQgewGiYZqrA9DsP4zbQ1M/1/*)#mfdmwng4\",[0,99]]],[\"listunspent\",[0,9999999,[\"bcrt1q9u62588spffmq4dzjxsr5l297znf3z6jkgnhsw\",\"bcrt1qkwgskuzmmwwvqajnyr7yp9hgvh5y45kg984qvy\",\"bcrt1q2vma00td2g9llw8hwa8ny3r774rtt7ae3q2e44\",\"bcrt1qdz50mh3c5n2nyhazlxcum3ckwd7vppfh3r8tkx\",\"bcrt1qw3xfnyuspj8qnr2envc448mxwam7f7p249rqs0\",\"bcrt1q053ptqlv0ugz8fcc3njw355rdluk4tqn4qk9cm\",\"bcrt1qsqtfalqsdcqc06s0naxrzzluh4utc0ldhgj5d6\",\"bcrt1qx82rjy3h09q55pvqwgea47f2cvvu8r66rqz2h4\",\"bcrt1qaj6xxrj2n2ddqxe3a0wncxvc0jrwd3qrtxsj3x\",\"bcrt1qpdez8vj0p2f3apazztc6k6g0w09slrxyw4hqs7\",\"bcrt1q6mpyx6qvvpuhkg0u9fq7ddllh6zrsrpw9thhfg\",\"bcrt1qcgswlmkg9cdfnhzzzqq4xw6cagnye9u9mmt42q\",\"bcrt1qh7xjs0ehz2atv3cv0xkl2xmffe3uqt0auyd670\",\"bcrt1qs22g0ryp2x50mf4l85cmn4fs5t7uta9cpkhkeu\",\"bcrt1qgyhvw0wh6xfttg2hpnpzde3xjsf7xgnftd35vc\",\"bcrt1qfs9g4l8sushltwr7t3dusucz4atydvkecc2fqy\",\"bcrt1qlvrvpxm6gfhrvdx026g8xljns4dvf2xqypzg60\",\"bcrt1qduktcw86srx4mkhk25hsmqa3ewrnmtzwdrxrtt\",\"bcrt1q0c5gp85e83tfv3rynwlx9uh3ah6qnzfygr2tej\",\"bcrt1qyv52gp849hukss3atzrmgechz9c7wac623637w\",\"bcrt1qurwkc8fmnxjlc75a5jmy3nj20trlqyp3u7z7y8\",\"bcrt1ql4vtuu9vhjt8n2r7ujuutuujmn7ukc2wdf5s3t\",\"bcrt1qz73dz6zxpp0tgqnrdmc5dtjx3ah55qe3e0j5zp\",\"bcrt1q88awvucjkykgmpuu7z5udy0whs8dmwqd0sjkt2\",\"bcrt1q32453uex9rvn3hyxghg3tzuelgrrcdx4c820m6\",\"bcrt1qk3pck7jex3u9fld2f68gav98uc3gu8lks79k0l\",\"bcrt1qsj56das8zv5dmeh3jls6ex3klnk4v9mghs8rg0\",\"bcrt1q9jux2u93sc42rw2xgn96zn8c8r2wtf35ccg78w\",\"bcrt1qgmkexn79ly4d8kd689gwgwskf8awkdcpplkate\",\"bcrt1qs3ks5a97zfmm9e3eh6tkpp73xagzg697cht6vw\",\"bcrt1qtae6e4y8qy0zv0p5pwwxetvq3s3cfdtfynlel8\",\"bcrt1q24ka2pku9589t0e9npc4tcxu25q6hfpdxmeyl2\",\"bcrt1q23m92zf2n2u4nkmwt2nlklcqy4q4hsgmpyqu3p\",\"bcrt1qw3j5yzlnu6jemr6pfdqaete6dxfap2vsuhh0r3\",\"bcrt1q3w4p6fpdhk4vha64gqpergp9vxdjhd5fzwfgej\",\"bcrt1qewsch4hdh383jhhekzca35tuknprcg5mm5cwpa\",\"bcrt1q8s4wc07eqtf87nx5ssuspn3xnahqqelj35m59p\",\"bcrt1q39jlnk3kjs0rm50auxqgxqche97jqz26ltd9qw\",\"bcrt1qy03kwahvsxvwhqa0sqrdtxxl9pnaeu9ny56jeu\",\"bcrt1qu6ffdzqxpmymnattz8h6rzdw9frlf6jtp5leeh\",\"bcrt1qjmu4kdw96ddhdttjxfu58zwt5q9l6nh5mhwrk3\",\"bcrt1q9pf4yyk45chjewksus6ysxw3ehmtpk6ns8l26h\",\"bcrt1qfdflx45k5v0q452s9l75gurm6ej6y5zktfdtu9\",\"bcrt1qlp4qqj7twv9ggnnmwulkcuuqs2fl4gag96ll0r\",\"bcrt1qkmm8f2zj2j8lcjra5c2kqua3sp60398zamvav3\",\"bcrt1qsa2ufqyd9aujkm2sdvddmn54l2ah07agfh2v6d\",\"bcrt1qqnp6mhd4metfc2amsemd5ltyshp79z23ah3qlz\",\"bcrt1qg6fm86l2hez56s8z2vwqru80n27sfj6gjwc4e5\",\"bcrt1qr35yd5j67rdepydy2ku83efgw5d9hxru5jee5r\",\"bcrt1qk837ktg0t624x7p8kp4u0dwftf3dtjwftd8uxl\",\"bcrt1q938tvumfn84c9tkqrn9gh3k6040mz3s5gh5vzy\",\"bcrt1qhg5xk0ury7gzmvt6qnrhtcglc6z4ckywk88p4h\",\"bcrt1qs07wj2st78reg7q8jrqx5kj0ahjmtqkx3hm2aq\",\"bcrt1qwp0m5h5q0skhkwkrj4xnn4xu07pws40v7pag6f\",\"bcrt1qssms7and7flmstzpcjl50l7wd56upzkx4trq5m\",\"bcrt1qeeunhs2a3yxupz3k8cysqz00rh3077uu3gxjnh\",\"bcrt1qplrjl5rqvr2rp3rhr3840h3njnha5uxk25n224\",\"bcrt1q3mnl684lf4ja7h2d55wan058x52jg2zhmjv8dh\",\"bcrt1qzdsjj3w0dfncu85p9sjzndza92xalg0jgdgcnd\",\"bcrt1qydxs79u46a4t4ptwzm3sy9k83mxyp43q5fe233\",\"bcrt1qdsu7gnv946zx2ugcsxdd5gu37hrnt2jk72v3hf\",\"bcrt1qwl5glrld78rnaf0tmmv6jeuevth3ktglwvhvdc\",\"bcrt1qa0zkm2ym34lcqdn4pg4k5d3q7jhkavg0wwxc4u\",\"bcrt1qp8xqwwr7m7ck6rlpvlh6350cq0uca6arpw8z3v\",\"bcrt1q5x3ql33u9j9ugtyl80c6kd60t8crn0w06hm0s3\",\"bcrt1qx0qnlwrnn09lh6ahnmhuvse8uyqr3zawhef5mh\",\"bcrt1qdkuapala8das0z29jy43j8gtcg8ptq6smftcjl\",\"bcrt1qykysqdx6ftt3eaf48lns9z30rkyye2zghsk0zh\",\"bcrt1qrc7zha22wpswst377cy3vrs6xt59hc8299ur4r\",\"bcrt1qeueuuwd8f507uj4vqrvh3v35nt2zwm3n7kvsfp\",\"bcrt1qjeg0lwa3ke35w34l5njryu453jsydndz6fxeu3\",\"bcrt1q3jvxukqmstdxrp706h0jz7tq3h34yr9lj4xpnu\",\"bcrt1qtay0tylcx5fhug9l09qak3pjllhm4nxh7gqapr\",\"bcrt1q7kv09t4q90k2hfzhp9msgwlcznw9wsyfe3ez6s\",\"bcrt1qfktsv088dzxtzshp98r90cfs29txqpfyc0j94q\",\"bcrt1q5zuevf4wd20jrg6lfclrnzxfhv6scr8tuqgu7v\",\"bcrt1qzhgnepd0s6dumasye7dn3tsqvw8g5fgvlwfzku\",\"bcrt1qm84c654z8qs5sytt0lkjzra2t96ar04tc8e5wh\",\"bcrt1qm8xe45p5a423czaxtnygrzhywszdrqx9sjwvc0\",\"bcrt1qfeqgzs9yl0v9h40lc7ned00js087kx4mf7kpe0\",\"bcrt1qeh8g5jnna064n43f04wvmjk4upzwy2deqs77kj\",\"bcrt1q7tlms8rgu7azzg8q6xjahz30ft399f5qfkewch\",\"bcrt1qdn4eaxvrnz3vcxv0d9lmu4e6tcganakqf4s7ec\",\"bcrt1qxp8kgkpma2wlc0965jrfqkfuqrxuf5hpf7ef0s\",\"bcrt1qknd9lgkf4kknk8lm7s6w60rucpsyz3n8l77vj7\",\"bcrt1qcmjphkedzpnrshxk6kflvf62v338r6szzt7h37\",\"bcrt1qsnlqjvvsv8gmvy9j6jvskz9ck787qganattjy7\",\"bcrt1qqhg92sahu9gfgz4wch7dpphjhpp7wmj5zn40pt\",\"bcrt1q6g7skce3pr8lkd2p7nn9cqeq73dw29z7jjgtnx\",\"bcrt1qfqrw4aw3cqjsymxtjczwd8zes08j4jmn0dkvdd\",\"bcrt1q2qnyvc2hk7lqt4u5r5ur8ylqsvlrmtu63003u8\",\"bcrt1qmsp6fatnf4s4jj6yy9r3k93g5plpd6xc8plt8z\",\"bcrt1q0xhxd8c664j8jsrpnl3mlm773x5rf64j995hat\",\"bcrt1qvd49zyfa3n7fyrthxvqkfjxweuew2h0sfnpfwh\",\"bcrt1q5uhuj8pq6ka5zahe98z9lmtg5qr9xfk3vqr98l\",\"bcrt1qnz384emzpw4kp77da5zvkpxyk03p8hta5rvmjm\",\"bcrt1qdz002ggx2akx9847r7fd4c3gxxgekxxdfnfa7e\",\"bcrt1qekv25eq4cyf0pgtlthxz2k5ycycj4533cwef5v\",\"bcrt1quvwn06gthsk2uj4f64m0hhjknjkelp4mvl7upv\",\"bcrt1quj8y8z00m68m222ykwrspmp9r20hmdrpep0xcj\"]]],[\"getrawtransaction\",[\"7692ca72557a3c3ea2a99264fd2745b0c73c4aca2067a8a22c449bbcb9b0c0cd\",true]],[\"getrawtransaction\",[\"8e5165455cd084bb3a5fbed7f5d0554926957a1e384c9b06820da32511e68374\",true]],[\"getrawtransaction\",[\"b96089a60111f6204f4bf52342bbe8d56cf55e22444b8a2d94a7e2d72b670b99\",true]],[\"getrawtransaction\",[\"6075906c272fcf2612923bd5e157124caeb72be9ee132dca45a1cb66dc01ba90\",true]],[\"createpsbt\",[[{\"txid\":\"b96089a60111f6204f4bf52342bbe8d56cf55e22444b8a2d94a7e2d72b670b99\",\"vout\":1},{\"txid\":\"8e5165455cd084bb3a5fbed7f5d0554926957a1e384c9b06820da32511e68374\",\"vout\":1}],{\"bcrt1qr7scvm07ta0ldzlrmk7rnmc9lk356yarcts3za\":0.5999834},0,false]]]"
+    },
+    {
+      "name": "overshoot",
+      "status": 0,
+      "stdout": "{\n  \"psbt\": \"cHNidP8BAHsCAAAAApkLZyvX4qeULYpLRCJe9WzV6LtCI/VLTyD2EQGmiWC5AQAAAAD/////dIPmESWjDYIGm0w4HnqVJklV0PXXvl86u4TQXEVlUY4BAAAAAP////8BBOr6AgAAAAAWABQfoYZt/l9f9ovj3bw57wX9o00TowAAAAAAAAAA\",\n  \"fee_sats\": 1660,\n  \"change_position\": null\n}",
+      "stderr": "",
+      "files": {
+        "output.json": null,
+        "raw.psbt": null,
+        "shared.json": null
+      },
+      "requests": "[[\"getdescriptorinfo\",[\"wpkh([73c5da0a/84'/1'/0']tpubDC8msFGeGuwnKG9Upg7DM2b4DaRqg3CUZa5g8v2SRQ6K4NSkxUgd7HsL2XVWbVm39yBA4LAxysQAm397zwQSQoQgewGiYZqrA9DsP4zbQ1M/<0;1>/*)\"]],[\"importdescriptors\",[[{\"desc\":\"wpkh([73c5da0a/84'/1'/0']tpubDC8msFGeGuwnKG9Upg7DM2b4DaRqg3CUZa5g8v2SRQ6K4NSkxUgd7HsL2XVWbVm39yBA4LAxysQAm397zwQSQoQgewGiYZqrA9DsP4zbQ1M/0/*)#2ag6nxcd\",\"label\":\"cyberkrill_import\",\"range\":[0,1000],\"timestamp\":\"now\",\"watchonly\":true}]]],[\"getdescriptorinfo\",[\"wpkh([73c5da0a/84'/1'/0']tpubDC8msFGeGuwnKG9Upg7DM2b4DaRqg3CUZa5g8v2SRQ6K4NSkxUgd7HsL2XVWbVm39yBA4LAxysQAm397zwQSQoQgewGiYZqrA9DsP4zbQ1M/0/*)\"]],[\"deriveaddresses\",[\"wpkh([73c5da0a/84'/1'/0']tpubDC8msFGeGuwnKG9Upg7DM2b4DaRqg3CUZa5g8v2SRQ6K4NSkxUgd7HsL2XVWbVm39yBA4LAxysQAm397zwQSQoQgewGiYZqrA9DsP4zbQ1M/0/*)#2ag6nxcd\",[0,99]]],[\"listunspent\",[0,9999999,[\"bcrt1q6rz28mcfaxtmd6v789l9rrlrusdprr9pz3cppk\",\"bcrt1qd7spv5q28348xl4myc8zmh983w5jx32cs707jh\",\"bcrt1qxdyjf6h5d6qxap4n2dap97q4j5ps6ua8jkxz0z\",\"bcrt1qynpgs6wap6h9uvy7j0xlesew2w82qn039tzepj\",\"bcrt1q677973lw0w796gttpy52f296jqaaksz0kadvlr\",\"bcrt1qr7scvm07ta0ldzlrmk7rnmc9lk356yarcts3za\",\"bcrt1q4e9q5taxnsvc6m0uxv6h75mkzvnkxeqk6l90u2\",\"bcrt1qfsryn6hh2yhpxpp7m9dh54x89wettyfkhat7dd\",\"bcrt1qk9ca9jh7a2muk2venu26qsc2an5cvnwpmze5gq\",\"bcrt1ql483wsftk62xvt4k5w608h2w9yy2nrnmskm03v\",\"bcrt1qz62u6t0px5tpyplrxuh2zyw6ycejyt9j0w3j4s\",\"bcrt1qextge928njsn94qu5jhc80uyx3wpz0fjz6q5yu\",\"bcrt1qevqc0f9vv69y8l5328heyap7vh4sm3pfut46qs\",\"bcrt1qdl5kf4928qng9t28cntwslha9ppwxdccm428up\",\"bcrt1qqs2f8gy3d42pwj68yk7y42fa8cfr59upm2dccc\",\"bcrt1qhtwqm3x7wn0zteznkkzpamzrm345js9k0v2twy\",\"bcrt1qfvczjgwnc6l4tr4ee8vlffr6hznf7u28y6z8n7\",\"bcrt1q8sh5sqh7lml070lxt540408xuhklxkvyf6egnz\",\"bcrt1q7lttzr63l6z89rys3c8zh9rt6aj78fel0grgng\",\"bcrt1q4kestxh2w7r7h5hxvn4pn2qv2dldvylgsnj8p2\",\"bcrt1qgatph3xrdjvcq63xhwct77m2ufn93stndghrwd\",\"bcrt1q8knm24ect26h96563dwvtnjf07xmysr6v9cwyg\",\"bcrt1q0kndjc0j8h5z7flcwlr85cxh2v2vhya5u7thvx\",\"bcrt1qwezdf0j0gaw76pmqgf9m4y8gt3mvjd5wxx2w8x\",\"bcrt1qtete9uxxuf7nj9g04ujn2fnndhxkfps59g30uh\",\"bcrt1qpucph20u5ynsr4hrk8ymq3g6zhtfa440xef87e\",\"bcrt1q0p62fkary6yya826cl84ev06sltazumv5cdmqt\",\"bcrt1qau3wsexzy20ryswt9zp4gca6ndcs5ve2vzh8s5\",\"bcrt1qq5d5fmq8u5appwlph3nwypf0adkuje6sh697hy\",\"bcrt1q7xp7ztknv2c7hf0kut4rgef8gg884rkqka28kk\",\"bcrt1q5773udpj2raf40a9avfnf47hlv35vxtnmkxaq6\",\"bcrt1qv5zuz0g6nlsl4hqnmyeeh7473hee8txwkfw944\",\"bcrt1qra9cr8uc7h2rq9w4ussnftdu4aaqmwtnypjarg\",\"bcrt1q4627jf4h68hse4h7uekd7apr95d7zlfwwsy5ds\",\"bcrt1qavzj042gwd09c3ut0ffwlqzvuwawdu3fnhpacy\",\"bcrt1qhyvyxgmsw7ymd7gfmxf3rfzpxg3q8w273836ps\",\"bcrt1qf5r3mzf66hh7aakv8s38m080204tcf5qtacfea\",\"bcrt1q9xrdsafgjaaj6vr56flntmemkut8z2ng0f4t2a\",\"bcrt1qeugphn0uu4nfvpzlv55djghjwqgtnx2p49gr82\",\"bcrt1quvlh9a2jqxf7lh67uwvnlpvup4xx8kzzcqlpl4\",\"bcrt1qg9teye5tus5wvudkvmt5jausqz999sud6kcdwp\",\"bcrt1q2wjcv6p5p74hssu5wjwzplg969sk6zfec4mflh\",\"bcrt1q3kfjt3cdd9lv9gtu9ssg2uzqvkeuppaqv2upea\",\"bcrt1qlxhdzn8ln7am820f40ummh3ummse9wqeflasgt\",\"bcrt1qc34ccq0hfhsa469ung9k34sm0ry302du4f6slt\",\"bcrt1q0s9nprh54afplxntfftu7uh83a8dpunq7m4ra3\",\"bcrt1qrcv8564ws4he3zg6lstrmv75cxplmcszqt8ca3\",\"bcrt1qvgpzkuaw6kah78j8fvyg4m4lpaygw694z9xyqe\",\"bcrt1q3rgdejh5c67ft3n2csx9n43las9h6pzkxpcx3j\",\"bcrt1qpu4jhtueqmr5xnwy49nykpy9fw5h5lmwwe6aep\",\"bcrt1q9jesrwjyeczwj7xcpmd4wu9a20qgkv3gnx5zpt\",\"bcrt1qd2v4m2hew0yreppqp8dnaum7n8v4t9h849nt5j\",\"bcrt1qdkum0mxxsj55q2lrn4e6vw8e8a6q45gucaeq4s\",\"bcrt1qr44x54vygyy255l8atn3jmuq7n839cs6lql4uf\",\"bcrt1q5tly4gjp0rvzj8pnemw7a0xay4788hkzz2u3gh\",\"bcrt1qawsat2xx7jn24xv52jw3e32xynahq84yfn87v4\",\"bcrt1q75vfwyfnsad47n03adfvc2d4ctka0ygkyqpdyh\",\"bcrt1qaxcnjvtqdqzr7lt4n7tztdmj9wfv2nze82d7xh\",\"bcrt1qjydepz55pqpppks6zxsg4y75urcx4telsza0lf\",\"bcrt1qsakeys0lqusna08kfzz0q8l4vwy8983dn6jgmc\",\"bcrt1q6qnse6kp7j87r3694676q0vp8j4j6rllkngm37\",\"bcrt1q0h9a9jne7g2auulzyre2g3xkwlzkunyvrlwx6k\",\"bcrt1q8dqhxepsyvke78u8zrjdsds9zvxhyu6cc7d89k\",\"bcrt1qsgeq6fuvraz2jjl4vpzdvv0lnksusrmqnt3m9q\",\"bcrt1q6sx7pd6kuypq2fwwugs64j475xjwqut5v599kw\",\"bcrt1q6sphl9zr3zg88vdsxqnewmnalsek2g5p0cjpcw\",\"bcrt1qsz6g8vxdchq9sppqrrka3myeqws6gs4zxah9q9\",\"bcrt1q5ak8nrmj9fc62fjwl7y8gw77w3xl44f98slzz9\",\"bcrt1q6t8krff0kxw2rrr2sqda3y9apvdr3y425mdz6k\",\"bcrt1q4tpzxlfq7l3awyfej96x9srw6zd8n9unqwxcah\",\"bcrt1qh5evrh068epdh4dyyvx4n7v79vwlhdxwfwpe3c\",\"bcrt1q6lrd9ehdpy3w4xapfgypp6rgkcw0g6v5ayzn6t\",\"bcrt1qhwgf9ruzhaahm7vm6autsa6k3hgmrs4fyrywm3\",\"bcrt1qm95swsj2s5r2a565z6reu8fpketpjjeegg0z0p\",\"bcrt1qwm5tnterf0rumfa8grjatza7567hpn779rctsv\",\"bcrt1q8xjgtkq32f6gc7zl58a8g2zpdqpvt3le7tp0u7\",\"bcrt1qlennkxdx6p2d3hs2sm5vdkngcukvp96ygrugnn\",\"bcrt1qskupy4p7c3ez3wrnqf2aev4wlrvzwaadrav0pw\",\"bcrt1q5l8th570prksqm3m3xuh8ksy5st8h635jvnsxs\",\"bcrt1qrfdhr5dxzqt8e76emh57ads3ztajctpqyslhzm\",\"bcrt1q8xw3r69uxmr8vr9hhxljfr9r5hkrd4aggqph2q\",\"bcrt1q2gvkwk95983v9nv2lzrvl39qmyycqtzpch2d5w\",\"bcrt1q8dnjyfn3d67a42a0heprrtv875mq5ngrfdy49w\",\"bcrt1qdzl8uw5c37d8fdcgmvn8ke2w6c4tcfguet0xdz\",\"bcrt1q98k3vere6c6r06wjq7zvev6vkmrkyyg86x8pms\",\"bcrt1qex4aze0tgkz8es7gm4t4mzj2fjw62map24zv04\",\"bcrt1qcd38x9gqwmgrcg4tf97kvrlmlrj0n2upcvjm8c\",\"bcrt1qfd6v535qqyypcacnpcctlwtr2jk0nwy3u9ztqq\",\"bcrt1qlmmfkfl7hthuvgyv75ucrkrlgdd3nx7m2z44px\",\"bcrt1qthd4nfemc8zw8ntzp34xz9vtaexffghcjvjzam\",\"bcrt1qcg0es6dft6wzdptv2n5epjd89tahjkaeuz940z\",\"bcrt1q8t2267szq8r232u4d5swpwqrd005fk2y7ptncu\",\"bcrt1q0exlultsykngwgegzhd96lmap5vh4uzzasl3ne\",\"bcrt1qk0y83lukmwsyad9suzqtqfwaqkmcu22n2vwac5\",\"bcrt1qtqp7evx3xjd3rupwqmq8e8x6z3ufx0m9xwkps6\",\"bcrt1q8sm7ac5rqucea6v5aw9y6exjmf5qyhlwmpn44n\",\"bcrt1qkdhnvelr3kgkt254g893vydqr4z2yd98tz3tfr\",\"bcrt1qjvl2mdwlzg3u64lrazftlve4je5pcvlxqxkqr7\",\"bcrt1qdnh6df2308a6qk6a2qqr9ggnu4sxpur0cvnr0x\",\"bcrt1q2luf4dpr7rgp0m6cgqca68rl4ph9nc5zw3kcht\"]]],[\"getdescriptorinfo\",[\"wpkh([73c5da0a/84'/1'/0']tpubDC8msFGeGuwnKG9Upg7DM2b4DaRqg3CUZa5g8v2SRQ6K4NSkxUgd7HsL2XVWbVm39yBA4LAxysQAm397zwQSQoQgewGiYZqrA9DsP4zbQ1M/1/*)\"]],[\"deriveaddresses\",[\"wpkh([73c5da0a/84'/1'/0']tpubDC8msFGeGuwnKG9Upg7DM2b4DaRqg3CUZa5g8v2SRQ6K4NSkxUgd7HsL2XVWbVm39yBA4LAxysQAm397zwQSQoQgewGiYZqrA9DsP4zbQ1M/1/*)#mfdmwng4\",[0,99]]],[\"listunspent\",[0,9999999,[\"bcrt1q9u62588spffmq4dzjxsr5l297znf3z6jkgnhsw\",\"bcrt1qkwgskuzmmwwvqajnyr7yp9hgvh5y45kg984qvy\",\"bcrt1q2vma00td2g9llw8hwa8ny3r774rtt7ae3q2e44\",\"bcrt1qdz50mh3c5n2nyhazlxcum3ckwd7vppfh3r8tkx\",\"bcrt1qw3xfnyuspj8qnr2envc448mxwam7f7p249rqs0\",\"bcrt1q053ptqlv0ugz8fcc3njw355rdluk4tqn4qk9cm\",\"bcrt1qsqtfalqsdcqc06s0naxrzzluh4utc0ldhgj5d6\",\"bcrt1qx82rjy3h09q55pvqwgea47f2cvvu8r66rqz2h4\",\"bcrt1qaj6xxrj2n2ddqxe3a0wncxvc0jrwd3qrtxsj3x\",\"bcrt1qpdez8vj0p2f3apazztc6k6g0w09slrxyw4hqs7\",\"bcrt1q6mpyx6qvvpuhkg0u9fq7ddllh6zrsrpw9thhfg\",\"bcrt1qcgswlmkg9cdfnhzzzqq4xw6cagnye9u9mmt42q\",\"bcrt1qh7xjs0ehz2atv3cv0xkl2xmffe3uqt0auyd670\",\"bcrt1qs22g0ryp2x50mf4l85cmn4fs5t7uta9cpkhkeu\",\"bcrt1qgyhvw0wh6xfttg2hpnpzde3xjsf7xgnftd35vc\",\"bcrt1qfs9g4l8sushltwr7t3dusucz4atydvkecc2fqy\",\"bcrt1qlvrvpxm6gfhrvdx026g8xljns4dvf2xqypzg60\",\"bcrt1qduktcw86srx4mkhk25hsmqa3ewrnmtzwdrxrtt\",\"bcrt1q0c5gp85e83tfv3rynwlx9uh3ah6qnzfygr2tej\",\"bcrt1qyv52gp849hukss3atzrmgechz9c7wac623637w\",\"bcrt1qurwkc8fmnxjlc75a5jmy3nj20trlqyp3u7z7y8\",\"bcrt1ql4vtuu9vhjt8n2r7ujuutuujmn7ukc2wdf5s3t\",\"bcrt1qz73dz6zxpp0tgqnrdmc5dtjx3ah55qe3e0j5zp\",\"bcrt1q88awvucjkykgmpuu7z5udy0whs8dmwqd0sjkt2\",\"bcrt1q32453uex9rvn3hyxghg3tzuelgrrcdx4c820m6\",\"bcrt1qk3pck7jex3u9fld2f68gav98uc3gu8lks79k0l\",\"bcrt1qsj56das8zv5dmeh3jls6ex3klnk4v9mghs8rg0\",\"bcrt1q9jux2u93sc42rw2xgn96zn8c8r2wtf35ccg78w\",\"bcrt1qgmkexn79ly4d8kd689gwgwskf8awkdcpplkate\",\"bcrt1qs3ks5a97zfmm9e3eh6tkpp73xagzg697cht6vw\",\"bcrt1qtae6e4y8qy0zv0p5pwwxetvq3s3cfdtfynlel8\",\"bcrt1q24ka2pku9589t0e9npc4tcxu25q6hfpdxmeyl2\",\"bcrt1q23m92zf2n2u4nkmwt2nlklcqy4q4hsgmpyqu3p\",\"bcrt1qw3j5yzlnu6jemr6pfdqaete6dxfap2vsuhh0r3\",\"bcrt1q3w4p6fpdhk4vha64gqpergp9vxdjhd5fzwfgej\",\"bcrt1qewsch4hdh383jhhekzca35tuknprcg5mm5cwpa\",\"bcrt1q8s4wc07eqtf87nx5ssuspn3xnahqqelj35m59p\",\"bcrt1q39jlnk3kjs0rm50auxqgxqche97jqz26ltd9qw\",\"bcrt1qy03kwahvsxvwhqa0sqrdtxxl9pnaeu9ny56jeu\",\"bcrt1qu6ffdzqxpmymnattz8h6rzdw9frlf6jtp5leeh\",\"bcrt1qjmu4kdw96ddhdttjxfu58zwt5q9l6nh5mhwrk3\",\"bcrt1q9pf4yyk45chjewksus6ysxw3ehmtpk6ns8l26h\",\"bcrt1qfdflx45k5v0q452s9l75gurm6ej6y5zktfdtu9\",\"bcrt1qlp4qqj7twv9ggnnmwulkcuuqs2fl4gag96ll0r\",\"bcrt1qkmm8f2zj2j8lcjra5c2kqua3sp60398zamvav3\",\"bcrt1qsa2ufqyd9aujkm2sdvddmn54l2ah07agfh2v6d\",\"bcrt1qqnp6mhd4metfc2amsemd5ltyshp79z23ah3qlz\",\"bcrt1qg6fm86l2hez56s8z2vwqru80n27sfj6gjwc4e5\",\"bcrt1qr35yd5j67rdepydy2ku83efgw5d9hxru5jee5r\",\"bcrt1qk837ktg0t624x7p8kp4u0dwftf3dtjwftd8uxl\",\"bcrt1q938tvumfn84c9tkqrn9gh3k6040mz3s5gh5vzy\",\"bcrt1qhg5xk0ury7gzmvt6qnrhtcglc6z4ckywk88p4h\",\"bcrt1qs07wj2st78reg7q8jrqx5kj0ahjmtqkx3hm2aq\",\"bcrt1qwp0m5h5q0skhkwkrj4xnn4xu07pws40v7pag6f\",\"bcrt1qssms7and7flmstzpcjl50l7wd56upzkx4trq5m\",\"bcrt1qeeunhs2a3yxupz3k8cysqz00rh3077uu3gxjnh\",\"bcrt1qplrjl5rqvr2rp3rhr3840h3njnha5uxk25n224\",\"bcrt1q3mnl684lf4ja7h2d55wan058x52jg2zhmjv8dh\",\"bcrt1qzdsjj3w0dfncu85p9sjzndza92xalg0jgdgcnd\",\"bcrt1qydxs79u46a4t4ptwzm3sy9k83mxyp43q5fe233\",\"bcrt1qdsu7gnv946zx2ugcsxdd5gu37hrnt2jk72v3hf\",\"bcrt1qwl5glrld78rnaf0tmmv6jeuevth3ktglwvhvdc\",\"bcrt1qa0zkm2ym34lcqdn4pg4k5d3q7jhkavg0wwxc4u\",\"bcrt1qp8xqwwr7m7ck6rlpvlh6350cq0uca6arpw8z3v\",\"bcrt1q5x3ql33u9j9ugtyl80c6kd60t8crn0w06hm0s3\",\"bcrt1qx0qnlwrnn09lh6ahnmhuvse8uyqr3zawhef5mh\",\"bcrt1qdkuapala8das0z29jy43j8gtcg8ptq6smftcjl\",\"bcrt1qykysqdx6ftt3eaf48lns9z30rkyye2zghsk0zh\",\"bcrt1qrc7zha22wpswst377cy3vrs6xt59hc8299ur4r\",\"bcrt1qeueuuwd8f507uj4vqrvh3v35nt2zwm3n7kvsfp\",\"bcrt1qjeg0lwa3ke35w34l5njryu453jsydndz6fxeu3\",\"bcrt1q3jvxukqmstdxrp706h0jz7tq3h34yr9lj4xpnu\",\"bcrt1qtay0tylcx5fhug9l09qak3pjllhm4nxh7gqapr\",\"bcrt1q7kv09t4q90k2hfzhp9msgwlcznw9wsyfe3ez6s\",\"bcrt1qfktsv088dzxtzshp98r90cfs29txqpfyc0j94q\",\"bcrt1q5zuevf4wd20jrg6lfclrnzxfhv6scr8tuqgu7v\",\"bcrt1qzhgnepd0s6dumasye7dn3tsqvw8g5fgvlwfzku\",\"bcrt1qm84c654z8qs5sytt0lkjzra2t96ar04tc8e5wh\",\"bcrt1qm8xe45p5a423czaxtnygrzhywszdrqx9sjwvc0\",\"bcrt1qfeqgzs9yl0v9h40lc7ned00js087kx4mf7kpe0\",\"bcrt1qeh8g5jnna064n43f04wvmjk4upzwy2deqs77kj\",\"bcrt1q7tlms8rgu7azzg8q6xjahz30ft399f5qfkewch\",\"bcrt1qdn4eaxvrnz3vcxv0d9lmu4e6tcganakqf4s7ec\",\"bcrt1qxp8kgkpma2wlc0965jrfqkfuqrxuf5hpf7ef0s\",\"bcrt1qknd9lgkf4kknk8lm7s6w60rucpsyz3n8l77vj7\",\"bcrt1qcmjphkedzpnrshxk6kflvf62v338r6szzt7h37\",\"bcrt1qsnlqjvvsv8gmvy9j6jvskz9ck787qganattjy7\",\"bcrt1qqhg92sahu9gfgz4wch7dpphjhpp7wmj5zn40pt\",\"bcrt1q6g7skce3pr8lkd2p7nn9cqeq73dw29z7jjgtnx\",\"bcrt1qfqrw4aw3cqjsymxtjczwd8zes08j4jmn0dkvdd\",\"bcrt1q2qnyvc2hk7lqt4u5r5ur8ylqsvlrmtu63003u8\",\"bcrt1qmsp6fatnf4s4jj6yy9r3k93g5plpd6xc8plt8z\",\"bcrt1q0xhxd8c664j8jsrpnl3mlm773x5rf64j995hat\",\"bcrt1qvd49zyfa3n7fyrthxvqkfjxweuew2h0sfnpfwh\",\"bcrt1q5uhuj8pq6ka5zahe98z9lmtg5qr9xfk3vqr98l\",\"bcrt1qnz384emzpw4kp77da5zvkpxyk03p8hta5rvmjm\",\"bcrt1qdz002ggx2akx9847r7fd4c3gxxgekxxdfnfa7e\",\"bcrt1qekv25eq4cyf0pgtlthxz2k5ycycj4533cwef5v\",\"bcrt1quvwn06gthsk2uj4f64m0hhjknjkelp4mvl7upv\",\"bcrt1quj8y8z00m68m222ykwrspmp9r20hmdrpep0xcj\"]]],[\"getrawtransaction\",[\"7692ca72557a3c3ea2a99264fd2745b0c73c4aca2067a8a22c449bbcb9b0c0cd\",true]],[\"getrawtransaction\",[\"8e5165455cd084bb3a5fbed7f5d0554926957a1e384c9b06820da32511e68374\",true]],[\"getrawtransaction\",[\"b96089a60111f6204f4bf52342bbe8d56cf55e22444b8a2d94a7e2d72b670b99\",true]],[\"getrawtransaction\",[\"6075906c272fcf2612923bd5e157124caeb72be9ee132dca45a1cb66dc01ba90\",true]],[\"createpsbt\",[[{\"txid\":\"b96089a60111f6204f4bf52342bbe8d56cf55e22444b8a2d94a7e2d72b670b99\",\"vout\":1},{\"txid\":\"8e5165455cd084bb3a5fbed7f5d0554926957a1e384c9b06820da32511e68374\",\"vout\":1}],{\"bcrt1qr7scvm07ta0ldzlrmk7rnmc9lk356yarcts3za\":0.4999834},0,false]]]"
+    },
+    {
+      "name": "f64",
+      "status": 1,
+      "stdout": "",
+      "stderr": "Error: RPC error: {\"code\":-3,\"message\":\"Invalid amount\"}\n",
+      "files": {
+        "output.json": null,
+        "raw.psbt": null,
+        "shared.json": null
+      },
+      "requests": "[[\"getrawtransaction\",[\"9284dc5fd7a3494bd76b7a0c2fc3563bcb355481ab94e53806dadcff58f055ba\",true]],[\"getrawtransaction\",[\"ddf100f2c7215303d67c47014739836aff22e2fbb90bff2155a9e7ea26f1579c\",true]],[\"getrawtransaction\",[\"031f6d05aa99863a7378fee8f2bdac8aab087be40f95ce7b40fc1f2c56104bbc\",true]],[\"createpsbt\",[[{\"txid\":\"9284dc5fd7a3494bd76b7a0c2fc3563bcb355481ab94e53806dadcff58f055ba\",\"vout\":0},{\"txid\":\"ddf100f2c7215303d67c47014739836aff22e2fbb90bff2155a9e7ea26f1579c\",\"vout\":0},{\"txid\":\"031f6d05aa99863a7378fee8f2bdac8aab087be40f95ce7b40fc1f2c56104bbc\",\"vout\":1}],{\"bcrt1qr7scvm07ta0ldzlrmk7rnmc9lk356yarcts3za\":0.6999833999999999},0,false]]]"
+    }
+  ],
+  "exceptions": {
+    "absolute-bare": "feeUnitRequired",
+    "rate-bare": "feeUnitRequired",
+    "overshoot": "fullSelectedTotal",
+    "f64": "exactAmount"
+  }
+}

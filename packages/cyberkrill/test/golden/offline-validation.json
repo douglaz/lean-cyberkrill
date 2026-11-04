@@ -404,7 +404,6 @@
     "port_success": 340,
     "named_failures": 276,
     "legacy_lightning_captures": 531,
-    "separate_l814_observation": 1,
     "published_psbt_vectors": 113,
     "parity_rows": 49,
     "hybrid_rows": 19,
@@ -414,7 +413,8 @@
     "cluster_help_success": 44,
     "total_help_success": 93,
     "carried_help": 32,
-    "carried_help_success": 14
+    "carried_help_success": 14,
+    "separate_l814_capture": 1
   },
   "mutation_counts": {
     "retained_distinct_edits": 85,
@@ -504,22 +504,6 @@
     }
   ],
   "refresh_environment": "All refresh commands execute inside nix develop under the complete foreground gate.py supervisor.",
-  "superseded_attempts": [
-    {
-      "name": "offline-mutations",
-      "command": [
-        "timeout",
-        "--foreground",
-        "6000",
-        "python3",
-        "-B",
-        "packages/cyberkrill/test/offline-mutate.py"
-      ],
-      "status": 1,
-      "seconds": 1166.652,
-      "disposition": "Excluded from current selected totals. The short-output attachment check detected missing output existence before the expected newline assertion; the detector identity was corrected, remaining checks preflighted, and the complete suite rerun."
-    }
-  ],
   "supplemental_preflight": {
     "distinct_edits": 6,
     "selected_runtime_reds": 19,
@@ -554,10 +538,5 @@
     "injected_no_action_cases": 12,
     "new_distinct_edits": 6,
     "selected_runtime_reds": 13
-  },
-  "historical_notes": [
-    "Original ordered/file and cluster observations and their former source bindings are historical; current production reintroductions were executed separately.",
-    "The original carried-help before/after observations are retained, with a separate current run after preserving the bare missing-word diagnostic.",
-    "The superseded attempt and 19 supplemental preflight reds below are historical observations, excluded from current selected execution totals."
-  ]
+  }
 }

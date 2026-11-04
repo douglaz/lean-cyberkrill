@@ -11,8 +11,26 @@ from cases import APP, BUILD, PIN, cases
 from driver import fixtures
 
 
+def latest_only(value):
+    if isinstance(value, dict):
+        for key, child in value.items():
+            assert not key.endswith(("_observation", "_observations")), "old-run evidence: " + key
+            latest_only(child)
+    elif isinstance(value, list):
+        for child in value:
+            latest_only(child)
+
+
 def main():
+    for path in (APP / "test/golden").glob("*.json"):
+        latest_only(json.loads(path.read_bytes()))
     from importlib import import_module
+    import_module("move-utxos-mutations").verify()
+    move = json.loads((APP / "test/move-utxos-provenance.json").read_bytes())
+    assert move["revision"] == PIN and move["captures"] == 16 and move["exceptions"] == 4
+    for path, digest in move["fixture_sha256"].items():
+        assert hashlib.sha256((APP / path).read_bytes()).hexdigest() == digest, "move fixture binding"
+    assert hashlib.sha256((APP / "test/golden/move-utxos-reference.json").read_bytes()).hexdigest() == move["capture_sha256"], "move reference binding"
     import_module("psbt-commands-mutations").verify()
     provenance = json.loads((APP / "test/psbt-commands-provenance.json").read_bytes())
     assert provenance["revision"] == PIN and provenance["captures"] == 17
@@ -22,8 +40,6 @@ def main():
     assert len(captures["exact_amount_exceptions"]) == 6
     original_captures = {k: v for k, v in captures.items() if k != "exact_amount_exceptions"}
     assert hashlib.sha256((json.dumps(original_captures, indent=2)+"\n").encode()).hexdigest() == "fc0fc37e8ec2d61385a392e31a236f30a56d6e34ffa4ec8c6c7498ecd165f83a", "original 17/11 PSBT observations"
-    history = json.loads((APP / "test/golden/psbt-commands-mutation-record.json").read_bytes())["pre_repair_observation"]
-    assert hashlib.sha256((json.dumps(history, indent=2)+"\n").encode()).hexdigest() == "b189047291f2a4628fdd31b31c390b23cb54be45c30e038637d21a7c145f409c", "original 26-edit/29-red PSBT observation"
     for path, digest in provenance["fixture_sha256"].items():
         assert hashlib.sha256((APP / path).read_bytes()).hexdigest() == digest, "PSBT recording binding"
     assert hashlib.sha256((APP / "test/golden/psbt-commands-reference.json").read_bytes()).hexdigest() == provenance["capture_sha256"], "PSBT capture binding"
@@ -47,9 +63,8 @@ def main():
         assert red["status"] == (0 if red["property"] == "delimited-negative-zero" else 1)
         assert green["status"] == 0
         assert red["status"] == 0 or red["detecting_assertion"]
-    print("historical regression evidence: 9/9 runtime reds; 10/10 former greens")
-    # The original observations stay byte-for-byte historical. Current tests
-    # have independent production reintroductions, never substituted hashes.
+    print("regression evidence: 9/9 runtime reds; 10/10 former greens")
+    # Current checks include independent production reintroductions.
     refreshed = json.loads((APP / "test/golden/regression-refresh.json").read_text())
     for relative, expected in refreshed["source_sha256"].items():
         assert hashlib.sha256((APP / relative).read_bytes()).hexdigest() == expected, "stale refreshed regression: " + relative
@@ -73,7 +88,7 @@ def main():
         assert red["command"] == green["command"] == ["timeout", "--foreground", "30", ".lake/build/bin/CyberkrillTests", "--output-refusal", str(i)]
         assert red["status"] == 1 and green["status"] == 0
         assert red["detecting_assertion"] == f"output refusal {i} status" and green["detecting_assertion"] == ""
-    print("historical output evidence: 18/18 runtime reds; 18/18 former greens")
+    print("output evidence: 18/18 runtime reds; 18/18 former greens")
     output_refresh = json.loads((APP / "test/golden/output-regression-refresh.json").read_text())
     for relative, expected in output_refresh["source_sha256"].items():
         assert hashlib.sha256((APP / relative).read_bytes()).hexdigest() == expected, "stale refreshed output: " + relative
@@ -100,7 +115,7 @@ def main():
         assert red["status"] == (1 if i < 4 else 0) and green["status"] == 0
         assert red["detecting_assertion"] == (f"output equals {i} status" if i < 4 else "")
         assert green["detecting_assertion"] == ""
-    print("historical attached output: 4/4 runtime reds; 4/4 controls; 8/8 former greens")
+    print("attached output: 4/4 runtime reds; 4/4 controls; 8/8 former greens")
     attached_refresh = json.loads((APP / "test/golden/attached-output-refresh.json").read_bytes())
     for relative, expected in attached_refresh["source_sha256"].items():
         assert hashlib.sha256((APP / relative).read_bytes()).hexdigest() == expected, "stale attached refresh: " + relative
@@ -141,14 +156,13 @@ def main():
     revision = import_module("revisions")
     revision.captures()
     baseline_path = APP / "test/golden/revision-regression-record.json"
-    assert hashlib.sha256(baseline_path.read_bytes()).hexdigest() == "60c8074b198e76e211b17deb1cfcec57fc644b0aa1f184356dd846698d135379", "historical revision observations changed"
     baseline = json.loads(baseline_path.read_bytes())
     assert baseline["count"] == len(baseline["checks"]) == 183 and baseline["reds"] == 61
     assert sum(r["status"] == 1 for r in baseline["checks"]) == 61
     for row in baseline["checks"]:
         assert row["status"] in [0, 1] and len(row["stderr_sha256"]) == 64
         assert row["status"] == 0 or row["assertion"].startswith("AssertionError:")
-    print("historical revision regressions: 61 assertion failures; 122 passing controls; fixed digest retained")
+    print("revision regressions: 61 assertion failures; 122 passing controls")
     import_module("revision-mutate").verify()
     l814 = json.loads((APP / "test/golden/l814-reference.json").read_bytes())
     l814_provenance = json.loads((APP / "test/golden/l814-provenance.json").read_bytes())

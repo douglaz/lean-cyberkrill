@@ -34,6 +34,10 @@ definitions of done; the beads tracker (`br`) holds the executable work.
 - **Package boundaries.** Pure packages never import `secp256k1` or `http-curl`. Curve operations reach
   pure code as a supplied structure of functions. C code lives only in those two packages. Proofs
   that need Mathlib go in a separate `<pkg>-proofs` package.
+- **Evidence records.** Commit only the latest completed run in each evidence record.
+  Replace the record on refresh; never nest or pin copies of earlier runs. Keep current
+  results, source bindings, commands, detecting assertions and statuses. Reference fixtures
+  and their provenance remain pinned independently of mutation-run evidence.
 - **Proof hygiene.** No `sorry` anywhere. No `native_decide` in library or proof modules (test files
   may use it). `#print axioms` on every theorem a phase lists shows only `propext`,
   `Classical.choice` and `Quot.sound`. Never weaken a theorem the plan states; stop and report.

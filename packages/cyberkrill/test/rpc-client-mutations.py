@@ -12,6 +12,7 @@ import subprocess
 import sys
 import types
 
+from evidence import write_record
 from cases import APP
 import network
 
@@ -20,12 +21,6 @@ SOURCE = APP / "Cyberkrill/CoreRpc.lean"
 FLAGS = APP / "Cyberkrill/RpcFlags.lean"
 DEST = APP / "test/golden/rpc-client-mutation-record.json"
 LOGS = APP / ".lake/validation/rpc-client-mutations-response-checked-final"
-PREVIOUS_SHA256 = "ceacb68cf44ee76be24595af3f33022898a03040f2e4e6a4b1053c1fb050d693"
-CORRECTED_SHA256 = "ccdc53e07f0ecb9a4a9a346c0f8304f0f5f00bbf3ca1daaf7ca162967326b004"
-NESTED_SHA256 = "6ee597e6e65cb112b03b8d08a7fefef4e8e6fd41854e2f53379fc6a9178bbddd"
-LATE_SHA256 = "2eacf03deac4fc975f35588b57856dc94550b6fb69d035418fc384bcf84645c1"
-DEADLINE_SHA256 = "5cb6c57630a7232cb6fc1a28be98ec770e7fc0fe62f3d1db3119f4d652c81500"
-PRE_LIST_SHA256 = "1eafcc41c753102860c70eaea88dbb68cb1b2bf90444c09bd01b512a863cfa4e"
 
 
 def client_edits():
@@ -199,15 +194,17 @@ def fingerprints():
 
 def command(label, args, expected, assertion=None):
     # Write while the child runs so a crash or outer timeout retains its output.
+    limit = 600 if args == ["lake", "test"] else 180
+    bounded = ["timeout", "--foreground", str(limit), *args]
     with (LOGS / (label + ".stdout")).open("wb") as stdout, (LOGS / (label + ".stderr")).open("wb") as stderr:
-        proc = subprocess.run(["timeout", "--foreground", "180", *args], cwd=APP, stdin=subprocess.DEVNULL,
-                              stdout=stdout, stderr=stderr, timeout=190)
+        proc = subprocess.run(bounded, cwd=APP, stdin=subprocess.DEVNULL,
+                              stdout=stdout, stderr=stderr, timeout=limit+10)
     (LOGS / (label + ".status")).write_text(str(proc.returncode) + "\n")
     output = ((LOGS / (label + ".stdout")).read_bytes() + (LOGS / (label + ".stderr")).read_bytes()).decode()
     assert proc.returncode == expected, "mutation status " + label + " " + str(proc.returncode) + ": " + output
     if assertion:
         assert assertion in output and ("AssertionError:" in output or "assertion failed:" in output), "mutation detecting assertion " + label + ": " + output
-    return dict(command=["timeout", "--foreground", "180", *args], status=proc.returncode, streams=str(LOGS.relative_to(APP)) + "/" + label)
+    return dict(command=bounded, status=proc.returncode, streams=str(LOGS.relative_to(APP)) + "/" + label)
 
 
 def network_variant(index):
@@ -226,34 +223,13 @@ def network_variant(index):
     else: S.lifecycle_checks(selected)
 
 
-PRE_PSBT_SHA256 = '220593b68521f27b6364ce0ca00a65eae09d3a1b4fff4eb6710d4a122675cd82'
 
 def verify():
     record = json.loads(DEST.read_bytes())
-    retained = record["pre_psbt_observation"]
-    assert hashlib.sha256((json.dumps(retained, indent=2) + "\n").encode()).hexdigest() == PRE_PSBT_SHA256, "retained pre-PSBT observation"
     assert record["source_sha256"] == fingerprints(), "stale RPC mutation evidence"
     expected = [r[0] for r in client_edits()] + [r[0] for r in network_edits()]
     assert [r["property"] for r in record["checks"]] == expected, "RPC mutation property inventory"
     assert record["count"] == len(record["checks"]) == 281, "RPC mutation count"
-    pre_list = record["pre_list_observation"]
-    assert hashlib.sha256((json.dumps(pre_list, indent=2) + "\n").encode()).hexdigest() == PRE_LIST_SHA256, "retained pre-list 80/281 observation"
-    assert pre_list["count"] == len(pre_list["checks"]) == 281
-    previous = record["previous_observation"]
-    assert hashlib.sha256((json.dumps(previous, indent=2) + "\n").encode()).hexdigest() == PREVIOUS_SHA256, "retained prior RPC observations"
-    assert previous["count"] == len(previous["checks"]) == 164
-    corrected = record["corrected_observation"]
-    assert hashlib.sha256((json.dumps(corrected, indent=2) + "\n").encode()).hexdigest() == CORRECTED_SHA256, "retained corrected RPC observations"
-    assert corrected["count"] == len(corrected["checks"]) == 211
-    nested = record["nested_observation"]
-    assert hashlib.sha256((json.dumps(nested, indent=2) + "\n").encode()).hexdigest() == NESTED_SHA256, "retained nested cleanup observations"
-    assert nested["count"] == len(nested["checks"]) == 243
-    late = record["late_cleanup_observation"]
-    assert hashlib.sha256((json.dumps(late, indent=2) + "\n").encode()).hexdigest() == LATE_SHA256, "retained final cleanup observations"
-    assert late["count"] == len(late["checks"]) == 271
-    deadline = record["deadline_adoption_observation"]
-    assert hashlib.sha256((json.dumps(deadline, indent=2) + "\n").encode()).hexdigest() == DEADLINE_SHA256, "retained deadline/adoption observations"
-    assert deadline["count"] == len(deadline["checks"]) == 278
     planned = client_edits() + network_edits()
     assert [(r["file"], r["replace"], r["with_text"]) for r in record["checks"]] == [
         (str(r[1].relative_to(APP)), r[2], r[3]) for r in planned], "RPC exact mutation definitions"
@@ -262,7 +238,7 @@ def verify():
         assert row["assertion"] and row["replace"] != row["with_text"]
         if "build" in row: assert row["build"]["status"] == row["restore_build"]["status"] == 0
     assert record["restored_full"]["status"] == 0
-    print("RPC mutation evidence: 68 client/capture selections; 213 separately selected safety reds; exact restoration; prior 64/164, corrected 69/211, nested 72/243 and final cleanup 73/271 and deadline/adoption 77/278 retained", flush=True)
+    print("RPC mutation evidence: 68 client/capture selections; 213 separately selected safety reds; exact restoration", flush=True)
 
 
 def main():
@@ -275,21 +251,6 @@ def main():
         network_variant(int(args[1])); return 0
     assert args in [[], ["--resume"]]
     LOGS.mkdir(parents=True, exist_ok=True)
-    prior = json.loads(DEST.read_bytes())
-    pre_psbt = prior.get("pre_psbt_observation", {k: v for k, v in prior.items() if not k.endswith("_observation")})
-    assert hashlib.sha256((json.dumps(pre_psbt, indent=2) + "\n").encode()).hexdigest() == PRE_PSBT_SHA256, "original pre-PSBT observation"
-    pre_list = prior.get("pre_list_observation", {k: v for k, v in prior.items() if not k.endswith("_observation")})
-    assert hashlib.sha256((json.dumps(pre_list, indent=2) + "\n").encode()).hexdigest() == PRE_LIST_SHA256, "original pre-list observation"
-    previous = prior.get("previous_observation", prior)
-    assert hashlib.sha256((json.dumps(previous, indent=2) + "\n").encode()).hexdigest() == PREVIOUS_SHA256, "original RPC observation"
-    corrected = prior.get("corrected_observation", prior)
-    assert hashlib.sha256((json.dumps(corrected, indent=2) + "\n").encode()).hexdigest() == CORRECTED_SHA256, "corrected RPC observation"
-    nested = prior.get("nested_observation", prior)
-    assert hashlib.sha256((json.dumps(nested, indent=2) + "\n").encode()).hexdigest() == NESTED_SHA256, "nested RPC observation"
-    late = prior.get("late_cleanup_observation", prior)
-    assert hashlib.sha256((json.dumps(late, indent=2) + "\n").encode()).hexdigest() == LATE_SHA256, "final cleanup RPC observation"
-    deadline = prior.get("deadline_adoption_observation", prior)
-    assert hashlib.sha256((json.dumps(deadline, indent=2) + "\n").encode()).hexdigest() == DEADLINE_SHA256, "deadline/adoption RPC observation"
     hashes = fingerprints()
     originals = {p: p.read_bytes() for _, p, *_ in client_edits()}
     managed = [signal.SIGHUP, signal.SIGINT, signal.SIGQUIT, signal.SIGTERM]
@@ -342,10 +303,7 @@ def main():
             print(name + ": red/green 1/0", flush=True)
         full = command("restored-full", ["lake", "test"], 0)
         assert fingerprints() == hashes, "RPC exact source restoration"
-        DEST.write_text(json.dumps(dict(pre_psbt_observation=pre_psbt, count=len(records), source_sha256=hashes, checks=records, restored_full=full,
-                                       previous_observation=previous, corrected_observation=corrected,
-                                       nested_observation=nested, late_cleanup_observation=late, deadline_adoption_observation=deadline,
-                                       pre_list_observation=pre_list), indent=2) + "\n")
+        write_record(DEST, json.dumps(dict(count=len(records), source_sha256=hashes, checks=records, restored_full=full), indent=2) + '\n')
         verify()
     finally:
         restore()

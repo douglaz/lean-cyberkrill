@@ -588,8 +588,9 @@ def capture_case(job):
             for method, params, target, reply in list(capture.calls):
                 if method not in ["createpsbt", "walletcreatefundedpsbt"]: continue
                 exact = parse_json(json_text(params))
-                if row["kind"] == "move-f64":
-                    amount = sum(p["sats"] for p in funding[wallet][:3]) - sats(option(row, "--fee"))
+                if row["kind"] == "move-f64" or row["name"] == "move-unclamped":
+                    count = 2 if row["name"] == "move-unclamped" else 3
+                    amount = sum(p["sats"] for p in funding[wallet][:count]) - sats(option(row, "--fee"))
                     exact[1] = {addresses["single"][0][5]: Decimal(amount) / Decimal(100000000)}
                     capture.record(method, exact, target)
                     numeric.append(dict(reference=params[1], exact=exact[1], integer_sats=amount))

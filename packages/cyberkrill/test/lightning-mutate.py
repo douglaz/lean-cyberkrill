@@ -12,6 +12,7 @@ import subprocess
 import sys
 import time
 
+from evidence import write_record
 from cases import APP
 
 
@@ -211,7 +212,7 @@ def main():
         assert executions == 94
         record = dict(count=30, new_distinct=29, executions=executions,
                       source_sha256=hashes, mutations=records, restored_full=full)
-        Path("test/golden/lightning-mutation-record.json").write_text(json.dumps(record, indent=2) + "\n")
+        write_record(Path('test/golden/lightning-mutation-record.json'), json.dumps(record, indent=2) + '\n')
     finally:
         restore()
     verify()

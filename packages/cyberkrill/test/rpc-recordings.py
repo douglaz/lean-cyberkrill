@@ -40,6 +40,9 @@ COUNTS["funded-fractional"] = 15
 RESPONSES["funded-fractional"] = 15
 METHOD_COUNTS["funded-fractional"] = dict(getdescriptorinfo=5, importdescriptors=1,
     deriveaddresses=4, listunspent=2, getreceivedbyaddress=2, walletcreatefundedpsbt=1)
+COUNTS["move-unclamped"] = 14
+RESPONSES["move-unclamped"] = 14
+METHOD_COUNTS["move-unclamped"] = dict(METHOD_COUNTS["move-overshoot"], createpsbt=2)
 METHODS = {"listunspent", "scantxoutset", "getblockchaininfo", "getdescriptorinfo", "importdescriptors",
            "deriveaddresses", "createpsbt", "getreceivedbyaddress", "walletcreatefundedpsbt", "getrawtransaction", "getblock"}
 METHOD_INVENTORY = dict(listunspent=10, scantxoutset=2, getblockchaininfo=1,
@@ -227,7 +230,7 @@ def validate_case(row, data, shared):
             for entry in methods[method]:
                 for params in entry["rpc"]["params"]:
                     assert G.selector(params[0]) == G.selector(expected), "ordered case-local PSBT inputs: " + row["name"]
-    if row["kind"] in ["create", "funded", "move-success", "overshoot"]:
+    if row["kind"] in ["create", "funded", "move-success", "overshoot"] and row["name"] != "move-unclamped":
         name = "walletcreatefundedpsbt" if row["kind"] == "funded" else "createpsbt"
         assert len(methods[name]) == 1, "successful PSBT command shape"
         entry = methods[name][0]
@@ -256,6 +259,15 @@ def validate_case(row, data, shared):
         params = methods["createpsbt"][0]["rpc"]["params"][0]
         assert params[0] == [dict(txid=p["txid"], vout=p["vout"]) for p in funding[:2]], "largest-first selection"
         assert sum(p["sats"] for p in funding[:2]) == 60000000 > 50000000, "selection overshoots cap"
+    if row["name"] == "move-unclamped":
+        pair = methods["createpsbt"]
+        assert len(pair) == 2, "clamped/exact real Core selectors"
+        original, exact = pair
+        assert list(original["rpc"]["params"][0][1].values()) == [Decimal("0.4999834")], "reference clamp"
+        assert list(exact["rpc"]["params"][0][1].values()) == [Decimal("0.5999834")], "full selected total less fee"
+        assert original["rpc"]["params"][0][0] == exact["rpc"]["params"][0][0], "same overshooting selection"
+        assert all(result(e).startswith("cHNidP") for e in pair), "both observed Core successes"
+        assert meta["numeric"] == [dict(reference=original["rpc"]["params"][0][1], exact=exact["rpc"]["params"][0][1], integer_sats=59998340)], "independent unclamped amount"
     if row["kind"] == "move-f64":
         pair = methods["createpsbt"]
         assert len(pair) == 2, "distinct float/error and exact/success selectors"
@@ -327,14 +339,15 @@ def validate_bundle(rows, blobs, shared):
               f"{sum(len(e['responses']) for e in entries)}/{RESPONSES[row['name']]} responses; "
               f"methods {METHOD_COUNTS[row['name']]}", flush=True)
     if {r["name"] for r in rows} == set(COUNTS):
-        assert len(rows) == 9 and total == 84, "independent case/entry inventory"
+        assert len(rows) == 10 and total == 98, "independent case/entry inventory"
         assert sum(ORIGINAL_COUNTS.values()) == 69 and sum(ORIGINAL_RESPONSES.values()) == 75
         assert methods == METHODS, "eleven-method completeness"
         expected = Counter(METHOD_INVENTORY)
         expected.update(METHOD_COUNTS["funded-fractional"])
-        assert inventory == expected and responses == 90, "complete method/response inventory"
+        expected.update(METHOD_COUNTS["move-unclamped"])
+        assert inventory == expected and responses == 104, "complete method/response inventory"
         print("RPC original recordings: 8 cases/11 methods/69 selectors/75 replies/69 auth controls", flush=True)
-        print("RPC recordings: 9/9 cases, 11/11 methods, 84/84 selectors, 90/90 replies, 84/84 auth controls", flush=True)
+        print("RPC recordings: 10/10 cases, 11/11 methods, 98/98 selectors, 104/104 replies, 98/98 auth controls", flush=True)
 
 
 def request(port, entry, params, authorization=G.AUTH, method="POST", path=None):
@@ -411,7 +424,7 @@ def replay_main():
     blobs = {r["recording"]: (root / r["recording"]).read_bytes() for r in rows}
     validate_bundle(rows, blobs, shared)
     for row in rows: replay(root / row["recording"], parse_json(blobs[row["recording"]]))
-    print("RPC replay: 9/9 separate real responders; exact params/auth, complete replies, refusals and exhaustion")
+    print("RPC replay: 10/10 separate real responders; exact params/auth, complete replies, refusals and exhaustion")
 
 
 def main():

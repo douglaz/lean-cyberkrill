@@ -12,7 +12,9 @@ import subprocess
 import sys
 import time
 
+from evidence import write_record
 from cases import APP
+from network import run_owned
 
 
 def mutations():
@@ -134,8 +136,8 @@ def mutations():
         "cluster-help/fm-decode-invite/value-missing-then-help", "cluster help earlier error or operand")
     rows[-1][4][:] = cluster_checks(["value-missing-then-help"], "cluster help earlier error or operand")
     add("cluster-terminator", app,
-        'private def throughHelp : List String → List String\n  | "--" :: rest => "--" :: rest',
-        'private def throughHelp : List String → List String\n  | "--" :: rest => throughHelp rest',
+        'private def throughHelp (valueFlags : List String) : List String → List String\n  | "--" :: rest => "--" :: rest',
+        'private def throughHelp (valueFlags : List String) : List String → List String\n  | "--" :: rest => throughHelp valueFlags rest',
         "cluster-help/fm-decode-invite/terminator-long-help", "cluster help earlier error or operand")
     rows[-1][4][:] = cluster_checks(["terminator-long-help"], "cluster help earlier error or operand")
     add("cluster-long-help-value", app, 'flag == "--help"', 'flag.startsWith "--help"',
@@ -224,8 +226,15 @@ def main():
     def interrupted(signum,_): restore(); raise SystemExit(128+signum)
     for signum in signals: signal.signal(signum,interrupted)
     def command(label,args):
-        bounded=["timeout","--foreground","180",*args]; start=time.monotonic()
-        result=subprocess.run(bounded,stdin=subprocess.DEVNULL,capture_output=True,timeout=190)
+        limit = 600 if args == ["lake", "test"] else 180
+        bounded=["timeout","--foreground",str(limit),*args]; start=time.monotonic()
+        try:
+            result=run_owned(bounded,capture_output=True,timeout=limit+10)
+        except subprocess.TimeoutExpired as error:
+            for stream in ["stdout","stderr"]:
+                (logs/(label+"."+stream)).write_bytes(getattr(error,stream) or b"")
+            (logs/(label+".status")).write_text("timeout\n")
+            raise
         for stream in ["stdout","stderr"]: (logs/(label+"."+stream)).write_bytes(getattr(result,stream))
         (logs/(label+".status")).write_text(str(result.returncode)+"\n")
         return result,dict(command=bounded,status=result.returncode,seconds=round(time.monotonic()-start,3))
@@ -268,7 +277,7 @@ def main():
         assert fingerprints() == hashes, "offline final exact source restoration"
         record=dict(count=len(records),executions=sum(len(r["checks"]) for r in records),
                     source_sha256=hashes,mutations=records,restored_full=full)
-        (APP/"test/golden/offline-mutation-record.json").write_text(json.dumps(record,indent=2)+"\n")
+        write_record(APP / 'test/golden/offline-mutation-record.json', json.dumps(record, indent=2) + '\n')
     finally:
         restore()
         # Even a failed experiment leaves executable artifacts built from the
