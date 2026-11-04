@@ -1,21 +1,523 @@
 {
+  "pre_psbt_observation": {
+    "count": 9,
+    "source_sha256": {
+      "Cyberkrill/App.lean": "db61dca18d0e8b1460a092a3cf7797b46b032ab2a25b1379ef51a8b2d4d93de1",
+      "Cyberkrill/Amounts.lean": "5c61afca50ba859e8dba2fea4fd04d3db1c70905684815aec03c9174a1ac327f",
+      "Cyberkrill/Frozenkrill.lean": "97a971fcefac7c5c49bcd528a97a2f49c53406b2bcd5619a7f062b38d284b96a",
+      "Cyberkrill/ListUtxos.lean": "a00fae00fbe109a034e6753b981db3c81ffd30b49ad21dd77651bb19950e6e06",
+      "Cyberkrill/CoreRpc.lean": "eafadfb9bc17769c5f48ad3bec281a51177e64de9badb253a3f200f1f8669dea",
+      "Cyberkrill/RpcFlags.lean": "d07ca3f7d647bfabceb6eeaa90954d59dc30a76401677a16226dd9171b65b1d0",
+      "CyberkrillTests/ListUtxos.lean": "e813ada4731e4e51a62ec49782301a1f0fe99ce07d375d7f474b17a60fb3380b",
+      "CyberkrillTests.lean": "7f8f24bbbc5e3861efecda5392678e34194d55809880d1c3d0ba3f86c96ad8e4",
+      "test/list-utxos.py": "da7c7da086e48ae74fda4b16bdfad94c43968833754cea5e46caa6f69fa36b5b",
+      "test/list-utxos-mutations.py": "a86538afe287a38319b02c08b79d60904f6d08057a2f20a603c78cc0bed9d6f5",
+      "test/list-utxos-lifecycle.py": "387c1e8dd627e98175a95047fc4cba825f53697b9cfde7000f931907b4a4ec36",
+      "test/network.py": "053bc627decb80b256efe256fb5aa4b81027c93693e3dd9c9c630b689cb98297",
+      "test/list-utxos-provenance.json": "587ee6aed4d9741b464a008276ef67bb9c6d4b7cdb445d20329e125dbd7d8183",
+      "test/golden/list-utxos-reference.json": "c867214f133633b80e7b6337a78b0c2b258453e41bb14cceabcbaab7c1a0d6c2",
+      "test/list-utxos-lexical-mutations.py": "2f326a3d7ddd7e85a40080041ca623a3031f52b184f452ef0e5b38be31c938aa"
+    },
+    "baseline": {
+      "command": [
+        "lake",
+        "build",
+        "cyberkrill",
+        "CyberkrillTests"
+      ],
+      "status": 0,
+      "stdout_sha256": "5eb503b2f28c5b5d31a7645adcc73914a00c9d79e1165d29cabdfeef96afe279",
+      "stderr_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    "checks": [
+      {
+        "property": "high-pair-required",
+        "replace": "| _ => false\n    else",
+        "with_text": "| _ => true\n    else",
+        "build": {
+          "command": [
+            "lake",
+            "build",
+            "cyberkrill",
+            "CyberkrillTests"
+          ],
+          "status": 0,
+          "stdout_sha256": "3274a5f45013b2fdc9d1a0d96cbe336126b21d12f2658f520be54a1195b2df0b",
+          "stderr_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+        },
+        "red": {
+          "command": [
+            "python3",
+            "-B",
+            "test/list-utxos-lexical-mutations.py",
+            "--case",
+            "high-pair-required"
+          ],
+          "status": 1,
+          "stdout_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+          "stderr_sha256": "77e5522ab17a3a87b93de10acaba4529bda11c8837d4e12dfaa406ba06687312"
+        },
+        "restore_build": {
+          "command": [
+            "lake",
+            "build",
+            "cyberkrill",
+            "CyberkrillTests"
+          ],
+          "status": 0,
+          "stdout_sha256": "84d968276396c7fe14cd693e30b1c473bd4ec4401720adfeabd0fa920be593b2",
+          "stderr_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+        },
+        "green": {
+          "command": [
+            "python3",
+            "-B",
+            "test/list-utxos-lexical-mutations.py",
+            "--case",
+            "high-pair-required"
+          ],
+          "status": 0,
+          "stdout_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+          "stderr_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+        }
+      },
+      {
+        "property": "low-surrogate-refused",
+        "replace": "!(0xDC00 \u2264 unit && unit \u2264 0xDFFF)",
+        "with_text": "true",
+        "build": {
+          "command": [
+            "lake",
+            "build",
+            "cyberkrill",
+            "CyberkrillTests"
+          ],
+          "status": 0,
+          "stdout_sha256": "fec0338ad197177f8f6643adbe246730aec96122d0ed7f22a453f93e4db8e3f8",
+          "stderr_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+        },
+        "red": {
+          "command": [
+            "python3",
+            "-B",
+            "test/list-utxos-lexical-mutations.py",
+            "--case",
+            "low-surrogate-refused"
+          ],
+          "status": 1,
+          "stdout_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+          "stderr_sha256": "c224762d5c3d53bed848465ff4a17592902b71f0a9cc1ff9e0cda22053d887fb"
+        },
+        "restore_build": {
+          "command": [
+            "lake",
+            "build",
+            "cyberkrill",
+            "CyberkrillTests"
+          ],
+          "status": 0,
+          "stdout_sha256": "e01801684fc6b1eb8d93f5a4baea811b59f3a93d5aef0fe260464000774b51a3",
+          "stderr_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+        },
+        "green": {
+          "command": [
+            "python3",
+            "-B",
+            "test/list-utxos-lexical-mutations.py",
+            "--case",
+            "low-surrogate-refused"
+          ],
+          "status": 0,
+          "stdout_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+          "stderr_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+        }
+      },
+      {
+        "property": "pair-second-unit",
+        "replace": "0xDC00 \u2264 low && low \u2264 0xDFFF",
+        "with_text": "low \u2264 0xFFFF",
+        "build": {
+          "command": [
+            "lake",
+            "build",
+            "cyberkrill",
+            "CyberkrillTests"
+          ],
+          "status": 0,
+          "stdout_sha256": "6cf460c120be726e7562cc54bd94be4eff4dc31281aee6c735af1cc94cde9faf",
+          "stderr_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+        },
+        "red": {
+          "command": [
+            "python3",
+            "-B",
+            "test/list-utxos-lexical-mutations.py",
+            "--case",
+            "pair-second-unit"
+          ],
+          "status": 1,
+          "stdout_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+          "stderr_sha256": "396e346aaa1847e6686699336715e0c4f3f6ac53f7b3f93f0ef7e4abe4044cf1"
+        },
+        "restore_build": {
+          "command": [
+            "lake",
+            "build",
+            "cyberkrill",
+            "CyberkrillTests"
+          ],
+          "status": 0,
+          "stdout_sha256": "1761e68fe7d560abad5cdc00f9bd15d22dd14a52f166f2c86ab6b9dee6d9926c",
+          "stderr_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+        },
+        "green": {
+          "command": [
+            "python3",
+            "-B",
+            "test/list-utxos-lexical-mutations.py",
+            "--case",
+            "pair-second-unit"
+          ],
+          "status": 0,
+          "stdout_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+          "stderr_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+        }
+      },
+      {
+        "property": "escaped-field-name",
+        "replace": "let .str key \u2190 Json.parse token | throw \"field\"",
+        "with_text": "let .str decoded \u2190 Json.parse token | throw \"field\"\n        let key := if token.contains '\\\\' then token else decoded",
+        "build": {
+          "command": [
+            "lake",
+            "build",
+            "cyberkrill",
+            "CyberkrillTests"
+          ],
+          "status": 0,
+          "stdout_sha256": "0c8c9847537a5f580f66f980982b7d79ac1161c5a8e76a279aaa5034ad6c4922",
+          "stderr_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+        },
+        "red": {
+          "command": [
+            "python3",
+            "-B",
+            "test/list-utxos-lexical-mutations.py",
+            "--case",
+            "escaped-field-name"
+          ],
+          "status": 1,
+          "stdout_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+          "stderr_sha256": "2d56c6d66e56225e24b1fed77c48e0b1a4f4e22f66d64a4d99c56d44549f006c"
+        },
+        "restore_build": {
+          "command": [
+            "lake",
+            "build",
+            "cyberkrill",
+            "CyberkrillTests"
+          ],
+          "status": 0,
+          "stdout_sha256": "7476022f70022a3df93515447ded9f6e72ffb1b028f9399f562cb6d5d904fa6c",
+          "stderr_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+        },
+        "green": {
+          "command": [
+            "python3",
+            "-B",
+            "test/list-utxos-lexical-mutations.py",
+            "--case",
+            "escaped-field-name"
+          ],
+          "status": 0,
+          "stdout_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+          "stderr_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+        }
+      },
+      {
+        "property": "nested-field-name",
+        "replace": "unless validKeys do throw \"field escape\"",
+        "with_text": "unless validKeys || known.contains \"address\" do throw \"field escape\"",
+        "build": {
+          "command": [
+            "lake",
+            "build",
+            "cyberkrill",
+            "CyberkrillTests"
+          ],
+          "status": 0,
+          "stdout_sha256": "7da4e052ee1492dda7a63ff8f42eb38ac5259f9545da312f5f6e72c0a8912255",
+          "stderr_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+        },
+        "red": {
+          "command": [
+            "python3",
+            "-B",
+            "test/list-utxos-lexical-mutations.py",
+            "--case",
+            "nested-field-name"
+          ],
+          "status": 1,
+          "stdout_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+          "stderr_sha256": "11a02980b3ff563c5dac07c710ddfb19d33f22285e09c3e7178bc01b66b70fbd"
+        },
+        "restore_build": {
+          "command": [
+            "lake",
+            "build",
+            "cyberkrill",
+            "CyberkrillTests"
+          ],
+          "status": 0,
+          "stdout_sha256": "4383e1065318ba7eb6c62ed3158ce19a2bc0c980c8d4ee787c8fa5e0b4654ce9",
+          "stderr_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+        },
+        "green": {
+          "command": [
+            "python3",
+            "-B",
+            "test/list-utxos-lexical-mutations.py",
+            "--case",
+            "nested-field-name"
+          ],
+          "status": 0,
+          "stdout_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+          "stderr_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+        }
+      },
+      {
+        "property": "ignored-duplicate",
+        "replace": "fields.map (\u00b7.1) |>.filter (known.contains \u00b7)",
+        "with_text": "fields.map (\u00b7.1)",
+        "build": {
+          "command": [
+            "lake",
+            "build",
+            "cyberkrill",
+            "CyberkrillTests"
+          ],
+          "status": 0,
+          "stdout_sha256": "f18f3737d21f8021c94cc72241b7941558c26b73479991f59970eed4fa3f1dce",
+          "stderr_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+        },
+        "red": {
+          "command": [
+            "python3",
+            "-B",
+            "test/list-utxos-lexical-mutations.py",
+            "--case",
+            "ignored-duplicate"
+          ],
+          "status": 1,
+          "stdout_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+          "stderr_sha256": "4d5a29edd2e494782cfbe84d09ba1baff91f3f891c6417498d8a28a412ccac72"
+        },
+        "restore_build": {
+          "command": [
+            "lake",
+            "build",
+            "cyberkrill",
+            "CyberkrillTests"
+          ],
+          "status": 0,
+          "stdout_sha256": "9813d40d9f6ca56044f6ec9135a8dbe3f4df7fd01f9d9ff352471d32fa47d272",
+          "stderr_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+        },
+        "green": {
+          "command": [
+            "python3",
+            "-B",
+            "test/list-utxos-lexical-mutations.py",
+            "--case",
+            "ignored-duplicate"
+          ],
+          "status": 0,
+          "stdout_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+          "stderr_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+        }
+      },
+      {
+        "property": "ignored-surrogate",
+        "replace": "if known.contains key then",
+        "with_text": "if true then",
+        "build": {
+          "command": [
+            "lake",
+            "build",
+            "cyberkrill",
+            "CyberkrillTests"
+          ],
+          "status": 0,
+          "stdout_sha256": "ac87c3e4b79d44f063c12aade97386474dbd0df23fa0138c3d5f00ed1ed40935",
+          "stderr_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+        },
+        "red": {
+          "command": [
+            "python3",
+            "-B",
+            "test/list-utxos-lexical-mutations.py",
+            "--case",
+            "ignored-surrogate"
+          ],
+          "status": 1,
+          "stdout_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+          "stderr_sha256": "eec95d2dddcc5b7543d06b0a7bd615fa35fa31e721bfdfea6fe140c786d4f195"
+        },
+        "restore_build": {
+          "command": [
+            "lake",
+            "build",
+            "cyberkrill",
+            "CyberkrillTests"
+          ],
+          "status": 0,
+          "stdout_sha256": "c3df6545afb2ddcedc77e0fe0db99908a4b64af35f00b574cd89ef2a794cdeaa",
+          "stderr_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+        },
+        "green": {
+          "command": [
+            "python3",
+            "-B",
+            "test/list-utxos-lexical-mutations.py",
+            "--case",
+            "ignored-surrogate"
+          ],
+          "status": 0,
+          "stdout_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+          "stderr_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+        }
+      },
+      {
+        "property": "valid-pair",
+        "replace": "0xDC00 \u2264 low && low \u2264 0xDFFF && validStringChars tail",
+        "with_text": "false",
+        "build": {
+          "command": [
+            "lake",
+            "build",
+            "cyberkrill",
+            "CyberkrillTests"
+          ],
+          "status": 0,
+          "stdout_sha256": "840a69427b44c75fcef46ea562d6c94830b442423031f08ad4e405334f444fc3",
+          "stderr_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+        },
+        "red": {
+          "command": [
+            "python3",
+            "-B",
+            "test/list-utxos-lexical-mutations.py",
+            "--case",
+            "valid-pair"
+          ],
+          "status": 1,
+          "stdout_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+          "stderr_sha256": "9c3500af9dbf931897c0ef036c7c86592d1ff29dd37d4f7d3c7f43df17129c78"
+        },
+        "restore_build": {
+          "command": [
+            "lake",
+            "build",
+            "cyberkrill",
+            "CyberkrillTests"
+          ],
+          "status": 0,
+          "stdout_sha256": "2d0111cc542174975dcce4e0cedaf60ca82227553445a2cf2ffcb9dd523d0705",
+          "stderr_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+        },
+        "green": {
+          "command": [
+            "python3",
+            "-B",
+            "test/list-utxos-lexical-mutations.py",
+            "--case",
+            "valid-pair"
+          ],
+          "status": 0,
+          "stdout_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+          "stderr_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+        }
+      },
+      {
+        "property": "ordinary-unicode",
+        "replace": ".atom (validStringChars token.toList)",
+        "with_text": ".atom (validStringChars token.toList && token.toList.all (fun c => c.toNat < 128))",
+        "build": {
+          "command": [
+            "lake",
+            "build",
+            "cyberkrill",
+            "CyberkrillTests"
+          ],
+          "status": 0,
+          "stdout_sha256": "f3d8223edbc34bf0159c77f651fabf0c778cd8410c1693038286f636ad853968",
+          "stderr_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+        },
+        "red": {
+          "command": [
+            "python3",
+            "-B",
+            "test/list-utxos-lexical-mutations.py",
+            "--case",
+            "ordinary-unicode"
+          ],
+          "status": 1,
+          "stdout_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+          "stderr_sha256": "e367f77cf64e8bb19996d298c44cafb5bd498b3369215778b66a1960ac4e2784"
+        },
+        "restore_build": {
+          "command": [
+            "lake",
+            "build",
+            "cyberkrill",
+            "CyberkrillTests"
+          ],
+          "status": 0,
+          "stdout_sha256": "0d6d4214439658dd666a7b095baa9354deffe4f03a3e6271cdcd5f4ddf41e0c4",
+          "stderr_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+        },
+        "green": {
+          "command": [
+            "python3",
+            "-B",
+            "test/list-utxos-lexical-mutations.py",
+            "--case",
+            "ordinary-unicode"
+          ],
+          "status": 0,
+          "stdout_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+          "stderr_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+        }
+      }
+    ],
+    "restored_full": {
+      "command": [
+        "python3",
+        "-B",
+        "test/list-utxos.py"
+      ],
+      "status": 0,
+      "stdout_sha256": "acf5a58e6895ff4e12225f79e9dca7473b6d9ef68737fbd30a869c8eff8add86",
+      "stderr_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    }
+  },
   "count": 9,
   "source_sha256": {
-    "Cyberkrill/App.lean": "db61dca18d0e8b1460a092a3cf7797b46b032ab2a25b1379ef51a8b2d4d93de1",
+    "Cyberkrill/App.lean": "2c34598b24c9a4d199528ad4392edca14bf7b84bd0c9e978baee78574303a6d7",
     "Cyberkrill/Amounts.lean": "5c61afca50ba859e8dba2fea4fd04d3db1c70905684815aec03c9174a1ac327f",
     "Cyberkrill/Frozenkrill.lean": "97a971fcefac7c5c49bcd528a97a2f49c53406b2bcd5619a7f062b38d284b96a",
     "Cyberkrill/ListUtxos.lean": "a00fae00fbe109a034e6753b981db3c81ffd30b49ad21dd77651bb19950e6e06",
-    "Cyberkrill/CoreRpc.lean": "eafadfb9bc17769c5f48ad3bec281a51177e64de9badb253a3f200f1f8669dea",
+    "Cyberkrill/CoreRpc.lean": "63fab1a1540c05eac769322a77fc799dc86cdb210da98a35696f8f46d3848a6d",
     "Cyberkrill/RpcFlags.lean": "d07ca3f7d647bfabceb6eeaa90954d59dc30a76401677a16226dd9171b65b1d0",
     "CyberkrillTests/ListUtxos.lean": "e813ada4731e4e51a62ec49782301a1f0fe99ce07d375d7f474b17a60fb3380b",
-    "CyberkrillTests.lean": "7f8f24bbbc5e3861efecda5392678e34194d55809880d1c3d0ba3f86c96ad8e4",
+    "CyberkrillTests.lean": "465b95792624b7ee1d48d5c5b332ec5513fa88a467b247a54444d7179c54cbc3",
     "test/list-utxos.py": "da7c7da086e48ae74fda4b16bdfad94c43968833754cea5e46caa6f69fa36b5b",
-    "test/list-utxos-mutations.py": "a86538afe287a38319b02c08b79d60904f6d08057a2f20a603c78cc0bed9d6f5",
+    "test/list-utxos-mutations.py": "c4f512d8afe8c94c4cda62c1c402c7745fe8de8c89b16b203163142d962b5b17",
     "test/list-utxos-lifecycle.py": "387c1e8dd627e98175a95047fc4cba825f53697b9cfde7000f931907b4a4ec36",
     "test/network.py": "053bc627decb80b256efe256fb5aa4b81027c93693e3dd9c9c630b689cb98297",
     "test/list-utxos-provenance.json": "587ee6aed4d9741b464a008276ef67bb9c6d4b7cdb445d20329e125dbd7d8183",
     "test/golden/list-utxos-reference.json": "c867214f133633b80e7b6337a78b0c2b258453e41bb14cceabcbaab7c1a0d6c2",
-    "test/list-utxos-lexical-mutations.py": "2f326a3d7ddd7e85a40080041ca623a3031f52b184f452ef0e5b38be31c938aa"
+    "test/list-utxos-lexical-mutations.py": "5f58c477669913098f0fbe7dca23d3bee61ef22e1c7e7e000f7e0cd87f40490a"
   },
   "previous_observation": {
     "count": 9,
@@ -525,7 +1027,7 @@
       "CyberkrillTests"
     ],
     "status": 0,
-    "stdout_sha256": "5eb503b2f28c5b5d31a7645adcc73914a00c9d79e1165d29cabdfeef96afe279",
+    "stdout_sha256": "043fc7437ab349a3f218d6096944cfc7f4080a6f6a21d76dc901eeebd05bae32",
     "stderr_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
   },
   "checks": [
@@ -541,7 +1043,7 @@
           "CyberkrillTests"
         ],
         "status": 0,
-        "stdout_sha256": "3274a5f45013b2fdc9d1a0d96cbe336126b21d12f2658f520be54a1195b2df0b",
+        "stdout_sha256": "e896ced82ee0046a74523c46be6a37bf50147a1bb74ba7c41a20fd5c8085388d",
         "stderr_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
       },
       "red": {
@@ -554,7 +1056,7 @@
         ],
         "status": 1,
         "stdout_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
-        "stderr_sha256": "77e5522ab17a3a87b93de10acaba4529bda11c8837d4e12dfaa406ba06687312"
+        "stderr_sha256": "11e016dd37f750e11cde45a9e6e4a11467f108330b639a7bf315a149c10bcbdd"
       },
       "restore_build": {
         "command": [
@@ -564,7 +1066,7 @@
           "CyberkrillTests"
         ],
         "status": 0,
-        "stdout_sha256": "84d968276396c7fe14cd693e30b1c473bd4ec4401720adfeabd0fa920be593b2",
+        "stdout_sha256": "936953145abb8e11201c25b5ff8753a910e563180833597c9c8e954536f1d30e",
         "stderr_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
       },
       "green": {
@@ -592,7 +1094,7 @@
           "CyberkrillTests"
         ],
         "status": 0,
-        "stdout_sha256": "fec0338ad197177f8f6643adbe246730aec96122d0ed7f22a453f93e4db8e3f8",
+        "stdout_sha256": "dd603591ee0fc0e8d3178fb76e61c9c1f6633e80f074600ac53b856afefdaa3a",
         "stderr_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
       },
       "red": {
@@ -605,7 +1107,7 @@
         ],
         "status": 1,
         "stdout_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
-        "stderr_sha256": "c224762d5c3d53bed848465ff4a17592902b71f0a9cc1ff9e0cda22053d887fb"
+        "stderr_sha256": "db65ef7e8a04d1e1e7fac28ffabd3058bf4facd4431e6e3c493fe911bf0dd85f"
       },
       "restore_build": {
         "command": [
@@ -615,7 +1117,7 @@
           "CyberkrillTests"
         ],
         "status": 0,
-        "stdout_sha256": "e01801684fc6b1eb8d93f5a4baea811b59f3a93d5aef0fe260464000774b51a3",
+        "stdout_sha256": "f1a4d8a27ac3c3637e25a6e8c8005fb775656d6e92725365291bbf98fb63a4d7",
         "stderr_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
       },
       "green": {
@@ -643,7 +1145,7 @@
           "CyberkrillTests"
         ],
         "status": 0,
-        "stdout_sha256": "6cf460c120be726e7562cc54bd94be4eff4dc31281aee6c735af1cc94cde9faf",
+        "stdout_sha256": "95a9528a0bf8831d1d62d9a6100d0d5b4aaabb22f233665e7b3cf32da88290c0",
         "stderr_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
       },
       "red": {
@@ -656,7 +1158,7 @@
         ],
         "status": 1,
         "stdout_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
-        "stderr_sha256": "396e346aaa1847e6686699336715e0c4f3f6ac53f7b3f93f0ef7e4abe4044cf1"
+        "stderr_sha256": "909f90050d3ad09a596714ebdbc31b92754e0194ab3c8ff4d5aad0fcb331980a"
       },
       "restore_build": {
         "command": [
@@ -666,7 +1168,7 @@
           "CyberkrillTests"
         ],
         "status": 0,
-        "stdout_sha256": "1761e68fe7d560abad5cdc00f9bd15d22dd14a52f166f2c86ab6b9dee6d9926c",
+        "stdout_sha256": "2e591ae2794a3431c49f1441b459d3fcc026311930b8b8940a80763d835f0b27",
         "stderr_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
       },
       "green": {
@@ -694,7 +1196,7 @@
           "CyberkrillTests"
         ],
         "status": 0,
-        "stdout_sha256": "0c8c9847537a5f580f66f980982b7d79ac1161c5a8e76a279aaa5034ad6c4922",
+        "stdout_sha256": "0cc0339022324a490fe6d0349d26eb0d63d73b341044fe277ef364948968523f",
         "stderr_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
       },
       "red": {
@@ -707,7 +1209,7 @@
         ],
         "status": 1,
         "stdout_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
-        "stderr_sha256": "2d56c6d66e56225e24b1fed77c48e0b1a4f4e22f66d64a4d99c56d44549f006c"
+        "stderr_sha256": "afaa48e883b7511924441605160aca4f04ecec25a98c3db4f47622e8851893d4"
       },
       "restore_build": {
         "command": [
@@ -717,7 +1219,7 @@
           "CyberkrillTests"
         ],
         "status": 0,
-        "stdout_sha256": "7476022f70022a3df93515447ded9f6e72ffb1b028f9399f562cb6d5d904fa6c",
+        "stdout_sha256": "e3162ee04690990d03279bb8882c29f2a3b2f1bb5caf1b00bb80dd168779a13d",
         "stderr_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
       },
       "green": {
@@ -745,7 +1247,7 @@
           "CyberkrillTests"
         ],
         "status": 0,
-        "stdout_sha256": "7da4e052ee1492dda7a63ff8f42eb38ac5259f9545da312f5f6e72c0a8912255",
+        "stdout_sha256": "6373b9396b9b37cbfad0ccce860d752e1a614fc6d167e799b830734e257d6479",
         "stderr_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
       },
       "red": {
@@ -758,7 +1260,7 @@
         ],
         "status": 1,
         "stdout_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
-        "stderr_sha256": "11a02980b3ff563c5dac07c710ddfb19d33f22285e09c3e7178bc01b66b70fbd"
+        "stderr_sha256": "b08ef351253d535eb39bb06f4bb50eb50e1d1d04249aabfe22d4416d20ddbc33"
       },
       "restore_build": {
         "command": [
@@ -768,7 +1270,7 @@
           "CyberkrillTests"
         ],
         "status": 0,
-        "stdout_sha256": "4383e1065318ba7eb6c62ed3158ce19a2bc0c980c8d4ee787c8fa5e0b4654ce9",
+        "stdout_sha256": "52686bb230c32c7271979c7355491a4249c6ac0e42db1df0641390cddd146e28",
         "stderr_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
       },
       "green": {
@@ -796,7 +1298,7 @@
           "CyberkrillTests"
         ],
         "status": 0,
-        "stdout_sha256": "f18f3737d21f8021c94cc72241b7941558c26b73479991f59970eed4fa3f1dce",
+        "stdout_sha256": "69491c2ef6726e308de87db8739f884f00ecfb183f84ef4e27f65dc575c7883e",
         "stderr_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
       },
       "red": {
@@ -809,7 +1311,7 @@
         ],
         "status": 1,
         "stdout_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
-        "stderr_sha256": "4d5a29edd2e494782cfbe84d09ba1baff91f3f891c6417498d8a28a412ccac72"
+        "stderr_sha256": "3e8b3ce147c409d1b2c88fac5a50e314a26ddeb8cba572ff6c6664f06fd8ac01"
       },
       "restore_build": {
         "command": [
@@ -819,7 +1321,7 @@
           "CyberkrillTests"
         ],
         "status": 0,
-        "stdout_sha256": "9813d40d9f6ca56044f6ec9135a8dbe3f4df7fd01f9d9ff352471d32fa47d272",
+        "stdout_sha256": "bae0d6847244dc66bdc04d51ad04703bb3ef79a933eb67a8f7ebe936078ba177",
         "stderr_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
       },
       "green": {
@@ -847,7 +1349,7 @@
           "CyberkrillTests"
         ],
         "status": 0,
-        "stdout_sha256": "ac87c3e4b79d44f063c12aade97386474dbd0df23fa0138c3d5f00ed1ed40935",
+        "stdout_sha256": "c0a63b672f48368be5a0958b34b0463f173b559f5dcdf93e60f4215fee395814",
         "stderr_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
       },
       "red": {
@@ -860,7 +1362,7 @@
         ],
         "status": 1,
         "stdout_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
-        "stderr_sha256": "eec95d2dddcc5b7543d06b0a7bd615fa35fa31e721bfdfea6fe140c786d4f195"
+        "stderr_sha256": "956a290d8074be98b0008b37e9bd2645bacee5b1bbc5eb90e5d90562433cb5f7"
       },
       "restore_build": {
         "command": [
@@ -870,7 +1372,7 @@
           "CyberkrillTests"
         ],
         "status": 0,
-        "stdout_sha256": "c3df6545afb2ddcedc77e0fe0db99908a4b64af35f00b574cd89ef2a794cdeaa",
+        "stdout_sha256": "a6da43d1aac86ec737ba5cba43b58a8a2432d7217a72fbd1d653cf8bdc758115",
         "stderr_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
       },
       "green": {
@@ -898,7 +1400,7 @@
           "CyberkrillTests"
         ],
         "status": 0,
-        "stdout_sha256": "840a69427b44c75fcef46ea562d6c94830b442423031f08ad4e405334f444fc3",
+        "stdout_sha256": "50b3804bb60e003edacb1de50eee8fa0851407b229f47b353ab1b30f6e6930fd",
         "stderr_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
       },
       "red": {
@@ -911,7 +1413,7 @@
         ],
         "status": 1,
         "stdout_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
-        "stderr_sha256": "9c3500af9dbf931897c0ef036c7c86592d1ff29dd37d4f7d3c7f43df17129c78"
+        "stderr_sha256": "d0abbcb7704f49fc5d69b4dfbb31d8ab4272dadd759d620ad9b43e73899ed5d2"
       },
       "restore_build": {
         "command": [
@@ -921,7 +1423,7 @@
           "CyberkrillTests"
         ],
         "status": 0,
-        "stdout_sha256": "2d0111cc542174975dcce4e0cedaf60ca82227553445a2cf2ffcb9dd523d0705",
+        "stdout_sha256": "c84cbf87c047da75b73ae5209d41e98d26af2c8708c243e29183c7a9a2ca6a68",
         "stderr_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
       },
       "green": {
@@ -949,7 +1451,7 @@
           "CyberkrillTests"
         ],
         "status": 0,
-        "stdout_sha256": "f3d8223edbc34bf0159c77f651fabf0c778cd8410c1693038286f636ad853968",
+        "stdout_sha256": "2fb7668275ae42ba3ed20089f68a6b0b5ea6edae15b194ef27bdcb9cd1e3907a",
         "stderr_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
       },
       "red": {
@@ -962,7 +1464,7 @@
         ],
         "status": 1,
         "stdout_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
-        "stderr_sha256": "e367f77cf64e8bb19996d298c44cafb5bd498b3369215778b66a1960ac4e2784"
+        "stderr_sha256": "f07579ef163880fa84816f1fdaebd328a6558bc6248410833512db12f8f94cf2"
       },
       "restore_build": {
         "command": [
@@ -972,7 +1474,7 @@
           "CyberkrillTests"
         ],
         "status": 0,
-        "stdout_sha256": "0d6d4214439658dd666a7b095baa9354deffe4f03a3e6271cdcd5f4ddf41e0c4",
+        "stdout_sha256": "dbbfda13cab3742bac925e2062279aac68883fc0c1af3ed42e5dd47d59302391",
         "stderr_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
       },
       "green": {

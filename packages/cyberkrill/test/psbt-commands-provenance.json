@@ -1,0 +1,48 @@
+{
+  "upstream": "https://github.com/douglaz/cyberkrill",
+  "revision": "27cad1faba86260b06665a89f0af5134d23525c2",
+  "licence": "MIT",
+  "changes": "Original command orchestration; actual isolated CLI captures against unchanged case-local replies. Negative controls are labeled synthetic recorded-PSBT derivatives.",
+  "source_sha256": {
+    "cyberkrill/src/main.rs": "184feb3b1de3af7f961ba4f936d2d2137d199686fa4a59079377fbb9cd2ce9ed",
+    "cyberkrill-core/src/bitcoin_rpc.rs": "84e58ce11c94bc70e3c20469a95b8e87c7a1d8d695dcd23d647da5a5db723987"
+  },
+  "fixture_sha256": {
+    "test/recordings/multipath-create.json": "7fc6777bc3be8d8eb0236f8b13d8d9afd576db2aea3310df106c6729b70ae21b",
+    "test/recordings/change-funded.json": "bc3d6a11905174192ffafa005dd00f2b6544eca18a5229c961d3efb1537f0993",
+    "test/recordings/funded-fractional.json": "5354d3ea0d2d2e53ffa4a2b8cb3349a99ee4b5e053af6c8638c77e10febac04e"
+  },
+  "capture_sha256": "9f177beb9ebcc3b2bb92c36b00e635e856f2771178d50df6da50742d8407e99e",
+  "captures": 17,
+  "bare_fee_exceptions": 3,
+  "original_recordings": {
+    "cases": 8,
+    "methods": 11,
+    "selectors": 69,
+    "replies": 75,
+    "auth401": 69
+  },
+  "new_recordings": {
+    "cases": 1,
+    "selectors": 15,
+    "replies": 15,
+    "auth401": 15
+  },
+  "execution": "Each reference command in a fresh loopback-only network namespace, explicit owned replay URL, owned HOME and cwd, finite timeout; real responder stdin retained until completion.",
+  "caveats": [
+    "Descriptor imports ignore errors and do not rescan historical funds.",
+    "Upstream issue 156 BDK move default was about 1sat/vB, could add change or fail, and reported an incorrect fee; destination calculation governs.",
+    "Existing move-f64 request 0.6999833999999999 retains Core -3 Invalid amount; exact 0.6999834 succeeds. Neither variant is normalized. No move handler is tested here.",
+    "Selected-total-minus-computed-fee with no clamp and --fee handler goldens remain the separate move task."
+  ],
+  "synthetic_numeric_captures": 11,
+  "numeric_controls": "Separate synthetic default/error bodies with recorded PSBTs; actual pinned CLI comparison. Exponent and negative-zero positions default to -1; fees require whole u64 satoshis.",
+  "exact_amount_exception_captures": 6,
+  "exact_amount_exceptions": "Two actual recorded-handler sub-msat rounding successes; four separately labeled synthetic transport controls: exact 20999999.9769 BTC wire/refusal on both commands and funded received amounts -1 and 1e-12, with complete scanning/stopping. No altered-output Core PSBT success is claimed.",
+  "scanner_whitespace": {
+    "expectations": "Source-derived from cyberkrill/src/main.rs:2103-2190 at the pinned revision; no reference fiat invocation or new Core capture.",
+    "controls": 12,
+    "rules": "Internal candidate whitespace follows Rust ASCII whitespace excluding vertical tab; final suffix trim follows Unicode White_Space. Both commands assert exact errors, status, empty stdout and retained writer only."
+  },
+  "cookie_controls": "Fixed committed throwaway cookie copied to the explicit directory and the owned fake HOME conventional .bitcoin/.cookie. No-directory/no-credentials calls retain recorded 401; detecting fallback mutations are restricted to that owned HOME."
+}

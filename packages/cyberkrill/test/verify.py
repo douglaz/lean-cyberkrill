@@ -12,6 +12,21 @@ from driver import fixtures
 
 
 def main():
+    from importlib import import_module
+    import_module("psbt-commands-mutations").verify()
+    provenance = json.loads((APP / "test/psbt-commands-provenance.json").read_bytes())
+    assert provenance["revision"] == PIN and provenance["captures"] == 17
+    assert provenance["exact_amount_exception_captures"] == 6
+    captures = json.loads((APP / "test/golden/psbt-commands-reference.json").read_bytes())
+    assert len(captures["captures"]) == 17 and len(captures["synthetic_numeric_controls"]) == 11
+    assert len(captures["exact_amount_exceptions"]) == 6
+    original_captures = {k: v for k, v in captures.items() if k != "exact_amount_exceptions"}
+    assert hashlib.sha256((json.dumps(original_captures, indent=2)+"\n").encode()).hexdigest() == "fc0fc37e8ec2d61385a392e31a236f30a56d6e34ffa4ec8c6c7498ecd165f83a", "original 17/11 PSBT observations"
+    history = json.loads((APP / "test/golden/psbt-commands-mutation-record.json").read_bytes())["pre_repair_observation"]
+    assert hashlib.sha256((json.dumps(history, indent=2)+"\n").encode()).hexdigest() == "b189047291f2a4628fdd31b31c390b23cb54be45c30e038637d21a7c145f409c", "original 26-edit/29-red PSBT observation"
+    for path, digest in provenance["fixture_sha256"].items():
+        assert hashlib.sha256((APP / path).read_bytes()).hexdigest() == digest, "PSBT recording binding"
+    assert hashlib.sha256((APP / "test/golden/psbt-commands-reference.json").read_bytes()).hexdigest() == provenance["capture_sha256"], "PSBT capture binding"
     fixtures()
     captured = json.loads((APP / "test/golden/reference.json").read_text())
     assert [{k: v for k, v in row.items() if k != "result"} for row in captured] == cases()

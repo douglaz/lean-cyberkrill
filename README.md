@@ -43,8 +43,175 @@ commands, shared whole-sat/explicit-fee helpers, real curve capability wiring,
 and an offline exact-decimal golden comparator. Phase 7b adds offline BOLT11
 invoice decoding/signing and LNURL decoding. Phase 7c adds invite decoding,
 invite encoding and PSBT inspection. Phase 8b adds Core UTXO listing and the
-public frozenkrill reader;
+public frozenkrill reader. Phase 8c adds Core PSBT creation and funded PSBT creation;
 `plan.md` is the plan for v1.
+
+## Phase 8c: Core PSBT creation commands
+
+`onchain-create-psbt` and `onchain-create-funded-psbt` accept repeated `--inputs`,
+required `--outputs`, `--network`, `--fee-rate`, the shared RPC flags,
+`-o/--output` and `--psbt-output`. Funded also accepts unsigned32 `--conf-target`
+and unrestricted `--estimate-mode`; supplied options remain together even when
+`--fee-rate` is set. Unsigned32 uses ASCII decimal, optional leading `+`, and
+maximum 4294967295. Typed errors before effective help fail; earlier help
+succeeds. Create requires inputs during argument parsing; funded reports
+`missingInputs` after opening ordinary output. Empty descriptor expansion
+reports `emptyInputs`. The same case-insensitive network aliases as listing
+are accepted.
+
+`Cyberkrill.PsbtCommands.parseOutputs` preserves empty separator entries,
+trims entries/address/amount, splits at the last colon, and recognizes western
+and Indian grouped fiat numbers, including three-digit leading Indian groups.
+Finite exponent fiat syntax such as `1e5USD` receives the same unsupported-fiat
+refusal. The pinned comma scanner still splits grouped exponent candidates;
+malformed entries fail before precision checking. All entries parse before Bitcoin whole-sat
+checks; those checks precede the clear `fiatNotSupported` refusal. Ordinary
+bare amounts remain BTC. Sub-satoshi outputs give `wholeSatRequired` without
+rounding. A colon left in a destination is rejected on the Core-facing path
+after expansion, matching the pinned handler/client combination. Destination
+objects collapse duplicates last-value-wins before counting distinct outputs;
+amounts stay exact `Bitcoin.Amount` values and exact JSON numbers.
+
+`Cyberkrill.PsbtCommands.fetch` expands descriptor-like inputs (containing `(`
+or `[`) through the existing import/list path. It retains explicit input order,
+per-invocation first-seen deduplication, receiving before change, and repeated
+outpoints across separate expansions. Import errors are ignored; importing with
+timestamp `now` does not rescan historical funds. Every operation keeps the
+supplied client's URL, authentication, timeout and response-size bound.
+
+Create sends `[inputs, destination_object, 0, false]` to `createpsbt`. Its JSON
+contains `psbt`, integer `fee_sats`, and null `change_position`. Without a rate,
+fee is zero. With a rate, the unchanged P2WPKH estimator uses expanded inputs
+and distinct collapsed outputs; the result is informational and never deducted
+from destinations. `2.5sats` succeeds. Bare `0.00000001` is an intentional
+`feeUnitRequired` exception, with nonzero status and the `15sats` example. Three
+actual pinned handler captures cover that exception (descriptor and explicit
+create inputs, and funded), alongside explicit-unit successes. The existing
+exact-amount exception table and its precise pins are unchanged. Six additional
+command-specific exact-amount exceptions are described below.
+
+Funded probes change only for descriptor inputs containing `<0;1>`. It replaces
+the first occurrence with `1`, substitutes each index 0 through 199, strips the
+checksum, asks for descriptor information, and derives without a range. Failed
+derivations are skipped. Positive `getreceivedbyaddress(address, 0)` marks an
+address used; RPC failure falls back to `listunspent(0, 9999999, [address])`.
+The first unused address stops probing. Nonnumeric received amounts default to
+zero; a nonarray fallback defaults to unused. With no multipath input no probe
+runs. `walletCreateFundedPsbtCommand` omits empty options and applies the pinned
+command defaults separately from the unchanged strict typed wrapper: absent or
+nonnumeric fee is zero, absent/noninteger change position is -1, and integer
+positions retain the i64-to-i32 conversion. Command-specific token inspection
+preserves that default for exponent forms and negative zero, whose spelling
+the ordinary exact JSON number representation erases. The raw command result
+is validated before `fundedCommandResult` converts the fee and position.
+Numeric fees must be whole satoshis within u64; fractional-satoshi fees are
+refused with `wholeSatRequired`, and overflow with `invalidFee`. Option keys are `changeAddress`,
+`conf_target`, `estimate_mode`, `fee_rate`; the rate is sat/vB directly. No
+BIP32 argument is appended. Only funded leaves coin selection to Core.
+
+Both commands acquire and retain their ordinary JSON writer before runtime
+network/backend/output validation or client work. Writer failures therefore
+precede those failures, and invalid runtime inputs can truncate the JSON file.
+The original RPC Base64 spelling must be valid, including its padding and
+whitespace boundaries. After the real PSBT parser's curve/hash/same-point checks, raw Base64 is written
+to `--psbt-output` without a newline, before JSON serialization/final write.
+JSON has no appended newline; JSON file output leaves stdout empty. These are
+ordinary files; the private mnemonic output contract is separate. Tests check
+single acquisition, retained writer identity, write failures, and both handlers
+using controlled JSON/raw FIFOs; the five original FIFO consumers are retained.
+Twenty-four recorded-PSBT spelling derivatives cover valid success and surrounding
+space, tab, newline, CRLF and Unicode whitespace rejection on both handlers,
+with early JSON truncation and no raw-file creation or overwrite. Offline PSBT
+inspection retains its accepted trimming behavior.
+
+Both commands reject `--wallet-file` with or without a directory, and reject
+`--descriptor` plus `--bitcoin-dir` even with explicit `--rpc-url`. These are
+port-only tests: the pinned BDK path hardcodes port 8332
+(`main.rs:1617–1638,1726–1748`, `bdk_wallet.rs:254–259`). A descriptor supplied
+without a directory is accepted and ignored. Electrum/Esplora remain unsupported.
+No fiat capture, BDK route, wallet-file PSBT route or move handler is executed.
+
+The implementation follows the complete MIT source bodies in
+[cyberkrill at the pinned revision](https://github.com/douglaz/cyberkrill/tree/27cad1faba86260b06665a89f0af5134d23525c2),
+`cyberkrill/src/main.rs` and `cyberkrill-core/src/bitcoin_rpc.rs`.
+`test/psbt-commands-provenance.json` binds those sources, the actual captures and
+case-local public regtest fixtures. The original eight recordings remain
+byte-identical: 11 methods, 69 selectors, 75 replies and 69 auth controls.
+The new `funded-fractional` case was generated with pinned Core 31.1.0 in the
+recording shell, using the committed producer, and adds 15 selectors, replies
+and auth controls. The total is nine cases, 11 methods, 84 selectors, 90 replies
+and 84 auth controls. Shared/auth fixtures and historical metadata are unchanged.
+The original 17 immutable-reference captures against recorded replies and 11
+separately labeled synthetic numeric default/error captures remain intact.
+Two further recorded-handler captures and four synthetic exact-amount controls
+bring those inventories to 19 recorded-handler and 15 synthetic captures.
+They use fresh namespaces, owned HOME/cwd,
+explicit replay endpoints and finite deadlines. Full JSON comparison uses exact
+Decimal values and retains arrays, booleans, nulls, statuses, independent stderr
+and file/newline boundaries. Defaults/errors and corrupted recorded PSBTs are
+explicitly synthetic controls, not Core captures.
+
+`test/golden/psbt-commands-reference.json` pins six exact-amount differences,
+separately from the original 53 offline exception pins. On both handlers,
+`1000000.0004sat` gives the port's `subMillisatoshi` refusal and zero requests;
+the reference rounds to the recorded 0.01 BTC, succeeds and makes all nine
+create or fifteen funded calls. Conversely, exact `20999999.9769` BTC is
+accepted and sent unchanged by both port handlers, while the reference refuses
+it before RPC as fractional satoshis after binary64 conversion. The latter
+uses public recorded outpoints and a synthetic final RPC error: no Core-created
+PSBT for that altered request is claimed. A compiled Float-roundtrip mutation
+checks the exact wire value. Synthetic funded `getreceivedbyaddress` numbers
+`-1` and `1e-12` yield `rpcInvalidAmount` after eleven calls in the port. The
+reference treats the negative amount as unused (twelve calls), and the tiny
+positive amount as used (fifteen calls); both reach the explicitly synthetic
+final error. Complete ordered requests, values, statuses and errors are pinned;
+these entries authorize no wider numeric exception.
+
+The new suite also checks 70 writer/refusal injection controls, plus 12 focused
+source-derived whitespace controls, 14 unsigned32
+checks, two parsing precedence checks, 50 executable grammar/help refusals with
+zero RPC, six default/framing controls, three full-validation derivatives,
+eight probe/expansion controls, ten response-size controls, ten deadline controls and
+two FIFO flows, and 11 numeric controls compared to actual pinned CLI captures.
+Thirteen handler boundary controls cover both commands' recorded 401 replies,
+secret suppression, positive explicit-directory cookie authentication, partial
+credentials, colon rejection after expansion, and a nonmultipath descriptor's
+final options omission without change probing. Cookie tests use owned copies
+of the fixed fixture at both the explicit directory and the owned fake HOME's
+`.bitcoin/.cookie`, detecting conventional implicit lookup on both handlers
+when no directory or credentials are supplied. Stage-specific delay controls complete preceding calls
+normally, pair short limits with longer success and preserve failed-derivation
+skip behavior during funded probing.
+The exponent-position regression failed at its intended assertion before the fix
+and passed after rebuilding. The original 26-edit/29-red observation remains
+separate from the later 40-edit/47-red observation and current compiled mutation
+evidence, which checks 43 distinct production edits and 57 selected runtime reds,
+restoring exact bytes and rebuilding/rerunning
+green after each edit. The original 616 offline captures, 53 precise exception
+pins/named errors, 18 listing captures, historical 152/275 observations, and
+later client/list observations remain separate from this new evidence.
+
+The pinned output scanner uses ASCII whitespace excluding vertical tab inside
+an amount candidate, then Unicode whitespace for its final suffix check
+(`cyberkrill/src/main.rs:2103–2190` at the pinned revision). Both handlers test
+grouped fiat followed by a nonbreaking space, mixed-entry whole-satoshi
+precedence, a Unicode space before the next separator, and the vertical-tab
+and internal-Unicode boundaries. These expectations come from source inspection;
+no reference CLI receives fiat. Exact error text, status, empty stdout and only
+the retained ordinary writer are asserted. Compiled mutations independently
+restore the wrong suffix trim, include vertical tab in the internal scan, and
+attempt conventional cookie fallback only against the test-owned HOME.
+
+The 8c move caveats still apply: upstream
+[#156](https://github.com/douglaz/cyberkrill/issues/156)'s BDK move default was
+approximately 1sat/vB, could add change or fail in its low-rate band, and reported
+an incorrect fee. Its fee/change is not an oracle; destination calculation
+governs. The retained move-f64 request `0.6999833999999999` produces Core -3
+`Invalid amount`; exact `0.6999834` succeeds. Neither variant is normalized or
+clamped, and these are existing recording checks, not a new move handler test.
+Selected-total-minus-computed-fee without clamping and `--fee` handler goldens
+remain the separate move task (`xxl`). The deferred URL and invoice decisions
+and the bech32 proof stop are unchanged.
 
 ## Phase 8b: Core UTXO listing and frozenkrill exports
 
@@ -129,8 +296,8 @@ The BDK routing delta is deliberate: `--descriptor` plus `--bitcoin-dir` is
 refused even with an explicit RPC URL. The reference selects BDK in
 `cyberkrill/src/main.rs:1506`, whose `cyberkrill-core/src/bdk_wallet.rs:254`
 uses a hardcoded endpoint. Address and wallet-file cookie authentication remain
-supported. Electrum/Esplora and the three PSBT command handlers remain outside
-this implementation; their wallet-file support remains deferred to their scope.
+supported. Electrum/Esplora remain unsupported. The two creation handlers and their
+wallet-file refusals are documented above; the move handler remains deferred.
 
 Behavior is independently reimplemented from
 [cyberkrill at the parity revision](https://github.com/douglaz/cyberkrill/tree/27cad1faba86260b06665a89f0af5134d23525c2)
@@ -249,9 +416,9 @@ does not supply a fee/change oracle. The settled output follows the destination
 calculation rather than that observed fee. The recorded Core binary64 output
 `0.6999833999999999` returns RPC -3 `Invalid amount`, while exact
 `0.6999834` succeeds; both requests/outcomes remain checked. Full selected
-total minus computed fee without clamping, explicit fee units and actual fee
-handler goldens belong to 8c. Address-keyed output maps collapse duplicate
-destinations before estimation; that future command concern is unchanged.
+total minus computed fee without clamping and `--fee` handler goldens remain
+the separate move task. The two creation handlers now test explicit fee units
+and collapse duplicate destinations before estimation, as documented above.
 
 ## Phase 8a: Core RPC client and shared connection flags (2 of 2)
 
@@ -291,8 +458,9 @@ No wrapper performs coin selection, fee calculation, signing or broadcast.
 PSBT outputs use an address-keyed JSON object, as in the pinned reference.
 Repeated addresses retain the last supplied amount rather than accumulating
 amounts or producing multiple outputs.
-Core UTXO listing is registered in Phase 8b; the three PSBT handlers and their
-fee-command goldens remain Phase 8c work. Offline commands have no RPC flags.
+Core UTXO listing is registered in Phase 8b; the two creation handlers and
+their fee-rate goldens are implemented above. The move handler remains deferred.
+Offline commands have no RPC flags.
 
 `Cyberkrill.RpcFlags.flags` is the common `Cli.Flag` array, with `ofParsed`
 for future command groups and `parse` for in-process use. It defines
@@ -1096,7 +1264,9 @@ status reversal are listed in the Lightning section; supported LNURL forms
 still match while the precisely named userinfo/IPv6/IPv4/IDNA/scheme refusals
 remain reference-success/port-exit-1 exceptions. Bare fees still fail with
 `feeUnitRequired` before a consumer, with `15sats` as the explicit-unit example;
-no fee command or backend is registered. Private mnemonic output still uses
+the two creation handlers have three actual bare-fee captures, plus the six
+command-specific exact-amount pins described in Phase 8c. The move handler
+remains deferred. Private mnemonic output still uses
 exclusive owner-only creation and `outputPathExists`, with its five controlled
 public-entropy captures and unchanged refusal pins. The planned move-utxos
 whole-selected-value decision belongs to its future command and has no new
@@ -8523,11 +8693,13 @@ to the three commands above. Fee input requires an explicit Bitcoin suffix,
 with the same whitespace/case and exact-precision rules as ordinary amounts.
 Bare `15`, zero and signed numeric spellings give `feeUnitRequired`; the
 production refusal boundary asks for a unit, for example `15sats`, before
-calling the supplied consumer. Ordinary conversion and future `--outputs`
+calling the supplied consumer. Ordinary conversion and `--outputs`
 grammar retain bare BTC. Future fee help examples must include units. This is
 the merged exception to the pinned reference, whose bare fees mean BTC;
 upstream #154's subsequent fix does not change the parity pin. Prior fee
-evidence remains parser-only; Phase 8 owns actual offline fee-command goldens.
+evidence remains parser-only. The two Phase 8c creation handlers now have actual
+offline fee-rate captures, including `2.5sats` successes and the named bare-fee
+refusal. Absolute `--fee` and move-handler goldens remain the separate `xxl` task.
 
 `Cyberkrill.Capabilities` supplies the actual four Bitcoin curve functions,
 RIPEMD-160/HASH160 values and `bolt11Curve secret`. The signer closes over
@@ -8620,8 +8792,25 @@ The recorded Core move request `0.6999833999999999` fails with RPC -3 while
 exact `0.6999834` succeeds. Both variants remain asserted for 8c, whose BDK
 default-fee/change outcomes are not a fee oracle; the settled output follows
 the destination calculation. No-clamp destination
-calculation, explicit fee units and actual fee-handler goldens remain 8c work;
-duplicate-address JSON-map collapse before estimation remains relevant there.
+calculation and absolute `--fee` handler goldens remain the separate `xxl` task.
+The two creation handlers now cover explicit fee units and actual offline
+fee-rate captures. Duplicate-address maps collapse last-value-wins before
+counting distinct outputs for creation's informational fee; no fee is deducted.
+The 17 creation captures match the pinned reference as exact JSON values,
+apart from the three named bare-fee refusals. Eleven separately labeled
+synthetic numeric controls pin funded defaults, integer-token handling,
+whole-satoshi fees and the u64 bound; they do not claim additional Core captures.
+Six additional precise command exceptions extend that evidence: both handlers
+reject `1000000.0004sat` as `subMillisatoshi` before RPC while the reference
+rounds to the existing recorded 0.01 BTC success; both send exact
+`20999999.9769` BTC while the reference rejects its binary64 whole-satoshi
+conversion. Synthetic funded received amounts `-1` and `1e-12` stop the port
+with `rpcInvalidAmount` after eleven calls; the reference reaches a synthetic
+final refusal after twelve and fifteen calls respectively. The two rounding
+captures use unchanged Core replies; the other four are labeled synthetic
+transport controls and claim no altered-request Core PSBT. The complete pins
+and zero/full request assertions live in the PSBT command capture and replay
+suite described above. The original table and 53 offline pins remain unchanged.
 
 These pins come from the new executable captures, not the older pure-parser
 capture. Numeric rows compare exact values. Scalar strings below include

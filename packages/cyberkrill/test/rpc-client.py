@@ -34,7 +34,7 @@ def run(args, payload=None, *, cwd=APP):
 
 
 @contextmanager
-def responder(path, *, delay_ms=0):
+def responder(path, *, delay_ms=0, response_delays=False):
     directory = APP / ".lake/rpc-replay"
     directory.mkdir(parents=True, exist_ok=True)
     with tempfile.TemporaryDirectory(dir=directory) as root:
@@ -43,7 +43,7 @@ def responder(path, *, delay_ms=0):
         with (root / "stderr").open("wb") as errors:
             script = ROOT / "packages/http-curl/test/responder.py"
             args = [sys.executable, "-B", str(script), str(path), "--log", str(log)]
-            if delay_ms:
+            if delay_ms or response_delays:
                 # Delay the real responder's selected reply. Parsing, selection,
                 # logging, HTTP framing and the client transport remain real.
                 program = """import importlib.util, sys, time
@@ -53,7 +53,7 @@ spec.loader.exec_module(module)
 delay = int(sys.argv[2])
 original = module.Handler.send_recorded
 def delayed(self, response):
-    time.sleep(delay / 1000)
+    time.sleep(int(response.get('test_delay_ms', delay)) / 1000)
     original(self, response)
 module.Handler.send_recorded = delayed
 sys.argv = [sys.argv[1], *sys.argv[3:]]
@@ -121,9 +121,10 @@ def replay():
                 methods.add(entry["rpc"]["method"])
             counts.append(len(expected))
         print(f"Lean RPC {definition['name']}: {len(expected)} recorded responses", flush=True)
-    assert counts == [10, 10, 9, 15, 13, 5, 2, 11], "RPC wrapper response inventory"
-    assert methods == R.METHODS and sum(counts) == 75, "RPC eleven-wrapper inventory"
-    print("Lean RPC wrappers: 11/11; case-local responses: 75/75; exact requests checked", flush=True)
+    assert counts[:8] == [10, 10, 9, 15, 13, 5, 2, 11] and sum(counts[:8]) == 75, "RPC original wrapper response inventory"
+    assert counts[8:] == [15], "RPC fractional funded wrapper inventory"
+    assert methods == R.METHODS and sum(counts) == 90, "RPC eleven-wrapper inventory"
+    print("Lean RPC wrappers: 11/11; original 75/75 plus 15/15 new replies; exact requests checked", flush=True)
 
 
 def continuation():

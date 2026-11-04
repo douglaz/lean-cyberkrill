@@ -61,8 +61,8 @@ def edits():
         ("typed-before-help", app, 'validateTypedArgs (args.head?.getD "") args.tail', 'pure ()', ["help", "typed"], "list help typed ordering"),
         ("help-before-typed", app, 'let args := throughHelp args', 'validateTypedArgs (args.head?.getD "") args.tail\n  let args := throughHelp args', ["help", "typed"], "list help typed ordering"),
         ("confirmation-u32", app, 'unless (wordCount? flag).isSome do', 'unless true do', injected, "list u32 rejected before help"),
-        ("writer-once", app, 'let .ok writer ← prepareDecodeOutput services args.output', 'let _ ← prepareDecodeOutput services args.output\n    let .ok writer ← prepareDecodeOutput services args.output', injected, "list retained single writer"),
-        ("writer-before-network", app, 'let .ok writer ← prepareDecodeOutput services args.output', 'if !ListUtxos.networkValid args.network then return .error (.onchain "invalidNetwork: Expected network")\n    let .ok writer ← prepareDecodeOutput services args.output', injected, "list writer before invalidNetwork"),
+        ("writer-once", app, '| .listUtxos args => do\n    let .ok writer ← prepareDecodeOutput services args.output', '| .listUtxos args => do\n    let _ ← prepareDecodeOutput services args.output\n    let .ok writer ← prepareDecodeOutput services args.output', injected, "list retained single writer"),
+        ("writer-before-network", app, '| .listUtxos args => do\n    let .ok writer ← prepareDecodeOutput services args.output', '| .listUtxos args => do\n    if !ListUtxos.networkValid args.network then return .error (.onchain "invalidNetwork: Expected network")\n    let .ok writer ← prepareDecodeOutput services args.output', injected, "list writer before invalidNetwork"),
         ("address-order", listing, ')).toArray', ')).reverse.toArray', ["replay", "addresses"], "list CLI success addresses"),
         ("shape-desc-null", listing, 'optionalString u.raw "descriptor"', 'optionalString u.raw "desc"', replay, "list exact shape/nulls/order/filter/totals"),
         ("amount-exact", listing, '("amount_sats", toJson sats)', '("amount_sats", toJson (sats + 1))', replay, "list exact shape/nulls/order/filter/totals"),
@@ -83,7 +83,7 @@ def edits():
         ("client-timeout-inheritance", listing, 'let values ← match args.descriptor', 'let client := { client with totalTimeoutMs := 30000 }\n  let values ← match args.descriptor', ["synthetic", "timeout"], "list inherited limit timeout"),
     ]
     split_guard = '''else if ["--descriptor", "--addresses", "--wallet-file", "--rpc-url", "--bitcoin-dir",
-        "--rpc-user", "--rpc-password"].contains flag then
+        "--rpc-user", "--rpc-password", "--inputs", "--outputs", "--psbt-output", "--estimate-mode"].contains flag then
       (!(value.startsWith "-") || value == "-") && outputArgsValid rest'''
     rows += [
         ("split-refusal", app, split_guard, split_guard.replace('(!(value.startsWith "-") || value == "-") && ', ''), ["split"], "list split refusal side effects"),
@@ -91,7 +91,7 @@ def edits():
          'if (flag "descriptor").any (·.startsWith "-") then throw .invalidArguments\n    let sources := ["descriptor", "addresses", "wallet-file"].filter p.hasFlag', ["split"], "list attached value acceptance"),
         ("split-literal-dash", app, split_guard, split_guard.replace(' || value == "-"', ''), ["split"], "list split dash/empty acceptance"),
         ("split-empty", app, split_guard, split_guard.replace('&& outputArgsValid rest', '&& !value.isEmpty && outputArgsValid rest'), ["split"], "list split dash/empty acceptance"),
-        ("attached-value-bytes", app, 'descriptor := flag "descriptor",', 'descriptor := (flag "descriptor").map (fun value => (value.splitOn "=").head!),', ["split"], "list attached value bytes"),
+        ("attached-value-bytes", app, 'rpc, descriptor := flag "descriptor",', 'rpc, descriptor := (flag "descriptor").map (fun value => (value.splitOn "=").head!),', ["split"], "list attached value bytes"),
         ("positional-acceptance", reader, '| .arr values => do\n        unless', '| .arr values => do\n        if true then throw "sequence refused"\n        unless', ["positional", "acceptance"], "wallet positional acceptance"),
         ("positional-short-arity", reader, 'values.size == 3', 'values.size ≤ 3', ["positional", "arity-short"], "wallet positional arity-short"),
         ("positional-long-arity", reader, 'values.size == 3', '3 ≤ values.size', ["positional", "arity-long"], "wallet positional arity-long"),
@@ -165,8 +165,12 @@ def command(label, args, status, assertion=None):
                 stderr_sha256=hashlib.sha256(streams["stderr"].encode()).hexdigest())
 
 
+PRE_PSBT_SHA256 = '9f629d18f9069aa28d941ee616259a466f95a6d1d87b69f92699f8dd441a3837'
+
 def verify():
     record = json.loads(DEST.read_bytes())
+    retained = record["pre_psbt_observation"]
+    assert hashlib.sha256((json.dumps(retained, indent=2) + "\n").encode()).hexdigest() == PRE_PSBT_SHA256, "retained pre-PSBT observation"
     previous = record["previous_observation"]
     assert previous["count"] == 33 and hashlib.sha256((json.dumps(previous, indent=2) + "\n").encode()).hexdigest() == PREVIOUS_SHA256, "retained 33-edit list observation"
     schema = record["schema_observation"]
@@ -188,6 +192,8 @@ def main():
     LOGS.mkdir(parents=True, exist_ok=True)
     hashes = fingerprints()
     prior = json.loads(DEST.read_bytes())
+    pre_psbt = prior.get("pre_psbt_observation", {k: v for k, v in prior.items() if not k.endswith("_observation")})
+    assert hashlib.sha256((json.dumps(pre_psbt, indent=2) + "\n").encode()).hexdigest() == PRE_PSBT_SHA256, "original pre-PSBT observation"
     schema = prior.get("schema_observation", prior)
     assert hashlib.sha256((json.dumps(schema, indent=2) + "\n").encode()).hexdigest() == SCHEMA_SHA256
     previous = prior.get("previous_observation", prior)
@@ -225,7 +231,7 @@ def main():
             print(name + ": build/red/restore/green 0/1/0/0", flush=True)
         full = command("restored-full", ["python3", "-B", "test/list-utxos.py"], 0)
         assert fingerprints() == hashes, "list exact final restoration"
-        DEST.write_text(json.dumps(dict(count=len(records), source_sha256=hashes, baseline=baseline, checks=records, restored_full=full, previous_observation=previous, schema_observation=schema), indent=2) + "\n")
+        DEST.write_text(json.dumps(dict(pre_psbt_observation=pre_psbt, count=len(records), source_sha256=hashes, baseline=baseline, checks=records, restored_full=full, previous_observation=previous, schema_observation=schema), indent=2) + "\n")
         verify()
     except SystemExit:
         # Cancellation is terminal. Cleanup has reaped the command; restore
