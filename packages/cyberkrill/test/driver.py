@@ -84,17 +84,17 @@ def executable():
     for text, error in invalid:
         p = run([str(EXE), "convert-amount", "--", text])
         assert p["status"] == 1 and p["stdout"] == "" and p["stderr"].startswith(error + ":"), "stderr error routing"
-    fiat = ["100USD", "2081.74BRL", "1,000 USD", "-bad1usd", " 1 EUR "]
-    count("port-only fiat refusals", fiat, 5)
-    for value in fiat:
-        p = run([str(EXE), "convert-amount", "--", value])
-        assert p["status"] == 1 and not p["stdout"] and p["stderr"].startswith("fiatNotSupported:"), "fiat offline refusal"
+    p = run([str(TEST), "--price-former-refusals"])
+    assert p["status"] == 0 and not p["stderr"], "guarded fiat input coverage"
+    print(p["stdout"], end="")
     help_cases = [[], ["--help"], ["version", "--help"], ["convert-amount", "--help"], ["generate-mnemonic", "-h"]]
     count("executable help", help_cases, 5)
     for args in help_cases:
         p = run([str(EXE), *args])
         assert p["status"] == 0 and p["stderr"] == "" and "USAGE:" in p["stdout"], "help boundary"
         assert "--electrum" not in p["stdout"] and "--esplora" not in p["stdout"], "truthful help"
+        if args == ["convert-amount", "--help"]:
+            assert "nine price feeds, quorum three" in p["stdout"], "price help feed count and quorum"
     unsupported = [["--esplora", "unused"], ["generate-mnemonic", "--entropy", "unused"],
                    ["generate-mnemonic", "-o"], ["generate-mnemonic", "-w"],
                    ["generate-mnemonic", "extra"], ["generate-mnemonic", "-o", "a", "--output", "b"]]

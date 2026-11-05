@@ -2,11 +2,11 @@
   "count": 26,
   "source_sha256": {
     "Cyberkrill/Amounts.lean": "5c61afca50ba859e8dba2fea4fd04d3db1c70905684815aec03c9174a1ac327f",
-    "Cyberkrill/App.lean": "6f7edc73a36d4412e63bcf4696fd1af7c3da539be7d3252be40a5b099c923047",
+    "Cyberkrill/App.lean": "403edc04ce493e5c0696b88228ad9fa7707f697865d779078d4307819eb760c9",
     "Cyberkrill/Capabilities.lean": "35a0f3dc6dff6a88989c9de7665c93a117f26341f8869ba28c4c01e298d064a8",
     "private_output.c": "5bf3940e88b4d8dfba6214e5e489a0c3d6dbd94e0d26f212126c8fd8ef1d3308",
-    "test/mutate.py": "b15773b297ecb981fef94c5f83b8410c5b5042423d6698c9084d5d154f3e7f15",
-    "test/driver.py": "1d0c262c9efe561fa9a52e3afce017a979eb511819974e10d81f2d6c39aadec6",
+    "test/mutate.py": "a856596b1afc9c4f565aee83cee1d3f6cf5a84ecc414927dc6ce60f52f234e33",
+    "test/driver.py": "172236df4080394e861492683311651a0a87c13b7f4693e60ef57fe480989f22",
     "test/compare.py": "65792ec70aab8f33fa83736d1fb7a9708e373d0d74712bc3ce5c3d511b64ba82",
     "test/selftest.py": "2f8ed78c93c4c7e075630defb338d6345f5d33be8975044bcfef90b5946115e5",
     "test/regressions.py": "b1e757d159d3255817c8227c80b18822040ea77073f4ef2dcb8a75218fdd7787",
@@ -20,11 +20,12 @@
     "CyberkrillTests/MoveUtxos.lean": "d551d8b7021775e97db187a3835c5eb8d8e77bba195df69c234c5cb375814386",
     "CyberkrillTests/Offline.lean": "e6243c51b6638c0bd777835b843459e955e2e7f6163e7bbac6bfe22230407a9d",
     "CyberkrillTests/Output.lean": "9912e5c699b4fb7c07ff5eaacd2d5d821d6585118cb17a0829b224c96965a966",
+    "CyberkrillTests/PriceFeed.lean": "b6f4984d0fbd51e32e581d4ca523d5432d2957aabd95db551c06b49bf837b44c",
     "CyberkrillTests/PrivateOutput.lean": "a4412bb4cf4908cc777e39018cb2ac34fc12c697e373b90be3b6c1235514997f",
     "CyberkrillTests/PsbtCommands.lean": "54c20a78aa5164f7a78b1939d6167b5c882c8ecaea9f6fb932ddd6e4f9281310",
     "CyberkrillTests/Rpc.lean": "3f1887f1dad6d82d421e7bbeecaea6486431b33ba134051d07d5d828809419bf",
     "CyberkrillTests/Support.lean": "80dbdfd22c0478dde791bfc46ae73418a8cf838f7728bb08f248291cdb3a179c",
-    "CyberkrillTests.lean": "3d28755d3577cc7669a5ed341274211cc5f353bda063bf65e149e4a3ef78c57d",
+    "CyberkrillTests.lean": "bf7a271039740b895b2c56d7394de69d29a94f230ea1d82887e4f9d99c5d077f",
     "test/output-regressions.py": "126321bfa36a00ac51ef8096bc25bb1864f0b31db4b07863d3562d8d715a0862",
     "test/private-output.py": "07d8a492d3f66eace44dd4c4c5a32f68b06cd50bb3c4ee34b6f40e8c3809e1f9",
     "Cyberkrill/PrivateOutput.lean": "46ecbff603563e28e27ec208a64333acc23680ac062f6d1b050c9c78cd8bf7f4",
@@ -34,8 +35,8 @@
     {
       "property": "amount-scaling",
       "file": "Cyberkrill/App.lean",
-      "replace": "let a \u2190 parseAmount input",
-      "with_text": "let a \u2190 parseAmount input\n  let a := Bitcoin.Amount.ofMsat (a.msat * 10)",
+      "replace": "| .inl amount => return conversionOutput input unit amount",
+      "with_text": "| .inl amount => return conversionOutput input unit (Bitcoin.Amount.ofMsat (amount.msat * 10))",
       "build_command": [
         "timeout",
         "--foreground",
@@ -57,7 +58,7 @@
       ],
       "status": 1,
       "detecting_assertion": "amount scaling",
-      "seconds": 0.524,
+      "seconds": 0.552,
       "restored_status": 0
     },
     {
@@ -86,7 +87,7 @@
       ],
       "status": 1,
       "detecting_assertion": "sats flooring",
-      "seconds": 1.348,
+      "seconds": 1.311,
       "restored_status": 0
     },
     {
@@ -143,7 +144,7 @@
       ],
       "status": 1,
       "detecting_assertion": "wholeSat half-up",
-      "seconds": 0.027,
+      "seconds": 0.029,
       "restored_status": 0
     },
     {
@@ -227,7 +228,7 @@
       ],
       "status": 1,
       "detecting_assertion": "exact wholeSat rejects",
-      "seconds": 0.027,
+      "seconds": 0.028,
       "restored_status": 0
     },
     {
@@ -284,7 +285,7 @@
       ],
       "status": 1,
       "detecting_assertion": "mnemonic entropy mapping",
-      "seconds": 0.076,
+      "seconds": 0.077,
       "restored_status": 0
     },
     {
@@ -341,7 +342,7 @@
       ],
       "status": 1,
       "detecting_assertion": "mnemonic file stdout",
-      "seconds": 0.071,
+      "seconds": 0.072,
       "restored_status": 0
     },
     {
@@ -369,7 +370,7 @@
       ],
       "status": 1,
       "detecting_assertion": "cap Bitcoin pubkey accepts",
-      "seconds": 0.028,
+      "seconds": 0.026,
       "restored_status": 0
     },
     {
@@ -397,7 +398,7 @@
       ],
       "status": 1,
       "detecting_assertion": "cap Bitcoin compression matches",
-      "seconds": 0.029,
+      "seconds": 0.027,
       "restored_status": 0
     },
     {
@@ -453,7 +454,7 @@
       ],
       "status": 1,
       "detecting_assertion": "cap Bitcoin DER accepts",
-      "seconds": 0.027,
+      "seconds": 0.028,
       "restored_status": 0
     },
     {
@@ -481,7 +482,7 @@
       ],
       "status": 1,
       "detecting_assertion": "cap BOLT recover L382",
-      "seconds": 0.03,
+      "seconds": 0.029,
       "restored_status": 0
     },
     {
@@ -509,7 +510,7 @@
       ],
       "status": 1,
       "detecting_assertion": "cap BOLT verify decode",
-      "seconds": 0.029,
+      "seconds": 0.03,
       "restored_status": 0
     },
     {
@@ -565,7 +566,7 @@
       ],
       "status": 1,
       "detecting_assertion": "cap BOLT point accepts",
-      "seconds": 0.026,
+      "seconds": 0.029,
       "restored_status": 0
     },
     {
@@ -593,7 +594,7 @@
       ],
       "status": 1,
       "detecting_assertion": "cap RIPEMD160",
-      "seconds": 0.029,
+      "seconds": 0.027,
       "restored_status": 0
     },
     {
@@ -650,7 +651,7 @@
       ],
       "status": 1,
       "detecting_assertion": "private output mode 0600",
-      "seconds": 0.068,
+      "seconds": 0.073,
       "restored_status": 0
     },
     {
@@ -679,7 +680,7 @@
       ],
       "status": 1,
       "detecting_assertion": "private output exclusive create",
-      "seconds": 0.074,
+      "seconds": 0.072,
       "restored_status": 0
     },
     {
@@ -708,7 +709,7 @@
       ],
       "status": 1,
       "detecting_assertion": "private output write failure",
-      "seconds": 0.071,
+      "seconds": 0.072,
       "restored_status": 0
     },
     {
@@ -737,7 +738,7 @@
       ],
       "status": 1,
       "detecting_assertion": "private output existing trailing slash",
-      "seconds": 0.073,
+      "seconds": 0.071,
       "restored_status": 0
     },
     {
@@ -766,7 +767,7 @@
       ],
       "status": 1,
       "detecting_assertion": "private output missing trailing slash",
-      "seconds": 0.068,
+      "seconds": 0.071,
       "restored_status": 0
     }
   ],
@@ -774,11 +775,11 @@
     "command": [
       "timeout",
       "--foreground",
-      "180",
+      "600",
       "lake",
       "test"
     ],
     "status": 0,
-    "seconds": 155.453
+    "seconds": 183.843
   }
 }

@@ -1,0 +1,57 @@
+{
+  "coingecko": {
+    "bitcoin": {
+      "usd": 95000,
+      "brl": 475000
+    }
+  },
+  "coinbase": {
+    "data": {
+      "rates": {
+        "USD": "95010",
+        "BRL": "475050"
+      }
+    }
+  },
+  "blockchain.info": {
+    "USD": {
+      "last": 95020
+    },
+    "BRL": {
+      "last": 475100
+    }
+  },
+  "kraken": {
+    "error": [],
+    "result": {
+      "UNEXPECTED": {
+        "c": [
+          "95030",
+          "1"
+        ]
+      }
+    }
+  },
+  "fedi": {
+    "prices": {
+      "BTC/USD": {
+        "rate": 95040
+      },
+      "BRL/USD": {
+        "rate": "0.2"
+      }
+    }
+  },
+  "cex.io": {
+    "last": "95050"
+  },
+  "bitstamp": {
+    "last": "95060"
+  },
+  "yadio": {
+    "rate": 95070
+  },
+  "gemini": {
+    "last": "95080"
+  }
+}

@@ -12,6 +12,7 @@ import Cyberkrill.Psbt
 import Cyberkrill.ListUtxos
 import Cyberkrill.PsbtCommands
 import Cyberkrill.MoveUtxos
+import Cyberkrill.PriceFeed
 
 namespace Cyberkrill
 
@@ -77,9 +78,9 @@ private def parser : Cli.Cmd :=
           ⟨some "o", "output", "Write JSON to a file", String⟩])
         (run := fun _ => pure 0),
       Cli.Cmd.mk "version" none "Print the package version as JSON" (run := fun _ => pure 0),
-      Cli.Cmd.mk "convert-amount" none "Convert BTC, sats or msats exactly; bare amounts are BTC"
+      Cli.Cmd.mk "convert-amount" none "Convert BTC, sats, msats or fiat exactly; nine price feeds, quorum three; bare amounts are BTC"
         (flags := #[⟨none, "as", "Scalar output: btc, sats or msats", String⟩])
-        (positionalArgs := #[⟨"amount", "Bitcoin amount", String⟩]) (run := fun _ => pure 0),
+        (positionalArgs := #[⟨"amount", "Bitcoin or fiat amount", String⟩]) (run := fun _ => pure 0),
       Cli.Cmd.mk "generate-mnemonic" none "Generate an English BIP39 mnemonic using OS entropy"
         (flags := #[⟨some "w", "words", "12, 15, 18, 21 or 24 (default)", String⟩,
                     ⟨some "o", "output", "Create a new owner-only JSON file instead of stdout", String⟩])
@@ -398,6 +399,7 @@ structure Services where
   psbt : CoreRpc.Client → PsbtCommands.Args → Array (String × Bitcoin.Amount) → IO (Except Error PsbtCommands.Result) := PsbtCommands.fetch
   move : CoreRpc.Client → MoveUtxos.Args → Option Bitcoin.Amount → IO (Except Error PsbtCommands.Result) := MoveUtxos.fetch
   writeOrdinaryFile : String → String → IO Unit := fun path text => IO.FS.writeFile path text
+  price : String → IO PriceFeed.Result := PriceFeed.fetch
 
 def productionServices : Services where
   entropy := fun n => IO.getRandomBytes n.toUSize
@@ -409,9 +411,8 @@ def entropyBytes : Nat → Except Error Nat
   | 12 => .ok 16 | 15 => .ok 20 | 18 => .ok 24 | 21 => .ok 28 | 24 => .ok 32
   | _ => .error .invalidWordCount
 
-def conversion (input : String) (unit : Option String) : Except Error Output := do
-  if recognizableFiat input then throw .fiatNotSupported
-  let a ← parseAmount input
+def conversionOutput (input : String) (unit : Option String) (a : Bitcoin.Amount)
+    (fiat : Option (FiatAmount × PriceFeed.Price) := none) : Except Error Output := do
   let sats := a.msat / 1000
   match unit with
   | some "btc" => return { stdout := a.printBtc ++ "\n" }
@@ -425,8 +426,35 @@ def conversion (input : String) (unit : Option String) : Except Error Output := 
     -- Write the already validated exact decimal directly, including zero.
     let text := "{\"input\":" ++ (Lean.Json.str input).compress ++
       ",\"btc\":" ++ a.printBtc ++ ",\"sats\":" ++ toString sats ++
-      ",\"msats\":" ++ toString a.msat ++ "}\n"
+      ",\"msats\":" ++ toString a.msat ++ (match fiat with
+        | none => ""
+        | some (f, p) => ",\"fiat_source\":" ++ (Json.mkObj [
+          ("amount", f.amount.json), ("currency", .str p.currency),
+          ("price_per_btc", p.price.json),
+          ("feeds", toJson (p.sources.map (·.source)))]).compress) ++ "}\n"
     return { stdout := text }
+
+def conversion (input : String) (unit : Option String) : Except Error Output := do
+  let a ← parseAmount input
+  conversionOutput input unit a
+
+def convertWith (services : Services) (input : String) (unit : Option String) : IO (Except Error Output) := do
+  let parsed ← match parseBitcoinOrFiat input with
+    | .error e => return .error e
+    | .ok parsed => pure parsed
+  match parsed with
+  | .inl amount => return conversionOutput input unit amount
+  | .inr fiat =>
+    let result ← services.price fiat.currency
+    -- Feed diagnostics and breadcrumb precede conversion, including failures.
+    if !result.diagnostics.isEmpty then services.stderr result.diagnostics
+    let price ← match result.price with
+      | .error e => return .error (.onchain e)
+      | .ok price => pure price
+    services.stderr (PriceFeed.breadcrumb price)
+    return do
+      let amount ← convertFiat fiat price.currency price.price .millisat
+      conversionOutput input unit amount (some (fiat, price))
 
 private def lightningOutput (text : String) (writer : Option (String → IO Unit)) (newline : Bool) : Output :=
   match writer with
@@ -525,7 +553,7 @@ def execute (version : String) (services : Services) : Command → IO (Except Er
     | .ok result => return .ok (lightningOutput result.pretty writer false)
   | .version => pure (.ok { stdout := (Lean.Json.mkObj [("version", .str version)]).compress ++ "\n" })
   | .help text => pure (.ok { stdout := text ++ "\n" })
-  | .convert input unit => pure (conversion input unit)
+  | .convert input unit => convertWith services input unit
   | .decodeInvite input path => do
     let .ok text ← lightningInput services input false | return .error .inputFailure
     let .ok writer ← prepareDecodeOutput services path | return .error .outputFailure

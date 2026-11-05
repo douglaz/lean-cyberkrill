@@ -3,6 +3,7 @@
 # Apache License 2.0, at your option; see LICENSE-MIT and LICENSE-APACHE.
 """Disposable mutation-driver sentinels: cleanup must precede source restoration."""
 import hashlib
+from evidence import write_record
 import importlib
 import inspect
 import json
@@ -495,7 +496,7 @@ def main():
     rows = checks(selected)
     assert len(rows) == len(selected)
     if args == ["--record"]:
-        DEST.write_text(json.dumps(dict(source_sha256=fingerprints(), checks=rows), indent=2) + "\n")
+        write_record(DEST, json.dumps(dict(source_sha256=fingerprints(), checks=rows), indent=2) + "\n")
     print(f"list lifecycle: {len(rows)}/{len(selected)} boundaries")
 
 

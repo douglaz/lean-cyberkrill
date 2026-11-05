@@ -1,0 +1,1943 @@
+{
+  "source_sha256": {
+    "Cyberkrill/Fiat.lean": "877f5980527ae043b44b059ac99fb96413aa294e6f827141cdabedce37318159",
+    "Cyberkrill/PriceFeed.lean": "a07882b430c14fa954fdbe9e30f327f7379565a73c3afc77b450e07182f17086",
+    "Cyberkrill/TestEntry.lean": "4f888f3dc1af933d9e80d5eef426ddf0873ecc57ab3a7fc36cb4030cb544f826",
+    "Cyberkrill/App.lean": "403edc04ce493e5c0696b88228ad9fa7707f697865d779078d4307819eb760c9",
+    "CyberkrillTests/PriceFeed.lean": "b6f4984d0fbd51e32e581d4ca523d5432d2957aabd95db551c06b49bf837b44c",
+    "CyberkrillTests.lean": "bf7a271039740b895b2c56d7394de69d29a94f230ea1d82887e4f9d99c5d077f",
+    "test/price-mutations.py": "d35be8c721cbe2b5c19c24b0898e01a6f1387e24f34affa39fb76d15ac6316a0",
+    "test/price-feeds.py": "bcb716a392f164b9460e6300c9fadb9962f8673ead58cdfd6d1c7fd581afb5f0",
+    "test/price-cases.py": "6379b1453903f578125d17fcb89ba413f2f9fd1c0766c214af645433cf3c9292",
+    "test/price-parity.py": "8a23332ef9b9c100d1ce8bc7a1dd44373ea6bf4ca5a966891fdef1ed3bc2ebcf",
+    "test/http/success.json": "76f5e766f13803e6c0cab8a1dbba9efc648ea6bdb3b89ee9c19062d686c1a486",
+    "test/http/reference.json": "09763a6652f7a3ce69d857c116cd9c8b121abb89872d0b051637f928a627642f",
+    "test/http/exact-deltas.json": "dffa5eb99b0ce2b503db96233b935a0fe36ef712eb82acae1a97aa76d9768e43"
+  },
+  "initial_build": {
+    "command": [
+      "lake",
+      "build",
+      "cyberkrill",
+      "CyberkrillTests"
+    ],
+    "status": 0,
+    "seconds": 0.397
+  },
+  "initial_green": {
+    "command": [
+      "python3",
+      "-B",
+      "test/price-feeds.py"
+    ],
+    "status": 0,
+    "seconds": 44.457
+  },
+  "checks": [
+    {
+      "property": "msat-half-away",
+      "file": "Cyberkrill/Fiat.lean",
+      "replace": "(2 * a.numerator + a.denominator) / (2 * a.denominator)",
+      "with_text": "a.numerator / a.denominator",
+      "command": [
+        "python3",
+        "-B",
+        "test/price-feeds.py",
+        "--pure"
+      ],
+      "assertion": "convert/0.000010925",
+      "failure": "AssertionError: convert/0.000010925: {'ok': Decimal('11')} != {'ok': 12}",
+      "build": {
+        "command": [
+          "lake",
+          "build",
+          "cyberkrill",
+          "CyberkrillTests"
+        ],
+        "status": 0,
+        "seconds": 13.007
+      },
+      "red": {
+        "command": [
+          "python3",
+          "-B",
+          "test/price-feeds.py",
+          "--pure"
+        ],
+        "status": 1,
+        "seconds": 0.127
+      },
+      "restore_build": {
+        "command": [
+          "lake",
+          "build",
+          "cyberkrill",
+          "CyberkrillTests"
+        ],
+        "status": 0,
+        "seconds": 12.705
+      },
+      "green": {
+        "command": [
+          "python3",
+          "-B",
+          "test/price-feeds.py",
+          "--pure"
+        ],
+        "status": 0,
+        "seconds": 1.606
+      }
+    },
+    {
+      "property": "whole-after-msat",
+      "file": "Cyberkrill/Fiat.lean",
+      "replace": "| .wholeSat => wholeSat \u27e8rounded\u27e9",
+      "with_text": "| .wholeSat => floorSat \u27e8rounded\u27e9",
+      "command": [
+        "python3",
+        "-B",
+        "test/price-feeds.py",
+        "--pure"
+      ],
+      "assertion": "precision/0.001424525/whole",
+      "failure": "AssertionError: precision/0.001424525/whole: {'ok': Decimal('1000')} != {'ok': 2000}",
+      "build": {
+        "command": [
+          "lake",
+          "build",
+          "cyberkrill",
+          "CyberkrillTests"
+        ],
+        "status": 0,
+        "seconds": 12.601
+      },
+      "red": {
+        "command": [
+          "python3",
+          "-B",
+          "test/price-feeds.py",
+          "--pure"
+        ],
+        "status": 1,
+        "seconds": 0.133
+      },
+      "restore_build": {
+        "command": [
+          "lake",
+          "build",
+          "cyberkrill",
+          "CyberkrillTests"
+        ],
+        "status": 0,
+        "seconds": 13.199
+      },
+      "green": {
+        "command": [
+          "python3",
+          "-B",
+          "test/price-feeds.py",
+          "--pure"
+        ],
+        "status": 0,
+        "seconds": 1.586
+      }
+    },
+    {
+      "property": "floor-after-msat",
+      "file": "Cyberkrill/Fiat.lean",
+      "replace": "| .floorSat => floorSat \u27e8rounded\u27e9",
+      "with_text": "| .floorSat => wholeSat \u27e8rounded\u27e9",
+      "command": [
+        "python3",
+        "-B",
+        "test/price-feeds.py",
+        "--pure"
+      ],
+      "assertion": "precision/0.001424525/floor",
+      "failure": "AssertionError: precision/0.001424525/floor: {'ok': Decimal('2000')} != {'ok': 1000}",
+      "build": {
+        "command": [
+          "lake",
+          "build",
+          "cyberkrill",
+          "CyberkrillTests"
+        ],
+        "status": 0,
+        "seconds": 12.8
+      },
+      "red": {
+        "command": [
+          "python3",
+          "-B",
+          "test/price-feeds.py",
+          "--pure"
+        ],
+        "status": 1,
+        "seconds": 0.127
+      },
+      "restore_build": {
+        "command": [
+          "lake",
+          "build",
+          "cyberkrill",
+          "CyberkrillTests"
+        ],
+        "status": 0,
+        "seconds": 12.705
+      },
+      "green": {
+        "command": [
+          "python3",
+          "-B",
+          "test/price-feeds.py",
+          "--pure"
+        ],
+        "status": 0,
+        "seconds": 1.613
+      }
+    },
+    {
+      "property": "quorum-three",
+      "file": "Cyberkrill/PriceFeed.lean",
+      "replace": "if quotes.size < 3 then",
+      "with_text": "if quotes.size < 2 then",
+      "command": [
+        "python3",
+        "-B",
+        "test/price-feeds.py",
+        "--pure"
+      ],
+      "assertion": "aggregate/2",
+      "failure": "AssertionError: aggregate/2: {'ok': {'breadcrumb': '[price-feed] median BTC/USD = 95005.00 from 2 feeds: coingecko, coinbase\\n', 'price': {'denominator': '1', 'numerator': '95005'}, 'sources': ['coingecko', 'coinbase'], 'warning': ''}} != {'error': 'Only 2 BTC price feeds responded for USD; need at least 3 to compute a manipulation-resistant median'}",
+      "build": {
+        "command": [
+          "lake",
+          "build",
+          "cyberkrill",
+          "CyberkrillTests"
+        ],
+        "status": 0,
+        "seconds": 11.998
+      },
+      "red": {
+        "command": [
+          "python3",
+          "-B",
+          "test/price-feeds.py",
+          "--pure"
+        ],
+        "status": 1,
+        "seconds": 0.127
+      },
+      "restore_build": {
+        "command": [
+          "lake",
+          "build",
+          "cyberkrill",
+          "CyberkrillTests"
+        ],
+        "status": 0,
+        "seconds": 12.0
+      },
+      "green": {
+        "command": [
+          "python3",
+          "-B",
+          "test/price-feeds.py",
+          "--pure"
+        ],
+        "status": 0,
+        "seconds": 1.602
+      }
+    },
+    {
+      "property": "even-mean",
+      "file": "Cyberkrill/PriceFeed.lean",
+      "replace": "return ((\u2190 sorted[middle - 1]?).add (\u2190 sorted[middle]?)).div \u27e82, 1\u27e9",
+      "with_text": "return (\u2190 sorted[middle - 1]?)",
+      "command": [
+        "python3",
+        "-B",
+        "test/price-feeds.py",
+        "--pure"
+      ],
+      "assertion": "aggregate/4",
+      "failure": "AssertionError: aggregate/4: {'ok': {'breadcrumb': '[price-feed] median BTC/USD = 95010.00 from 4 feeds: coingecko, coinbase, blockchain.info, kraken\\n', 'price': {'denominator': '1', 'numerator': '95010'}, 'sources': ['coingecko', 'coinbase', 'blockchain.info', 'kraken'], 'warning': ''}} != {'ok': {'price': {'numerator': '95015', 'denominator': '1'}, 'sources': ['coingecko', 'coinbase', 'blockchain.info', 'kraken'], 'warning': '', 'breadcrumb': '[price-feed] median BTC/USD = 95015.00 from 4 feeds: coingecko, coinbase, blockchain.info, kraken\\n'}}",
+      "build": {
+        "command": [
+          "lake",
+          "build",
+          "cyberkrill",
+          "CyberkrillTests"
+        ],
+        "status": 0,
+        "seconds": 11.9
+      },
+      "red": {
+        "command": [
+          "python3",
+          "-B",
+          "test/price-feeds.py",
+          "--pure"
+        ],
+        "status": 1,
+        "seconds": 0.13
+      },
+      "restore_build": {
+        "command": [
+          "lake",
+          "build",
+          "cyberkrill",
+          "CyberkrillTests"
+        ],
+        "status": 0,
+        "seconds": 11.911
+      },
+      "green": {
+        "command": [
+          "python3",
+          "-B",
+          "test/price-feeds.py",
+          "--pure"
+        ],
+        "status": 0,
+        "seconds": 1.585
+      }
+    },
+    {
+      "property": "strict-spread",
+      "file": "Cyberkrill/PriceFeed.lean",
+      "replace": "unless (Exact.mk 102 100).lt ratio do return \"\"",
+      "with_text": "unless !(ratio.lt (Exact.mk 102 100)) do return \"\"",
+      "command": [
+        "python3",
+        "-B",
+        "test/price-feeds.py",
+        "--pure"
+      ],
+      "assertion": "aggregate/exact-spread",
+      "failure": "AssertionError: aggregate/exact-spread: {'ok': {'breadcrumb': '[price-feed] median BTC/USD = 101.00 from 3 feeds: z, a, m\\n', 'price': {'denominator': '1', 'numerator': '101'}, 'sources': ['z', 'a', 'm'], 'warning': '[price-feed] BTC price feed spread for USD is 2.00% (z=100.00, m=102.00); using median BTC/USD=101.00\\n'}} != {'ok': {'price': {'numerator': '101', 'denominator': '1'}, 'sources': ['z', 'a', 'm'], 'warning': '', 'breadcrumb': '[price-feed] median BTC/USD = 101.00 from 3 feeds: z, a, m\\n'}}",
+      "build": {
+        "command": [
+          "lake",
+          "build",
+          "cyberkrill",
+          "CyberkrillTests"
+        ],
+        "status": 0,
+        "seconds": 12.007
+      },
+      "red": {
+        "command": [
+          "python3",
+          "-B",
+          "test/price-feeds.py",
+          "--pure"
+        ],
+        "status": 1,
+        "seconds": 0.126
+      },
+      "restore_build": {
+        "command": [
+          "lake",
+          "build",
+          "cyberkrill",
+          "CyberkrillTests"
+        ],
+        "status": 0,
+        "seconds": 11.996
+      },
+      "green": {
+        "command": [
+          "python3",
+          "-B",
+          "test/price-feeds.py",
+          "--pure"
+        ],
+        "status": 0,
+        "seconds": 1.588
+      }
+    },
+    {
+      "property": "fedi-orientation",
+      "file": "Cyberkrill/PriceFeed.lean",
+      "replace": "return some (btc.div fiat)",
+      "with_text": "return some (btc.mul fiat)",
+      "command": [
+        "python3",
+        "-B",
+        "test/price-feeds.py",
+        "--pure"
+      ],
+      "assertion": "fedi/orientation",
+      "failure": "AssertionError: fedi/orientation: {'ok': {'denominator': '1', 'numerator': '19008'}} != {'ok': {'numerator': '475200', 'denominator': '1'}}",
+      "build": {
+        "command": [
+          "lake",
+          "build",
+          "cyberkrill",
+          "CyberkrillTests"
+        ],
+        "status": 0,
+        "seconds": 11.804
+      },
+      "red": {
+        "command": [
+          "python3",
+          "-B",
+          "test/price-feeds.py",
+          "--pure"
+        ],
+        "status": 1,
+        "seconds": 0.129
+      },
+      "restore_build": {
+        "command": [
+          "lake",
+          "build",
+          "cyberkrill",
+          "CyberkrillTests"
+        ],
+        "status": 0,
+        "seconds": 11.899
+      },
+      "green": {
+        "command": [
+          "python3",
+          "-B",
+          "test/price-feeds.py",
+          "--pure"
+        ],
+        "status": 0,
+        "seconds": 1.587
+      }
+    },
+    {
+      "property": "special-404-only",
+      "file": "Cyberkrill/PriceFeed.lean",
+      "replace": "if r.status == 404 && feed.missing404 then return none",
+      "with_text": "if r.status == 404 then return none",
+      "command": [
+        "python3",
+        "-B",
+        "test/price-feeds.py",
+        "--pure"
+      ],
+      "assertion": "coingecko/http-404",
+      "failure": "AssertionError: coingecko/http-404: {'ok': None} != {'error': 'CoinGecko returned an unsuccessful status: HTTP 404'}",
+      "build": {
+        "command": [
+          "lake",
+          "build",
+          "cyberkrill",
+          "CyberkrillTests"
+        ],
+        "status": 0,
+        "seconds": 11.799
+      },
+      "red": {
+        "command": [
+          "python3",
+          "-B",
+          "test/price-feeds.py",
+          "--pure"
+        ],
+        "status": 1,
+        "seconds": 0.124
+      },
+      "restore_build": {
+        "command": [
+          "lake",
+          "build",
+          "cyberkrill",
+          "CyberkrillTests"
+        ],
+        "status": 0,
+        "seconds": 11.914
+      },
+      "green": {
+        "command": [
+          "python3",
+          "-B",
+          "test/price-feeds.py",
+          "--pure"
+        ],
+        "status": 0,
+        "seconds": 1.588
+      }
+    },
+    {
+      "property": "parallel-fanout",
+      "file": "Cyberkrill/PriceFeed.lean",
+      "replace": "tasks := task :: tasks",
+      "with_text": "let _ \u2190 IO.wait task\n    tasks := task :: tasks",
+      "command": [
+        "python3",
+        "-B",
+        "test/price-feeds.py"
+      ],
+      "assertion": "actual nine-request overlapping fanout",
+      "failure": "AssertionError: actual nine-request overlapping fanout",
+      "build": {
+        "command": [
+          "lake",
+          "build",
+          "cyberkrill",
+          "CyberkrillTests"
+        ],
+        "status": 0,
+        "seconds": 11.898
+      },
+      "red": {
+        "command": [
+          "python3",
+          "-B",
+          "test/price-feeds.py"
+        ],
+        "status": 1,
+        "seconds": 11.306
+      },
+      "restore_build": {
+        "command": [
+          "lake",
+          "build",
+          "cyberkrill",
+          "CyberkrillTests"
+        ],
+        "status": 0,
+        "seconds": 11.909
+      },
+      "green": {
+        "command": [
+          "python3",
+          "-B",
+          "test/price-feeds.py"
+        ],
+        "status": 0,
+        "seconds": 43.401
+      }
+    },
+    {
+      "property": "all-override-slots",
+      "file": "Cyberkrill/TestEntry.lean",
+      "replace": "(urls.feedBases ++ #[urls.coinGeckoHistory, urls.dcaRpc]).all (fun url => permitted url && !forbiddenPort url)",
+      "with_text": "urls.feedBases.all (fun url => permitted url && !forbiddenPort url)",
+      "command": [
+        ".lake/build/bin/CyberkrillTests",
+        "--price-guards"
+      ],
+      "assertion": "every unused override slot before action",
+      "failure": "assertion failed: every unused override slot before action",
+      "build": {
+        "command": [
+          "lake",
+          "build",
+          "cyberkrill",
+          "CyberkrillTests"
+        ],
+        "status": 0,
+        "seconds": 9.611
+      },
+      "red": {
+        "command": [
+          ".lake/build/bin/CyberkrillTests",
+          "--price-guards"
+        ],
+        "status": 1,
+        "seconds": 0.036
+      },
+      "restore_build": {
+        "command": [
+          "lake",
+          "build",
+          "cyberkrill",
+          "CyberkrillTests"
+        ],
+        "status": 0,
+        "seconds": 9.609
+      },
+      "green": {
+        "command": [
+          ".lake/build/bin/CyberkrillTests",
+          "--price-guards"
+        ],
+        "status": 0,
+        "seconds": 0.088
+      }
+    },
+    {
+      "property": "embedded-port-guard",
+      "file": "Cyberkrill/TestEntry.lean",
+      "replace": "if args.any forbiddenPort then",
+      "with_text": "if false then",
+      "command": [
+        ".lake/build/bin/CyberkrillTests",
+        "--price-guards"
+      ],
+      "assertion": "nested URL port refused",
+      "failure": "assertion failed: nested URL port refused",
+      "build": {
+        "command": [
+          "lake",
+          "build",
+          "cyberkrill",
+          "CyberkrillTests"
+        ],
+        "status": 0,
+        "seconds": 10.905
+      },
+      "red": {
+        "command": [
+          ".lake/build/bin/CyberkrillTests",
+          "--price-guards"
+        ],
+        "status": 1,
+        "seconds": 0.046
+      },
+      "restore_build": {
+        "command": [
+          "lake",
+          "build",
+          "cyberkrill",
+          "CyberkrillTests"
+        ],
+        "status": 0,
+        "seconds": 10.51
+      },
+      "green": {
+        "command": [
+          ".lake/build/bin/CyberkrillTests",
+          "--price-guards"
+        ],
+        "status": 0,
+        "seconds": 0.088
+      }
+    },
+    {
+      "property": "source-list-order",
+      "file": "Cyberkrill/App.lean",
+      "replace": "(\"feeds\", toJson (p.sources.map (\u00b7.source)))",
+      "with_text": "(\"feeds\", toJson (p.sources.reverse.map (\u00b7.source)))",
+      "command": [
+        "python3",
+        "-B",
+        "test/price-feeds.py"
+      ],
+      "assertion": "nine-feed exact handler JSON",
+      "failure": "AssertionError: nine-feed exact handler JSON",
+      "build": {
+        "command": [
+          "lake",
+          "build",
+          "cyberkrill",
+          "CyberkrillTests"
+        ],
+        "status": 0,
+        "seconds": 10.807
+      },
+      "red": {
+        "command": [
+          "python3",
+          "-B",
+          "test/price-feeds.py"
+        ],
+        "status": 1,
+        "seconds": 3.29
+      },
+      "restore_build": {
+        "command": [
+          "lake",
+          "build",
+          "cyberkrill",
+          "CyberkrillTests"
+        ],
+        "status": 0,
+        "seconds": 10.807
+      },
+      "green": {
+        "command": [
+          "python3",
+          "-B",
+          "test/price-feeds.py"
+        ],
+        "status": 0,
+        "seconds": 43.252
+      }
+    },
+    {
+      "property": "tiny-quote-json",
+      "file": "Cyberkrill/Fiat.lean",
+      "replace": "24 + (toString a.denominator).length - (toString a.numerator).length",
+      "with_text": "24",
+      "command": [
+        "python3",
+        "-B",
+        "test/price-feeds.py",
+        "--pure"
+      ],
+      "assertion": "fedi/tiny-repeating-output",
+      "failure": "AssertionError: fedi/tiny-repeating-output: {'btc': Decimal('3'), 'fiat_source': {'amount': Decimal('1E-30'), 'currency': 'EUR', 'feeds': [], 'price_per_btc': Decimal('0')}, 'input': '1e-30EUR', 'msats': Decimal('300000000000'), 'sats': Decimal('300000000')} != {'input': '1e-30EUR', 'btc': 3, 'sats': 300000000, 'msats': 300000000000, 'fiat_source': {'amount': Decimal('1E-30'), 'currency': 'EUR', 'price_per_btc': Decimal('3.33333333333333333333333E-31'), 'feeds': []}}",
+      "build": {
+        "command": [
+          "lake",
+          "build",
+          "cyberkrill",
+          "CyberkrillTests"
+        ],
+        "status": 0,
+        "seconds": 12.702
+      },
+      "red": {
+        "command": [
+          "python3",
+          "-B",
+          "test/price-feeds.py",
+          "--pure"
+        ],
+        "status": 1,
+        "seconds": 0.129
+      },
+      "restore_build": {
+        "command": [
+          "lake",
+          "build",
+          "cyberkrill",
+          "CyberkrillTests"
+        ],
+        "status": 0,
+        "seconds": 12.802
+      },
+      "green": {
+        "command": [
+          "python3",
+          "-B",
+          "test/price-feeds.py",
+          "--pure"
+        ],
+        "status": 0,
+        "seconds": 1.593
+      }
+    },
+    {
+      "property": "nested-override-decoding",
+      "file": "Cyberkrill/TestEntry.lean",
+      "replace": "for _ in [:5] do",
+      "with_text": "for _ in [:2] do",
+      "command": [
+        ".lake/build/bin/CyberkrillTests",
+        "--price-guards"
+      ],
+      "assertion": "safe encoded override fixed point",
+      "failure": "assertion failed: safe encoded override fixed point",
+      "build": {
+        "command": [
+          "lake",
+          "build",
+          "cyberkrill",
+          "CyberkrillTests"
+        ],
+        "status": 0,
+        "seconds": 9.606
+      },
+      "red": {
+        "command": [
+          ".lake/build/bin/CyberkrillTests",
+          "--price-guards"
+        ],
+        "status": 1,
+        "seconds": 0.087
+      },
+      "restore_build": {
+        "command": [
+          "lake",
+          "build",
+          "cyberkrill",
+          "CyberkrillTests"
+        ],
+        "status": 0,
+        "seconds": 9.6
+      },
+      "green": {
+        "command": [
+          ".lake/build/bin/CyberkrillTests",
+          "--price-guards"
+        ],
+        "status": 0,
+        "seconds": 0.088
+      }
+    },
+    {
+      "property": "nested-override-port",
+      "file": "Cyberkrill/TestEntry.lean",
+      "replace": "(urls.feedBases ++ #[urls.coinGeckoHistory, urls.dcaRpc]).all (fun url => permitted url && !forbiddenPort url)",
+      "with_text": "(urls.feedBases ++ #[urls.coinGeckoHistory, urls.dcaRpc]).all permitted",
+      "command": [
+        ".lake/build/bin/CyberkrillTests",
+        "--price-guards"
+      ],
+      "assertion": "every unused override slot before action",
+      "failure": "assertion failed: every unused override slot before action",
+      "build": {
+        "command": [
+          "lake",
+          "build",
+          "cyberkrill",
+          "CyberkrillTests"
+        ],
+        "status": 0,
+        "seconds": 9.602
+      },
+      "red": {
+        "command": [
+          ".lake/build/bin/CyberkrillTests",
+          "--price-guards"
+        ],
+        "status": 1,
+        "seconds": 0.042
+      },
+      "restore_build": {
+        "command": [
+          "lake",
+          "build",
+          "cyberkrill",
+          "CyberkrillTests"
+        ],
+        "status": 0,
+        "seconds": 9.898
+      },
+      "green": {
+        "command": [
+          ".lake/build/bin/CyberkrillTests",
+          "--price-guards"
+        ],
+        "status": 0,
+        "seconds": 0.091
+      }
+    },
+    {
+      "property": "numeric-json-preflight",
+      "file": "Cyberkrill/Fiat.lean",
+      "replace": "if power.natAbs > 1024 then none else do",
+      "with_text": "if power.natAbs > 1025 then none else do",
+      "command": [
+        "python3",
+        "-B",
+        "test/price-feeds.py",
+        "--probe",
+        "numeric-limit"
+      ],
+      "assertion": "numeric token rejected before JSON expansion",
+      "failure": "AssertionError: numeric token rejected before JSON expansion",
+      "build": {
+        "command": [
+          "lake",
+          "build",
+          "cyberkrill",
+          "CyberkrillTests"
+        ],
+        "status": 0,
+        "seconds": 12.7
+      },
+      "red": {
+        "command": [
+          "python3",
+          "-B",
+          "test/price-feeds.py",
+          "--probe",
+          "numeric-limit"
+        ],
+        "status": 1,
+        "seconds": 0.092
+      },
+      "restore_build": {
+        "command": [
+          "lake",
+          "build",
+          "cyberkrill",
+          "CyberkrillTests"
+        ],
+        "status": 0,
+        "seconds": 12.712
+      },
+      "green": {
+        "command": [
+          "python3",
+          "-B",
+          "test/price-feeds.py",
+          "--probe",
+          "numeric-limit"
+        ],
+        "status": 0,
+        "seconds": 0.084
+      }
+    },
+    {
+      "property": "string-coefficient-bound",
+      "file": "Cyberkrill/Fiat.lean",
+      "replace": "if coefficient.length > 1024 || negative then none else do",
+      "with_text": "if coefficient.length > 2048 || negative then none else do",
+      "command": [
+        "python3",
+        "-B",
+        "test/price-feeds.py",
+        "--pure"
+      ],
+      "assertion": "grammar/coefficient-1025",
+      "failure": "AssertionError: grammar/coefficient-1025 diagnostic",
+      "build": {
+        "command": [
+          "lake",
+          "build",
+          "cyberkrill",
+          "CyberkrillTests"
+        ],
+        "status": 0,
+        "seconds": 12.704
+      },
+      "red": {
+        "command": [
+          "python3",
+          "-B",
+          "test/price-feeds.py",
+          "--pure"
+        ],
+        "status": 1,
+        "seconds": 0.132
+      },
+      "restore_build": {
+        "command": [
+          "lake",
+          "build",
+          "cyberkrill",
+          "CyberkrillTests"
+        ],
+        "status": 0,
+        "seconds": 12.702
+      },
+      "green": {
+        "command": [
+          "python3",
+          "-B",
+          "test/price-feeds.py",
+          "--pure"
+        ],
+        "status": 0,
+        "seconds": 1.58
+      }
+    },
+    {
+      "property": "unicode-json-preflight",
+      "file": "Cyberkrill/PriceFeed.lean",
+      "replace": "if 0xD800 \u2264 unit && unit \u2264 0xDBFF then",
+      "with_text": "if false then",
+      "command": [
+        "python3",
+        "-B",
+        "test/price-feeds.py",
+        "--probe",
+        "surrogate"
+      ],
+      "assertion": "lone surrogate rejected in ignored field",
+      "failure": "AssertionError: lone surrogate rejected in ignored field",
+      "build": {
+        "command": [
+          "lake",
+          "build",
+          "cyberkrill",
+          "CyberkrillTests"
+        ],
+        "status": 0,
+        "seconds": 11.801
+      },
+      "red": {
+        "command": [
+          "python3",
+          "-B",
+          "test/price-feeds.py",
+          "--probe",
+          "surrogate"
+        ],
+        "status": 1,
+        "seconds": 0.094
+      },
+      "restore_build": {
+        "command": [
+          "lake",
+          "build",
+          "cyberkrill",
+          "CyberkrillTests"
+        ],
+        "status": 0,
+        "seconds": 11.803
+      },
+      "green": {
+        "command": [
+          "python3",
+          "-B",
+          "test/price-feeds.py",
+          "--probe",
+          "surrogate"
+        ],
+        "status": 0,
+        "seconds": 0.081
+      }
+    },
+    {
+      "property": "lossy-response-text",
+      "file": "Cyberkrill/PriceFeed.lean",
+      "replace": "let body := Lightning.Lnurl.lossyUtf8 r.body",
+      "with_text": "let some body := String.fromUTF8? r.body | throw s!\"Failed to read {feed.label} response\"",
+      "command": [
+        "python3",
+        "-B",
+        "test/price-feeds.py",
+        "--pure"
+      ],
+      "assertion": "bitstamp/raw-ignored",
+      "failure": "AssertionError: bitstamp/raw-ignored: {'error': 'Failed to read Bitstamp response'} != {'ok': {'numerator': '1', 'denominator': '1'}}",
+      "build": {
+        "command": [
+          "lake",
+          "build",
+          "cyberkrill",
+          "CyberkrillTests"
+        ],
+        "status": 0,
+        "seconds": 12.005
+      },
+      "red": {
+        "command": [
+          "python3",
+          "-B",
+          "test/price-feeds.py",
+          "--pure"
+        ],
+        "status": 1,
+        "seconds": 0.129
+      },
+      "restore_build": {
+        "command": [
+          "lake",
+          "build",
+          "cyberkrill",
+          "CyberkrillTests"
+        ],
+        "status": 0,
+        "seconds": 12.516
+      },
+      "green": {
+        "command": [
+          "python3",
+          "-B",
+          "test/price-feeds.py",
+          "--pure"
+        ],
+        "status": 0,
+        "seconds": 1.638
+      }
+    },
+    {
+      "property": "no-early-connect-cutoff",
+      "file": "Cyberkrill/PriceFeed.lean",
+      "replace": "connectTimeoutMs := 0",
+      "with_text": "connectTimeoutMs := 5000",
+      "command": [
+        ".lake/build/bin/CyberkrillTests",
+        "--price-tasks"
+      ],
+      "assertion": "per-feed deadline and response bound",
+      "failure": "assertion failed: per-feed deadline and response bound",
+      "build": {
+        "command": [
+          "lake",
+          "build",
+          "cyberkrill",
+          "CyberkrillTests"
+        ],
+        "status": 0,
+        "seconds": 12.215
+      },
+      "red": {
+        "command": [
+          ".lake/build/bin/CyberkrillTests",
+          "--price-tasks"
+        ],
+        "status": 1,
+        "seconds": 0.037
+      },
+      "restore_build": {
+        "command": [
+          "lake",
+          "build",
+          "cyberkrill",
+          "CyberkrillTests"
+        ],
+        "status": 0,
+        "seconds": 12.406
+      },
+      "green": {
+        "command": [
+          ".lake/build/bin/CyberkrillTests",
+          "--price-tasks"
+        ],
+        "status": 0,
+        "seconds": 0.039
+      }
+    },
+    {
+      "property": "exhausted-override-decoding",
+      "file": "Cyberkrill/TestEntry.lean",
+      "replace": "-- Exhausting the decoding budget never constitutes validation.\n  return false",
+      "with_text": "-- Exhausting the decoding budget never constitutes validation.\n  return true",
+      "command": [
+        ".lake/build/bin/CyberkrillTests",
+        "--price-guards"
+      ],
+      "assertion": "permitted decode exhaustion",
+      "failure": "assertion failed: permitted decode exhaustion",
+      "build": {
+        "command": [
+          "lake",
+          "build",
+          "cyberkrill",
+          "CyberkrillTests"
+        ],
+        "status": 0,
+        "seconds": 10.12
+      },
+      "red": {
+        "command": [
+          ".lake/build/bin/CyberkrillTests",
+          "--price-guards"
+        ],
+        "status": 1,
+        "seconds": 0.053
+      },
+      "restore_build": {
+        "command": [
+          "lake",
+          "build",
+          "cyberkrill",
+          "CyberkrillTests"
+        ],
+        "status": 0,
+        "seconds": 9.936
+      },
+      "green": {
+        "command": [
+          ".lake/build/bin/CyberkrillTests",
+          "--price-guards"
+        ],
+        "status": 0,
+        "seconds": 0.088
+      }
+    },
+    {
+      "property": "bech32-override-target",
+      "file": "Cyberkrill/TestEntry.lean",
+      "replace": "if next == decoded then return !(encodedMaterial decoded).any (concealedTarget 5)",
+      "with_text": "if next == decoded then return true",
+      "command": [
+        ".lake/build/bin/CyberkrillTests",
+        "--price-guards"
+      ],
+      "assertion": "every unused override slot before action",
+      "failure": "assertion failed: every unused override slot before action",
+      "build": {
+        "command": [
+          "lake",
+          "build",
+          "cyberkrill",
+          "CyberkrillTests"
+        ],
+        "status": 0,
+        "seconds": 9.803
+      },
+      "red": {
+        "command": [
+          ".lake/build/bin/CyberkrillTests",
+          "--price-guards"
+        ],
+        "status": 1,
+        "seconds": 0.045
+      },
+      "restore_build": {
+        "command": [
+          "lake",
+          "build",
+          "cyberkrill",
+          "CyberkrillTests"
+        ],
+        "status": 0,
+        "seconds": 9.922
+      },
+      "green": {
+        "command": [
+          ".lake/build/bin/CyberkrillTests",
+          "--price-guards"
+        ],
+        "status": 0,
+        "seconds": 0.092
+      }
+    },
+    {
+      "property": "argv-decoding-exhaustion",
+      "file": "Cyberkrill/TestEntry.lean",
+      "replace": "private def concealedPort : Nat \u2192 String \u2192 Bool\n  | 0, _ => true",
+      "with_text": "private def concealedPort : Nat \u2192 String \u2192 Bool\n  | 0, _ => false",
+      "command": [
+        ".lake/build/bin/CyberkrillTests",
+        "--price-guards"
+      ],
+      "assertion": "nested argv fail closed",
+      "failure": "assertion failed: nested argv fail closed",
+      "build": {
+        "command": [
+          "lake",
+          "build",
+          "cyberkrill",
+          "CyberkrillTests"
+        ],
+        "status": 0,
+        "seconds": 10.026
+      },
+      "red": {
+        "command": [
+          ".lake/build/bin/CyberkrillTests",
+          "--price-guards"
+        ],
+        "status": 1,
+        "seconds": 0.054
+      },
+      "restore_build": {
+        "command": [
+          "lake",
+          "build",
+          "cyberkrill",
+          "CyberkrillTests"
+        ],
+        "status": 0,
+        "seconds": 9.915
+      },
+      "green": {
+        "command": [
+          ".lake/build/bin/CyberkrillTests",
+          "--price-guards"
+        ],
+        "status": 0,
+        "seconds": 0.087
+      }
+    },
+    {
+      "property": "json-container-depth",
+      "file": "Cyberkrill/PriceFeed.lean",
+      "replace": "if depth \u2265 128 then return none",
+      "with_text": "if false then return none",
+      "command": [
+        "python3",
+        "-B",
+        "test/price-feeds.py",
+        "--pure"
+      ],
+      "assertion": "bitstamp/depth-array-127",
+      "failure": "AssertionError: bitstamp/depth-array-127: {'ok': {'denominator': '1', 'numerator': '95000'}} != {'error': 'Invalid Bitstamp JSON'}",
+      "build": {
+        "command": [
+          "lake",
+          "build",
+          "cyberkrill",
+          "CyberkrillTests"
+        ],
+        "status": 0,
+        "seconds": 12.007
+      },
+      "red": {
+        "command": [
+          "python3",
+          "-B",
+          "test/price-feeds.py",
+          "--pure"
+        ],
+        "status": 1,
+        "seconds": 0.125
+      },
+      "restore_build": {
+        "command": [
+          "lake",
+          "build",
+          "cyberkrill",
+          "CyberkrillTests"
+        ],
+        "status": 0,
+        "seconds": 11.904
+      },
+      "green": {
+        "command": [
+          "python3",
+          "-B",
+          "test/price-feeds.py",
+          "--pure"
+        ],
+        "status": 0,
+        "seconds": 1.582
+      }
+    },
+    {
+      "property": "ignored-numeric-underflow",
+      "file": "Cyberkrill/PriceFeed.lean",
+      "replace": "if order < 308 then return true",
+      "with_text": "if order < 308 then return order \u2265 -1024",
+      "command": [
+        "python3",
+        "-B",
+        "test/price-feeds.py",
+        "--pure"
+      ],
+      "assertion": "bitstamp/ignored-1e-1025",
+      "failure": "AssertionError: bitstamp/ignored-1e-1025: {'error': 'Invalid Bitstamp JSON'} != {'ok': {'numerator': '95000', 'denominator': '1'}}",
+      "build": {
+        "command": [
+          "lake",
+          "build",
+          "cyberkrill",
+          "CyberkrillTests"
+        ],
+        "status": 0,
+        "seconds": 11.904
+      },
+      "red": {
+        "command": [
+          "python3",
+          "-B",
+          "test/price-feeds.py",
+          "--pure"
+        ],
+        "status": 1,
+        "seconds": 0.128
+      },
+      "restore_build": {
+        "command": [
+          "lake",
+          "build",
+          "cyberkrill",
+          "CyberkrillTests"
+        ],
+        "status": 0,
+        "seconds": 11.898
+      },
+      "green": {
+        "command": [
+          "python3",
+          "-B",
+          "test/price-feeds.py",
+          "--pure"
+        ],
+        "status": 0,
+        "seconds": 1.578
+      }
+    },
+    {
+      "property": "ignored-numeric-overflow",
+      "file": "Cyberkrill/PriceFeed.lean",
+      "replace": "unless (quoted && used.contains i) || finiteJsonNumber numbers[i]! do throw invalid",
+      "with_text": "unless true do throw invalid",
+      "command": [
+        "python3",
+        "-B",
+        "test/price-feeds.py",
+        "--pure"
+      ],
+      "assertion": "bitstamp/ignored-1e400",
+      "failure": "AssertionError: bitstamp/ignored-1e400: {'ok': {'denominator': '1', 'numerator': '95000'}} != {'error': 'Invalid Bitstamp JSON'}",
+      "build": {
+        "command": [
+          "lake",
+          "build",
+          "cyberkrill",
+          "CyberkrillTests"
+        ],
+        "status": 0,
+        "seconds": 11.904
+      },
+      "red": {
+        "command": [
+          "python3",
+          "-B",
+          "test/price-feeds.py",
+          "--pure"
+        ],
+        "status": 1,
+        "seconds": 0.125
+      },
+      "restore_build": {
+        "command": [
+          "lake",
+          "build",
+          "cyberkrill",
+          "CyberkrillTests"
+        ],
+        "status": 0,
+        "seconds": 12.101
+      },
+      "green": {
+        "command": [
+          "python3",
+          "-B",
+          "test/price-feeds.py",
+          "--pure"
+        ],
+        "status": 0,
+        "seconds": 1.65
+      }
+    },
+    {
+      "property": "zero-json-exponent",
+      "file": "Cyberkrill/PriceFeed.lean",
+      "replace": "unless token.length \u2264 2048 && decimalSyntax token true do return none",
+      "with_text": "unless token.length \u2264 2048 && decimalSyntax token true && (((token.splitOn \"e\")[1]?.getD \"0\").toInt?.getD 2049).natAbs \u2264 2048 do return none",
+      "command": [
+        "python3",
+        "-B",
+        "test/price-feeds.py",
+        "--probe",
+        "zero-token"
+      ],
+      "assertion": "zero-token parser correction",
+      "failure": "AssertionError: zero-token parser correction",
+      "build": {
+        "command": [
+          "lake",
+          "build",
+          "cyberkrill",
+          "CyberkrillTests"
+        ],
+        "status": 0,
+        "seconds": 12.213
+      },
+      "red": {
+        "command": [
+          "python3",
+          "-B",
+          "test/price-feeds.py",
+          "--probe",
+          "zero-token"
+        ],
+        "status": 1,
+        "seconds": 0.093
+      },
+      "restore_build": {
+        "command": [
+          "lake",
+          "build",
+          "cyberkrill",
+          "CyberkrillTests"
+        ],
+        "status": 0,
+        "seconds": 12.106
+      },
+      "green": {
+        "command": [
+          "python3",
+          "-B",
+          "test/price-feeds.py",
+          "--probe",
+          "zero-token"
+        ],
+        "status": 0,
+        "seconds": 0.08
+      }
+    },
+    {
+      "property": "malformed-sign-category",
+      "file": "Cyberkrill/PriceFeed.lean",
+      "replace": "unless decimalSyntax text do throw (label ++ \" is not a number\")",
+      "with_text": "unless text.startsWith \"-\" || decimalSyntax text do throw (label ++ \" is not a number\")",
+      "command": [
+        "python3",
+        "-B",
+        "test/price-feeds.py",
+        "--pure"
+      ],
+      "assertion": "bitstamp/sign--+5",
+      "failure": "AssertionError: bitstamp/sign--+5: {'error': 'Bitstamp last price must be positive'} != {'error': 'Bitstamp last price is not a number'}",
+      "build": {
+        "command": [
+          "lake",
+          "build",
+          "cyberkrill",
+          "CyberkrillTests"
+        ],
+        "status": 0,
+        "seconds": 11.901
+      },
+      "red": {
+        "command": [
+          "python3",
+          "-B",
+          "test/price-feeds.py",
+          "--pure"
+        ],
+        "status": 1,
+        "seconds": 0.131
+      },
+      "restore_build": {
+        "command": [
+          "lake",
+          "build",
+          "cyberkrill",
+          "CyberkrillTests"
+        ],
+        "status": 0,
+        "seconds": 11.904
+      },
+      "green": {
+        "command": [
+          "python3",
+          "-B",
+          "test/price-feeds.py",
+          "--pure"
+        ],
+        "status": 0,
+        "seconds": 1.564
+      }
+    },
+    {
+      "property": "negative-range-category",
+      "file": "Cyberkrill/PriceFeed.lean",
+      "replace": "if text.startsWith \"-\" then throw (label ++ \" must be positive\")",
+      "with_text": "if text.startsWith \"-\" && (Exact.parse unsigned).isSome then throw (label ++ \" must be positive\")",
+      "command": [
+        "python3",
+        "-B",
+        "test/price-feeds.py",
+        "--pure"
+      ],
+      "assertion": "bitstamp/sign--1e2000",
+      "failure": "AssertionError: bitstamp/sign--1e2000: {'error': 'Bitstamp last price is not a number'} != {'error': 'Bitstamp last price must be positive'}",
+      "build": {
+        "command": [
+          "lake",
+          "build",
+          "cyberkrill",
+          "CyberkrillTests"
+        ],
+        "status": 0,
+        "seconds": 12.001
+      },
+      "red": {
+        "command": [
+          "python3",
+          "-B",
+          "test/price-feeds.py",
+          "--pure"
+        ],
+        "status": 1,
+        "seconds": 0.125
+      },
+      "restore_build": {
+        "command": [
+          "lake",
+          "build",
+          "cyberkrill",
+          "CyberkrillTests"
+        ],
+        "status": 0,
+        "seconds": 12.508
+      },
+      "green": {
+        "command": [
+          "python3",
+          "-B",
+          "test/price-feeds.py",
+          "--pure"
+        ],
+        "status": 0,
+        "seconds": 1.584
+      }
+    },
+    {
+      "property": "fedi-exact-overflow",
+      "file": "Cyberkrill/PriceFeed.lean",
+      "replace": "return some (btc.div fiat)",
+      "with_text": "let cross := btc.div fiat\n    unless cross.lt \u27e82^1024, 1\u27e9 do throw \"Fedi cross-rate must be positive\"\n    return some cross",
+      "command": [
+        "python3",
+        "-B",
+        "test/price-feeds.py",
+        "--pure"
+      ],
+      "assertion": "fedi/cross-overflow",
+      "failure": "AssertionError: fedi/cross-overflow: {'error': 'Fedi cross-rate must be positive'} != {'ok': {'numerator': '1000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000', 'denominator': '1'}}",
+      "build": {
+        "command": [
+          "lake",
+          "build",
+          "cyberkrill",
+          "CyberkrillTests"
+        ],
+        "status": 0,
+        "seconds": 12.202
+      },
+      "red": {
+        "command": [
+          "python3",
+          "-B",
+          "test/price-feeds.py",
+          "--pure"
+        ],
+        "status": 1,
+        "seconds": 0.129
+      },
+      "restore_build": {
+        "command": [
+          "lake",
+          "build",
+          "cyberkrill",
+          "CyberkrillTests"
+        ],
+        "status": 0,
+        "seconds": 12.207
+      },
+      "green": {
+        "command": [
+          "python3",
+          "-B",
+          "test/price-feeds.py",
+          "--pure"
+        ],
+        "status": 0,
+        "seconds": 1.622
+      }
+    },
+    {
+      "property": "fedi-exact-underflow",
+      "file": "Cyberkrill/PriceFeed.lean",
+      "replace": "return some (btc.div fiat)",
+      "with_text": "let cross := btc.div fiat\n    if cross.lt \u27e81, 10^324\u27e9 then throw \"Fedi cross-rate must be positive\"\n    return some cross",
+      "command": [
+        "python3",
+        "-B",
+        "test/price-feeds.py",
+        "--pure"
+      ],
+      "assertion": "fedi/cross-underflow",
+      "failure": "AssertionError: fedi/cross-underflow: {'error': 'Fedi cross-rate must be positive'} != {'ok': {'numerator': '1', 'denominator': '1000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000'}}",
+      "build": {
+        "command": [
+          "lake",
+          "build",
+          "cyberkrill",
+          "CyberkrillTests"
+        ],
+        "status": 0,
+        "seconds": 12.014
+      },
+      "red": {
+        "command": [
+          "python3",
+          "-B",
+          "test/price-feeds.py",
+          "--pure"
+        ],
+        "status": 1,
+        "seconds": 0.123
+      },
+      "restore_build": {
+        "command": [
+          "lake",
+          "build",
+          "cyberkrill",
+          "CyberkrillTests"
+        ],
+        "status": 0,
+        "seconds": 11.906
+      },
+      "green": {
+        "command": [
+          "python3",
+          "-B",
+          "test/price-feeds.py",
+          "--pure"
+        ],
+        "status": 0,
+        "seconds": 1.565
+      }
+    },
+    {
+      "property": "json-number-grammar",
+      "file": "Cyberkrill/PriceFeed.lean",
+      "replace": "decimalSyntax token true",
+      "with_text": "decimalSyntax token false",
+      "command": [
+        "python3",
+        "-B",
+        "test/price-feeds.py",
+        "--pure"
+      ],
+      "assertion": "bitstamp/json-syntax-01",
+      "failure": "AssertionError: bitstamp/json-syntax-01: {'ok': {'denominator': '1', 'numerator': '1'}} != {'error': 'Invalid Bitstamp JSON'}",
+      "build": {
+        "command": [
+          "lake",
+          "build",
+          "cyberkrill",
+          "CyberkrillTests"
+        ],
+        "status": 0,
+        "seconds": 11.904
+      },
+      "red": {
+        "command": [
+          "python3",
+          "-B",
+          "test/price-feeds.py",
+          "--pure"
+        ],
+        "status": 1,
+        "seconds": 0.126
+      },
+      "restore_build": {
+        "command": [
+          "lake",
+          "build",
+          "cyberkrill",
+          "CyberkrillTests"
+        ],
+        "status": 0,
+        "seconds": 12.112
+      },
+      "green": {
+        "command": [
+          "python3",
+          "-B",
+          "test/price-feeds.py",
+          "--pure"
+        ],
+        "status": 0,
+        "seconds": 1.608
+      }
+    },
+    {
+      "property": "numeric-object-key",
+      "file": "Cyberkrill/PriceFeed.lean",
+      "replace": "if (rest.dropWhile (fun ch => \" \\t\\r\\n\".contains ch)).head? == some ':' then return none",
+      "with_text": "if false then return none",
+      "command": [
+        "python3",
+        "-B",
+        "test/price-feeds.py",
+        "--pure"
+      ],
+      "assertion": "bitstamp/numeric-key-first-1",
+      "failure": "AssertionError: bitstamp/numeric-key-first-1: {'ok': {'denominator': '1', 'numerator': '95000'}} != {'error': 'Invalid Bitstamp JSON'}",
+      "build": {
+        "command": [
+          "lake",
+          "build",
+          "cyberkrill",
+          "CyberkrillTests"
+        ],
+        "status": 0,
+        "seconds": 12.307
+      },
+      "red": {
+        "command": [
+          "python3",
+          "-B",
+          "test/price-feeds.py",
+          "--pure"
+        ],
+        "status": 1,
+        "seconds": 0.131
+      },
+      "restore_build": {
+        "command": [
+          "lake",
+          "build",
+          "cyberkrill",
+          "CyberkrillTests"
+        ],
+        "status": 0,
+        "seconds": 12.022
+      },
+      "green": {
+        "command": [
+          "python3",
+          "-B",
+          "test/price-feeds.py",
+          "--pure"
+        ],
+        "status": 0,
+        "seconds": 1.587
+      }
+    },
+    {
+      "property": "losing-candidate-range",
+      "file": "Cyberkrill/PriceFeed.lean",
+      "replace": "set (chosen.map (\u00b7.2.2) |>.getD #[])",
+      "with_text": "set (candidates.flatMap (\u00b7.2.2))",
+      "command": [
+        "python3",
+        "-B",
+        "test/price-feeds.py",
+        "--pure"
+      ],
+      "assertion": "kraken/losing-USD-overflow309",
+      "failure": "AssertionError: kraken/losing-USD-overflow309: {'ok': {'denominator': '1', 'numerator': '20'}} != {'error': 'Invalid Kraken JSON'}",
+      "build": {
+        "command": [
+          "lake",
+          "build",
+          "cyberkrill",
+          "CyberkrillTests"
+        ],
+        "status": 0,
+        "seconds": 12.103
+      },
+      "red": {
+        "command": [
+          "python3",
+          "-B",
+          "test/price-feeds.py",
+          "--pure"
+        ],
+        "status": 1,
+        "seconds": 0.13
+      },
+      "restore_build": {
+        "command": [
+          "lake",
+          "build",
+          "cyberkrill",
+          "CyberkrillTests"
+        ],
+        "status": 0,
+        "seconds": 12.422
+      },
+      "green": {
+        "command": [
+          "python3",
+          "-B",
+          "test/price-feeds.py",
+          "--pure"
+        ],
+        "status": 0,
+        "seconds": 1.636
+      }
+    },
+    {
+      "property": "selected-candidate-exemption",
+      "file": "Cyberkrill/PriceFeed.lean",
+      "replace": "set (chosen.map (\u00b7.2.2) |>.getD #[])",
+      "with_text": "set (#[] : Array Nat)",
+      "command": [
+        "python3",
+        "-B",
+        "test/price-feeds.py",
+        "--pure"
+      ],
+      "assertion": "kraken/selected-single-1e400",
+      "failure": "AssertionError: kraken/selected-single-1e400: {'error': 'Invalid Kraken JSON'} != {'ok': {'numerator': '10000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000', 'denominator': '1'}}",
+      "build": {
+        "command": [
+          "lake",
+          "build",
+          "cyberkrill",
+          "CyberkrillTests"
+        ],
+        "status": 0,
+        "seconds": 12.814
+      },
+      "red": {
+        "command": [
+          "python3",
+          "-B",
+          "test/price-feeds.py",
+          "--pure"
+        ],
+        "status": 1,
+        "seconds": 0.131
+      },
+      "restore_build": {
+        "command": [
+          "lake",
+          "build",
+          "cyberkrill",
+          "CyberkrillTests"
+        ],
+        "status": 0,
+        "seconds": 12.008
+      },
+      "green": {
+        "command": [
+          "python3",
+          "-B",
+          "test/price-feeds.py",
+          "--pure"
+        ],
+        "status": 0,
+        "seconds": 1.561
+      }
+    },
+    {
+      "property": "warning-before-issues",
+      "file": "Cyberkrill/PriceFeed.lean",
+      "replace": "spreadWarning p ++ (if summary.isEmpty then \"\" else \"[price-feed] \" ++ summary ++ \"\\n\")",
+      "with_text": "(if summary.isEmpty then \"\" else \"[price-feed] \" ++ summary ++ \"\\n\") ++ spreadWarning p",
+      "command": [
+        "python3",
+        "-B",
+        "test/price-feeds.py"
+      ],
+      "assertion": "cent median warning/issues/breadcrumb order",
+      "failure": "AssertionError: cent median warning/issues/breadcrumb order",
+      "build": {
+        "command": [
+          "lake",
+          "build",
+          "cyberkrill",
+          "CyberkrillTests"
+        ],
+        "status": 0,
+        "seconds": 11.903
+      },
+      "red": {
+        "command": [
+          "python3",
+          "-B",
+          "test/price-feeds.py"
+        ],
+        "status": 1,
+        "seconds": 43.352
+      },
+      "restore_build": {
+        "command": [
+          "lake",
+          "build",
+          "cyberkrill",
+          "CyberkrillTests"
+        ],
+        "status": 0,
+        "seconds": 12.304
+      },
+      "green": {
+        "command": [
+          "python3",
+          "-B",
+          "test/price-feeds.py"
+        ],
+        "status": 0,
+        "seconds": 44.706
+      }
+    }
+  ],
+  "restored_full": {
+    "command": [
+      "python3",
+      "-B",
+      "test/price-feeds.py"
+    ],
+    "status": 0,
+    "seconds": 43.754
+  }
+}

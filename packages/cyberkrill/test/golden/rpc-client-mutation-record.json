@@ -4,7 +4,7 @@
     "Cyberkrill/CoreRpc.lean": "63fab1a1540c05eac769322a77fc799dc86cdb210da98a35696f8f46d3848a6d",
     "Cyberkrill/RpcFlags.lean": "d07ca3f7d647bfabceb6eeaa90954d59dc30a76401677a16226dd9171b65b1d0",
     "CyberkrillTests/Rpc.lean": "3f1887f1dad6d82d421e7bbeecaea6486431b33ba134051d07d5d828809419bf",
-    "CyberkrillTests.lean": "3d28755d3577cc7669a5ed341274211cc5f353bda063bf65e149e4a3ef78c57d",
+    "CyberkrillTests.lean": "bf7a271039740b895b2c56d7394de69d29a94f230ea1d82887e4f9d99c5d077f",
     "test/rpc-client.py": "93f8992f6a231e9b78c631400ebeaa178b482becea1e30d2c73c4182c6e9f003",
     "test/network.py": "053bc627decb80b256efe256fb5aa4b81027c93693e3dd9c9c630b689cb98297",
     "test/network-safety.py": "1198ecc57a1b75e49e3a2a1ee99a76d9d665e854b6e3d4409a20b76454e388a7",

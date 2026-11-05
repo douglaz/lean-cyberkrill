@@ -19,18 +19,18 @@ roots = {'Sha256', 'Secp256k1', 'Bitcoin', 'Lightning', 'FedimintInvite', 'HttpC
 tracked = subprocess.check_output(['git', 'ls-files', '-z', '--', 'packages']).decode().split(chr(0))
 paths = [pathlib.Path(p) for p in tracked if p and pathlib.Path(p).suffix == '.lean']
 paths = [p for p in paths if len(p.parts) >= 3 and (p.parts[2] in roots or p.parts[2].removesuffix('.lean') in roots)]
-assert len(paths) == 82, 'library/proof source inventory'
+assert len(paths) == 85, 'library/proof source inventory'
 assert {'packages/cyberkrill/Cyberkrill/CoreRpc.lean', 'packages/cyberkrill/Cyberkrill/RpcFlags.lean'} <= {str(p) for p in paths}, 'Core RPC/flags source inventory'
 assert {p.parts[2].removesuffix('.lean') for p in paths} == roots, 'library root inventory'
 bad = [str(p) for p in paths if re.search(r'\\b(?:native_decide|bv_decide)\\b', p.read_text())]
 assert not bad, 'native decision in library: ' + ', '.join(bad)
-print(f'library/proof native-decision scan: {len(paths)}/82 tracked files; zero offenders')
+print(f'library/proof native-decision scan: {len(paths)}/85 tracked files; zero offenders')
 """
 
 
 def main():
     mode, = sys.argv[1:]
-    assert mode in ["app", "repo", "evidence", "refresh"]
+    assert mode in ["app", "repo", "evidence", "refresh", "campaigns"]
     directory = APP / ".lake/validation"
     directory.mkdir(parents=True, exist_ok=True)
     if mode == "app":
@@ -38,6 +38,8 @@ def main():
                   ("test", APP, ["nix", "develop", "-c", "lake", "test"], 600)]
     elif mode == "evidence":
         checks = [
+            ("price-feeds", ROOT, ["python3", "-B", "packages/cyberkrill/test/price-feeds.py"], 240),
+            ("price-mutations", ROOT, ["python3", "-B", "packages/cyberkrill/test/price-mutations.py", "--verify"], 120),
             ("move-scope-bytes", ROOT, ["python3", "-B", "packages/cyberkrill/test/move-utxos.py", "scope-bytes"], 120),
             ("move-utxos", ROOT, ["python3", "-B", "packages/cyberkrill/test/move-utxos.py"], 240),
             ("move-utxos-mutations", ROOT, ["python3", "-B", "packages/cyberkrill/test/move-utxos-mutations.py", "--verify"], 120),
@@ -72,6 +74,15 @@ def main():
             ("carried-regressions", ROOT, ["python3", "-B", "packages/cyberkrill/test/carried-regressions.py", "--verify"], 120),
             ("file-observation", ROOT, ["python3", "-B", "packages/cyberkrill/test/file-observation.py"], 120),
             ("ordered-boundary-regressions", ROOT, ["python3", "-B", "packages/cyberkrill/test/boundary-regressions.py", "--verify"], 120),
+        ]
+    elif mode == "campaigns":
+        checks = [
+            ("move-campaign", ROOT, ["python3", "-B", "packages/cyberkrill/test/move-utxos-mutations.py"], 7200),
+            ("creation-campaign", ROOT, ["python3", "-B", "packages/cyberkrill/test/psbt-commands-mutations.py"], 7200),
+            ("list-campaign", ROOT, ["python3", "-B", "packages/cyberkrill/test/list-utxos-mutations.py"], 7200),
+            ("lexical-campaign", ROOT, ["python3", "-B", "packages/cyberkrill/test/list-utxos-lexical-mutations.py"], 3600),
+            ("lifecycle-record", ROOT, ["python3", "-B", "packages/cyberkrill/test/list-utxos-lifecycle.py", "--record"], 300),
+            ("rpc-campaign", ROOT, ["python3", "-B", "packages/cyberkrill/test/rpc-client-mutations.py"], 14400),
         ]
     elif mode == "refresh":
         checks = [

@@ -4,6 +4,7 @@
 """Compile deliberate production changes, detect runtime assertions, restore and rerun."""
 from contextlib import chdir
 import hashlib
+from evidence import write_record
 import json
 import os
 from pathlib import Path
@@ -179,7 +180,7 @@ def main():
             print(name+": build/red/restore/green 0/1/0/0",flush=True)
         full,_=command("restored-full",tests,0)
         assert fingerprints()==source,"move final source restoration"
-        DEST.write_text(json.dumps(dict(source_sha256=source, initial_build=initial_build, initial_green=initial_green, checks=checks, restored_full=full), indent=2) + '\n')
+        write_record(DEST, json.dumps(dict(source_sha256=source, initial_build=initial_build, initial_green=initial_green, checks=checks, restored_full=full), indent=2) + '\n')
         verify();complete=True
     finally:
         restore()

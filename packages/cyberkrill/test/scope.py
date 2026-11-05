@@ -12,8 +12,8 @@ from datetime import datetime
 
 from cases import APP, ROOT
 
-BASE = "01879167f2f6b7ace2a286987a14a2104a48f912"
-ISSUE = "lck-phase-8c-move-utxos-xxl"
+BASE = "3a122a1e7998e28fa382561fd1fbf4859c655abd"
+ISSUE = "lck-phase-9a-price-feeds-fiat-pz5"
 # Fixed reference fixtures. Never derive
 # these expected values from HEAD, the index, or the current fixture bytes.
 FIXTURE_DIGESTS = {
@@ -55,51 +55,32 @@ def check_lifecycle(original, current):
 
 
 def main():
-    allowed = {"README.md", "AGENTS.md", ".beads/issues.jsonl"}
-    # Move integration and latest-only evidence maintenance.
+    allowed = {"README.md", ".beads/issues.jsonl"}
+    # Fiat conversion, guarded feed replay and actual dependent evidence refreshes.
     allowed |= {"packages/cyberkrill/" + p for p in [
-        "Cyberkrill/App.lean",  # Move registration, ordered parser and ordinary writer dispatch.
-        "Cyberkrill/MoveUtxos.lean",  # Exact lookup, stable selection, local fee, validation.
-        "Cyberkrill/PsbtCommands.lean",  # Export existing fiat grammar; creation behavior unchanged.
-        "CyberkrillTests.lean", "CyberkrillTests/MoveUtxos.lean",  # Registered move checks and client injection.
-        "test/move-utxos.py", "test/move-utxos-mutations.py",  # Handler replay and compiled detecting edits.
-        "test/move-utxos-provenance.json",  # Pinned source and actual reference capture bindings.
-        "test/scope.py", "test/validate.py", "test/verify.py",  # Phase scope, registration, source count.
-        "test/rpc-client.py",  # Replay new real Core responses alongside the original 90.
-        "test/rpc-recording-cases.json",  # Named new overshoot request only.
-        "test/generate-rpc-recordings.py",  # Additional exact request in the new case only.
-        "test/rpc-recordings.py",  # Independent new-case shape and inventory.
-        "test/recordings/move-unclamped.json",  # New real Core no-clamp success; old cases untouched.
-        "test/list-utxos-mutations.py", "test/list-utxos-lexical-mutations.py",
-        "test/rpc-client-mutations.py",  # Finite full-suite allowance for the added move replay.
-        "test/offline-mutate.py",  # Measured full-suite allowance and retained timeout diagnostics.
-        "test/evidence.py",  # Atomic replacement with latest-run content only.
-        "test/evidence_history.py",  # Remove the obsolete nested-history writer.
-        "test/list-utxos-lifecycle.py",  # Remove old-run snapshot preservation.
-        "test/mutate.py",  # Publish refreshed App/test bindings with latest-run records.
-        "test/lightning-mutate.py",  # Publish refreshed App/test bindings with latest-run records.
-        "test/revision-mutate.py",  # Publish refreshed parser/scope bindings with latest-run records.
-        "test/refresh-regressions.py",  # Replace the regression record on each refresh.
-        "test/output-regressions.py",  # Replace the output record on each refresh.
-        "test/refresh-attached-output.py",  # Replace the attached-output record on each refresh.
-        "test/psbt-commands-mutations.py",  # Replace the creation record on each completed campaign.
-
+        "Cyberkrill.lean", "Cyberkrill/App.lean", "Cyberkrill/Fiat.lean",
+        "Cyberkrill/PriceFeed.lean", "Cyberkrill/TestEntry.lean",
+        "CyberkrillTests.lean", "CyberkrillTests/PriceFeed.lean",
+        "test/driver.py", "test/scope.py", "test/revisions.py", "test/validate.py", "test/verify.py",
+        "test/price-cases.py", "test/price-feeds.py", "test/capture-price-reference.py",
+        "test/http/success.json", "test/http/success.json.provenance", "test/http/reference.json",
+        "test/http/exact-deltas.json", "test/http/mutation-record.json",
+        "test/price-mutations.py", "test/price-parity.py",
+        "test/move-utxos.py", "test/move-utxos-mutations.py", "test/list-utxos-lifecycle.py", "test/mutate.py", "test/recapture-history.py",
+        "test/lightning-mutate.py", "test/revision-mutate.py",
     ]}
     allowed |= {"packages/cyberkrill/test/golden/" + p for p in [
-        "move-utxos-reference.json", "move-utxos-mutation-record.json",  # Actual new captures and compiled reds.
-        "psbt-commands-mutation-record.json",  # Actual App/test-registration/client-source refresh.
+        "move-utxos-mutation-record.json", "psbt-commands-mutation-record.json",
         "mutation-record.json", "lightning-mutation-record.json", "revision-mutation-record.json",
         "offline-mutation-record.json", "rpc-client-mutation-record.json",
         "list-utxos-mutation-record.json", "list-utxos-lexical-mutation-record.json",
-        "list-utxos-lifecycle-record.json",  # Actual amended-source lifecycle replay.
-        "regression-refresh.json", "output-regression-refresh.json", "attached-output-refresh.json",
-        "offline-history-recapture.json",  # Actual App/test/phase-boundary refreshes.
-        "offline-validation.json",  # Remove obsolete prior-attempt notes only.
+        "list-utxos-lifecycle-record.json", "regression-refresh.json", "output-regression-refresh.json",
+        "attached-output-refresh.json", "offline-history-recapture.json",
     ]}
     changed = set(filter(None, git("diff", BASE, "--name-only", "-z").decode().split("\0")))
     new = set(filter(None, git("ls-files", "--others", "--exclude-standard", "-z").decode().split("\0")))
     base_paths = set(git("ls-tree", "-r", "--name-only", BASE).decode().splitlines())
-    assert changed | new <= allowed, "path outside move command scope: " + repr(sorted((changed | new) - allowed))
+    assert changed | new <= allowed, "path outside price feed scope: " + repr(sorted((changed | new) - allowed))
     # Equality against the base for each unrelated issue includes every field.
     def issues(data):
         rows = [json.loads(line) for line in data.splitlines()]
