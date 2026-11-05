@@ -1,0 +1,6 @@
+Authored synthetic examples; no provider responses were fetched or copied.
+Response fields are defined by the MIT parser code at
+https://github.com/douglaz/cyberkrill/blob/27cad1faba86260b06665a89f0af5134d23525c2/cyberkrill-core/src/price_feed.rs
+coingecko:486; coinbase:496; blockchain.info:509; kraken:524; fedi:570,596;
+cex.io:607; bitstamp:623; yadio:634; gemini:649.
+Numbers and extra fields are independently authored test data.

@@ -109,9 +109,10 @@ def main():
     for signum in managed: signal.signal(signum, interrupted)
 
     def command(label, args):
-        bounded = ["timeout", "--foreground", "180", *args]
+        limit = 600 if args == ["lake", "test"] else 180
+        bounded = ["timeout", "--foreground", str(limit), *args]
         start = time.monotonic()
-        proc = subprocess.run(bounded, stdin=subprocess.DEVNULL, capture_output=True, timeout=190)
+        proc = subprocess.run(bounded, stdin=subprocess.DEVNULL, capture_output=True, timeout=limit+10)
         for stream in ["stdout", "stderr"]: (logs / (label + "." + stream)).write_bytes(getattr(proc, stream))
         (logs / (label + ".status")).write_text(str(proc.returncode) + "\n")
         return proc, dict(command=bounded, status=proc.returncode, seconds=round(time.monotonic() - start, 3))

@@ -12,6 +12,7 @@ import CyberkrillTests.Rpc
 import CyberkrillTests.ListUtxos
 import CyberkrillTests.PsbtCommands
 import CyberkrillTests.MoveUtxos
+import CyberkrillTests.PriceFeed
 
 open CyberkrillTests
 
@@ -30,6 +31,11 @@ private def suite (name : String) (action : IO Unit) : IO Unit := do
 def main (args : List String) : IO UInt32 := do
   try
     match args with
+    | ["--price-evaluate"] => priceEvaluate
+    | ["--price-run"] => priceRun
+    | ["--price-former-refusals"] => priceFormerRefusals
+    | ["--price-guards"] => priceGuards
+    | ["--price-tasks"] => priceTasks
     | ["--move-fetch"] => moveFetch
     | ["--move-injected"] => moveInjected
     | ["--move-ordering", name] => moveOrdering name
@@ -59,6 +65,13 @@ def main (args : List String) : IO UInt32 := do
       outputEquals i
     | ["--check", name] => helpers name; capabilities name
     | [] =>
+      suite "price guards" priceGuards
+      suite "price tasks" priceTasks
+      suite "price feed replay" do
+        let result ← IO.Process.output { cmd := "python3", args := #["-B", "test/price-feeds.py"] }
+        (← IO.getStdout).putStr result.stdout
+        (← IO.getStderr).putStr result.stderr
+        check "price feed replay" (result.exitCode == 0)
       suite "move injection" moveInjected
       suite "move CLI replay driver" do
         let result ← IO.Process.output { cmd := "python3", args := #["-B", "test/move-utxos.py"] }

@@ -26,7 +26,7 @@ def mutations():
     def selected(name):
         return [".lake/build/bin/CyberkrillTests", "--check", name]
     rows = [
-        ("amount-scaling", APPLICATION, "let a ← parseAmount input", "let a ← parseAmount input\n  let a := Bitcoin.Amount.ofMsat (a.msat * 10)", cli, "amount scaling"),
+        ("amount-scaling", APPLICATION, "| .inl amount => return conversionOutput input unit amount", "| .inl amount => return conversionOutput input unit (Bitcoin.Amount.ofMsat (amount.msat * 10))", cli, "amount scaling"),
         ("sats-flooring", APPLICATION, "let sats := a.msat / 1000", "let sats := (a.msat + 500) / 1000", cli, "sats flooring"),
         ("stderr-routing", APPLICATION, "services.stderr (error.message ++", "services.stdout (error.message ++", cli, "output refusal 0 stdout"),
         ("whole-rounding", AMOUNTS, "satsResult a ((a.msat + 500) / 1000)", "satsResult a ((a.msat + 499) / 1000)", selected("whole-round"), "wholeSat half-up"),
@@ -110,8 +110,9 @@ def main():
 
     def command(label, args):
         start = time.monotonic()
-        p = subprocess.run(["timeout", "--foreground", "180", *args], stdin=subprocess.DEVNULL,
-                           capture_output=True, timeout=190)
+        limit = 600 if args == ["lake", "test"] else 180
+        p = subprocess.run(["timeout", "--foreground", str(limit), *args], stdin=subprocess.DEVNULL,
+                           capture_output=True, timeout=limit+10)
         for stream in ["stdout", "stderr"]:
             (logs / f"{label}.{stream}").write_bytes(getattr(p, stream))
         (logs / f"{label}.status").write_text(str(p.returncode) + "\n")
@@ -152,7 +153,7 @@ def main():
         assert green.returncode == 0, "restored full suite"
         assert {str(p): digest(p) for p in fingerprint_paths} == fingerprints
         record = dict(count=len(records), source_sha256=fingerprints, mutations=records,
-                      restored_full=dict(command=["timeout", "--foreground", "180", "lake", "test"], status=0, seconds=elapsed))
+                      restored_full=dict(command=["timeout", "--foreground", "600", "lake", "test"], status=0, seconds=elapsed))
         write_record(Path('test/golden/mutation-record.json'), json.dumps(record, indent=2) + '\n')
         print("independent mutations: 26/26; restored full suite: exit 0", flush=True)
     finally:

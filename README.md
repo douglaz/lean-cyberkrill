@@ -46,6 +46,407 @@ invite encoding and PSBT inspection. Phase 8b adds Core UTXO listing and the
 public frozenkrill reader. Phase 8c adds Core PSBT creation, funded PSBT creation and UTXO consolidation;
 `plan.md` is the plan for v1.
 
+## Phase 9a: exact fiat conversion and nine price feeds
+
+`convert-amount` accepts Bitcoin amounts locally and fiat amounts such as
+`100usd`, `1,000 USD` and `1,23,456.78INR`. Bitcoin parsing takes priority,
+including bare BTC, plus signs, leading/trailing decimal points and decimal
+negative zero. Fiat uses an unsigned number followed by three ASCII letters,
+case insensitive, with Rust whitespace trimming and Western or Indian comma
+grouping. Scientific notation is parsed exactly within the bounds below. Invalid fiat
+fails before any request; Bitcoin-only conversions make no price requests.
+Fee flags still require explicit Bitcoin units. Fiat on the onchain commands
+remains refused pending the separate integration task.
+
+The app requests all nine pinned feeds: CoinGecko, Coinbase, blockchain.info,
+Kraken, Fedi, CEX.io, Bitstamp, Yadio and Gemini. Each request uses `HttpCurl`,
+an 8000 ms total deadline with no separate early connect cutoff, its per-request CA selection and its 1 MiB response
+bound. Blocking requests run in dedicated tasks, all launched before waiting.
+The TLS replay demonstrates overlapping request intervals for these nine
+requests; it establishes no universal latency bound.
+
+At least three quotes are required. Quotes sort by exact price, then source
+name. Odd medians take the middle quote; even medians average both middle
+quotes. All sorted source names remain in `fiat_source.feeds`. Fedi contributes
+one quote: BTC/USD directly for USD, otherwise BTC/USD divided by fiat/USD.
+A 404 means no quote only for CEX.io, Bitstamp, Yadio and Gemini. Missing quotes,
+invalid selected values, malformed JSON, HTTP/transport failures and failed
+tasks retain distinct diagnostics. Feed issues reach stderr without logging
+configuration; their observed completion order is not a fixed capture order.
+Spread warnings use the strict exact comparison `max/min - 1 > 0.02` and
+include both endpoint prices/sources and the median.
+
+Fiat inputs, JSON numeric/string prices, cross-rates and medians use nonnegative
+rationals, with no binary floating point intermediate. Conversion computes
+`amount / price * 100000000000`, rounds half away from zero to integer msat,
+then applies `Millisat`, shared `wholeSat`, or shared `floorSat`. Tests exercise
+all three through this path, including values on both sides of msat and sat
+boundaries. Currency mismatch, nonpositive prices, nonzero amounts that round
+to zero msat, and results outside unsigned 64-bit msat range fail. The shared
+whole-sat enforcement and existing consumers retain their behavior.
+
+Before JSON numeric expansion, a lexical pass checks decimal syntax, rejects
+unpaired UTF-16 escapes and enforces the captured container boundary, including
+ignored fields. With the outer object counted, 126 nested arrays or objects
+inside it succeed; 127 fail as invalid JSON. Quoted brackets and escaped quotes
+do not count as containers. Numeric tokens are kept separately from encoded
+original strings, so unused tiny values and large-exponent zeros require no
+power construction. Ignored numbers use an exact overflow-midpoint check rather
+than the reference decimal-to-binary conversion path:
+`1e-1025`, `1e-5000`, a 1100-zero fractional coefficient and `0e5000` preserve
+the selected quote, while ignored `1e400` makes the complete body invalid.
+Numeric identity remains separate across selected, ignored and overwritten
+fields. Selected exact nonzero decimal inputs retain the existing limit of
+1024 coefficient digits and effective decimal power magnitude 1024; JSON number
+tokens retain a 2048-character lexical limit. Zero values need no exponent
+allocation. String price syntax is checked before sign classification:
+`-+5`, `-+0` and `--0` are invalid numbers; syntactically valid negative decimals,
+including `-1e2000` and `-1e-2000`, fail positivity without constructing their
+magnitude. The specific exact boundary differences are captured below; no general
+CPU or memory bound is claimed. Eight isolated TLS probes, including million-scale
+exponents and near-response-bound numeric/string mantissas, each retain all nine
+requests, a per-feed issue and the exact ordered eight-source median of 95035.
+Another 26 TLS cases exercise ignored numeric and container boundaries through
+the guarded handler, comparing complete JSON, sorted source lists, median,
+stderr and newlines. Accepted replacements retain all nine sources at median
+95030; refused bodies leave eight sources at median 95035.
+Eight further TLS cases exercise unquoted numeric keys, quoted marker controls,
+losing Kraken overflow candidates and 2048/2049-character ignored zero tokens.
+They check all nine requests, complete handler JSON, source order, medians,
+issues, breadcrumbs and newlines. Unquoted numeric keys remain invalid at the
+first/later position and inside nested objects/arrays. Encoding does not repair
+object-key grammar. Kraken validates every candidate, then exempts only the
+returned quote's numeric tokens from the ignored-number range check; raw losing
+`1e309`/`1e400` candidates invalidate the body even alongside a valid winner.
+Response bytes use UTF-8 replacement decoding, matching the pinned text consumer:
+invalid bytes in an ignored string retain a quote, an absent selected field
+remains no quote, and bytes corrupting JSON structure produce a JSON error.
+Lone-surrogate rejection and valid-pair controls are also pure-reference checked.
+
+JSON retains the original input, exact numeric BTC, floored integer sats,
+integer msats, and `fiat_source` with numeric amount, uppercase currency,
+numeric price and all sorted feeds. Unit-only JSON omits that object. Scalar
+`--as btc`, `--as sats` and `--as msats` retain their existing newline behavior.
+Every fiat success writes the price breadcrumb; sats output floors and appends
+the existing fractional-satoshi note. A failed quorum returns nonzero with
+empty success output. Terminating numeric prices retain their decimal digits;
+repeating rational prices serialize to at least 24 fractional decimal places,
+extending the scale for tiny quotes so a positive price stays nonzero. Ties
+round to even, while conversion continues to use the unrounded rational. Two-decimal
+breadcrumbs also use exact ties to even.
+
+`runWithTestUrls` is an app-library entry point with an explicit required
+`TestUrls` parameter and separate captured status/stdout/stderr. It validates
+all nine feed base URLs and the reserved CoinGecko history and DCA RPC slots
+before any action, including unit-only commands. Every URL requires literal
+`127.0.0.1` and an explicit nonzero port other than 8332. Deceptive authorities,
+userinfo, unsupported URL forms and nested targets are refused. Core argv
+independently requires an explicit permitted RPC URL. Embedded default-port
+URLs, including percent-encoded material and bech32 invite/LNURL payloads,
+are refused before dispatch. No CLI flag or environment variable enables this
+override; `Main.lean` still uses production services. The existing spawn helper
+continues to refuse fiat and DCA paths.
+
+The registered tests include **561** exact parser/grammar/precision/median/
+output vectors, **89** TLS handler replay cases, five injected task/transport/
+parse/absence controls, nine request-contract checks, and the guarded former
+five fiat subprocess inputs.
+The URL guards cover 26 refused forms in each of 11 slots, three incomplete
+feed inventories, sixteen Core argv refusals, four explicit Core URL acceptance
+controls, five embedded URL refusals, 408 nested decoding boundary refusals,
+four direct decoding-boundary controls,
+five safe encoded fixed-point controls, three safe embedded argv controls,
+seven malformed fiat no-fetch controls
+and nine Bitcoin-priority spellings. Decoding stops at a safe fixed point;
+exhausting its five-level work budget refuses the input.
+The replay covers nine/four/three successes, two/one/zero quorum failures,
+all four special 404s, an actual delayed feed timeout, correct-CA success,
+valid-unrelated-CA trust rejection and missing-CA failure,
+full JSON and every scalar mode, zero/tiny amounts, and spread boundaries.
+Tests use the shared recording responder and network ownership machinery,
+with fresh namespace loopback, owned HOME/cwd, exact environment selection and
+EOF/stop/reap cleanup. Fixtures in `test/http/success.json` are authored
+synthetic JSON; their sidecar cites each pinned MIT parser. No provider was
+contacted and no provider body was copied.
+
+`test/capture-price-reference.py` creates a disposable checkout at
+[cyberkrill 27cad1f](https://github.com/douglaz/cyberkrill/tree/27cad1faba86260b06665a89f0af5134d23525c2),
+prefetches dependencies in that revision's own Nix shell, then executes only
+added pure Rust tests offline in `unshare -rn` with loopback up and temporary
+HOME. The capture also records the pinned packages’ `serde_json` feature
+configuration for the tested `--no-default-features` commands
+(`1.0.148`, alloc/default/std, without float_roundtrip).
+Parsers, median, aggregation, fiat-to-msat, CLI grammar, precision,
+formatting and the complete conversion output constructor are exercised;
+no fetch function or network CLI handler runs. `test/http/reference.json`
+contains the latest complete separate stdout/stderr/status and portable source
+bindings. Expected port values are independently calculated with Python
+`Fraction`/`Decimal`, and `price-parity.py` compares complete values and arrays
+without floats or tolerance. Error classes retain their separately checked
+parser/quorum diagnostics.
+
+### Deltas taken for fiat and prices
+
+The reference help's “median of 5” is corrected to nine feeds with quorum three;
+the executable help test checks this text. The actual algorithm already uses
+nine feeds. The 154 captured numeric/grammar differences below are examples of
+the documented kinds: exact arithmetic versus binary64 rounding, parsing and
+formatting, and the bounded number-size and grammar limits. Each example is
+pinned by case and field/stream in `test/http/exact-deltas.json`. Other inputs
+within an already demonstrated kind need no separate entry; a new kind or any
+non-numeric validity or parity difference requires its own documented test.
+
+| Case | Field or stream | Captured Rust | Exact port |
+|---|---|---|---|
+| `convert/0.000010925` at price `95000` | result msat, output msats, output BTC | `11`, `11`, `0.00000000011` | `12`, `12`, `0.00000000012` |
+| `convert/max`: amount `18446744073709551615`, price `100000000000` | result msat / output msats | `18446744073709549568` | `18446744073709551615` |
+| same | output BTC | `184467440.7370955` | `184467440.73709551615` |
+| same | fiat source amount | `18446744073709552000` | `18446744073709551615` |
+| same | output sats | `18446744073709549` | `18446744073709551` |
+| `convert/overflow`: amount `18446744073709551616`, price `100000000000`, Millisat | complete success/refusal result | success, `18446744073709549568` msat | supported-range error |
+| `convert/whole-overflow`: amount `18446744073709551615`, same price, WholeSat | complete success/refusal result | success, `18446744073709550000` msat | supported-range error |
+| `fedi/repeating`: BTC/USD `95040`, EUR/USD `7` | exact quote value | `13577.142857142857` | `95040/7` |
+| `fedi/repeating-output`: `1EUR`, same legs | `fiat_source.price_per_btc` | `13577.142857142857` | `13577.142857142857142857142857` |
+| `fedi/tiny-repeating-output`: `1e-30EUR`, BTC/USD `1e-30`, EUR/USD `3` | `fiat_source.price_per_btc` | `3.3333333333333338e-31` | `3.33333333333333333333333e-31` |
+| `aggregate/exact-spread`: `100`, `101`, `102` | stderr | `2.00%` spread warning | empty; spread is exactly 2% |
+| `display/tie-odd`: `1.015` | two-decimal display | `1.01` | `1.02` |
+| `fedi/cross-overflow`: BTC/USD `1e300`, EUR/USD `1e-300` | complete quote outcome | `Fedi cross-rate must be positive` after overflow | exact positive `10^600` |
+| `fedi/cross-underflow`: BTC/USD `1e-300`, EUR/USD `1e300` | complete quote outcome | `Fedi cross-rate must be positive` after underflow | exact positive `10^-600` |
+| `fedi/cross-large-control`: BTC/USD `1e150`, EUR/USD `1e-150` | quote value | `9.999999999999999e299` | exact `10^300` |
+| `grammar/boundary-1e-400`, `grammar/boundary-1e-1024` | parsed amount | zero from underflow | exact positive `10^-400`, `10^-1024` |
+| `grammar/boundary-1e-1025`, `grammar/boundary-1e-10000`, `grammar/boundary-1e-10001` | complete grammar outcome | success, zero | `invalidFiat` number refusal |
+| `grammar/coefficient-1025`: 1024 leading zeros then `1USD` | complete grammar outcome | success, amount 1 | `invalidFiat` number refusal; 1024-digit neighbor succeeds |
+| `convert/boundary-1e-400`, `convert/boundary-1e-1024`, price `95000` | complete conversion/output outcome | success, zero msat and zero fiat source amount | nonzero below-one-msat error |
+| `bitstamp/boundary-string-1e309`, `-1e400`, `-1e1024` (case-name suffixes) | complete quote outcome | positive/finite validation error | exact positive `10^309`, `10^400`, `10^1024` |
+| `bitstamp/boundary-number-1e309`, `-1e400`, `-1e1024` | complete quote outcome | out-of-range JSON error | the same exact positive quotes |
+| `bitstamp/boundary-string-1e-400`, `-1e-1024`, and corresponding `boundary-number` cases | complete quote outcome | positive validation error after underflow | exact positive `10^-400`, `10^-1024` |
+| `bitstamp/boundary-string-1e1025`, `-1e-1025` | error | must be positive | is not a number; exact parser bound |
+| `bitstamp/boundary-number-1e-1025` | error | must be positive | invalid JSON; preflight bound |
+| `bitstamp/coefficient-string-1024`, `coefficient-number-1024`: `0.` then 1022 zeros then `1` | complete quote outcome | must be positive after underflow | exact positive `10^-1023` |
+| `bitstamp/coefficient-string-1025`: one more fractional zero | error | must be positive | is not a number; coefficient bound |
+| `bitstamp/coefficient-number-1025`: same decimal as JSON number | error | must be positive | invalid JSON; preflight bound |
+| `kraken/losing-USD-underflow`, `kraken/losing-EUR-underflow`: winner AUSD `20`, losing ZUSD/ZEUR raw `1e-400` | complete quote outcome | `Kraken close price must be positive` | exact positive losing candidate; returned quote `20` |
+| `kraken/losing-USD-string-overflow`, `kraken/losing-EUR-string-overflow`: same winner, losing string `"1e400"` | complete quote outcome | `Kraken close price must be positive` | exact positive losing candidate; returned quote `20` |
+| `kraken/losing-USD-string-underflow`, `kraken/losing-EUR-string-underflow`: losing string `"1e-400"` | complete quote outcome | `Kraken close price must be positive` | exact positive losing candidate; returned quote `20` |
+| `fedi/missing-leg-underflow`: EUR, only BTC/USD raw `1e-400` | complete quote outcome | `Fedi rate must be positive` | positive exact BTC leg, missing EUR leg: no quote |
+| `bitstamp/lexical-ignored-exponent-2049`: ignored `0e` plus 2047 exponent zeros | complete quote outcome | quote `95000` | `Invalid Bitstamp JSON` |
+| `bitstamp/lexical-ignored-fraction-2049`: ignored `0.` plus 2047 zeros | complete quote outcome | quote `95000` | `Invalid Bitstamp JSON` |
+| `bitstamp/lexical-selected-exponent-2049`, `bitstamp/lexical-selected-fraction-2049`: same zero tokens in `last` | error | `Bitstamp last price must be positive` | `Invalid Bitstamp JSON` |
+| `bitstamp/finite-neighbor-1.7976931348623158e308`, `bitstamp/finite-neighbor-17976931348623158e292`: ignored beside `last:95000` | complete quote outcome | `Invalid Bitstamp JSON: number out of range` | quote `95000` |
+| `bitstamp/finite-neighbor-1.79769313486231581e308`: ignored beside `last:95000` | complete quote outcome | quote `95000` | `Invalid Bitstamp JSON` |
+
+The following additional captures retain the same exact arithmetic and bounds.
+Every row identifies its own complete quote outcome; the paired names refer to
+separate exercised examples of the documented kinds.
+
+| Case | Field or stream | Captured Rust | Exact port |
+|---|---|---|---|
+| `coingecko/selected-number-1e400`, `coingecko/selected-number-1e-400`: `bitcoin.usd` | complete quote outcome | `Invalid CoinGecko JSON: number out of range`; `CoinGecko price must be positive` | exact `10^400`; exact `10^-400` |
+| `coinbase/selected-number-1e400`, `coinbase/selected-number-1e-400`: `data.rates.USD` | complete quote outcome | `Invalid Coinbase JSON: number out of range`; `Coinbase rate must be positive` | exact `10^400`; exact `10^-400` |
+| `blockchain.info/selected-number-1e400`, `blockchain.info/selected-number-1e-400`: `USD.last` | complete quote outcome | `Invalid Blockchain.info JSON: number out of range`; `Blockchain.info last price must be positive` | exact `10^400`; exact `10^-400` |
+| `cex.io/selected-number-1e400`, `cex.io/selected-number-1e-400`: `last` | complete quote outcome | `Invalid CEX.IO JSON: number out of range`; `CEX.IO last price must be positive` | exact `10^400`; exact `10^-400` |
+| `yadio/selected-number-1e400`, `yadio/selected-number-1e-400`: `rate` | complete quote outcome | `Invalid Yadio JSON: number out of range`; `Yadio rate must be positive` | exact `10^400`; exact `10^-400` |
+| `gemini/selected-number-1e400`, `gemini/selected-number-1e-400`: `last` | complete quote outcome | `Invalid Gemini JSON: number out of range`; `Gemini last price must be positive` | exact `10^400`; exact `10^-400` |
+| `kraken/selected-single-1e400`, `kraken/selected-single-1e-400`: sole `ANY.c[0]` | complete quote outcome | `Invalid Kraken JSON: number out of range`; `Kraken close price must be positive` | exact `10^400`; exact `10^-400` |
+| `kraken/selected-multiple-1e400`, `kraken/selected-multiple-1e-400`: winning `AUSD.c[0]`, finite `ZEUR.c[0]=5` | complete quote outcome | `Invalid Kraken JSON: number out of range`; `Kraken close price must be positive` | exact winning `10^400`; exact winning `10^-400` |
+| `fedi/selected-USD-1e400`, `fedi/selected-USD-1e-400`: raw BTC/USD rate | complete quote outcome | `Invalid Fedi JSON: number out of range`; `Fedi rate must be positive` | exact `10^400`; exact `10^-400` |
+| `fedi/selected-EUR-1e400`, `fedi/selected-EUR-1e-400`: same BTC/USD rates, EUR/USD `2` | complete quote outcome | `Invalid Fedi JSON: number out of range`; `Fedi rate must be positive` | exact `10^400 / 2`; exact `10^-400 / 2` |
+| `fedi/missing-leg-string-1e400`, `fedi/missing-leg-string-1e-400`: BTC/USD string, absent EUR/USD | complete quote outcome | `Fedi rate must be positive` in both cases | no quote after a positive exact BTC leg in both cases |
+| `bitstamp/ordinary-coefficient-number-1025`: raw `95000.` plus 1020 zeros | complete quote outcome | quote `95000` | `Invalid Bitstamp JSON` |
+| `bitstamp/ordinary-coefficient-string-1025`: same spelling as a string | complete quote outcome | quote `95000` | `Bitstamp last price is not a number` |
+| `bitstamp/unit-coefficient-1025`: raw `1.` plus 1024 zeros | complete quote outcome | quote `1` | `Invalid Bitstamp JSON` |
+| `bitstamp/leading-coefficient-1025`: string of 1020 zeros then `95000` | complete quote outcome | quote `95000` | `Bitstamp last price is not a number` |
+| `fedi/ordinary-coefficient-1025`: BTC/USD raw `95000.` plus 1020 zeros, EUR/USD `2` | complete quote outcome | quote `47500` | `Invalid Fedi JSON` |
+| `kraken/losing-coefficient-1025`, `kraken/losing-coefficient-1101`: winner `AUSD=20`, losing `ZEUR` raw `1.` plus 1024 or 1100 zeros | complete quote outcome | quote `20` in both cases | `Invalid Kraken JSON` in both cases |
+| `bitstamp/nonzero-lexical-number-2049`: raw `95000e` plus 2043 exponent zeros | complete quote outcome | quote `95000` | `Invalid Bitstamp JSON` |
+| `bitstamp/nonzero-lexical-ignored-fraction-2049`: ignored raw `0.` plus 2047 `1` digits beside `last:95000` | complete quote outcome | quote `95000` | `Invalid Bitstamp JSON` |
+
+The **61** added pure cases include **31** specific deltas above and **30**
+agreeing controls. The selected raw-number families added together have finite `1e20`/`1e-20`
+controls; Bitstamp retains its separately captured boundary controls. Coefficient counts exclude the decimal point: `95000.` plus
+1019 zeros has 1024 coefficient digits and succeeds as number/string; adding
+one zero fails. The unit, leading-zero string, Fedi and losing Kraken cases
+also have correctly counted 1024-digit successful neighbors. The losing
+1101-digit unit spelling remains a separate case. Nonzero exponent tokens of
+2048/2049 characters have only five coefficient digits and value 95000;
+the string spellings succeed at both lengths. Ignored nonzero fractions
+succeed at 2048 characters and hit the lexical cap at 2049. All 61 new
+reference outcomes and all 61 new port outcomes have independent detecting
+comparator perturbations, alongside the eight existing zero-token controls.
+
+Six added TLS cases exercise the actual guarded handler: selected Kraken
+`1e400`/`1e-400` remain among nine sorted quotes, and Bitstamp's raw/string
+ordinary coefficient neighbors retain nine or eight sources respectively.
+Each checks all nine appended exact request records, full output JSON and
+`fiat_source`, exact median, sorted feeds, spread/issue/breadcrumb stderr and
+the final newline. Clearing Kraken's chosen-token exemption is a compiled
+runtime reversal detected by `kraken/selected-single-1e400`, followed by exact
+source restoration and a green check. The prior losing-candidate reversal
+and all 34 earlier price mutations remain exercised.
+
+Both 2048-character zero-token neighbors retain the reference behavior: ignored
+exponents/fractions yield `95000`, selected zeros fail positive-price validation.
+At 2049 the lexical cap rejects all four. The comparator detects independent
+changes to every one of these eight reference outcomes and eight port outcomes.
+The first finite neighbor `1.7976931348623157e308` remains accepted on both sides;
+the three particular differences above preserve exact classification without
+binary64 emulation. Kraken's raw losing-overflow cases agree on invalid JSON;
+finite large/small neighbors, single-any-key and first matching-suffix controls
+remain exercised. There is no exemption for all visited candidates or a blanket
+ignored-number finite-range parity claim.
+
+Zero exponent controls `0e10001USD`, `0e-10001USD` and `0e10000000000USD`
+retain the captured successful zero outcome. Both sides of each chosen numeric
+boundary are tested. The abbreviated case-name suffixes in the table refer to
+positive exponent spellings, not signed negative prices. Every entry is a
+specific complete outcome or named field illustrating the documented numeric
+and grammar limits, without waiving non-numeric parity.
+
+The cross-rate extremes retain rational division; they neither clamp a large
+quote nor turn a positive tiny quote into zero. The finite small control
+`1e-150 / 1e150` retains the same captured `1e-300` value. Ignored tiny/zero,
+nesting and sign-category controls match the captured reference outcomes.
+The finite-range neighbors and lexical limits above have their own exact
+exemptions. The 36 compiled price mutations
+exercise intended runtime failures followed by exact restoration and greens.
+
+The remaining ordinary precision and path captures add **74** pure cases:
+**66** specific deltas and **eight** agreeing controls. The closed diagnostic
+inventory has 66 parser inputs and five CLI inputs. Five Bitstamp inputs reuse
+`ordinary-coefficient-number-1025`, `ordinary-coefficient-string-1025`,
+`boundary-string-1e400`, `boundary-string-1e-400` and
+`nonzero-lexical-number-2049`; they are not duplicated in the loaded inventory.
+The following table names each remaining differing input and exact outcome.
+
+Within `diagnostic/<source>/`, `num-coef1025` and `str-coef1025` mean
+`95000.` followed by 1020 zeros as a raw number or string; `num-lex2049`
+means raw `95000e` followed by 2043 zeros. `str-1e400` and `str-1e-400`
+use those exact string spellings in the selected provider field.
+The shapes are `bitcoin.usd`, `data.rates.USD`, `USD.last`, `last` for
+CEX.io/Gemini, `rate` for Yadio, `result.ANY.c[0]` for Kraken, and
+`prices["BTC/USD"].rate` for Fedi USD. Each table entry is a separately
+captured case illustrating those kinds, rather than an exhaustive input list.
+
+| Case | Field or stream | Captured Rust | Exact port |
+|---|---|---|---|
+| `diagnostic/coingecko/num-coef1025` | `result` | quote `95000` | `Invalid CoinGecko JSON` |
+| `diagnostic/coingecko/str-coef1025` | `result` | quote `95000` | `CoinGecko price is not a number` |
+| `diagnostic/coingecko/str-1e400` | `result` | `CoinGecko price must be positive` | quote `10^400` |
+| `diagnostic/coingecko/str-1e-400` | `result` | `CoinGecko price must be positive` | quote `10^-400` |
+| `diagnostic/coingecko/num-lex2049` | `result` | quote `95000` | `Invalid CoinGecko JSON` |
+| `diagnostic/coinbase/num-coef1025` | `result` | quote `95000` | `Invalid Coinbase JSON` |
+| `diagnostic/coinbase/str-coef1025` | `result` | quote `95000` | `Coinbase rate is not a number` |
+| `diagnostic/coinbase/str-1e400` | `result` | `Coinbase rate must be positive` | quote `10^400` |
+| `diagnostic/coinbase/str-1e-400` | `result` | `Coinbase rate must be positive` | quote `10^-400` |
+| `diagnostic/coinbase/num-lex2049` | `result` | quote `95000` | `Invalid Coinbase JSON` |
+| `diagnostic/blockchain.info/num-coef1025` | `result` | quote `95000` | `Invalid Blockchain.info JSON` |
+| `diagnostic/blockchain.info/str-coef1025` | `result` | quote `95000` | `Blockchain.info last price is not a number` |
+| `diagnostic/blockchain.info/str-1e400` | `result` | `Blockchain.info last price must be positive` | quote `10^400` |
+| `diagnostic/blockchain.info/str-1e-400` | `result` | `Blockchain.info last price must be positive` | quote `10^-400` |
+| `diagnostic/blockchain.info/num-lex2049` | `result` | quote `95000` | `Invalid Blockchain.info JSON` |
+| `diagnostic/cex.io/num-coef1025` | `result` | quote `95000` | `Invalid CEX.IO JSON` |
+| `diagnostic/cex.io/str-coef1025` | `result` | quote `95000` | `CEX.IO last price is not a number` |
+| `diagnostic/cex.io/str-1e400` | `result` | `CEX.IO last price must be positive` | quote `10^400` |
+| `diagnostic/cex.io/str-1e-400` | `result` | `CEX.IO last price must be positive` | quote `10^-400` |
+| `diagnostic/cex.io/num-lex2049` | `result` | quote `95000` | `Invalid CEX.IO JSON` |
+| `diagnostic/yadio/num-coef1025` | `result` | quote `95000` | `Invalid Yadio JSON` |
+| `diagnostic/yadio/str-coef1025` | `result` | quote `95000` | `Yadio rate is not a number` |
+| `diagnostic/yadio/str-1e400` | `result` | `Yadio rate must be positive` | quote `10^400` |
+| `diagnostic/yadio/str-1e-400` | `result` | `Yadio rate must be positive` | quote `10^-400` |
+| `diagnostic/yadio/num-lex2049` | `result` | quote `95000` | `Invalid Yadio JSON` |
+| `diagnostic/gemini/num-coef1025` | `result` | quote `95000` | `Invalid Gemini JSON` |
+| `diagnostic/gemini/str-coef1025` | `result` | quote `95000` | `Gemini last price is not a number` |
+| `diagnostic/gemini/str-1e400` | `result` | `Gemini last price must be positive` | quote `10^400` |
+| `diagnostic/gemini/str-1e-400` | `result` | `Gemini last price must be positive` | quote `10^-400` |
+| `diagnostic/gemini/num-lex2049` | `result` | quote `95000` | `Invalid Gemini JSON` |
+| `diagnostic/kraken/num-coef1025` | `result` | quote `95000` | `Invalid Kraken JSON` |
+| `diagnostic/kraken/str-coef1025` | `result` | quote `95000` | `Kraken close price is not a number` |
+| `diagnostic/kraken/str-1e400` | `result` | `Kraken close price must be positive` | quote `10^400` |
+| `diagnostic/kraken/str-1e-400` | `result` | `Kraken close price must be positive` | quote `10^-400` |
+| `diagnostic/kraken/num-lex2049` | `result` | quote `95000` | `Invalid Kraken JSON` |
+| `diagnostic/fedi/num-coef1025` | `result` | quote `95000` | `Invalid Fedi JSON` |
+| `diagnostic/fedi/str-coef1025` | `result` | quote `95000` | `Fedi rate is not a number` |
+| `diagnostic/fedi/str-1e400` | `result` | `Fedi rate must be positive` | quote `10^400` |
+| `diagnostic/fedi/str-1e-400` | `result` | `Fedi rate must be positive` | quote `10^-400` |
+| `diagnostic/fedi/num-lex2049` | `result` | quote `95000` | `Invalid Fedi JSON` |
+| `diagnostic/bitstamp/power1025-coef1024` | `result` | quote `0.095` | `Invalid Bitstamp JSON` |
+| `diagnostic/bitstamp/power1025-coef1024-string` | `result` | quote `0.095` | `Bitstamp last price is not a number` |
+| `diagnostic/bitstamp/int-power1025` | `result` | quote `0.01` | `Invalid Bitstamp JSON` |
+| `diagnostic/fedi/eurleg-raw-1e400` | `result` | `Invalid Fedi JSON` | quote `95000 / 10^400` |
+| `diagnostic/fedi/eurleg-raw-1e-400` | `result` | `Fedi rate must be positive` | quote `95000 × 10^400` |
+| `diagnostic/fedi/eurleg-str-1e400` | `result` | `Fedi rate must be positive` | quote `95000 / 10^400` |
+| `diagnostic/fedi/eurleg-coef1025` | `result` | quote `47500` | `Invalid Fedi JSON` |
+| `diagnostic/fedi/btcleg-str-coef1025` | `result` | quote `47500` | `Fedi rate is not a number` |
+| `diagnostic/fedi/missing-raw-coef1025` | `result` | no quote | `Invalid Fedi JSON` |
+| `diagnostic/fedi/missing-str-coef1025` | `result` | no quote | `Fedi rate is not a number` |
+| `diagnostic/kraken/losing-str-coef1101` | `result` | quote `20` | `Kraken close price is not a number` |
+| `diagnostic/kraken/nowinner-raw-1e-400` | `result` | `Kraken close price must be positive` | no quote |
+| `diagnostic/kraken/nowinner-str-1e400` | `result` | `Kraken close price must be positive` | no quote |
+| `diagnostic/kraken/nowinner-raw-coef1101` | `result` | no quote | `Invalid Kraken JSON` |
+| `diagnostic/kraken/winner-num-coef1025` | `result` | quote `95000` | `Invalid Kraken JSON` |
+| `diagnostic/kraken/losing-lex2049` | `result` | quote `20` | `Invalid Kraken JSON` |
+| `diagnostic/gemini-error-long-lex` | `result` | no quote | `Invalid Gemini JSON` |
+| `diagnostic/coingecko-ignored-lex2049` | `result` | quote `95000` | `Invalid CoinGecko JSON` |
+| `diagnostic/cli-power1025-value001` | `result` | amount `0.01` USD | `invalidFiat` |
+| `diagnostic/cli-power1025-value0095` | `result` | amount `0.095` USD | `invalidFiat` |
+| `diagnostic/cli-coef1025-ordinary` | `result` | amount `95000` USD | `invalidFiat` |
+| `precision-price/long-string` | `result["ok"]` | `95000.123456789` | `95000.123456789012345678` |
+| `precision-price/long-number` | `result["ok"]` | `95000.123456789` | `95000.123456789012345678` |
+| `precision-price/small-string` | `result["ok"]` | `0.1` | `0.10000000000000001` |
+| `precision-price/integer` | `result["ok"]` | `9007199254740992` | `9007199254740993` |
+| `aggregate/cent` | `result["ok"]["price_per_btc"]` | `95000.01000000001` | `95000.01` |
+
+The effective-power inputs `power1025-coef1024` use `95000.` plus 1019
+zeros then `e-6` (mathematically 0.095), raw/string; `int-power1025`
+uses `1` plus 1023 zeros then `e-1025` (0.01). Their `e-5` control is
+exact 0.95 and succeeds. The CLI versions append `USD`; ordinary CLI
+coefficient neighbors have 1019/1020 zeros and value 95000. All coefficient
+and effective-power limits remain unchanged.
+
+Fedi denominator cases use BTC/USD 95000 and the named EUR/USD raw/string
+rate; its long denominator is `2.` plus 1024 zeros. The long BTC string
+uses `95000.` plus 1020 zeros, either with EUR/USD 2 or with that leg absent.
+These missing-leg errors remain distinct from a successful no-quote outcome.
+Kraken long losing/no-winner coefficients use `1.` plus 1100 zeros;
+the winning long coefficient uses `95000.` plus 1020 zeros. Winning/losing
+pairs are AUSD/ZEUR with other price 20/5 as defined in the vectors;
+no-winner pairs are A/B with B=5. The losing lexical token is `1e` plus
+2047 zeros. All candidates still validate before suffix selection.
+Gemini’s `result:"error"` case has raw `last:95000e` plus 2043 zeros;
+CoinGecko’s ignored raw fraction is `0.` plus 2047 ones beside bitcoin.usd
+95000. Agreeing CEX.io error-object and Bitstamp ignored-coefficient controls
+use the same ordinary long coefficient and retain no quote/95000 respectively.
+
+`precision-price/long-string` and `long-number` both use
+`95000.123456789012345678`; `small-string` uses `"0.10000000000000001"`.
+The raw integer 9007199254740993 differs while 9007199254740992 agrees.
+`aggregate/cent` uses ordered a=94000, b=95000.00, c=95000.02, d=96000.
+Its median differs numerically as listed, while both actual breadcrumbs print
+95000.01. Immediate cent controls with middle values both 95000.00 or both
+95000.02 agree. Complete ordered quotes, numeric median, warning stderr and
+the actual CLI breadcrumb are compared separately; the latter receives the
+actual captured aggregate bits rather than a reparsed rounded price.
+
+All 74 new reference and port outcomes have independent comparator
+perturbations; each of the three new aggregate warnings and breadcrumbs is
+also perturbed separately on each side. The prior 61+61 and eight+eight
+perturbations remain. Eight added guarded TLS runs cover ordinary power-bound
+success/refusal, two Kraken no-suffix outcomes, and the even-cent handler in
+JSON and all scalar modes. The cent handler has eight healthy quotes with
+middle prices 95000.00/95000.02, wide endpoints and one missing feed. It
+checks exact conversion, complete sorted feeds, all nine exact request
+records, newlines and warning → issues → breadcrumb sequencing, followed
+by the existing fractional-sat note when applicable. Swapping warning/issues
+is a compiled runtime reversal with exact restoration and a green replay.
+
+The half-msat case has captured Rust result 11, rather than an arithmetic
+simulation labeled as a capture. Below/above-half neighbors are separate
+controls. WholeSat and FloorSat run after the msat rounding. The two range
+changes pin each complete reference success and port refusal; other entries
+permit only their named numeric leaf or stream. The repeating price display
+never feeds back into arithmetic. Existing PSBT, Lightning, URL, fee, private
+output, full-selection and Core exact-amount exceptions remain unchanged.
+
 ## Phase 8c: Core UTXO consolidation
 
 `onchain-move-utxos` accepts required repeated `--inputs`, required
@@ -8306,7 +8707,8 @@ by value, leading/trailing dots, plus signs and decimal negative zero remain
 accepted; unsigned `-0msat` remains rejected. Option-looking negative operands
 require `--`, including decimal negative zero; bare `-0` and `-0.0btc` fail
 argument parsing, matching the reference. Recognizable three-letter fiat
-suffixes produce `fiatNotSupported` without HTTP/RPC initialization. Use `--` before an operand
+suffixes now use the exact fiat handler described above; onchain fiat operands
+retain `fiatNotSupported`. Use `--` before an operand
 that otherwise looks like an option. No command here consults wallet/node state.
 
 All errors exit 1, with a named fixed diagnostic on stderr and empty stdout.

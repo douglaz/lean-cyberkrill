@@ -22,8 +22,9 @@ def latest_only(value):
 
 
 def main():
-    for path in (APP / "test/golden").glob("*.json"):
-        latest_only(json.loads(path.read_bytes()))
+    for directory in ["test/golden", "test/http"]:
+        for path in (APP / directory).glob("*.json"):
+            latest_only(json.loads(path.read_bytes()))
     from importlib import import_module
     import_module("move-utxos-mutations").verify()
     move = json.loads((APP / "test/move-utxos-provenance.json").read_bytes())
@@ -193,6 +194,8 @@ def main():
         json.loads((APP / "test/golden/offline-exceptions.json").read_bytes()),
         json.loads((APP / "test/golden/offline-errors.json").read_bytes()))
     import_module("offline-mutate").verify()
+    import_module("price-mutations").verify()
+    import_module("price-feeds").pure()
 
 
 if __name__ == "__main__":

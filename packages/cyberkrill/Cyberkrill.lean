@@ -11,10 +11,11 @@ import HttpCurl
 import Cyberkrill.Capabilities
 import Cyberkrill.App
 import Cyberkrill.CoreRpc
+import Cyberkrill.TestEntry
 
 /-! # Cyberkrill
 
-The offline version, amount conversion and mnemonic commands. -/
+Reusable app services, command execution and guarded test URL entry points. -/
 
 namespace Cyberkrill
 

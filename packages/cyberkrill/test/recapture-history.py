@@ -11,6 +11,7 @@ import sys
 import time
 
 from cases import APP, ROOT, BUILD, PIN
+from evidence import write_record
 from compare import differences, exact_json
 
 
@@ -64,7 +65,7 @@ def main():
     record=dict(commit=PIN,build=BUILD,build_status=0,seconds=round(time.monotonic()-start,3),
         execution='unshare -rn with fresh temporary HOME/cwd, loopback only, timeout --foreground 15 "$PRODUCER"; original deterministic inputs and separate streams',
         historical_sha256=hashes,script_sha256=script_hash,executions=executions)
-    destination.write_text(json.dumps(record,indent=2)+"\n")
+    write_record(destination,json.dumps(record,indent=2)+"\n")
     print("retained recaptures: 532 isolated executions matched; original observations unchanged")
 
 

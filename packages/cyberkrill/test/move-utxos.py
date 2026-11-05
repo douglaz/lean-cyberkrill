@@ -416,7 +416,7 @@ def limits(only=None):
             data=copy.deepcopy(entries)
             for response in data[index]["responses"]:
                 if kind=="size":response["text"]+=" "*30000
-                else:response["test_delay_ms"]=120
+                else:response["test_delay_ms"]=600
             with tempfile.TemporaryDirectory(prefix="move-limits-",dir=os.environ["TMPDIR"]) as directory:
                 root=Path(directory);fixture=root/"synthetic.json";fixture.write_text(G.json_text(dict(entries=data)))
                 for large in [False,True]:
@@ -424,7 +424,7 @@ def limits(only=None):
                         actual=args+["--rpc-url",base+"/wallet/single","--rpc-user","lck","--rpc-password","lck-throwaway"]
                         network.refuse_spawn(actual,base)
                         payload=dict(args=actual,status=0 if large else 1,bytes=100000 if large or kind!="size" else 10000,
-                                     timeout=1000 if large or kind!="timeout" else 30)
+                                     timeout=3000 if large or kind!="timeout" else 200)
                         proc=subprocess.run([str(TEST),"--move-fetch"],input=G.json_text(payload).encode(),cwd=root,
                             env=dict(os.environ,HOME=str(root)),capture_output=True,timeout=20)
                         assert proc.returncode==0,"move inherited "+name+": "+proc.stderr.decode()
