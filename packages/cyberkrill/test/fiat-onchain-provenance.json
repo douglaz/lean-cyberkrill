@@ -1,0 +1,29 @@
+{
+  "upstream": "https://github.com/douglaz/cyberkrill",
+  "revision": "27cad1faba86260b06665a89f0af5134d23525c2",
+  "licence": "MIT",
+  "sources": [
+    "cyberkrill/src/main.rs:155-173,311-380,1598-2011,2013-2219",
+    "cyberkrill-core/src/price_feed.rs:220-249"
+  ],
+  "derivation": "Exact rational request expectations independently derived from synthetic quotes; complete command JSON and seeded parser expectations cross-checked by the pinned pure Rust capture. No reference network handler executed for fiat.",
+  "synthetic": "Matrix RPC selectors and provider JSON are authored synthetic responses; valid recorded PSBT reused only as validation payload. The two final recording replays retain complete actual Core replies and requests.",
+  "counts": {
+    "create": 29,
+    "funded": 29,
+    "move": 15,
+    "repeated_invocations": 3,
+    "recorded_commands": 2,
+    "recorded_selectors": 24,
+    "pure_reference": 10
+  },
+  "fixture_sha256": {
+    "http/success.json": "76f5e766f13803e6c0cab8a1dbba9efc648ea6bdb3b89ee9c19062d686c1a486",
+    "http/reference.json": "09763a6652f7a3ce69d857c116cd9c8b121abb89872d0b051637f928a627642f",
+    "http/exact-deltas.json": "dffa5eb99b0ce2b503db96233b935a0fe36ef712eb82acae1a97aa76d9768e43",
+    "recordings/fiat-create.json": "8422eb854bcae7be4770a762b54fd6b6afdc467b5e4035c913147d010c734747",
+    "recordings/fiat-funded.json": "d00ef1af97ab97c482405cf3cab5228347e34c554ec9adf610a048542035748c",
+    "http/fiat-onchain-reference.json": "3eaca95cf40872c52b36d2ce1b16f86912dceb333d8fd1f87393d41000239f84"
+  },
+  "reference_capture": "http/fiat-onchain-reference.json"
+}

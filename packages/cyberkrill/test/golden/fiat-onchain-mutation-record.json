@@ -1,0 +1,390 @@
+{
+  "source_sha256": {
+    "Cyberkrill/App.lean": "0454b49fd86a314d47a370ba3bebf782cbbc8eba372c73165a149eb602fb458a",
+    "Cyberkrill/Fiat.lean": "877f5980527ae043b44b059ac99fb96413aa294e6f827141cdabedce37318159",
+    "Cyberkrill/PsbtCommands.lean": "5444b59f8d0ecb066a8ae921d052471f5913276700f9d01d8d31fd78f9b49abc",
+    "Cyberkrill/MoveUtxos.lean": "af33e3af9886104b115f4f6cd91b1b58a5762d049cbbd6656822b664960de286",
+    "CyberkrillTests.lean": "980964d989490659aac1f7e1c6333a224f49d5f8d0ed1a73536bcaa429d9d87d",
+    "CyberkrillTests/FiatOnchain.lean": "8ee610b7c08e1b96237f1e7f7751731ba6901f65cdbfa7b46b7348215455475b",
+    "test/fiat-onchain.py": "7a5a110d8c686d42e98d8a73ca3a1025a11e8ed2d4e32579e242b4f3fcde28e5",
+    "test/fiat-onchain-mutations.py": "cdc004c0d4c20dfa6f63160824b84006d9dce85ecc2f828c9556a2de2c66ab89",
+    "test/price-mutations.py": "7d64067f00df09ec76a8f944e78e1d1f2af8b058321e7d5078f6aa2f15e94506",
+    "test/fiat-onchain-provenance.json": "0e87e19379890c4f791469db8faf1d9c2753498e8cce9ec9aa1d580b3ef535eb",
+    "test/capture-fiat-onchain-reference.py": "f459910b28f693d8ab6adb2e507e9fc48701a59125367a85504910635a2739b1",
+    "test/http/fiat-onchain-reference.json": "3eaca95cf40872c52b36d2ce1b16f86912dceb333d8fd1f87393d41000239f84",
+    "test/recordings/fiat-create.json": "8422eb854bcae7be4770a762b54fd6b6afdc467b5e4035c913147d010c734747",
+    "test/recordings/fiat-funded.json": "d00ef1af97ab97c482405cf3cab5228347e34c554ec9adf610a048542035748c"
+  },
+  "initial_build": {
+    "command": [
+      "lake",
+      "build",
+      "cyberkrill",
+      "CyberkrillTests"
+    ],
+    "status": 0,
+    "seconds": 0.646
+  },
+  "initial_green": {
+    "command": [
+      "python3",
+      "-B",
+      "test/fiat-onchain.py"
+    ],
+    "status": 0,
+    "seconds": 47.862
+  },
+  "checks": [
+    {
+      "property": "conversion-wiring",
+      "file": "Cyberkrill/App.lean",
+      "replace": "match convertFiat fiat price.currency price.price precision with",
+      "with_text": "match Except.ok (Bitcoin.Amount.ofSats 1) with",
+      "command": [
+        "python3",
+        "-B",
+        "test/fiat-onchain.py",
+        "--probe",
+        "create-fiat"
+      ],
+      "assertion": "fiat command success create-fiat",
+      "failure": "AssertionError: fiat command success create-fiat: {'clients': Decimal('1'), 'status': Decimal('1'), 'stderr': '[price-feed] median BTC/USD = 100000000.00 from 9 feeds: bitstamp, blockchain.info, cex.io, coinbase, coingecko, fedi, gemini, kraken, yadio\\nrpcHttp: HTTP 599\\n', 'stdout': ''}",
+      "build": {
+        "command": [
+          "lake",
+          "build",
+          "cyberkrill",
+          "CyberkrillTests"
+        ],
+        "status": 0,
+        "seconds": 11.913
+      },
+      "red": {
+        "command": [
+          "python3",
+          "-B",
+          "test/fiat-onchain.py",
+          "--probe",
+          "create-fiat"
+        ],
+        "status": 1,
+        "seconds": 1.434
+      },
+      "restore_build": {
+        "command": [
+          "lake",
+          "build",
+          "cyberkrill",
+          "CyberkrillTests"
+        ],
+        "status": 0,
+        "seconds": 11.517
+      },
+      "green": {
+        "command": [
+          "python3",
+          "-B",
+          "test/fiat-onchain.py",
+          "--probe",
+          "create-fiat"
+        ],
+        "status": 0,
+        "seconds": 0.7
+      }
+    },
+    {
+      "property": "output-whole-sat",
+      "file": "Cyberkrill/App.lean",
+      "replace": "convertAmounts services (parsed.map (\u00b7.2)) .wholeSat",
+      "with_text": "convertAmounts services (parsed.map (\u00b7.2)) .floorSat",
+      "command": [
+        "python3",
+        "-B",
+        "test/fiat-onchain.py",
+        "--probe",
+        "create-at"
+      ],
+      "assertion": "fiat command success create-at",
+      "failure": "AssertionError: fiat command success create-at: {'clients': Decimal('1'), 'status': Decimal('1'), 'stderr': '[price-feed] median BTC/USD = 100000000.00 from 9 feeds: bitstamp, blockchain.info, cex.io, coinbase, coingecko, fedi, gemini, kraken, yadio\\nrpcHttp: HTTP 599\\n', 'stdout': ''}",
+      "build": {
+        "command": [
+          "lake",
+          "build",
+          "cyberkrill",
+          "CyberkrillTests"
+        ],
+        "status": 0,
+        "seconds": 11.911
+      },
+      "red": {
+        "command": [
+          "python3",
+          "-B",
+          "test/fiat-onchain.py",
+          "--probe",
+          "create-at"
+        ],
+        "status": 1,
+        "seconds": 0.688
+      },
+      "restore_build": {
+        "command": [
+          "lake",
+          "build",
+          "cyberkrill",
+          "CyberkrillTests"
+        ],
+        "status": 0,
+        "seconds": 11.932
+      },
+      "green": {
+        "command": [
+          "python3",
+          "-B",
+          "test/fiat-onchain.py",
+          "--probe",
+          "create-at"
+        ],
+        "status": 0,
+        "seconds": 1.54
+      }
+    },
+    {
+      "property": "maximum-floor-sat",
+      "file": "Cyberkrill/App.lean",
+      "replace": "convertAmounts services #[parsed] .floorSat",
+      "with_text": "convertAmounts services #[parsed] .wholeSat",
+      "command": [
+        "python3",
+        "-B",
+        "test/fiat-onchain.py",
+        "--probe",
+        "move-floor"
+      ],
+      "assertion": "fiat command success move-floor",
+      "failure": "AssertionError: fiat command success move-floor: {'clients': Decimal('1'), 'status': Decimal('1'), 'stderr': '[price-feed] median BTC/USD = 100000000.00 from 9 feeds: bitstamp, blockchain.info, cex.io, coinbase, coingecko, fedi, gemini, kraken, yadio\\nrpcHttp: HTTP 599\\n', 'stdout': ''}",
+      "build": {
+        "command": [
+          "lake",
+          "build",
+          "cyberkrill",
+          "CyberkrillTests"
+        ],
+        "status": 0,
+        "seconds": 12.132
+      },
+      "red": {
+        "command": [
+          "python3",
+          "-B",
+          "test/fiat-onchain.py",
+          "--probe",
+          "move-floor"
+        ],
+        "status": 1,
+        "seconds": 1.499
+      },
+      "restore_build": {
+        "command": [
+          "lake",
+          "build",
+          "cyberkrill",
+          "CyberkrillTests"
+        ],
+        "status": 0,
+        "seconds": 11.738
+      },
+      "green": {
+        "command": [
+          "python3",
+          "-B",
+          "test/fiat-onchain.py",
+          "--probe",
+          "move-floor"
+        ],
+        "status": 0,
+        "seconds": 1.492
+      }
+    },
+    {
+      "property": "currency-cache",
+      "file": "Cyberkrill/App.lean",
+      "replace": "prices.find? (\u00b7.currency == fiat.currency)",
+      "with_text": "(none : Option PriceFeed.Price)",
+      "command": [
+        "python3",
+        "-B",
+        "test/fiat-onchain.py",
+        "--probe",
+        "create-normalized"
+      ],
+      "assertion": "fiat command cache requests create-normalized",
+      "failure": "AssertionError: fiat command cache requests create-normalized: 27",
+      "build": {
+        "command": [
+          "lake",
+          "build",
+          "cyberkrill",
+          "CyberkrillTests"
+        ],
+        "status": 0,
+        "seconds": 11.916
+      },
+      "red": {
+        "command": [
+          "python3",
+          "-B",
+          "test/fiat-onchain.py",
+          "--probe",
+          "create-normalized"
+        ],
+        "status": 1,
+        "seconds": 1.889
+      },
+      "restore_build": {
+        "command": [
+          "lake",
+          "build",
+          "cyberkrill",
+          "CyberkrillTests"
+        ],
+        "status": 0,
+        "seconds": 11.617
+      },
+      "green": {
+        "command": [
+          "python3",
+          "-B",
+          "test/fiat-onchain.py",
+          "--probe",
+          "create-normalized"
+        ],
+        "status": 0,
+        "seconds": 1.49
+      }
+    },
+    {
+      "property": "msat-before-sat",
+      "file": "Cyberkrill/Fiat.lean",
+      "replace": "let rounded := ((fiat.amount.div price).mul \u27e8100000000000, 1\u27e9).round",
+      "with_text": "let raw := ((fiat.amount.div price).mul \u27e8100000000000, 1\u27e9)\n  let rounded := raw.numerator / raw.denominator",
+      "command": [
+        "python3",
+        "-B",
+        "test/fiat-onchain.py",
+        "--probe",
+        "create-at"
+      ],
+      "assertion": "fiat command success create-at",
+      "failure": "AssertionError: fiat command success create-at: {'clients': Decimal('1'), 'status': Decimal('1'), 'stderr': '[price-feed] median BTC/USD = 100000000.00 from 9 feeds: bitstamp, blockchain.info, cex.io, coinbase, coingecko, fedi, gemini, kraken, yadio\\nrpcHttp: HTTP 599\\n', 'stdout': ''}",
+      "build": {
+        "command": [
+          "lake",
+          "build",
+          "cyberkrill",
+          "CyberkrillTests"
+        ],
+        "status": 0,
+        "seconds": 14.618
+      },
+      "red": {
+        "command": [
+          "python3",
+          "-B",
+          "test/fiat-onchain.py",
+          "--probe",
+          "create-at"
+        ],
+        "status": 1,
+        "seconds": 0.692
+      },
+      "restore_build": {
+        "command": [
+          "lake",
+          "build",
+          "cyberkrill",
+          "CyberkrillTests"
+        ],
+        "status": 0,
+        "seconds": 14.234
+      },
+      "green": {
+        "command": [
+          "python3",
+          "-B",
+          "test/fiat-onchain.py",
+          "--probe",
+          "create-at"
+        ],
+        "status": 0,
+        "seconds": 0.688
+      }
+    },
+    {
+      "property": "invocation-cache-lifetime",
+      "file": "Cyberkrill/App.lean",
+      "replace": "def convertAmounts (services : Services) (values : Array (Bitcoin.Amount \u2295 FiatAmount))\n    (precision : FiatConversionPrecision) : IO (Except Error (Array Bitcoin.Amount)) := do\n  let mut prices : Array PriceFeed.Price := #[]\n  let mut amounts := #[]\n  for value in values do\n    match value with\n    | .inl amount => amounts := amounts.push amount\n    | .inr fiat =>\n      let cached := prices.find? (\u00b7.currency == fiat.currency)\n      let result \u2190 match cached with\n        | some price => pure (Except.ok price)\n        | none => do\n          let result \u2190 services.price fiat.currency\n          if !result.diagnostics.isEmpty then services.stderr result.diagnostics\n          pure (result.price.mapError Error.onchain)\n      let price \u2190 match result with\n        | .error e => return .error e\n        | .ok price => pure price\n      if cached.isNone then\n        services.stderr (PriceFeed.breadcrumb price)\n        prices := prices.push price\n      match convertFiat fiat price.currency price.price precision with\n      | .error e => return .error e\n      | .ok amount => amounts := amounts.push amount\n  return .ok amounts\n",
+      "with_text": "initialize retainedPrices : IO.Ref (Array PriceFeed.Price) \u2190 IO.mkRef #[]\n\ndef convertAmounts (services : Services) (values : Array (Bitcoin.Amount \u2295 FiatAmount))\n    (precision : FiatConversionPrecision) : IO (Except Error (Array Bitcoin.Amount)) := do\n  let mut prices \u2190 retainedPrices.get\n  let mut amounts := #[]\n  for value in values do\n    match value with\n    | .inl amount => amounts := amounts.push amount\n    | .inr fiat =>\n      let cached := prices.find? (\u00b7.currency == fiat.currency)\n      let result \u2190 match cached with\n        | some price => pure (Except.ok price)\n        | none => do\n          let result \u2190 services.price fiat.currency\n          if !result.diagnostics.isEmpty then services.stderr result.diagnostics\n          pure (result.price.mapError Error.onchain)\n      let price \u2190 match result with\n        | .error e => return .error e\n        | .ok price => pure price\n      if cached.isNone then\n        services.stderr (PriceFeed.breadcrumb price)\n        prices := prices.push price\n        retainedPrices.set prices\n      match convertFiat fiat price.currency price.price precision with\n      | .error e => return .error e\n      | .ok amount => amounts := amounts.push amount\n  return .ok amounts\n",
+      "command": [
+        "python3",
+        "-B",
+        "test/fiat-onchain.py",
+        "--probe",
+        "lifetime"
+      ],
+      "assertion": "fiat command cache requests create-fiat",
+      "failure": "AssertionError: fiat command cache requests create-fiat: 9",
+      "build": {
+        "command": [
+          "lake",
+          "build",
+          "cyberkrill",
+          "CyberkrillTests"
+        ],
+        "status": 0,
+        "seconds": 11.56
+      },
+      "red": {
+        "command": [
+          "python3",
+          "-B",
+          "test/fiat-onchain.py",
+          "--probe",
+          "lifetime"
+        ],
+        "status": 1,
+        "seconds": 0.746
+      },
+      "restore_build": {
+        "command": [
+          "lake",
+          "build",
+          "cyberkrill",
+          "CyberkrillTests"
+        ],
+        "status": 0,
+        "seconds": 11.42
+      },
+      "green": {
+        "command": [
+          "python3",
+          "-B",
+          "test/fiat-onchain.py",
+          "--probe",
+          "lifetime"
+        ],
+        "status": 0,
+        "seconds": 2.54
+      }
+    }
+  ],
+  "restored_full": {
+    "command": [
+      "python3",
+      "-B",
+      "test/fiat-onchain.py"
+    ],
+    "status": 0,
+    "seconds": 44.812
+  }
+}

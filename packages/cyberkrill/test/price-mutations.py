@@ -129,7 +129,7 @@ def verify():
     print("price mutation evidence: 36/36 compiled detecting failures and restored greens",flush=True)
 
 
-def main():
+def main(full=None):
     if sys.argv[1:] == ["--verify"]: verify(); return
     assert not sys.argv[1:]
     logs = APP / ".lake/validation/price-mutations" / str(time.time_ns())
@@ -160,7 +160,7 @@ def main():
             assert assertion in output and ("AssertionError:" in output or "assertion failed:" in output), "price intended runtime failure " + name
         return dict(command=args,status=result.returncode,seconds=round(time.monotonic()-start,3)),output
     build = ["lake","build","cyberkrill","CyberkrillTests"]
-    full = ["python3","-B","test/price-feeds.py"]
+    full = full or ["python3","-B","test/price-feeds.py"]
     complete = False
     try:
         initial_build,_ = command("initial-build",build,0)

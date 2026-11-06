@@ -34,9 +34,9 @@ def mutations():
         ("last-value", source, 'outputs.filter (fun (key, _) => key != address)',
          'outputs.filter (fun (key, _) => key != address || key == address)', ["replay", "create-duplicate"], "PSBT full JSON/null/fee shape"),
         ("fee-distinct-count", source, 'Fee.estimateWeight inputs.size outputs.size', 'Fee.estimateWeight inputs.size (outputs.size + 1)', ["replay", "create-duplicate"], "PSBT full JSON/null/fee shape"),
-        ("whole-sat", source, 'if let some value := value then let _ ← exactWholeSat value', 'if let some value := value then let _ := value', ["refusals"], "PSBT output grammar/precedence"),
-        ("fiat-precision-order", source, 'if let some value := value then let _ ← exactWholeSat value', 'if let some value := value then let _ := value', ["injected"], "PSBT fiat classification/precedence destination:1msat"),
-        ("fiat-grouping", source, 'c == \',\' && !(index < protectedUntil)', 'c == \',\'', ["injected"], "PSBT fiat has no client or child"),
+        ("whole-sat", "Cyberkrill/Amounts.lean", 'if a.msat % 1000 != 0 then .error .wholeSatRequired else .ok a', 'if false then .error .wholeSatRequired else .ok a', ["refusals"], "PSBT output grammar/precedence"),
+        ("fiat-precision-order", source, 'if let .inl value := value then let _ ← exactWholeSat value', 'if let .inl value := value then let _ := value', ["injected"], "PSBT fiat classification/precedence destination:1msat"),
+        ("fiat-grouping", source, 'c == \',\' && !(index < protectedUntil)', 'c == \',\'', ["injected"], "PSBT quote failure has no client or child"),
         ("change-first-unused", source, '| .ok false => return .ok (some address)', '| .ok false => return .ok none', ["replay", "funded-unit"], "PSBT CLI success"),
         ("change-used", source, 'a.msat > 0', 'a.msat > 3000000000', ["replay", "funded-unit"], "PSBT CLI success"),
         ("change-bound", source, 'for index in [:200]', 'for index in [:199]', ["probes", "bound"], "PSBT probe request order/stopping"),
@@ -71,12 +71,12 @@ def mutations():
          'unless true do throw (.offline "psbtBase64")', ["spelling", "create-newline"], "PSBT original spelling rejection"),
         ("rpc-original-spelling-funded", source, 'unless (Base64.decode psbt).isSome do throw (.offline "psbtBase64")',
          'unless true do throw (.offline "psbtBase64")', ["spelling", "funded-newline"], "PSBT original spelling rejection"),
-        ("fiat-indian-leading-three", source, 'groups.length ≥ 3 && groups.head!.length ≤ 3',
-         'groups.length ≥ 3 && groups.head!.length ≤ 2', ["injected"], "PSBT fiat classification/precedence destination:123,45,678INR"),
-        ("fiat-finite-exponent", source, 'unless exponentParts.length ≤ 2 do return false',
-         'unless exponentParts.length == 1 do return false', ["injected"], "PSBT fiat classification/precedence destination:1e5USD"),
+        ("fiat-indian-leading-three", "Cyberkrill/Fiat.lean", 'groups.length ≥ 3 && digits first && first.length ≤ 3',
+         'groups.length ≥ 3 && digits first && first.length ≤ 2', ["injected"], "PSBT fiat classification/precedence destination:123,45,678INR"),
+        ("fiat-finite-exponent", "Cyberkrill/Fiat.lean", 'let some amount := Exact.parse (number.replace "," "")',
+         'let some amount := (if number.toLower.contains \'e\' then none else Exact.parse (number.replace "," ""))', ["injected"], "PSBT fiat classification/precedence destination:1e5USD"),
         ("fiat-before-precision", source, 'for (_, value) in parsed do',
-         'if parsed.any (fun (_, value) => value.isNone) then throw .fiatNotSupported\n  for (_, value) in parsed do', ["injected"], "PSBT fiat classification/precedence destination:1msat"),
+         'if parsed.any (fun (_, value) => match value with | .inr _ => true | _ => false) then throw (.onchain "priceUnavailable:")\n  for (_, value) in parsed do', ["injected"], "PSBT fiat classification/precedence destination:1msat"),
         ("colon-core-boundary", source, "if outputs.any (fun (address, _) => address.contains ':') then return .error invalidOutput",
          "if false then return .error invalidOutput", ["boundaries", "colon"], "PSBT colon boundary refusal"),
         ("output-float-roundtrip", core, '.num ⟨Int.ofNat value.msat, if value.msat == 0 then 0 else 11⟩',
@@ -99,8 +99,8 @@ def mutations():
         rows.append((selection, source, old, new, ["limits", selection], "PSBT inherited "+selection))
     rows.append(("nonmultipath-probing", source, 'descriptorLike input && parts.length > 1',
                  'descriptorLike input', ["boundaries", "nonmultipath"], "PSBT nonmultipath descriptor no change probe/empty options omitted"))
-    rows.append(("exact-output-submillisatoshi", source, 'match parseAmount value with',
-                 'match parseAmount (if value == "1000000.0004sat" then "1000000sat" else value) with',
+    rows.append(("exact-output-submillisatoshi", source, 'let amount ← parseBitcoinOrFiat value',
+                 'let amount ← parseBitcoinOrFiat (if value == "1000000.0004sat" then "1000000sat" else value)',
                  ["exact", "create-rounded"], "PSBT precise exact requests/stopping"))
     for name in ["negative", "tiny"]:
         rows.append(("exact-probe-"+name, source, '(CoreRpc.amount (.num n)).map (fun a => a.msat > 0)',
@@ -133,7 +133,7 @@ def mutations():
 
 
 def fingerprints():
-    paths = ["Cyberkrill/App.lean", "Cyberkrill/CoreRpc.lean", "Cyberkrill/PsbtCommands.lean",
+    paths = ["Cyberkrill/Amounts.lean", "Cyberkrill/Fiat.lean", "Cyberkrill/App.lean", "Cyberkrill/CoreRpc.lean", "Cyberkrill/PsbtCommands.lean",
              "CyberkrillTests.lean", "CyberkrillTests/PsbtCommands.lean", "test/psbt-commands.py",
              "test/psbt-commands-mutations.py", "test/psbt-commands-provenance.json",
              "test/golden/psbt-commands-reference.json", "test/rpc-client.py"]
@@ -151,7 +151,7 @@ def verify():
         assert observed["red"]["status"] == 1 and assertion in observed["failure"], "PSBT genuine runtime red"
     assert record["initial_build"]["status"] == record["initial_green"]["status"] == record["restored_full"]["status"] == 0
     edits = len({(r[1], r[2], r[3]) for r in rows})
-    assert edits == 43, "PSBT distinct production edit inventory"
+    assert edits == 44, "PSBT distinct production edit inventory"
     print(f"PSBT mutation evidence: {edits} distinct production edits / {len(rows)} named runtime reds; exact restoration; clean initial/restored builds", flush=True)
 
 

@@ -27,6 +27,7 @@ def psbtFetch : IO Unit := do
 def psbtWhitespace (only : Option String := none) : IO Unit := do
   let events ← IO.mkRef ([] : List String)
   let services := { productionServices with
+    price := fun _ => pure { price := .error "priceUnavailable:", diagnostics := "" }
     openOrdinaryFile := fun _ => do
       events.modify (· ++ ["open"])
       return fun _ => events.modify (· ++ ["json"])
@@ -39,11 +40,11 @@ def psbtWhitespace (only : Option String := none) : IO Unit := do
   let mut count := 0
   for (commandPrefix, command) in [("create", "onchain-create-psbt"), ("funded", "onchain-create-funded-psbt")] do
     for (name, outputs, error) in [
-        ("grouped-control", "destination:1,234USD", Error.fiatNotSupported),
-        ("nbsp", "destination:1,234USD\u00a0", Error.fiatNotSupported),
+        ("grouped-control", "destination:1,234USD", (Error.onchain "priceUnavailable:")),
+        ("nbsp", "destination:1,234USD\u00a0", (Error.onchain "priceUnavailable:")),
         ("precedence", "destination:1msat,other:1,234USD\u00a0", Error.wholeSatRequired),
         ("vertical-tab", "d:1,000\x0bUSD", Error.onchain "invalidOutputs: Expected nonempty address:amount entries"),
-        ("unicode-separator", "destination:1,234USD\u2003,other:1sat", Error.fiatNotSupported),
+        ("unicode-separator", "destination:1,234USD\u2003,other:1sat", (Error.onchain "priceUnavailable:")),
         ("internal-unicode", "destination:1,234\u00a0USD", Error.onchain "invalidOutputs: Expected nonempty address:amount entries")] do
       let label := commandPrefix ++ "-" ++ name
       if only.isSome && only != some label then continue
@@ -61,6 +62,7 @@ def psbtInjected : IO Unit := do
     return
   let events ← IO.mkRef ([] : List String)
   let base := { productionServices with
+    price := fun _ => pure { price := .error "priceUnavailable:", diagnostics := "" }
     coreClient := fun _ => do events.modify (· ++ ["client"]); pure { url := "unused" }
     openOrdinaryFile := fun _ => do
       events.modify (· ++ ["open"])
@@ -104,25 +106,25 @@ def psbtInjected : IO Unit := do
     for outputs in ["destination:1USD", "destination:1,234.56USD", "destination:12,34,567INR"] do
       events.set []
       let (status, _, err) ← runCase base [command, "--inputs", "synthetic:0", "--outputs", outputs, "-o", "output"]
-      check "PSBT fiat has no client or child" (status == 1 && err.startsWith "fiatNotSupported:" && (← events.get) == ["open"])
+      check "PSBT quote failure has no client or child" (status == 1 && err.startsWith "priceUnavailable:" && (← events.get) == ["open"])
       count := count + 1
     for (outputs, error) in [
-        ("destination:123,45,678INR", "fiatNotSupported:"),
-        ("destination:1e5USD", "fiatNotSupported:"),
-        ("destination:1.2e+5USD", "fiatNotSupported:"),
-        ("destination:1e-500USD", "fiatNotSupported:"),
+        ("destination:123,45,678INR", "priceUnavailable:"),
+        ("destination:1e5USD", "priceUnavailable:"),
+        ("destination:1.2e+5USD", "priceUnavailable:"),
+        ("destination:1e-500USD", "priceUnavailable:"),
         ("destination:1,234.5e2USD", "invalidOutputs:"),
         ("destination:1msat,other:123,45,678INR", "wholeSatRequired:"),
         ("destination:1msat,other:1e5USD", "wholeSatRequired:"),
         ("destination:1e5USD,broken", "invalidOutputs:"),
         ("destination:123,45,678INR,broken", "invalidOutputs:"),
-        ("destination:1e500USD", "invalidNumber:"),
+        ("destination:1e500USD", "invalidFiat:"),
         ("destination:1eUSD", "invalidNumber:"),
-        ("destination:+1USD", "invalidNumber:"),
-        ("destination:.5USD", "invalidNumber:"),
-        ("destination:1.USD", "invalidNumber:"),
-        ("destination:1,23USD", "invalidNumber:"),
-        ("destination:1234,56,789INR", "invalidNumber:"),
+        ("destination:+1USD", "invalidFiat:"),
+        ("destination:.5USD", "invalidFiat:"),
+        ("destination:1.USD", "invalidFiat:"),
+        ("destination:1,23USD", "invalidFiat:"),
+        ("destination:1234,56,789INR", "invalidFiat:"),
         ("destination:1e5btc", "invalidNumber:")] do
       events.set []
       let (status, out, err) ← runCase base [command, "--inputs", "synthetic:0", "--outputs", outputs, "-o", "output"]
@@ -147,7 +149,7 @@ def psbtInjected : IO Unit := do
   check "PSBT precision before fiat" (result matches .error .wholeSatRequired)
   check "PSBT parse entries before precision" (PsbtCommands.parseOutputs "destination:1msat,broken" matches .error (.onchain _))
   check "PSBT injected inventory" (count == 70)
-  IO.println s!"PSBT injection: {count}/70 writer/refusal controls; 14/14 u32; 2/2 parsing precedence; fiat zero IO beyond writer"
+  IO.println s!"PSBT injection: {count}/70 writer/refusal controls; 14/14 u32; 2/2 parsing precedence; supplied quote failure before client"
   psbtWhitespace
 
 end CyberkrillTests

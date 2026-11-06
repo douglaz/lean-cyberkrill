@@ -3,7 +3,7 @@ Copyright (c) 2026 lean-cyberkrill developers. Released under the MIT License or
 Apache License 2.0, at your option; see LICENSE-MIT and LICENSE-APACHE.
 -/
 import Cyberkrill.CoreRpc
-import Cyberkrill.Amounts
+import Cyberkrill.Fiat
 import Cyberkrill.Psbt
 import Bitcoin.Fee
 
@@ -73,65 +73,40 @@ def splitOutputs (s : String) : Array String := Id.run do
     index := index + 1
   return entries.push (String.ofList current.reverse)
 
-def fiatValid (s : String) : Bool := Id.run do
-  unless recognizableFiat s do return false
-  let cs := (Amount.trimInput s).toList
-  let suffix := cs.reverse.takeWhile (fun c => !(asciiDigit c || c == '.' || c == ','))
-  let number := Amount.trimInput (String.ofList (cs.take (cs.length - suffix.length)))
-  if number.isEmpty || ['-', '+', '.'].contains (number.toList.head!) || number.endsWith "." then return false
-  let parts := number.splitOn "."
-  -- Group checks precede f64 parsing, as in parse_fiat_number. The scanner
-  -- deliberately remains narrower: it only protects commas in candidates.
-  if number.contains ',' then
-    unless parts.length ≤ 2 && !(parts.drop 1).any (·.contains ',') do return false
-    let groups := parts.head!.splitOn ","
-    unless groups.all (fun g => !g.isEmpty && g.toList.all asciiDigit) do return false
-    let western := groups.head!.length ≤ 3 && groups.tail.all (·.length == 3)
-    let indian := groups.length ≥ 3 && groups.head!.length ≤ 3 && groups.getLast!.length == 3 &&
-      (groups.tail.take (groups.length - 2)).all (·.length == 2)
-    unless western || indian do return false
-  let exponentParts := (number.replace "," "").toLower.splitOn "e"
-  unless exponentParts.length ≤ 2 do return false
-  let mantissaParts := exponentParts.head!.splitOn "."
-  unless mantissaParts.length ≤ 2 do return false
-  let digits := String.intercalate "" mantissaParts
-  unless !digits.isEmpty && digits.toList.all asciiDigit do return false
-  let mut exponent : Int := 0
-  if exponentParts.length == 2 then
-    let raw := exponentParts[1]!
-    let unsigned := String.ofList (raw.toList.dropWhile (fun c => c == '+' || c == '-'))
-    unless !unsigned.isEmpty && unsigned.toList.all asciiDigit && raw.length - unsigned.length ≤ 1 do return false
-    let some value := unsigned.toNat? | return false
-    exponent := if raw.startsWith "-" then -Int.ofNat (min value 10000) else Int.ofNat (min value 10000)
-  let some mantissa := digits.toNat? | return false
-  let fraction := if mantissaParts.length == 2 then mantissaParts[1]!.length else 0
-  let scale := exponent - Int.ofNat fraction
-  -- Float is used only to recognize the refused fiat class, never an output.
-  let value : Float := OfScientific.ofScientific mantissa (scale < 0) scale.natAbs
-  return value.isFinite
+/-- Shared exact fiat grammar, independent of the output-list scanner. -/
+def fiatValid (s : String) : Bool := (parseFiat s).isOk
 
-/-- Parse all entries first, then check Bitcoin precision, then refuse fiat.
-The second Core-facing split rejects colons remaining in destinations, after
-input expansion, matching the complete handler-to-client path. -/
-def parseOutputs (s : String) : Except Error (Array (String × Amount)) := do
-  let mut parsed : Array (String × Option Amount) := #[]
+/-- Parse every entry, then validate every Bitcoin amount before any quote.
+Destinations keep their last-colon spelling until the Core-facing check. -/
+def prepareOutputs (s : String) : Except Error (Array (String × (Amount ⊕ FiatAmount))) := do
+  let mut parsed := #[]
   for entry in splitOutputs s do
     let parts := (Amount.trimInput entry).splitOn ":"
     unless parts.length ≥ 2 do throw invalidOutput
     let address := Amount.trimInput (String.intercalate ":" (parts.take (parts.length - 1)))
     let value := Amount.trimInput parts.getLast!
     if address.isEmpty then throw invalidOutput
-    let amount ← match parseAmount value with
-      | .ok amount => pure (some amount)
-      | .error e => if fiatValid value then pure none else throw e
+    let amount ← parseBitcoinOrFiat value
     parsed := parsed.push (address, amount)
   for (_, value) in parsed do
-    if let some value := value then let _ ← exactWholeSat value
-  if parsed.any (fun (_, value) => value.isNone) then throw .fiatNotSupported
+    if let .inl value := value then let _ ← exactWholeSat value
+  return parsed
+
+/-- Creation's destination map is last-value-wins, after every conversion. -/
+def collapseOutputs (parsed : Array (String × Amount)) : Array (String × Amount) := Id.run do
   let mut outputs := #[]
   for (address, value) in parsed do
-    outputs := (outputs.filter (fun (key, _) => key != address)).push (address, value.getD (Amount.ofSats 0))
+    outputs := (outputs.filter (fun (key, _) => key != address)).push (address, value)
   return outputs
+
+/-- Pure Bitcoin-only adapter for callers without a quote capability. -/
+def parseOutputs (s : String) : Except Error (Array (String × Amount)) := do
+  let mut outputs := #[]
+  for (address, value) in ← prepareOutputs s do
+    match value with
+    | .inl value => outputs := outputs.push (address, value)
+    | .inr _ => throw .fiatNotSupported
+  return collapseOutputs outputs
 
 private def rpc (action : IO (Except CoreRpc.Error α)) : IO (Except Error α) := do
   return (← action).mapError (fun e => .onchain e.message)

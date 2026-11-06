@@ -1,7 +1,7 @@
 {
   "count": 30,
   "source_sha256": {
-    "Cyberkrill/App.lean": "403edc04ce493e5c0696b88228ad9fa7707f697865d779078d4307819eb760c9",
+    "Cyberkrill/App.lean": "0454b49fd86a314d47a370ba3bebf782cbbc8eba372c73165a149eb602fb458a",
     "Cyberkrill/Amounts.lean": "5c61afca50ba859e8dba2fea4fd04d3db1c70905684815aec03c9174a1ac327f",
     "Cyberkrill/Capabilities.lean": "35a0f3dc6dff6a88989c9de7665c93a117f26341f8869ba28c4c01e298d064a8",
     "Cyberkrill/Lightning.lean": "30728c403b57686af70f6461ac2141152b7b09ae062799583129e82963e0d2b1",
@@ -17,19 +17,20 @@
     "test/verify.py": "de86e155e733906f745c2dcc5c78e78e2cbc2f12d6d61e870d104edff5fdd937",
     "test/fifo.py": "014cff9f435f23f2d553379f7d014fd65753c620c0f0f9975d5b9072d23ced0c",
     "Main.lean": "915167be1211cea874cd9f781d9651bc3e441b81dd9979415ba55d44e34f2eb1",
-    "CyberkrillTests.lean": "bf7a271039740b895b2c56d7394de69d29a94f230ea1d82887e4f9d99c5d077f",
+    "CyberkrillTests.lean": "980964d989490659aac1f7e1c6333a224f49d5f8d0ed1a73536bcaa429d9d87d",
     "lakefile.lean": "091b5366403a589d69a1226b5728588a7d7b4907cbe3b32199f22d5a0ed4093d",
     "private_output.c": "5bf3940e88b4d8dfba6214e5e489a0c3d6dbd94e0d26f212126c8fd8ef1d3308",
     "CyberkrillTests/Capabilities.lean": "50172673976ead4aef29242efa591ed2237d2db4f60a6a323c2d5f9f4555fd66",
+    "CyberkrillTests/FiatOnchain.lean": "8ee610b7c08e1b96237f1e7f7751731ba6901f65cdbfa7b46b7348215455475b",
     "CyberkrillTests/Helpers.lean": "d4484cedac1da7a20e5bc0a05080c7d6c171e7ec49f7a64e3a80ad3d075bc70a",
     "CyberkrillTests/ListUtxos.lean": "e813ada4731e4e51a62ec49782301a1f0fe99ce07d375d7f474b17a60fb3380b",
     "CyberkrillTests/Mnemonic.lean": "49c85bcaf2327da760e08fb7fef4ea5071c4b29160481a578caa61e36200cb0e",
-    "CyberkrillTests/MoveUtxos.lean": "d551d8b7021775e97db187a3835c5eb8d8e77bba195df69c234c5cb375814386",
+    "CyberkrillTests/MoveUtxos.lean": "b1737d3fe9b8229660c8cc1f8474946771d0ab9d3bf5be8a3bf517eab251c626",
     "CyberkrillTests/Offline.lean": "e6243c51b6638c0bd777835b843459e955e2e7f6163e7bbac6bfe22230407a9d",
     "CyberkrillTests/Output.lean": "9912e5c699b4fb7c07ff5eaacd2d5d821d6585118cb17a0829b224c96965a966",
     "CyberkrillTests/PriceFeed.lean": "b6f4984d0fbd51e32e581d4ca523d5432d2957aabd95db551c06b49bf837b44c",
     "CyberkrillTests/PrivateOutput.lean": "a4412bb4cf4908cc777e39018cb2ac34fc12c697e373b90be3b6c1235514997f",
-    "CyberkrillTests/PsbtCommands.lean": "54c20a78aa5164f7a78b1939d6167b5c882c8ecaea9f6fb932ddd6e4f9281310",
+    "CyberkrillTests/PsbtCommands.lean": "4bb61a711a8bde81f2e1185490f0cebbcc9061b0722105a68f9ba632a18b8f58",
     "CyberkrillTests/Rpc.lean": "3f1887f1dad6d82d421e7bbeecaea6486431b33ba134051d07d5d828809419bf",
     "CyberkrillTests/Support.lean": "80dbdfd22c0478dde791bfc46ae73418a8cf838f7728bb08f248291cdb3a179c",
     "test/golden/lightning-reference.json": "1e897b600d4cbf8012615a4daadc2fd201e9773e01190e79ddd0809a9bc7eadb",
@@ -39,8 +40,8 @@
     "test/revision-cases.py": "34b9422908c0b1dbce438133de14ed5b8cb28aa3756a9132bbad021e01122491",
     "test/capture-revisions.py": "0fb9a5134ad73137a14db31208fd78b61f695cac98ee0cded5c7561189e45694",
     "test/revision-mutate.py": "0f5ca1aa827e87027bc6cc91dc65588bafa72c06241a9980df2663e324c8e620",
-    "test/scope.py": "3f89a5548b8dbc41aa9a3c9d8bb664709864eba59713f4bc028bd8ac6d56bc85",
-    "test/validate.py": "12d0bfb4c6d65cf782fe10e8f4b8d5c23c6ce46a19969436af16ec04c4dab164",
+    "test/scope.py": "1686f838d9c361638a3aa3a562f8b7152011c43a58b50123436884d7fa836fa1",
+    "test/validate.py": "65c268e6804d284782f60e6326d37891a961741ede3d4685b7b267957e0d2731",
     "test/record-revision-regressions.py": "835793fffcab60c1b7d340211788fd37b55695f86843ea7d0c5c0774df360fee",
     "test/golden/revision-reference.json": "c168ba949234dc118dc0fb89de5e065c0ba39e3024686334536eec155b5e187e",
     "test/golden/revision-provenance.json": "ee2e60e5e3d6ec507be8181b742531ba67c19434496f6c1ecd1584c876ba3568",
@@ -66,7 +67,7 @@
           "CyberkrillTests"
         ],
         "status": 0,
-        "seconds": 13.523
+        "seconds": 14.633
       },
       "red": {
         "command": [
@@ -80,7 +81,7 @@
           "timestamp/compact-zone"
         ],
         "status": 1,
-        "seconds": 0.102
+        "seconds": 0.116
       },
       "restore_build": {
         "command": [
@@ -93,7 +94,7 @@
           "CyberkrillTests"
         ],
         "status": 0,
-        "seconds": 13.702
+        "seconds": 15.453
       },
       "green": {
         "command": [
@@ -107,7 +108,7 @@
           "timestamp/compact-zone"
         ],
         "status": 0,
-        "seconds": 0.106
+        "seconds": 0.125
       }
     },
     {
@@ -129,7 +130,7 @@
           "CyberkrillTests"
         ],
         "status": 0,
-        "seconds": 13.616
+        "seconds": 18.182
       },
       "red": {
         "command": [
@@ -143,7 +144,7 @@
           "timestamp/expanded-year"
         ],
         "status": 1,
-        "seconds": 0.104
+        "seconds": 0.142
       },
       "restore_build": {
         "command": [
@@ -156,7 +157,7 @@
           "CyberkrillTests"
         ],
         "status": 0,
-        "seconds": 13.527
+        "seconds": 17.921
       },
       "green": {
         "command": [
@@ -170,7 +171,7 @@
           "timestamp/expanded-year"
         ],
         "status": 0,
-        "seconds": 0.101
+        "seconds": 0.115
       }
     },
     {
@@ -192,7 +193,7 @@
           "CyberkrillTests"
         ],
         "status": 0,
-        "seconds": 13.521
+        "seconds": 17.373
       },
       "red": {
         "command": [
@@ -206,7 +207,7 @@
           "timestamp/zone-nbsp"
         ],
         "status": 1,
-        "seconds": 0.1
+        "seconds": 0.126
       },
       "restore_build": {
         "command": [
@@ -219,7 +220,7 @@
           "CyberkrillTests"
         ],
         "status": 0,
-        "seconds": 13.119
+        "seconds": 17.287
       },
       "green": {
         "command": [
@@ -233,7 +234,7 @@
           "timestamp/zone-nbsp"
         ],
         "status": 0,
-        "seconds": 0.101
+        "seconds": 0.137
       }
     },
     {
@@ -255,7 +256,7 @@
           "CyberkrillTests"
         ],
         "status": 0,
-        "seconds": 13.109
+        "seconds": 17.083
       },
       "red": {
         "command": [
@@ -269,7 +270,7 @@
           "timestamp/utc-underflow"
         ],
         "status": 1,
-        "seconds": 0.104
+        "seconds": 0.117
       },
       "restore_build": {
         "command": [
@@ -282,7 +283,7 @@
           "CyberkrillTests"
         ],
         "status": 0,
-        "seconds": 13.208
+        "seconds": 15.955
       },
       "green": {
         "command": [
@@ -296,7 +297,7 @@
           "timestamp/utc-underflow"
         ],
         "status": 0,
-        "seconds": 0.104
+        "seconds": 0.123
       }
     },
     {
@@ -318,7 +319,7 @@
           "CyberkrillTests"
         ],
         "status": 0,
-        "seconds": 13.203
+        "seconds": 15.566
       },
       "red": {
         "command": [
@@ -332,7 +333,7 @@
           "timestamp/utc-overflow"
         ],
         "status": 1,
-        "seconds": 0.104
+        "seconds": 0.133
       },
       "restore_build": {
         "command": [
@@ -345,7 +346,7 @@
           "CyberkrillTests"
         ],
         "status": 0,
-        "seconds": 13.509
+        "seconds": 16.162
       },
       "green": {
         "command": [
@@ -359,7 +360,7 @@
           "timestamp/utc-overflow"
         ],
         "status": 0,
-        "seconds": 0.101
+        "seconds": 0.123
       }
     },
     {
@@ -381,7 +382,7 @@
           "CyberkrillTests"
         ],
         "status": 0,
-        "seconds": 13.415
+        "seconds": 16.068
       },
       "red": {
         "command": [
@@ -395,7 +396,7 @@
           "timestamp/date-leap-invalid"
         ],
         "status": 1,
-        "seconds": 0.104
+        "seconds": 0.136
       },
       "restore_build": {
         "command": [
@@ -408,7 +409,7 @@
           "CyberkrillTests"
         ],
         "status": 0,
-        "seconds": 13.222
+        "seconds": 15.903
       },
       "green": {
         "command": [
@@ -422,7 +423,7 @@
           "timestamp/date-leap-invalid"
         ],
         "status": 0,
-        "seconds": 0.1
+        "seconds": 0.129
       }
     },
     {
@@ -444,7 +445,7 @@
           "CyberkrillTests"
         ],
         "status": 0,
-        "seconds": 13.409
+        "seconds": 16.501
       },
       "red": {
         "command": [
@@ -458,7 +459,7 @@
           "timestamp/tab-separator"
         ],
         "status": 1,
-        "seconds": 0.101
+        "seconds": 0.12
       },
       "restore_build": {
         "command": [
@@ -471,7 +472,7 @@
           "CyberkrillTests"
         ],
         "status": 0,
-        "seconds": 13.624
+        "seconds": 15.995
       },
       "green": {
         "command": [
@@ -485,7 +486,7 @@
           "timestamp/tab-separator"
         ],
         "status": 0,
-        "seconds": 0.11
+        "seconds": 0.111
       }
     },
     {
@@ -507,7 +508,7 @@
           "CyberkrillTests"
         ],
         "status": 0,
-        "seconds": 15.234
+        "seconds": 16.45
       },
       "red": {
         "command": [
@@ -521,7 +522,7 @@
           "timestamp/zone-hour-overflow"
         ],
         "status": 1,
-        "seconds": 0.104
+        "seconds": 0.129
       },
       "restore_build": {
         "command": [
@@ -534,7 +535,7 @@
           "CyberkrillTests"
         ],
         "status": 0,
-        "seconds": 14.37
+        "seconds": 16.054
       },
       "green": {
         "command": [
@@ -548,7 +549,7 @@
           "timestamp/zone-hour-overflow"
         ],
         "status": 0,
-        "seconds": 0.105
+        "seconds": 0.129
       }
     },
     {
@@ -570,7 +571,7 @@
           "CyberkrillTests"
         ],
         "status": 0,
-        "seconds": 13.726
+        "seconds": 16.993
       },
       "red": {
         "command": [
@@ -584,7 +585,7 @@
           "unicode/known-high"
         ],
         "status": 1,
-        "seconds": 0.101
+        "seconds": 0.123
       },
       "restore_build": {
         "command": [
@@ -597,7 +598,7 @@
           "CyberkrillTests"
         ],
         "status": 0,
-        "seconds": 13.026
+        "seconds": 16.347
       },
       "green": {
         "command": [
@@ -611,7 +612,7 @@
           "unicode/known-high"
         ],
         "status": 0,
-        "seconds": 0.104
+        "seconds": 0.109
       }
     },
     {
@@ -633,7 +634,7 @@
           "CyberkrillTests"
         ],
         "status": 0,
-        "seconds": 12.995
+        "seconds": 16.766
       },
       "red": {
         "command": [
@@ -647,7 +648,7 @@
           "unicode/known-low"
         ],
         "status": 1,
-        "seconds": 0.103
+        "seconds": 0.143
       },
       "restore_build": {
         "command": [
@@ -660,7 +661,7 @@
           "CyberkrillTests"
         ],
         "status": 0,
-        "seconds": 13.855
+        "seconds": 16.3
       },
       "green": {
         "command": [
@@ -674,7 +675,7 @@
           "unicode/known-low"
         ],
         "status": 0,
-        "seconds": 0.108
+        "seconds": 0.107
       }
     },
     {
@@ -696,7 +697,7 @@
           "CyberkrillTests"
         ],
         "status": 0,
-        "seconds": 13.111
+        "seconds": 16.066
       },
       "red": {
         "command": [
@@ -710,7 +711,7 @@
           "unicode/known-high-ascii"
         ],
         "status": 1,
-        "seconds": 0.104
+        "seconds": 0.116
       },
       "restore_build": {
         "command": [
@@ -723,7 +724,7 @@
           "CyberkrillTests"
         ],
         "status": 0,
-        "seconds": 13.511
+        "seconds": 18.266
       },
       "green": {
         "command": [
@@ -737,7 +738,7 @@
           "unicode/known-high-ascii"
         ],
         "status": 0,
-        "seconds": 0.113
+        "seconds": 0.13
       }
     },
     {
@@ -759,7 +760,7 @@
           "CyberkrillTests"
         ],
         "status": 0,
-        "seconds": 15.229
+        "seconds": 19.51
       },
       "red": {
         "command": [
@@ -773,7 +774,7 @@
           "unicode/field-name-high"
         ],
         "status": 1,
-        "seconds": 0.125
+        "seconds": 0.131
       },
       "restore_build": {
         "command": [
@@ -786,7 +787,7 @@
           "CyberkrillTests"
         ],
         "status": 0,
-        "seconds": 16.862
+        "seconds": 20.305
       },
       "green": {
         "command": [
@@ -800,7 +801,7 @@
           "unicode/field-name-high"
         ],
         "status": 0,
-        "seconds": 0.114
+        "seconds": 0.144
       }
     },
     {
@@ -822,7 +823,7 @@
           "CyberkrillTests"
         ],
         "status": 0,
-        "seconds": 16.045
+        "seconds": 18.533
       },
       "red": {
         "command": [
@@ -836,7 +837,7 @@
           "unicode/ignored-high"
         ],
         "status": 1,
-        "seconds": 0.12
+        "seconds": 0.179
       },
       "restore_build": {
         "command": [
@@ -849,7 +850,7 @@
           "CyberkrillTests"
         ],
         "status": 0,
-        "seconds": 14.76
+        "seconds": 18.297
       },
       "green": {
         "command": [
@@ -863,7 +864,7 @@
           "unicode/ignored-high"
         ],
         "status": 0,
-        "seconds": 0.117
+        "seconds": 0.159
       }
     },
     {
@@ -885,7 +886,7 @@
           "CyberkrillTests"
         ],
         "status": 0,
-        "seconds": 13.859
+        "seconds": 21.199
       },
       "red": {
         "command": [
@@ -899,7 +900,7 @@
           "sequence/root-length-14"
         ],
         "status": 1,
-        "seconds": 0.119
+        "seconds": 0.2
       },
       "restore_build": {
         "command": [
@@ -912,7 +913,7 @@
           "CyberkrillTests"
         ],
         "status": 0,
-        "seconds": 14.175
+        "seconds": 22.455
       },
       "green": {
         "command": [
@@ -926,7 +927,7 @@
           "sequence/root-length-14"
         ],
         "status": 0,
-        "seconds": 0.113
+        "seconds": 0.282
       }
     },
     {
@@ -948,7 +949,7 @@
           "CyberkrillTests"
         ],
         "status": 0,
-        "seconds": 14.451
+        "seconds": 22.585
       },
       "red": {
         "command": [
@@ -962,7 +963,7 @@
           "sequence/hop-length-6"
         ],
         "status": 1,
-        "seconds": 0.113
+        "seconds": 0.226
       },
       "restore_build": {
         "command": [
@@ -975,7 +976,7 @@
           "CyberkrillTests"
         ],
         "status": 0,
-        "seconds": 13.85
+        "seconds": 21.609
       },
       "green": {
         "command": [
@@ -989,7 +990,7 @@
           "sequence/hop-length-6"
         ],
         "status": 0,
-        "seconds": 0.116
+        "seconds": 0.181
       }
     },
     {
@@ -1011,7 +1012,7 @@
           "CyberkrillTests"
         ],
         "status": 0,
-        "seconds": 13.54
+        "seconds": 21.772
       },
       "red": {
         "command": [
@@ -1025,7 +1026,7 @@
           "sequence/fees-length-2"
         ],
         "status": 1,
-        "seconds": 0.116
+        "seconds": 0.336
       },
       "restore_build": {
         "command": [
@@ -1038,7 +1039,7 @@
           "CyberkrillTests"
         ],
         "status": 0,
-        "seconds": 14.256
+        "seconds": 27.379
       },
       "green": {
         "command": [
@@ -1052,7 +1053,7 @@
           "sequence/fees-length-2"
         ],
         "status": 0,
-        "seconds": 0.154
+        "seconds": 0.309
       }
     },
     {
@@ -1074,7 +1075,7 @@
           "CyberkrillTests"
         ],
         "status": 0,
-        "seconds": 15.798
+        "seconds": 27.262
       },
       "red": {
         "command": [
@@ -1088,7 +1089,7 @@
           "sequence/root-unsigned"
         ],
         "status": 1,
-        "seconds": 0.122
+        "seconds": 0.26
       },
       "restore_build": {
         "command": [
@@ -1101,7 +1102,7 @@
           "CyberkrillTests"
         ],
         "status": 0,
-        "seconds": 14.768
+        "seconds": 28.878
       },
       "green": {
         "command": [
@@ -1115,7 +1116,7 @@
           "sequence/root-unsigned"
         ],
         "status": 0,
-        "seconds": 0.112
+        "seconds": 0.283
       }
     },
     {
@@ -1137,7 +1138,7 @@
           "CyberkrillTests"
         ],
         "status": 0,
-        "seconds": 15.047
+        "seconds": 24.408
       },
       "red": {
         "command": [
@@ -1151,7 +1152,7 @@
           "sequence/root-length-15"
         ],
         "status": 1,
-        "seconds": 0.118
+        "seconds": 0.189
       },
       "restore_build": {
         "command": [
@@ -1164,7 +1165,7 @@
           "CyberkrillTests"
         ],
         "status": 0,
-        "seconds": 14.945
+        "seconds": 22.218
       },
       "green": {
         "command": [
@@ -1178,7 +1179,7 @@
           "sequence/root-length-15"
         ],
         "status": 0,
-        "seconds": 0.117
+        "seconds": 0.163
       }
     },
     {
@@ -1200,7 +1201,7 @@
           "CyberkrillTests"
         ],
         "status": 0,
-        "seconds": 13.247
+        "seconds": 22.113
       },
       "red": {
         "command": [
@@ -1214,7 +1215,7 @@
           "simnet/decode"
         ],
         "status": 1,
-        "seconds": 0.113
+        "seconds": 0.267
       },
       "restore_build": {
         "command": [
@@ -1227,7 +1228,7 @@
           "CyberkrillTests"
         ],
         "status": 0,
-        "seconds": 12.934
+        "seconds": 22.329
       },
       "green": {
         "command": [
@@ -1241,7 +1242,7 @@
           "simnet/decode"
         ],
         "status": 0,
-        "seconds": 0.11
+        "seconds": 0.346
       }
     },
     {
@@ -1263,7 +1264,7 @@
           "CyberkrillTests"
         ],
         "status": 0,
-        "seconds": 16.945
+        "seconds": 22.977
       },
       "red": {
         "command": [
@@ -1277,7 +1278,7 @@
           "simnet/encode"
         ],
         "status": 1,
-        "seconds": 0.113
+        "seconds": 0.173
       },
       "restore_build": {
         "command": [
@@ -1290,7 +1291,7 @@
           "CyberkrillTests"
         ],
         "status": 0,
-        "seconds": 17.21
+        "seconds": 21.96
       },
       "green": {
         "command": [
@@ -1304,7 +1305,7 @@
           "simnet/encode"
         ],
         "status": 0,
-        "seconds": 0.159
+        "seconds": 0.181
       }
     },
     {
@@ -1326,7 +1327,7 @@
           "CyberkrillTests"
         ],
         "status": 0,
-        "seconds": 17.068
+        "seconds": 19.525
       },
       "red": {
         "command": [
@@ -1340,7 +1341,7 @@
           "output/ln-decode-invoice-create"
         ],
         "status": 1,
-        "seconds": 0.12
+        "seconds": 0.153
       },
       "restore_build": {
         "command": [
@@ -1353,7 +1354,7 @@
           "CyberkrillTests"
         ],
         "status": 0,
-        "seconds": 16.093
+        "seconds": 20.985
       },
       "green": {
         "command": [
@@ -1367,7 +1368,7 @@
           "output/ln-decode-invoice-create"
         ],
         "status": 0,
-        "seconds": 0.119
+        "seconds": 0.219
       }
     },
     {
@@ -1389,7 +1390,7 @@
           "CyberkrillTests"
         ],
         "status": 0,
-        "seconds": 15.131
+        "seconds": 20.801
       },
       "red": {
         "command": [
@@ -1403,7 +1404,7 @@
           "output/ln-decode-lnurl-truncate"
         ],
         "status": 1,
-        "seconds": 0.24
+        "seconds": 0.225
       },
       "restore_build": {
         "command": [
@@ -1416,7 +1417,7 @@
           "CyberkrillTests"
         ],
         "status": 0,
-        "seconds": 15.598
+        "seconds": 19.86
       },
       "green": {
         "command": [
@@ -1430,7 +1431,7 @@
           "output/ln-decode-lnurl-truncate"
         ],
         "status": 0,
-        "seconds": 0.124
+        "seconds": 0.185
       }
     },
     {
@@ -1452,7 +1453,7 @@
           "CyberkrillTests"
         ],
         "status": 0,
-        "seconds": 15.1
+        "seconds": 19.98
       },
       "red": {
         "command": [
@@ -1466,7 +1467,7 @@
           "output/ln-decode-invoice-open-error"
         ],
         "status": 1,
-        "seconds": 0.114
+        "seconds": 0.199
       },
       "restore_build": {
         "command": [
@@ -1479,7 +1480,7 @@
           "CyberkrillTests"
         ],
         "status": 0,
-        "seconds": 14.904
+        "seconds": 20.048
       },
       "green": {
         "command": [
@@ -1493,7 +1494,7 @@
           "output/ln-decode-invoice-open-error"
         ],
         "status": 0,
-        "seconds": 0.12
+        "seconds": 0.14
       }
     },
     {
@@ -1515,7 +1516,7 @@
           "CyberkrillTests"
         ],
         "status": 0,
-        "seconds": 15.409
+        "seconds": 18.051
       },
       "red": {
         "command": [
@@ -1529,7 +1530,7 @@
           "output/ln-decode-lnurl-read-before-open"
         ],
         "status": 1,
-        "seconds": 0.121
+        "seconds": 0.161
       },
       "restore_build": {
         "command": [
@@ -1542,7 +1543,7 @@
           "CyberkrillTests"
         ],
         "status": 0,
-        "seconds": 15.196
+        "seconds": 18.815
       },
       "green": {
         "command": [
@@ -1556,7 +1557,7 @@
           "output/ln-decode-lnurl-read-before-open"
         ],
         "status": 0,
-        "seconds": 0.124
+        "seconds": 0.161
       }
     },
     {
@@ -1578,7 +1579,7 @@
           "CyberkrillTests"
         ],
         "status": 0,
-        "seconds": 14.781
+        "seconds": 20.821
       },
       "red": {
         "command": [
@@ -1592,7 +1593,7 @@
           "output/encode-preserve"
         ],
         "status": 1,
-        "seconds": 0.128
+        "seconds": 0.162
       },
       "restore_build": {
         "command": [
@@ -1605,7 +1606,7 @@
           "CyberkrillTests"
         ],
         "status": 0,
-        "seconds": 15.331
+        "seconds": 21.196
       },
       "green": {
         "command": [
@@ -1619,7 +1620,7 @@
           "output/encode-preserve"
         ],
         "status": 0,
-        "seconds": 0.12
+        "seconds": 0.155
       }
     },
     {
@@ -1641,7 +1642,7 @@
           "CyberkrillTests"
         ],
         "status": 0,
-        "seconds": 0.47
+        "seconds": 0.564
       },
       "red": {
         "command": [
@@ -1655,7 +1656,7 @@
           "closed"
         ],
         "status": 1,
-        "seconds": 0.119
+        "seconds": 0.175
       },
       "restore_build": {
         "command": [
@@ -1668,7 +1669,7 @@
           "CyberkrillTests"
         ],
         "status": 0,
-        "seconds": 0.45
+        "seconds": 0.571
       },
       "green": {
         "command": [
@@ -1682,7 +1683,7 @@
           "closed"
         ],
         "status": 0,
-        "seconds": 0.807
+        "seconds": 1.797
       }
     },
     {
@@ -1704,7 +1705,7 @@
           "CyberkrillTests"
         ],
         "status": 0,
-        "seconds": 0.437
+        "seconds": 0.611
       },
       "red": {
         "command": [
@@ -1718,7 +1719,7 @@
           "closed-empty-reason"
         ],
         "status": 1,
-        "seconds": 1.031
+        "seconds": 1.544
       },
       "restore_build": {
         "command": [
@@ -1731,7 +1732,7 @@
           "CyberkrillTests"
         ],
         "status": 0,
-        "seconds": 0.509
+        "seconds": 0.544
       },
       "green": {
         "command": [
@@ -1745,7 +1746,7 @@
           "closed-empty-reason"
         ],
         "status": 0,
-        "seconds": 0.116
+        "seconds": 0.168
       }
     },
     {
@@ -1767,7 +1768,7 @@
           "CyberkrillTests"
         ],
         "status": 0,
-        "seconds": 0.423
+        "seconds": 0.586
       },
       "red": {
         "command": [
@@ -1781,7 +1782,7 @@
           "closed-wrong-order"
         ],
         "status": 1,
-        "seconds": 0.792
+        "seconds": 1.759
       },
       "restore_build": {
         "command": [
@@ -1794,7 +1795,7 @@
           "CyberkrillTests"
         ],
         "status": 0,
-        "seconds": 0.441
+        "seconds": 0.604
       },
       "green": {
         "command": [
@@ -1808,7 +1809,7 @@
           "closed-wrong-order"
         ],
         "status": 0,
-        "seconds": 0.108
+        "seconds": 0.214
       }
     },
     {
@@ -1830,7 +1831,7 @@
           "CyberkrillTests"
         ],
         "status": 0,
-        "seconds": 0.434
+        "seconds": 0.617
       },
       "red": {
         "command": [
@@ -1844,7 +1845,7 @@
           "unrelated"
         ],
         "status": 1,
-        "seconds": 0.784
+        "seconds": 1.937
       },
       "restore_build": {
         "command": [
@@ -1857,7 +1858,7 @@
           "CyberkrillTests"
         ],
         "status": 0,
-        "seconds": 0.434
+        "seconds": 0.655
       },
       "green": {
         "command": [
@@ -1871,7 +1872,7 @@
           "unrelated"
         ],
         "status": 0,
-        "seconds": 0.11
+        "seconds": 0.139
       }
     },
     {
@@ -1893,7 +1894,7 @@
           "CyberkrillTests"
         ],
         "status": 0,
-        "seconds": 0.453
+        "seconds": 0.568
       },
       "red": {
         "command": [
@@ -1907,7 +1908,7 @@
           "decision-text"
         ],
         "status": 1,
-        "seconds": 0.775
+        "seconds": 1.304
       },
       "restore_build": {
         "command": [
@@ -1920,7 +1921,7 @@
           "CyberkrillTests"
         ],
         "status": 0,
-        "seconds": 0.447
+        "seconds": 0.538
       },
       "green": {
         "command": [
@@ -1934,7 +1935,7 @@
           "decision-text"
         ],
         "status": 0,
-        "seconds": 0.105
+        "seconds": 0.148
       }
     }
   ],
@@ -1947,7 +1948,7 @@
       "test"
     ],
     "status": 0,
-    "seconds": 182.258
+    "seconds": 368.336
   },
   "regressions_green": {
     "command": [
@@ -1959,7 +1960,7 @@
       "test/revisions.py"
     ],
     "status": 0,
-    "seconds": 4.927
+    "seconds": 5.437
   },
   "scope_green": {
     "command": [
@@ -1972,6 +1973,6 @@
       "--scope"
     ],
     "status": 0,
-    "seconds": 1.687
+    "seconds": 1.845
   }
 }

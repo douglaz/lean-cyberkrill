@@ -122,9 +122,10 @@ def replay():
             counts.append(len(expected))
         print(f"Lean RPC {definition['name']}: {len(expected)} recorded responses", flush=True)
     assert counts[:8] == [10, 10, 9, 15, 13, 5, 2, 11] and sum(counts[:8]) == 75, "RPC original wrapper response inventory"
-    assert counts[8:] == [15, 14], "RPC fractional funded wrapper inventory"
-    assert methods == R.METHODS and sum(counts) == 104, "RPC eleven-wrapper inventory"
-    print("Lean RPC wrappers: 11/11; original 75/75 plus funded 15/15 and move 14/14 replies; exact requests checked", flush=True)
+    assert counts[8:10] == [15, 14], "RPC fractional funded wrapper inventory"
+    assert counts[10:] == [9, 15], "RPC fiat wrapper inventory"
+    assert methods == R.METHODS and sum(counts) == 128, "RPC eleven-wrapper inventory"
+    print("Lean RPC wrappers: 11/11; original 75/75 plus funded 15/15, move 14/14 and fiat 24/24 replies; exact requests checked", flush=True)
 
 
 def continuation():
