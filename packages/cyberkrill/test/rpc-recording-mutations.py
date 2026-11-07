@@ -133,10 +133,11 @@ def repair_checks(g=G, r=R):
                                   first_case_attempts=[dict(status=1, stdout="", stderr="disposable reference failure", qualifying_capture=False)] * 2)
         blobs = {row["recording"]: G.encoded(changed if row["name"] == "move-success" else data[row["name"]]) for row in rows}
         rejected(lambda: r.validate_bundle(rows, blobs, shared), "consistent non-DCA producer policy")
-        # DCA is an exception; a uniformly source-client corpus is also permitted.
+        # DCA and fiat keep their source-client exceptions; the original cases
+        # also permit a uniformly source-client corpus with genuine attempts.
         fallback = copy.deepcopy(data)
         for row in rows:
-            if row["kind"] == "dca": continue
+            if row["kind"] == "dca" or "fiat" in row: continue
             fallback[row["name"]]["capture"].update(producer="source-client", reference_result=None,
                 first_case_attempts=[dict(status=1, stdout="", stderr="disposable reference failure", qualifying_capture=False)] * 2)
         r.validate_bundle(rows, {row["recording"]: G.encoded(fallback[row["name"]]) for row in rows}, shared)
@@ -154,6 +155,8 @@ def repair_checks(g=G, r=R):
                 path.write_bytes(blob)
             inventory = G.HERE / "rpc-recording-cases.json"
             (here / inventory.name).write_bytes(inventory.read_bytes())
+            (here / "http").mkdir()
+            (here / "http/success.json").write_bytes((G.HERE / "http/success.json").read_bytes())
             before = {p.relative_to(here).as_posix(): p.read_bytes() for p in here.rglob("*") if p.is_file()}
             changed = copy.deepcopy(data["move-success"])
             attempts = [dict(status=1, stdout="", stderr="disposable reference failure", qualifying_capture=False)] * 2
@@ -339,7 +342,7 @@ def metadata_checks(r=R):
     def fallback():
         cases = copy.deepcopy(data)
         for row in rows:
-            if row["kind"] != "dca":
+            if row["kind"] != "dca" and "fiat" not in row:
                 cases[row["name"]]["capture"].update(producer="source-client", reference_result=None,
                     first_case_attempts=[copy.deepcopy(incomplete), copy.deepcopy(failed)])
         cases["single-list"]["capture"]["reference_result"] = {k: failed[k] for k in ["status", "stdout", "stderr"]}
@@ -353,7 +356,7 @@ def metadata_checks(r=R):
             rejected(lambda: validate(cases), assertion)
         checks["metadata-" + name] = check
     def meta(cases): return cases["move-success"]["capture"]
-    def non_dca(cases): return [cases[row["name"]]["capture"] for row in rows if row["kind"] != "dca"]
+    def non_dca(cases): return [cases[row["name"]]["capture"] for row in rows if row["kind"] != "dca" and "fiat" not in row]
     negative("relabel", lambda cases: [m.update(producer="source-client") for m in non_dca(cases)], "fallback requires two failed reference attempts")
     negative("null-result", lambda cases: meta(cases).update(reference_result=None), "reference-proxy execution evidence")
     negative("empty-attempts", lambda cases: [m.update(first_case_attempts=[]) for m in non_dca(cases)], "bounded first-case attempts")

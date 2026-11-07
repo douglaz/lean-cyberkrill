@@ -13,6 +13,7 @@ import CyberkrillTests.ListUtxos
 import CyberkrillTests.PsbtCommands
 import CyberkrillTests.MoveUtxos
 import CyberkrillTests.PriceFeed
+import CyberkrillTests.FiatOnchain
 
 open CyberkrillTests
 
@@ -31,6 +32,7 @@ private def suite (name : String) (action : IO Unit) : IO Unit := do
 def main (args : List String) : IO UInt32 := do
   try
     match args with
+    | ["--fiat-onchain-run"] => fiatOnchainRun
     | ["--price-evaluate"] => priceEvaluate
     | ["--price-run"] => priceRun
     | ["--price-former-refusals"] => priceFormerRefusals
@@ -72,6 +74,11 @@ def main (args : List String) : IO UInt32 := do
         (← IO.getStdout).putStr result.stdout
         (← IO.getStderr).putStr result.stderr
         check "price feed replay" (result.exitCode == 0)
+      suite "fiat onchain replay" do
+        let result ← IO.Process.output { cmd := "python3", args := #["-B", "test/fiat-onchain.py"] }
+        (← IO.getStdout).putStr result.stdout
+        (← IO.getStderr).putStr result.stderr
+        check "fiat onchain replay" (result.exitCode == 0)
       suite "move injection" moveInjected
       suite "move CLI replay driver" do
         let result ← IO.Process.output { cmd := "python3", args := #["-B", "test/move-utxos.py"] }

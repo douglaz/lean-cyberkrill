@@ -20,7 +20,7 @@ structure Args where
   output : Option String := none
   psbtOutput : Option String := none
 
-/-- Validate grammar during parsing; whole-sat flooring and fiat refusal are
+/-- Validate grammar during parsing; whole-sat flooring and fiat conversion are
 runtime checks. Share grouped/finite fiat grammar with the creation commands
 without applying their comma-separated output-entry scanner. -/
 def validateMax (text : String) : Except Error Unit := do
@@ -30,7 +30,6 @@ def validateMax (text : String) : Except Error Unit := do
     if PsbtCommands.fiatValid text then return else throw e
 
 def maximum (text : String) : Except Error Amount := do
-  if recognizableFiat text then throw .fiatNotSupported
   floorSat (← parseAmount text)
 
 /-- Read only the requested array element, matching the command's response

@@ -84,6 +84,28 @@ def option(row, flag):
     return row["args"][row["args"].index(flag) + 1]
 
 
+def output_sats(row):
+    if "fiat" not in row:
+        return sats(option(row, "--outputs").split(":")[-1])
+    from fractions import Fraction
+    f = row["fiat"]
+    assert row["name"] in {"fiat-create", "fiat-funded"} and row["kind"] in {"create", "funded"}, "fiat case scope"
+    assert f == dict(amount="95.04", currency="USD", price="95040", sats=100000), "synthetic fiat authority"
+    assert option(row, "--outputs") == "{destination}:" + f["amount"] + f["currency"], "fiat argument binding"
+    # Independently fixed median of the nine authored USD fixtures.
+    fixtures = json.loads((HERE / "http/success.json").read_text())
+    quotes = [fixtures["coingecko"]["bitcoin"]["usd"], fixtures["coinbase"]["data"]["rates"]["USD"],
+              fixtures["blockchain.info"]["USD"]["last"], fixtures["kraken"]["result"]["UNEXPECTED"]["c"][0],
+              fixtures["fedi"]["prices"]["BTC/USD"]["rate"], fixtures["cex.io"]["last"],
+              fixtures["bitstamp"]["last"], fixtures["yadio"]["rate"], fixtures["gemini"]["last"]]
+    assert sorted(map(Fraction, quotes))[4] == Fraction(f["price"]) == 95040, "synthetic median"
+    msat = Fraction(f["amount"]) / Fraction(f["price"]) * 10**11
+    rounded = (2 * msat.numerator + msat.denominator) // (2 * msat.denominator)
+    whole = (rounded + 500) // 1000
+    assert whole == f["sats"], "independent fiat whole-sat conversion"
+    return whole
+
+
 def validate_definition(row):
     commands = dict(list="onchain-list-utxos", create="onchain-create-psbt",
                     funded="onchain-create-funded-psbt", dca="onchain-dca-report",
@@ -107,7 +129,7 @@ def validate_definition(row):
             else: sats(actual)
         elif template == "OUTPUT":
             assert actual.startswith("{destination}:"), "declared output destination"
-            sats(actual.split(":")[1])
+            output_sats(row)
         else: assert actual == template, "command argument consistency"
 
 
@@ -402,15 +424,16 @@ def fallback(capture, row, descriptors, addresses, outpoints):
     selected = expand_inputs(capture, inputs, wallet, desc, outpoints)
     inputs = [dict(txid=p["txid"], vout=p["vout"]) for p in selected]
     destination = addresses["single"][0][5]
-    output = sats(option(row, "--outputs").split(':')[-1]) if "--outputs" in row["args"] else None
-    if row["kind"] == "create": rpc("createpsbt", [inputs, {destination: output / 1e8}, 0, False])
+    output = output_sats(row) if "--outputs" in row["args"] else None
+    output_btc = Decimal(output) / Decimal(100000000) if "fiat" in row else (output / 1e8 if output is not None else None)
+    if row["kind"] == "create": rpc("createpsbt", [inputs, {destination: output_btc}, 0, False])
     if row["kind"] == "funded":
         for index in [0, 1]:
             checked = rpc("getdescriptorinfo", [desc.replace("<0;1>", "1").replace('*', str(index))])["descriptor"]
             addr = rpc("deriveaddresses", [checked])[0]
             used = rpc("getreceivedbyaddress", [addr, 0])
             if used == 0: break
-        rpc("walletcreatefundedpsbt", [inputs, {destination: output / 1e8}, 0, dict(changeAddress=addr, fee_rate=2.5 if row["name"] == "funded-fractional" else float(sats(option(row, "--fee-rate"))))])
+        rpc("walletcreatefundedpsbt", [inputs, {destination: output_btc}, 0, dict(changeAddress=addr, fee_rate=2.5 if row["name"] == "funded-fractional" else float(sats(option(row, "--fee-rate"))))])
     if row["kind"] in ["overshoot", "move-f64", "move-success"]:
         chosen = selected
         for p in chosen: rpc("getrawtransaction", [p["txid"], True])
@@ -429,6 +452,11 @@ def fallback(capture, row, descriptors, addresses, outpoints):
         fee = sats(option(row, "--fee"))
         floating = total - fee / 1e8
         rpc("createpsbt", [[dict(txid=p["txid"], vout=p["vout"]) for p in chosen], {destination: Decimal(repr(floating))}, 0, False])
+
+
+def capture_reference_attempts(row, attempts):
+    """Preserve each case's actual reference execution provenance."""
+    return [] if "fiat" in row else attempts
 
 
 def capture_case(job):
@@ -552,7 +580,7 @@ def capture_case(job):
                 "second": f"{funding[wallet][1]['txid']}:{funding[wallet][1]['vout']}",
                 "third": f"{funding[wallet][2]['txid']}:{funding[wallet][2]['vout']}"}
             result = None
-            if row["kind"] != "dca" and producer != "source-client":
+            if row["kind"] != "dca" and "fiat" not in row and producer != "source-client":
                 for attempt in range(2 if producer is None else 1):
                     capture.calls = []
                     args = [a.format(**substitutions) for a in row["args"]]
@@ -574,7 +602,7 @@ def capture_case(job):
                 if producer is None:
                     producer = "source-client"
                     capture.calls = []
-            if row["kind"] != "dca" and producer == "source-client":
+            if "fiat" in row or (row["kind"] != "dca" and producer == "source-client"):
                 fallback(capture, row, descriptors, addresses, funding[wallet])
             if row["kind"] == "dca":
                 capture.record("getblockchaininfo", [], wallet)
@@ -595,15 +623,15 @@ def capture_case(job):
                     capture.record(method, exact, target)
                     numeric.append(dict(reference=params[1], exact=exact[1], integer_sats=amount))
                 elif row["kind"] in ["create", "funded"]:
-                    exact[1] = {addresses["single"][0][5]: Decimal(sats(option(row, "--outputs").split(':')[-1])) / Decimal(100000000)}
+                    exact[1] = {addresses["single"][0][5]: Decimal(output_sats(row)) / Decimal(100000000)}
                     if selector(exact) != selector(params): capture.record(method, exact, target)
             entries = capture.entries()
             assert entries, "nonempty capture"
             captures[row["name"]] = dict(schema=1, case=row["name"],
                 binding=dict(definition=digest(definition_bytes(row)), files={name: digest(text.encode()) for name, text in job["shared"].items()}),
-                capture=dict(producer="source-client" if row["kind"] == "dca" else producer, source_revision=REV, nixpkgs=NIXPKGS,
+                capture=dict(producer="source-client" if row["kind"] == "dca" or "fiat" in row else producer, source_revision=REV, nixpkgs=NIXPKGS,
                     core="31.1.0", tools=job["tools"], generator_sha256=job["generator_sha256"], reference_sha256=job["reference_sha256"],
-                    source_sha256=job["source_sha256"], reference_result=result, first_case_attempts=attempts,
+                    source_sha256=job["source_sha256"], reference_result=result, first_case_attempts=capture_reference_attempts(row, attempts),
                     funding=funding[wallet], numeric=numeric, wallet_private_keys_enabled=False,
                     entries_sha256=digest(encoded(entries))), entries=entries)
             print(f"captured {row['name']}: {len(entries)} entries", file=sys.stderr, flush=True)
@@ -652,7 +680,7 @@ def inside(job):
         if job.get("wait_between_cases"):
             print("between cases checkpoint", file=sys.stderr, flush=True)
             signal.pause()
-        if row["kind"] != "dca":
+        if row["kind"] != "dca" and "fiat" not in row:
             producer = result[row["name"]]["capture"]["producer"]
             attempts = result[row["name"]]["capture"]["first_case_attempts"]
     return captures

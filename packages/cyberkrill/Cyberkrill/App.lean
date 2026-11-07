@@ -456,6 +456,59 @@ def convertWith (services : Services) (input : String) (unit : Option String) : 
       let amount ← convertFiat fiat price.currency price.price .millisat
       conversionOutput input unit amount (some (fiat, price))
 
+/-- Quotes live only for this call. Each miss emits diagnostics and its
+breadcrumb before conversion, even when that conversion subsequently fails. -/
+def convertAmounts (services : Services) (values : Array (Bitcoin.Amount ⊕ FiatAmount))
+    (precision : FiatConversionPrecision) : IO (Except Error (Array Bitcoin.Amount)) := do
+  let mut prices : Array PriceFeed.Price := #[]
+  let mut amounts := #[]
+  for value in values do
+    match value with
+    | .inl amount => amounts := amounts.push amount
+    | .inr fiat =>
+      let cached := prices.find? (·.currency == fiat.currency)
+      let result ← match cached with
+        | some price => pure (Except.ok price)
+        | none => do
+          let result ← services.price fiat.currency
+          if !result.diagnostics.isEmpty then services.stderr result.diagnostics
+          pure (result.price.mapError Error.onchain)
+      let price ← match result with
+        | .error e => return .error e
+        | .ok price => pure price
+      if cached.isNone then
+        services.stderr (PriceFeed.breadcrumb price)
+        prices := prices.push price
+      match convertFiat fiat price.currency price.price precision with
+      | .error e => return .error e
+      | .ok amount => amounts := amounts.push amount
+  return .ok amounts
+
+private def outputsWith (services : Services) (text : String) :
+    IO (Except Error (Array (String × Bitcoin.Amount))) := do
+  let parsed ← match PsbtCommands.prepareOutputs text with
+    | .error e => return .error e
+    | .ok parsed => pure parsed
+  let amounts ← match ← convertAmounts services (parsed.map (·.2)) .wholeSat with
+    | .error e => return .error e
+    | .ok amounts => pure amounts
+  return do
+    let amounts ← amounts.mapM exactWholeSat
+    return PsbtCommands.collapseOutputs ((parsed.map (·.1)).zip amounts)
+
+private def maximumWith (services : Services) (text : String) : IO (Except Error Bitcoin.Amount) := do
+  let parsed ← match parseBitcoinOrFiat text with
+    | .error e => return .error e
+    | .ok parsed => pure parsed
+  match parsed with
+  | .inl _ => return MoveUtxos.maximum text
+  | .inr _ =>
+    match ← convertAmounts services #[parsed] .floorSat with
+    | .error e => return .error e
+    | .ok amounts =>
+      let some amount := amounts[0]? | return .error .invalidArguments
+      return .ok amount
+
 private def lightningOutput (text : String) (writer : Option (String → IO Unit)) (newline : Bool) : Output :=
   match writer with
   | none => { stdout := text ++ if newline then "\n" else "" }
@@ -496,7 +549,10 @@ def execute (version : String) (services : Services) : Command → IO (Except Er
       return .error (.onchain "unsupportedWalletFile: PSBT wallet-file routing requires BDK")
     if args.descriptor.isSome && args.rpc.bitcoinDir.isSome then
       return .error (.onchain "unsupportedBackend: descriptor with bitcoin-dir requires BDK")
-    let maximum ← match args.maxAmount.mapM MoveUtxos.maximum with
+    let maximumResult ← match args.maxAmount with
+      | none => pure (.ok none)
+      | some text => do pure ((← maximumWith services text).map some)
+    let maximum ← match maximumResult with
       | .error e => return .error e
       | .ok maximum => pure maximum
     let client ← try services.coreClient args.rpc catch _ =>
@@ -519,7 +575,7 @@ def execute (version : String) (services : Services) : Command → IO (Except Er
       return .error (.onchain "unsupportedBackend: descriptor with bitcoin-dir requires BDK")
     if args.funded && args.inputs.isEmpty then
       return .error (.onchain "missingInputs: Provide inputs for Core funded PSBT creation")
-    let outputs ← match PsbtCommands.parseOutputs args.outputs with
+    let outputs ← match ← outputsWith services args.outputs with
       | .error e => return .error e
       | .ok outputs => pure outputs
     let client ← try services.coreClient args.rpc catch _ =>

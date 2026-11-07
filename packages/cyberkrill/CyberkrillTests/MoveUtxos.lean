@@ -21,6 +21,7 @@ def moveFetch : IO Unit := do
 def moveOrdering (only : String := "") : IO Unit := do
   let events ← IO.mkRef ([] : List String)
   let services := { productionServices with
+    price := fun _ => pure { price := .error "priceUnavailable:", diagnostics := "" }
     openOrdinaryFile := fun _ => do
       events.modify (· ++ ["open"])
       return fun _ => events.modify (· ++ ["json"])
@@ -34,8 +35,8 @@ def moveOrdering (only : String := "") : IO Unit := do
       ("missing-fee", [], "missingFee:", ["open"]),
       ("missing-before-network", ["--network", "bad"], "missingFee:", ["open"]),
       ("network-before-backend", ["--fee", "1sat", "--network", "bad", "--wallet-file", "x"], "invalidNetwork:", ["open"]),
-      ("fiat", ["--fee", "1sat", "--max-amount", "100USD"], "fiatNotSupported:", ["open"]),
-      ("fiat-exponent", ["--fee", "1sat", "--max-amount", "1,234.5e2USD"], "fiatNotSupported:", ["open"]),
+      ("fiat", ["--fee", "1sat", "--max-amount", "100USD"], "priceUnavailable:", ["open"]),
+      ("fiat-exponent", ["--fee", "1sat", "--max-amount", "1,234.5e2USD"], "priceUnavailable:", ["open"]),
       ("floor", ["--fee", "1sat", "--max-amount", "0.1sat"], "lessThanOneSat:", ["open"]),
       ("typed-fee", ["--fee", "bare"], "feeUnitRequired:", []),
       ("typed-maximum", ["--max-amount", "broken"], "invalidNumber:", []),

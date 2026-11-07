@@ -43,6 +43,10 @@ METHOD_COUNTS["funded-fractional"] = dict(getdescriptorinfo=5, importdescriptors
 COUNTS["move-unclamped"] = 14
 RESPONSES["move-unclamped"] = 14
 METHOD_COUNTS["move-unclamped"] = dict(METHOD_COUNTS["move-overshoot"], createpsbt=2)
+for name, template in [("fiat-create", "multipath-create"), ("fiat-funded", "change-funded")]:
+    COUNTS[name] = COUNTS[template]
+    RESPONSES[name] = RESPONSES[template]
+    METHOD_COUNTS[name] = dict(METHOD_COUNTS[template])
 METHODS = {"listunspent", "scantxoutset", "getblockchaininfo", "getdescriptorinfo", "importdescriptors",
            "deriveaddresses", "createpsbt", "getreceivedbyaddress", "walletcreatefundedpsbt", "getrawtransaction", "getblock"}
 METHOD_INVENTORY = dict(listunspent=10, scantxoutset=2, getblockchaininfo=1,
@@ -112,11 +116,14 @@ def expected_inputs(row, methods, descriptor, funding):
 
 
 def check_producers(rows, cases):
-    producers = {cases[row["name"]]["capture"]["producer"] for row in rows if row["kind"] != "dca"}
+    producers = {cases[row["name"]]["capture"]["producer"] for row in rows if row["kind"] != "dca" and "fiat" not in row}
     assert producers <= {"reference-proxy", "source-client"} and len(producers) <= 1, "consistent non-DCA producer policy"
 
 
 def check_capture(row, meta):
+    if "fiat" in row:
+        assert meta["producer"] == "source-client" and meta["reference_result"] is None and meta["first_case_attempts"] == [], "fiat never executes reference"
+        return
     assert "reference_result" in meta and "first_case_attempts" in meta, "required capture attempt metadata"
     attempts = meta["first_case_attempts"]
     assert isinstance(attempts, list) and (0 if row["kind"] == "dca" else 1) <= len(attempts) <= 2, "bounded first-case attempts"
@@ -240,6 +247,8 @@ def validate_case(row, data, shared):
         params = entry["rpc"]["params"][0]
         assert params[2] == 0 and (params[3] is False if name == "createpsbt" else params[3]["fee_rate"] == (Decimal("2.5") if row["name"] == "funded-fractional" else 1)), "PSBT locktime/options"
         expected_amount = {"create": Decimal("0.01"), "funded": Decimal("0.01"), "move-success": Decimal("0.39999"), "overshoot": Decimal("0.4999834")}[row["kind"]]
+        if "fiat" in row:
+            expected_amount = Decimal(G.output_sats(row)) / 100000000
         assert list(params[1].values()) == [expected_amount], "exact command output amount"
     if row["kind"] == "funded":
         probes = methods["getreceivedbyaddress"]
@@ -339,15 +348,17 @@ def validate_bundle(rows, blobs, shared):
               f"{sum(len(e['responses']) for e in entries)}/{RESPONSES[row['name']]} responses; "
               f"methods {METHOD_COUNTS[row['name']]}", flush=True)
     if {r["name"] for r in rows} == set(COUNTS):
-        assert len(rows) == 10 and total == 98, "independent case/entry inventory"
+        assert len(rows) == 12 and total == 122, "independent case/entry inventory"
         assert sum(ORIGINAL_COUNTS.values()) == 69 and sum(ORIGINAL_RESPONSES.values()) == 75
         assert methods == METHODS, "eleven-method completeness"
         expected = Counter(METHOD_INVENTORY)
         expected.update(METHOD_COUNTS["funded-fractional"])
         expected.update(METHOD_COUNTS["move-unclamped"])
-        assert inventory == expected and responses == 104, "complete method/response inventory"
+        expected.update(METHOD_COUNTS["fiat-create"])
+        expected.update(METHOD_COUNTS["fiat-funded"])
+        assert inventory == expected and responses == 128, "complete method/response inventory"
         print("RPC original recordings: 8 cases/11 methods/69 selectors/75 replies/69 auth controls", flush=True)
-        print("RPC recordings: 10/10 cases, 11/11 methods, 98/98 selectors, 104/104 replies, 98/98 auth controls", flush=True)
+        print("RPC recordings: 12/12 cases, 11/11 methods, 122/122 selectors, 128/128 replies, 122/122 auth controls", flush=True)
 
 
 def request(port, entry, params, authorization=G.AUTH, method="POST", path=None):
@@ -415,7 +426,27 @@ def replay(path, data):
                 assert process.returncode == 0, "replay child reaped"
 
 
+def fiat_capture_attempts():
+    # Simulate a full capture reaching fiat after a successful original case.
+    # Admission checks use actual recorded replies and independent case counts.
+    root = G.HERE / "recordings"
+    shared = {name: (root / name).read_bytes() for name in G.SHARED}
+    original = parse_json((root / "multipath-create.json").read_bytes())
+    attempts = original["capture"]["first_case_attempts"]
+    assert attempts, "original reference attempts control"
+    rows = [row for row in G.inventory() if "fiat" in row]
+    assert len(rows) == 2, "fiat attempt provenance inventory"
+    for row in rows:
+        data = parse_json((root / row["recording"]).read_bytes())
+        data["capture"]["first_case_attempts"] = G.capture_reference_attempts(row, copy.deepcopy(attempts))
+        validate_case(row, data, shared)
+    legacy = next(row for row in G.inventory() if row["name"] == "multipath-create")
+    assert G.capture_reference_attempts(legacy, attempts) == attempts, "original attempt history unchanged"
+    print("fiat attempt provenance: 2/2 full-capture continuation controls; original evidence retained", flush=True)
+
+
 def replay_main():
+    fiat_capture_attempts()
     rows = G.inventory()
     assert {r["name"] for r in rows} == set(COUNTS), "pinned case inventory"
     root = G.HERE / "recordings"
@@ -424,7 +455,7 @@ def replay_main():
     blobs = {r["recording"]: (root / r["recording"]).read_bytes() for r in rows}
     validate_bundle(rows, blobs, shared)
     for row in rows: replay(root / row["recording"], parse_json(blobs[row["recording"]]))
-    print("RPC replay: 10/10 separate real responders; exact params/auth, complete replies, refusals and exhaustion")
+    print("RPC replay: 12/12 separate real responders; exact params/auth, complete replies, refusals and exhaustion")
 
 
 def main():
@@ -434,7 +465,9 @@ def main():
 
 
 if __name__ == "__main__":
-    if sys.argv[1:] == ["--isolated-replay"]:
+    if sys.argv[1:] == ["--fiat-attempts"]:
+        fiat_capture_attempts()
+    elif sys.argv[1:] == ["--isolated-replay"]:
         import network
         assert network.sandbox() or network.isolated(), "recording replay requires isolation"
         replay_main()

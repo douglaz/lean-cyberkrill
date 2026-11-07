@@ -4,16 +4,19 @@
 """Assert the accepted implementation scope and unchanged unrelated issue records."""
 import json
 import hashlib
+import io
 import os
 from pathlib import Path
 import re
 import subprocess
 from datetime import datetime
+from contextlib import redirect_stdout
+from unittest.mock import patch
 
 from cases import APP, ROOT
 
-BASE = "3a122a1e7998e28fa382561fd1fbf4859c655abd"
-ISSUE = "lck-phase-9a-price-feeds-fiat-pz5"
+BASE = "abde0a183039a6e9ecf05c88639d4017cf089448"
+ISSUE = "lck-phase-9a-fiat-onchain-amounts-7j5"
 # Fixed reference fixtures. Never derive
 # these expected values from HEAD, the index, or the current fixture bytes.
 FIXTURE_DIGESTS = {
@@ -58,29 +61,29 @@ def main():
     allowed = {"README.md", ".beads/issues.jsonl"}
     # Fiat conversion, guarded feed replay and actual dependent evidence refreshes.
     allowed |= {"packages/cyberkrill/" + p for p in [
-        "Cyberkrill.lean", "Cyberkrill/App.lean", "Cyberkrill/Fiat.lean",
-        "Cyberkrill/PriceFeed.lean", "Cyberkrill/TestEntry.lean",
-        "CyberkrillTests.lean", "CyberkrillTests/PriceFeed.lean",
-        "test/driver.py", "test/scope.py", "test/revisions.py", "test/validate.py", "test/verify.py",
-        "test/price-cases.py", "test/price-feeds.py", "test/capture-price-reference.py",
-        "test/http/success.json", "test/http/success.json.provenance", "test/http/reference.json",
-        "test/http/exact-deltas.json", "test/http/mutation-record.json",
-        "test/price-mutations.py", "test/price-parity.py",
-        "test/move-utxos.py", "test/move-utxos-mutations.py", "test/list-utxos-lifecycle.py", "test/mutate.py", "test/recapture-history.py",
-        "test/lightning-mutate.py", "test/revision-mutate.py",
+        "Cyberkrill/App.lean", "Cyberkrill/PsbtCommands.lean", "Cyberkrill/MoveUtxos.lean",
+        "CyberkrillTests/PsbtCommands.lean", "CyberkrillTests/MoveUtxos.lean",
+        "CyberkrillTests/FiatOnchain.lean", "test/fiat-onchain.py", "test/fiat-onchain-mutations.py",
+        "test/fiat-onchain-provenance.json", "test/golden/fiat-onchain-mutation-record.json",
+        "test/rpc-client.py", "test/capture-fiat-onchain-reference.py", "test/http/fiat-onchain-reference.json",
+        "test/rpc-recording-mutations.py",
+        "test/psbt-commands-mutations.py", "test/rpc-recording-cases.json", "test/rpc-recordings.py",
+        "test/generate-rpc-recordings.py", "test/recordings/fiat-create.json", "test/recordings/fiat-funded.json",
+        "CyberkrillTests.lean", "test/scope.py", "test/validate.py",
+        "test/http/mutation-record.json", "test/price-mutations.py", "test/move-utxos-mutations.py",
     ]}
     allowed |= {"packages/cyberkrill/test/golden/" + p for p in [
         "move-utxos-mutation-record.json", "psbt-commands-mutation-record.json",
         "mutation-record.json", "lightning-mutation-record.json", "revision-mutation-record.json",
         "offline-mutation-record.json", "rpc-client-mutation-record.json",
         "list-utxos-mutation-record.json", "list-utxos-lexical-mutation-record.json",
-        "list-utxos-lifecycle-record.json", "regression-refresh.json", "output-regression-refresh.json",
+        "regression-refresh.json", "output-regression-refresh.json",
         "attached-output-refresh.json", "offline-history-recapture.json",
     ]}
     changed = set(filter(None, git("diff", BASE, "--name-only", "-z").decode().split("\0")))
     new = set(filter(None, git("ls-files", "--others", "--exclude-standard", "-z").decode().split("\0")))
     base_paths = set(git("ls-tree", "-r", "--name-only", BASE).decode().splitlines())
-    assert changed | new <= allowed, "path outside price feed scope: " + repr(sorted((changed | new) - allowed))
+    assert changed | new <= allowed, "path outside fiat onchain scope: " + repr(sorted((changed | new) - allowed))
     # Equality against the base for each unrelated issue includes every field.
     def issues(data):
         rows = [json.loads(line) for line in data.splitlines()]
@@ -141,5 +144,57 @@ def main():
     print("reference captures/fixtures unchanged; seven packages/link gates retained; whitespace/public-text checks passed")
 
 
+def check_admission():
+    """Exercise the real gate in read-only views of unrelated source/evidence edits."""
+    protected = [
+        "Cyberkrill/PriceFeed.lean", "Cyberkrill/TestEntry.lean",
+        "CyberkrillTests/PriceFeed.lean", "test/capture-price-reference.py",
+        "test/driver.py", "test/golden/list-utxos-lifecycle-record.json",
+        "test/http/exact-deltas.json", "test/http/reference.json",
+        "test/http/success.json", "test/http/success.json.provenance",
+        "test/lightning-mutate.py", "test/list-utxos-lifecycle.py",
+        "test/move-utxos.py", "test/mutate.py", "test/price-cases.py",
+        "test/price-feeds.py", "test/price-parity.py", "test/recapture-history.py",
+        "test/revision-mutate.py", "test/revisions.py", "test/verify.py",
+    ]
+    assert len(protected) == len(set(protected)) == 21, "scope protected path inventory"
+    real_git, real_bytes, real_text = git, Path.read_bytes, Path.read_text
+    checks = 0
+    for relative in protected:
+        relative = "packages/cyberkrill/" + relative
+        target = ROOT / relative
+        marker = "\n-- synthetic scope admission edit\n"
+
+        def read_bytes(path):
+            return real_bytes(path) + (marker.encode() if path == target else b"")
+
+        def read_text(path, *args, **kwargs):
+            return real_text(path, *args, **kwargs) + (marker if path == target else "")
+
+        for reported in [True, False]:
+            def virtual_git(*args):
+                result = real_git(*args)
+                if reported and args == ("diff", BASE, "--name-only", "-z"):
+                    return result + relative.encode() + b"\0"
+                return result
+
+            expected = ("path outside fiat onchain scope: " if reported
+                        else "forbidden path changed: ")
+            with patch(__name__ + ".git", virtual_git), \
+                    patch.object(Path, "read_bytes", read_bytes), \
+                    patch.object(Path, "read_text", read_text), redirect_stdout(io.StringIO()):
+                try:
+                    main()
+                except AssertionError as error:
+                    assert str(error).startswith(expected) and relative in str(error), \
+                        "scope admission wrong rejection: " + str(error)
+                else:
+                    raise AssertionError("scope admission accepted unrelated edit: " + relative)
+            checks += 1
+    assert checks == 42, "scope admission check inventory"
+    print("scope admission: 42/42 unrelated edits rejected at path/baseline assertions; read-only views")
+
+
 if __name__ == "__main__":
     main()
+    check_admission()

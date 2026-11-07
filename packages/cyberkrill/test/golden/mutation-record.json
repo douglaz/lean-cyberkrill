@@ -2,7 +2,7 @@
   "count": 26,
   "source_sha256": {
     "Cyberkrill/Amounts.lean": "5c61afca50ba859e8dba2fea4fd04d3db1c70905684815aec03c9174a1ac327f",
-    "Cyberkrill/App.lean": "403edc04ce493e5c0696b88228ad9fa7707f697865d779078d4307819eb760c9",
+    "Cyberkrill/App.lean": "0454b49fd86a314d47a370ba3bebf782cbbc8eba372c73165a149eb602fb458a",
     "Cyberkrill/Capabilities.lean": "35a0f3dc6dff6a88989c9de7665c93a117f26341f8869ba28c4c01e298d064a8",
     "private_output.c": "5bf3940e88b4d8dfba6214e5e489a0c3d6dbd94e0d26f212126c8fd8ef1d3308",
     "test/mutate.py": "a856596b1afc9c4f565aee83cee1d3f6cf5a84ecc414927dc6ce60f52f234e33",
@@ -14,18 +14,19 @@
     "Main.lean": "915167be1211cea874cd9f781d9651bc3e441b81dd9979415ba55d44e34f2eb1",
     "lakefile.lean": "091b5366403a589d69a1226b5728588a7d7b4907cbe3b32199f22d5a0ed4093d",
     "CyberkrillTests/Capabilities.lean": "50172673976ead4aef29242efa591ed2237d2db4f60a6a323c2d5f9f4555fd66",
+    "CyberkrillTests/FiatOnchain.lean": "8ee610b7c08e1b96237f1e7f7751731ba6901f65cdbfa7b46b7348215455475b",
     "CyberkrillTests/Helpers.lean": "d4484cedac1da7a20e5bc0a05080c7d6c171e7ec49f7a64e3a80ad3d075bc70a",
     "CyberkrillTests/ListUtxos.lean": "e813ada4731e4e51a62ec49782301a1f0fe99ce07d375d7f474b17a60fb3380b",
     "CyberkrillTests/Mnemonic.lean": "49c85bcaf2327da760e08fb7fef4ea5071c4b29160481a578caa61e36200cb0e",
-    "CyberkrillTests/MoveUtxos.lean": "d551d8b7021775e97db187a3835c5eb8d8e77bba195df69c234c5cb375814386",
+    "CyberkrillTests/MoveUtxos.lean": "b1737d3fe9b8229660c8cc1f8474946771d0ab9d3bf5be8a3bf517eab251c626",
     "CyberkrillTests/Offline.lean": "e6243c51b6638c0bd777835b843459e955e2e7f6163e7bbac6bfe22230407a9d",
     "CyberkrillTests/Output.lean": "9912e5c699b4fb7c07ff5eaacd2d5d821d6585118cb17a0829b224c96965a966",
     "CyberkrillTests/PriceFeed.lean": "b6f4984d0fbd51e32e581d4ca523d5432d2957aabd95db551c06b49bf837b44c",
     "CyberkrillTests/PrivateOutput.lean": "a4412bb4cf4908cc777e39018cb2ac34fc12c697e373b90be3b6c1235514997f",
-    "CyberkrillTests/PsbtCommands.lean": "54c20a78aa5164f7a78b1939d6167b5c882c8ecaea9f6fb932ddd6e4f9281310",
+    "CyberkrillTests/PsbtCommands.lean": "4bb61a711a8bde81f2e1185490f0cebbcc9061b0722105a68f9ba632a18b8f58",
     "CyberkrillTests/Rpc.lean": "3f1887f1dad6d82d421e7bbeecaea6486431b33ba134051d07d5d828809419bf",
     "CyberkrillTests/Support.lean": "80dbdfd22c0478dde791bfc46ae73418a8cf838f7728bb08f248291cdb3a179c",
-    "CyberkrillTests.lean": "bf7a271039740b895b2c56d7394de69d29a94f230ea1d82887e4f9d99c5d077f",
+    "CyberkrillTests.lean": "980964d989490659aac1f7e1c6333a224f49d5f8d0ed1a73536bcaa429d9d87d",
     "test/output-regressions.py": "126321bfa36a00ac51ef8096bc25bb1864f0b31db4b07863d3562d8d715a0862",
     "test/private-output.py": "07d8a492d3f66eace44dd4c4c5a32f68b06cd50bb3c4ee34b6f40e8c3809e1f9",
     "Cyberkrill/PrivateOutput.lean": "46ecbff603563e28e27ec208a64333acc23680ac062f6d1b050c9c78cd8bf7f4",
@@ -58,7 +59,7 @@
       ],
       "status": 1,
       "detecting_assertion": "amount scaling",
-      "seconds": 0.552,
+      "seconds": 0.542,
       "restored_status": 0
     },
     {
@@ -87,7 +88,7 @@
       ],
       "status": 1,
       "detecting_assertion": "sats flooring",
-      "seconds": 1.311,
+      "seconds": 1.348,
       "restored_status": 0
     },
     {
@@ -116,7 +117,7 @@
       ],
       "status": 1,
       "detecting_assertion": "output refusal 0 stdout",
-      "seconds": 0.076,
+      "seconds": 0.084,
       "restored_status": 0
     },
     {
@@ -144,7 +145,7 @@
       ],
       "status": 1,
       "detecting_assertion": "wholeSat half-up",
-      "seconds": 0.029,
+      "seconds": 0.031,
       "restored_status": 0
     },
     {
@@ -172,7 +173,7 @@
       ],
       "status": 1,
       "detecting_assertion": "wholeSat tiny",
-      "seconds": 0.028,
+      "seconds": 0.03,
       "restored_status": 0
     },
     {
@@ -200,7 +201,7 @@
       ],
       "status": 1,
       "detecting_assertion": "floorSat tiny",
-      "seconds": 0.027,
+      "seconds": 0.045,
       "restored_status": 0
     },
     {
@@ -228,7 +229,7 @@
       ],
       "status": 1,
       "detecting_assertion": "exact wholeSat rejects",
-      "seconds": 0.028,
+      "seconds": 0.098,
       "restored_status": 0
     },
     {
@@ -256,7 +257,7 @@
       ],
       "status": 1,
       "detecting_assertion": "fee unit requirement",
-      "seconds": 0.027,
+      "seconds": 0.028,
       "restored_status": 0
     },
     {
@@ -285,7 +286,7 @@
       ],
       "status": 1,
       "detecting_assertion": "mnemonic entropy mapping",
-      "seconds": 0.077,
+      "seconds": 0.085,
       "restored_status": 0
     },
     {
@@ -313,7 +314,7 @@
       ],
       "status": 1,
       "detecting_assertion": "entropy production length",
-      "seconds": 0.026,
+      "seconds": 0.136,
       "restored_status": 0
     },
     {
@@ -342,7 +343,7 @@
       ],
       "status": 1,
       "detecting_assertion": "mnemonic file stdout",
-      "seconds": 0.072,
+      "seconds": 0.082,
       "restored_status": 0
     },
     {
@@ -370,7 +371,7 @@
       ],
       "status": 1,
       "detecting_assertion": "cap Bitcoin pubkey accepts",
-      "seconds": 0.026,
+      "seconds": 0.031,
       "restored_status": 0
     },
     {
@@ -398,7 +399,7 @@
       ],
       "status": 1,
       "detecting_assertion": "cap Bitcoin compression matches",
-      "seconds": 0.027,
+      "seconds": 0.032,
       "restored_status": 0
     },
     {
@@ -426,7 +427,7 @@
       ],
       "status": 1,
       "detecting_assertion": "cap Bitcoin xonly accepts",
-      "seconds": 0.027,
+      "seconds": 0.11,
       "restored_status": 0
     },
     {
@@ -454,7 +455,7 @@
       ],
       "status": 1,
       "detecting_assertion": "cap Bitcoin DER accepts",
-      "seconds": 0.028,
+      "seconds": 0.034,
       "restored_status": 0
     },
     {
@@ -482,7 +483,7 @@
       ],
       "status": 1,
       "detecting_assertion": "cap BOLT recover L382",
-      "seconds": 0.029,
+      "seconds": 0.033,
       "restored_status": 0
     },
     {
@@ -510,7 +511,7 @@
       ],
       "status": 1,
       "detecting_assertion": "cap BOLT verify decode",
-      "seconds": 0.03,
+      "seconds": 0.034,
       "restored_status": 0
     },
     {
@@ -538,7 +539,7 @@
       ],
       "status": 1,
       "detecting_assertion": "cap BOLT signature exact",
-      "seconds": 0.027,
+      "seconds": 0.031,
       "restored_status": 0
     },
     {
@@ -566,7 +567,7 @@
       ],
       "status": 1,
       "detecting_assertion": "cap BOLT point accepts",
-      "seconds": 0.029,
+      "seconds": 0.031,
       "restored_status": 0
     },
     {
@@ -594,7 +595,7 @@
       ],
       "status": 1,
       "detecting_assertion": "cap RIPEMD160",
-      "seconds": 0.027,
+      "seconds": 0.031,
       "restored_status": 0
     },
     {
@@ -622,7 +623,7 @@
       ],
       "status": 1,
       "detecting_assertion": "cap HASH160",
-      "seconds": 0.028,
+      "seconds": 0.032,
       "restored_status": 0
     },
     {
@@ -651,7 +652,7 @@
       ],
       "status": 1,
       "detecting_assertion": "private output mode 0600",
-      "seconds": 0.073,
+      "seconds": 0.09,
       "restored_status": 0
     },
     {
@@ -680,7 +681,7 @@
       ],
       "status": 1,
       "detecting_assertion": "private output exclusive create",
-      "seconds": 0.072,
+      "seconds": 0.103,
       "restored_status": 0
     },
     {
@@ -709,7 +710,7 @@
       ],
       "status": 1,
       "detecting_assertion": "private output write failure",
-      "seconds": 0.072,
+      "seconds": 0.131,
       "restored_status": 0
     },
     {
@@ -738,7 +739,7 @@
       ],
       "status": 1,
       "detecting_assertion": "private output existing trailing slash",
-      "seconds": 0.071,
+      "seconds": 0.164,
       "restored_status": 0
     },
     {
@@ -767,7 +768,7 @@
       ],
       "status": 1,
       "detecting_assertion": "private output missing trailing slash",
-      "seconds": 0.071,
+      "seconds": 0.077,
       "restored_status": 0
     }
   ],
@@ -780,6 +781,6 @@
       "test"
     ],
     "status": 0,
-    "seconds": 183.843
+    "seconds": 303.205
   }
 }

@@ -55,8 +55,68 @@ negative zero. Fiat uses an unsigned number followed by three ASCII letters,
 case insensitive, with Rust whitespace trimming and Western or Indian comma
 grouping. Scientific notation is parsed exactly within the bounds below. Invalid fiat
 fails before any request; Bitcoin-only conversions make no price requests.
-Fee flags still require explicit Bitcoin units. Fiat on the onchain commands
-remains refused pending the separate integration task.
+Fee flags still require explicit Bitcoin units.
+
+Fiat also works in `onchain-create-psbt --outputs`,
+`onchain-create-funded-psbt --outputs`, and `onchain-move-utxos --max-amount`.
+Creation parses every output and checks all Bitcoin precision before fetching
+quotes, then converts fiat in entry order. It applies WholeSat after integer
+msat rounding and enforces whole satoshis. Move applies FloorSat after that
+same msat rounding and uses the result as a selection threshold. It sends the
+full selected total minus the fee, including any overshoot. Zero retains the
+existing behavior; a zero move maximum reaches the empty-selection error.
+The shared helpers retain their specific small-nonzero and range errors.
+
+Quotes are cached by uppercase currency only within an invocation. Repeated
+currencies and duplicate destinations share a fetch; later invocations fetch
+again. Diagnostics and one breadcrumb per fetched successful currency precede
+conversion, including conversion errors. Duplicate destinations collapse to
+the last value after every entry has been validated and converted. JSON writer
+acquisition, raw-before-JSON writes, file aliases, and stream/newline boundaries
+retain the Phase 8 behavior.
+
+`test/fiat-onchain.py`, registered in `lake test`, checks 29 creation cases,
+29 funded cases and 15 move cases, plus three same-process repeat invocations:
+76 guarded invocations. It checks the actual ordered RPC parameters, complete
+JSON, separate streams, client initialization, nine requests per currency,
+no-fetch prevalidation and Bitcoin-only paths, grouping/scanner boundaries,
+duplicate destinations, tiny/range/quorum failures, and output files/aliases.
+At a synthetic price of 100,000,000 per BTC, output amounts 1.499499,
+1.4995 and 1.499501 become 1, 2 and 2 satoshis. Move maxima 100.999499,
+100.9995 and 100.999501 become 100, 101 and 101 satoshis; with 100-sat and
+60-sat inputs these select different input sets. A 100.75 fiat maximum selects
+only the first input, detecting an accidental WholeSat mode.
+
+Two additional replays use the newly generated `fiat-create` and `fiat-funded`
+recordings, retaining all 24 ordered selectors and full real Core replies.
+Their nine authored USD feeds have median 95,040, so 95.04 USD becomes exactly
+100,000 satoshis (0.001 BTC). These recordings were generated with
+`generate-rpc-recordings.py --cases fiat-create fiat-funded` in the pinned
+recording shell, using its source client. Every earlier recording and shared
+auth/public fixture remains unchanged. The generator never runs the reference
+CLI with fiat. Complete JSON expectations are independently derived from these
+replies and cross-checked by pure Rust result serialization at the pinned revision.
+`test/capture-fiat-onchain-reference.py` reuses the existing disposable-checkout,
+foreground prefetch/build and offline namespace workflow. Its ten captured results
+cover both complete result JSON values and eight output/maximum parser controls,
+with every fiat currency checked as a seeded cache hit before the async parser.
+No fetch function, RPC operation or network handler executes. The earlier price
+capture stays byte-for-byte unchanged; the additional fixed capture is
+`test/http/fiat-onchain-reference.json`, validated by the registered command suite.
+The wider matrix uses authored synthetic RPC selectors and a recorded PSBT only
+as a validation payload. Provenance and independent fixture hashes are in
+`test/fiat-onchain-provenance.json`. Existing pure Rust precision captures and
+exact-number delta kinds remain pinned independently; no new numeric kind is
+introduced by this integration.
+Six compiled consumer mutations each fail at their intended runtime assertion
+and pass after exact restoration: conversion wiring, both flag precision modes,
+normalized-currency reuse, msat-before-sat rounding and invocation cache lifetime.
+The latest run is `test/golden/fiat-onchain-mutation-record.json`.
+
+The scope gate uses 41 explicit authorized paths. Its 42 read-only regression
+views check that edits to each of 21 unrelated files fail both changed-path
+admission and independent baseline-byte enforcement. All 58 unrelated tracker
+records retain their original bytes.
 
 The app requests all nine pinned feeds: CoinGecko, Coinbase, blockchain.info,
 Kraken, Fedi, CEX.io, Bitstamp, Yadio and Gemini. Each request uses `HttpCurl`,
@@ -472,7 +532,8 @@ Separate expansions and explicit inputs retain duplicates. Import timestamp
 `now` does not rescan historical transactions.
 
 Without a maximum all inputs retain their order. With a maximum, `floorSat`
-floors the threshold; nonzero amounts below one sat fail. Stable descending
+floors the parsed Bitcoin amount or the fiat conversion's integer-msat result;
+positive msat values that floor to zero fail. Stable descending
 selection tests the accumulated total before adding the next input. Zero
 selects nothing and gives `emptySelection`; a threshold above available funds
 selects all. The sole output is **the full selected total minus the fee**,
@@ -577,15 +638,16 @@ succeeds. Create requires inputs during argument parsing; funded reports
 reports `emptyInputs`. The same case-insensitive network aliases as listing
 are accepted.
 
-`Cyberkrill.PsbtCommands.parseOutputs` preserves empty separator entries,
-trims entries/address/amount, splits at the last colon, and recognizes western
+`Cyberkrill.PsbtCommands.prepareOutputs` preserves empty separator entries,
+trims entries/address/amount, splits at the last colon, and recognizes Western
 and Indian grouped fiat numbers, including three-digit leading Indian groups.
-Finite exponent fiat syntax such as `1e5USD` receives the same unsupported-fiat
-refusal. The pinned comma scanner still splits grouped exponent candidates;
-malformed entries fail before precision checking. All entries parse before Bitcoin whole-sat
-checks; those checks precede the clear `fiatNotSupported` refusal. Ordinary
-bare amounts remain BTC. Sub-satoshi outputs give `wholeSatRequired` without
-rounding. A colon left in a destination is rejected on the Core-facing path
+Finite exponent fiat syntax such as `1e5USD` converts through the shared exact
+parser. The pinned comma scanner still splits grouped exponent candidates;
+malformed entries fail before precision checking. All entries parse before
+Bitcoin whole-sat checks, and all Bitcoin precision checks precede price requests.
+Fiat entries then convert sequentially using WholeSat after msat rounding.
+Ordinary bare amounts remain BTC. Bitcoin sub-satoshi outputs give
+`wholeSatRequired` without rounding. A colon left in a destination is rejected on the Core-facing path
 after expansion, matching the pinned handler/client combination. Destination
 objects collapse duplicates last-value-wins before counting distinct outputs;
 amounts stay exact `Bitcoin.Amount` values and exact JSON numbers.
@@ -702,9 +764,12 @@ normally, pair short limits with longer success and preserve failed-derivation
 skip behavior during funded probing.
 The exponent-position regression failed at its intended assertion before the fix
 and passed after rebuilding. The latest compiled mutation
-evidence checks 43 distinct production edits and 57 selected runtime reds,
-restoring exact bytes and rebuilding/rerunning
-green after each edit. The original 616 offline captures, 53 precise exception
+evidence checks 44 distinct production edits and 57 selected runtime reds,
+including a shared whole-sat enforcement mutation and a separate prevalidation
+mutation. Removing prevalidation alone leaves the post-conversion whole-sat
+check active; the shared mutation tests Bitcoin-only refusal at both boundaries.
+Sources are restored byte-for-byte and rebuilt, with a passing selected test
+after each edit. The original 616 offline captures, 53 precise exception
 pins/named errors and 18 listing captures remain as reference fixtures; mutation
 records retain only their latest completed run.
 
@@ -1190,8 +1255,15 @@ missing or changed shared data, and publishes only selected case JSON files.
 Before publication, all selected replacements must agree with the non-DCA
 producer policy of the unchanged cases. An incompatible replacement refuses
 without changing any published artifact. Offline corpus checking enforces the
-same policy. The first non-DCA capture still has at most two reference attempts;
-DCA keeps its source-client exception. Changing the corpus policy requires a
+same policy for the original cases. Their first non-DCA capture still has at
+most two reference attempts. DCA and the two explicitly declared fiat cases use
+the source client. Fiat records have no reference result or attempts and never
+execute the reference CLI; this exception does not change the producer policy
+or attempt evidence of any original case. Two connection-free continuation
+controls validate actual fiat recordings after earlier reference attempts. The
+unfixed producer's inherited attempts fail at `fiat never executes reference`;
+clearing those attempts only for fiat makes both controls pass. Changing the
+corpus policy requires a
 full regeneration rather than silently refreshing unselected cases.
 Capture checking also requires per-case reference results and the bounded
 first-case attempt records. Reference-proxy cases retain their actual execution

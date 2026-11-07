@@ -29,15 +29,29 @@ print(f'library/proof native-decision scan: {len(paths)}/85 tracked files; zero 
 
 
 def main():
-    mode, = sys.argv[1:]
-    assert mode in ["app", "repo", "evidence", "refresh", "campaigns"]
+    mode, *selected = sys.argv[1:]
+    assert not selected or mode == "campaigns", "only campaign batches support named selection"
+    assert mode in ["app", "repo", "evidence", "refresh", "campaigns", "fiat"]
     directory = APP / ".lake/validation"
     directory.mkdir(parents=True, exist_ok=True)
     if mode == "app":
         checks = [("build", APP, ["nix", "develop", "-c", "lake", "build"], 600),
                   ("test", APP, ["nix", "develop", "-c", "lake", "test"], 600)]
+    elif mode == "fiat":
+        checks = [
+            ("fiat-build", APP, ["nix", "develop", "-c", "lake", "build", "cyberkrill", "CyberkrillTests"], 600),
+            ("fiat-replay", ROOT, ["nix", "develop", "-c", "python3", "-B", "packages/cyberkrill/test/fiat-onchain.py"], 300),
+            ("fiat-creation-retained", ROOT, ["nix", "develop", "-c", "python3", "-B", "packages/cyberkrill/test/psbt-commands.py"], 300),
+            ("fiat-move-retained", ROOT, ["nix", "develop", "-c", "python3", "-B", "packages/cyberkrill/test/move-utxos.py"], 300),
+            ("fiat-recordings", ROOT, ["nix", "develop", "-c", "python3", "-B", "packages/cyberkrill/test/rpc-recordings.py"], 300),
+            ("fiat-rpc-client", ROOT, ["nix", "develop", "-c", "python3", "-B", "packages/cyberkrill/test/rpc-client.py"], 300),
+            ("fiat-recording-safety", ROOT, ["nix", "develop", "-c", "python3", "-B", "packages/cyberkrill/test/rpc-recording-safety.py"], 180),
+            ("fiat-recording-mutations", ROOT, ["nix", "develop", "-c", "python3", "-B", "packages/cyberkrill/test/rpc-recording-mutations.py"], 300),
+        ]
     elif mode == "evidence":
         checks = [
+            ("fiat-onchain", ROOT, ["python3", "-B", "packages/cyberkrill/test/fiat-onchain.py"], 300),
+            ("fiat-onchain-mutations", ROOT, ["python3", "-B", "packages/cyberkrill/test/fiat-onchain-mutations.py", "--verify"], 120),
             ("price-feeds", ROOT, ["python3", "-B", "packages/cyberkrill/test/price-feeds.py"], 240),
             ("price-mutations", ROOT, ["python3", "-B", "packages/cyberkrill/test/price-mutations.py", "--verify"], 120),
             ("move-scope-bytes", ROOT, ["python3", "-B", "packages/cyberkrill/test/move-utxos.py", "scope-bytes"], 120),
@@ -77,6 +91,8 @@ def main():
         ]
     elif mode == "campaigns":
         checks = [
+            ("fiat-campaign", ROOT, ["python3", "-B", "packages/cyberkrill/test/fiat-onchain-mutations.py"], 2400),
+            ("price-campaign", ROOT, ["python3", "-B", "packages/cyberkrill/test/price-mutations.py"], 7200),
             ("move-campaign", ROOT, ["python3", "-B", "packages/cyberkrill/test/move-utxos-mutations.py"], 7200),
             ("creation-campaign", ROOT, ["python3", "-B", "packages/cyberkrill/test/psbt-commands-mutations.py"], 7200),
             ("list-campaign", ROOT, ["python3", "-B", "packages/cyberkrill/test/list-utxos-mutations.py"], 7200),
@@ -109,6 +125,9 @@ def main():
             ("proof-token-scan", ROOT, ["bash", "-c", 'rc=0; grep -rnw sorry --include="*.lean" --exclude-dir=.lake packages || rc=$?; test "$rc" -eq 1'], 60),
             ("private-key-scan", ROOT, ["bash", "-c", 'rc=0; grep -rEn --exclude-dir=.lake "[tuvxyzUVYZ]prv[1-9A-HJ-NP-Za-km-z]{100,}" packages || rc=$?; test "$rc" -eq 1'], 60),
         ]
+    if selected:
+        assert len(selected) == len(set(selected)) and set(selected) <= {c[0] for c in checks}, "known distinct campaign names"
+        checks = [c for c in checks if c[0] in selected]
     records = []
     for name, cwd, args, limit in checks:
         start = time.monotonic()

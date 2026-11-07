@@ -94,7 +94,7 @@ def mutations():
                  ["injected"], assertion)
     dispatch("descriptor-directory", "    if args.descriptor.isSome && args.rpc.bitcoinDir.isSome then",
              "    if false then", ["injected"], "move injected bdk")
-    maximum = '    let maximum ← match args.maxAmount.mapM MoveUtxos.maximum with\n      | .error e => return .error e\n      | .ok maximum => pure maximum\n'
+    maximum = '    let maximumResult ← match args.maxAmount with\n      | none => pure (.ok none)\n      | some text => do pure ((← maximumWith services text).map some)\n    let maximum ← match maximumResult with\n      | .error e => return .error e\n      | .ok maximum => pure maximum\n'
     client = '    let client ← try services.coreClient args.rpc catch _ =>\n      return .error (.onchain "rpcTransport: Cannot initialize Core client")\n'
     for name in ["fiat", "floor"]:
         dispatch("maximum-before-client-"+name, maximum+client, client+maximum,
