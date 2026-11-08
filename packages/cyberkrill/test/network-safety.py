@@ -45,9 +45,12 @@ def invoice_controls():
     for amount in ["1BTC", "100sat", "1000sats", "100msat", "100msats"]:
         for options in [[], ["--comment", "USD", "--output=report.com"],
                         ["-cUSD", "-oreport.com"], ["--comment=USD", "-o", "report.com"]]:
-            rows.append(["ln-generate-invoice", *options, "user@example.com", amount])
-    rows += [["ln-generate-invoice", "user@example.org", "-c", "USD", "--", "1000sats"],
-             ["ln-generate-invoice", "--", "user@example.net", "1000sats"]]
+            # The literal address builder accepts this path text in the domain.
+            # Its target stays loopback, and the .com suffix detects a guard
+            # that accidentally classifies the ADDRESS as a fiat AMOUNT.
+            rows.append(["ln-generate-invoice", *options, "user@127.0.0.1:18444/synthetic.com", amount])
+    rows += [["ln-generate-invoice", "user@127.0.0.1:18444", "-c", "USD", "--", "1000sats"],
+             ["ln-generate-invoice", "--", "user@127.0.0.1:18444", "1000sats"]]
     assert len(rows) == 22, "invoice permission inventory"
     return rows
 
@@ -143,12 +146,13 @@ def spawn_checks(only=None):
         accepted += [args for _, args, allowed in encoded_controls() if allowed] + invoice_controls()
         for index, args in enumerate(accepted):
             if only is not None and only != f"allowed/{index}": continue
+            stub = ("https" if args[0] == "ln-generate-invoice" else "http") + "://127.0.0.1:18444"
             for boundary in ["port", *references]:
                 try:
                     if boundary == "port":
-                        network.checked_run(executable, args, stub_url="http://127.0.0.1:18444", timeout=5, check=True)
+                        network.checked_run(executable, args, stub_url=stub, timeout=5, check=True)
                     else:
-                        generator.run([str(boundary), *args], reference=True, stub_url="http://127.0.0.1:18444", timeout=5)
+                        generator.run([str(boundary), *args], reference=True, stub_url=stub, timeout=5)
                 except ValueError:
                     raise AssertionError("spawn permitted sentinel starts: " + str(index)) from None
                 assert sentinel.exists(), "spawn permitted sentinel starts: " + str(index)

@@ -46,6 +46,138 @@ invite encoding and PSBT inspection. Phase 8b adds Core UTXO listing and the
 public frozenkrill reader. Phase 8c adds Core PSBT creation, funded PSBT creation and UTXO consolidation;
 `plan.md` is the plan for v1.
 
+## Phase 9b: Lightning address invoice requests
+
+`ln-generate-invoice ADDRESS AMOUNT [-c COMMENT] [-o FILE]` requests an invoice
+through LNURL-pay. It opens the ordinary JSON writer first, converts Bitcoin or
+fiat amounts at Millisat precision, fetches the HTTPS well-known endpoint, checks
+the inclusive msat range and optional comment limit in UTF-8 bytes, then fetches
+the callback and decodes its BOLT11 invoice. It never pays an invoice. Fiat uses
+the existing nine feeds, exact arithmetic, diagnostics and invocation-local quotes;
+Bitcoin amounts fetch no prices. At the synthetic price 100,000,000 per BTC,
+2.000499, 2.0005 and 2.000501 USD request 2000, 2001 and 2001 msat.
+
+The five output fields are `lightning_address`, `amount_msats`, `comment`,
+`invoice` and `decoded_invoice`. An absent comment is null; an explicitly empty
+comment stays empty and is sent as `comment=`. Output is pretty JSON with no
+added newline, on stdout or the retained open file handle. Later failures leave
+the output file created or truncated. Output-open failures precede conversion
+and network activity; final write failures remain errors on stderr.
+
+Callback serialization reuses the approved HTTP(S), ASCII-host/plain-dotted-IPv4
+subset. It normalizes scheme, host, default ports and path segments, preserves
+the original query pairs (including duplicates and order), appends `amount` then
+optional `comment`, and retains the fragment outside the query. Form encoding
+uses `+` for spaces, `%2B` for literal plus and UTF-8 byte escapes. An existing
+trailing `&` is preserved before the additional pair separator, as in
+`form_urlencoded` 1.2.2. Existing LNURL decode projections are unchanged.
+
+The initial well-known URL uses the same normalization without adding callback
+query fields. The literal address builder and original `lightning_address` echo
+are preserved: `user name@127.0.0.1:19443` requests
+`/.well-known/lnurlp/user%20name`. Both GET flows follow 301, 302, 303, 307 and 308
+redirects within the approved URL subset, resolving relative Location values
+against the current request. Ten redirects are allowed; another redirect fails
+before its target is requested. Missing or invalid URI-reference Location values
+leave the response available for JSON parsing, as do other statuses. Each hop
+uses the same bounded transport and guarded test capability. Invalid
+Location controls include unescaped bracketed path/query text and nondigit
+ports, derived from [iri-string 0.7.10's URI-reference grammar](https://docs.rs/crate/iri-string/0.7.10/source/src/parser/validate.rs). A resolved URI
+that cannot form an absolute HTTP GET fails before transport, matching the
+pinned HTTP client's requirement. Resolved redirects retain URI
+authority/query spelling and discard the fragment before requesting the target;
+the callback's amount and comment are appended once before redirect handling.
+The raw-query replay combines relative path resolution with `note='raw'`.
+
+Redirect expectations are hand-derived from reqwest 0.12.28's
+[`redirect.rs`](https://github.com/seanmonstar/reqwest/blob/v0.12.28/src/redirect.rs)
+and tower-http 0.6.8's
+[`follow_redirect`](https://github.com/tower-rs/tower-http/blob/tower-http-0.6.8/tower-http/src/follow_redirect/mod.rs):
+the five GET-preserving statuses, RFC URI-reference resolution, no follow on
+missing/invalid Location, and `Policy::limited(10)`'s eleven total requests on a
+loop. Script-generated synthetic redirect replies are our own; the independently
+pinned base fixtures and invoice expectations remain unchanged.
+
+`test/generate-invoice.py` is registered in `lake test`. Its 63 cases make 64
+invocations against the owned TLS responder on fixed port 19443, including a
+same-process repeat proving fresh quotes. It asserts complete exact JSON,
+ordered well-known/callback GET paths and counts, no callback after early failure,
+both range endpoints, comment byte boundaries, missing/empty comments, absent/null
+limits, malformed replies/addresses/callbacks/invoices, fiat rounding and quorum
+failure, Bitcoin-only no-price-fetch, writer/file/open-handle behavior, aliases,
+and transport failures. The added cases cover normalized initial requests in
+both invocation modes, all five redirect statuses, relative callback redirects,
+ten-hop success, loop failure, missing/invalid Location, a nonredirect status,
+and unsafe or unsupported destinations. It also checks 11 parser/help cases,
+three injected writer ordering cases, six pre-spawn refusals, one in-process
+guard, four injected initial refusals, one injected redirect refusal before
+transport, normalization-error refusal before output acquisition and fixed-port collision refusal. Pure Lightning tests add eight
+callback serialization cases, three request normalization cases, nineteen URI-resolution cases and two HTTP-URI
+checks and two sets of five subset refusals. Seventeen compiled runtime
+mutations detect range, inclusive maximum, comment bytes, original query, form
+encoding, Millisat conversion, trailing-query separation, dispatch, initial
+normalization, initial/callback following, redirect limits, relative resolution,
+redirect guarding, URI syntax, raw redirect queries and initial-normalization
+guard failures before output acquisition, with exact restoration and passing reruns in
+`test/golden/ln-generate-mutation-record.json`.
+
+The own synthetic well-known, callback and ERROR wrappers are in
+`test/http/ln-generate.json`, based on our Phase 5 LNURL models. The invoice is
+the existing published BOLT #11 L410 example. Attribution, CC-BY-4.0 extraction
+notes and fixture hashes are in `test/http/ln-generate.provenance.json`.
+Expectations are hand-derived from
+[cyberkrill decoder.rs at 27cad1f](https://github.com/douglaz/cyberkrill/blob/27cad1faba86260b06665a89f0af5134d23525c2/cyberkrill-core/src/decoder.rs#L495)
+and its writer in `main.rs:1286`; the decoded invoice reuses the pinned pure
+`valid/L410` capture. Callback strings are independently derived from `url` 2.5.7
+and `form_urlencoded`, never from the new serializer. The reference network
+generation handler is never called. No additional numeric delta kind is needed.
+
+### Deltas taken for invoice requests
+
+Each LNURL GET has a 1000 ms connect deadline, 2000 ms total deadline and inclusive
+1 MiB body limit; the reference has no explicit timeout. The local replay delays
+an actual response by 3000 ms and observes a timeout under five seconds, rejects
+a 1 MiB plus one byte body and rejects an untrusted TLS certificate. This tested
+bound is not a universal latency guarantee. The existing narrow URL and exact
+number exceptions continue to apply.
+
+The reference's permissive checks are retained: no required `payRequest` tag,
+special interpretation of `status: ERROR`, HTTP-success requirement,
+requested/invoice amount equality, metadata-hash validation or invoice-network
+restriction. ERROR-shaped bodies lacking the required fields fail generically.
+The acceptance control uses an unchecked tag, unrelated metadata, an invoice for
+a different amount and a 503 status. Deferred URL decisions and the documented
+late-signal supervision limitation remain unchanged.
+
+Validation ran through `test/gate.py`, `test/validate.py` and the existing process
+ownership helper, in the foreground with separate complete streams and statuses.
+Each child had an owned `TMPDIR`, restored explicitly after `nix develop`.
+For the evidence command below, `TMP_ROOT` denotes that owned temporary directory.
+
+| Final command | Directory | Exit | Observation |
+|---|---|---|---|
+| `nix develop -c lake build`; `nix develop -c lake test` | `packages/lightning` | 0; 0 | Existing vectors and axiom gate retained; callback serialization 8/8, request normalization 3/3, redirect resolution 19/19 and subset refusals 5/5 each. |
+| `nix develop -c lake build`; `nix develop -c lake test` | `packages/cyberkrill` | 0; 0 | Complete registered app suite, including LNURL 63/63 cases and 64/64 invocations. |
+| `nix develop -c env TMPDIR="$TMP_ROOT" python3 -B packages/cyberkrill/test/validate.py evidence` | root | 0 | 40/40 checks, including current source/evidence bindings, scope and lifecycle shapes, exact comparators and retained replays. |
+| `nix flake check -L` | root | 0 | All seven package build/test pairs and the link checks. |
+| `nix build -L` | root | 0 | Normal reuse after the flake check; installed version, Lightning, offline and RPC checks also exit 0. |
+| `nix build --rebuild -L` | root | 0 | Actual fresh sandbox execution, including LNURL 63/63 cases, 64/64 invocations, delayed timeout and callback tests; zero `SKIP` results. |
+| Explicit native-decision, proof-token and private-key scans in `validate.py repo` | root | 0 each | 86/86 tracked library/proof files, zero native-decision offenders; proof and private-key scans empty. |
+
+The actual sequential campaigns also completed with exit 0: invoice requests
+(17 compiled detections), fiat consumers (6), prices (36), move (56), creation
+(57), listing (63), lexical listing (9), listing lifecycle (34 boundaries), and
+Core client/capture/safety (68 compiled selections plus 213 safety selections).
+The affected retained, Lightning, revision, regression, output, attached-output
+and offline refresh commands all exited 0; the offline campaign retains 67
+mutations and 125 selected runtime checks. Their latest evidence records bind
+the exact commands, definitions, detecting assertions, restored green results
+and current sources. Reference captures and provenance stay independently pinned.
+The scope gate retains all 59 issue identities, all 58 unrelated raw records,
+and rejects 42/42 unrelated edits. Refreshed records contain no added history or
+growth beyond one completed run. No required implementation check remains unrun;
+acceptance judgement and tracker finalization are separate from these gates.
+
 ## Phase 9a: exact fiat conversion and nine price feeds
 
 `convert-amount` accepts Bitcoin amounts locally and fiat amounts such as

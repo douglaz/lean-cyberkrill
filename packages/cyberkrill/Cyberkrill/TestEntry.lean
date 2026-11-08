@@ -37,7 +37,7 @@ private def concealedTarget : Nat → String → Bool
     if decoded != token && concealedTarget fuel decoded then return true
     return (encodedMaterial token).any (concealedTarget fuel)
 
-def permitted (url : String) : Bool := Id.run do
+def permitted (url : String) (allowPathSpace : Bool := false) : Bool := Id.run do
   let .ok parts := Lightning.Lnurl.parseUrl url | return false
   unless parts.host == "127.0.0.1" do return false
   let startText := parts.scheme ++ "://127.0.0.1:"
@@ -52,7 +52,7 @@ def permitted (url : String) : Bool := Id.run do
   let mut decoded := rest
   for _ in [:5] do
     if decoded.contains '@' || decoded.contains '\\' ||
-        !decoded.toList.all (fun c => c.toNat > 32) || (decoded.splitOn "://").length != 1 then return false
+        !decoded.toList.all (fun c => c.toNat > 32 || (allowPathSpace && c == ' ')) || (decoded.splitOn "://").length != 1 then return false
     let .ok bytes := Lightning.Lnurl.percentDecode decoded true | return false
     let some next := String.fromUTF8? bytes | return false
     if next == decoded then return !(encodedMaterial decoded).any (concealedTarget 5)
@@ -81,6 +81,13 @@ def validate (urls : TestUrls) (args : List String) : Except Error Unit := do
       (urls.feedBases ++ #[urls.coinGeckoHistory, urls.dcaRpc]).all (fun url => permitted url && !forbiddenPort url) do
     throw (.onchain "testUrlRefused: Complete explicit loopback URLs with permitted ports are required")
   if args.any forbiddenPort then throw (.onchain "testArgRefused: Default RPC port is forbidden")
+  if args.head? == some "ln-generate-invoice" then
+    if let .ok (.generateInvoice address _ _ _) := parseCommand args then
+      if let .ok raw := Lightning.lightningAddressUrl address then
+        match Lightning.Lnurl.normalizeUrl raw with
+        | .error _ => throw (.onchain "testLnurlRefused: Explicit loopback Lightning address is required")
+        | .ok url =>
+          unless permitted url true do throw (.onchain "testLnurlRefused: Explicit loopback Lightning address is required")
   if ["onchain-list-utxos", "onchain-create-psbt", "onchain-create-funded-psbt", "onchain-move-utxos"].contains (args.head?.getD "") then
     let mut found := false
     let mut pending := false
@@ -112,7 +119,11 @@ def runWithTestUrls (version : String) (urls : TestUrls) (args : List String)
   let services := { services with
     stdout := fun s => out.modify (· ++ s)
     stderr := fun s => err.modify (· ++ s)
-    price := fun currency => PriceFeed.fetch currency urls.feedBases request }
+    price := fun currency => PriceFeed.fetch currency urls.feedBases request
+    lnurlRequest := fun req => do
+      unless TestUrls.permitted req.url true && !TestUrls.forbiddenPort req.url do
+        return .error (.curl 43 "Test LNURL target refused")
+      request req }
   let status ← match urls.validate args with
     | .error e => reportError services e
     | .ok _ => runWith version services args

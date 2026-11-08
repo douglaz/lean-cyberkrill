@@ -98,6 +98,35 @@ def refuse_spawn(args, stub_url=None):
             else:
                 positional.append(token)
         amounts.extend(positional[1:2])
+        if positional:
+            parts = positional[0].split("@")
+            # Malformed addresses fail before any transport. A well-formed one
+            # must target this invocation's owned TLS stub, including its port.
+            if len(parts) == 2 and all(parts):
+                try:
+                    assembled = "https://" + parts[1] + "/.well-known/lnurlp/" + parts[0]
+                    parsed = urlsplit(assembled)
+                    expected = urlsplit(stub_url or "")
+                    valid = (parsed.scheme == expected.scheme == "https" and
+                             parsed.hostname == expected.hostname == "127.0.0.1" and
+                             parsed.port == expected.port and parsed.port not in {None,0,8332} and
+                             parsed.username is None and parsed.password is None and
+                             "\\" not in assembled and all(ord(c)>=32 for c in assembled))
+                    # Permit path spaces, but never concealed targets. Match the
+                    # guarded entry's finite decoding and embedded-material rule.
+                    material = assembled.split(parsed.netloc,1)[1]
+                    for _ in range(5):
+                        if any("@" in value or "\\" in value or "://" in value or
+                               any(ord(c)<32 for c in value) for value in url_material(material)):
+                            valid = False
+                            break
+                        decoded = unquote(material)
+                        if decoded == material: break
+                        material = decoded
+                    else: valid = False
+                except ValueError:
+                    valid = False
+                if not valid: raise ValueError("spawn refused: explicit stub Lightning address required")
     if any(fiat(value) for value in amounts):
         raise ValueError("spawn refused: hardcoded fiat endpoints")
 

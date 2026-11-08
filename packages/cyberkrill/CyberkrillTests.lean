@@ -14,6 +14,7 @@ import CyberkrillTests.PsbtCommands
 import CyberkrillTests.MoveUtxos
 import CyberkrillTests.PriceFeed
 import CyberkrillTests.FiatOnchain
+import CyberkrillTests.GenerateInvoice
 
 open CyberkrillTests
 
@@ -32,6 +33,8 @@ private def suite (name : String) (action : IO Unit) : IO Unit := do
 def main (args : List String) : IO UInt32 := do
   try
     match args with
+    | ["--generate-invoice-run"] => generateInvoiceRun
+    | ["--generate-invoice-ordering"] => generateInvoiceOrdering
     | ["--fiat-onchain-run"] => fiatOnchainRun
     | ["--price-evaluate"] => priceEvaluate
     | ["--price-run"] => priceRun
@@ -67,6 +70,12 @@ def main (args : List String) : IO UInt32 := do
       outputEquals i
     | ["--check", name] => helpers name; capabilities name
     | [] =>
+      suite "LNURL invoice replay" do
+        generateInvoiceOrdering
+        let result ← IO.Process.output { cmd := "python3", args := #["-B", "test/generate-invoice.py"] }
+        (← IO.getStdout).putStr result.stdout
+        (← IO.getStderr).putStr result.stderr
+        check "LNURL invoice replay" (result.exitCode == 0)
       suite "price guards" priceGuards
       suite "price tasks" priceTasks
       suite "price feed replay" do

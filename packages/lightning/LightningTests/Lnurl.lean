@@ -120,6 +120,57 @@ def measurements : IO Unit := do
   IO.println "JSON measurements: 7/7"
 
 def run (selector : Option String := none) : IO Unit := do
+  if selector.isNone || selector == some "callback-url" then
+    let rows : List (String × Nat × Option String × String) := [
+      ("HTTPS://EXAMPLE.COM:00443/p?q=a+b&%61=first&a=last#frag", 123, some "a + café",
+        "https://example.com/p?q=a+b&%61=first&a=last&amount=123&comment=a+%2B+caf%C3%A9#frag"),
+      ("http://EXAMPLE.COM:080", 0, none, "http://example.com/?amount=0"),
+      ("https://example.com:00081/a/../b/./c", 1, some "", "https://example.com:81/b/c?amount=1&comment="),
+      ("https://example.com/a/%2E%2e/b?x=1&x=2&", 2, none, "https://example.com/b?x=1&x=2&&amount=2"),
+      ("https://example.com/a\\b?q='é#frag ment", 3, some "~!*()",
+        "https://example.com/a/b?q=%27%C3%A9&amount=3&comment=%7E%21*%28%29#frag%20ment"),
+      ("https://example.com/?#", 4, none, "https://example.com/?amount=4#"),
+      ("https://example.com//a//b/..", 5, none, "https://example.com//a//?amount=5"),
+      ("https://example.com/a b/é?x=%ZZ&x=%FF#?x", 6, none,
+        "https://example.com/a%20b/%C3%A9?x=%ZZ&x=%FF&amount=6#?x")]
+    check "callback URL count" (rows.length == 8)
+    for (url, amount, comment, expected) in rows do
+      check ("callback URL " ++ url) ((Lnurl.callbackUrl url amount comment).toOption == some expected)
+    for url in ["ftp://example.com/", "https://[::1]/", "https://127.1/", "https://a@b/", "https://é.example/"] do
+      check "callback URL subset refusal" (!(Lnurl.callbackUrl url 1 none).isOk)
+    IO.println "callback URL serialization: 8/8; subset refusals: 5/5"
+    let requests := [
+      ("HTTPS://EXAMPLE.COM:00443/.well-known/lnurlp/user name", "https://example.com/.well-known/lnurlp/user%20name"),
+      ("https://example.com/a/../b?q=1&q=2#x y", "https://example.com/b?q=1&q=2#x%20y"),
+      ("http://EXAMPLE.COM:080?", "http://example.com/?")]
+    check "request normalization count" (requests.length == 3)
+    for (source, expected) in requests do
+      check ("request normalization " ++ source) ((Lnurl.normalizeUrl source).toOption == some expected)
+    let redirects : List (String × Option String) := [
+      ("../done?x=1&x=2", some "https://example.com/done?x=1&x=2"),
+      ("./done", some "https://example.com/a/done"),
+      ("/done", some "https://example.com/done"),
+      ("//OTHER.EXAMPLE:443/done", some "https://OTHER.EXAMPLE:443/done"),
+      ("http://EXAMPLE.COM:80/done", some "http://EXAMPLE.COM:80/done"),
+      ("?q=2", some "https://example.com/a/b?q=2"),
+      ("#new", some "https://example.com/a/b?q=1"),
+      ("", some "https://example.com/a/b?q=1"),
+      ("/bad path", none), ("/bad%ZZ", none), ("é", none),
+      ("/bad[x]", none), ("/pay?q=[x]", none), ("#x#y", none),
+      ("https:/foo", none), ("https://127.0.0.1:bad/pay", none), ("//", none),
+      ("./keep/%2e%2e/finished?amount=2000&note='raw'", some "https://example.com/a/finished?amount=2000&note='raw'"),
+      ("?note='raw'", some "https://example.com/a/b?note='raw'")]
+    check "redirect resolution count" (redirects.length == 19)
+    for (location, expected) in redirects do
+      check ("redirect resolution " ++ location)
+        ((Lnurl.resolveRedirect "https://example.com/a/b?q=1#old" location).toOption == some expected)
+    for location in ["ftp://example.com/", "https://[::1]/", "https://127.1/", "https://a@b/", "https://xn--x.example/"] do
+      check "redirect subset refusal" (!(Lnurl.resolveRedirect "https://example.com/" location).isOk)
+    check "redirect absolute HTTP URI required"
+      (!(Lnurl.resolveRedirect "https://example.com/" "https:foo").isOk)
+    check "redirect base URI syntax"
+      ((Lnurl.resolveRedirect "https://example.com/a[b]" "/done").toOption == some none)
+    IO.println "request URL normalization: 3/3; redirect resolution: 19/19; redirect subset refusals: 5/5; HTTP URI checks: 2/2"
   let json ← getOk "LNURL fixture JSON" (Lean.Json.parse (← IO.FS.readFile "test-data/lnurl.json"))
   let reference ← getOk "reference JSON" (Lean.Json.parse (← IO.FS.readFile "test-data/lnurl-reference.json"))
   for (set, count) in [("url-supported", 35), ("url-refusal", 13), ("url-error", 23),

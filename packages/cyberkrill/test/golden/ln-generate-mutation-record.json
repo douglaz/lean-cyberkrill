@@ -1,0 +1,1007 @@
+{
+  "source_sha256": {
+    "Cyberkrill/App.lean": "b733b974f3aaf929ab7c8086d1f8ed0438cc0abc9ff49992008d7cdc4d12f0a2",
+    "Cyberkrill/GenerateInvoice.lean": "304048a8273fc036bc9d23efd1347507fd7eac375ed46c47f666759695b607d7",
+    "Cyberkrill/TestEntry.lean": "fd05678593e99380b4269e4deb58815bd7e6e4cae93e48a8d14152bfb0d0bae5",
+    "CyberkrillTests/GenerateInvoice.lean": "5ebf3a0a6ad5e197d2458a005ed0a8a90e87e1dedaf87a48da2d320c665f96e9",
+    "CyberkrillTests.lean": "fa8145e57e7ae2b4b1a0d88c8fcf67af4c40c63d379da398ee9b69f4f2ef2896",
+    "../lightning/Lightning/Lnurl/Url.lean": "0ad023cf3a5dfa255ba7504fd742341ed6aefab30620df5eb99d44af542ca31a",
+    "test/generate-invoice.py": "4f19567b890cb18f35a410caa8902425692d899b9a6358083a6e19abd5de616b",
+    "test/generate-invoice-mutations.py": "b8742c51a7bb7c497cf4fcf08b27ee666bd0133e7a3d02f00943387b4a79f425",
+    "test/network.py": "3a5b3f894949631e715a89b53f978ca888184ea22dacc6ed1213fcac37e132a8",
+    "test/price-mutations.py": "7d64067f00df09ec76a8f944e78e1d1f2af8b058321e7d5078f6aa2f15e94506",
+    "test/http/ln-generate.json": "a504d9075ce81633032192b58f291020eae5bc8159f522901772f1d5f3cb3e57",
+    "test/http/ln-generate-expected.json": "247becffa0ab687377b7d36302d854d97552cdb796b280a838743f3ec7f6dfe3",
+    "test/http/ln-generate.provenance.json": "ada0d52d09e786f10e54031e5d5f2303201f1d81060ecd8345c53de0dcf0c120"
+  },
+  "initial_build": {
+    "command": [
+      "lake",
+      "build",
+      "cyberkrill",
+      "CyberkrillTests"
+    ],
+    "status": 0,
+    "seconds": 0.407
+  },
+  "initial_green": {
+    "command": [
+      "python3",
+      "-B",
+      "test/generate-invoice.py"
+    ],
+    "status": 0,
+    "seconds": 11.059
+  },
+  "checks": [
+    {
+      "property": "minimum-range",
+      "file": "Cyberkrill/GenerateInvoice.lean",
+      "replace": "amount.msat < pay.minSendable.msat",
+      "with_text": "false",
+      "command": [
+        "python3",
+        "-B",
+        "test/generate-invoice.py",
+        "--probe",
+        "below"
+      ],
+      "assertion": "LNURL refusal below",
+      "failure": "AssertionError: LNURL refusal below: {'status': 1, 'stdout': '', 'stderr': 'malformedResponse \"pr\": Invalid Lightning input\\n'}",
+      "build": {
+        "command": [
+          "lake",
+          "build",
+          "cyberkrill",
+          "CyberkrillTests"
+        ],
+        "status": 0,
+        "seconds": 12.319
+      },
+      "red": {
+        "command": [
+          "python3",
+          "-B",
+          "test/generate-invoice.py",
+          "--probe",
+          "below"
+        ],
+        "status": 1,
+        "seconds": 0.441
+      },
+      "restore_build": {
+        "command": [
+          "lake",
+          "build",
+          "cyberkrill",
+          "CyberkrillTests"
+        ],
+        "status": 0,
+        "seconds": 12.231
+      },
+      "green": {
+        "command": [
+          "python3",
+          "-B",
+          "test/generate-invoice.py",
+          "--probe",
+          "below"
+        ],
+        "status": 0,
+        "seconds": 0.397
+      }
+    },
+    {
+      "property": "inclusive-maximum",
+      "file": "Cyberkrill/GenerateInvoice.lean",
+      "replace": "amount.msat > pay.maxSendable.msat",
+      "with_text": "amount.msat >= pay.maxSendable.msat",
+      "command": [
+        "python3",
+        "-B",
+        "test/generate-invoice.py",
+        "--probe",
+        "maximum"
+      ],
+      "assertion": "LNURL success maximum",
+      "failure": "AssertionError: LNURL success maximum: {'status': 1, 'stdout': '', 'stderr': 'Amount 3000 msats is outside allowed range: 1000 - 3000 msats: Invalid Lightning input\\n'}; observed paths=['/.well-known/lnurlp/user']",
+      "build": {
+        "command": [
+          "lake",
+          "build",
+          "cyberkrill",
+          "CyberkrillTests"
+        ],
+        "status": 0,
+        "seconds": 12.014
+      },
+      "red": {
+        "command": [
+          "python3",
+          "-B",
+          "test/generate-invoice.py",
+          "--probe",
+          "maximum"
+        ],
+        "status": 1,
+        "seconds": 0.436
+      },
+      "restore_build": {
+        "command": [
+          "lake",
+          "build",
+          "cyberkrill",
+          "CyberkrillTests"
+        ],
+        "status": 0,
+        "seconds": 12.11
+      },
+      "green": {
+        "command": [
+          "python3",
+          "-B",
+          "test/generate-invoice.py",
+          "--probe",
+          "maximum"
+        ],
+        "status": 0,
+        "seconds": 0.437
+      }
+    },
+    {
+      "property": "comment-utf8-bytes",
+      "file": "Cyberkrill/GenerateInvoice.lean",
+      "replace": "text.toUTF8.size > limit",
+      "with_text": "text.length > limit",
+      "command": [
+        "python3",
+        "-B",
+        "test/generate-invoice.py",
+        "--probe",
+        "byte-over"
+      ],
+      "assertion": "LNURL refusal byte-over",
+      "failure": "AssertionError: LNURL refusal byte-over: {'status': 0, 'stdout': '{\"lightning_address\": \"user@127.0.0.1:19443\",\\n \"invoice\":\\n \"lnbc2500u1pvjluezsp5zyg3zyg3zyg3zyg3zyg3zyg3zyg3zyg3zyg3zyg3zyg3zyg3zygspp5qqqsyqcyq5rqwzqfqqqsyqcyq5rqwzqfqqqsyqcyq5rqwzqfqypqdq5xysxxatsyp3k7enxv4jsxqzpu9qrsgquk0rl77nj30yxdy8j9vdx85fkpmdla2087ne0xh8nhedh8w27kyke0lp53ut353s06fv3qfegext0eh0ymjpf39tuven09sam30g4vgpfna3rh\",\\n \"decoded_invoice\":\\n {\"timestamp_millis\": 1496314658000,\\n  \"timestamp\": \"2017-06-01T10:57:38Z\",\\n  \"routes\": [],\\n  \"payment_secret\":\\n  \"1111111111111111111111111111111111111111111111111111111111111111\",\\n  \"payment_hash\":\\n  \"0001020304050607080900010203040506070809000102030405060708090102\",\\n  \"network\": \"bitcoin\",\\n  \"min_final_cltv_expiry\": 18,\\n  \"features\":\\n  [{\"payment_secret\": \"required\"}, {\"variable_length_onion\": \"required\"}],\\n  \"fallback_addresses\": [],\\n  \"expiry_seconds\": 60,\\n  \"destination\":\\n  \"03e7156ae33b0a208d0744199163177e909e80176e55d97a2f221ede0f934dd9ad\",\\n  \"description_hash\": null,\\n  \"description\": \"1 cup coffee\",\\n  \"amount_msats\": 250000000},\\n \"comment\": \"\u00e9\u00e9\u00e9\u00e9\u00e9\u00e9\u00e9\u00e9a\",\\n \"amount_msats\": 2000}', 'stderr': ''}",
+      "build": {
+        "command": [
+          "lake",
+          "build",
+          "cyberkrill",
+          "CyberkrillTests"
+        ],
+        "status": 0,
+        "seconds": 12.122
+      },
+      "red": {
+        "command": [
+          "python3",
+          "-B",
+          "test/generate-invoice.py",
+          "--probe",
+          "byte-over"
+        ],
+        "status": 1,
+        "seconds": 0.39
+      },
+      "restore_build": {
+        "command": [
+          "lake",
+          "build",
+          "cyberkrill",
+          "CyberkrillTests"
+        ],
+        "status": 0,
+        "seconds": 12.116
+      },
+      "green": {
+        "command": [
+          "python3",
+          "-B",
+          "test/generate-invoice.py",
+          "--probe",
+          "byte-over"
+        ],
+        "status": 0,
+        "seconds": 0.437
+      }
+    },
+    {
+      "property": "original-query",
+      "file": "../lightning/Lightning/Lnurl/Url.lean",
+      "replace": "let query := originalQuery.getD \"\"",
+      "with_text": "let query := (originalQuery.map (fun _ => \"\")).getD \"\"",
+      "command": [
+        "python3",
+        "-B",
+        "test/generate-invoice.py",
+        "--probe",
+        "sats"
+      ],
+      "assertion": "LNURL success sats",
+      "failure": "AssertionError: LNURL success sats: {'status': 1, 'stdout': '', 'stderr': 'malformedResponse \"pr\": Invalid Lightning input\\n'}; observed paths=['/.well-known/lnurlp/user', '/pay?amount=2000']",
+      "build": {
+        "command": [
+          "lake",
+          "build",
+          "cyberkrill",
+          "CyberkrillTests"
+        ],
+        "status": 0,
+        "seconds": 17.015
+      },
+      "red": {
+        "command": [
+          "python3",
+          "-B",
+          "test/generate-invoice.py",
+          "--probe",
+          "sats"
+        ],
+        "status": 1,
+        "seconds": 0.436
+      },
+      "restore_build": {
+        "command": [
+          "lake",
+          "build",
+          "cyberkrill",
+          "CyberkrillTests"
+        ],
+        "status": 0,
+        "seconds": 16.912
+      },
+      "green": {
+        "command": [
+          "python3",
+          "-B",
+          "test/generate-invoice.py",
+          "--probe",
+          "sats"
+        ],
+        "status": 0,
+        "seconds": 0.438
+      }
+    },
+    {
+      "property": "form-encoding",
+      "file": "../lightning/Lightning/Lnurl/Url.lean",
+      "replace": "\"&comment=\" ++ formEncode s",
+      "with_text": "\"&comment=\" ++ s",
+      "command": [
+        "python3",
+        "-B",
+        "test/generate-invoice.py",
+        "--probe",
+        "unicode"
+      ],
+      "assertion": "LNURL success unicode",
+      "failure": "AssertionError: LNURL success unicode: {'status': 1, 'stdout': '', 'stderr': 'lnurlTransport: HttpCurl.Error.curl 3 \"URL using bad/illegal format or missing URL\": Invalid Lightning input\\n'}; observed paths=['/.well-known/lnurlp/user']",
+      "build": {
+        "command": [
+          "lake",
+          "build",
+          "cyberkrill",
+          "CyberkrillTests"
+        ],
+        "status": 0,
+        "seconds": 16.82
+      },
+      "red": {
+        "command": [
+          "python3",
+          "-B",
+          "test/generate-invoice.py",
+          "--probe",
+          "unicode"
+        ],
+        "status": 1,
+        "seconds": 0.388
+      },
+      "restore_build": {
+        "command": [
+          "lake",
+          "build",
+          "cyberkrill",
+          "CyberkrillTests"
+        ],
+        "status": 0,
+        "seconds": 16.713
+      },
+      "green": {
+        "command": [
+          "python3",
+          "-B",
+          "test/generate-invoice.py",
+          "--probe",
+          "unicode"
+        ],
+        "status": 0,
+        "seconds": 0.386
+      }
+    },
+    {
+      "property": "trailing-query-separator",
+      "file": "../lightning/Lightning/Lnurl/Url.lean",
+      "replace": "if query.isEmpty then \"\" else \"&\"",
+      "with_text": "if query.isEmpty || query.endsWith \"&\" then \"\" else \"&\"",
+      "command": [
+        "python3",
+        "-B",
+        "test/generate-invoice.py",
+        "--probe",
+        "trailing-query"
+      ],
+      "assertion": "LNURL success trailing-query",
+      "failure": "AssertionError: LNURL success trailing-query: {'status': 1, 'stdout': '', 'stderr': 'malformedResponse \"pr\": Invalid Lightning input\\n'}; observed paths=['/.well-known/lnurlp/user', '/pay?dup=first&dup=last&flag&amount=2000']",
+      "build": {
+        "command": [
+          "lake",
+          "build",
+          "cyberkrill",
+          "CyberkrillTests"
+        ],
+        "status": 0,
+        "seconds": 16.82
+      },
+      "red": {
+        "command": [
+          "python3",
+          "-B",
+          "test/generate-invoice.py",
+          "--probe",
+          "trailing-query"
+        ],
+        "status": 1,
+        "seconds": 0.386
+      },
+      "restore_build": {
+        "command": [
+          "lake",
+          "build",
+          "cyberkrill",
+          "CyberkrillTests"
+        ],
+        "status": 0,
+        "seconds": 18.015
+      },
+      "green": {
+        "command": [
+          "python3",
+          "-B",
+          "test/generate-invoice.py",
+          "--probe",
+          "trailing-query"
+        ],
+        "status": 0,
+        "seconds": 0.387
+      }
+    },
+    {
+      "property": "millisat-precision",
+      "file": "Cyberkrill/App.lean",
+      "replace": "convertAmounts services #[parsed] .millisat",
+      "with_text": "convertAmounts services #[parsed] .wholeSat",
+      "command": [
+        "python3",
+        "-B",
+        "test/generate-invoice.py",
+        "--probe",
+        "fiat-at"
+      ],
+      "assertion": "LNURL success fiat-at",
+      "failure": "AssertionError: LNURL success fiat-at: {'status': Decimal('1'), 'stderr': '[price-feed] median BTC/USD = 100000000.00 from 9 feeds: bitstamp, blockchain.info, cex.io, coinbase, coingecko, fedi, gemini, kraken, yadio\\nmalformedResponse \"pr\": Invalid Lightning input\\n', 'stdout': ''}; observed paths=['/v2/exchange-rates?currency=BTC', '/ticker', '/v1/pubticker/btcusd', '/latest', '/api/v3/simple/price?ids=bitcoin&vs_currencies=usd', '/0/public/Ticker?pair=XBTUSD', '/api/ticker/BTC/USD', '/api/v2/ticker/btcusd', '/convert/1/BTC/USD', '/.well-known/lnurlp/user', '/pay?dup=first&dup=last&flag&amount=2000']",
+      "build": {
+        "command": [
+          "lake",
+          "build",
+          "cyberkrill",
+          "CyberkrillTests"
+        ],
+        "status": 0,
+        "seconds": 11.525
+      },
+      "red": {
+        "command": [
+          "python3",
+          "-B",
+          "test/generate-invoice.py",
+          "--probe",
+          "fiat-at"
+        ],
+        "status": 1,
+        "seconds": 0.635
+      },
+      "restore_build": {
+        "command": [
+          "lake",
+          "build",
+          "cyberkrill",
+          "CyberkrillTests"
+        ],
+        "status": 0,
+        "seconds": 11.83
+      },
+      "green": {
+        "command": [
+          "python3",
+          "-B",
+          "test/generate-invoice.py",
+          "--probe",
+          "fiat-at"
+        ],
+        "status": 0,
+        "seconds": 1.495
+      }
+    },
+    {
+      "property": "dispatch",
+      "file": "Cyberkrill/App.lean",
+      "replace": "return .generateInvoice address.value amount.value (flag \"comment\") (flag \"output\")",
+      "with_text": "return .decodeLnurl (some address.value) (flag \"output\")",
+      "command": [
+        "python3",
+        "-B",
+        "test/generate-invoice.py",
+        "--probe",
+        "sats"
+      ],
+      "assertion": "LNURL success sats",
+      "failure": "AssertionError: LNURL success sats: {'status': 1, 'stdout': '', 'stderr': 'wrongPrefix: Invalid Lightning input\\n'}; observed paths=[]",
+      "build": {
+        "command": [
+          "lake",
+          "build",
+          "cyberkrill",
+          "CyberkrillTests"
+        ],
+        "status": 0,
+        "seconds": 12.427
+      },
+      "red": {
+        "command": [
+          "python3",
+          "-B",
+          "test/generate-invoice.py",
+          "--probe",
+          "sats"
+        ],
+        "status": 1,
+        "seconds": 0.447
+      },
+      "restore_build": {
+        "command": [
+          "lake",
+          "build",
+          "cyberkrill",
+          "CyberkrillTests"
+        ],
+        "status": 0,
+        "seconds": 12.429
+      },
+      "green": {
+        "command": [
+          "python3",
+          "-B",
+          "test/generate-invoice.py",
+          "--probe",
+          "sats"
+        ],
+        "status": 0,
+        "seconds": 0.442
+      }
+    },
+    {
+      "property": "initial-url-normalization",
+      "file": "Cyberkrill/GenerateInvoice.lean",
+      "replace": "Lightning.lightningAddressUrl address >>= Lightning.Lnurl.normalizeUrl",
+      "with_text": "Lightning.lightningAddressUrl address",
+      "command": [
+        "python3",
+        "-B",
+        "test/generate-invoice.py",
+        "--probe",
+        "address-space"
+      ],
+      "assertion": "LNURL success address-space",
+      "failure": "AssertionError: LNURL success address-space: {'status': 1, 'stdout': '', 'stderr': 'lnurlTransport: HttpCurl.Error.curl 3 \"URL using bad/illegal format or missing URL\": Invalid Lightning input\\n'}; observed paths=[]",
+      "build": {
+        "command": [
+          "lake",
+          "build",
+          "cyberkrill",
+          "CyberkrillTests"
+        ],
+        "status": 0,
+        "seconds": 12.32
+      },
+      "red": {
+        "command": [
+          "python3",
+          "-B",
+          "test/generate-invoice.py",
+          "--probe",
+          "address-space"
+        ],
+        "status": 1,
+        "seconds": 0.389
+      },
+      "restore_build": {
+        "command": [
+          "lake",
+          "build",
+          "cyberkrill",
+          "CyberkrillTests"
+        ],
+        "status": 0,
+        "seconds": 12.537
+      },
+      "green": {
+        "command": [
+          "python3",
+          "-B",
+          "test/generate-invoice.py",
+          "--probe",
+          "address-space"
+        ],
+        "status": 0,
+        "seconds": 0.494
+      }
+    },
+    {
+      "property": "redirect-follow",
+      "file": "Cyberkrill/GenerateInvoice.lean",
+      "replace": "[301, 302, 303, 307, 308].contains response.status.toNat",
+      "with_text": "false",
+      "command": [
+        "python3",
+        "-B",
+        "test/generate-invoice.py",
+        "--probe",
+        "redirect-well-302"
+      ],
+      "assertion": "LNURL success redirect-well-302",
+      "failure": "AssertionError: LNURL success redirect-well-302: {'status': 1, 'stdout': '', 'stderr': 'malformedResponse: JSON: Invalid Lightning input\\n'}; observed paths=['/.well-known/lnurlp/user']",
+      "build": {
+        "command": [
+          "lake",
+          "build",
+          "cyberkrill",
+          "CyberkrillTests"
+        ],
+        "status": 0,
+        "seconds": 12.224
+      },
+      "red": {
+        "command": [
+          "python3",
+          "-B",
+          "test/generate-invoice.py",
+          "--probe",
+          "redirect-well-302"
+        ],
+        "status": 1,
+        "seconds": 0.389
+      },
+      "restore_build": {
+        "command": [
+          "lake",
+          "build",
+          "cyberkrill",
+          "CyberkrillTests"
+        ],
+        "status": 0,
+        "seconds": 12.309
+      },
+      "green": {
+        "command": [
+          "python3",
+          "-B",
+          "test/generate-invoice.py",
+          "--probe",
+          "redirect-well-302"
+        ],
+        "status": 0,
+        "seconds": 0.441
+      }
+    },
+    {
+      "property": "callback-redirect-follow",
+      "file": "Cyberkrill/GenerateInvoice.lean",
+      "replace": "[301, 302, 303, 307, 308].contains response.status.toNat",
+      "with_text": "false",
+      "command": [
+        "python3",
+        "-B",
+        "test/generate-invoice.py",
+        "--probe",
+        "redirect-callback"
+      ],
+      "assertion": "LNURL success redirect-callback",
+      "failure": "AssertionError: LNURL success redirect-callback: {'status': 1, 'stdout': '', 'stderr': 'malformedResponse: JSON: Invalid Lightning input\\n'}; observed paths=['/.well-known/lnurlp/user', '/pay?dup=first&dup=last&flag&amount=2000&comment=a+%2B+caf%C3%A9']",
+      "build": {
+        "command": [
+          "lake",
+          "build",
+          "cyberkrill",
+          "CyberkrillTests"
+        ],
+        "status": 0,
+        "seconds": 12.014
+      },
+      "red": {
+        "command": [
+          "python3",
+          "-B",
+          "test/generate-invoice.py",
+          "--probe",
+          "redirect-callback"
+        ],
+        "status": 1,
+        "seconds": 0.437
+      },
+      "restore_build": {
+        "command": [
+          "lake",
+          "build",
+          "cyberkrill",
+          "CyberkrillTests"
+        ],
+        "status": 0,
+        "seconds": 12.319
+      },
+      "green": {
+        "command": [
+          "python3",
+          "-B",
+          "test/generate-invoice.py",
+          "--probe",
+          "redirect-callback"
+        ],
+        "status": 0,
+        "seconds": 0.442
+      }
+    },
+    {
+      "property": "redirect-limit",
+      "file": "Cyberkrill/GenerateInvoice.lean",
+      "replace": "getResponse request url 10",
+      "with_text": "getResponse request url 9",
+      "command": [
+        "python3",
+        "-B",
+        "test/generate-invoice.py",
+        "--probe",
+        "redirect-ten"
+      ],
+      "assertion": "LNURL success redirect-ten",
+      "failure": "AssertionError: LNURL success redirect-ten: {'status': 1, 'stdout': '', 'stderr': 'lnurlTransport: redirectLimit: Invalid Lightning input\\n'}; observed paths=['/.well-known/lnurlp/user', '/hop/1', '/hop/2', '/hop/3', '/hop/4', '/hop/5', '/hop/6', '/hop/7', '/hop/8', '/hop/9']",
+      "build": {
+        "command": [
+          "lake",
+          "build",
+          "cyberkrill",
+          "CyberkrillTests"
+        ],
+        "status": 0,
+        "seconds": 12.336
+      },
+      "red": {
+        "command": [
+          "python3",
+          "-B",
+          "test/generate-invoice.py",
+          "--probe",
+          "redirect-ten"
+        ],
+        "status": 1,
+        "seconds": 0.436
+      },
+      "restore_build": {
+        "command": [
+          "lake",
+          "build",
+          "cyberkrill",
+          "CyberkrillTests"
+        ],
+        "status": 0,
+        "seconds": 12.526
+      },
+      "green": {
+        "command": [
+          "python3",
+          "-B",
+          "test/generate-invoice.py",
+          "--probe",
+          "redirect-ten"
+        ],
+        "status": 0,
+        "seconds": 0.536
+      }
+    },
+    {
+      "property": "redirect-relative-resolution",
+      "file": "../lightning/Lightning/Lnurl/Url.lean",
+      "replace": "String.intercalate \"/\" (pathBase.splitOn \"/\").dropLast",
+      "with_text": "origin",
+      "command": [
+        "python3",
+        "-B",
+        "test/generate-invoice.py",
+        "--probe",
+        "redirect-limit"
+      ],
+      "assertion": "LNURL refusal redirect-limit",
+      "failure": "AssertionError: LNURL refusal redirect-limit: {'status': 1, 'stdout': '', 'stderr': 'malformedResponse \"callback\": Invalid Lightning input\\n'}",
+      "build": {
+        "command": [
+          "lake",
+          "build",
+          "cyberkrill",
+          "CyberkrillTests"
+        ],
+        "status": 0,
+        "seconds": 17.84
+      },
+      "red": {
+        "command": [
+          "python3",
+          "-B",
+          "test/generate-invoice.py",
+          "--probe",
+          "redirect-limit"
+        ],
+        "status": 1,
+        "seconds": 0.435
+      },
+      "restore_build": {
+        "command": [
+          "lake",
+          "build",
+          "cyberkrill",
+          "CyberkrillTests"
+        ],
+        "status": 0,
+        "seconds": 16.928
+      },
+      "green": {
+        "command": [
+          "python3",
+          "-B",
+          "test/generate-invoice.py",
+          "--probe",
+          "redirect-limit"
+        ],
+        "status": 0,
+        "seconds": 0.434
+      }
+    },
+    {
+      "property": "redirect-guard",
+      "file": "Cyberkrill/TestEntry.lean",
+      "replace": "unless TestUrls.permitted req.url true && !TestUrls.forbiddenPort req.url do",
+      "with_text": "unless true do",
+      "command": [
+        ".lake/build/bin/CyberkrillTests",
+        "--generate-invoice-ordering"
+      ],
+      "assertion": "LNURL redirected guard before transport",
+      "failure": "assertion failed: LNURL redirected guard before transport",
+      "build": {
+        "command": [
+          "lake",
+          "build",
+          "cyberkrill",
+          "CyberkrillTests"
+        ],
+        "status": 0,
+        "seconds": 9.804
+      },
+      "red": {
+        "command": [
+          ".lake/build/bin/CyberkrillTests",
+          "--generate-invoice-ordering"
+        ],
+        "status": 1,
+        "seconds": 0.036
+      },
+      "restore_build": {
+        "command": [
+          "lake",
+          "build",
+          "cyberkrill",
+          "CyberkrillTests"
+        ],
+        "status": 0,
+        "seconds": 10.218
+      },
+      "green": {
+        "command": [
+          ".lake/build/bin/CyberkrillTests",
+          "--generate-invoice-ordering"
+        ],
+        "status": 0,
+        "seconds": 0.038
+      }
+    },
+    {
+      "property": "redirect-uri-syntax",
+      "file": "../lightning/Lightning/Lnurl/Url.lean",
+      "replace": "if !uriReferenceValid location then return none",
+      "with_text": "if false then return none",
+      "command": [
+        "python3",
+        "-B",
+        "test/generate-invoice.py",
+        "--probe",
+        "redirect-invalid-path"
+      ],
+      "assertion": "LNURL success redirect-invalid-path",
+      "failure": "AssertionError: LNURL success redirect-invalid-path: {'status': 1, 'stdout': '', 'stderr': 'malformedResponse \"callback\": Invalid Lightning input\\n'}; observed paths=['/.well-known/lnurlp/user', '/bad[x]']",
+      "build": {
+        "command": [
+          "lake",
+          "build",
+          "cyberkrill",
+          "CyberkrillTests"
+        ],
+        "status": 0,
+        "seconds": 16.71
+      },
+      "red": {
+        "command": [
+          "python3",
+          "-B",
+          "test/generate-invoice.py",
+          "--probe",
+          "redirect-invalid-path"
+        ],
+        "status": 1,
+        "seconds": 0.433
+      },
+      "restore_build": {
+        "command": [
+          "lake",
+          "build",
+          "cyberkrill",
+          "CyberkrillTests"
+        ],
+        "status": 0,
+        "seconds": 18.218
+      },
+      "green": {
+        "command": [
+          "python3",
+          "-B",
+          "test/generate-invoice.py",
+          "--probe",
+          "redirect-invalid-path"
+        ],
+        "status": 0,
+        "seconds": 0.438
+      }
+    },
+    {
+      "property": "redirect-raw-query",
+      "file": "../lightning/Lightning/Lnurl/Url.lean",
+      "replace": "serializeParts source true",
+      "with_text": "serializeParts source false",
+      "command": [
+        "python3",
+        "-B",
+        "test/generate-invoice.py",
+        "--probe",
+        "redirect-raw-query"
+      ],
+      "assertion": "LNURL success redirect-raw-query",
+      "failure": "AssertionError: LNURL success redirect-raw-query: {'status': 1, 'stdout': '', 'stderr': 'malformedResponse \"pr\": Invalid Lightning input\\n'}; observed paths=['/.well-known/lnurlp/user', '/pay?dup=first&dup=last&flag&amount=2000', '/finished?amount=2000&note=%27raw%27']",
+      "build": {
+        "command": [
+          "lake",
+          "build",
+          "cyberkrill",
+          "CyberkrillTests"
+        ],
+        "status": 0,
+        "seconds": 19.638
+      },
+      "red": {
+        "command": [
+          "python3",
+          "-B",
+          "test/generate-invoice.py",
+          "--probe",
+          "redirect-raw-query"
+        ],
+        "status": 1,
+        "seconds": 0.388
+      },
+      "restore_build": {
+        "command": [
+          "lake",
+          "build",
+          "cyberkrill",
+          "CyberkrillTests"
+        ],
+        "status": 0,
+        "seconds": 16.816
+      },
+      "green": {
+        "command": [
+          "python3",
+          "-B",
+          "test/generate-invoice.py",
+          "--probe",
+          "redirect-raw-query"
+        ],
+        "status": 0,
+        "seconds": 0.448
+      }
+    },
+    {
+      "property": "initial-normalization-guard",
+      "file": "Cyberkrill/TestEntry.lean",
+      "replace": "| .error _ => throw (.onchain \"testLnurlRefused: Explicit loopback Lightning address is required\")",
+      "with_text": "| .error _ => pure ()",
+      "command": [
+        "python3",
+        "-B",
+        "test/generate-invoice.py",
+        "--probe",
+        "guard-invalid-initial"
+      ],
+      "assertion": "LNURL refusal guard-invalid-initial",
+      "failure": "AssertionError: LNURL refusal guard-invalid-initial: {'status': Decimal('1'), 'stderr': 'invalidNumber: Expected a finite decimal without exponent syntax\\n', 'stdout': ''}",
+      "build": {
+        "command": [
+          "lake",
+          "build",
+          "cyberkrill",
+          "CyberkrillTests"
+        ],
+        "status": 0,
+        "seconds": 11.531
+      },
+      "red": {
+        "command": [
+          "python3",
+          "-B",
+          "test/generate-invoice.py",
+          "--probe",
+          "guard-invalid-initial"
+        ],
+        "status": 1,
+        "seconds": 0.507
+      },
+      "restore_build": {
+        "command": [
+          "lake",
+          "build",
+          "cyberkrill",
+          "CyberkrillTests"
+        ],
+        "status": 0,
+        "seconds": 10.526
+      },
+      "green": {
+        "command": [
+          "python3",
+          "-B",
+          "test/generate-invoice.py",
+          "--probe",
+          "guard-invalid-initial"
+        ],
+        "status": 0,
+        "seconds": 0.386
+      }
+    }
+  ],
+  "restored_full": {
+    "command": [
+      "python3",
+      "-B",
+      "test/generate-invoice.py"
+    ],
+    "status": 0,
+    "seconds": 12.706
+  }
+}
