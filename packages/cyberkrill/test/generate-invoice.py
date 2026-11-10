@@ -2,7 +2,7 @@
 # Copyright (c) 2026 lean-cyberkrill developers. Released under the MIT License or the
 # Apache License 2.0, at your option; see LICENSE-MIT and LICENSE-APACHE.
 """Isolated LNURL-pay replay; independent exact output and raw request assertions."""
-from contextlib import contextmanager
+from contextlib import contextmanager, chdir
 from copy import deepcopy
 from fractions import Fraction
 import hashlib
@@ -106,7 +106,22 @@ def cases():
                      redirect_location="./keep/%2e%2e/finished?amount=2000&note='raw'"))
     rows.append(dict(name="guard-invalid-initial",inprocess=True,address="user@é.example",amount="invalid",
                      file=True,guard_file=True,error="testLnurlRefused:",requests=0))
-    assert len(rows) == 63, "LNURL matrix inventory"
+    # Raw numeric tokens exercise the preflight before Json.parse, including
+    # otherwise ignored fields. Strings with the same text must stay strings.
+    for side, requests in [("well", 1), ("callback", 2)]:
+        for name, token in [("huge", "1e1000000000"), ("tiny", "1e-1000000000"),
+                            ("zero", "0e1000000000"), ("numeric-limit", "1e1025")]:
+            rows.append(dict(name=side+"-"+name, **{side+"_number":token},
+                             error="malformedResponse: JSON", requests=requests))
+    rows += [dict(name="well-long-exponent",well_number="1e"+"9"*2100,
+                  error="malformedResponse: JSON",requests=1),
+             dict(name="well-long-coefficient",well_number="1"*1025,
+                  error="malformedResponse: JSON",requests=1),
+             dict(name="well-coefficient-boundary",well_number="1"*1024),
+             dict(name="well-exponent-boundary",well_number="1e1024"),
+             dict(name="well-numeric-string",well_string="1e1000000000\\\"tail"),
+             dict(name="callback-numeric-string",callback_string="1e-1000000000")]
+    assert len(rows) == 77, "LNURL matrix inventory"
     return rows
 
 
@@ -193,6 +208,13 @@ def replay(only=None):
                 json=fixture["error"] if row.get("well_error") else pay,delay_ms=row.get("delay",0))],repeat=True),
                 dict(method="GET",path=request_path(row),responses=[dict(status=row.get("status",200),
                 json=fixture["error"] if row.get("callback_error") else callback)],repeat=True)]
+            for side, entry in [("well", entries[0]), ("callback", entries[1])]:
+                if side+"_string" in row:
+                    entry["responses"][0]["json"]["ignored"] = row[side+"_string"]
+                if side+"_number" in row:
+                    response = entry["responses"][0]
+                    text = json.dumps(response.pop("json"))
+                    response["text"] = text[:-1] + ',"ignored":' + row[side+"_number"] + '}'
             paths = [well_path,request_path(row)][:row.get("requests",2)]
             if "location" in row and not row.get("well_redirect"):
                 for entry in entries: entry["responses"][0]["headers"] = {"Location":row["location"]}
@@ -285,7 +307,8 @@ def replay(only=None):
                 with responder(root,[],collision=True): pass
             guards(root,environment)
             parser(root,environment)
-    print("LNURL selected control passed" if only else "LNURL replay: 63/63 cases, 64/64 invocations; exact five-field JSON, ordered GETs and no early callback; collision 1/1",flush=True)
+            path_stress(environment)
+    print("LNURL selected control passed" if only else "LNURL replay: 77/77 cases, 78/78 invocations; exact five-field JSON, ordered GETs and no early callback; collision 1/1",flush=True)
 
 
 def guards(root, env):
@@ -309,6 +332,23 @@ def guards(root, env):
     print("LNURL guards: 6/6 pre-spawn, 1/1 inprocess before service; writer ordering 3/3",flush=True)
 
 
+def path_stress(environment):
+    package = ROOT/"packages/lightning"
+    with chdir(package):
+        built = network.run_owned(["lake","build","LightningTests"],env=environment,
+            capture_output=True,timeout=120)
+    assert built.returncode==0, "LNURL large callback build: "+built.stderr.decode()
+    try:
+        with chdir(package):
+            stress = network.run_owned([str(package/".lake/build/bin/LightningTests"),
+                "--lnurl-case","large-path"], env=environment,
+                capture_output=True,timeout=10)
+    except subprocess.TimeoutExpired:
+        raise AssertionError("LNURL large callback normalization exceeds 10s budget") from None
+    assert stress.returncode==0 and b"large callback paths: 2/2" in stress.stdout, "LNURL large callback normalization results"
+    print("LNURL large callback normalization: 2/2 within 10s test budget",flush=True)
+
+
 def parser(root,env):
     # Help and consumed option values are parsed before any network is possible.
     rows = [(["--help"],0), ([ADDRESS,"bad","--help"],0), (["-c","--help"],1),
@@ -323,7 +363,8 @@ def parser(root,env):
 
 
 if __name__ == "__main__":
-    if sys.argv[1:2]==["--isolated"]: replay(sys.argv[2] if len(sys.argv)>2 else None)
+    if sys.argv[1:] == ["--path-stress"]: path_stress(dict(os.environ))
+    elif sys.argv[1:2]==["--isolated"]: replay(sys.argv[2] if len(sys.argv)>2 else None)
     else:
         assert not sys.argv[1:] or (len(sys.argv)==3 and sys.argv[1]=="--probe")
         sys.exit(network.run_isolated([sys.executable,"-B",str(Path(__file__).resolve()),"--isolated",*sys.argv[2:]],timeout=240))

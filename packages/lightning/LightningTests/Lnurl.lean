@@ -120,6 +120,17 @@ def measurements : IO Unit := do
   IO.println "JSON measurements: 7/7"
 
 def run (selector : Option String := none) : IO Unit := do
+  if selector.isNone || selector == some "large-path" then
+    let segments := List.replicate 100000 "a"
+    let path := "/" ++ String.intercalate "/" segments
+    check "large callback path exact result"
+      ((Lnurl.callbackUrl ("https://example.com" ++ path) 1 none).toOption ==
+        some ("https://example.com" ++ path ++ "?amount=1"))
+    let dotted := "/" ++ String.join (List.replicate 100000 "a/../")
+    check "large dotted callback exact result"
+      ((Lnurl.callbackUrl ("https://example.com" ++ dotted) 1 none).toOption ==
+        some "https://example.com/?amount=1")
+    IO.println "large callback paths: 2/2 (100000 ordinary segments; 100000 dot-segment pairs)"
   if selector.isNone || selector == some "callback-url" then
     let rows : List (String × Nat × Option String × String) := [
       ("HTTPS://EXAMPLE.COM:00443/p?q=a+b&%61=first&a=last#frag", 123, some "a + café",

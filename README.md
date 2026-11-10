@@ -89,6 +89,13 @@ authority/query spelling and discard the fragment before requesting the target;
 the callback's amount and comment are appended once before redirect handling.
 The raw-query replay combines relative path resolution with `note='raw'`.
 
+Path segments accumulate in reverse, with constant-time parent removal and one
+final reversal; the segment count is computed once. Two compiled controls check
+100,000 ordinary segments and 100,000 dot-segment pairs against exact expected
+callback URLs within a 10-second test budget. Reintroducing repeated list
+appends exceeds that budget. This measures those controls, without claiming a
+universal latency bound.
+
 Redirect expectations are hand-derived from reqwest 0.12.28's
 [`redirect.rs`](https://github.com/seanmonstar/reqwest/blob/v0.12.28/src/redirect.rs)
 and tower-http 0.6.8's
@@ -98,7 +105,7 @@ missing/invalid Location, and `Policy::limited(10)`'s eleven total requests on a
 loop. Script-generated synthetic redirect replies are our own; the independently
 pinned base fixtures and invoice expectations remain unchanged.
 
-`test/generate-invoice.py` is registered in `lake test`. Its 63 cases make 64
+`test/generate-invoice.py` is registered in `lake test`. Its 77 cases make 78
 invocations against the owned TLS responder on fixed port 19443, including a
 same-process repeat proving fresh quotes. It asserts complete exact JSON,
 ordered well-known/callback GET paths and counts, no callback after early failure,
@@ -113,7 +120,7 @@ three injected writer ordering cases, six pre-spawn refusals, one in-process
 guard, four injected initial refusals, one injected redirect refusal before
 transport, normalization-error refusal before output acquisition and fixed-port collision refusal. Pure Lightning tests add eight
 callback serialization cases, three request normalization cases, nineteen URI-resolution cases and two HTTP-URI
-checks and two sets of five subset refusals. Seventeen compiled runtime
+checks and two sets of five subset refusals. Nineteen compiled runtime
 mutations detect range, inclusive maximum, comment bytes, original query, form
 encoding, Millisat conversion, trailing-query separation, dispatch, initial
 normalization, initial/callback following, redirect limits, relative resolution,
@@ -141,6 +148,20 @@ a 1 MiB plus one byte body and rejects an untrusted TLS certificate. This tested
 bound is not a universal latency guarantee. The existing narrow URL and exact
 number exceptions continue to apply.
 
+Before parsing either reply, a lexical scan bounds each numeric token to 2048
+characters, its coefficient to 1024 digits and its exponent magnitude to 1024.
+The exponent is checked without constructing its power. Quoted strings and
+escaped quotes are distinguished from numbers; the ordinary JSON parser still
+validates the body. Tests cover both endpoints, huge positive/negative and zero
+exponents, oversized tokens/coefficients, accepted boundaries and numeric-looking
+strings. The bounded number-size exception already recorded for exact parsing
+covers these refusals, including otherwise ignored fields; this is another
+example of that existing kind. The pinned reference's serde_json 1.0.148 skips
+ignored numeric fields lexically rather than expanding their exponents
+(`de.rs`, `deserialize_ignored_any` and `ignore_exponent`). The new scan follows
+the price parser's token separation without adopting its value rewriting or
+extra whole-document validation.
+
 The reference's permissive checks are retained: no required `payRequest` tag,
 special interpretation of `status: ERROR`, HTTP-success requirement,
 requested/invoice amount equality, metadata-hash validation or invoice-network
@@ -157,15 +178,15 @@ For the evidence command below, `TMP_ROOT` denotes that owned temporary director
 | Final command | Directory | Exit | Observation |
 |---|---|---|---|
 | `nix develop -c lake build`; `nix develop -c lake test` | `packages/lightning` | 0; 0 | Existing vectors and axiom gate retained; callback serialization 8/8, request normalization 3/3, redirect resolution 19/19 and subset refusals 5/5 each. |
-| `nix develop -c lake build`; `nix develop -c lake test` | `packages/cyberkrill` | 0; 0 | Complete registered app suite, including LNURL 63/63 cases and 64/64 invocations. |
+| `nix develop -c lake build`; `nix develop -c lake test` | `packages/cyberkrill` | 0; 0 | Complete registered app suite, including LNURL 77/77 cases and 78/78 invocations. |
 | `nix develop -c env TMPDIR="$TMP_ROOT" python3 -B packages/cyberkrill/test/validate.py evidence` | root | 0 | 40/40 checks, including current source/evidence bindings, scope and lifecycle shapes, exact comparators and retained replays. |
 | `nix flake check -L` | root | 0 | All seven package build/test pairs and the link checks. |
 | `nix build -L` | root | 0 | Normal reuse after the flake check; installed version, Lightning, offline and RPC checks also exit 0. |
-| `nix build --rebuild -L` | root | 0 | Actual fresh sandbox execution, including LNURL 63/63 cases, 64/64 invocations, delayed timeout and callback tests; zero `SKIP` results. |
+| `nix build --rebuild -L` | root | 0 | Actual fresh sandbox execution, including LNURL 77/77 cases, 78/78 invocations, delayed timeout and callback tests; zero `SKIP` results. |
 | Explicit native-decision, proof-token and private-key scans in `validate.py repo` | root | 0 each | 86/86 tracked library/proof files, zero native-decision offenders; proof and private-key scans empty. |
 
 The actual sequential campaigns also completed with exit 0: invoice requests
-(17 compiled detections), fiat consumers (6), prices (36), move (56), creation
+(19 compiled detections), fiat consumers (6), prices (36), move (56), creation
 (57), listing (63), lexical listing (9), listing lifecycle (34 boundaries), and
 Core client/capture/safety (68 compiled selections plus 213 safety selections).
 The affected retained, Lightning, revision, regression, output, attached-output

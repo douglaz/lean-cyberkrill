@@ -164,14 +164,15 @@ private def urlEscape (path : Bool) (s : String) : String :=
 private def normalizePath (raw : String) : String := Id.run do
   let raw := raw.replace "\\" "/"
   let pieces := (if raw.isEmpty then "/" else raw).splitOn "/"
-  let mut stack : List String := []
+  let count := pieces.length
+  let mut reversed : List String := []
   for (piece, index) in pieces.drop 1 |>.zipIdx do
     let dot := (Bitcoin.Bech32.lower piece).replace "%2e" "."
     if dot == "." || dot == ".." then
-      if dot == ".." then stack := stack.dropLast
-      if index + 2 == pieces.length then stack := stack ++ [""]
-    else stack := stack ++ [urlEscape true piece]
-  return "/" ++ String.intercalate "/" stack
+      if dot == ".." then reversed := reversed.drop 1
+      if index + 2 == count then reversed := "" :: reversed
+    else reversed := urlEscape true piece :: reversed
+  return "/" ++ String.intercalate "/" reversed.reverse
 
 /-- Serialization components shared by requests and callback query appending.
 The decode projection deliberately keeps its existing host-only `base` field. -/

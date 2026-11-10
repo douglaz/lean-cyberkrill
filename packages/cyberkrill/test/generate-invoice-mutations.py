@@ -54,7 +54,16 @@ def mutations():
     rows.append(("initial-normalization-guard","Cyberkrill/TestEntry.lean",
         '| .error _ => throw (.onchain "testLnurlRefused: Explicit loopback Lightning address is required")',
         '| .error _ => pure ()',probe("guard-invalid-initial"),"LNURL refusal guard-invalid-initial"))
-    assert len(rows)==17, "LNURL runtime mutation inventory"
+    rows.append(("response-number-bound",flow,
+        'unless numbersBounded text do throw (.lightning "malformedResponse: JSON")',
+        'unless true do throw (.lightning "malformedResponse: JSON")',
+        probe("well-numeric-limit"),"LNURL refusal well-numeric-limit"))
+    rows.append(("callback-path-work",url,
+        '  let count := pieces.length\n  let mut reversed : List String := []\n  for (piece, index) in pieces.drop 1 |>.zipIdx do\n    let dot := (Bitcoin.Bech32.lower piece).replace "%2e" "."\n    if dot == "." || dot == ".." then\n      if dot == ".." then reversed := reversed.drop 1\n      if index + 2 == count then reversed := "" :: reversed\n    else reversed := urlEscape true piece :: reversed\n  return "/" ++ String.intercalate "/" reversed.reverse\n',
+        '  let mut stack : List String := []\n  for (piece, index) in pieces.drop 1 |>.zipIdx do\n    let dot := (Bitcoin.Bech32.lower piece).replace "%2e" "."\n    if dot == "." || dot == ".." then\n      if dot == ".." then stack := stack.dropLast\n      if index + 2 == pieces.length then stack := stack ++ [""]\n    else stack := stack ++ [urlEscape true piece]\n  return "/" ++ String.intercalate "/" stack\n',
+        ["python3","-B","test/generate-invoice.py","--path-stress"],
+        "LNURL large callback normalization exceeds 10s budget"))
+    assert len(rows)==19, "LNURL runtime mutation inventory"
     return rows
 
 
@@ -62,6 +71,7 @@ def fingerprints():
     paths = ["Cyberkrill/App.lean","Cyberkrill/GenerateInvoice.lean","Cyberkrill/TestEntry.lean",
         "CyberkrillTests/GenerateInvoice.lean","CyberkrillTests.lean","../lightning/Lightning/Lnurl/Url.lean",
         "test/generate-invoice.py","test/generate-invoice-mutations.py","test/network.py",
+        "../lightning/LightningTests/Lnurl.lean",
         "test/price-mutations.py","test/http/ln-generate.json","test/http/ln-generate-expected.json",
         "test/http/ln-generate.provenance.json"]
     return {p:hashlib.sha256((APP/p).read_bytes()).hexdigest() for p in paths}
@@ -70,13 +80,13 @@ def fingerprints():
 def verify():
     record = json.loads(DEST.read_bytes())
     assert record["source_sha256"]==fingerprints(), "stale LNURL runtime evidence"
-    assert len(record["checks"])==len(mutations())==17, "LNURL detecting count"
+    assert len(record["checks"])==len(mutations())==19, "LNURL detecting count"
     for check,row in zip(record["checks"],mutations()):
         assert [check[k] for k in ["property","file","replace","with_text","command","assertion"]]==list(row), "LNURL mutation identity"
         assert [check[k]["status"] for k in ["build","red","restore_build","green"]]==[0,1,0,0], "LNURL compiled/runtime/restored statuses"
         assert row[-1] in check["failure"] and ("AssertionError:" in check["failure"] or "assertion failed:" in check["failure"]), "LNURL intended runtime assertion"
     assert all(record[k]["status"]==0 for k in ["initial_build","initial_green","restored_full"])
-    print("LNURL mutations: 17/17 compiled intended runtime reds; 17/17 restored builds and greens",flush=True)
+    print("LNURL mutations: 19/19 compiled intended runtime reds; 19/19 restored builds and greens",flush=True)
 
 
 if __name__ == "__main__":

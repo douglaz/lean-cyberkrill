@@ -35,6 +35,38 @@ private def getResponse (request : HttpCurl.Request → IO (Except HttpCurl.Erro
         | fuel + 1 => return ← getResponse request next fuel
   return .ok response
 
+/-- Bound token size and exponent magnitude before JSON numeric expansion.
+The lexical pass follows the price parser's string/number separation, without
+its value rewriting or additional whole-document validation. -/
+private def numberBounded (token : String) : Bool := Id.run do
+  if token.length > 2048 then return false
+  let unsigned := if token.startsWith "-" then (token.drop 1).toString else token
+  let parts := (unsigned.replace "E" "e").splitOn "e"
+  if parts.length > 2 then return false
+  if (parts.head!.replace "." "").length > 1024 then return false
+  let exponent := parts[1]?.getD "0"
+  let exponent := if exponent.startsWith "+" || exponent.startsWith "-" then
+    (exponent.drop 1).toString else exponent
+  let digits := String.ofList (exponent.toList.dropWhile (· == '0'))
+  if digits.length > 4 then return false
+  return digits.toNat?.getD 0 ≤ 1024
+
+private def numbersBounded (body : String) : Bool := Id.run do
+  let mut rest := body.toList
+  let mut quoted := false
+  for _ in [:rest.length] do
+    let c :: tail := rest | break
+    rest := tail
+    if quoted then
+      if c == '\\' then rest := rest.drop 1
+      else if c == '"' then quoted := false
+    else if c == '"' then quoted := true
+    else if c == '-' || ('0' ≤ c && c ≤ '9') then
+      let chars := rest.takeWhile (fun ch => "0123456789eE+.-".contains ch)
+      rest := rest.drop chars.length
+      unless numberBounded (String.ofList (c :: chars)) do return false
+  return true
+
 /-- HTTP status is intentionally not a JSON success condition. -/
 private def getJson (request : HttpCurl.Request → IO (Except HttpCurl.Error HttpCurl.Response))
     (url : String) : IO (Except Error Json) := do
@@ -42,6 +74,7 @@ private def getJson (request : HttpCurl.Request → IO (Except HttpCurl.Error Ht
   | .error e => return .error e
   | .ok response => return do
     let some text := String.fromUTF8? response.body | throw (.lightning "malformedResponse: UTF-8")
+    unless numbersBounded text do throw (.lightning "malformedResponse: JSON")
     (Json.parse text).mapError (fun _ => .lightning "malformedResponse: JSON")
 
 /-- LNURL-pay invoice acquisition only. Invoice validation and JSON use the
