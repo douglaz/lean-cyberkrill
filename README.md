@@ -46,6 +46,150 @@ invite encoding and PSBT inspection. Phase 8b adds Core UTXO listing and the
 public frozenkrill reader. Phase 8c adds Core PSBT creation, funded PSBT creation and UTXO consolidation;
 `plan.md` is the plan for v1.
 
+## Phase 9c: Fedimint configuration fetch
+
+`fm-fetch-config INVITE_CODE [-o FILE]` fetches a configuration using the
+existing bounded HTTP transport. It uses the same invite decoder and Phase 7c
+fallback as `fm-decode-invite`. The ordinary output handle opens before invite
+decoding or requests, stays open through the final write, and receives pretty
+JSON without an added newline. Later failures leave a created/truncated file;
+output-open errors take precedence, and final write errors remain failures.
+
+Guardians are tried sequentially in decoded invite order. Each whole URL first
+replaces every `wss://` with `https://`, then every `ws://` with `http://`, trims
+all trailing slashes, and appends `/config`. HTTP URL normalization follows the
+existing approved subset, retaining meaningful path/query text. A GET transport
+error or non-2xx status triggers POST to that original config URL with literal
+`{}` bytes and `Content-Type: application/json`. A successful GET with an invalid
+UTF-8/JSON body advances to the next guardian without POST. POST transport,
+status or decode failure also advances. Decoded validation or semantic config
+errors abort immediately, including when a later guardian is ready to succeed.
+The first parsed/validated result stops iteration.
+
+Validation deliberately remains weak: `global.api_endpoints` must exist, and a
+present federation ID must be a matching string. Missing ID emits
+`Could not verify federation ID from config` and trusts the invite. Null
+endpoints pass existence validation and fail subsequent object parsing. Peer
+keys use Rust's ASCII u16 grammar, including `+1`, `01`, `000`, `+0` and `65535`;
+negative, underscore and overflow spellings fail. Endpoint values must be
+strings, but their contents are copied without URL validation. Guardians sort
+numerically, with equal numeric spellings retaining lexicographic map order.
+Optional names, string-only metadata, string/default-`unknown` consensus
+version, and unchanged/default-empty-object modules match the pinned projection.
+Modules may also be null, scalar, array or object.
+
+Redirects follow the pinned reqwest/tower-http policy: 301, 302, 303, 307 and
+308, relative URI resolution, ten hops, and no follow on missing/invalid
+Location. POST becomes GET on 301/302/303 with payload headers removed;
+307/308 retain its method/body/content type. Referer uses the normalized previous
+URL without a fragment, except on HTTPS-to-HTTP downgrade. Every test transport
+hop traverses the loopback guard. Query/embedded rewrite examples refused by
+the existing conservative test guard use injected request assertions.
+
+`test/http/fetch-config.json` contains authored synthetic replies and thirteen
+synthetic invites: twelve consensus invites built by the existing encoder from
+the reviewed Phase 6 one- or two-guardian vector with replaced guardian URLs, and one
+synthetic fallback payload checksummed by the existing Phase 6 wrapper. The
+fallback keeps that vector's federation ID. Port **19444** is fixed in fixtures,
+invites, captures and replays; collision fails before READY. No live guardian
+or original vector endpoint is contacted. The sidecar pins synthetic origin,
+source, licence, fixture hash and independent capture hash.
+`test/capture-fetch-config.py` builds
+[cyberkrill at 27cad1f](https://github.com/douglaz/cyberkrill/tree/27cad1faba86260b06665a89f0af5134d23525c2)
+before entering a new `unshare -rn` namespace with loopback up, an owned
+temporary HOME/TMPDIR/cwd, and the owned plain-HTTP responder with stdin kept
+open. Its 78 captures bind the fixture, definitions and script, preserving
+actual statuses, separate streams and raw requests. Config expectations come
+from these captures, compared as exact JSON values with ordered arrays.
+
+The authority is `fedimint-lite/src/lib.rs:435-630` and the output writer at
+`cyberkrill/src/main.rs:1968-1976`, under MIT. HTTP defaults are checked against
+[reqwest 0.12.28](https://github.com/seanmonstar/reqwest/blob/v0.12.28/src/async_impl/client.rs),
+[its redirect policy](https://github.com/seanmonstar/reqwest/blob/v0.12.28/src/redirect.rs),
+[tower-http 0.6.8](https://github.com/tower-rs/tower-http/blob/tower-http-0.6.8/tower-http/src/follow_redirect/mod.rs),
+[iri-string 0.7.10](https://github.com/lo48576/iri-string/blob/v0.7.10/src/parser/validate.rs)
+and [url 2.5.7](https://github.com/servo/rust-url/blob/v2.5.7/url/src/parser.rs).
+Numeric/recursion comparisons use the same captured command and
+[serde_json 1.0.148](https://github.com/serde-rs/json/blob/v1.0.148/src/de.rs).
+
+`test/fetch-config.py` runs in `lake test`: 127 replay cases, 78 loaded captures,
+13 invite vectors, 11 parser/help checks, two injected output-order assertions,
+three no-child-before-guard refusals, one release-dispatch replay, one fixed-port
+collision and three held-local-socket connect controls. Assertions cover full
+JSON/streams/files, original open handles, exact verbs/paths/bodies/order/counts,
+fallback versus abort, weak validation, defaults, stable peers, all five redirect
+statuses and bounded input. The responder's raw log records only verb, path and
+body; exact content-type, Referer and transport settings are asserted separately
+at the injected request boundary, not claimed as raw-log observations.
+The compiled campaign defines 39 independent runtime detections, including
+separate transport/injected byte checks, each numeric/container limit,
+connect/total deadlines, Location/resolved URL work, and continuation/abort
+boundaries. Its latest completed record is
+`test/golden/fetch-config-mutation-record.json`, written atomically only after
+all intended runtime failures, exact restoration, rebuilds and green reruns.
+
+### Deltas taken for configuration fetch
+
+These explicit resource bounds are bounded-behavior differences, not full
+reqwest resource parity. Each actual request has a 1000 ms connect deadline,
+2000 ms total deadline and inclusive 1 MiB body cap. Injected responses receive
+the same byte check before any UTF-8/JSON work, including non-2xx and redirect
+responses. Tests use 1 MiB minus one, exactly 1 MiB and plus one byte in both
+paths. Local response delays of 1900, 2000 and 2100 ms exercise the total
+deadline; held TLS sockets at 900, 1000 and 1100 ms exercise connection
+establishment. These controls generate an owned test CA bundle rather than
+relying on host certificates; the held sockets never complete TLS. The
+exact-boundary race can produce either a connection failure or timeout. These are finite local controls, without a universal latency claim.
+
+Before recursive JSON parsing or numeric expansion, a quote/escape-aware lexical
+scan covers all body fields, including ignored values, metadata and modules.
+The ordinary parser still checks JSON syntax; lone UTF-16 surrogates and numeric
+object keys are refused as in serde's Value deserializer. `fmJsonNumberRange`
+keeps nonfinite binary64-range numbers in the decode/next-guardian stage,
+including ignored values, root numbers and modules. Controls accept
+`1.7976931348623157e308`, refuse the overflow midpoint `2^1024 - 2^970` and
+refuse one above it; `1e309`, `-1e309` and `1e400` also advance without POST. Quoted digits/brackets
+and escaped quotes do not count toward numeric/container limits.
+
+| Bound / named diagnostic | Tested below / at / above | Failure stage and continuation |
+|---|---|---|
+| Body bytes: `fmResponseTooLarge` | 1048575 / 1048576 / 1048577 | Transport; GET permits POST, POST advances guardian. |
+| Deadline: `fmTimeout` | Connect 900 / 1000 / 1100 ms; total 1900 / 2000 / 2100 ms | Transport; same GET/POST staging. |
+| Numeric token: `fmJsonTokenLimit` | 2047 / 2048 / 2049 characters, zero-padded exponent | Decode; next guardian, no POST after GET success. |
+| Coefficient: `fmJsonCoefficientLimit` | 1023 / 1024 / 1025 digits | Decode; same continuation. |
+| Exponent: `fmJsonExponentLimit` | magnitude 1023 / 1024 / 1025, including negative exponents | Decode; same continuation. |
+| Container: `fmJsonDepthLimit` | depth 126 / 127 / 128, root one; arrays and objects | Decode; same continuation. Depth 127 succeeds, 128 is refused before parsing. |
+| URL/Location: `fmUrlLimit` | 8191 / 8192 / 8193 UTF-8 bytes | Transport; GET permits POST, POST advances guardian. Location is checked before resolution, resolved URLs before transport. |
+
+The URL work controls separately remove each check: a long dot-segment Location
+that resolves short isolates the pre-resolution cap, while a short relative
+Location on a long base isolates the resolved-target cap. Initial guardian URL
+work is already bounded by the invite wrapper's 1023-character/632-byte payload
+contract; no new invite-validity rule is added. The transport's existing 64 KiB
+aggregate header cap remains unchanged.
+
+The accepted bounded-number-size/grammar delta kind covers the narrower numeric
+refusals, including serde accepting zero with exponent 1025 or a 2049-character
+zero-padded exponent. Captured depth-128 replies already make the reference try
+the next guardian. The `post-preflight-next` capture pins a specific visible
+numeric delta: reference POST accepts `modules: 0e1025` as zero and stops; the
+port refuses it during decode and returns the following guardian's independently
+captured full modules. Only that reference value/request trace is excepted.
+Two scalar-module captures pin the existing exact-parsing/formatting kind:
+`1.0000000000000001` remains exact here versus reference `1.0`, and
+`18446744073709551617` remains exact versus reference `18446744073709552000`
+(the latter is serialized from binary64 as `1.8446744073709552e19`). Only those
+module leaves differ; all other fields and streams remain checked. No blanket
+tolerance or nonnumeric validity exception is introduced.
+
+`fmUtf8Decode` and `fmJsonDecode` are decode failures. Missing endpoints,
+ID mismatch/type, invalid endpoint objects, peer IDs and endpoint value types
+retain separate abort diagnostics. Exhaustion reports `fmAllGuardiansFailed`
+with the last bounded failure code. Diagnostics never render guardian data.
+Pure libraries, the C shims, package/link/flake contracts, earlier fixtures and
+recordings, and all plan decisions remain unchanged. The documented late-signal
+supervision limitation remains unchanged.
+
 ## Phase 9b: Lightning address invoice requests
 
 `ln-generate-invoice ADDRESS AMOUNT [-c COMMENT] [-o FILE]` requests an invoice

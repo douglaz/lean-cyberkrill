@@ -75,6 +75,23 @@ def refuse_spawn(args, stub_url=None):
                 valid = False
         if not valid:
             raise ValueError("spawn refused: explicit stub RPC URL required")
+    if command == "fm-fetch-config":
+        expected = urlsplit(stub_url or "")
+        # Inspect decoded invite material before creating a child. The guarded
+        # app entry separately checks decoded guardians and every redirect.
+        for token in args[1:]:
+            for material in url_material(token):
+                for match in re.finditer(r"(?:wss?|https?)://[^\x00-\x20\x7f-\xff]+", material):
+                    target = match[0].replace("wss://", "https://").replace("ws://", "http://")
+                    try:
+                        parsed = urlsplit(target)
+                        valid = (parsed.hostname == expected.hostname == "127.0.0.1" and
+                                 parsed.port == expected.port and parsed.port not in {None, 0, 8332} and
+                                 parsed.username is None and parsed.password is None)
+                    except ValueError:
+                        valid = False
+                    if not valid:
+                        raise ValueError("spawn refused: explicit stub guardian required")
     amounts = flag_values(args, "--max-amount")
     for value in flag_values(args, "--outputs"):
         # Commas also occur in fiat grouping; examine each amount suffix and whole tail.

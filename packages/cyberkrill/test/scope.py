@@ -15,8 +15,8 @@ from unittest.mock import patch
 
 from cases import APP, ROOT
 
-BASE = "6e3bbefbbb954ac391cd04000eca61b0a6b41c04"
-ISSUE = "lck-phase-9b-ln-generate-invoice-edn"
+BASE = "d2d7ad1a788f3aa2dda67f6804c14d959ff66c4d"
+ISSUE = "lck-phase-9c-fm-fetch-config-z4e"
 # Fixed reference fixtures. Never derive
 # these expected values from HEAD, the index, or the current fixture bytes.
 FIXTURE_DIGESTS = {
@@ -59,31 +59,29 @@ def check_lifecycle(original, current):
 
 def main():
     allowed = {"README.md", ".beads/issues.jsonl"}
-    # LNURL command, pure callback serialization and necessary verification refreshes.
-    allowed |= {"packages/lightning/Lightning/Lnurl/Url.lean",
-                "packages/lightning/LightningTests/Lnurl.lean"}
+    # App-local config command and affected verification/evidence records.
     allowed |= {"packages/cyberkrill/" + p for p in [
-        "Cyberkrill/App.lean", "Cyberkrill/GenerateInvoice.lean", "Cyberkrill/TestEntry.lean",
-        "CyberkrillTests/GenerateInvoice.lean", "CyberkrillTests.lean",
-        "test/generate-invoice.py", "test/generate-invoice-mutations.py",
-        "test/http/ln-generate.json", "test/http/ln-generate-expected.json",
-        "test/http/ln-generate.provenance.json", "test/golden/ln-generate-mutation-record.json",
-        "test/scope.py", "test/validate.py", "test/verify.py", "test/network.py", "test/network-safety.py",
+        "Cyberkrill/App.lean", "Cyberkrill/FetchConfig.lean", "Cyberkrill/TestEntry.lean",
+        "CyberkrillTests/FetchConfig.lean", "CyberkrillTests.lean",
+        "test/fetch-config.py", "test/fetch-config-mutations.py", "test/capture-fetch-config.py",
+        "test/http/fetch-config.json", "test/http/fetch-config-reference.json",
+        "test/http/fetch-config.provenance.json", "test/golden/fetch-config-mutation-record.json",
+        "test/scope.py", "test/validate.py", "test/verify.py", "test/network.py",
         "test/http/mutation-record.json",
     ]}
     allowed |= {"packages/cyberkrill/test/golden/" + p for p in [
-        "fiat-onchain-mutation-record.json", "move-utxos-mutation-record.json", "psbt-commands-mutation-record.json",
+        "ln-generate-mutation-record.json", "fiat-onchain-mutation-record.json", "move-utxos-mutation-record.json", "psbt-commands-mutation-record.json",
         "mutation-record.json", "lightning-mutation-record.json", "revision-mutation-record.json",
         "offline-mutation-record.json", "rpc-client-mutation-record.json",
         "list-utxos-mutation-record.json", "list-utxos-lexical-mutation-record.json",
         "list-utxos-lifecycle-record.json",
         "regression-refresh.json", "output-regression-refresh.json",
-        "attached-output-refresh.json",
+        "attached-output-refresh.json", "offline-history-recapture.json",
     ]}
     changed = set(filter(None, git("diff", BASE, "--name-only", "-z").decode().split("\0")))
     new = set(filter(None, git("ls-files", "--others", "--exclude-standard", "-z").decode().split("\0")))
     base_paths = set(git("ls-tree", "-r", "--name-only", BASE).decode().splitlines())
-    assert changed | new <= allowed, "path outside invoice generation scope: " + repr(sorted((changed | new) - allowed))
+    assert changed | new <= allowed, "path outside config fetch scope: " + repr(sorted((changed | new) - allowed))
     # Equality against the base for each unrelated issue includes every field.
     def issues(data):
         rows = [json.loads(line) for line in data.splitlines()]
@@ -147,7 +145,7 @@ def main():
 def check_admission():
     """Exercise the real gate in read-only views of unrelated source/evidence edits."""
     protected = [
-        "Cyberkrill/PriceFeed.lean", "Cyberkrill/Fiat.lean", "Cyberkrill/CoreRpc.lean",
+        "Cyberkrill/GenerateInvoice.lean", "Cyberkrill/PriceFeed.lean", "Cyberkrill/Fiat.lean", "Cyberkrill/CoreRpc.lean",
         "Cyberkrill/PsbtCommands.lean", "Cyberkrill/MoveUtxos.lean",
         "CyberkrillTests/PriceFeed.lean", "test/capture-price-reference.py",
         "test/driver.py", "test/http/exact-deltas.json", "test/http/reference.json",
@@ -156,7 +154,7 @@ def check_admission():
         "test/move-utxos.py", "test/mutate.py", "test/price-cases.py",
         "test/price-feeds.py", "test/price-parity.py", "test/recordings/fiat-create.json", "test/recordings/fiat-funded.json",
     ]
-    assert len(protected) == len(set(protected)) == 21, "scope protected path inventory"
+    assert len(protected) == len(set(protected)) == 22, "scope protected path inventory"
     real_git, real_bytes, real_text = git, Path.read_bytes, Path.read_text
     checks = 0
     for relative in protected:
@@ -177,7 +175,7 @@ def check_admission():
                     return result + relative.encode() + b"\0"
                 return result
 
-            expected = ("path outside invoice generation scope: " if reported
+            expected = ("path outside config fetch scope: " if reported
                         else "forbidden path changed: ")
             with patch(__name__ + ".git", virtual_git), \
                     patch.object(Path, "read_bytes", read_bytes), \
@@ -190,8 +188,8 @@ def check_admission():
                 else:
                     raise AssertionError("scope admission accepted unrelated edit: " + relative)
             checks += 1
-    assert checks == 42, "scope admission check inventory"
-    print("scope admission: 42/42 unrelated edits rejected at path/baseline assertions; read-only views")
+    assert checks == 44, "scope admission check inventory"
+    print("scope admission: 44/44 unrelated edits rejected at path/baseline assertions; read-only views")
 
 
 if __name__ == "__main__":

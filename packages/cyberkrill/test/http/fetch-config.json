@@ -1,0 +1,68 @@
+{
+  "port": 19444,
+  "identity": "b21068c84f5b12ca4fdf93f3e443d3bd7c27e8642d0d52ea2e4dce6fdbbee9df",
+  "two_identity": "1234567890abcdef1234567890abcdef1234567890abcdef1234567890abcdef",
+  "invites": {
+    "single": "fed11qgqpcxnhwvaz7te3xgmjuvpwxqhrzw338y6rgdp0ve5hyum5qqqjpvssdryy7kcjef8alylnu3pa80tuyl5xgtgd2t4zunwwdldma6wls9ugey",
+    "two": "fed11qsqpcxnhwvaz7te3xgmjuvpwxqhrzw338y6rgdp0ve5hyum5qqqp6xmhwvaz7te3xgmjuvpwxqhrzw338y6rgdp0wdjkxmmwvsqszgqjx3t83y9tehh3ydzk0zg2hn00zg69v7ys40x77y352eufp27dauppgum4wpjhyhmnv43hyet5tashq62lddjhjsf7dws",
+    "slash": "fed11qgqp6xmhwvaz7te3xgmjuvpwxqhrzw338y6rgdp0ve5hyum59uqqzg9jzp5vsn6mzt9ylhun70jy85aa0sn7sepdp4fw5tjdeehah0hfmum9n4ak",
+    "double": "fed11qgqpu8rhwvaz7te3xgmjuvpwxqhrzw338y6rgdp0ve5hyum59uhsqqfqkggx3jz0tvfv5n7lj0e7gs7nh47z06ry95x4963wfh8xlka7a80svh75ak",
+    "many": "fed11qgqzxgthwvaz7te3xgmjuvpwxqhrzw338y6rgdp0ve5hyum59uhj7te09uhsqqfqkggx3jz0tvfv5n7lj0e7gs7nh47z06ry95x4963wfh8xlka7a80slun5hl",
+    "normalize": "fed11qgqzggjg2329qw309ucnydewxqhrqt338gcrzwf5xs6z7cf09chz7enfwfehgqqpyzepq6xgfad39jj0m7fl8ezr6w7hcflgvsks65h29exuum7mhm5a7qlup3z",
+    "query": "fed11qgqzwfthwvaz7te3xgmjuvpwxqhrzw338y6rgdp0ve5hyum58ahx7ar985nhycthyuqqzg9jzp5vsn6mzt9ylhun70jy85aa0sn7sepdp4fw5tjdeehah0hfmul623m8",
+    "wss": "fed11qgqp6xmhwden5te0xyerwt3s9cczuvf6xyungdp59anxjunnwsqqzg9jzp5vsn6mzt9ylhun70jy85aa0sn7sepdp4fw5tjdeehah0hfmugc84uh",
+    "embedded": "fed11qgqz7tthwvaz7te3xgmjuvpwxqhrzw338y6rgdp0waehxw309a5kuumfv3jj7amn8ghj7arpd9kz7tcqqystyyrgep84kyk2fl0e8ulyg0fm6lp8apjz6r2jaghymnn0mwlwnhcekwsq6",
+    "unsafe": "fed11qgqp6xmhwvaz7tm90p6x2unwv9kzu6twweskc6ty9anxjunnwsqqzg9jzp5vsn6mzt9ylhun70jy85aa0sn7sepdp4fw5tjdeehah0hfmu49r5ry",
+    "unsupported": "fed11qgqpyyrhwvaz7t6m8garzhf0ve5hyum5qqqjpvssdryy7kcjef8alylnu3pa80tuyl5xgtgd2t4zunwwdldma6wlm5yyum",
+    "8332": "fed11qgqpkxthwvaz7te3xgmjuvpwxqhrzw3cxvenytmxd9e8xaqqqystyyrgep84kyk2fl0e8ulyg0fm6lp8apjz6r2jaghymnn0mwlwnhcjuwt2y",
+    "fallback": "fed11luqqqqrgw368que69uhnzv3h9cczuvpwxyarzwf5xs6z7enfwfehgq9jzp5vsn6mzt9ylhun70jy85aa0sn7sepdp4fw5tjdeehah0hfmu8nvsft"
+  },
+  "full": {
+    "federation_id": "b21068c84f5b12ca4fdf93f3e443d3bd7c27e8642d0d52ea2e4dce6fdbbee9df",
+    "global": {
+      "api_endpoints": {
+        "10": "opaque endpoint ten",
+        "2": "wss://synthetic.invalid/two",
+        "0": ""
+      },
+      "meta": {
+        "federation_name": "Synthetic Federation",
+        "guardian_0_name": "Zero",
+        "guardian_2_name": "Two",
+        "note": "authored fixture",
+        "ignored": false
+      },
+      "consensus_version": "2.1"
+    },
+    "modules": {
+      "0": {
+        "kind": "mint",
+        "amount": 123
+      },
+      "nested": [
+        true,
+        null,
+        "fixture"
+      ]
+    }
+  },
+  "defaults": {
+    "federation_id": "b21068c84f5b12ca4fdf93f3e443d3bd7c27e8642d0d52ea2e4dce6fdbbee9df",
+    "global": {
+      "api_endpoints": {}
+    }
+  },
+  "peers": {
+    "federation_id": "b21068c84f5b12ca4fdf93f3e443d3bd7c27e8642d0d52ea2e4dce6fdbbee9df",
+    "global": {
+      "api_endpoints": {
+        "1": "one",
+        "01": "zero-one",
+        "+1": "plus-one",
+        "000": "zero",
+        "+0": "plus-zero",
+        "65535": "last"
+      }
+    }
+  }
+}

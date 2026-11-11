@@ -14,6 +14,7 @@ import Cyberkrill.PsbtCommands
 import Cyberkrill.MoveUtxos
 import Cyberkrill.PriceFeed
 import Cyberkrill.GenerateInvoice
+import Cyberkrill.FetchConfig
 
 namespace Cyberkrill
 
@@ -27,6 +28,7 @@ inductive Command where
   | decodeLnurl (input output : Option String)
   | encodeInvoice (input : Option String) (key : String) (output : Option String)
   | generateInvoice (address amount : String) (comment output : Option String)
+  | fetchConfig (invite : String) (output : Option String)
   | decodeInvite (input output : Option String)
   | encodeInvite (input : String) (skipSecret : Bool) (output : Option String)
   | decodePsbt (input : Option String) (network : String) (output : Option String)
@@ -109,6 +111,10 @@ private def parser : Cli.Cmd :=
       Cli.Cmd.mk "fm-decode-invite" none "Decode a literal invite or all stdin"
         (flags := #[⟨some "o", "output", "Write JSON to a file", String⟩])
         (variableArg? := some ⟨"input", "Optional literal invite", String⟩)
+        (run := fun _ => pure 0),
+      Cli.Cmd.mk "fm-fetch-config" none "Fetch federation configuration from an invite's guardians"
+        (flags := #[⟨some "o", "output", "Write JSON to a file", String⟩])
+        (positionalArgs := #[⟨"invite_code", "Fedimint invite code", String⟩])
         (run := fun _ => pure 0),
       Cli.Cmd.mk "fm-encode-invite" none "Encode a JSON file, or '-' for all stdin"
         (flags := #[⟨none, "skip-api-secret", "Omit the API secret", Unit⟩,
@@ -377,6 +383,9 @@ def parseCommand (args : List String) : Except Error Command := do
   | "fm-encode-invite" =>
     let some input := p.positionalArg? "input" | throw .invalidArguments
     return .encodeInvite input.value (p.hasFlag "skip-api-secret") (flag "output")
+  | "fm-fetch-config" =>
+    let some invite := p.positionalArg? "invite_code" | throw .invalidArguments
+    return .fetchConfig invite.value (flag "output")
   | "ln-decode-invoice" | "ln-decode-lnurl" | "ln-encode-invoice" |
       "fm-decode-invite" | "onchain-decode-psbt" =>
     if p.variableArgs.size > 1 then throw .invalidArguments
@@ -418,6 +427,7 @@ structure Services where
   writeOrdinaryFile : String → String → IO Unit := fun path text => IO.FS.writeFile path text
   price : String → IO PriceFeed.Result := PriceFeed.fetch
   lnurlRequest : HttpCurl.Request → IO (Except HttpCurl.Error HttpCurl.Response) := HttpCurl.request
+  configRequest : HttpCurl.Request → IO (Except HttpCurl.Error HttpCurl.Response) := HttpCurl.request
 
 def productionServices : Services where
   entropy := fun n => IO.getRandomBytes n.toUSize
@@ -555,6 +565,11 @@ private def prepareDecodeOutput (services : Services) (path : Option String) :
   catch _ => return .error .outputFailure
 
 def execute (version : String) (services : Services) : Command → IO (Except Error Output)
+  | .fetchConfig invite path => do
+    let .ok writer ← prepareDecodeOutput services path | return .error .outputFailure
+    match ← FetchConfig.fetch invite services.configRequest services.stderr with
+    | .error e => return .error e
+    | .ok result => return .ok (lightningOutput result.pretty writer false)
   | .generateInvoice address input comment path => do
     let .ok writer ← prepareDecodeOutput services path | return .error .outputFailure
     let parsed ← match parseBitcoinOrFiat input with

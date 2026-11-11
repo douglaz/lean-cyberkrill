@@ -3,7 +3,7 @@
   "new_distinct": 29,
   "executions": 94,
   "source_sha256": {
-    "Cyberkrill/App.lean": "b733b974f3aaf929ab7c8086d1f8ed0438cc0abc9ff49992008d7cdc4d12f0a2",
+    "Cyberkrill/App.lean": "c4988419b9aec54141f3d2355de8b0481843a7f142295e427921e5cd28517dd3",
     "Cyberkrill/Amounts.lean": "5c61afca50ba859e8dba2fea4fd04d3db1c70905684815aec03c9174a1ac327f",
     "Cyberkrill/Capabilities.lean": "35a0f3dc6dff6a88989c9de7665c93a117f26341f8869ba28c4c01e298d064a8",
     "Cyberkrill/Lightning.lean": "30728c403b57686af70f6461ac2141152b7b09ae062799583129e82963e0d2b1",
@@ -16,13 +16,14 @@
     "test/compare.py": "65792ec70aab8f33fa83736d1fb7a9708e373d0d74712bc3ce5c3d511b64ba82",
     "test/selftest.py": "2f8ed78c93c4c7e075630defb338d6345f5d33be8975044bcfef90b5946115e5",
     "test/driver.py": "172236df4080394e861492683311651a0a87c13b7f4693e60ef57fe480989f22",
-    "test/verify.py": "86155830e75ed6dd487060cc1e28cb420cffca22b92e5b62c78c8746ad7f2ada",
+    "test/verify.py": "17539f9bbf38f28d97e1dd2f9d6e7d943a48d5bd4ba37cf3c7ac3ae633b3a2e7",
     "test/fifo.py": "014cff9f435f23f2d553379f7d014fd65753c620c0f0f9975d5b9072d23ced0c",
     "Main.lean": "915167be1211cea874cd9f781d9651bc3e441b81dd9979415ba55d44e34f2eb1",
-    "CyberkrillTests.lean": "fa8145e57e7ae2b4b1a0d88c8fcf67af4c40c63d379da398ee9b69f4f2ef2896",
+    "CyberkrillTests.lean": "4a8c61cbe208f66da5da6cde1e8a0db64a843f46a7ba6e24d2d4bdfc5773ab2e",
     "lakefile.lean": "091b5366403a589d69a1226b5728588a7d7b4907cbe3b32199f22d5a0ed4093d",
     "private_output.c": "5bf3940e88b4d8dfba6214e5e489a0c3d6dbd94e0d26f212126c8fd8ef1d3308",
     "CyberkrillTests/Capabilities.lean": "50172673976ead4aef29242efa591ed2237d2db4f60a6a323c2d5f9f4555fd66",
+    "CyberkrillTests/FetchConfig.lean": "5da86af97d1063bef9064b0083387448c91314ff2b783d0eac0c79e5e167cf97",
     "CyberkrillTests/FiatOnchain.lean": "8ee610b7c08e1b96237f1e7f7751731ba6901f65cdbfa7b46b7348215455475b",
     "CyberkrillTests/GenerateInvoice.lean": "5ebf3a0a6ad5e197d2458a005ed0a8a90e87e1dedaf87a48da2d320c665f96e9",
     "CyberkrillTests/Helpers.lean": "d4484cedac1da7a20e5bc0a05080c7d6c171e7ec49f7a64e3a80ad3d075bc70a",
@@ -57,7 +58,7 @@
           "CyberkrillTests"
         ],
         "status": 0,
-        "seconds": 13.075
+        "seconds": 12.564
       },
       "restore_build": {
         "command": [
@@ -70,7 +71,7 @@
           "CyberkrillTests"
         ],
         "status": 0,
-        "seconds": 12.209
+        "seconds": 13.117
       },
       "checks": [
         {
@@ -97,7 +98,7 @@
               "valid/L410"
             ],
             "status": 1,
-            "seconds": 0.08,
+            "seconds": 0.079,
             "failure": "AssertionError: success status: valid/L410"
           },
           "green": {
@@ -112,7 +113,7 @@
               "valid/L410"
             ],
             "status": 0,
-            "seconds": 0.073
+            "seconds": 0.071
           }
         }
       ]
@@ -133,7 +134,7 @@
           "CyberkrillTests"
         ],
         "status": 0,
-        "seconds": 12.526
+        "seconds": 12.735
       },
       "restore_build": {
         "command": [
@@ -146,7 +147,7 @@
           "CyberkrillTests"
         ],
         "status": 0,
-        "seconds": 12.537
+        "seconds": 13.026
       },
       "checks": [
         {
@@ -173,7 +174,7 @@
               "lnurl-reference/cyberkrill"
             ],
             "status": 1,
-            "seconds": 0.085,
+            "seconds": 0.081,
             "failure": "AssertionError: success status: lnurl-reference/cyberkrill"
           },
           "green": {
@@ -188,7 +189,7 @@
               "lnurl-reference/cyberkrill"
             ],
             "status": 0,
-            "seconds": 0.069
+            "seconds": 0.076
           }
         }
       ]
@@ -209,7 +210,7 @@
           "CyberkrillTests"
         ],
         "status": 0,
-        "seconds": 12.705
+        "seconds": 12.926
       },
       "restore_build": {
         "command": [
@@ -222,7 +223,7 @@
           "CyberkrillTests"
         ],
         "status": 0,
-        "seconds": 12.217
+        "seconds": 12.928
       },
       "checks": [
         {
@@ -249,7 +250,7 @@
               "encode/valid/L410"
             ],
             "status": 1,
-            "seconds": 0.085,
+            "seconds": 0.09,
             "failure": "AssertionError: success status: encode/valid/L410"
           },
           "green": {
@@ -264,7 +265,7 @@
               "encode/valid/L410"
             ],
             "status": 0,
-            "seconds": 0.072
+            "seconds": 0.076
           }
         }
       ]
@@ -285,7 +286,7 @@
           "CyberkrillTests"
         ],
         "status": 0,
-        "seconds": 11.908
+        "seconds": 12.836
       },
       "restore_build": {
         "command": [
@@ -298,7 +299,7 @@
           "CyberkrillTests"
         ],
         "status": 0,
-        "seconds": 12.021
+        "seconds": 12.836
       },
       "checks": [
         {
@@ -325,7 +326,7 @@
               "valid/L410"
             ],
             "status": 1,
-            "seconds": 0.08,
+            "seconds": 0.087,
             "failure": "AssertionError: success status: valid/L410"
           },
           "green": {
@@ -340,7 +341,7 @@
               "valid/L410"
             ],
             "status": 0,
-            "seconds": 0.078
+            "seconds": 0.073
           }
         }
       ]
@@ -361,7 +362,7 @@
           "CyberkrillTests"
         ],
         "status": 0,
-        "seconds": 14.125
+        "seconds": 12.745
       },
       "restore_build": {
         "command": [
@@ -374,7 +375,7 @@
           "CyberkrillTests"
         ],
         "status": 0,
-        "seconds": 12.015
+        "seconds": 13.027
       },
       "checks": [
         {
@@ -399,7 +400,7 @@
               "--routing"
             ],
             "status": 1,
-            "seconds": 0.324,
+            "seconds": 0.34,
             "failure": "AssertionError: encoder input routing"
           },
           "green": {
@@ -413,7 +414,7 @@
               "--routing"
             ],
             "status": 0,
-            "seconds": 2.318
+            "seconds": 2.501
           }
         }
       ]
@@ -434,7 +435,7 @@
           "CyberkrillTests"
         ],
         "status": 0,
-        "seconds": 11.803
+        "seconds": 12.928
       },
       "restore_build": {
         "command": [
@@ -447,7 +448,7 @@
           "CyberkrillTests"
         ],
         "status": 0,
-        "seconds": 13.136
+        "seconds": 12.83
       },
       "checks": [
         {
@@ -472,7 +473,7 @@
               "--routing"
             ],
             "status": 1,
-            "seconds": 0.433,
+            "seconds": 0.441,
             "failure": "AssertionError: ordinary output status/streams"
           },
           "green": {
@@ -486,7 +487,7 @@
               "--routing"
             ],
             "status": 0,
-            "seconds": 2.84
+            "seconds": 2.469
           }
         }
       ]
@@ -507,7 +508,7 @@
           "CyberkrillTests"
         ],
         "status": 0,
-        "seconds": 13.339
+        "seconds": 12.83
       },
       "restore_build": {
         "command": [
@@ -520,7 +521,7 @@
           "CyberkrillTests"
         ],
         "status": 0,
-        "seconds": 13.736
+        "seconds": 12.929
       },
       "checks": [
         {
@@ -547,7 +548,7 @@
               "encode/valid/L410"
             ],
             "status": 1,
-            "seconds": 0.083,
+            "seconds": 0.084,
             "failure": "AssertionError: unlisted difference: encode/valid/L410 stdout"
           },
           "green": {
@@ -562,7 +563,7 @@
               "encode/valid/L410"
             ],
             "status": 0,
-            "seconds": 0.08
+            "seconds": 0.074
           }
         }
       ]
@@ -583,7 +584,7 @@
           "CyberkrillTests"
         ],
         "status": 0,
-        "seconds": 12.855
+        "seconds": 12.928
       },
       "restore_build": {
         "command": [
@@ -596,7 +597,7 @@
           "CyberkrillTests"
         ],
         "status": 0,
-        "seconds": 14.72
+        "seconds": 12.834
       },
       "checks": [
         {
@@ -623,7 +624,7 @@
               "valid/L410"
             ],
             "status": 1,
-            "seconds": 0.08,
+            "seconds": 0.089,
             "failure": "AssertionError: Lightning stdout newline: valid/L410"
           },
           "green": {
@@ -638,7 +639,7 @@
               "valid/L410"
             ],
             "status": 0,
-            "seconds": 0.073
+            "seconds": 0.079
           }
         }
       ]
@@ -659,7 +660,7 @@
           "CyberkrillTests"
         ],
         "status": 0,
-        "seconds": 14.669
+        "seconds": 14.33
       },
       "restore_build": {
         "command": [
@@ -672,7 +673,7 @@
           "CyberkrillTests"
         ],
         "status": 0,
-        "seconds": 14.519
+        "seconds": 14.421
       },
       "checks": [
         {
@@ -699,7 +700,7 @@
               "encode/valid/L410"
             ],
             "status": 1,
-            "seconds": 0.145,
+            "seconds": 0.088,
             "failure": "AssertionError: unlisted difference: encode/valid/L410 stdout"
           },
           "green": {
@@ -714,7 +715,7 @@
               "encode/valid/L410"
             ],
             "status": 0,
-            "seconds": 0.075
+            "seconds": 0.08
           }
         }
       ]
@@ -735,7 +736,7 @@
           "CyberkrillTests"
         ],
         "status": 0,
-        "seconds": 14.225
+        "seconds": 14.45
       },
       "restore_build": {
         "command": [
@@ -748,7 +749,7 @@
           "CyberkrillTests"
         ],
         "status": 0,
-        "seconds": 13.85
+        "seconds": 14.342
       },
       "checks": [
         {
@@ -775,7 +776,7 @@
               "encode/valid/L410"
             ],
             "status": 1,
-            "seconds": 0.09,
+            "seconds": 0.092,
             "failure": "AssertionError: unlisted difference: encode/valid/L410 stdout"
           },
           "green": {
@@ -790,7 +791,7 @@
               "encode/valid/L410"
             ],
             "status": 0,
-            "seconds": 0.07
+            "seconds": 0.075
           }
         }
       ]
@@ -811,7 +812,7 @@
           "CyberkrillTests"
         ],
         "status": 0,
-        "seconds": 15.105
+        "seconds": 14.629
       },
       "restore_build": {
         "command": [
@@ -824,7 +825,7 @@
           "CyberkrillTests"
         ],
         "status": 0,
-        "seconds": 14.419
+        "seconds": 14.529
       },
       "checks": [
         {
@@ -851,7 +852,7 @@
               "builder/amount-100000000000"
             ],
             "status": 1,
-            "seconds": 0.08,
+            "seconds": 0.084,
             "failure": "AssertionError: unlisted difference: builder/amount-100000000000 stdout"
           },
           "green": {
@@ -866,7 +867,7 @@
               "builder/amount-100000000000"
             ],
             "status": 0,
-            "seconds": 0.082
+            "seconds": 0.077
           }
         },
         {
@@ -893,7 +894,7 @@
               "builder/amount-0"
             ],
             "status": 1,
-            "seconds": 0.085,
+            "seconds": 0.09,
             "failure": "AssertionError: unlisted difference: builder/amount-0 stdout"
           },
           "green": {
@@ -908,7 +909,7 @@
               "builder/amount-0"
             ],
             "status": 0,
-            "seconds": 0.08
+            "seconds": 0.076
           }
         }
       ]
@@ -929,7 +930,7 @@
           "CyberkrillTests"
         ],
         "status": 0,
-        "seconds": 13.64
+        "seconds": 14.622
       },
       "restore_build": {
         "command": [
@@ -942,7 +943,7 @@
           "CyberkrillTests"
         ],
         "status": 0,
-        "seconds": 15.414
+        "seconds": 14.833
       },
       "checks": [
         {
@@ -969,7 +970,7 @@
               "valid/L410"
             ],
             "status": 1,
-            "seconds": 0.079,
+            "seconds": 0.085,
             "failure": "AssertionError: unlisted difference: valid/L410 stdout[\"timestamp_millis\"]"
           },
           "green": {
@@ -1005,7 +1006,7 @@
           "CyberkrillTests"
         ],
         "status": 0,
-        "seconds": 14.877
+        "seconds": 14.527
       },
       "restore_build": {
         "command": [
@@ -1018,7 +1019,7 @@
           "CyberkrillTests"
         ],
         "status": 0,
-        "seconds": 16.155
+        "seconds": 14.548
       },
       "checks": [
         {
@@ -1045,7 +1046,7 @@
               "encode/valid/L516"
             ],
             "status": 1,
-            "seconds": 0.086,
+            "seconds": 0.094,
             "failure": "AssertionError: unlisted difference: encode/valid/L516 stdout"
           },
           "green": {
@@ -1060,7 +1061,7 @@
               "encode/valid/L516"
             ],
             "status": 0,
-            "seconds": 0.154
+            "seconds": 0.078
           }
         }
       ]
@@ -1081,7 +1082,7 @@
           "CyberkrillTests"
         ],
         "status": 0,
-        "seconds": 16.094
+        "seconds": 14.56
       },
       "restore_build": {
         "command": [
@@ -1094,7 +1095,7 @@
           "CyberkrillTests"
         ],
         "status": 0,
-        "seconds": 16.152
+        "seconds": 14.63
       },
       "checks": [
         {
@@ -1121,7 +1122,7 @@
               "builder/destination-uncompressed"
             ],
             "status": 1,
-            "seconds": 0.091,
+            "seconds": 0.082,
             "failure": "AssertionError: success status: builder/destination-uncompressed"
           },
           "green": {
@@ -1136,7 +1137,7 @@
               "builder/destination-uncompressed"
             ],
             "status": 0,
-            "seconds": 0.07
+            "seconds": 0.08
           }
         },
         {
@@ -1163,7 +1164,7 @@
               "builder/route-uncompressed"
             ],
             "status": 1,
-            "seconds": 0.084,
+            "seconds": 0.088,
             "failure": "AssertionError: success status: builder/route-uncompressed"
           },
           "green": {
@@ -1178,7 +1179,7 @@
               "builder/route-uncompressed"
             ],
             "status": 0,
-            "seconds": 0.073
+            "seconds": 0.08
           }
         },
         {
@@ -1205,7 +1206,7 @@
               "builder/destination-hybrid"
             ],
             "status": 1,
-            "seconds": 0.084,
+            "seconds": 0.083,
             "failure": "AssertionError: success status: builder/destination-hybrid"
           },
           "green": {
@@ -1220,7 +1221,7 @@
               "builder/destination-hybrid"
             ],
             "status": 0,
-            "seconds": 0.07
+            "seconds": 0.072
           }
         },
         {
@@ -1247,7 +1248,7 @@
               "builder/route-hybrid"
             ],
             "status": 1,
-            "seconds": 0.086,
+            "seconds": 0.083,
             "failure": "AssertionError: success status: builder/route-hybrid"
           },
           "green": {
@@ -1262,7 +1263,7 @@
               "builder/route-hybrid"
             ],
             "status": 0,
-            "seconds": 0.073
+            "seconds": 0.081
           }
         }
       ]
@@ -1283,7 +1284,7 @@
           "CyberkrillTests"
         ],
         "status": 0,
-        "seconds": 14.431
+        "seconds": 14.636
       },
       "restore_build": {
         "command": [
@@ -1296,7 +1297,7 @@
           "CyberkrillTests"
         ],
         "status": 0,
-        "seconds": 14.177
+        "seconds": 14.543
       },
       "checks": [
         {
@@ -1323,7 +1324,7 @@
               "builder/destination-mismatched"
             ],
             "status": 1,
-            "seconds": 0.085,
+            "seconds": 0.086,
             "failure": "AssertionError: ordinary failure: builder/destination-mismatched"
           },
           "green": {
@@ -1338,7 +1339,7 @@
               "builder/destination-mismatched"
             ],
             "status": 0,
-            "seconds": 0.07
+            "seconds": 0.074
           }
         },
         {
@@ -1365,7 +1366,7 @@
               "builder/route-mismatched"
             ],
             "status": 1,
-            "seconds": 0.095,
+            "seconds": 0.088,
             "failure": "AssertionError: ordinary failure: builder/route-mismatched"
           },
           "green": {
@@ -1380,7 +1381,7 @@
               "builder/route-mismatched"
             ],
             "status": 0,
-            "seconds": 0.072
+            "seconds": 0.073
           }
         }
       ]
@@ -1401,7 +1402,7 @@
           "CyberkrillTests"
         ],
         "status": 0,
-        "seconds": 15.738
+        "seconds": 14.531
       },
       "restore_build": {
         "command": [
@@ -1414,7 +1415,7 @@
           "CyberkrillTests"
         ],
         "status": 0,
-        "seconds": 15.047
+        "seconds": 14.632
       },
       "checks": [
         {
@@ -1441,7 +1442,7 @@
               "json/duplicate-known"
             ],
             "status": 1,
-            "seconds": 0.08,
+            "seconds": 0.085,
             "failure": "AssertionError: ordinary failure: json/duplicate-known"
           },
           "green": {
@@ -1456,7 +1457,7 @@
               "json/duplicate-known"
             ],
             "status": 0,
-            "seconds": 0.108
+            "seconds": 0.071
           }
         },
         {
@@ -1483,7 +1484,7 @@
               "json/exponent-amount_msats"
             ],
             "status": 1,
-            "seconds": 0.085,
+            "seconds": 0.083,
             "failure": "AssertionError: ordinary failure: json/exponent-amount_msats"
           },
           "green": {
@@ -1498,7 +1499,7 @@
               "json/exponent-amount_msats"
             ],
             "status": 0,
-            "seconds": 0.083
+            "seconds": 0.082
           }
         }
       ]
@@ -1519,7 +1520,7 @@
           "CyberkrillTests"
         ],
         "status": 0,
-        "seconds": 16.192
+        "seconds": 14.843
       },
       "restore_build": {
         "command": [
@@ -1532,7 +1533,7 @@
           "CyberkrillTests"
         ],
         "status": 0,
-        "seconds": 16.321
+        "seconds": 15.642
       },
       "checks": [
         {
@@ -1559,7 +1560,7 @@
               "json/timestamp-6"
             ],
             "status": 1,
-            "seconds": 0.085,
+            "seconds": 0.089,
             "failure": "AssertionError: ordinary failure: json/timestamp-6"
           },
           "green": {
@@ -1574,7 +1575,7 @@
               "json/timestamp-6"
             ],
             "status": 0,
-            "seconds": 0.073
+            "seconds": 0.086
           }
         }
       ]
@@ -1595,7 +1596,7 @@
           "CyberkrillTests"
         ],
         "status": 0,
-        "seconds": 14.624
+        "seconds": 15.844
       },
       "restore_build": {
         "command": [
@@ -1608,7 +1609,7 @@
           "CyberkrillTests"
         ],
         "status": 0,
-        "seconds": 15.228
+        "seconds": 15.346
       },
       "checks": [
         {
@@ -1635,7 +1636,7 @@
               "json/feature-4"
             ],
             "status": 1,
-            "seconds": 0.079,
+            "seconds": 0.099,
             "failure": "AssertionError: success status: json/feature-4"
           },
           "green": {
@@ -1650,7 +1651,7 @@
               "json/feature-4"
             ],
             "status": 0,
-            "seconds": 0.072
+            "seconds": 0.076
           }
         }
       ]
@@ -1671,7 +1672,7 @@
           "CyberkrillTests"
         ],
         "status": 0,
-        "seconds": 15.968
+        "seconds": 15.253
       },
       "restore_build": {
         "command": [
@@ -1684,7 +1685,7 @@
           "CyberkrillTests"
         ],
         "status": 0,
-        "seconds": 15.054
+        "seconds": 14.323
       },
       "checks": [
         {
@@ -1711,7 +1712,7 @@
               "json/hop-overflow-cltv_expiry_delta"
             ],
             "status": 1,
-            "seconds": 0.111,
+            "seconds": 0.086,
             "failure": "AssertionError: ordinary failure: json/hop-overflow-cltv_expiry_delta"
           },
           "green": {
@@ -1726,7 +1727,7 @@
               "json/hop-overflow-cltv_expiry_delta"
             ],
             "status": 0,
-            "seconds": 0.073
+            "seconds": 0.071
           }
         }
       ]
@@ -1747,7 +1748,7 @@
           "CyberkrillTests"
         ],
         "status": 0,
-        "seconds": 14.642
+        "seconds": 13.032
       },
       "restore_build": {
         "command": [
@@ -1760,7 +1761,7 @@
           "CyberkrillTests"
         ],
         "status": 0,
-        "seconds": 13.98
+        "seconds": 12.615
       },
       "checks": [
         {
@@ -1785,7 +1786,7 @@
               "--routing"
             ],
             "status": 1,
-            "seconds": 1.98,
+            "seconds": 1.944,
             "failure": "AssertionError: ordinary write failure status"
           },
           "green": {
@@ -1799,7 +1800,7 @@
               "--routing"
             ],
             "status": 0,
-            "seconds": 3.619
+            "seconds": 2.455
           }
         }
       ]
@@ -1820,7 +1821,7 @@
           "CyberkrillTests"
         ],
         "status": 0,
-        "seconds": 13.765
+        "seconds": 12.629
       },
       "restore_build": {
         "command": [
@@ -1833,7 +1834,7 @@
           "CyberkrillTests"
         ],
         "status": 0,
-        "seconds": 14.127
+        "seconds": 12.431
       },
       "checks": [
         {
@@ -1860,7 +1861,7 @@
               "negative/payment-hash-padding"
             ],
             "status": 1,
-            "seconds": 0.101,
+            "seconds": 0.083,
             "failure": "AssertionError: refusal port status: negative/payment-hash-padding"
           },
           "green": {
@@ -1875,7 +1876,7 @@
               "negative/payment-hash-padding"
             ],
             "status": 0,
-            "seconds": 0.08
+            "seconds": 0.073
           }
         },
         {
@@ -1902,7 +1903,7 @@
               "negative/description-padding"
             ],
             "status": 1,
-            "seconds": 0.117,
+            "seconds": 0.094,
             "failure": "AssertionError: refusal port status: negative/description-padding"
           },
           "green": {
@@ -1917,7 +1918,7 @@
               "negative/description-padding"
             ],
             "status": 0,
-            "seconds": 0.076
+            "seconds": 0.072
           }
         },
         {
@@ -1944,7 +1945,7 @@
               "negative/expiry-leading-zero"
             ],
             "status": 1,
-            "seconds": 0.105,
+            "seconds": 0.084,
             "failure": "AssertionError: refusal port status: negative/expiry-leading-zero"
           },
           "green": {
@@ -1959,7 +1960,7 @@
               "negative/expiry-leading-zero"
             ],
             "status": 0,
-            "seconds": 0.075
+            "seconds": 0.074
           }
         },
         {
@@ -1986,7 +1987,7 @@
               "negative/cltv-leading-zero"
             ],
             "status": 1,
-            "seconds": 0.088,
+            "seconds": 0.087,
             "failure": "AssertionError: refusal port status: negative/cltv-leading-zero"
           },
           "green": {
@@ -2001,7 +2002,7 @@
               "negative/cltv-leading-zero"
             ],
             "status": 0,
-            "seconds": 0.078
+            "seconds": 0.072
           }
         },
         {
@@ -2028,7 +2029,7 @@
               "negative/features-leading-zero"
             ],
             "status": 1,
-            "seconds": 0.087,
+            "seconds": 0.086,
             "failure": "AssertionError: refusal port status: negative/features-leading-zero"
           },
           "green": {
@@ -2043,7 +2044,7 @@
               "negative/features-leading-zero"
             ],
             "status": 0,
-            "seconds": 0.074
+            "seconds": 0.072
           }
         },
         {
@@ -2070,7 +2071,7 @@
               "negative/n-payment-hash-padding"
             ],
             "status": 1,
-            "seconds": 0.085,
+            "seconds": 0.083,
             "failure": "AssertionError: refusal port status: negative/n-payment-hash-padding"
           },
           "green": {
@@ -2112,7 +2113,7 @@
               "url-refusal/userinfo"
             ],
             "status": 1,
-            "seconds": 0.085,
+            "seconds": 0.082,
             "failure": "AssertionError: refusal port status: url-refusal/userinfo"
           },
           "green": {
@@ -2127,7 +2128,7 @@
               "url-refusal/userinfo"
             ],
             "status": 0,
-            "seconds": 0.074
+            "seconds": 0.077
           }
         },
         {
@@ -2154,7 +2155,7 @@
               "url-refusal/userinfo-multiple"
             ],
             "status": 1,
-            "seconds": 0.088,
+            "seconds": 0.086,
             "failure": "AssertionError: refusal port status: url-refusal/userinfo-multiple"
           },
           "green": {
@@ -2169,7 +2170,7 @@
               "url-refusal/userinfo-multiple"
             ],
             "status": 0,
-            "seconds": 0.082
+            "seconds": 0.076
           }
         },
         {
@@ -2196,7 +2197,7 @@
               "url-refusal/ipv6"
             ],
             "status": 1,
-            "seconds": 0.082,
+            "seconds": 0.081,
             "failure": "AssertionError: refusal port status: url-refusal/ipv6"
           },
           "green": {
@@ -2211,7 +2212,7 @@
               "url-refusal/ipv6"
             ],
             "status": 0,
-            "seconds": 0.08
+            "seconds": 0.071
           }
         },
         {
@@ -2238,7 +2239,7 @@
               "url-refusal/ipv4-hex"
             ],
             "status": 1,
-            "seconds": 0.085,
+            "seconds": 0.082,
             "failure": "AssertionError: refusal port status: url-refusal/ipv4-hex"
           },
           "green": {
@@ -2253,7 +2254,7 @@
               "url-refusal/ipv4-hex"
             ],
             "status": 0,
-            "seconds": 0.077
+            "seconds": 0.074
           }
         },
         {
@@ -2280,7 +2281,7 @@
               "url-refusal/ipv4-integer"
             ],
             "status": 1,
-            "seconds": 0.083,
+            "seconds": 0.085,
             "failure": "AssertionError: refusal port status: url-refusal/ipv4-integer"
           },
           "green": {
@@ -2295,7 +2296,7 @@
               "url-refusal/ipv4-integer"
             ],
             "status": 0,
-            "seconds": 0.082
+            "seconds": 0.075
           }
         },
         {
@@ -2322,7 +2323,7 @@
               "url-refusal/ipv4-short"
             ],
             "status": 1,
-            "seconds": 0.081,
+            "seconds": 0.087,
             "failure": "AssertionError: refusal port status: url-refusal/ipv4-short"
           },
           "green": {
@@ -2337,7 +2338,7 @@
               "url-refusal/ipv4-short"
             ],
             "status": 0,
-            "seconds": 0.081
+            "seconds": 0.074
           }
         },
         {
@@ -2364,7 +2365,7 @@
               "url-refusal/ipv4-octal"
             ],
             "status": 1,
-            "seconds": 0.083,
+            "seconds": 0.087,
             "failure": "AssertionError: refusal port status: url-refusal/ipv4-octal"
           },
           "green": {
@@ -2379,7 +2380,7 @@
               "url-refusal/ipv4-octal"
             ],
             "status": 0,
-            "seconds": 0.074
+            "seconds": 0.073
           }
         },
         {
@@ -2406,7 +2407,7 @@
               "url-refusal/ipv4-leading"
             ],
             "status": 1,
-            "seconds": 0.081,
+            "seconds": 0.087,
             "failure": "AssertionError: refusal port status: url-refusal/ipv4-leading"
           },
           "green": {
@@ -2421,7 +2422,7 @@
               "url-refusal/ipv4-leading"
             ],
             "status": 0,
-            "seconds": 0.08
+            "seconds": 0.078
           }
         },
         {
@@ -2448,7 +2449,7 @@
               "url-refusal/ipv4-dot"
             ],
             "status": 1,
-            "seconds": 0.099,
+            "seconds": 0.09,
             "failure": "AssertionError: refusal port status: url-refusal/ipv4-dot"
           },
           "green": {
@@ -2463,7 +2464,7 @@
               "url-refusal/ipv4-dot"
             ],
             "status": 0,
-            "seconds": 0.078
+            "seconds": 0.072
           }
         },
         {
@@ -2490,7 +2491,7 @@
               "url-refusal/unicode-host"
             ],
             "status": 1,
-            "seconds": 0.089,
+            "seconds": 0.086,
             "failure": "AssertionError: refusal port status: url-refusal/unicode-host"
           },
           "green": {
@@ -2505,7 +2506,7 @@
               "url-refusal/unicode-host"
             ],
             "status": 0,
-            "seconds": 0.077
+            "seconds": 0.075
           }
         },
         {
@@ -2532,7 +2533,7 @@
               "url-refusal/encoded-unicode-host"
             ],
             "status": 1,
-            "seconds": 0.082,
+            "seconds": 0.093,
             "failure": "AssertionError: refusal port status: url-refusal/encoded-unicode-host"
           },
           "green": {
@@ -2547,7 +2548,7 @@
               "url-refusal/encoded-unicode-host"
             ],
             "status": 0,
-            "seconds": 0.077
+            "seconds": 0.075
           }
         },
         {
@@ -2574,7 +2575,7 @@
               "url-refusal/punycode-host"
             ],
             "status": 1,
-            "seconds": 0.082,
+            "seconds": 0.085,
             "failure": "AssertionError: refusal port status: url-refusal/punycode-host"
           },
           "green": {
@@ -2589,7 +2590,7 @@
               "url-refusal/punycode-host"
             ],
             "status": 0,
-            "seconds": 0.084
+            "seconds": 0.078
           }
         },
         {
@@ -2616,7 +2617,7 @@
               "url-refusal/punycode-upper"
             ],
             "status": 1,
-            "seconds": 0.081,
+            "seconds": 0.09,
             "failure": "AssertionError: refusal port status: url-refusal/punycode-upper"
           },
           "green": {
@@ -2631,7 +2632,7 @@
               "url-refusal/punycode-upper"
             ],
             "status": 0,
-            "seconds": 0.082
+            "seconds": 0.076
           }
         },
         {
@@ -2658,7 +2659,7 @@
               "url-error/scheme"
             ],
             "status": 1,
-            "seconds": 0.08,
+            "seconds": 0.082,
             "failure": "AssertionError: refusal port status: url-error/scheme"
           },
           "green": {
@@ -2673,7 +2674,7 @@
               "url-error/scheme"
             ],
             "status": 0,
-            "seconds": 0.074
+            "seconds": 0.081
           }
         }
       ]
@@ -2694,7 +2695,7 @@
           "CyberkrillTests"
         ],
         "status": 0,
-        "seconds": 13.23
+        "seconds": 12.63
       },
       "restore_build": {
         "command": [
@@ -2707,7 +2708,7 @@
           "CyberkrillTests"
         ],
         "status": 0,
-        "seconds": 14.43
+        "seconds": 12.839
       },
       "checks": [
         {
@@ -2734,7 +2735,7 @@
               "negative/payment-hash-padding"
             ],
             "status": 1,
-            "seconds": 0.08,
+            "seconds": 0.089,
             "failure": "AssertionError: refusal stdout: negative/payment-hash-padding"
           },
           "green": {
@@ -2749,7 +2750,7 @@
               "negative/payment-hash-padding"
             ],
             "status": 0,
-            "seconds": 0.072
+            "seconds": 0.077
           }
         },
         {
@@ -2776,7 +2777,7 @@
               "negative/description-padding"
             ],
             "status": 1,
-            "seconds": 0.087,
+            "seconds": 0.081,
             "failure": "AssertionError: refusal stdout: negative/description-padding"
           },
           "green": {
@@ -2791,7 +2792,7 @@
               "negative/description-padding"
             ],
             "status": 0,
-            "seconds": 0.071
+            "seconds": 0.087
           }
         },
         {
@@ -2818,7 +2819,7 @@
               "negative/expiry-leading-zero"
             ],
             "status": 1,
-            "seconds": 0.081,
+            "seconds": 0.089,
             "failure": "AssertionError: refusal stdout: negative/expiry-leading-zero"
           },
           "green": {
@@ -2833,7 +2834,7 @@
               "negative/expiry-leading-zero"
             ],
             "status": 0,
-            "seconds": 0.076
+            "seconds": 0.077
           }
         },
         {
@@ -2860,7 +2861,7 @@
               "negative/cltv-leading-zero"
             ],
             "status": 1,
-            "seconds": 0.081,
+            "seconds": 0.095,
             "failure": "AssertionError: refusal stdout: negative/cltv-leading-zero"
           },
           "green": {
@@ -2875,7 +2876,7 @@
               "negative/cltv-leading-zero"
             ],
             "status": 0,
-            "seconds": 0.074
+            "seconds": 0.075
           }
         },
         {
@@ -2902,7 +2903,7 @@
               "negative/features-leading-zero"
             ],
             "status": 1,
-            "seconds": 0.096,
+            "seconds": 0.086,
             "failure": "AssertionError: refusal stdout: negative/features-leading-zero"
           },
           "green": {
@@ -2917,7 +2918,7 @@
               "negative/features-leading-zero"
             ],
             "status": 0,
-            "seconds": 0.072
+            "seconds": 0.075
           }
         },
         {
@@ -2944,7 +2945,7 @@
               "negative/n-payment-hash-padding"
             ],
             "status": 1,
-            "seconds": 0.081,
+            "seconds": 0.09,
             "failure": "AssertionError: refusal stdout: negative/n-payment-hash-padding"
           },
           "green": {
@@ -2959,7 +2960,7 @@
               "negative/n-payment-hash-padding"
             ],
             "status": 0,
-            "seconds": 0.074
+            "seconds": 0.076
           }
         },
         {
@@ -2986,7 +2987,7 @@
               "url-refusal/userinfo"
             ],
             "status": 1,
-            "seconds": 0.081,
+            "seconds": 0.089,
             "failure": "AssertionError: refusal stdout: url-refusal/userinfo"
           },
           "green": {
@@ -3028,7 +3029,7 @@
               "url-refusal/userinfo-multiple"
             ],
             "status": 1,
-            "seconds": 0.083,
+            "seconds": 0.085,
             "failure": "AssertionError: refusal stdout: url-refusal/userinfo-multiple"
           },
           "green": {
@@ -3043,7 +3044,7 @@
               "url-refusal/userinfo-multiple"
             ],
             "status": 0,
-            "seconds": 0.073
+            "seconds": 0.076
           }
         },
         {
@@ -3070,7 +3071,7 @@
               "url-refusal/ipv6"
             ],
             "status": 1,
-            "seconds": 0.082,
+            "seconds": 0.086,
             "failure": "AssertionError: refusal stdout: url-refusal/ipv6"
           },
           "green": {
@@ -3085,7 +3086,7 @@
               "url-refusal/ipv6"
             ],
             "status": 0,
-            "seconds": 0.07
+            "seconds": 0.075
           }
         },
         {
@@ -3112,7 +3113,7 @@
               "url-refusal/ipv4-hex"
             ],
             "status": 1,
-            "seconds": 0.08,
+            "seconds": 0.084,
             "failure": "AssertionError: refusal stdout: url-refusal/ipv4-hex"
           },
           "green": {
@@ -3127,7 +3128,7 @@
               "url-refusal/ipv4-hex"
             ],
             "status": 0,
-            "seconds": 0.074
+            "seconds": 0.079
           }
         },
         {
@@ -3154,7 +3155,7 @@
               "url-refusal/ipv4-integer"
             ],
             "status": 1,
-            "seconds": 0.079,
+            "seconds": 0.083,
             "failure": "AssertionError: refusal stdout: url-refusal/ipv4-integer"
           },
           "green": {
@@ -3196,7 +3197,7 @@
               "url-refusal/ipv4-short"
             ],
             "status": 1,
-            "seconds": 0.082,
+            "seconds": 0.084,
             "failure": "AssertionError: refusal stdout: url-refusal/ipv4-short"
           },
           "green": {
@@ -3211,7 +3212,7 @@
               "url-refusal/ipv4-short"
             ],
             "status": 0,
-            "seconds": 0.071
+            "seconds": 0.075
           }
         },
         {
@@ -3238,7 +3239,7 @@
               "url-refusal/ipv4-octal"
             ],
             "status": 1,
-            "seconds": 0.083,
+            "seconds": 0.091,
             "failure": "AssertionError: refusal stdout: url-refusal/ipv4-octal"
           },
           "green": {
@@ -3280,7 +3281,7 @@
               "url-refusal/ipv4-leading"
             ],
             "status": 1,
-            "seconds": 0.082,
+            "seconds": 0.083,
             "failure": "AssertionError: refusal stdout: url-refusal/ipv4-leading"
           },
           "green": {
@@ -3295,7 +3296,7 @@
               "url-refusal/ipv4-leading"
             ],
             "status": 0,
-            "seconds": 0.077
+            "seconds": 0.07
           }
         },
         {
@@ -3322,7 +3323,7 @@
               "url-refusal/ipv4-dot"
             ],
             "status": 1,
-            "seconds": 0.084,
+            "seconds": 0.083,
             "failure": "AssertionError: refusal stdout: url-refusal/ipv4-dot"
           },
           "green": {
@@ -3337,7 +3338,7 @@
               "url-refusal/ipv4-dot"
             ],
             "status": 0,
-            "seconds": 0.08
+            "seconds": 0.074
           }
         },
         {
@@ -3364,7 +3365,7 @@
               "url-refusal/unicode-host"
             ],
             "status": 1,
-            "seconds": 0.083,
+            "seconds": 0.085,
             "failure": "AssertionError: refusal stdout: url-refusal/unicode-host"
           },
           "green": {
@@ -3379,7 +3380,7 @@
               "url-refusal/unicode-host"
             ],
             "status": 0,
-            "seconds": 0.089
+            "seconds": 0.076
           }
         },
         {
@@ -3421,7 +3422,7 @@
               "url-refusal/encoded-unicode-host"
             ],
             "status": 0,
-            "seconds": 0.085
+            "seconds": 0.072
           }
         },
         {
@@ -3463,7 +3464,7 @@
               "url-refusal/punycode-host"
             ],
             "status": 0,
-            "seconds": 0.1
+            "seconds": 0.074
           }
         },
         {
@@ -3490,7 +3491,7 @@
               "url-refusal/punycode-upper"
             ],
             "status": 1,
-            "seconds": 0.085,
+            "seconds": 0.081,
             "failure": "AssertionError: refusal stdout: url-refusal/punycode-upper"
           },
           "green": {
@@ -3505,7 +3506,7 @@
               "url-refusal/punycode-upper"
             ],
             "status": 0,
-            "seconds": 0.092
+            "seconds": 0.074
           }
         },
         {
@@ -3532,7 +3533,7 @@
               "url-error/scheme"
             ],
             "status": 1,
-            "seconds": 0.092,
+            "seconds": 0.083,
             "failure": "AssertionError: refusal stdout: url-error/scheme"
           },
           "green": {
@@ -3547,7 +3548,7 @@
               "url-error/scheme"
             ],
             "status": 0,
-            "seconds": 0.075
+            "seconds": 0.071
           }
         }
       ]
@@ -3568,7 +3569,7 @@
           "CyberkrillTests"
         ],
         "status": 0,
-        "seconds": 17.971
+        "seconds": 16.673
       },
       "restore_build": {
         "command": [
@@ -3581,7 +3582,7 @@
           "CyberkrillTests"
         ],
         "status": 0,
-        "seconds": 18.491
+        "seconds": 16.437
       },
       "checks": [
         {
@@ -3608,7 +3609,7 @@
               "negative/payment-hash-padding"
             ],
             "status": 1,
-            "seconds": 0.082,
+            "seconds": 0.091,
             "failure": "AssertionError: refusal error identity: negative/payment-hash-padding"
           },
           "green": {
@@ -3623,7 +3624,7 @@
               "negative/payment-hash-padding"
             ],
             "status": 0,
-            "seconds": 0.077
+            "seconds": 0.075
           }
         },
         {
@@ -3650,7 +3651,7 @@
               "negative/description-padding"
             ],
             "status": 1,
-            "seconds": 0.091,
+            "seconds": 0.085,
             "failure": "AssertionError: refusal error identity: negative/description-padding"
           },
           "green": {
@@ -3665,7 +3666,7 @@
               "negative/description-padding"
             ],
             "status": 0,
-            "seconds": 0.078
+            "seconds": 0.073
           }
         },
         {
@@ -3692,7 +3693,7 @@
               "negative/expiry-leading-zero"
             ],
             "status": 1,
-            "seconds": 0.096,
+            "seconds": 0.083,
             "failure": "AssertionError: refusal error identity: negative/expiry-leading-zero"
           },
           "green": {
@@ -3707,7 +3708,7 @@
               "negative/expiry-leading-zero"
             ],
             "status": 0,
-            "seconds": 0.099
+            "seconds": 0.073
           }
         },
         {
@@ -3734,7 +3735,7 @@
               "negative/cltv-leading-zero"
             ],
             "status": 1,
-            "seconds": 0.094,
+            "seconds": 0.084,
             "failure": "AssertionError: refusal error identity: negative/cltv-leading-zero"
           },
           "green": {
@@ -3749,7 +3750,7 @@
               "negative/cltv-leading-zero"
             ],
             "status": 0,
-            "seconds": 0.088
+            "seconds": 0.075
           }
         },
         {
@@ -3776,7 +3777,7 @@
               "negative/features-leading-zero"
             ],
             "status": 1,
-            "seconds": 0.095,
+            "seconds": 0.083,
             "failure": "AssertionError: refusal error identity: negative/features-leading-zero"
           },
           "green": {
@@ -3791,7 +3792,7 @@
               "negative/features-leading-zero"
             ],
             "status": 0,
-            "seconds": 0.075
+            "seconds": 0.078
           }
         },
         {
@@ -3818,7 +3819,7 @@
               "negative/n-payment-hash-padding"
             ],
             "status": 1,
-            "seconds": 0.094,
+            "seconds": 0.082,
             "failure": "AssertionError: refusal error identity: negative/n-payment-hash-padding"
           },
           "green": {
@@ -3833,7 +3834,7 @@
               "negative/n-payment-hash-padding"
             ],
             "status": 0,
-            "seconds": 0.079
+            "seconds": 0.082
           }
         },
         {
@@ -3860,7 +3861,7 @@
               "url-refusal/userinfo"
             ],
             "status": 1,
-            "seconds": 0.09,
+            "seconds": 0.082,
             "failure": "AssertionError: refusal error identity: url-refusal/userinfo"
           },
           "green": {
@@ -3875,7 +3876,7 @@
               "url-refusal/userinfo"
             ],
             "status": 0,
-            "seconds": 0.081
+            "seconds": 0.073
           }
         },
         {
@@ -3902,7 +3903,7 @@
               "url-refusal/userinfo-multiple"
             ],
             "status": 1,
-            "seconds": 0.089,
+            "seconds": 0.083,
             "failure": "AssertionError: refusal error identity: url-refusal/userinfo-multiple"
           },
           "green": {
@@ -3917,7 +3918,7 @@
               "url-refusal/userinfo-multiple"
             ],
             "status": 0,
-            "seconds": 0.077
+            "seconds": 0.075
           }
         },
         {
@@ -3959,7 +3960,7 @@
               "url-refusal/ipv6"
             ],
             "status": 0,
-            "seconds": 0.079
+            "seconds": 0.074
           }
         },
         {
@@ -3986,7 +3987,7 @@
               "url-refusal/ipv4-hex"
             ],
             "status": 1,
-            "seconds": 0.084,
+            "seconds": 0.089,
             "failure": "AssertionError: refusal error identity: url-refusal/ipv4-hex"
           },
           "green": {
@@ -4001,7 +4002,7 @@
               "url-refusal/ipv4-hex"
             ],
             "status": 0,
-            "seconds": 0.081
+            "seconds": 0.073
           }
         },
         {
@@ -4028,7 +4029,7 @@
               "url-refusal/ipv4-integer"
             ],
             "status": 1,
-            "seconds": 0.085,
+            "seconds": 0.09,
             "failure": "AssertionError: refusal error identity: url-refusal/ipv4-integer"
           },
           "green": {
@@ -4043,7 +4044,7 @@
               "url-refusal/ipv4-integer"
             ],
             "status": 0,
-            "seconds": 0.076
+            "seconds": 0.073
           }
         },
         {
@@ -4070,7 +4071,7 @@
               "url-refusal/ipv4-short"
             ],
             "status": 1,
-            "seconds": 0.084,
+            "seconds": 0.081,
             "failure": "AssertionError: refusal error identity: url-refusal/ipv4-short"
           },
           "green": {
@@ -4085,7 +4086,7 @@
               "url-refusal/ipv4-short"
             ],
             "status": 0,
-            "seconds": 0.074
+            "seconds": 0.078
           }
         },
         {
@@ -4112,7 +4113,7 @@
               "url-refusal/ipv4-octal"
             ],
             "status": 1,
-            "seconds": 0.086,
+            "seconds": 0.084,
             "failure": "AssertionError: refusal error identity: url-refusal/ipv4-octal"
           },
           "green": {
@@ -4127,7 +4128,7 @@
               "url-refusal/ipv4-octal"
             ],
             "status": 0,
-            "seconds": 0.078
+            "seconds": 0.075
           }
         },
         {
@@ -4154,7 +4155,7 @@
               "url-refusal/ipv4-leading"
             ],
             "status": 1,
-            "seconds": 0.086,
+            "seconds": 0.088,
             "failure": "AssertionError: refusal error identity: url-refusal/ipv4-leading"
           },
           "green": {
@@ -4169,7 +4170,7 @@
               "url-refusal/ipv4-leading"
             ],
             "status": 0,
-            "seconds": 0.077
+            "seconds": 0.071
           }
         },
         {
@@ -4211,7 +4212,7 @@
               "url-refusal/ipv4-dot"
             ],
             "status": 0,
-            "seconds": 0.074
+            "seconds": 0.071
           }
         },
         {
@@ -4238,7 +4239,7 @@
               "url-refusal/unicode-host"
             ],
             "status": 1,
-            "seconds": 0.087,
+            "seconds": 0.083,
             "failure": "AssertionError: refusal error identity: url-refusal/unicode-host"
           },
           "green": {
@@ -4253,7 +4254,7 @@
               "url-refusal/unicode-host"
             ],
             "status": 0,
-            "seconds": 0.075
+            "seconds": 0.071
           }
         },
         {
@@ -4280,7 +4281,7 @@
               "url-refusal/encoded-unicode-host"
             ],
             "status": 1,
-            "seconds": 0.086,
+            "seconds": 0.082,
             "failure": "AssertionError: refusal error identity: url-refusal/encoded-unicode-host"
           },
           "green": {
@@ -4295,7 +4296,7 @@
               "url-refusal/encoded-unicode-host"
             ],
             "status": 0,
-            "seconds": 0.079
+            "seconds": 0.075
           }
         },
         {
@@ -4322,7 +4323,7 @@
               "url-refusal/punycode-host"
             ],
             "status": 1,
-            "seconds": 0.082,
+            "seconds": 0.091,
             "failure": "AssertionError: refusal error identity: url-refusal/punycode-host"
           },
           "green": {
@@ -4337,7 +4338,7 @@
               "url-refusal/punycode-host"
             ],
             "status": 0,
-            "seconds": 0.078
+            "seconds": 0.075
           }
         },
         {
@@ -4364,7 +4365,7 @@
               "url-refusal/punycode-upper"
             ],
             "status": 1,
-            "seconds": 0.084,
+            "seconds": 0.089,
             "failure": "AssertionError: refusal error identity: url-refusal/punycode-upper"
           },
           "green": {
@@ -4379,7 +4380,7 @@
               "url-refusal/punycode-upper"
             ],
             "status": 0,
-            "seconds": 0.079
+            "seconds": 0.077
           }
         },
         {
@@ -4406,7 +4407,7 @@
               "url-error/scheme"
             ],
             "status": 1,
-            "seconds": 0.081,
+            "seconds": 0.088,
             "failure": "AssertionError: refusal error identity: url-error/scheme"
           },
           "green": {
@@ -4421,7 +4422,7 @@
               "url-error/scheme"
             ],
             "status": 0,
-            "seconds": 0.077
+            "seconds": 0.074
           }
         }
       ]
@@ -4442,7 +4443,7 @@
           "CyberkrillTests"
         ],
         "status": 0,
-        "seconds": 14.659
+        "seconds": 14.222
       },
       "restore_build": {
         "command": [
@@ -4455,7 +4456,7 @@
           "CyberkrillTests"
         ],
         "status": 0,
-        "seconds": 15.636
+        "seconds": 14.124
       },
       "checks": [
         {
@@ -4482,7 +4483,7 @@
               "positive/amount-leading-zero"
             ],
             "status": 1,
-            "seconds": 0.084,
+            "seconds": 0.082,
             "failure": "AssertionError: wrong pinned values: positive/amount-leading-zero stdout[\"destination\"]"
           },
           "green": {
@@ -4497,7 +4498,7 @@
               "positive/amount-leading-zero"
             ],
             "status": 0,
-            "seconds": 0.078
+            "seconds": 0.08
           }
         }
       ]
@@ -4518,7 +4519,7 @@
           "CyberkrillTests"
         ],
         "status": 0,
-        "seconds": 15.141
+        "seconds": 14.225
       },
       "restore_build": {
         "command": [
@@ -4531,7 +4532,7 @@
           "CyberkrillTests"
         ],
         "status": 0,
-        "seconds": 13.956
+        "seconds": 14.054
       },
       "checks": [
         {
@@ -4558,7 +4559,7 @@
               "positive/n-amount-leading-zero"
             ],
             "status": 1,
-            "seconds": 0.091,
+            "seconds": 0.087,
             "failure": "AssertionError: leading-zero port status/stderr"
           },
           "green": {
@@ -4573,7 +4574,7 @@
               "positive/n-amount-leading-zero"
             ],
             "status": 0,
-            "seconds": 0.073
+            "seconds": 0.077
           }
         }
       ]
@@ -4594,7 +4595,7 @@
           "CyberkrillTests"
         ],
         "status": 0,
-        "seconds": 15.576
+        "seconds": 14.333
       },
       "restore_build": {
         "command": [
@@ -4607,7 +4608,7 @@
           "CyberkrillTests"
         ],
         "status": 0,
-        "seconds": 13.732
+        "seconds": 14.249
       },
       "checks": [
         {
@@ -4634,7 +4635,7 @@
               "valid/L516"
             ],
             "status": 1,
-            "seconds": 0.103,
+            "seconds": 0.087,
             "failure": "AssertionError: unlisted difference: valid/L516 stdout[\"routes\"][0][0][\"fees\"][\"base_msat\"]"
           },
           "green": {
@@ -4649,7 +4650,7 @@
               "valid/L516"
             ],
             "status": 0,
-            "seconds": 0.07
+            "seconds": 0.072
           }
         }
       ]
@@ -4670,7 +4671,7 @@
           "CyberkrillTests"
         ],
         "status": 0,
-        "seconds": 15.245
+        "seconds": 14.316
       },
       "restore_build": {
         "command": [
@@ -4683,7 +4684,7 @@
           "CyberkrillTests"
         ],
         "status": 0,
-        "seconds": 14.635
+        "seconds": 14.434
       },
       "checks": [
         {
@@ -4710,7 +4711,7 @@
               "lnurl-reference/cyberkrill"
             ],
             "status": 1,
-            "seconds": 0.128,
+            "seconds": 0.087,
             "failure": "AssertionError: unlisted difference: lnurl-reference/cyberkrill stdout[\"query_params\"][\"q\"]"
           },
           "green": {
@@ -4725,7 +4726,7 @@
               "lnurl-reference/cyberkrill"
             ],
             "status": 0,
-            "seconds": 0.074
+            "seconds": 0.077
           }
         }
       ]
@@ -4746,7 +4747,7 @@
           "CyberkrillTests"
         ],
         "status": 0,
-        "seconds": 14.025
+        "seconds": 14.144
       },
       "restore_build": {
         "command": [
@@ -4759,7 +4760,7 @@
           "CyberkrillTests"
         ],
         "status": 0,
-        "seconds": 15.651
+        "seconds": 14.226
       },
       "checks": [
         {
@@ -4786,7 +4787,7 @@
               "builder/explicit-n-mismatch"
             ],
             "status": 1,
-            "seconds": 0.083,
+            "seconds": 0.086,
             "failure": "AssertionError: success status: builder/explicit-n-mismatch"
           },
           "green": {
@@ -4822,7 +4823,7 @@
           "CyberkrillTests"
         ],
         "status": 0,
-        "seconds": 15.814
+        "seconds": 15.235
       },
       "restore_build": {
         "command": [
@@ -4835,7 +4836,7 @@
           "CyberkrillTests"
         ],
         "status": 0,
-        "seconds": 15.126
+        "seconds": 15.226
       },
       "checks": [
         {
@@ -4862,7 +4863,7 @@
               "json/duplicate-network-enum"
             ],
             "status": 1,
-            "seconds": 0.081,
+            "seconds": 0.088,
             "failure": "AssertionError: ordinary failure: json/duplicate-network-enum"
           },
           "green": {
@@ -4877,7 +4878,7 @@
               "json/duplicate-network-enum"
             ],
             "status": 0,
-            "seconds": 0.069
+            "seconds": 0.076
           }
         }
       ]
@@ -4898,7 +4899,7 @@
           "CyberkrillTests"
         ],
         "status": 0,
-        "seconds": 13.63
+        "seconds": 12.543
       },
       "restore_build": {
         "command": [
@@ -4911,7 +4912,7 @@
           "CyberkrillTests"
         ],
         "status": 0,
-        "seconds": 12.418
+        "seconds": 12.731
       },
       "checks": [
         {
@@ -4938,7 +4939,7 @@
               "ln-decode-invoice"
             ],
             "status": 1,
-            "seconds": 0.087,
+            "seconds": 0.088,
             "failure": "AssertionError: FIFO output bytes before EOF: ln-decode-invoice"
           },
           "green": {
@@ -4980,7 +4981,7 @@
               "ln-decode-lnurl"
             ],
             "status": 1,
-            "seconds": 0.087,
+            "seconds": 0.092,
             "failure": "AssertionError: FIFO output bytes before EOF: ln-decode-lnurl"
           },
           "green": {
@@ -4995,7 +4996,7 @@
               "ln-decode-lnurl"
             ],
             "status": 0,
-            "seconds": 0.073
+            "seconds": 0.076
           }
         }
       ]
@@ -5010,6 +5011,6 @@
       "test"
     ],
     "status": 0,
-    "seconds": 270.199
+    "seconds": 311.2
   }
 }

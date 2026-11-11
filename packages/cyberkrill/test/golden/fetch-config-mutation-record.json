@@ -1,0 +1,2271 @@
+{
+  "source_sha256": {
+    "Cyberkrill/App.lean": "c4988419b9aec54141f3d2355de8b0481843a7f142295e427921e5cd28517dd3",
+    "Cyberkrill/FetchConfig.lean": "8ff88b49985bd008060d1a913fa0daa4e5ec9533ddf10f08cfb915610c2f43cb",
+    "Cyberkrill/Invite.lean": "ca3df94074fc673cabe6bff3ddec1ac9007a00ebc432b05b130b15af46a3e321",
+    "Cyberkrill/TestEntry.lean": "c4bb325067bc0639c40cbffdaa1a3b0c6a888af1c63631a68db8263bd7625ee0",
+    "CyberkrillTests/FetchConfig.lean": "5da86af97d1063bef9064b0083387448c91314ff2b783d0eac0c79e5e167cf97",
+    "CyberkrillTests.lean": "4a8c61cbe208f66da5da6cde1e8a0db64a843f46a7ba6e24d2d4bdfc5773ab2e",
+    "test/network.py": "eda4c160a91bb73ddc43d8b9a48c36c6c240d6fcbd0926f1b542934ff0ba673e",
+    "test/fetch-config.py": "5158952b0e9264a1315f294885e92e562888525a65aafad22a48cba2b4771d48",
+    "test/fetch-config-mutations.py": "a8e817d7d3a2b3451a1265317b3f98341111f5ac12170f60033a43919efb00b6",
+    "test/price-mutations.py": "7d64067f00df09ec76a8f944e78e1d1f2af8b058321e7d5078f6aa2f15e94506",
+    "test/http/fetch-config.json": "97df201d4345eead3271ab84772fc9c35f1f4ee3291ea84ff5021005bf8f256d",
+    "test/http/fetch-config-reference.json": "c9d8aee4026752e184b2aed384c8f22f6885b2fcd40cc84ab422deb9221d4936",
+    "test/http/fetch-config.provenance.json": "8474e401e471fe4489c2b32e81d4e0a7136a0f857857b0edfc643e8ff5daf511",
+    "../http-curl/HttpCurl.lean": "a7f7646c563d612e23f2d432798dfa751f47cf208a516d515f0e69c853926a6b",
+    "../http-curl/link_shim.c": "87942ff9a9870fa580ce0f6b2f0aa4ef3032eaea10e187f848243d892f01070e",
+    "../http-curl/test/responder.py": "9b661f268f6693cee0d268952aab862d15183b2c3cc24c9058bc226f5606795a",
+    "../lightning/Lightning/Lnurl/Url.lean": "24efaa167d2dae47f95b2252fb27945e06e8865d89051fdd1e386a2d472f5356"
+  },
+  "initial_build": {
+    "command": [
+      "lake",
+      "build",
+      "cyberkrill",
+      "CyberkrillTests"
+    ],
+    "status": 0,
+    "seconds": 0.422
+  },
+  "initial_green": {
+    "command": [
+      "python3",
+      "-B",
+      "test/fetch-config.py"
+    ],
+    "status": 0,
+    "seconds": 25.515
+  },
+  "checks": [
+    {
+      "property": "numeric-token",
+      "file": "Cyberkrill/FetchConfig.lean",
+      "replace": "if token.length > 2048 then",
+      "with_text": "if false then",
+      "command": [
+        "python3",
+        "-B",
+        "test/fetch-config.py",
+        "--probe",
+        "token-2049"
+      ],
+      "assertion": "config success token-2049",
+      "failure": "AssertionError: config success token-2049 raw request trace",
+      "build": {
+        "command": [
+          "lake",
+          "build",
+          "cyberkrill",
+          "CyberkrillTests"
+        ],
+        "status": 0,
+        "seconds": 13.05
+      },
+      "red": {
+        "command": [
+          "python3",
+          "-B",
+          "test/fetch-config.py",
+          "--probe",
+          "token-2049"
+        ],
+        "status": 1,
+        "seconds": 0.374
+      },
+      "restore_build": {
+        "command": [
+          "lake",
+          "build",
+          "cyberkrill",
+          "CyberkrillTests"
+        ],
+        "status": 0,
+        "seconds": 12.841
+      },
+      "green": {
+        "command": [
+          "python3",
+          "-B",
+          "test/fetch-config.py",
+          "--probe",
+          "token-2049"
+        ],
+        "status": 0,
+        "seconds": 0.37
+      }
+    },
+    {
+      "property": "numeric-coefficient",
+      "file": "Cyberkrill/FetchConfig.lean",
+      "replace": "if (parts.head!.replace \".\" \"\").length > 1024 then",
+      "with_text": "if false then",
+      "command": [
+        "python3",
+        "-B",
+        "test/fetch-config.py",
+        "--probe",
+        "coefficient-1025"
+      ],
+      "assertion": "config success coefficient-1025",
+      "failure": "AssertionError: config success coefficient-1025 raw request trace",
+      "build": {
+        "command": [
+          "lake",
+          "build",
+          "cyberkrill",
+          "CyberkrillTests"
+        ],
+        "status": 0,
+        "seconds": 13.039
+      },
+      "red": {
+        "command": [
+          "python3",
+          "-B",
+          "test/fetch-config.py",
+          "--probe",
+          "coefficient-1025"
+        ],
+        "status": 1,
+        "seconds": 0.372
+      },
+      "restore_build": {
+        "command": [
+          "lake",
+          "build",
+          "cyberkrill",
+          "CyberkrillTests"
+        ],
+        "status": 0,
+        "seconds": 13.05
+      },
+      "green": {
+        "command": [
+          "python3",
+          "-B",
+          "test/fetch-config.py",
+          "--probe",
+          "coefficient-1025"
+        ],
+        "status": 0,
+        "seconds": 0.368
+      }
+    },
+    {
+      "property": "numeric-exponent",
+      "file": "Cyberkrill/FetchConfig.lean",
+      "replace": "if digits.length > 4 || digits.toNat?.getD 0 > 1024 then",
+      "with_text": "if false then",
+      "command": [
+        "python3",
+        "-B",
+        "test/fetch-config.py",
+        "--probe",
+        "exponent-1025"
+      ],
+      "assertion": "config success exponent-1025",
+      "failure": "AssertionError: config success exponent-1025 raw request trace",
+      "build": {
+        "command": [
+          "lake",
+          "build",
+          "cyberkrill",
+          "CyberkrillTests"
+        ],
+        "status": 0,
+        "seconds": 13.034
+      },
+      "red": {
+        "command": [
+          "python3",
+          "-B",
+          "test/fetch-config.py",
+          "--probe",
+          "exponent-1025"
+        ],
+        "status": 1,
+        "seconds": 0.373
+      },
+      "restore_build": {
+        "command": [
+          "lake",
+          "build",
+          "cyberkrill",
+          "CyberkrillTests"
+        ],
+        "status": 0,
+        "seconds": 13.234
+      },
+      "green": {
+        "command": [
+          "python3",
+          "-B",
+          "test/fetch-config.py",
+          "--probe",
+          "exponent-1025"
+        ],
+        "status": 0,
+        "seconds": 0.375
+      }
+    },
+    {
+      "property": "container-depth",
+      "file": "Cyberkrill/FetchConfig.lean",
+      "replace": "if depth \u2265 128 then",
+      "with_text": "if false then",
+      "command": [
+        "python3",
+        "-B",
+        "test/fetch-config.py",
+        "--probe",
+        "array-depth-128"
+      ],
+      "assertion": "config success array-depth-128",
+      "failure": "AssertionError: config success array-depth-128 raw request trace",
+      "build": {
+        "command": [
+          "lake",
+          "build",
+          "cyberkrill",
+          "CyberkrillTests"
+        ],
+        "status": 0,
+        "seconds": 13.04
+      },
+      "red": {
+        "command": [
+          "python3",
+          "-B",
+          "test/fetch-config.py",
+          "--probe",
+          "array-depth-128"
+        ],
+        "status": 1,
+        "seconds": 0.376
+      },
+      "restore_build": {
+        "command": [
+          "lake",
+          "build",
+          "cyberkrill",
+          "CyberkrillTests"
+        ],
+        "status": 0,
+        "seconds": 12.844
+      },
+      "green": {
+        "command": [
+          "python3",
+          "-B",
+          "test/fetch-config.py",
+          "--probe",
+          "array-depth-128"
+        ],
+        "status": 0,
+        "seconds": 0.372
+      }
+    },
+    {
+      "property": "finite-number-range",
+      "file": "Cyberkrill/FetchConfig.lean",
+      "replace": "unless finiteNumber token do",
+      "with_text": "unless true do",
+      "command": [
+        "python3",
+        "-B",
+        "test/fetch-config.py",
+        "--probe",
+        "ignored-overflow"
+      ],
+      "assertion": "config success ignored-overflow",
+      "failure": "AssertionError: config success ignored-overflow raw request trace",
+      "build": {
+        "command": [
+          "lake",
+          "build",
+          "cyberkrill",
+          "CyberkrillTests"
+        ],
+        "status": 0,
+        "seconds": 13.141
+      },
+      "red": {
+        "command": [
+          "python3",
+          "-B",
+          "test/fetch-config.py",
+          "--probe",
+          "ignored-overflow"
+        ],
+        "status": 1,
+        "seconds": 0.424
+      },
+      "restore_build": {
+        "command": [
+          "lake",
+          "build",
+          "cyberkrill",
+          "CyberkrillTests"
+        ],
+        "status": 0,
+        "seconds": 13.155
+      },
+      "green": {
+        "command": [
+          "python3",
+          "-B",
+          "test/fetch-config.py",
+          "--probe",
+          "ignored-overflow"
+        ],
+        "status": 0,
+        "seconds": 0.369
+      }
+    },
+    {
+      "property": "transport-bytes",
+      "file": "Cyberkrill/FetchConfig.lean",
+      "replace": "maxResponseBytes := 1048576",
+      "with_text": "maxResponseBytes := 1048577",
+      "command": [
+        "python3",
+        "-B",
+        "test/fetch-config.py",
+        "--probe",
+        "bytes-1048577"
+      ],
+      "assertion": "config transport body bound",
+      "failure": "AssertionError: config transport body bound",
+      "build": {
+        "command": [
+          "lake",
+          "build",
+          "cyberkrill",
+          "CyberkrillTests"
+        ],
+        "status": 0,
+        "seconds": 12.933
+      },
+      "red": {
+        "command": [
+          "python3",
+          "-B",
+          "test/fetch-config.py",
+          "--probe",
+          "bytes-1048577"
+        ],
+        "status": 1,
+        "seconds": 0.419
+      },
+      "restore_build": {
+        "command": [
+          "lake",
+          "build",
+          "cyberkrill",
+          "CyberkrillTests"
+        ],
+        "status": 0,
+        "seconds": 12.937
+      },
+      "green": {
+        "command": [
+          "python3",
+          "-B",
+          "test/fetch-config.py",
+          "--probe",
+          "bytes-1048577"
+        ],
+        "status": 0,
+        "seconds": 0.38
+      }
+    },
+    {
+      "property": "injected-bytes",
+      "file": "Cyberkrill/FetchConfig.lean",
+      "replace": "if r.body.size > req.maxResponseBytes.toNat then",
+      "with_text": "if false then",
+      "command": [
+        "python3",
+        "-B",
+        "test/fetch-config.py",
+        "--probe",
+        "injected-bytes-1048577"
+      ],
+      "assertion": "config success injected-bytes-1048577",
+      "failure": "AssertionError: config success injected-bytes-1048577 request count",
+      "build": {
+        "command": [
+          "lake",
+          "build",
+          "cyberkrill",
+          "CyberkrillTests"
+        ],
+        "status": 0,
+        "seconds": 13.15
+      },
+      "red": {
+        "command": [
+          "python3",
+          "-B",
+          "test/fetch-config.py",
+          "--probe",
+          "injected-bytes-1048577"
+        ],
+        "status": 1,
+        "seconds": 0.376
+      },
+      "restore_build": {
+        "command": [
+          "lake",
+          "build",
+          "cyberkrill",
+          "CyberkrillTests"
+        ],
+        "status": 0,
+        "seconds": 13.339
+      },
+      "green": {
+        "command": [
+          "python3",
+          "-B",
+          "test/fetch-config.py",
+          "--probe",
+          "injected-bytes-1048577"
+        ],
+        "status": 0,
+        "seconds": 0.322
+      }
+    },
+    {
+      "property": "connect-deadline",
+      "file": "Cyberkrill/FetchConfig.lean",
+      "replace": "connectTimeoutMs := 1000",
+      "with_text": "connectTimeoutMs := 0",
+      "command": [
+        "python3",
+        "-B",
+        "test/fetch-config.py",
+        "--connect"
+      ],
+      "assertion": "config connect deadline before total deadline",
+      "failure": "AssertionError: config connect deadline before total deadline",
+      "build": {
+        "command": [
+          "lake",
+          "build",
+          "cyberkrill",
+          "CyberkrillTests"
+        ],
+        "status": 0,
+        "seconds": 13.155
+      },
+      "red": {
+        "command": [
+          "python3",
+          "-B",
+          "test/fetch-config.py",
+          "--connect"
+        ],
+        "status": 1,
+        "seconds": 6.442
+      },
+      "restore_build": {
+        "command": [
+          "lake",
+          "build",
+          "cyberkrill",
+          "CyberkrillTests"
+        ],
+        "status": 0,
+        "seconds": 12.944
+      },
+      "green": {
+        "command": [
+          "python3",
+          "-B",
+          "test/fetch-config.py",
+          "--connect"
+        ],
+        "status": 0,
+        "seconds": 6.228
+      }
+    },
+    {
+      "property": "total-deadline",
+      "file": "Cyberkrill/FetchConfig.lean",
+      "replace": "totalTimeoutMs := 2000",
+      "with_text": "totalTimeoutMs := 0",
+      "command": [
+        "python3",
+        "-B",
+        "test/fetch-config.py",
+        "--probe",
+        "total-2100"
+      ],
+      "assertion": "config success total-2100",
+      "failure": "AssertionError: config success total-2100 raw request trace",
+      "build": {
+        "command": [
+          "lake",
+          "build",
+          "cyberkrill",
+          "CyberkrillTests"
+        ],
+        "status": 0,
+        "seconds": 13.057
+      },
+      "red": {
+        "command": [
+          "python3",
+          "-B",
+          "test/fetch-config.py",
+          "--probe",
+          "total-2100"
+        ],
+        "status": 1,
+        "seconds": 2.481
+      },
+      "restore_build": {
+        "command": [
+          "lake",
+          "build",
+          "cyberkrill",
+          "CyberkrillTests"
+        ],
+        "status": 0,
+        "seconds": 12.828
+      },
+      "green": {
+        "command": [
+          "python3",
+          "-B",
+          "test/fetch-config.py",
+          "--probe",
+          "total-2100"
+        ],
+        "status": 0,
+        "seconds": 2.476
+      }
+    },
+    {
+      "property": "location-work",
+      "file": "Cyberkrill/FetchConfig.lean",
+      "replace": "if location.utf8ByteSize > 8192 then",
+      "with_text": "if false then",
+      "command": [
+        "python3",
+        "-B",
+        "test/fetch-config.py",
+        "--probe",
+        "location-limit"
+      ],
+      "assertion": "config success location-limit",
+      "failure": "AssertionError: config success location-limit injected trace",
+      "build": {
+        "command": [
+          "lake",
+          "build",
+          "cyberkrill",
+          "CyberkrillTests"
+        ],
+        "status": 0,
+        "seconds": 13.232
+      },
+      "red": {
+        "command": [
+          "python3",
+          "-B",
+          "test/fetch-config.py",
+          "--probe",
+          "location-limit"
+        ],
+        "status": 1,
+        "seconds": 0.319
+      },
+      "restore_build": {
+        "command": [
+          "lake",
+          "build",
+          "cyberkrill",
+          "CyberkrillTests"
+        ],
+        "status": 0,
+        "seconds": 12.836
+      },
+      "green": {
+        "command": [
+          "python3",
+          "-B",
+          "test/fetch-config.py",
+          "--probe",
+          "location-limit"
+        ],
+        "status": 0,
+        "seconds": 0.325
+      }
+    },
+    {
+      "property": "resolved-url-work",
+      "file": "Cyberkrill/FetchConfig.lean",
+      "replace": "if req.url.utf8ByteSize > 8192 then",
+      "with_text": "if false then",
+      "command": [
+        "python3",
+        "-B",
+        "test/fetch-config.py",
+        "--probe",
+        "resolved-url-limit"
+      ],
+      "assertion": "config success resolved-url-limit",
+      "failure": "AssertionError: config success resolved-url-limit injected trace",
+      "build": {
+        "command": [
+          "lake",
+          "build",
+          "cyberkrill",
+          "CyberkrillTests"
+        ],
+        "status": 0,
+        "seconds": 12.831
+      },
+      "red": {
+        "command": [
+          "python3",
+          "-B",
+          "test/fetch-config.py",
+          "--probe",
+          "resolved-url-limit"
+        ],
+        "status": 1,
+        "seconds": 0.321
+      },
+      "restore_build": {
+        "command": [
+          "lake",
+          "build",
+          "cyberkrill",
+          "CyberkrillTests"
+        ],
+        "status": 0,
+        "seconds": 13.038
+      },
+      "green": {
+        "command": [
+          "python3",
+          "-B",
+          "test/fetch-config.py",
+          "--probe",
+          "resolved-url-limit"
+        ],
+        "status": 0,
+        "seconds": 0.325
+      }
+    },
+    {
+      "property": "utf8-before-json",
+      "file": "Cyberkrill/FetchConfig.lean",
+      "replace": "let some text := String.fromUTF8? r.body | throw (.decode \"fmUtf8Decode\")",
+      "with_text": "let text := Lightning.Lnurl.lossyUtf8 r.body",
+      "command": [
+        "python3",
+        "-B",
+        "test/fetch-config.py",
+        "--probe",
+        "utf8-next"
+      ],
+      "assertion": "config success utf8-next",
+      "failure": "AssertionError: config success utf8-next raw request trace",
+      "build": {
+        "command": [
+          "lake",
+          "build",
+          "cyberkrill",
+          "CyberkrillTests"
+        ],
+        "status": 0,
+        "seconds": 13.028
+      },
+      "red": {
+        "command": [
+          "python3",
+          "-B",
+          "test/fetch-config.py",
+          "--probe",
+          "utf8-next"
+        ],
+        "status": 1,
+        "seconds": 0.373
+      },
+      "restore_build": {
+        "command": [
+          "lake",
+          "build",
+          "cyberkrill",
+          "CyberkrillTests"
+        ],
+        "status": 0,
+        "seconds": 13.043
+      },
+      "green": {
+        "command": [
+          "python3",
+          "-B",
+          "test/fetch-config.py",
+          "--probe",
+          "utf8-next"
+        ],
+        "status": 0,
+        "seconds": 0.373
+      }
+    },
+    {
+      "property": "get-status-post",
+      "file": "Cyberkrill/FetchConfig.lean",
+      "replace": "if successful r then pure get else",
+      "with_text": "if true then pure get else",
+      "command": [
+        "python3",
+        "-B",
+        "test/fetch-config.py",
+        "--probe",
+        "get-status-post"
+      ],
+      "assertion": "config success get-status-post",
+      "failure": "AssertionError: config success get-status-post: {'calls': [{'body': '', 'bytes': 1048576, 'connect': 1000, 'headers': [], 'method': 'GET', 'total': 2000, 'transport': 'ok', 'url': 'http://127.0.0.1:19444/first/config'}], 'status': 1, 'stderr': 'fmAllGuardiansFailed: fmHttpStatus\\n', 'stdout': ''}",
+      "build": {
+        "command": [
+          "lake",
+          "build",
+          "cyberkrill",
+          "CyberkrillTests"
+        ],
+        "status": 0,
+        "seconds": 12.93
+      },
+      "red": {
+        "command": [
+          "python3",
+          "-B",
+          "test/fetch-config.py",
+          "--probe",
+          "get-status-post"
+        ],
+        "status": 1,
+        "seconds": 0.37
+      },
+      "restore_build": {
+        "command": [
+          "lake",
+          "build",
+          "cyberkrill",
+          "CyberkrillTests"
+        ],
+        "status": 0,
+        "seconds": 12.946
+      },
+      "green": {
+        "command": [
+          "python3",
+          "-B",
+          "test/fetch-config.py",
+          "--probe",
+          "get-status-post"
+        ],
+        "status": 0,
+        "seconds": 0.37
+      }
+    },
+    {
+      "property": "get-transport-post",
+      "file": "Cyberkrill/FetchConfig.lean",
+      "replace": "| .error _ => response request { req with\n        method := .post, body := some \"{}\".toUTF8\n        headers := #[(\"Content-Type\", \"application/json\")] } 10",
+      "with_text": "| .error e => pure (.error e)",
+      "command": [
+        "python3",
+        "-B",
+        "test/fetch-config.py",
+        "--probe",
+        "get-transport-post"
+      ],
+      "assertion": "config success get-transport-post",
+      "failure": "AssertionError: config success get-transport-post: {'calls': [{'body': '', 'bytes': 1048576, 'connect': 1000, 'headers': [], 'method': 'GET', 'total': 2000, 'transport': 'error', 'url': 'http://127.0.0.1:19444/first/config'}], 'status': 1, 'stderr': 'fmAllGuardiansFailed: fmTransport\\n', 'stdout': ''}",
+      "build": {
+        "command": [
+          "lake",
+          "build",
+          "cyberkrill",
+          "CyberkrillTests"
+        ],
+        "status": 0,
+        "seconds": 13.137
+      },
+      "red": {
+        "command": [
+          "python3",
+          "-B",
+          "test/fetch-config.py",
+          "--probe",
+          "get-transport-post"
+        ],
+        "status": 1,
+        "seconds": 0.373
+      },
+      "restore_build": {
+        "command": [
+          "lake",
+          "build",
+          "cyberkrill",
+          "CyberkrillTests"
+        ],
+        "status": 0,
+        "seconds": 12.944
+      },
+      "green": {
+        "command": [
+          "python3",
+          "-B",
+          "test/fetch-config.py",
+          "--probe",
+          "get-transport-post"
+        ],
+        "status": 0,
+        "seconds": 0.37
+      }
+    },
+    {
+      "property": "post-body-header",
+      "file": "Cyberkrill/FetchConfig.lean",
+      "replace": "headers := #[(\"Content-Type\", \"application/json\")] } 10\n    | .error _",
+      "with_text": "headers := #[] } 10\n    | .error _",
+      "command": [
+        "python3",
+        "-B",
+        "test/fetch-config.py",
+        "--probe",
+        "get-status-post"
+      ],
+      "assertion": "config success get-status-post",
+      "failure": "AssertionError: config success get-status-post request headers",
+      "build": {
+        "command": [
+          "lake",
+          "build",
+          "cyberkrill",
+          "CyberkrillTests"
+        ],
+        "status": 0,
+        "seconds": 12.826
+      },
+      "red": {
+        "command": [
+          "python3",
+          "-B",
+          "test/fetch-config.py",
+          "--probe",
+          "get-status-post"
+        ],
+        "status": 1,
+        "seconds": 0.377
+      },
+      "restore_build": {
+        "command": [
+          "lake",
+          "build",
+          "cyberkrill",
+          "CyberkrillTests"
+        ],
+        "status": 0,
+        "seconds": 13.031
+      },
+      "green": {
+        "command": [
+          "python3",
+          "-B",
+          "test/fetch-config.py",
+          "--probe",
+          "get-status-post"
+        ],
+        "status": 0,
+        "seconds": 0.372
+      }
+    },
+    {
+      "property": "decode-next",
+      "file": "Cyberkrill/FetchConfig.lean",
+      "replace": "| .error e => last := e.message",
+      "with_text": "| .error e => return .error (failure e.message)",
+      "command": [
+        "python3",
+        "-B",
+        "test/fetch-config.py",
+        "--probe",
+        "non-json-next"
+      ],
+      "assertion": "config success non-json-next",
+      "failure": "AssertionError: config success non-json-next: {'calls': [{'body': '', 'bytes': 1048576, 'connect': 1000, 'headers': [], 'method': 'GET', 'total': 2000, 'transport': 'ok', 'url': 'http://127.0.0.1:19444/first/config'}], 'status': 1, 'stderr': 'fmJsonDecode\\n', 'stdout': ''}",
+      "build": {
+        "command": [
+          "lake",
+          "build",
+          "cyberkrill",
+          "CyberkrillTests"
+        ],
+        "status": 0,
+        "seconds": 12.943
+      },
+      "red": {
+        "command": [
+          "python3",
+          "-B",
+          "test/fetch-config.py",
+          "--probe",
+          "non-json-next"
+        ],
+        "status": 1,
+        "seconds": 0.374
+      },
+      "restore_build": {
+        "command": [
+          "lake",
+          "build",
+          "cyberkrill",
+          "CyberkrillTests"
+        ],
+        "status": 0,
+        "seconds": 13.036
+      },
+      "green": {
+        "command": [
+          "python3",
+          "-B",
+          "test/fetch-config.py",
+          "--probe",
+          "non-json-next"
+        ],
+        "status": 0,
+        "seconds": 0.373
+      }
+    },
+    {
+      "property": "post-decode-next",
+      "file": "Cyberkrill/FetchConfig.lean",
+      "replace": "| .error e => last := e.message",
+      "with_text": "| .error e => return .error (failure e.message)",
+      "command": [
+        "python3",
+        "-B",
+        "test/fetch-config.py",
+        "--probe",
+        "post-json-next"
+      ],
+      "assertion": "config success post-json-next",
+      "failure": "AssertionError: config success post-json-next: {'calls': [{'body': '', 'bytes': 1048576, 'connect': 1000, 'headers': [], 'method': 'GET', 'total': 2000, 'transport': 'ok', 'url': 'http://127.0.0.1:19444/first/config'}, {'body': '{}', 'bytes': 1048576, 'connect': 1000, 'headers': [['Content-Type', 'application/json']], 'method': 'POST', 'total': 2000, 'transport': 'ok', 'url': 'http://127.0.0.1:19444/first/config'}], 'status': 1, 'stderr': 'fmJsonDecode\\n', 'stdout': ''}",
+      "build": {
+        "command": [
+          "lake",
+          "build",
+          "cyberkrill",
+          "CyberkrillTests"
+        ],
+        "status": 0,
+        "seconds": 12.841
+      },
+      "red": {
+        "command": [
+          "python3",
+          "-B",
+          "test/fetch-config.py",
+          "--probe",
+          "post-json-next"
+        ],
+        "status": 1,
+        "seconds": 0.372
+      },
+      "restore_build": {
+        "command": [
+          "lake",
+          "build",
+          "cyberkrill",
+          "CyberkrillTests"
+        ],
+        "status": 0,
+        "seconds": 13.332
+      },
+      "green": {
+        "command": [
+          "python3",
+          "-B",
+          "test/fetch-config.py",
+          "--probe",
+          "post-json-next"
+        ],
+        "status": 0,
+        "seconds": 0.37
+      }
+    },
+    {
+      "property": "post-status-next",
+      "file": "Cyberkrill/FetchConfig.lean",
+      "replace": "| .error e => last := e.message",
+      "with_text": "| .error e => return .error (failure e.message)",
+      "command": [
+        "python3",
+        "-B",
+        "test/fetch-config.py",
+        "--probe",
+        "post-status-next"
+      ],
+      "assertion": "config success post-status-next",
+      "failure": "AssertionError: config success post-status-next: {'calls': [{'body': '', 'bytes': 1048576, 'connect': 1000, 'headers': [], 'method': 'GET', 'total': 2000, 'transport': 'ok', 'url': 'http://127.0.0.1:19444/first/config'}, {'body': '{}', 'bytes': 1048576, 'connect': 1000, 'headers': [['Content-Type', 'application/json']], 'method': 'POST', 'total': 2000, 'transport': 'ok', 'url': 'http://127.0.0.1:19444/first/config'}], 'status': 1, 'stderr': 'fmHttpStatus\\n', 'stdout': ''}",
+      "build": {
+        "command": [
+          "lake",
+          "build",
+          "cyberkrill",
+          "CyberkrillTests"
+        ],
+        "status": 0,
+        "seconds": 12.83
+      },
+      "red": {
+        "command": [
+          "python3",
+          "-B",
+          "test/fetch-config.py",
+          "--probe",
+          "post-status-next"
+        ],
+        "status": 1,
+        "seconds": 0.371
+      },
+      "restore_build": {
+        "command": [
+          "lake",
+          "build",
+          "cyberkrill",
+          "CyberkrillTests"
+        ],
+        "status": 0,
+        "seconds": 13.026
+      },
+      "green": {
+        "command": [
+          "python3",
+          "-B",
+          "test/fetch-config.py",
+          "--probe",
+          "post-status-next"
+        ],
+        "status": 0,
+        "seconds": 0.371
+      }
+    },
+    {
+      "property": "first-success",
+      "file": "Cyberkrill/FetchConfig.lean",
+      "replace": "return parseConfig config invite.federationId",
+      "with_text": "let _ := parseConfig config invite.federationId\n        pure ()",
+      "command": [
+        "python3",
+        "-B",
+        "test/fetch-config.py",
+        "--probe",
+        "first-success"
+      ],
+      "assertion": "config success first-success",
+      "failure": "AssertionError: config success first-success: {'calls': [{'body': '', 'bytes': 1048576, 'connect': 1000, 'headers': [], 'method': 'GET', 'total': 2000, 'transport': 'ok', 'url': 'http://127.0.0.1:19444/first/config'}, {'body': '', 'bytes': 1048576, 'connect': 1000, 'headers': [], 'method': 'GET', 'total': 2000, 'transport': 'ok', 'url': 'http://127.0.0.1:19444/second/config'}], 'status': 1, 'stderr': 'fmAllGuardiansFailed: fmNoGuardian\\n', 'stdout': ''}",
+      "build": {
+        "command": [
+          "lake",
+          "build",
+          "cyberkrill",
+          "CyberkrillTests"
+        ],
+        "status": 0,
+        "seconds": 13.029
+      },
+      "red": {
+        "command": [
+          "python3",
+          "-B",
+          "test/fetch-config.py",
+          "--probe",
+          "first-success"
+        ],
+        "status": 1,
+        "seconds": 0.373
+      },
+      "restore_build": {
+        "command": [
+          "lake",
+          "build",
+          "cyberkrill",
+          "CyberkrillTests"
+        ],
+        "status": 0,
+        "seconds": 13.027
+      },
+      "green": {
+        "command": [
+          "python3",
+          "-B",
+          "test/fetch-config.py",
+          "--probe",
+          "first-success"
+        ],
+        "status": 0,
+        "seconds": 0.373
+      }
+    },
+    {
+      "property": "weak-missing-id",
+      "file": "Cyberkrill/FetchConfig.lean",
+      "replace": "| none => return true",
+      "with_text": "| none => throw (failure \"fmFederationIdType\")",
+      "command": [
+        "python3",
+        "-B",
+        "test/fetch-config.py",
+        "--probe",
+        "absent-id"
+      ],
+      "assertion": "config success absent-id",
+      "failure": "AssertionError: config success absent-id: {'calls': [{'body': '', 'bytes': 1048576, 'connect': 1000, 'headers': [], 'method': 'GET', 'total': 2000, 'transport': 'ok', 'url': 'http://127.0.0.1:19444/first/config'}], 'status': 1, 'stderr': 'fmFederationIdType\\n', 'stdout': ''}",
+      "build": {
+        "command": [
+          "lake",
+          "build",
+          "cyberkrill",
+          "CyberkrillTests"
+        ],
+        "status": 0,
+        "seconds": 13.334
+      },
+      "red": {
+        "command": [
+          "python3",
+          "-B",
+          "test/fetch-config.py",
+          "--probe",
+          "absent-id"
+        ],
+        "status": 1,
+        "seconds": 0.37
+      },
+      "restore_build": {
+        "command": [
+          "lake",
+          "build",
+          "cyberkrill",
+          "CyberkrillTests"
+        ],
+        "status": 0,
+        "seconds": 13.524
+      },
+      "green": {
+        "command": [
+          "python3",
+          "-B",
+          "test/fetch-config.py",
+          "--probe",
+          "absent-id"
+        ],
+        "status": 0,
+        "seconds": 0.373
+      }
+    },
+    {
+      "property": "stable-peers",
+      "file": "Cyberkrill/FetchConfig.lean",
+      "replace": "guardians := guardians.reverse.mergeSort (fun a b => a.1 \u2264 b.1)",
+      "with_text": "guardians := guardians.mergeSort (fun a b => a.1 \u2264 b.1)",
+      "command": [
+        "python3",
+        "-B",
+        "test/fetch-config.py",
+        "--probe",
+        "peers"
+      ],
+      "assertion": "config success peers",
+      "failure": "AssertionError: config success peers: {'calls': [{'body': '', 'bytes': 1048576, 'connect': 1000, 'headers': [], 'method': 'GET', 'total': 2000, 'transport': 'ok', 'url': 'http://127.0.0.1:19444/first/config'}], 'status': 0, 'stderr': '', 'stdout': '{\"modules\": {},\\n \"meta\": {},\\n \"guardians\":\\n [{\"url\": \"zero\", \"peer_id\": 0, \"name\": null},\\n  {\"url\": \"plus-zero\", \"peer_id\": 0, \"name\": null},\\n  {\"url\": \"one\", \"peer_id\": 1, \"name\": null},\\n  {\"url\": \"zero-one\", \"peer_id\": 1, \"name\": null},\\n  {\"url\": \"plus-one\", \"peer_id\": 1, \"name\": null},\\n  {\"url\": \"last\", \"peer_id\": 65535, \"name\": null}],\\n \"federation_name\": null,\\n \"federation_id\":\\n \"b21068c84f5b12ca4fdf93f3e443d3bd7c27e8642d0d52ea2e4dce6fdbbee9df\",\\n \"consensus_version\": \"unknown\"}'}",
+      "build": {
+        "command": [
+          "lake",
+          "build",
+          "cyberkrill",
+          "CyberkrillTests"
+        ],
+        "status": 0,
+        "seconds": 12.922
+      },
+      "red": {
+        "command": [
+          "python3",
+          "-B",
+          "test/fetch-config.py",
+          "--probe",
+          "peers"
+        ],
+        "status": 1,
+        "seconds": 0.37
+      },
+      "restore_build": {
+        "command": [
+          "lake",
+          "build",
+          "cyberkrill",
+          "CyberkrillTests"
+        ],
+        "status": 0,
+        "seconds": 12.949
+      },
+      "green": {
+        "command": [
+          "python3",
+          "-B",
+          "test/fetch-config.py",
+          "--probe",
+          "peers"
+        ],
+        "status": 0,
+        "seconds": 0.372
+      }
+    },
+    {
+      "property": "global-rewrite",
+      "file": "Cyberkrill/FetchConfig.lean",
+      "replace": "(url.replace \"wss://\" \"https://\").replace \"ws://\" \"http://\"",
+      "with_text": "if url.startsWith \"ws://\" then \"http://\" ++ (url.drop 5).toString else url",
+      "command": [
+        "python3",
+        "-B",
+        "test/fetch-config.py",
+        "--probe",
+        "embedded"
+      ],
+      "assertion": "config success embedded",
+      "failure": "AssertionError: config success embedded injected trace",
+      "build": {
+        "command": [
+          "lake",
+          "build",
+          "cyberkrill",
+          "CyberkrillTests"
+        ],
+        "status": 0,
+        "seconds": 13.048
+      },
+      "red": {
+        "command": [
+          "python3",
+          "-B",
+          "test/fetch-config.py",
+          "--probe",
+          "embedded"
+        ],
+        "status": 1,
+        "seconds": 0.321
+      },
+      "restore_build": {
+        "command": [
+          "lake",
+          "build",
+          "cyberkrill",
+          "CyberkrillTests"
+        ],
+        "status": 0,
+        "seconds": 12.934
+      },
+      "green": {
+        "command": [
+          "python3",
+          "-B",
+          "test/fetch-config.py",
+          "--probe",
+          "embedded"
+        ],
+        "status": 0,
+        "seconds": 0.328
+      }
+    },
+    {
+      "property": "all-trailing-slashes",
+      "file": "Cyberkrill/FetchConfig.lean",
+      "replace": "rewritten.toList.reverse.dropWhile (\u00b7 == '/')",
+      "with_text": "if rewritten.endsWith \"/\" then rewritten.toList.reverse.drop 1 else rewritten.toList.reverse",
+      "command": [
+        "python3",
+        "-B",
+        "test/fetch-config.py",
+        "--probe",
+        "injected-double-slash"
+      ],
+      "assertion": "config success injected-double-slash",
+      "failure": "AssertionError: config success injected-double-slash injected trace",
+      "build": {
+        "command": [
+          "lake",
+          "build",
+          "cyberkrill",
+          "CyberkrillTests"
+        ],
+        "status": 0,
+        "seconds": 12.936
+      },
+      "red": {
+        "command": [
+          "python3",
+          "-B",
+          "test/fetch-config.py",
+          "--probe",
+          "injected-double-slash"
+        ],
+        "status": 1,
+        "seconds": 0.321
+      },
+      "restore_build": {
+        "command": [
+          "lake",
+          "build",
+          "cyberkrill",
+          "CyberkrillTests"
+        ],
+        "status": 0,
+        "seconds": 13.329
+      },
+      "green": {
+        "command": [
+          "python3",
+          "-B",
+          "test/fetch-config.py",
+          "--probe",
+          "injected-double-slash"
+        ],
+        "status": 0,
+        "seconds": 0.325
+      }
+    },
+    {
+      "property": "invite-fallback",
+      "file": "Cyberkrill/FetchConfig.lean",
+      "replace": "let invite \u2190 match InviteCli.decode input with",
+      "with_text": "let invite \u2190 match (FedimintInvite.decode input).mapError (fun _ => Error.offline \"invalidInvite\") with",
+      "command": [
+        "python3",
+        "-B",
+        "test/fetch-config.py",
+        "--probe",
+        "fallback"
+      ],
+      "assertion": "config success fallback",
+      "failure": "AssertionError: config success fallback: {'calls': [], 'status': 1, 'stderr': 'invalidInvite: Invalid offline input\\n', 'stdout': ''}",
+      "build": {
+        "command": [
+          "lake",
+          "build",
+          "cyberkrill",
+          "CyberkrillTests"
+        ],
+        "status": 0,
+        "seconds": 12.93
+      },
+      "red": {
+        "command": [
+          "python3",
+          "-B",
+          "test/fetch-config.py",
+          "--probe",
+          "fallback"
+        ],
+        "status": 1,
+        "seconds": 0.326
+      },
+      "restore_build": {
+        "command": [
+          "lake",
+          "build",
+          "cyberkrill",
+          "CyberkrillTests"
+        ],
+        "status": 0,
+        "seconds": 12.928
+      },
+      "green": {
+        "command": [
+          "python3",
+          "-B",
+          "test/fetch-config.py",
+          "--probe",
+          "fallback"
+        ],
+        "status": 0,
+        "seconds": 0.321
+      }
+    },
+    {
+      "property": "dispatch",
+      "file": "Cyberkrill/App.lean",
+      "replace": "return .fetchConfig invite.value (flag \"output\")",
+      "with_text": "return .decodeInvite (some invite.value) (flag \"output\")",
+      "command": [
+        "python3",
+        "-B",
+        "test/fetch-config.py",
+        "--probe",
+        "get"
+      ],
+      "assertion": "config success get",
+      "failure": "AssertionError: config success get: {'calls': [], 'status': 0, 'stderr': '', 'stdout': '{\"guardians\": [{\"url\": \"ws://127.0.0.1:19444/first\", \"peer_id\": 0}],\\n \"federation_id\":\\n \"b21068c84f5b12ca4fdf93f3e443d3bd7c27e8642d0d52ea2e4dce6fdbbee9df\",\\n \"api_secret\": null}'}",
+      "build": {
+        "command": [
+          "lake",
+          "build",
+          "cyberkrill",
+          "CyberkrillTests"
+        ],
+        "status": 0,
+        "seconds": 12.329
+      },
+      "red": {
+        "command": [
+          "python3",
+          "-B",
+          "test/fetch-config.py",
+          "--probe",
+          "get"
+        ],
+        "status": 1,
+        "seconds": 0.372
+      },
+      "restore_build": {
+        "command": [
+          "lake",
+          "build",
+          "cyberkrill",
+          "CyberkrillTests"
+        ],
+        "status": 0,
+        "seconds": 12.336
+      },
+      "green": {
+        "command": [
+          "python3",
+          "-B",
+          "test/fetch-config.py",
+          "--probe",
+          "get"
+        ],
+        "status": 0,
+        "seconds": 0.371
+      }
+    },
+    {
+      "property": "retained-output-handle",
+      "file": "Cyberkrill/App.lean",
+      "replace": "| .ok result => return .ok (lightningOutput result.pretty writer false)\n  | .generateInvoice",
+      "with_text": "| .ok result => return .ok (lightningOutput result.pretty none false)\n  | .generateInvoice",
+      "command": [
+        "python3",
+        "-B",
+        "test/fetch-config.py",
+        "--probe",
+        "retained-handle"
+      ],
+      "assertion": "config success retained-handle",
+      "failure": "AssertionError: config success retained-handle: {'calls': [{'body': '', 'bytes': 1048576, 'connect': 1000, 'headers': [], 'method': 'GET', 'total': 2000, 'transport': 'ok', 'url': 'http://127.0.0.1:19444/first/config'}], 'status': 0, 'stderr': '', 'stdout': '{\"modules\":\\n {\"nested\": [true, null, \"fixture\"], \"0\": {\"kind\": \"mint\", \"amount\": 123}},\\n \"meta\":\\n {\"note\": \"authored fixture\",\\n  \"guardian_2_name\": \"Two\",\\n  \"guardian_0_name\": \"Zero\",\\n  \"federation_name\": \"Synthetic Federation\"},\\n \"guardians\":\\n [{\"url\": \"\", \"peer_id\": 0, \"name\": \"Zero\"},\\n  {\"url\": \"wss://synthetic.invalid/two\", \"peer_id\": 2, \"name\": \"Two\"},\\n  {\"url\": \"opaque endpoint ten\", \"peer_id\": 10, \"name\": null}],\\n \"federation_name\": \"Synthetic Federation\",\\n \"federation_id\":\\n \"b21068c84f5b12ca4fdf93f3e443d3bd7c27e8642d0d52ea2e4dce6fdbbee9df\",\\n \"consensus_version\": \"2.1\"}'}",
+      "build": {
+        "command": [
+          "lake",
+          "build",
+          "cyberkrill",
+          "CyberkrillTests"
+        ],
+        "status": 0,
+        "seconds": 12.237
+      },
+      "red": {
+        "command": [
+          "python3",
+          "-B",
+          "test/fetch-config.py",
+          "--probe",
+          "retained-handle"
+        ],
+        "status": 1,
+        "seconds": 0.377
+      },
+      "restore_build": {
+        "command": [
+          "lake",
+          "build",
+          "cyberkrill",
+          "CyberkrillTests"
+        ],
+        "status": 0,
+        "seconds": 12.326
+      },
+      "green": {
+        "command": [
+          "python3",
+          "-B",
+          "test/fetch-config.py",
+          "--probe",
+          "retained-handle"
+        ],
+        "status": 0,
+        "seconds": 0.371
+      }
+    },
+    {
+      "property": "redirect-follow",
+      "file": "Cyberkrill/FetchConfig.lean",
+      "replace": "[301, 302, 303, 307, 308].contains r.status.toNat",
+      "with_text": "false",
+      "command": [
+        "python3",
+        "-B",
+        "test/fetch-config.py",
+        "--probe",
+        "injected-get-redirect-302"
+      ],
+      "assertion": "config success injected-get-redirect-302",
+      "failure": "AssertionError: config success injected-get-redirect-302 injected trace",
+      "build": {
+        "command": [
+          "lake",
+          "build",
+          "cyberkrill",
+          "CyberkrillTests"
+        ],
+        "status": 0,
+        "seconds": 12.733
+      },
+      "red": {
+        "command": [
+          "python3",
+          "-B",
+          "test/fetch-config.py",
+          "--probe",
+          "injected-get-redirect-302"
+        ],
+        "status": 1,
+        "seconds": 0.323
+      },
+      "restore_build": {
+        "command": [
+          "lake",
+          "build",
+          "cyberkrill",
+          "CyberkrillTests"
+        ],
+        "status": 0,
+        "seconds": 12.841
+      },
+      "green": {
+        "command": [
+          "python3",
+          "-B",
+          "test/fetch-config.py",
+          "--probe",
+          "injected-get-redirect-302"
+        ],
+        "status": 0,
+        "seconds": 0.318
+      }
+    },
+    {
+      "property": "post-redirect-method",
+      "file": "Cyberkrill/FetchConfig.lean",
+      "replace": "[301, 302, 303].contains r.status.toNat",
+      "with_text": "false",
+      "command": [
+        "python3",
+        "-B",
+        "test/fetch-config.py",
+        "--probe",
+        "injected-post-redirect-302"
+      ],
+      "assertion": "config success injected-post-redirect-302",
+      "failure": "AssertionError: config success injected-post-redirect-302 injected trace",
+      "build": {
+        "command": [
+          "lake",
+          "build",
+          "cyberkrill",
+          "CyberkrillTests"
+        ],
+        "status": 0,
+        "seconds": 13.037
+      },
+      "red": {
+        "command": [
+          "python3",
+          "-B",
+          "test/fetch-config.py",
+          "--probe",
+          "injected-post-redirect-302"
+        ],
+        "status": 1,
+        "seconds": 0.318
+      },
+      "restore_build": {
+        "command": [
+          "lake",
+          "build",
+          "cyberkrill",
+          "CyberkrillTests"
+        ],
+        "status": 0,
+        "seconds": 12.835
+      },
+      "green": {
+        "command": [
+          "python3",
+          "-B",
+          "test/fetch-config.py",
+          "--probe",
+          "injected-post-redirect-302"
+        ],
+        "status": 0,
+        "seconds": 0.319
+      }
+    },
+    {
+      "property": "redirect-referer",
+      "file": "Cyberkrill/FetchConfig.lean",
+      "replace": ".push (\"Referer\", referer)",
+      "with_text": "",
+      "command": [
+        "python3",
+        "-B",
+        "test/fetch-config.py",
+        "--probe",
+        "injected-get-redirect-302"
+      ],
+      "assertion": "config success injected-get-redirect-302",
+      "failure": "AssertionError: config success injected-get-redirect-302 request headers",
+      "build": {
+        "command": [
+          "lake",
+          "build",
+          "cyberkrill",
+          "CyberkrillTests"
+        ],
+        "status": 0,
+        "seconds": 12.94
+      },
+      "red": {
+        "command": [
+          "python3",
+          "-B",
+          "test/fetch-config.py",
+          "--probe",
+          "injected-get-redirect-302"
+        ],
+        "status": 1,
+        "seconds": 0.318
+      },
+      "restore_build": {
+        "command": [
+          "lake",
+          "build",
+          "cyberkrill",
+          "CyberkrillTests"
+        ],
+        "status": 0,
+        "seconds": 13.134
+      },
+      "green": {
+        "command": [
+          "python3",
+          "-B",
+          "test/fetch-config.py",
+          "--probe",
+          "injected-get-redirect-302"
+        ],
+        "status": 0,
+        "seconds": 0.319
+      }
+    },
+    {
+      "property": "redirect-limit",
+      "file": "Cyberkrill/FetchConfig.lean",
+      "replace": "let get \u2190 response request req 10",
+      "with_text": "let get \u2190 response request req 9",
+      "command": [
+        "python3",
+        "-B",
+        "test/fetch-config.py",
+        "--probe",
+        "injected-redirect-ten"
+      ],
+      "assertion": "config success injected-redirect-ten",
+      "failure": "AssertionError: config success injected-redirect-ten injected trace",
+      "build": {
+        "command": [
+          "lake",
+          "build",
+          "cyberkrill",
+          "CyberkrillTests"
+        ],
+        "status": 0,
+        "seconds": 12.934
+      },
+      "red": {
+        "command": [
+          "python3",
+          "-B",
+          "test/fetch-config.py",
+          "--probe",
+          "injected-redirect-ten"
+        ],
+        "status": 1,
+        "seconds": 0.33
+      },
+      "restore_build": {
+        "command": [
+          "lake",
+          "build",
+          "cyberkrill",
+          "CyberkrillTests"
+        ],
+        "status": 0,
+        "seconds": 13.032
+      },
+      "green": {
+        "command": [
+          "python3",
+          "-B",
+          "test/fetch-config.py",
+          "--probe",
+          "injected-redirect-ten"
+        ],
+        "status": 0,
+        "seconds": 0.325
+      }
+    },
+    {
+      "property": "redirect-guard",
+      "file": "Cyberkrill/TestEntry.lean",
+      "replace": "unless TestUrls.permitted req.url && !TestUrls.forbiddenPort req.url do",
+      "with_text": "unless true do",
+      "command": [
+        "python3",
+        "-B",
+        "test/fetch-config.py",
+        "--probe",
+        "unsafe-redirect-307"
+      ],
+      "assertion": "config refusal unsafe-redirect-307",
+      "failure": "AssertionError: config refusal unsafe-redirect-307 request count",
+      "build": {
+        "command": [
+          "lake",
+          "build",
+          "cyberkrill",
+          "CyberkrillTests"
+        ],
+        "status": 0,
+        "seconds": 10.54
+      },
+      "red": {
+        "command": [
+          "python3",
+          "-B",
+          "test/fetch-config.py",
+          "--probe",
+          "unsafe-redirect-307"
+        ],
+        "status": 1,
+        "seconds": 0.325
+      },
+      "restore_build": {
+        "command": [
+          "lake",
+          "build",
+          "cyberkrill",
+          "CyberkrillTests"
+        ],
+        "status": 0,
+        "seconds": 10.644
+      },
+      "green": {
+        "command": [
+          "python3",
+          "-B",
+          "test/fetch-config.py",
+          "--probe",
+          "unsafe-redirect-307"
+        ],
+        "status": 0,
+        "seconds": 0.322
+      }
+    },
+    {
+      "property": "validation-abort-missing-endpoints",
+      "file": "Cyberkrill/FetchConfig.lean",
+      "replace": "match validate config invite.federationId with\n      | .error e => return .error e",
+      "with_text": "match validate config invite.federationId with\n      | .error _ => pure ()",
+      "command": [
+        "python3",
+        "-B",
+        "test/fetch-config.py",
+        "--probe",
+        "missing-endpoints"
+      ],
+      "assertion": "config refusal missing-endpoints",
+      "failure": "AssertionError: config refusal missing-endpoints",
+      "build": {
+        "command": [
+          "lake",
+          "build",
+          "cyberkrill",
+          "CyberkrillTests"
+        ],
+        "status": 0,
+        "seconds": 12.935
+      },
+      "red": {
+        "command": [
+          "python3",
+          "-B",
+          "test/fetch-config.py",
+          "--probe",
+          "missing-endpoints"
+        ],
+        "status": 1,
+        "seconds": 0.371
+      },
+      "restore_build": {
+        "command": [
+          "lake",
+          "build",
+          "cyberkrill",
+          "CyberkrillTests"
+        ],
+        "status": 0,
+        "seconds": 12.926
+      },
+      "green": {
+        "command": [
+          "python3",
+          "-B",
+          "test/fetch-config.py",
+          "--probe",
+          "missing-endpoints"
+        ],
+        "status": 0,
+        "seconds": 0.37
+      }
+    },
+    {
+      "property": "validation-abort-id-mismatch",
+      "file": "Cyberkrill/FetchConfig.lean",
+      "replace": "match validate config invite.federationId with\n      | .error e => return .error e",
+      "with_text": "match validate config invite.federationId with\n      | .error _ => pure ()",
+      "command": [
+        "python3",
+        "-B",
+        "test/fetch-config.py",
+        "--probe",
+        "id-mismatch"
+      ],
+      "assertion": "config refusal id-mismatch",
+      "failure": "AssertionError: config refusal id-mismatch",
+      "build": {
+        "command": [
+          "lake",
+          "build",
+          "cyberkrill",
+          "CyberkrillTests"
+        ],
+        "status": 0,
+        "seconds": 13.031
+      },
+      "red": {
+        "command": [
+          "python3",
+          "-B",
+          "test/fetch-config.py",
+          "--probe",
+          "id-mismatch"
+        ],
+        "status": 1,
+        "seconds": 0.371
+      },
+      "restore_build": {
+        "command": [
+          "lake",
+          "build",
+          "cyberkrill",
+          "CyberkrillTests"
+        ],
+        "status": 0,
+        "seconds": 12.939
+      },
+      "green": {
+        "command": [
+          "python3",
+          "-B",
+          "test/fetch-config.py",
+          "--probe",
+          "id-mismatch"
+        ],
+        "status": 0,
+        "seconds": 0.375
+      }
+    },
+    {
+      "property": "validation-abort-id-type",
+      "file": "Cyberkrill/FetchConfig.lean",
+      "replace": "match validate config invite.federationId with\n      | .error e => return .error e",
+      "with_text": "match validate config invite.federationId with\n      | .error _ => pure ()",
+      "command": [
+        "python3",
+        "-B",
+        "test/fetch-config.py",
+        "--probe",
+        "id-type"
+      ],
+      "assertion": "config refusal id-type",
+      "failure": "AssertionError: config refusal id-type",
+      "build": {
+        "command": [
+          "lake",
+          "build",
+          "cyberkrill",
+          "CyberkrillTests"
+        ],
+        "status": 0,
+        "seconds": 13.235
+      },
+      "red": {
+        "command": [
+          "python3",
+          "-B",
+          "test/fetch-config.py",
+          "--probe",
+          "id-type"
+        ],
+        "status": 1,
+        "seconds": 0.371
+      },
+      "restore_build": {
+        "command": [
+          "lake",
+          "build",
+          "cyberkrill",
+          "CyberkrillTests"
+        ],
+        "status": 0,
+        "seconds": 13.035
+      },
+      "green": {
+        "command": [
+          "python3",
+          "-B",
+          "test/fetch-config.py",
+          "--probe",
+          "id-type"
+        ],
+        "status": 0,
+        "seconds": 0.371
+      }
+    },
+    {
+      "property": "semantic-abort-array",
+      "file": "Cyberkrill/FetchConfig.lean",
+      "replace": "return parseConfig config invite.federationId",
+      "with_text": "match parseConfig config invite.federationId with\n        | .ok result => return .ok result\n        | .error _ => pure ()",
+      "command": [
+        "python3",
+        "-B",
+        "test/fetch-config.py",
+        "--probe",
+        "array"
+      ],
+      "assertion": "config refusal array",
+      "failure": "AssertionError: config refusal array",
+      "build": {
+        "command": [
+          "lake",
+          "build",
+          "cyberkrill",
+          "CyberkrillTests"
+        ],
+        "status": 0,
+        "seconds": 13.037
+      },
+      "red": {
+        "command": [
+          "python3",
+          "-B",
+          "test/fetch-config.py",
+          "--probe",
+          "array"
+        ],
+        "status": 1,
+        "seconds": 0.373
+      },
+      "restore_build": {
+        "command": [
+          "lake",
+          "build",
+          "cyberkrill",
+          "CyberkrillTests"
+        ],
+        "status": 0,
+        "seconds": 13.036
+      },
+      "green": {
+        "command": [
+          "python3",
+          "-B",
+          "test/fetch-config.py",
+          "--probe",
+          "array"
+        ],
+        "status": 0,
+        "seconds": 0.373
+      }
+    },
+    {
+      "property": "semantic-abort-null",
+      "file": "Cyberkrill/FetchConfig.lean",
+      "replace": "return parseConfig config invite.federationId",
+      "with_text": "match parseConfig config invite.federationId with\n        | .ok result => return .ok result\n        | .error _ => pure ()",
+      "command": [
+        "python3",
+        "-B",
+        "test/fetch-config.py",
+        "--probe",
+        "null"
+      ],
+      "assertion": "config refusal null",
+      "failure": "AssertionError: config refusal null",
+      "build": {
+        "command": [
+          "lake",
+          "build",
+          "cyberkrill",
+          "CyberkrillTests"
+        ],
+        "status": 0,
+        "seconds": 13.13
+      },
+      "red": {
+        "command": [
+          "python3",
+          "-B",
+          "test/fetch-config.py",
+          "--probe",
+          "null"
+        ],
+        "status": 1,
+        "seconds": 0.375
+      },
+      "restore_build": {
+        "command": [
+          "lake",
+          "build",
+          "cyberkrill",
+          "CyberkrillTests"
+        ],
+        "status": 0,
+        "seconds": 12.831
+      },
+      "green": {
+        "command": [
+          "python3",
+          "-B",
+          "test/fetch-config.py",
+          "--probe",
+          "null"
+        ],
+        "status": 0,
+        "seconds": 0.377
+      }
+    },
+    {
+      "property": "semantic-abort-bad-peer",
+      "file": "Cyberkrill/FetchConfig.lean",
+      "replace": "return parseConfig config invite.federationId",
+      "with_text": "match parseConfig config invite.federationId with\n        | .ok result => return .ok result\n        | .error _ => pure ()",
+      "command": [
+        "python3",
+        "-B",
+        "test/fetch-config.py",
+        "--probe",
+        "bad-peer"
+      ],
+      "assertion": "config refusal bad-peer",
+      "failure": "AssertionError: config refusal bad-peer",
+      "build": {
+        "command": [
+          "lake",
+          "build",
+          "cyberkrill",
+          "CyberkrillTests"
+        ],
+        "status": 0,
+        "seconds": 12.935
+      },
+      "red": {
+        "command": [
+          "python3",
+          "-B",
+          "test/fetch-config.py",
+          "--probe",
+          "bad-peer"
+        ],
+        "status": 1,
+        "seconds": 0.366
+      },
+      "restore_build": {
+        "command": [
+          "lake",
+          "build",
+          "cyberkrill",
+          "CyberkrillTests"
+        ],
+        "status": 0,
+        "seconds": 12.84
+      },
+      "green": {
+        "command": [
+          "python3",
+          "-B",
+          "test/fetch-config.py",
+          "--probe",
+          "bad-peer"
+        ],
+        "status": 0,
+        "seconds": 0.375
+      }
+    },
+    {
+      "property": "semantic-abort-peer-overflow",
+      "file": "Cyberkrill/FetchConfig.lean",
+      "replace": "return parseConfig config invite.federationId",
+      "with_text": "match parseConfig config invite.federationId with\n        | .ok result => return .ok result\n        | .error _ => pure ()",
+      "command": [
+        "python3",
+        "-B",
+        "test/fetch-config.py",
+        "--probe",
+        "peer-overflow"
+      ],
+      "assertion": "config refusal peer-overflow",
+      "failure": "AssertionError: config refusal peer-overflow",
+      "build": {
+        "command": [
+          "lake",
+          "build",
+          "cyberkrill",
+          "CyberkrillTests"
+        ],
+        "status": 0,
+        "seconds": 12.924
+      },
+      "red": {
+        "command": [
+          "python3",
+          "-B",
+          "test/fetch-config.py",
+          "--probe",
+          "peer-overflow"
+        ],
+        "status": 1,
+        "seconds": 0.374
+      },
+      "restore_build": {
+        "command": [
+          "lake",
+          "build",
+          "cyberkrill",
+          "CyberkrillTests"
+        ],
+        "status": 0,
+        "seconds": 12.938
+      },
+      "green": {
+        "command": [
+          "python3",
+          "-B",
+          "test/fetch-config.py",
+          "--probe",
+          "peer-overflow"
+        ],
+        "status": 0,
+        "seconds": 0.375
+      }
+    },
+    {
+      "property": "semantic-abort-endpoint-type",
+      "file": "Cyberkrill/FetchConfig.lean",
+      "replace": "return parseConfig config invite.federationId",
+      "with_text": "match parseConfig config invite.federationId with\n        | .ok result => return .ok result\n        | .error _ => pure ()",
+      "command": [
+        "python3",
+        "-B",
+        "test/fetch-config.py",
+        "--probe",
+        "endpoint-type"
+      ],
+      "assertion": "config refusal endpoint-type",
+      "failure": "AssertionError: config refusal endpoint-type",
+      "build": {
+        "command": [
+          "lake",
+          "build",
+          "cyberkrill",
+          "CyberkrillTests"
+        ],
+        "status": 0,
+        "seconds": 13.028
+      },
+      "red": {
+        "command": [
+          "python3",
+          "-B",
+          "test/fetch-config.py",
+          "--probe",
+          "endpoint-type"
+        ],
+        "status": 1,
+        "seconds": 0.371
+      },
+      "restore_build": {
+        "command": [
+          "lake",
+          "build",
+          "cyberkrill",
+          "CyberkrillTests"
+        ],
+        "status": 0,
+        "seconds": 13.045
+      },
+      "green": {
+        "command": [
+          "python3",
+          "-B",
+          "test/fetch-config.py",
+          "--probe",
+          "endpoint-type"
+        ],
+        "status": 0,
+        "seconds": 0.376
+      }
+    }
+  ],
+  "restored_full": {
+    "command": [
+      "python3",
+      "-B",
+      "test/fetch-config.py"
+    ],
+    "status": 0,
+    "seconds": 25.566
+  }
+}

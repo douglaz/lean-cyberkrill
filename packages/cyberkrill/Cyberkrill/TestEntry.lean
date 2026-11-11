@@ -81,6 +81,14 @@ def validate (urls : TestUrls) (args : List String) : Except Error Unit := do
       (urls.feedBases ++ #[urls.coinGeckoHistory, urls.dcaRpc]).all (fun url => permitted url && !forbiddenPort url) do
     throw (.onchain "testUrlRefused: Complete explicit loopback URLs with permitted ports are required")
   if args.any forbiddenPort then throw (.onchain "testArgRefused: Default RPC port is forbidden")
+  if args.head? == some "fm-fetch-config" then
+    if let .ok (.fetchConfig input _) := parseCommand args then
+      if let .ok invite := InviteCli.decode input then
+        for guardian in invite.guardians do
+          let .ok url := Lightning.Lnurl.normalizeUrl (FetchConfig.configUrl guardian.url)
+            | throw (.onchain "testConfigRefused: Explicit loopback guardian is required")
+          unless permitted url && !forbiddenPort url do
+            throw (.onchain "testConfigRefused: Explicit loopback guardian is required")
   if args.head? == some "ln-generate-invoice" then
     if let .ok (.generateInvoice address _ _ _) := parseCommand args then
       if let .ok raw := Lightning.lightningAddressUrl address then
@@ -120,6 +128,10 @@ def runWithTestUrls (version : String) (urls : TestUrls) (args : List String)
     stdout := fun s => out.modify (· ++ s)
     stderr := fun s => err.modify (· ++ s)
     price := fun currency => PriceFeed.fetch currency urls.feedBases request
+    configRequest := fun req => do
+      unless TestUrls.permitted req.url && !TestUrls.forbiddenPort req.url do
+        return .error (.curl 43 "Test config target refused")
+      request req
     lnurlRequest := fun req => do
       unless TestUrls.permitted req.url true && !TestUrls.forbiddenPort req.url do
         return .error (.curl 43 "Test LNURL target refused")

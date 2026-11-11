@@ -1,0 +1,12 @@
+{
+  "origin": "Synthetic guardian replies and invites; authored from the pinned config projection. Consensus invites preserve the reviewed Phase 6 one- or two-guardian vector except for URLs; the fallback payload is synthetic and keeps the one-guardian vector ID. No original endpoint is contacted.",
+  "source": "https://github.com/douglaz/cyberkrill",
+  "revision": "27cad1faba86260b06665a89f0af5134d23525c2",
+  "paths": [
+    "fedimint-lite/src/lib.rs:435-630,659-737",
+    "cyberkrill/src/main.rs:596-602,1968-1976"
+  ],
+  "licence": "MIT OR Apache-2.0, taken under MIT",
+  "fixture_sha256": "97df201d4345eead3271ab84772fc9c35f1f4ee3291ea84ff5021005bf8f256d",
+  "capture_sha256": "c9d8aee4026752e184b2aed384c8f22f6885b2fcd40cc84ab422deb9221d4936"
+}
