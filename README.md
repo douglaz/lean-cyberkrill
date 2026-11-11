@@ -120,7 +120,7 @@ three injected writer ordering cases, six pre-spawn refusals, one in-process
 guard, four injected initial refusals, one injected redirect refusal before
 transport, normalization-error refusal before output acquisition and fixed-port collision refusal. Pure Lightning tests add eight
 callback serialization cases, three request normalization cases, nineteen URI-resolution cases and two HTTP-URI
-checks and two sets of five subset refusals. Nineteen compiled runtime
+checks and two sets of five subset refusals. Twenty-one compiled runtime
 mutations detect range, inclusive maximum, comment bytes, original query, form
 encoding, Millisat conversion, trailing-query separation, dispatch, initial
 normalization, initial/callback following, redirect limits, relative resolution,
