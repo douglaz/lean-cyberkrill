@@ -19,24 +19,33 @@ roots = {'Sha256', 'Secp256k1', 'Bitcoin', 'Lightning', 'FedimintInvite', 'HttpC
 tracked = subprocess.check_output(['git', 'ls-files', '-z', '--', 'packages']).decode().split(chr(0))
 paths = [pathlib.Path(p) for p in tracked if p and pathlib.Path(p).suffix == '.lean']
 paths = [p for p in paths if len(p.parts) >= 3 and (p.parts[2] in roots or p.parts[2].removesuffix('.lean') in roots)]
-assert len(paths) == 85, 'library/proof source inventory'
+assert len(paths) == 86, 'library/proof source inventory'
+assert 'packages/cyberkrill/Cyberkrill/GenerateInvoice.lean' in {str(p) for p in paths}, 'LNURL flow source inventory'
 assert {'packages/cyberkrill/Cyberkrill/CoreRpc.lean', 'packages/cyberkrill/Cyberkrill/RpcFlags.lean'} <= {str(p) for p in paths}, 'Core RPC/flags source inventory'
 assert {p.parts[2].removesuffix('.lean') for p in paths} == roots, 'library root inventory'
 bad = [str(p) for p in paths if re.search(r'\\b(?:native_decide|bv_decide)\\b', p.read_text())]
 assert not bad, 'native decision in library: ' + ', '.join(bad)
-print(f'library/proof native-decision scan: {len(paths)}/85 tracked files; zero offenders')
+print(f'library/proof native-decision scan: {len(paths)}/86 tracked files; zero offenders')
 """
 
 
 def main():
     mode, *selected = sys.argv[1:]
-    assert not selected or mode == "campaigns", "only campaign batches support named selection"
-    assert mode in ["app", "repo", "evidence", "refresh", "campaigns", "fiat"]
+    assert not selected or mode in ["campaigns", "refresh"], "only campaign and refresh batches support named selection"
+    assert mode in ["app", "repo", "evidence", "refresh", "campaigns", "fiat", "lightning", "lnurl", "sandbox"]
     directory = APP / ".lake/validation"
     directory.mkdir(parents=True, exist_ok=True)
     if mode == "app":
         checks = [("build", APP, ["nix", "develop", "-c", "lake", "build"], 600),
                   ("test", APP, ["nix", "develop", "-c", "lake", "test"], 600)]
+    elif mode == "lightning":
+        package = ROOT / "packages/lightning"
+        checks = [("lightning-build", package, ["nix", "develop", "-c", "lake", "build"], 600),
+                  ("lightning-test", package, ["nix", "develop", "-c", "lake", "test"], 600)]
+    elif mode == "lnurl":
+        checks = [("lnurl-replay", ROOT, ["nix", "develop", "-c", "python3", "-B", "packages/cyberkrill/test/generate-invoice.py"], 300)]
+    elif mode == "sandbox":
+        checks = [("fresh-sandbox", ROOT, ["nix", "build", "--rebuild", "-L"], 3600)]
     elif mode == "fiat":
         checks = [
             ("fiat-build", APP, ["nix", "develop", "-c", "lake", "build", "cyberkrill", "CyberkrillTests"], 600),
@@ -50,6 +59,8 @@ def main():
         ]
     elif mode == "evidence":
         checks = [
+            ("lnurl-replay", ROOT, ["python3", "-B", "packages/cyberkrill/test/generate-invoice.py"], 300),
+            ("lnurl-mutations", ROOT, ["python3", "-B", "packages/cyberkrill/test/generate-invoice-mutations.py", "--verify"], 120),
             ("fiat-onchain", ROOT, ["python3", "-B", "packages/cyberkrill/test/fiat-onchain.py"], 300),
             ("fiat-onchain-mutations", ROOT, ["python3", "-B", "packages/cyberkrill/test/fiat-onchain-mutations.py", "--verify"], 120),
             ("price-feeds", ROOT, ["python3", "-B", "packages/cyberkrill/test/price-feeds.py"], 240),
@@ -91,6 +102,7 @@ def main():
         ]
     elif mode == "campaigns":
         checks = [
+            ("lnurl-campaign", ROOT, ["python3", "-B", "packages/cyberkrill/test/generate-invoice-mutations.py"], 2400),
             ("fiat-campaign", ROOT, ["python3", "-B", "packages/cyberkrill/test/fiat-onchain-mutations.py"], 2400),
             ("price-campaign", ROOT, ["python3", "-B", "packages/cyberkrill/test/price-mutations.py"], 7200),
             ("move-campaign", ROOT, ["python3", "-B", "packages/cyberkrill/test/move-utxos-mutations.py"], 7200),
@@ -130,6 +142,8 @@ def main():
         checks = [c for c in checks if c[0] in selected]
     records = []
     for name, cwd, args, limit in checks:
+        if mode in ["campaigns", "refresh"] and name != "lifecycle-record":
+            args = ["nix", "develop", "-c", *args]
         start = time.monotonic()
         # Keep an owned, existing temp parent for the complete child lifetime.
         # A development shell may replace TMPDIR, so restore it explicitly at

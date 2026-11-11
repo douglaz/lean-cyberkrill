@@ -2,10 +2,10 @@
   "source_sha256": {
     "Cyberkrill/Fiat.lean": "877f5980527ae043b44b059ac99fb96413aa294e6f827141cdabedce37318159",
     "Cyberkrill/PriceFeed.lean": "a07882b430c14fa954fdbe9e30f327f7379565a73c3afc77b450e07182f17086",
-    "Cyberkrill/TestEntry.lean": "4f888f3dc1af933d9e80d5eef426ddf0873ecc57ab3a7fc36cb4030cb544f826",
-    "Cyberkrill/App.lean": "0454b49fd86a314d47a370ba3bebf782cbbc8eba372c73165a149eb602fb458a",
+    "Cyberkrill/TestEntry.lean": "fd05678593e99380b4269e4deb58815bd7e6e4cae93e48a8d14152bfb0d0bae5",
+    "Cyberkrill/App.lean": "b733b974f3aaf929ab7c8086d1f8ed0438cc0abc9ff49992008d7cdc4d12f0a2",
     "CyberkrillTests/PriceFeed.lean": "b6f4984d0fbd51e32e581d4ca523d5432d2957aabd95db551c06b49bf837b44c",
-    "CyberkrillTests.lean": "980964d989490659aac1f7e1c6333a224f49d5f8d0ed1a73536bcaa429d9d87d",
+    "CyberkrillTests.lean": "fa8145e57e7ae2b4b1a0d88c8fcf67af4c40c63d379da398ee9b69f4f2ef2896",
     "test/price-mutations.py": "7d64067f00df09ec76a8f944e78e1d1f2af8b058321e7d5078f6aa2f15e94506",
     "test/price-feeds.py": "bcb716a392f164b9460e6300c9fadb9962f8673ead58cdfd6d1c7fd581afb5f0",
     "test/price-cases.py": "6379b1453903f578125d17fcb89ba413f2f9fd1c0766c214af645433cf3c9292",
@@ -22,7 +22,7 @@
       "CyberkrillTests"
     ],
     "status": 0,
-    "seconds": 0.392
+    "seconds": 0.398
   },
   "initial_green": {
     "command": [
@@ -31,7 +31,7 @@
       "test/price-feeds.py"
     ],
     "status": 0,
-    "seconds": 44.763
+    "seconds": 49.133
   },
   "checks": [
     {
@@ -55,7 +55,7 @@
           "CyberkrillTests"
         ],
         "status": 0,
-        "seconds": 14.008
+        "seconds": 16.66
       },
       "red": {
         "command": [
@@ -65,7 +65,7 @@
           "--pure"
         ],
         "status": 1,
-        "seconds": 0.137
+        "seconds": 0.157
       },
       "restore_build": {
         "command": [
@@ -75,7 +75,7 @@
           "CyberkrillTests"
         ],
         "status": 0,
-        "seconds": 14.019
+        "seconds": 15.666
       },
       "green": {
         "command": [
@@ -85,7 +85,7 @@
           "--pure"
         ],
         "status": 0,
-        "seconds": 1.601
+        "seconds": 1.712
       }
     },
     {
@@ -109,7 +109,7 @@
           "CyberkrillTests"
         ],
         "status": 0,
-        "seconds": 13.904
+        "seconds": 17.253
       },
       "red": {
         "command": [
@@ -119,7 +119,7 @@
           "--pure"
         ],
         "status": 1,
-        "seconds": 0.135
+        "seconds": 0.136
       },
       "restore_build": {
         "command": [
@@ -129,7 +129,7 @@
           "CyberkrillTests"
         ],
         "status": 0,
-        "seconds": 13.906
+        "seconds": 15.345
       },
       "green": {
         "command": [
@@ -139,7 +139,7 @@
           "--pure"
         ],
         "status": 0,
-        "seconds": 1.639
+        "seconds": 1.658
       }
     },
     {
@@ -163,7 +163,7 @@
           "CyberkrillTests"
         ],
         "status": 0,
-        "seconds": 14.009
+        "seconds": 14.436
       },
       "red": {
         "command": [
@@ -173,7 +173,7 @@
           "--pure"
         ],
         "status": 1,
-        "seconds": 0.13
+        "seconds": 0.129
       },
       "restore_build": {
         "command": [
@@ -183,7 +183,7 @@
           "CyberkrillTests"
         ],
         "status": 0,
-        "seconds": 13.804
+        "seconds": 14.638
       },
       "green": {
         "command": [
@@ -193,7 +193,7 @@
           "--pure"
         ],
         "status": 0,
-        "seconds": 1.611
+        "seconds": 1.794
       }
     },
     {
@@ -217,7 +217,7 @@
           "CyberkrillTests"
         ],
         "status": 0,
-        "seconds": 12.403
+        "seconds": 13.354
       },
       "red": {
         "command": [
@@ -227,7 +227,7 @@
           "--pure"
         ],
         "status": 1,
-        "seconds": 0.146
+        "seconds": 0.134
       },
       "restore_build": {
         "command": [
@@ -237,7 +237,7 @@
           "CyberkrillTests"
         ],
         "status": 0,
-        "seconds": 12.317
+        "seconds": 14.779
       },
       "green": {
         "command": [
@@ -247,7 +247,7 @@
           "--pure"
         ],
         "status": 0,
-        "seconds": 1.61
+        "seconds": 1.863
       }
     },
     {
@@ -271,7 +271,7 @@
           "CyberkrillTests"
         ],
         "status": 0,
-        "seconds": 12.314
+        "seconds": 13.23
       },
       "red": {
         "command": [
@@ -281,7 +281,7 @@
           "--pure"
         ],
         "status": 1,
-        "seconds": 0.128
+        "seconds": 0.138
       },
       "restore_build": {
         "command": [
@@ -291,7 +291,7 @@
           "CyberkrillTests"
         ],
         "status": 0,
-        "seconds": 12.104
+        "seconds": 13.126
       },
       "green": {
         "command": [
@@ -301,7 +301,7 @@
           "--pure"
         ],
         "status": 0,
-        "seconds": 1.601
+        "seconds": 1.639
       }
     },
     {
@@ -325,7 +325,7 @@
           "CyberkrillTests"
         ],
         "status": 0,
-        "seconds": 12.394
+        "seconds": 12.713
       },
       "red": {
         "command": [
@@ -335,7 +335,7 @@
           "--pure"
         ],
         "status": 1,
-        "seconds": 0.128
+        "seconds": 0.13
       },
       "restore_build": {
         "command": [
@@ -345,7 +345,7 @@
           "CyberkrillTests"
         ],
         "status": 0,
-        "seconds": 12.614
+        "seconds": 12.611
       },
       "green": {
         "command": [
@@ -355,7 +355,7 @@
           "--pure"
         ],
         "status": 0,
-        "seconds": 1.652
+        "seconds": 1.756
       }
     },
     {
@@ -379,7 +379,7 @@
           "CyberkrillTests"
         ],
         "status": 0,
-        "seconds": 12.532
+        "seconds": 12.626
       },
       "red": {
         "command": [
@@ -389,7 +389,7 @@
           "--pure"
         ],
         "status": 1,
-        "seconds": 0.136
+        "seconds": 0.128
       },
       "restore_build": {
         "command": [
@@ -399,7 +399,7 @@
           "CyberkrillTests"
         ],
         "status": 0,
-        "seconds": 13.119
+        "seconds": 12.522
       },
       "green": {
         "command": [
@@ -409,7 +409,7 @@
           "--pure"
         ],
         "status": 0,
-        "seconds": 1.635
+        "seconds": 1.675
       }
     },
     {
@@ -433,7 +433,7 @@
           "CyberkrillTests"
         ],
         "status": 0,
-        "seconds": 12.503
+        "seconds": 13.535
       },
       "red": {
         "command": [
@@ -443,7 +443,7 @@
           "--pure"
         ],
         "status": 1,
-        "seconds": 0.126
+        "seconds": 0.137
       },
       "restore_build": {
         "command": [
@@ -453,7 +453,7 @@
           "CyberkrillTests"
         ],
         "status": 0,
-        "seconds": 12.098
+        "seconds": 16.835
       },
       "green": {
         "command": [
@@ -463,7 +463,7 @@
           "--pure"
         ],
         "status": 0,
-        "seconds": 1.613
+        "seconds": 1.672
       }
     },
     {
@@ -486,7 +486,7 @@
           "CyberkrillTests"
         ],
         "status": 0,
-        "seconds": 12.11
+        "seconds": 12.81
       },
       "red": {
         "command": [
@@ -495,7 +495,7 @@
           "test/price-feeds.py"
         ],
         "status": 1,
-        "seconds": 11.355
+        "seconds": 11.408
       },
       "restore_build": {
         "command": [
@@ -505,7 +505,7 @@
           "CyberkrillTests"
         ],
         "status": 0,
-        "seconds": 12.303
+        "seconds": 15.042
       },
       "green": {
         "command": [
@@ -514,7 +514,7 @@
           "test/price-feeds.py"
         ],
         "status": 0,
-        "seconds": 44.407
+        "seconds": 61.177
       }
     },
     {
@@ -536,7 +536,7 @@
           "CyberkrillTests"
         ],
         "status": 0,
-        "seconds": 9.912
+        "seconds": 12.665
       },
       "red": {
         "command": [
@@ -544,7 +544,7 @@
           "--price-guards"
         ],
         "status": 1,
-        "seconds": 0.036
+        "seconds": 0.067
       },
       "restore_build": {
         "command": [
@@ -554,7 +554,7 @@
           "CyberkrillTests"
         ],
         "status": 0,
-        "seconds": 10.021
+        "seconds": 11.398
       },
       "green": {
         "command": [
@@ -562,7 +562,7 @@
           "--price-guards"
         ],
         "status": 0,
-        "seconds": 0.091
+        "seconds": 0.096
       }
     },
     {
@@ -584,7 +584,7 @@
           "CyberkrillTests"
         ],
         "status": 0,
-        "seconds": 12.05
+        "seconds": 10.243
       },
       "red": {
         "command": [
@@ -592,7 +592,7 @@
           "--price-guards"
         ],
         "status": 1,
-        "seconds": 0.051
+        "seconds": 0.047
       },
       "restore_build": {
         "command": [
@@ -602,7 +602,7 @@
           "CyberkrillTests"
         ],
         "status": 0,
-        "seconds": 12.012
+        "seconds": 13.211
       },
       "green": {
         "command": [
@@ -610,7 +610,7 @@
           "--price-guards"
         ],
         "status": 0,
-        "seconds": 0.091
+        "seconds": 0.093
       }
     },
     {
@@ -633,7 +633,7 @@
           "CyberkrillTests"
         ],
         "status": 0,
-        "seconds": 11.813
+        "seconds": 13.555
       },
       "red": {
         "command": [
@@ -642,7 +642,7 @@
           "test/price-feeds.py"
         ],
         "status": 1,
-        "seconds": 3.4
+        "seconds": 3.709
       },
       "restore_build": {
         "command": [
@@ -652,7 +652,7 @@
           "CyberkrillTests"
         ],
         "status": 0,
-        "seconds": 11.807
+        "seconds": 12.377
       },
       "green": {
         "command": [
@@ -661,7 +661,7 @@
           "test/price-feeds.py"
         ],
         "status": 0,
-        "seconds": 44.866
+        "seconds": 78.56
       }
     },
     {
@@ -685,7 +685,7 @@
           "CyberkrillTests"
         ],
         "status": 0,
-        "seconds": 14.105
+        "seconds": 18.878
       },
       "red": {
         "command": [
@@ -695,7 +695,7 @@
           "--pure"
         ],
         "status": 1,
-        "seconds": 0.128
+        "seconds": 0.141
       },
       "restore_build": {
         "command": [
@@ -705,7 +705,7 @@
           "CyberkrillTests"
         ],
         "status": 0,
-        "seconds": 14.004
+        "seconds": 17.084
       },
       "green": {
         "command": [
@@ -715,7 +715,7 @@
           "--pure"
         ],
         "status": 0,
-        "seconds": 1.625
+        "seconds": 1.967
       }
     },
     {
@@ -737,7 +737,7 @@
           "CyberkrillTests"
         ],
         "status": 0,
-        "seconds": 10.226
+        "seconds": 11.155
       },
       "red": {
         "command": [
@@ -745,7 +745,7 @@
           "--price-guards"
         ],
         "status": 1,
-        "seconds": 0.092
+        "seconds": 0.095
       },
       "restore_build": {
         "command": [
@@ -755,7 +755,7 @@
           "CyberkrillTests"
         ],
         "status": 0,
-        "seconds": 10.31
+        "seconds": 11.837
       },
       "green": {
         "command": [
@@ -763,7 +763,7 @@
           "--price-guards"
         ],
         "status": 0,
-        "seconds": 0.089
+        "seconds": 0.093
       }
     },
     {
@@ -785,7 +785,7 @@
           "CyberkrillTests"
         ],
         "status": 0,
-        "seconds": 10.201
+        "seconds": 11.574
       },
       "red": {
         "command": [
@@ -793,7 +793,7 @@
           "--price-guards"
         ],
         "status": 1,
-        "seconds": 0.041
+        "seconds": 0.054
       },
       "restore_build": {
         "command": [
@@ -803,7 +803,7 @@
           "CyberkrillTests"
         ],
         "status": 0,
-        "seconds": 10.512
+        "seconds": 11.685
       },
       "green": {
         "command": [
@@ -811,7 +811,7 @@
           "--price-guards"
         ],
         "status": 0,
-        "seconds": 0.09
+        "seconds": 0.1
       }
     },
     {
@@ -836,7 +836,7 @@
           "CyberkrillTests"
         ],
         "status": 0,
-        "seconds": 13.6
+        "seconds": 15.796
       },
       "red": {
         "command": [
@@ -847,7 +847,7 @@
           "numeric-limit"
         ],
         "status": 1,
-        "seconds": 0.094
+        "seconds": 0.095
       },
       "restore_build": {
         "command": [
@@ -857,7 +857,7 @@
           "CyberkrillTests"
         ],
         "status": 0,
-        "seconds": 13.704
+        "seconds": 17.068
       },
       "green": {
         "command": [
@@ -868,7 +868,7 @@
           "numeric-limit"
         ],
         "status": 0,
-        "seconds": 0.083
+        "seconds": 0.098
       }
     },
     {
@@ -892,7 +892,7 @@
           "CyberkrillTests"
         ],
         "status": 0,
-        "seconds": 13.71
+        "seconds": 16.779
       },
       "red": {
         "command": [
@@ -902,7 +902,7 @@
           "--pure"
         ],
         "status": 1,
-        "seconds": 0.136
+        "seconds": 0.151
       },
       "restore_build": {
         "command": [
@@ -912,7 +912,7 @@
           "CyberkrillTests"
         ],
         "status": 0,
-        "seconds": 13.707
+        "seconds": 15.665
       },
       "green": {
         "command": [
@@ -922,7 +922,7 @@
           "--pure"
         ],
         "status": 0,
-        "seconds": 1.612
+        "seconds": 1.645
       }
     },
     {
@@ -947,7 +947,7 @@
           "CyberkrillTests"
         ],
         "status": 0,
-        "seconds": 12.706
+        "seconds": 15.928
       },
       "red": {
         "command": [
@@ -958,7 +958,7 @@
           "surrogate"
         ],
         "status": 1,
-        "seconds": 0.098
+        "seconds": 0.101
       },
       "restore_build": {
         "command": [
@@ -968,7 +968,7 @@
           "CyberkrillTests"
         ],
         "status": 0,
-        "seconds": 13.515
+        "seconds": 14.656
       },
       "green": {
         "command": [
@@ -979,7 +979,7 @@
           "surrogate"
         ],
         "status": 0,
-        "seconds": 0.087
+        "seconds": 0.109
       }
     },
     {
@@ -1003,7 +1003,7 @@
           "CyberkrillTests"
         ],
         "status": 0,
-        "seconds": 13.032
+        "seconds": 14.681
       },
       "red": {
         "command": [
@@ -1013,7 +1013,7 @@
           "--pure"
         ],
         "status": 1,
-        "seconds": 0.132
+        "seconds": 0.143
       },
       "restore_build": {
         "command": [
@@ -1023,7 +1023,7 @@
           "CyberkrillTests"
         ],
         "status": 0,
-        "seconds": 13.846
+        "seconds": 14.941
       },
       "green": {
         "command": [
@@ -1033,7 +1033,7 @@
           "--pure"
         ],
         "status": 0,
-        "seconds": 1.768
+        "seconds": 1.778
       }
     },
     {
@@ -1055,7 +1055,7 @@
           "CyberkrillTests"
         ],
         "status": 0,
-        "seconds": 13.852
+        "seconds": 14.881
       },
       "red": {
         "command": [
@@ -1063,7 +1063,7 @@
           "--price-tasks"
         ],
         "status": 1,
-        "seconds": 0.042
+        "seconds": 0.07
       },
       "restore_build": {
         "command": [
@@ -1073,7 +1073,7 @@
           "CyberkrillTests"
         ],
         "status": 0,
-        "seconds": 14.385
+        "seconds": 14.378
       },
       "green": {
         "command": [
@@ -1081,7 +1081,7 @@
           "--price-tasks"
         ],
         "status": 0,
-        "seconds": 0.044
+        "seconds": 0.039
       }
     },
     {
@@ -1103,7 +1103,7 @@
           "CyberkrillTests"
         ],
         "status": 0,
-        "seconds": 10.343
+        "seconds": 11.743
       },
       "red": {
         "command": [
@@ -1111,7 +1111,7 @@
           "--price-guards"
         ],
         "status": 1,
-        "seconds": 0.061
+        "seconds": 0.059
       },
       "restore_build": {
         "command": [
@@ -1121,7 +1121,7 @@
           "CyberkrillTests"
         ],
         "status": 0,
-        "seconds": 10.116
+        "seconds": 11.172
       },
       "green": {
         "command": [
@@ -1129,7 +1129,7 @@
           "--price-guards"
         ],
         "status": 0,
-        "seconds": 0.087
+        "seconds": 0.123
       }
     },
     {
@@ -1151,7 +1151,7 @@
           "CyberkrillTests"
         ],
         "status": 0,
-        "seconds": 9.815
+        "seconds": 12.022
       },
       "red": {
         "command": [
@@ -1159,7 +1159,7 @@
           "--price-guards"
         ],
         "status": 1,
-        "seconds": 0.043
+        "seconds": 0.051
       },
       "restore_build": {
         "command": [
@@ -1169,7 +1169,7 @@
           "CyberkrillTests"
         ],
         "status": 0,
-        "seconds": 9.897
+        "seconds": 11.187
       },
       "green": {
         "command": [
@@ -1177,7 +1177,7 @@
           "--price-guards"
         ],
         "status": 0,
-        "seconds": 0.09
+        "seconds": 0.144
       }
     },
     {
@@ -1199,7 +1199,7 @@
           "CyberkrillTests"
         ],
         "status": 0,
-        "seconds": 9.798
+        "seconds": 12.173
       },
       "red": {
         "command": [
@@ -1207,7 +1207,7 @@
           "--price-guards"
         ],
         "status": 1,
-        "seconds": 0.053
+        "seconds": 0.07
       },
       "restore_build": {
         "command": [
@@ -1217,7 +1217,7 @@
           "CyberkrillTests"
         ],
         "status": 0,
-        "seconds": 10.0
+        "seconds": 11.277
       },
       "green": {
         "command": [
@@ -1225,7 +1225,7 @@
           "--price-guards"
         ],
         "status": 0,
-        "seconds": 0.089
+        "seconds": 0.108
       }
     },
     {
@@ -1249,7 +1249,7 @@
           "CyberkrillTests"
         ],
         "status": 0,
-        "seconds": 12.516
+        "seconds": 14.541
       },
       "red": {
         "command": [
@@ -1259,7 +1259,7 @@
           "--pure"
         ],
         "status": 1,
-        "seconds": 0.149
+        "seconds": 0.145
       },
       "restore_build": {
         "command": [
@@ -1269,7 +1269,7 @@
           "CyberkrillTests"
         ],
         "status": 0,
-        "seconds": 13.565
+        "seconds": 14.242
       },
       "green": {
         "command": [
@@ -1279,7 +1279,7 @@
           "--pure"
         ],
         "status": 0,
-        "seconds": 1.686
+        "seconds": 1.631
       }
     },
     {
@@ -1303,7 +1303,7 @@
           "CyberkrillTests"
         ],
         "status": 0,
-        "seconds": 13.142
+        "seconds": 15.855
       },
       "red": {
         "command": [
@@ -1313,7 +1313,7 @@
           "--pure"
         ],
         "status": 1,
-        "seconds": 0.132
+        "seconds": 0.197
       },
       "restore_build": {
         "command": [
@@ -1323,7 +1323,7 @@
           "CyberkrillTests"
         ],
         "status": 0,
-        "seconds": 12.726
+        "seconds": 14.939
       },
       "green": {
         "command": [
@@ -1333,7 +1333,7 @@
           "--pure"
         ],
         "status": 0,
-        "seconds": 2.092
+        "seconds": 1.781
       }
     },
     {
@@ -1357,7 +1357,7 @@
           "CyberkrillTests"
         ],
         "status": 0,
-        "seconds": 16.391
+        "seconds": 13.717
       },
       "red": {
         "command": [
@@ -1367,7 +1367,7 @@
           "--pure"
         ],
         "status": 1,
-        "seconds": 0.143
+        "seconds": 0.129
       },
       "restore_build": {
         "command": [
@@ -1377,7 +1377,7 @@
           "CyberkrillTests"
         ],
         "status": 0,
-        "seconds": 13.45
+        "seconds": 16.178
       },
       "green": {
         "command": [
@@ -1387,7 +1387,7 @@
           "--pure"
         ],
         "status": 0,
-        "seconds": 1.788
+        "seconds": 1.83
       }
     },
     {
@@ -1412,7 +1412,7 @@
           "CyberkrillTests"
         ],
         "status": 0,
-        "seconds": 15.383
+        "seconds": 15.921
       },
       "red": {
         "command": [
@@ -1423,7 +1423,7 @@
           "zero-token"
         ],
         "status": 1,
-        "seconds": 0.099
+        "seconds": 0.106
       },
       "restore_build": {
         "command": [
@@ -1433,7 +1433,7 @@
           "CyberkrillTests"
         ],
         "status": 0,
-        "seconds": 13.721
+        "seconds": 29.349
       },
       "green": {
         "command": [
@@ -1444,7 +1444,7 @@
           "zero-token"
         ],
         "status": 0,
-        "seconds": 0.083
+        "seconds": 0.17
       }
     },
     {
@@ -1468,7 +1468,7 @@
           "CyberkrillTests"
         ],
         "status": 0,
-        "seconds": 13.03
+        "seconds": 30.778
       },
       "red": {
         "command": [
@@ -1478,7 +1478,7 @@
           "--pure"
         ],
         "status": 1,
-        "seconds": 0.146
+        "seconds": 0.389
       },
       "restore_build": {
         "command": [
@@ -1488,7 +1488,7 @@
           "CyberkrillTests"
         ],
         "status": 0,
-        "seconds": 13.648
+        "seconds": 22.636
       },
       "green": {
         "command": [
@@ -1498,7 +1498,7 @@
           "--pure"
         ],
         "status": 0,
-        "seconds": 1.669
+        "seconds": 2.016
       }
     },
     {
@@ -1522,7 +1522,7 @@
           "CyberkrillTests"
         ],
         "status": 0,
-        "seconds": 13.24
+        "seconds": 15.262
       },
       "red": {
         "command": [
@@ -1532,7 +1532,7 @@
           "--pure"
         ],
         "status": 1,
-        "seconds": 0.133
+        "seconds": 0.15
       },
       "restore_build": {
         "command": [
@@ -1542,7 +1542,7 @@
           "CyberkrillTests"
         ],
         "status": 0,
-        "seconds": 13.153
+        "seconds": 15.701
       },
       "green": {
         "command": [
@@ -1552,7 +1552,7 @@
           "--pure"
         ],
         "status": 0,
-        "seconds": 1.629
+        "seconds": 3.173
       }
     },
     {
@@ -1576,7 +1576,7 @@
           "CyberkrillTests"
         ],
         "status": 0,
-        "seconds": 13.426
+        "seconds": 14.246
       },
       "red": {
         "command": [
@@ -1586,7 +1586,7 @@
           "--pure"
         ],
         "status": 1,
-        "seconds": 0.136
+        "seconds": 0.143
       },
       "restore_build": {
         "command": [
@@ -1596,7 +1596,7 @@
           "CyberkrillTests"
         ],
         "status": 0,
-        "seconds": 13.328
+        "seconds": 13.539
       },
       "green": {
         "command": [
@@ -1606,7 +1606,7 @@
           "--pure"
         ],
         "status": 0,
-        "seconds": 1.658
+        "seconds": 1.624
       }
     },
     {
@@ -1630,7 +1630,7 @@
           "CyberkrillTests"
         ],
         "status": 0,
-        "seconds": 13.444
+        "seconds": 12.72
       },
       "red": {
         "command": [
@@ -1640,7 +1640,7 @@
           "--pure"
         ],
         "status": 1,
-        "seconds": 0.129
+        "seconds": 0.13
       },
       "restore_build": {
         "command": [
@@ -1650,7 +1650,7 @@
           "CyberkrillTests"
         ],
         "status": 0,
-        "seconds": 13.034
+        "seconds": 12.741
       },
       "green": {
         "command": [
@@ -1660,7 +1660,7 @@
           "--pure"
         ],
         "status": 0,
-        "seconds": 1.643
+        "seconds": 1.626
       }
     },
     {
@@ -1684,7 +1684,7 @@
           "CyberkrillTests"
         ],
         "status": 0,
-        "seconds": 12.829
+        "seconds": 12.91
       },
       "red": {
         "command": [
@@ -1694,7 +1694,7 @@
           "--pure"
         ],
         "status": 1,
-        "seconds": 0.133
+        "seconds": 0.127
       },
       "restore_build": {
         "command": [
@@ -1704,7 +1704,7 @@
           "CyberkrillTests"
         ],
         "status": 0,
-        "seconds": 12.925
+        "seconds": 12.611
       },
       "green": {
         "command": [
@@ -1714,7 +1714,7 @@
           "--pure"
         ],
         "status": 0,
-        "seconds": 1.624
+        "seconds": 1.619
       }
     },
     {
@@ -1738,7 +1738,7 @@
           "CyberkrillTests"
         ],
         "status": 0,
-        "seconds": 13.72
+        "seconds": 13.122
       },
       "red": {
         "command": [
@@ -1748,7 +1748,7 @@
           "--pure"
         ],
         "status": 1,
-        "seconds": 0.138
+        "seconds": 0.185
       },
       "restore_build": {
         "command": [
@@ -1758,7 +1758,7 @@
           "CyberkrillTests"
         ],
         "status": 0,
-        "seconds": 13.325
+        "seconds": 14.055
       },
       "green": {
         "command": [
@@ -1768,7 +1768,7 @@
           "--pure"
         ],
         "status": 0,
-        "seconds": 1.616
+        "seconds": 1.696
       }
     },
     {
@@ -1792,7 +1792,7 @@
           "CyberkrillTests"
         ],
         "status": 0,
-        "seconds": 12.21
+        "seconds": 14.033
       },
       "red": {
         "command": [
@@ -1812,7 +1812,7 @@
           "CyberkrillTests"
         ],
         "status": 0,
-        "seconds": 12.106
+        "seconds": 13.019
       },
       "green": {
         "command": [
@@ -1822,7 +1822,7 @@
           "--pure"
         ],
         "status": 0,
-        "seconds": 1.592
+        "seconds": 1.724
       }
     },
     {
@@ -1846,7 +1846,7 @@
           "CyberkrillTests"
         ],
         "status": 0,
-        "seconds": 12.507
+        "seconds": 13.323
       },
       "red": {
         "command": [
@@ -1856,7 +1856,7 @@
           "--pure"
         ],
         "status": 1,
-        "seconds": 0.128
+        "seconds": 0.131
       },
       "restore_build": {
         "command": [
@@ -1866,7 +1866,7 @@
           "CyberkrillTests"
         ],
         "status": 0,
-        "seconds": 12.213
+        "seconds": 22.812
       },
       "green": {
         "command": [
@@ -1876,7 +1876,7 @@
           "--pure"
         ],
         "status": 0,
-        "seconds": 1.591
+        "seconds": 2.084
       }
     },
     {
@@ -1899,7 +1899,7 @@
           "CyberkrillTests"
         ],
         "status": 0,
-        "seconds": 12.207
+        "seconds": 14.038
       },
       "red": {
         "command": [
@@ -1908,7 +1908,7 @@
           "test/price-feeds.py"
         ],
         "status": 1,
-        "seconds": 44.007
+        "seconds": 46.028
       },
       "restore_build": {
         "command": [
@@ -1918,7 +1918,7 @@
           "CyberkrillTests"
         ],
         "status": 0,
-        "seconds": 12.212
+        "seconds": 13.422
       },
       "green": {
         "command": [
@@ -1927,7 +1927,7 @@
           "test/price-feeds.py"
         ],
         "status": 0,
-        "seconds": 44.407
+        "seconds": 47.847
       }
     }
   ],
@@ -1938,6 +1938,6 @@
       "test/price-feeds.py"
     ],
     "status": 0,
-    "seconds": 45.558
+    "seconds": 46.133
   }
 }

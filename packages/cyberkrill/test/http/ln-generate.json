@@ -1,0 +1,18 @@
+{
+  "well_known": {
+    "callback": "https://127.0.0.1:19443/pay?dup=first&dup=last&flag#fragment",
+    "minSendable": 1000,
+    "maxSendable": 3000,
+    "metadata": "[[\"text/plain\",\"Synthetic invoice request\"]]",
+    "tag": "payRequest",
+    "commentAllowed": 16
+  },
+  "callback": {
+    "pr": "lnbc2500u1pvjluezsp5zyg3zyg3zyg3zyg3zyg3zyg3zyg3zyg3zyg3zyg3zyg3zyg3zygspp5qqqsyqcyq5rqwzqfqqqsyqcyq5rqwzqfqqqsyqcyq5rqwzqfqypqdq5xysxxatsyp3k7enxv4jsxqzpu9qrsgquk0rl77nj30yxdy8j9vdx85fkpmdla2087ne0xh8nhedh8w27kyke0lp53ut353s06fv3qfegext0eh0ymjpf39tuven09sam30g4vgpfna3rh",
+    "routes": null
+  },
+  "error": {
+    "status": "ERROR",
+    "reason": "Synthetic failure"
+  }
+}

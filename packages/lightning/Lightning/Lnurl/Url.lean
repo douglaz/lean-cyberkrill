@@ -101,6 +101,15 @@ private def endsInNumber (host : String) : Bool :=
     else parts.getLast?.getD ""
   asciiDigits last || ipv4Number last
 
+/-- Ignore leading zeroes and reject oversized decimal values before conversion. -/
+private def boundedNat? (source : String) (maxDigits : Nat) : Option Nat :=
+  if source.isEmpty then none
+  else
+    let significant := String.ofList (source.toList.dropWhile (· == '0'))
+    if significant.length > maxDigits then none
+    else if significant.isEmpty then some 0
+    else significant.toNat?
+
 private def normalizeHost (raw : String) : Except LnurlError String := do
   let bytes ← percentDecode raw
   let some decoded := String.fromUTF8? bytes | throw .invalidHost
@@ -116,15 +125,15 @@ private def normalizeHost (raw : String) : Except LnurlError String := do
     if parts.length != 4 || !(parts.all asciiDigits) ||
         parts.any (fun p => p.length > 1 && p.startsWith "0") then
       throw (.unsupportedUrlForm .ipv4Form)
-    if parts.any (fun p => p.toNat?.getD 256 > 255) then throw .invalidIpv4
+    if parts.any (fun p => (boundedNat? p 3).getD 256 > 255) then throw .invalidIpv4
   return host
 
 private def validatePort (port : String) : Except LnurlError Unit := do
   if port.isEmpty then return
-  if !asciiDigits port || port.toNat?.getD 65536 > 65535 then throw .invalidPort
+  if !asciiDigits port || (boundedNat? port 5).getD 65536 > 65535 then throw .invalidPort
 
-/-- Pure HTTP(S) subset parser. The source string is never rewritten in the output. -/
-def parseUrl (source : String) : Except LnurlError UrlParts := do
+/-- Validate HTTP(S) components without decoding or deduplicating query pairs. -/
+private def parseUrlComponents (source : String) : Except LnurlError UrlParts := do
   let endTrimmed := source.toList.dropWhile (fun c => c.toNat ≤ 32)
     |>.reverse.dropWhile (fun c => c.toNat ≤ 32) |>.reverse
   let cleaned := endTrimmed.filter (fun c => c != '\t' && c != '\r' && c != '\n')
@@ -143,7 +152,152 @@ def parseUrl (source : String) : Except LnurlError UrlParts := do
   let beforeFragment := rest.takeWhile (· != '#')
   let queryStart := beforeFragment.dropWhile (· != '?')
   let query := if queryStart.isEmpty then none else some (specialQuery (String.ofList (queryStart.drop 1)))
-  let pairs ← match query with | none => pure [] | some q => queryPairs q
-  return ⟨scheme, host, scheme ++ "://" ++ host ++ "/", query, pairs⟩
+  return ⟨scheme, host, scheme ++ "://" ++ host ++ "/", query, []⟩
+
+/-- Pure HTTP(S) subset parser. The source string is never rewritten in the output. -/
+def parseUrl (source : String) : Except LnurlError UrlParts := do
+  let parts ← parseUrlComponents source
+  let pairs ← match parts.query with | none => pure [] | some q => queryPairs q
+  return { parts with queryParams := pairs }
+
+/-- Application/x-www-form-urlencoded component, over UTF-8 bytes. -/
+def formEncode (s : String) : String :=
+  String.join (s.toUTF8.data.toList.map fun b =>
+    if b == 32 then "+"
+    else if (48 ≤ b && b ≤ 57) || (65 ≤ b && b ≤ 90) ||
+        (97 ≤ b && b ≤ 122) || [42, 45, 46, 95].contains b then
+      String.singleton (Char.ofNat b.toNat)
+    else escapedByte b)
+
+private def urlEscape (path : Bool) (s : String) : String :=
+  String.join (s.toUTF8.data.toList.map fun b =>
+    if b ≤ 32 || b ≥ 127 || [34, 60, 62, 96].contains b ||
+        (path && [35, 63, 123, 125].contains b) then escapedByte b
+    else String.singleton (Char.ofNat b.toNat))
+
+private def normalizePath (raw : String) : String := Id.run do
+  let raw := raw.replace "\\" "/"
+  let pieces := (if raw.isEmpty then "/" else raw).splitOn "/"
+  let count := pieces.length
+  let mut reversed : List String := []
+  for (piece, index) in pieces.drop 1 |>.zipIdx do
+    let dot := (Bitcoin.Bech32.lower piece).replace "%2e" "."
+    if dot == "." || dot == ".." then
+      if dot == ".." then reversed := reversed.drop 1
+      if index + 2 == count then reversed := "" :: reversed
+    else reversed := urlEscape true piece :: reversed
+  return "/" ++ String.intercalate "/" reversed.reverse
+
+/-- Serialization components shared by requests and callback query appending.
+The decode projection deliberately keeps its existing host-only `base` field. -/
+private def serializeParts (source : String) (requestUri : Bool := false) :
+    Except LnurlError (String × Option String × String) := do
+  let parts ← parseUrlComponents source
+  let cleaned := source.toList.dropWhile (fun c => c.toNat ≤ 32)
+    |>.reverse.dropWhile (fun c => c.toNat ≤ 32) |>.reverse
+    |>.filter (fun c => c != '\t' && c != '\r' && c != '\n')
+  let afterScheme := (cleaned.dropWhile (· != ':')).drop 1
+  let afterSlashes := afterScheme.dropWhile (fun c => c == '/' || c == '\\')
+  let authority := afterSlashes.takeWhile (fun c => c != '/' && c != '\\' && c != '?' && c != '#')
+  let rest := afterSlashes.drop authority.length
+  let portChars := (authority.dropWhile (· != ':')).drop 1
+  let port := boundedNat? (String.ofList portChars) 5
+  let portText := match port with
+    | some n => if (parts.scheme == "https" && n == 443) || (parts.scheme == "http" && n == 80)
+        then "" else ":" ++ toString n
+    | none => ""
+  let path := normalizePath (String.ofList (rest.takeWhile (fun c => c != '?' && c != '#')))
+  let fragmentStart := rest.dropWhile (· != '#')
+  let fragment := if fragmentStart.isEmpty then "" else "#" ++ urlEscape false (String.ofList (fragmentStart.drop 1))
+  let queryStart := (rest.takeWhile (· != '#')).dropWhile (· != '?')
+  let query := if requestUri then
+      if queryStart.isEmpty then none else some (String.ofList (queryStart.drop 1))
+    else parts.query
+  let authorityText := if requestUri then String.ofList authority else parts.host ++ portText
+  return (parts.scheme ++ "://" ++ authorityText ++ path, query, if requestUri then "" else fragment)
+
+/-- Normalize an HTTP(S) request without adding or deduplicating query pairs. -/
+def normalizeUrl (source : String) : Except LnurlError String := do
+  let (base, query, fragment) ← serializeParts source
+  return base ++ (query.map ("?" ++ ·) |>.getD "") ++ fragment
+
+/-- Serialize a supported callback URL and append form-encoded request fields. -/
+def callbackUrl (source : String) (amountMsat : Nat) (comment : Option String) :
+    Except LnurlError String := do
+  let (base, originalQuery, fragment) ← serializeParts source
+  let query := originalQuery.getD ""
+  let query := query ++ (if query.isEmpty then "" else "&") ++
+    "amount=" ++ toString amountMsat
+  let query := query ++ (match comment with
+    | none => "" | some s => "&comment=" ++ formEncode s)
+  return base ++ "?" ++ query ++ fragment
+
+/-- The redirect middleware serializes an HTTP URI, retaining authority and
+raw query spelling and discarding the fragment before the next request. -/
+private def redirectUrl (source : String) : Except LnurlError String := do
+  let (base, query, _) ← serializeParts source true
+  return base ++ (query.map ("?" ++ ·) |>.getD "")
+
+private def uriComponent (punctuation source : String) : Bool :=
+  source.toList.all (fun c => c.toNat < 128 && (c.isAlphanum || punctuation.contains c))
+
+/-- RFC URI syntax used by iri-string 0.7.10, within the supported authority
+forms. Deferred userinfo and bracketed hosts still reach the subset refusal. -/
+private def uriReferenceValid (source : String) : Bool := Id.run do
+  unless uriComponent "-._~:/?#[]@!$&'()*+,;=%" source &&
+      (percentDecode source true).isOk do return false
+  let first := source.toList.takeWhile (fun c => c != '/' && c != '?' && c != '#')
+  let hierarchy := if first.contains ':' then
+      (source.toList.dropWhile (· != ':')).drop 1 else source.toList
+  let mut rest := hierarchy
+  if (String.ofList hierarchy).startsWith "//" then
+    let tail := hierarchy.drop 2
+    let authority := tail.takeWhile (fun c => c != '/' && c != '?' && c != '#')
+    if authority.isEmpty then return false
+    if !authority.contains '@' && authority.head? != some '[' then
+      let fields := (String.ofList authority).splitOn ":"
+      let host := fields.headD ""
+      unless fields.length ≤ 2 && !host.isEmpty &&
+          uriComponent "-._~!$&'()*+,;=%" host do return false
+      if let [_, port] := fields then
+        unless port.toList.all (fun c => '0' ≤ c && c ≤ '9') do return false
+    rest := tail.drop authority.length
+  let beforeFragment := rest.takeWhile (· != '#')
+  let path := beforeFragment.takeWhile (· != '?')
+  let query := (beforeFragment.dropWhile (· != '?')).drop 1
+  let fragment := (rest.dropWhile (· != '#')).drop 1
+  return uriComponent "-._~!$&'()*+,;=:@%/" (String.ofList path) &&
+    uriComponent "-._~!$&'()*+,;=:@%/?" (String.ofList query) &&
+    uriComponent "-._~!$&'()*+,;=:@%/?" (String.ofList fragment)
+
+/-- Resolve a URI-reference Location against a normalized request URL. Invalid
+URI references are not followed (tower-http 0.6.8); valid targets still pass
+through the supported URL subset. No callback fields are added to redirects. -/
+def resolveRedirect (base location : String) : Except LnurlError (Option String) := do
+  if !uriReferenceValid location then return none
+  let base := (base.splitOn "#").headD ""
+  if !uriReferenceValid base then return none
+  let scheme := (base.splitOn ":").headD ""
+  let authority := (((base.splitOn "://").drop 1).headD "").toList.takeWhile (· != '/')
+  let origin := scheme ++ "://" ++ String.ofList authority
+  let pathBase := (base.splitOn "?").headD ""
+  let first := location.toList.takeWhile (fun c => c != '/' && c != '?' && c != '#')
+  let target ← if first.contains ':' then do
+      let schemeChars := first.takeWhile (· != ':')
+      if !(schemeChars.head?.any (fun c => c.isAlpha && c.toNat < 128)) ||
+          !schemeChars.all (fun c => c.isAlphanum && c.toNat < 128 || "+-.".contains c) then return none
+      let hierarchy := (location.toList.dropWhile (· != ':')).drop 1
+      unless (String.ofList hierarchy).startsWith "//" do
+        -- http 1.4.0 rejects slash/query/fragment forms without an authority;
+        -- an authority-only URI reaches Hyper's absolute-GET requirement.
+        if hierarchy.any (fun c => "/?#".contains c) then return none
+        throw (.malformedResponse "redirect URI")
+      pure location
+    else if location.startsWith "//" then pure (scheme ++ ":" ++ location)
+    else if location.startsWith "/" then pure (origin ++ location)
+    else if location.startsWith "?" then pure (pathBase ++ location)
+    else if location.startsWith "#" || location.isEmpty then pure (base ++ location)
+    else pure (String.intercalate "/" (pathBase.splitOn "/").dropLast ++ "/" ++ location)
+  return some (← redirectUrl target)
 
 end Lightning.Lnurl

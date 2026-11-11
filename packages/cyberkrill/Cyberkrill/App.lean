@@ -13,6 +13,7 @@ import Cyberkrill.ListUtxos
 import Cyberkrill.PsbtCommands
 import Cyberkrill.MoveUtxos
 import Cyberkrill.PriceFeed
+import Cyberkrill.GenerateInvoice
 
 namespace Cyberkrill
 
@@ -25,6 +26,7 @@ inductive Command where
   | decodeInvoice (input output : Option String)
   | decodeLnurl (input output : Option String)
   | encodeInvoice (input : Option String) (key : String) (output : Option String)
+  | generateInvoice (address amount : String) (comment output : Option String)
   | decodeInvite (input output : Option String)
   | encodeInvite (input : String) (skipSecret : Bool) (output : Option String)
   | decodePsbt (input : Option String) (network : String) (output : Option String)
@@ -89,6 +91,12 @@ private def parser : Cli.Cmd :=
         (flags := #[⟨some "o", "output", "Write JSON to a file", String⟩])
         (variableArg? := some ⟨"input", "Optional literal invoice", String⟩)
         (run := fun _ => pure 0),
+      Cli.Cmd.mk "ln-generate-invoice" none "Request an invoice from a Lightning address; Bitcoin or fiat amounts"
+        (flags := #[⟨some "c", "comment", "Optional payment request comment", String⟩,
+                    ⟨some "o", "output", "Write JSON to a file", String⟩])
+        (positionalArgs := #[⟨"address", "Lightning address", String⟩,
+                             ⟨"amount", "Bitcoin or fiat amount", String⟩])
+        (run := fun _ => pure 0),
       Cli.Cmd.mk "ln-decode-lnurl" none "Decode LNURL bech32 without fetching the URL"
         (flags := #[⟨some "o", "output", "Write JSON to a file", String⟩])
         (variableArg? := some ⟨"input", "Optional literal LNURL", String⟩)
@@ -134,6 +142,7 @@ private def valueFlags : List String :=
 private def commandValueFlags (command : String) : List String :=
   if command == "onchain-move-utxos" then
     valueFlags ++ ["--fee", "--destination", "--max-amount"]
+  else if command == "ln-generate-invoice" then valueFlags ++ ["-c", "--comment"]
   else valueFlags
 
 private def outputArgsValid (valueFlags : List String) : List String → Bool
@@ -145,6 +154,8 @@ private def outputArgsValid (valueFlags : List String) : List String → Bool
     else if flag == "-k" || flag == "--private-key" then
       (!(value.startsWith "-") || value == "-") && outputArgsValid valueFlags rest
     else if flag == "--network" then
+      (!(value.startsWith "-") || value == "-") && outputArgsValid valueFlags rest
+    else if (flag == "-c" || flag == "--comment") && valueFlags.contains flag then
       (!(value.startsWith "-") || value == "-") && outputArgsValid valueFlags rest
     else if (flag == "--destination" || flag == "--max-amount") && valueFlags.contains flag then
       (!(value.startsWith "-") || value == "-") && outputArgsValid valueFlags rest
@@ -166,8 +177,9 @@ private def outputParserArgs (valueFlags : List String) : List String → List S
       | value :: tail => flag :: value :: outputParserArgs valueFlags tail
       | [] => [flag]
     else
-      let flag := if (flag.startsWith "-o" || flag.startsWith "-k") &&
-          !(flag.startsWith "-o=" || flag.startsWith "-k=") && flag.contains '=' then
+      let flag := if (flag.startsWith "-o" || flag.startsWith "-k" ||
+          (valueFlags.contains "-c" && flag.startsWith "-c")) &&
+          !(flag.startsWith "-o=" || flag.startsWith "-k=" || flag.startsWith "-c=") && flag.contains '=' then
         (flag.take 2).toString ++ "=" ++ (flag.drop 2).toString else flag
       flag :: outputParserArgs valueFlags rest
   | [] => []
@@ -297,6 +309,7 @@ def parseCommand (args : List String) : Except Error Command := do
   let args := throughHelp args
   validateTypedArgs (args.head?.getD "") args.tail
   let routed := ["generate-mnemonic", "ln-decode-invoice", "ln-decode-lnurl", "ln-encode-invoice",
+    "ln-generate-invoice",
     "fm-decode-invite", "fm-encode-invite", "onchain-decode-psbt", "onchain-list-utxos",
     "onchain-create-psbt", "onchain-create-funded-psbt", "onchain-move-utxos"].contains
     (args.head?.getD "")
@@ -348,6 +361,10 @@ def parseCommand (args : List String) : Except Error Command := do
       maxConf := (wordCount? ((flag "max-conf").getD "9999999")).getD 9999999,
       output := flag "output" }
   | "version" => return .version
+  | "ln-generate-invoice" =>
+    let some address := p.positionalArg? "address" | throw .invalidArguments
+    let some amount := p.positionalArg? "amount" | throw .invalidArguments
+    return .generateInvoice address.value amount.value (flag "comment") (flag "output")
   | "convert-amount" =>
     let some arg := p.positionalArg? "amount" | throw .invalidArguments
     let unit := flag "as"
@@ -400,6 +417,7 @@ structure Services where
   move : CoreRpc.Client → MoveUtxos.Args → Option Bitcoin.Amount → IO (Except Error PsbtCommands.Result) := MoveUtxos.fetch
   writeOrdinaryFile : String → String → IO Unit := fun path text => IO.FS.writeFile path text
   price : String → IO PriceFeed.Result := PriceFeed.fetch
+  lnurlRequest : HttpCurl.Request → IO (Except HttpCurl.Error HttpCurl.Response) := HttpCurl.request
 
 def productionServices : Services where
   entropy := fun n => IO.getRandomBytes n.toUSize
@@ -537,6 +555,16 @@ private def prepareDecodeOutput (services : Services) (path : Option String) :
   catch _ => return .error .outputFailure
 
 def execute (version : String) (services : Services) : Command → IO (Except Error Output)
+  | .generateInvoice address input comment path => do
+    let .ok writer ← prepareDecodeOutput services path | return .error .outputFailure
+    let parsed ← match parseBitcoinOrFiat input with
+      | .error e => return .error e | .ok parsed => pure parsed
+    let amounts ← match ← convertAmounts services #[parsed] .millisat with
+      | .error e => return .error e | .ok amounts => pure amounts
+    let some amount := amounts[0]? | return .error .invalidArguments
+    match ← GenerateInvoice.fetch address amount comment services.lnurlRequest with
+    | .error e => return .error e
+    | .ok result => return .ok (lightningOutput result.pretty writer false)
   | .moveUtxos args => do
     let .ok writer ← prepareDecodeOutput services args.output | return .error .outputFailure
     if args.feeRate.isNone && args.fee.isNone then

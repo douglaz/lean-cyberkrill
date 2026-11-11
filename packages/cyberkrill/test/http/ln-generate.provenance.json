@@ -1,0 +1,17 @@
+{
+  "authority": "https://github.com/douglaz/cyberkrill/tree/27cad1faba86260b06665a89f0af5134d23525c2",
+  "derivation": "Own synthetic well-known and ERROR bodies in the shape of our Phase 5 lnurl.json. Hand-derived five-field output from decoder.rs:495-589 and main.rs:1286-1307; decoded_invoice reuses the independently captured valid/L410 output. Callback strings are hand-derived from Url::parse and form_urlencoded, not from the implementation. No network-bearing reference command was run.",
+  "invoice": {
+    "source": "https://github.com/lightning/bolts/blob/191462825ae341f0a27098765c075f01ca9bc6c2/11-payment-encoding.md",
+    "attribution": "BOLT contributors",
+    "licence": "CC-BY-4.0",
+    "changes": "L410 invoice extracted into an own callback wrapper; decoded fields extracted and reformatted from the pinned pure decode capture."
+  },
+  "sha256": {
+    "packages/lightning/test-data/lnurl.json": "b17b2e953188915fc912bc458e545e61c282c0078d4b77829b44fe64225d37a8",
+    "packages/lightning/test-data/bolt11.json": "462044b66541fcbdc172ca737a6966ffbbee1c34191f2346b943607d4b89c7b7",
+    "packages/cyberkrill/test/golden/lightning-reference.json": "1e897b600d4cbf8012615a4daadc2fd201e9773e01190e79ddd0809a9bc7eadb",
+    "packages/cyberkrill/test/http/ln-generate.json": "a504d9075ce81633032192b58f291020eae5bc8159f522901772f1d5f3cb3e57",
+    "packages/cyberkrill/test/http/ln-generate-expected.json": "247becffa0ab687377b7d36302d854d97552cdb796b280a838743f3ec7f6dfe3"
+  }
+}

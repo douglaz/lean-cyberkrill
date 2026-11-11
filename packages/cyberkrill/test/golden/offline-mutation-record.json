@@ -3,11 +3,12 @@
   "executions": 125,
   "source_sha256": {
     "Cyberkrill/Amounts.lean": "5c61afca50ba859e8dba2fea4fd04d3db1c70905684815aec03c9174a1ac327f",
-    "Cyberkrill/App.lean": "0454b49fd86a314d47a370ba3bebf782cbbc8eba372c73165a149eb602fb458a",
+    "Cyberkrill/App.lean": "b733b974f3aaf929ab7c8086d1f8ed0438cc0abc9ff49992008d7cdc4d12f0a2",
     "Cyberkrill/Capabilities.lean": "35a0f3dc6dff6a88989c9de7665c93a117f26341f8869ba28c4c01e298d064a8",
     "Cyberkrill/CoreRpc.lean": "63fab1a1540c05eac769322a77fc799dc86cdb210da98a35696f8f46d3848a6d",
     "Cyberkrill/Fiat.lean": "877f5980527ae043b44b059ac99fb96413aa294e6f827141cdabedce37318159",
     "Cyberkrill/Frozenkrill.lean": "97a971fcefac7c5c49bcd528a97a2f49c53406b2bcd5619a7f062b38d284b96a",
+    "Cyberkrill/GenerateInvoice.lean": "e84e2df47eb6d2804a0f2af756c91f76837fdbc666ab62e928c35626141aaa5b",
     "Cyberkrill/Invite.lean": "ca3df94074fc673cabe6bff3ddec1ac9007a00ebc432b05b130b15af46a3e321",
     "Cyberkrill/InvoiceJson.lean": "789cda01d5c80cfb5d1fdab8abf27200d85801982e056a5cd374bc43358c98dd",
     "Cyberkrill/Lightning.lean": "30728c403b57686af70f6461ac2141152b7b09ae062799583129e82963e0d2b1",
@@ -18,9 +19,10 @@
     "Cyberkrill/Psbt.lean": "59926b11470eef41073045ea937e8425333342583981e44f0aa17c445e8fda9d",
     "Cyberkrill/PsbtCommands.lean": "5444b59f8d0ecb066a8ae921d052471f5913276700f9d01d8d31fd78f9b49abc",
     "Cyberkrill/RpcFlags.lean": "d07ca3f7d647bfabceb6eeaa90954d59dc30a76401677a16226dd9171b65b1d0",
-    "Cyberkrill/TestEntry.lean": "4f888f3dc1af933d9e80d5eef426ddf0873ecc57ab3a7fc36cb4030cb544f826",
+    "Cyberkrill/TestEntry.lean": "fd05678593e99380b4269e4deb58815bd7e6e4cae93e48a8d14152bfb0d0bae5",
     "CyberkrillTests/Capabilities.lean": "50172673976ead4aef29242efa591ed2237d2db4f60a6a323c2d5f9f4555fd66",
     "CyberkrillTests/FiatOnchain.lean": "8ee610b7c08e1b96237f1e7f7751731ba6901f65cdbfa7b46b7348215455475b",
+    "CyberkrillTests/GenerateInvoice.lean": "5ebf3a0a6ad5e197d2458a005ed0a8a90e87e1dedaf87a48da2d320c665f96e9",
     "CyberkrillTests/Helpers.lean": "d4484cedac1da7a20e5bc0a05080c7d6c171e7ec49f7a64e3a80ad3d075bc70a",
     "CyberkrillTests/ListUtxos.lean": "e813ada4731e4e51a62ec49782301a1f0fe99ce07d375d7f474b17a60fb3380b",
     "CyberkrillTests/Mnemonic.lean": "49c85bcaf2327da760e08fb7fef4ea5071c4b29160481a578caa61e36200cb0e",
@@ -34,7 +36,7 @@
     "CyberkrillTests/Support.lean": "80dbdfd22c0478dde791bfc46ae73418a8cf838f7728bb08f248291cdb3a179c",
     "Main.lean": "915167be1211cea874cd9f781d9651bc3e441b81dd9979415ba55d44e34f2eb1",
     "Cyberkrill.lean": "92b524fc30e751647c3b5f21a4cb312d48bd6888bf0f9738de2af37c9778c5fb",
-    "CyberkrillTests.lean": "980964d989490659aac1f7e1c6333a224f49d5f8d0ed1a73536bcaa429d9d87d",
+    "CyberkrillTests.lean": "fa8145e57e7ae2b4b1a0d88c8fcf67af4c40c63d379da398ee9b69f4f2ef2896",
     "lakefile.lean": "091b5366403a589d69a1226b5728588a7d7b4907cbe3b32199f22d5a0ed4093d",
     "test/offline.py": "d1101fc449918c970babe0e8421fa08ff596dcc5b490e033427270d2161be29b",
     "test/offline-inputs.py": "5656df09559f08b2ae33340416e80edbd49a799b60057af5a3c48dbed1e66ef1",
@@ -47,9 +49,9 @@
     "test/fifo.py": "014cff9f435f23f2d553379f7d014fd65753c620c0f0f9975d5b9072d23ced0c",
     "test/compare.py": "65792ec70aab8f33fa83736d1fb7a9708e373d0d74712bc3ce5c3d511b64ba82",
     "test/driver.py": "172236df4080394e861492683311651a0a87c13b7f4693e60ef57fe480989f22",
-    "test/verify.py": "de86e155e733906f745c2dcc5c78e78e2cbc2f12d6d61e870d104edff5fdd937",
-    "test/scope.py": "1686f838d9c361638a3aa3a562f8b7152011c43a58b50123436884d7fa836fa1",
-    "test/validate.py": "65c268e6804d284782f60e6326d37891a961741ede3d4685b7b267957e0d2731",
+    "test/verify.py": "86155830e75ed6dd487060cc1e28cb420cffca22b92e5b62c78c8746ad7f2ada",
+    "test/scope.py": "6747f5a0554b1bc1c4399977d5000dfcb85bfbc2306657e7e00414f31f9b8448",
+    "test/validate.py": "f7739f9a57c6953aab6eb96d9b6ee0d5d5e6122d99622905fabfad5a0c98f69f",
     "test/offline-exact-selftest.py": "7416a14362771adc2869c648598670bd073d37073e9abceea4d0ea169051a9e0",
     "test/recapture-history.py": "cb430dbb8afa886f04f800942dfa1eb337943dea5073b8093e68698298323023",
     "test/ordered-help.py": "9f23fc18a7a656ff1bae6b4263ae503cd7b1fe00748cf7bfcb86ed706cb3ca20",
@@ -88,7 +90,7 @@
           "CyberkrillTests"
         ],
         "status": 0,
-        "seconds": 14.394
+        "seconds": 16.626
       },
       "restore_build": {
         "command": [
@@ -101,7 +103,7 @@
           "CyberkrillTests"
         ],
         "status": 0,
-        "seconds": 14.012
+        "seconds": 15.511
       },
       "checks": [
         {
@@ -119,7 +121,7 @@
               "invite/primary-0"
             ],
             "status": 1,
-            "seconds": 0.166
+            "seconds": 0.145
           },
           "failure": "AssertionError: offline output newline: invite/primary-0",
           "green": {
@@ -134,7 +136,7 @@
               "invite/primary-0"
             ],
             "status": 0,
-            "seconds": 0.116
+            "seconds": 0.133
           }
         }
       ]
@@ -155,7 +157,7 @@
           "CyberkrillTests"
         ],
         "status": 0,
-        "seconds": 14.395
+        "seconds": 16.106
       },
       "restore_build": {
         "command": [
@@ -168,7 +170,7 @@
           "CyberkrillTests"
         ],
         "status": 0,
-        "seconds": 13.53
+        "seconds": 15.009
       },
       "checks": [
         {
@@ -186,7 +188,7 @@
               "invite-json/primary-0"
             ],
             "status": 1,
-            "seconds": 0.164
+            "seconds": 0.146
           },
           "failure": "AssertionError: offline exact string: invite-json/primary-0",
           "green": {
@@ -201,7 +203,7 @@
               "invite-json/primary-0"
             ],
             "status": 0,
-            "seconds": 0.134
+            "seconds": 0.126
           }
         }
       ]
@@ -222,7 +224,7 @@
           "CyberkrillTests"
         ],
         "status": 0,
-        "seconds": 14.603
+        "seconds": 16.552
       },
       "restore_build": {
         "command": [
@@ -235,7 +237,7 @@
           "CyberkrillTests"
         ],
         "status": 0,
-        "seconds": 13.481
+        "seconds": 15.393
       },
       "checks": [
         {
@@ -253,7 +255,7 @@
               "bip174Valid/0"
             ],
             "status": 1,
-            "seconds": 0.147
+            "seconds": 0.158
           },
           "failure": "AssertionError: offline success status: bip174Valid/0",
           "green": {
@@ -268,7 +270,7 @@
               "bip174Valid/0"
             ],
             "status": 0,
-            "seconds": 0.202
+            "seconds": 0.13
           }
         }
       ]
@@ -289,7 +291,7 @@
           "CyberkrillTests"
         ],
         "status": 0,
-        "seconds": 13.784
+        "seconds": 14.985
       },
       "restore_build": {
         "command": [
@@ -302,7 +304,7 @@
           "CyberkrillTests"
         ],
         "status": 0,
-        "seconds": 12.279
+        "seconds": 15.002
       },
       "checks": [
         {
@@ -320,7 +322,7 @@
               "routing/onchain-decode-psbt/existing-file"
             ],
             "status": 1,
-            "seconds": 0.126
+            "seconds": 0.131
           },
           "failure": "AssertionError: offline success status: routing/onchain-decode-psbt/existing-file",
           "green": {
@@ -335,7 +337,7 @@
               "routing/onchain-decode-psbt/existing-file"
             ],
             "status": 0,
-            "seconds": 0.106
+            "seconds": 0.129
           }
         }
       ]
@@ -356,7 +358,7 @@
           "CyberkrillTests"
         ],
         "status": 0,
-        "seconds": 11.105
+        "seconds": 15.208
       },
       "restore_build": {
         "command": [
@@ -369,7 +371,7 @@
           "CyberkrillTests"
         ],
         "status": 0,
-        "seconds": 11.125
+        "seconds": 15.123
       },
       "checks": [
         {
@@ -387,7 +389,7 @@
               "routing/onchain-decode-psbt/literal-dash"
             ],
             "status": 1,
-            "seconds": 0.113
+            "seconds": 0.141
           },
           "failure": "AssertionError: offline ordinary failure status: routing/onchain-decode-psbt/literal-dash",
           "green": {
@@ -402,7 +404,7 @@
               "routing/onchain-decode-psbt/literal-dash"
             ],
             "status": 0,
-            "seconds": 0.108
+            "seconds": 0.13
           }
         }
       ]
@@ -423,7 +425,7 @@
           "CyberkrillTests"
         ],
         "status": 0,
-        "seconds": 12.01
+        "seconds": 16.113
       },
       "restore_build": {
         "command": [
@@ -436,7 +438,7 @@
           "CyberkrillTests"
         ],
         "status": 0,
-        "seconds": 11.798
+        "seconds": 15.637
       },
       "checks": [
         {
@@ -454,7 +456,7 @@
               "invite-json/primary-skip-1"
             ],
             "status": 1,
-            "seconds": 0.116
+            "seconds": 0.142
           },
           "failure": "AssertionError: offline exact string: invite-json/primary-skip-1",
           "green": {
@@ -469,7 +471,7 @@
               "invite-json/primary-skip-1"
             ],
             "status": 0,
-            "seconds": 0.106
+            "seconds": 0.186
           }
         }
       ]
@@ -490,7 +492,7 @@
           "CyberkrillTests"
         ],
         "status": 0,
-        "seconds": 11.6
+        "seconds": 16.366
       },
       "restore_build": {
         "command": [
@@ -503,7 +505,7 @@
           "CyberkrillTests"
         ],
         "status": 0,
-        "seconds": 12.507
+        "seconds": 16.372
       },
       "checks": [
         {
@@ -521,7 +523,7 @@
               "invite/primary-1"
             ],
             "status": 1,
-            "seconds": 0.12
+            "seconds": 0.149
           },
           "failure": "AssertionError: offline unlisted difference: invite/primary-1",
           "green": {
@@ -536,7 +538,7 @@
               "invite/primary-1"
             ],
             "status": 0,
-            "seconds": 0.121
+            "seconds": 0.133
           }
         }
       ]
@@ -557,7 +559,7 @@
           "CyberkrillTests"
         ],
         "status": 0,
-        "seconds": 12.835
+        "seconds": 16.426
       },
       "restore_build": {
         "command": [
@@ -570,7 +572,7 @@
           "CyberkrillTests"
         ],
         "status": 0,
-        "seconds": 12.34
+        "seconds": 15.497
       },
       "checks": [
         {
@@ -588,7 +590,7 @@
               "invite/truncated-wss"
             ],
             "status": 1,
-            "seconds": 0.136
+            "seconds": 0.133
           },
           "failure": "AssertionError: offline success status: invite/truncated-wss",
           "green": {
@@ -603,7 +605,7 @@
               "invite/truncated-wss"
             ],
             "status": 0,
-            "seconds": 0.124
+            "seconds": 0.17
           }
         }
       ]
@@ -624,7 +626,7 @@
           "CyberkrillTests"
         ],
         "status": 0,
-        "seconds": 12.827
+        "seconds": 16.238
       },
       "restore_build": {
         "command": [
@@ -637,7 +639,7 @@
           "CyberkrillTests"
         ],
         "status": 0,
-        "seconds": 12.107
+        "seconds": 18.532
       },
       "checks": [
         {
@@ -655,7 +657,7 @@
               "invite/uppercase"
             ],
             "status": 1,
-            "seconds": 0.116
+            "seconds": 0.152
           },
           "failure": "AssertionError: offline ordinary failure status: invite/uppercase",
           "green": {
@@ -670,7 +672,7 @@
               "invite/uppercase"
             ],
             "status": 0,
-            "seconds": 0.109
+            "seconds": 0.121
           }
         }
       ]
@@ -691,7 +693,7 @@
           "CyberkrillTests"
         ],
         "status": 0,
-        "seconds": 11.721
+        "seconds": 17.197
       },
       "restore_build": {
         "command": [
@@ -704,7 +706,7 @@
           "CyberkrillTests"
         ],
         "status": 0,
-        "seconds": 11.702
+        "seconds": 17.401
       },
       "checks": [
         {
@@ -722,7 +724,7 @@
               "invite/checksum"
             ],
             "status": 1,
-            "seconds": 0.115
+            "seconds": 0.143
           },
           "failure": "AssertionError: offline ordinary failure status: invite/checksum",
           "green": {
@@ -737,7 +739,7 @@
               "invite/checksum"
             ],
             "status": 0,
-            "seconds": 0.107
+            "seconds": 0.132
           }
         },
         {
@@ -755,7 +757,7 @@
               "invite/wrong-hrp"
             ],
             "status": 1,
-            "seconds": 0.114
+            "seconds": 0.145
           },
           "failure": "AssertionError: offline ordinary failure status: invite/wrong-hrp",
           "green": {
@@ -770,7 +772,7 @@
               "invite/wrong-hrp"
             ],
             "status": 0,
-            "seconds": 0.107
+            "seconds": 0.131
           }
         },
         {
@@ -788,7 +790,7 @@
               "invite/wrong-variant"
             ],
             "status": 1,
-            "seconds": 0.115
+            "seconds": 0.144
           },
           "failure": "AssertionError: offline ordinary failure status: invite/wrong-variant",
           "green": {
@@ -803,7 +805,7 @@
               "invite/wrong-variant"
             ],
             "status": 0,
-            "seconds": 0.105
+            "seconds": 0.126
           }
         }
       ]
@@ -824,7 +826,7 @@
           "CyberkrillTests"
         ],
         "status": 0,
-        "seconds": 11.706
+        "seconds": 17.486
       },
       "restore_build": {
         "command": [
@@ -837,7 +839,7 @@
           "CyberkrillTests"
         ],
         "status": 0,
-        "seconds": 11.603
+        "seconds": 15.742
       },
       "checks": [
         {
@@ -855,7 +857,7 @@
               "invite/lax-padding"
             ],
             "status": 1,
-            "seconds": 0.113
+            "seconds": 0.139
           },
           "failure": "AssertionError: offline unlisted difference: invite/lax-padding",
           "green": {
@@ -870,7 +872,7 @@
               "invite/lax-padding"
             ],
             "status": 0,
-            "seconds": 0.109
+            "seconds": 0.124
           }
         }
       ]
@@ -891,7 +893,7 @@
           "CyberkrillTests"
         ],
         "status": 0,
-        "seconds": 11.712
+        "seconds": 17.661
       },
       "restore_build": {
         "command": [
@@ -904,7 +906,7 @@
           "CyberkrillTests"
         ],
         "status": 0,
-        "seconds": 11.843
+        "seconds": 18.21
       },
       "checks": [
         {
@@ -922,7 +924,7 @@
               "invite/id-length-8"
             ],
             "status": 1,
-            "seconds": 0.118
+            "seconds": 0.16
           },
           "failure": "AssertionError: offline success status: invite/id-length-8",
           "green": {
@@ -937,7 +939,7 @@
               "invite/id-length-8"
             ],
             "status": 0,
-            "seconds": 0.116
+            "seconds": 0.132
           }
         }
       ]
@@ -958,7 +960,7 @@
           "CyberkrillTests"
         ],
         "status": 0,
-        "seconds": 11.721
+        "seconds": 16.117
       },
       "restore_build": {
         "command": [
@@ -971,7 +973,7 @@
           "CyberkrillTests"
         ],
         "status": 0,
-        "seconds": 11.812
+        "seconds": 17.239
       },
       "checks": [
         {
@@ -989,7 +991,7 @@
               "invite/ascii32"
             ],
             "status": 1,
-            "seconds": 0.116
+            "seconds": 0.13
           },
           "failure": "AssertionError: offline unlisted difference: invite/ascii32",
           "green": {
@@ -1004,7 +1006,7 @@
               "invite/ascii32"
             ],
             "status": 0,
-            "seconds": 0.111
+            "seconds": 0.133
           }
         }
       ]
@@ -1025,7 +1027,7 @@
           "CyberkrillTests"
         ],
         "status": 0,
-        "seconds": 12.07
+        "seconds": 17.375
       },
       "restore_build": {
         "command": [
@@ -1038,7 +1040,7 @@
           "CyberkrillTests"
         ],
         "status": 0,
-        "seconds": 12.394
+        "seconds": 16.24
       },
       "checks": [
         {
@@ -1056,7 +1058,7 @@
               "invite/ascii127"
             ],
             "status": 1,
-            "seconds": 0.195
+            "seconds": 0.197
           },
           "failure": "AssertionError: offline unlisted difference: invite/ascii127",
           "green": {
@@ -1071,7 +1073,7 @@
               "invite/ascii127"
             ],
             "status": 0,
-            "seconds": 0.106
+            "seconds": 0.172
           }
         }
       ]
@@ -1092,7 +1094,7 @@
           "CyberkrillTests"
         ],
         "status": 0,
-        "seconds": 11.915
+        "seconds": 16.42
       },
       "restore_build": {
         "command": [
@@ -1105,7 +1107,7 @@
           "CyberkrillTests"
         ],
         "status": 0,
-        "seconds": 11.83
+        "seconds": 16.448
       },
       "checks": [
         {
@@ -1123,7 +1125,7 @@
               "invite/http-fallback-reject"
             ],
             "status": 1,
-            "seconds": 0.117
+            "seconds": 0.135
           },
           "failure": "AssertionError: offline ordinary failure status: invite/http-fallback-reject",
           "green": {
@@ -1138,7 +1140,7 @@
               "invite/http-fallback-reject"
             ],
             "status": 0,
-            "seconds": 0.111
+            "seconds": 0.129
           }
         },
         {
@@ -1156,7 +1158,7 @@
               "invite/https-six"
             ],
             "status": 1,
-            "seconds": 0.117
+            "seconds": 0.138
           },
           "failure": "AssertionError: offline success status: invite/https-six",
           "green": {
@@ -1171,7 +1173,7 @@
               "invite/https-six"
             ],
             "status": 0,
-            "seconds": 0.111
+            "seconds": 0.128
           }
         }
       ]
@@ -1192,7 +1194,7 @@
           "CyberkrillTests"
         ],
         "status": 0,
-        "seconds": 12.747
+        "seconds": 16.144
       },
       "restore_build": {
         "command": [
@@ -1205,7 +1207,7 @@
           "CyberkrillTests"
         ],
         "status": 0,
-        "seconds": 12.01
+        "seconds": 15.998
       },
       "checks": [
         {
@@ -1223,7 +1225,7 @@
               "invite/nested"
             ],
             "status": 1,
-            "seconds": 0.117
+            "seconds": 0.154
           },
           "failure": "AssertionError: offline unlisted difference: invite/nested",
           "green": {
@@ -1238,7 +1240,7 @@
               "invite/nested"
             ],
             "status": 0,
-            "seconds": 0.113
+            "seconds": 0.141
           }
         }
       ]
@@ -1259,7 +1261,7 @@
           "CyberkrillTests"
         ],
         "status": 0,
-        "seconds": 12.111
+        "seconds": 16.079
       },
       "restore_build": {
         "command": [
@@ -1272,7 +1274,7 @@
           "CyberkrillTests"
         ],
         "status": 0,
-        "seconds": 11.715
+        "seconds": 16.359
       },
       "checks": [
         {
@@ -1290,7 +1292,7 @@
               "invite/id-length-64"
             ],
             "status": 1,
-            "seconds": 0.12
+            "seconds": 0.184
           },
           "failure": "AssertionError: offline unlisted difference: invite/id-length-64",
           "green": {
@@ -1305,7 +1307,7 @@
               "invite/id-length-64"
             ],
             "status": 0,
-            "seconds": 0.106
+            "seconds": 0.165
           }
         }
       ]
@@ -1326,7 +1328,7 @@
           "CyberkrillTests"
         ],
         "status": 0,
-        "seconds": 11.712
+        "seconds": 15.56
       },
       "restore_build": {
         "command": [
@@ -1339,7 +1341,7 @@
           "CyberkrillTests"
         ],
         "status": 0,
-        "seconds": 11.805
+        "seconds": 14.404
       },
       "checks": [
         {
@@ -1357,7 +1359,7 @@
               "invite/id-length-32"
             ],
             "status": 1,
-            "seconds": 0.118
+            "seconds": 0.16
           },
           "failure": "AssertionError: offline unlisted difference: invite/id-length-32",
           "green": {
@@ -1372,7 +1374,7 @@
               "invite/id-length-32"
             ],
             "status": 0,
-            "seconds": 0.109
+            "seconds": 0.116
           }
         }
       ]
@@ -1393,7 +1395,7 @@
           "CyberkrillTests"
         ],
         "status": 0,
-        "seconds": 11.914
+        "seconds": 12.722
       },
       "restore_build": {
         "command": [
@@ -1406,7 +1408,7 @@
           "CyberkrillTests"
         ],
         "status": 0,
-        "seconds": 11.72
+        "seconds": 12.848
       },
       "checks": [
         {
@@ -1424,7 +1426,7 @@
               "invite-json/peer-2"
             ],
             "status": 1,
-            "seconds": 0.115
+            "seconds": 0.123
           },
           "failure": "AssertionError: offline ordinary failure status: invite-json/peer-2",
           "green": {
@@ -1439,7 +1441,7 @@
               "invite-json/peer-2"
             ],
             "status": 0,
-            "seconds": 0.108
+            "seconds": 0.116
           }
         }
       ]
@@ -1460,7 +1462,7 @@
           "CyberkrillTests"
         ],
         "status": 0,
-        "seconds": 13.013
+        "seconds": 14.944
       },
       "restore_build": {
         "command": [
@@ -1473,7 +1475,7 @@
           "CyberkrillTests"
         ],
         "status": 0,
-        "seconds": 13.104
+        "seconds": 15.367
       },
       "checks": [
         {
@@ -1491,7 +1493,7 @@
               "invite-json/peer-token-exponent"
             ],
             "status": 1,
-            "seconds": 0.12
+            "seconds": 0.132
           },
           "failure": "AssertionError: offline ordinary failure status: invite-json/peer-token-exponent",
           "green": {
@@ -1506,7 +1508,7 @@
               "invite-json/peer-token-exponent"
             ],
             "status": 0,
-            "seconds": 0.104
+            "seconds": 0.115
           }
         }
       ]
@@ -1527,7 +1529,7 @@
           "CyberkrillTests"
         ],
         "status": 0,
-        "seconds": 12.908
+        "seconds": 14.741
       },
       "restore_build": {
         "command": [
@@ -1540,7 +1542,7 @@
           "CyberkrillTests"
         ],
         "status": 0,
-        "seconds": 13.122
+        "seconds": 14.742
       },
       "checks": [
         {
@@ -1558,7 +1560,7 @@
               "invite-json/guardian-unknown-surrogate"
             ],
             "status": 1,
-            "seconds": 0.125
+            "seconds": 0.122
           },
           "failure": "AssertionError: offline success status: invite-json/guardian-unknown-surrogate",
           "green": {
@@ -1573,7 +1575,7 @@
               "invite-json/guardian-unknown-surrogate"
             ],
             "status": 0,
-            "seconds": 0.112
+            "seconds": 0.123
           }
         }
       ]
@@ -1594,7 +1596,7 @@
           "CyberkrillTests"
         ],
         "status": 0,
-        "seconds": 13.421
+        "seconds": 15.058
       },
       "restore_build": {
         "command": [
@@ -1607,7 +1609,7 @@
           "CyberkrillTests"
         ],
         "status": 0,
-        "seconds": 13.403
+        "seconds": 14.848
       },
       "checks": [
         {
@@ -1625,7 +1627,7 @@
               "bip174Valid/0"
             ],
             "status": 1,
-            "seconds": 0.12
+            "seconds": 0.132
           },
           "failure": "AssertionError: offline unlisted difference: bip174Valid/0",
           "green": {
@@ -1640,7 +1642,7 @@
               "bip174Valid/0"
             ],
             "status": 0,
-            "seconds": 0.116
+            "seconds": 0.115
           }
         }
       ]
@@ -1661,7 +1663,7 @@
           "CyberkrillTests"
         ],
         "status": 0,
-        "seconds": 13.62
+        "seconds": 15.447
       },
       "restore_build": {
         "command": [
@@ -1674,7 +1676,7 @@
           "CyberkrillTests"
         ],
         "status": 0,
-        "seconds": 13.501
+        "seconds": 14.953
       },
       "checks": [
         {
@@ -1692,7 +1694,7 @@
               "network/bip174Valid/0/MAINNET"
             ],
             "status": 1,
-            "seconds": 0.117
+            "seconds": 0.122
           },
           "failure": "AssertionError: offline success status: network/bip174Valid/0/MAINNET",
           "green": {
@@ -1707,7 +1709,7 @@
               "network/bip174Valid/0/MAINNET"
             ],
             "status": 0,
-            "seconds": 0.108
+            "seconds": 0.121
           }
         }
       ]
@@ -1728,7 +1730,7 @@
           "CyberkrillTests"
         ],
         "status": 0,
-        "seconds": 14.106
+        "seconds": 16.646
       },
       "restore_build": {
         "command": [
@@ -1741,7 +1743,7 @@
           "CyberkrillTests"
         ],
         "status": 0,
-        "seconds": 14.423
+        "seconds": 15.652
       },
       "checks": [
         {
@@ -1759,7 +1761,7 @@
               "hybrid-partial-06-G"
             ],
             "status": 1,
-            "seconds": 0.121
+            "seconds": 0.12
           },
           "failure": "AssertionError: offline ordinary failure status: hybrid-partial-06-G",
           "green": {
@@ -1774,7 +1776,7 @@
               "hybrid-partial-06-G"
             ],
             "status": 0,
-            "seconds": 0.108
+            "seconds": 0.115
           }
         },
         {
@@ -1792,7 +1794,7 @@
               "hybrid-partial-07-negG"
             ],
             "status": 1,
-            "seconds": 0.12
+            "seconds": 0.131
           },
           "failure": "AssertionError: offline ordinary failure status: hybrid-partial-07-negG",
           "green": {
@@ -1807,7 +1809,7 @@
               "hybrid-partial-07-negG"
             ],
             "status": 0,
-            "seconds": 0.107
+            "seconds": 0.11
           }
         }
       ]
@@ -1828,7 +1830,7 @@
           "CyberkrillTests"
         ],
         "status": 0,
-        "seconds": 14.307
+        "seconds": 15.847
       },
       "restore_build": {
         "command": [
@@ -1841,7 +1843,7 @@
           "CyberkrillTests"
         ],
         "status": 0,
-        "seconds": 14.216
+        "seconds": 15.777
       },
       "checks": [
         {
@@ -1859,7 +1861,7 @@
               "hybrid-input-06-G"
             ],
             "status": 1,
-            "seconds": 0.113
+            "seconds": 0.124
           },
           "failure": "AssertionError: offline success status: hybrid-input-06-G",
           "green": {
@@ -1874,7 +1876,7 @@
               "hybrid-input-06-G"
             ],
             "status": 0,
-            "seconds": 0.108
+            "seconds": 0.112
           }
         },
         {
@@ -1892,7 +1894,7 @@
               "hybrid-input-07-negG"
             ],
             "status": 1,
-            "seconds": 0.115
+            "seconds": 0.134
           },
           "failure": "AssertionError: offline success status: hybrid-input-07-negG",
           "green": {
@@ -1907,7 +1909,7 @@
               "hybrid-input-07-negG"
             ],
             "status": 0,
-            "seconds": 0.11
+            "seconds": 0.116
           }
         },
         {
@@ -1925,7 +1927,7 @@
               "hybrid-output-06-G"
             ],
             "status": 1,
-            "seconds": 0.116
+            "seconds": 0.162
           },
           "failure": "AssertionError: offline success status: hybrid-output-06-G",
           "green": {
@@ -1940,7 +1942,7 @@
               "hybrid-output-06-G"
             ],
             "status": 0,
-            "seconds": 0.106
+            "seconds": 0.111
           }
         },
         {
@@ -1958,7 +1960,7 @@
               "hybrid-output-07-negG"
             ],
             "status": 1,
-            "seconds": 0.115
+            "seconds": 0.132
           },
           "failure": "AssertionError: offline success status: hybrid-output-07-negG",
           "green": {
@@ -1973,7 +1975,7 @@
               "hybrid-output-07-negG"
             ],
             "status": 0,
-            "seconds": 0.106
+            "seconds": 0.111
           }
         }
       ]
@@ -1994,7 +1996,7 @@
           "CyberkrillTests"
         ],
         "status": 0,
-        "seconds": 13.407
+        "seconds": 14.941
       },
       "restore_build": {
         "command": [
@@ -2007,7 +2009,7 @@
           "CyberkrillTests"
         ],
         "status": 0,
-        "seconds": 13.311
+        "seconds": 14.848
       },
       "checks": [
         {
@@ -2025,7 +2027,7 @@
               "hybrid-input-02-G-and-04-G"
             ],
             "status": 1,
-            "seconds": 0.12
+            "seconds": 0.122
           },
           "failure": "AssertionError: offline ordinary failure status: hybrid-input-02-G-and-04-G",
           "green": {
@@ -2040,7 +2042,7 @@
               "hybrid-input-02-G-and-04-G"
             ],
             "status": 0,
-            "seconds": 0.106
+            "seconds": 0.119
           }
         },
         {
@@ -2058,7 +2060,7 @@
               "hybrid-input-04-G-and-06-G"
             ],
             "status": 1,
-            "seconds": 0.115
+            "seconds": 0.12
           },
           "failure": "AssertionError: offline ordinary failure status: hybrid-input-04-G-and-06-G",
           "green": {
@@ -2073,7 +2075,7 @@
               "hybrid-input-04-G-and-06-G"
             ],
             "status": 0,
-            "seconds": 0.107
+            "seconds": 0.113
           }
         },
         {
@@ -2091,7 +2093,7 @@
               "hybrid-output-02-G-and-04-G"
             ],
             "status": 1,
-            "seconds": 0.118
+            "seconds": 0.12
           },
           "failure": "AssertionError: offline ordinary failure status: hybrid-output-02-G-and-04-G",
           "green": {
@@ -2106,7 +2108,7 @@
               "hybrid-output-02-G-and-04-G"
             ],
             "status": 0,
-            "seconds": 0.106
+            "seconds": 0.113
           }
         }
       ]
@@ -2127,7 +2129,7 @@
           "CyberkrillTests"
         ],
         "status": 0,
-        "seconds": 13.71
+        "seconds": 14.638
       },
       "restore_build": {
         "command": [
@@ -2140,7 +2142,7 @@
           "CyberkrillTests"
         ],
         "status": 0,
-        "seconds": 13.607
+        "seconds": 15.845
       },
       "checks": [
         {
@@ -2158,7 +2160,7 @@
               "synthetic-psbt/signed-version"
             ],
             "status": 1,
-            "seconds": 0.117
+            "seconds": 0.125
           },
           "failure": "AssertionError: offline unlisted difference: synthetic-psbt/signed-version",
           "green": {
@@ -2173,7 +2175,7 @@
               "synthetic-psbt/signed-version"
             ],
             "status": 0,
-            "seconds": 0.11
+            "seconds": 0.119
           }
         }
       ]
@@ -2194,7 +2196,7 @@
           "CyberkrillTests"
         ],
         "status": 0,
-        "seconds": 13.814
+        "seconds": 15.86
       },
       "restore_build": {
         "command": [
@@ -2207,7 +2209,441 @@
           "CyberkrillTests"
         ],
         "status": 0,
-        "seconds": 15.934
+        "seconds": 15.476
+      },
+      "checks": [
+        {
+          "case": "bip370Valid/0",
+          "assertion": "offline v2 complete JSON",
+          "red": {
+            "command": [
+              "timeout",
+              "--foreground",
+              "180",
+              "python3",
+              "-B",
+              "test/offline.py",
+              "--case",
+              "bip370Valid/0"
+            ],
+            "status": 1,
+            "seconds": 0.158
+          },
+          "failure": "AssertionError: offline v2 complete JSON: bip370Valid/0",
+          "green": {
+            "command": [
+              "timeout",
+              "--foreground",
+              "180",
+              "python3",
+              "-B",
+              "test/offline.py",
+              "--case",
+              "bip370Valid/0"
+            ],
+            "status": 0,
+            "seconds": 0.115
+          }
+        }
+      ]
+    },
+    {
+      "property": "psbt-locktime",
+      "file": "Cyberkrill/Psbt.lean",
+      "replace": "toJson tx.locktime.toNat",
+      "with_text": "toJson (tx.locktime.toNat + 1)",
+      "build": {
+        "command": [
+          "timeout",
+          "--foreground",
+          "180",
+          "lake",
+          "build",
+          "cyberkrill",
+          "CyberkrillTests"
+        ],
+        "status": 0,
+        "seconds": 14.831
+      },
+      "restore_build": {
+        "command": [
+          "timeout",
+          "--foreground",
+          "180",
+          "lake",
+          "build",
+          "cyberkrill",
+          "CyberkrillTests"
+        ],
+        "status": 0,
+        "seconds": 14.945
+      },
+      "checks": [
+        {
+          "case": "bip370Locktimes/2",
+          "assertion": "offline v2 complete JSON",
+          "red": {
+            "command": [
+              "timeout",
+              "--foreground",
+              "180",
+              "python3",
+              "-B",
+              "test/offline.py",
+              "--case",
+              "bip370Locktimes/2"
+            ],
+            "status": 1,
+            "seconds": 0.125
+          },
+          "failure": "AssertionError: offline v2 complete JSON: bip370Locktimes/2",
+          "green": {
+            "command": [
+              "timeout",
+              "--foreground",
+              "180",
+              "python3",
+              "-B",
+              "test/offline.py",
+              "--case",
+              "bip370Locktimes/2"
+            ],
+            "status": 0,
+            "seconds": 0.122
+          }
+        },
+        {
+          "case": "synthetic-psbt/missing-value",
+          "assertion": "offline unlisted difference",
+          "red": {
+            "command": [
+              "timeout",
+              "--foreground",
+              "180",
+              "python3",
+              "-B",
+              "test/offline.py",
+              "--case",
+              "synthetic-psbt/missing-value"
+            ],
+            "status": 1,
+            "seconds": 0.119
+          },
+          "failure": "AssertionError: offline unlisted difference: synthetic-psbt/missing-value",
+          "green": {
+            "command": [
+              "timeout",
+              "--foreground",
+              "180",
+              "python3",
+              "-B",
+              "test/offline.py",
+              "--case",
+              "synthetic-psbt/missing-value"
+            ],
+            "status": 0,
+            "seconds": 0.112
+          }
+        }
+      ]
+    },
+    {
+      "property": "psbt-incompatible-locktime",
+      "file": "Cyberkrill/Psbt.lean",
+      "replace": "let tx \u2190 decoded.unsignedTransaction.mapError parseError",
+      "with_text": "let tx := decoded.unsignedTransaction.toOption.getD { version := 0, inputs := #[], outputs := #[], locktime := 0 }",
+      "build": {
+        "command": [
+          "timeout",
+          "--foreground",
+          "180",
+          "lake",
+          "build",
+          "cyberkrill",
+          "CyberkrillTests"
+        ],
+        "status": 0,
+        "seconds": 14.943
+      },
+      "restore_build": {
+        "command": [
+          "timeout",
+          "--foreground",
+          "180",
+          "lake",
+          "build",
+          "cyberkrill",
+          "CyberkrillTests"
+        ],
+        "status": 0,
+        "seconds": 15.044
+      },
+      "checks": [
+        {
+          "case": "bip370Locktimes/9",
+          "assertion": "offline ordinary failure status",
+          "red": {
+            "command": [
+              "timeout",
+              "--foreground",
+              "180",
+              "python3",
+              "-B",
+              "test/offline.py",
+              "--case",
+              "bip370Locktimes/9"
+            ],
+            "status": 1,
+            "seconds": 0.124
+          },
+          "failure": "AssertionError: offline ordinary failure status: bip370Locktimes/9",
+          "green": {
+            "command": [
+              "timeout",
+              "--foreground",
+              "180",
+              "python3",
+              "-B",
+              "test/offline.py",
+              "--case",
+              "bip370Locktimes/9"
+            ],
+            "status": 0,
+            "seconds": 0.116
+          }
+        }
+      ]
+    },
+    {
+      "property": "psbt-txid-order",
+      "file": "Cyberkrill/Psbt.lean",
+      "replace": "input.previousOutput.txid.data.toList.reverse.toArray",
+      "with_text": "input.previousOutput.txid.data.toList.toArray",
+      "build": {
+        "command": [
+          "timeout",
+          "--foreground",
+          "180",
+          "lake",
+          "build",
+          "cyberkrill",
+          "CyberkrillTests"
+        ],
+        "status": 0,
+        "seconds": 14.84
+      },
+      "restore_build": {
+        "command": [
+          "timeout",
+          "--foreground",
+          "180",
+          "lake",
+          "build",
+          "cyberkrill",
+          "CyberkrillTests"
+        ],
+        "status": 0,
+        "seconds": 15.185
+      },
+      "checks": [
+        {
+          "case": "bip370Valid/0",
+          "assertion": "offline v2 complete JSON",
+          "red": {
+            "command": [
+              "timeout",
+              "--foreground",
+              "180",
+              "python3",
+              "-B",
+              "test/offline.py",
+              "--case",
+              "bip370Valid/0"
+            ],
+            "status": 1,
+            "seconds": 0.119
+          },
+          "failure": "AssertionError: offline v2 complete JSON: bip370Valid/0",
+          "green": {
+            "command": [
+              "timeout",
+              "--foreground",
+              "180",
+              "python3",
+              "-B",
+              "test/offline.py",
+              "--case",
+              "bip370Valid/0"
+            ],
+            "status": 0,
+            "seconds": 0.155
+          }
+        },
+        {
+          "case": "synthetic-psbt/missing-value",
+          "assertion": "offline unlisted difference",
+          "red": {
+            "command": [
+              "timeout",
+              "--foreground",
+              "180",
+              "python3",
+              "-B",
+              "test/offline.py",
+              "--case",
+              "synthetic-psbt/missing-value"
+            ],
+            "status": 1,
+            "seconds": 0.13
+          },
+          "failure": "AssertionError: offline unlisted difference: synthetic-psbt/missing-value",
+          "green": {
+            "command": [
+              "timeout",
+              "--foreground",
+              "180",
+              "python3",
+              "-B",
+              "test/offline.py",
+              "--case",
+              "synthetic-psbt/missing-value"
+            ],
+            "status": 0,
+            "seconds": 0.122
+          }
+        }
+      ]
+    },
+    {
+      "property": "psbt-vout",
+      "file": "Cyberkrill/Psbt.lean",
+      "replace": "toJson input.previousOutput.index.toNat",
+      "with_text": "toJson (input.previousOutput.index.toNat + 1)",
+      "build": {
+        "command": [
+          "timeout",
+          "--foreground",
+          "180",
+          "lake",
+          "build",
+          "cyberkrill",
+          "CyberkrillTests"
+        ],
+        "status": 0,
+        "seconds": 15.671
+      },
+      "restore_build": {
+        "command": [
+          "timeout",
+          "--foreground",
+          "180",
+          "lake",
+          "build",
+          "cyberkrill",
+          "CyberkrillTests"
+        ],
+        "status": 0,
+        "seconds": 14.846
+      },
+      "checks": [
+        {
+          "case": "bip370Valid/0",
+          "assertion": "offline v2 complete JSON",
+          "red": {
+            "command": [
+              "timeout",
+              "--foreground",
+              "180",
+              "python3",
+              "-B",
+              "test/offline.py",
+              "--case",
+              "bip370Valid/0"
+            ],
+            "status": 1,
+            "seconds": 0.131
+          },
+          "failure": "AssertionError: offline v2 complete JSON: bip370Valid/0",
+          "green": {
+            "command": [
+              "timeout",
+              "--foreground",
+              "180",
+              "python3",
+              "-B",
+              "test/offline.py",
+              "--case",
+              "bip370Valid/0"
+            ],
+            "status": 0,
+            "seconds": 0.111
+          }
+        },
+        {
+          "case": "synthetic-psbt/missing-value",
+          "assertion": "offline unlisted difference",
+          "red": {
+            "command": [
+              "timeout",
+              "--foreground",
+              "180",
+              "python3",
+              "-B",
+              "test/offline.py",
+              "--case",
+              "synthetic-psbt/missing-value"
+            ],
+            "status": 1,
+            "seconds": 0.135
+          },
+          "failure": "AssertionError: offline unlisted difference: synthetic-psbt/missing-value",
+          "green": {
+            "command": [
+              "timeout",
+              "--foreground",
+              "180",
+              "python3",
+              "-B",
+              "test/offline.py",
+              "--case",
+              "synthetic-psbt/missing-value"
+            ],
+            "status": 0,
+            "seconds": 0.109
+          }
+        }
+      ]
+    },
+    {
+      "property": "psbt-sequence",
+      "file": "Cyberkrill/Psbt.lean",
+      "replace": "toJson input.sequence.toNat",
+      "with_text": "toJson (input.sequence.toNat % 65536)",
+      "build": {
+        "command": [
+          "timeout",
+          "--foreground",
+          "180",
+          "lake",
+          "build",
+          "cyberkrill",
+          "CyberkrillTests"
+        ],
+        "status": 0,
+        "seconds": 14.741
+      },
+      "restore_build": {
+        "command": [
+          "timeout",
+          "--foreground",
+          "180",
+          "lake",
+          "build",
+          "cyberkrill",
+          "CyberkrillTests"
+        ],
+        "status": 0,
+        "seconds": 15.149
       },
       "checks": [
         {
@@ -2240,441 +2676,7 @@
               "bip370Valid/0"
             ],
             "status": 0,
-            "seconds": 0.132
-          }
-        }
-      ]
-    },
-    {
-      "property": "psbt-locktime",
-      "file": "Cyberkrill/Psbt.lean",
-      "replace": "toJson tx.locktime.toNat",
-      "with_text": "toJson (tx.locktime.toNat + 1)",
-      "build": {
-        "command": [
-          "timeout",
-          "--foreground",
-          "180",
-          "lake",
-          "build",
-          "cyberkrill",
-          "CyberkrillTests"
-        ],
-        "status": 0,
-        "seconds": 14.962
-      },
-      "restore_build": {
-        "command": [
-          "timeout",
-          "--foreground",
-          "180",
-          "lake",
-          "build",
-          "cyberkrill",
-          "CyberkrillTests"
-        ],
-        "status": 0,
-        "seconds": 14.025
-      },
-      "checks": [
-        {
-          "case": "bip370Locktimes/2",
-          "assertion": "offline v2 complete JSON",
-          "red": {
-            "command": [
-              "timeout",
-              "--foreground",
-              "180",
-              "python3",
-              "-B",
-              "test/offline.py",
-              "--case",
-              "bip370Locktimes/2"
-            ],
-            "status": 1,
-            "seconds": 0.126
-          },
-          "failure": "AssertionError: offline v2 complete JSON: bip370Locktimes/2",
-          "green": {
-            "command": [
-              "timeout",
-              "--foreground",
-              "180",
-              "python3",
-              "-B",
-              "test/offline.py",
-              "--case",
-              "bip370Locktimes/2"
-            ],
-            "status": 0,
-            "seconds": 0.109
-          }
-        },
-        {
-          "case": "synthetic-psbt/missing-value",
-          "assertion": "offline unlisted difference",
-          "red": {
-            "command": [
-              "timeout",
-              "--foreground",
-              "180",
-              "python3",
-              "-B",
-              "test/offline.py",
-              "--case",
-              "synthetic-psbt/missing-value"
-            ],
-            "status": 1,
-            "seconds": 0.117
-          },
-          "failure": "AssertionError: offline unlisted difference: synthetic-psbt/missing-value",
-          "green": {
-            "command": [
-              "timeout",
-              "--foreground",
-              "180",
-              "python3",
-              "-B",
-              "test/offline.py",
-              "--case",
-              "synthetic-psbt/missing-value"
-            ],
-            "status": 0,
-            "seconds": 0.108
-          }
-        }
-      ]
-    },
-    {
-      "property": "psbt-incompatible-locktime",
-      "file": "Cyberkrill/Psbt.lean",
-      "replace": "let tx \u2190 decoded.unsignedTransaction.mapError parseError",
-      "with_text": "let tx := decoded.unsignedTransaction.toOption.getD { version := 0, inputs := #[], outputs := #[], locktime := 0 }",
-      "build": {
-        "command": [
-          "timeout",
-          "--foreground",
-          "180",
-          "lake",
-          "build",
-          "cyberkrill",
-          "CyberkrillTests"
-        ],
-        "status": 0,
-        "seconds": 13.93
-      },
-      "restore_build": {
-        "command": [
-          "timeout",
-          "--foreground",
-          "180",
-          "lake",
-          "build",
-          "cyberkrill",
-          "CyberkrillTests"
-        ],
-        "status": 0,
-        "seconds": 13.811
-      },
-      "checks": [
-        {
-          "case": "bip370Locktimes/9",
-          "assertion": "offline ordinary failure status",
-          "red": {
-            "command": [
-              "timeout",
-              "--foreground",
-              "180",
-              "python3",
-              "-B",
-              "test/offline.py",
-              "--case",
-              "bip370Locktimes/9"
-            ],
-            "status": 1,
-            "seconds": 0.119
-          },
-          "failure": "AssertionError: offline ordinary failure status: bip370Locktimes/9",
-          "green": {
-            "command": [
-              "timeout",
-              "--foreground",
-              "180",
-              "python3",
-              "-B",
-              "test/offline.py",
-              "--case",
-              "bip370Locktimes/9"
-            ],
-            "status": 0,
-            "seconds": 0.105
-          }
-        }
-      ]
-    },
-    {
-      "property": "psbt-txid-order",
-      "file": "Cyberkrill/Psbt.lean",
-      "replace": "input.previousOutput.txid.data.toList.reverse.toArray",
-      "with_text": "input.previousOutput.txid.data.toList.toArray",
-      "build": {
-        "command": [
-          "timeout",
-          "--foreground",
-          "180",
-          "lake",
-          "build",
-          "cyberkrill",
-          "CyberkrillTests"
-        ],
-        "status": 0,
-        "seconds": 13.71
-      },
-      "restore_build": {
-        "command": [
-          "timeout",
-          "--foreground",
-          "180",
-          "lake",
-          "build",
-          "cyberkrill",
-          "CyberkrillTests"
-        ],
-        "status": 0,
-        "seconds": 13.408
-      },
-      "checks": [
-        {
-          "case": "bip370Valid/0",
-          "assertion": "offline v2 complete JSON",
-          "red": {
-            "command": [
-              "timeout",
-              "--foreground",
-              "180",
-              "python3",
-              "-B",
-              "test/offline.py",
-              "--case",
-              "bip370Valid/0"
-            ],
-            "status": 1,
-            "seconds": 0.117
-          },
-          "failure": "AssertionError: offline v2 complete JSON: bip370Valid/0",
-          "green": {
-            "command": [
-              "timeout",
-              "--foreground",
-              "180",
-              "python3",
-              "-B",
-              "test/offline.py",
-              "--case",
-              "bip370Valid/0"
-            ],
-            "status": 0,
-            "seconds": 0.112
-          }
-        },
-        {
-          "case": "synthetic-psbt/missing-value",
-          "assertion": "offline unlisted difference",
-          "red": {
-            "command": [
-              "timeout",
-              "--foreground",
-              "180",
-              "python3",
-              "-B",
-              "test/offline.py",
-              "--case",
-              "synthetic-psbt/missing-value"
-            ],
-            "status": 1,
-            "seconds": 0.115
-          },
-          "failure": "AssertionError: offline unlisted difference: synthetic-psbt/missing-value",
-          "green": {
-            "command": [
-              "timeout",
-              "--foreground",
-              "180",
-              "python3",
-              "-B",
-              "test/offline.py",
-              "--case",
-              "synthetic-psbt/missing-value"
-            ],
-            "status": 0,
-            "seconds": 0.11
-          }
-        }
-      ]
-    },
-    {
-      "property": "psbt-vout",
-      "file": "Cyberkrill/Psbt.lean",
-      "replace": "toJson input.previousOutput.index.toNat",
-      "with_text": "toJson (input.previousOutput.index.toNat + 1)",
-      "build": {
-        "command": [
-          "timeout",
-          "--foreground",
-          "180",
-          "lake",
-          "build",
-          "cyberkrill",
-          "CyberkrillTests"
-        ],
-        "status": 0,
-        "seconds": 13.321
-      },
-      "restore_build": {
-        "command": [
-          "timeout",
-          "--foreground",
-          "180",
-          "lake",
-          "build",
-          "cyberkrill",
-          "CyberkrillTests"
-        ],
-        "status": 0,
-        "seconds": 13.916
-      },
-      "checks": [
-        {
-          "case": "bip370Valid/0",
-          "assertion": "offline v2 complete JSON",
-          "red": {
-            "command": [
-              "timeout",
-              "--foreground",
-              "180",
-              "python3",
-              "-B",
-              "test/offline.py",
-              "--case",
-              "bip370Valid/0"
-            ],
-            "status": 1,
-            "seconds": 0.116
-          },
-          "failure": "AssertionError: offline v2 complete JSON: bip370Valid/0",
-          "green": {
-            "command": [
-              "timeout",
-              "--foreground",
-              "180",
-              "python3",
-              "-B",
-              "test/offline.py",
-              "--case",
-              "bip370Valid/0"
-            ],
-            "status": 0,
-            "seconds": 0.106
-          }
-        },
-        {
-          "case": "synthetic-psbt/missing-value",
-          "assertion": "offline unlisted difference",
-          "red": {
-            "command": [
-              "timeout",
-              "--foreground",
-              "180",
-              "python3",
-              "-B",
-              "test/offline.py",
-              "--case",
-              "synthetic-psbt/missing-value"
-            ],
-            "status": 1,
-            "seconds": 0.117
-          },
-          "failure": "AssertionError: offline unlisted difference: synthetic-psbt/missing-value",
-          "green": {
-            "command": [
-              "timeout",
-              "--foreground",
-              "180",
-              "python3",
-              "-B",
-              "test/offline.py",
-              "--case",
-              "synthetic-psbt/missing-value"
-            ],
-            "status": 0,
-            "seconds": 0.11
-          }
-        }
-      ]
-    },
-    {
-      "property": "psbt-sequence",
-      "file": "Cyberkrill/Psbt.lean",
-      "replace": "toJson input.sequence.toNat",
-      "with_text": "toJson (input.sequence.toNat % 65536)",
-      "build": {
-        "command": [
-          "timeout",
-          "--foreground",
-          "180",
-          "lake",
-          "build",
-          "cyberkrill",
-          "CyberkrillTests"
-        ],
-        "status": 0,
-        "seconds": 13.919
-      },
-      "restore_build": {
-        "command": [
-          "timeout",
-          "--foreground",
-          "180",
-          "lake",
-          "build",
-          "cyberkrill",
-          "CyberkrillTests"
-        ],
-        "status": 0,
-        "seconds": 13.404
-      },
-      "checks": [
-        {
-          "case": "bip370Valid/0",
-          "assertion": "offline v2 complete JSON",
-          "red": {
-            "command": [
-              "timeout",
-              "--foreground",
-              "180",
-              "python3",
-              "-B",
-              "test/offline.py",
-              "--case",
-              "bip370Valid/0"
-            ],
-            "status": 1,
-            "seconds": 0.119
-          },
-          "failure": "AssertionError: offline v2 complete JSON: bip370Valid/0",
-          "green": {
-            "command": [
-              "timeout",
-              "--foreground",
-              "180",
-              "python3",
-              "-B",
-              "test/offline.py",
-              "--case",
-              "bip370Valid/0"
-            ],
-            "status": 0,
-            "seconds": 0.105
+            "seconds": 0.111
           }
         },
         {
@@ -2692,7 +2694,7 @@
               "bip174Valid/0"
             ],
             "status": 1,
-            "seconds": 0.117
+            "seconds": 0.132
           },
           "failure": "AssertionError: offline unlisted difference: bip174Valid/0",
           "green": {
@@ -2707,7 +2709,7 @@
               "bip174Valid/0"
             ],
             "status": 0,
-            "seconds": 0.11
+            "seconds": 0.111
           }
         }
       ]
@@ -2728,7 +2730,7 @@
           "CyberkrillTests"
         ],
         "status": 0,
-        "seconds": 13.413
+        "seconds": 15.559
       },
       "restore_build": {
         "command": [
@@ -2741,7 +2743,7 @@
           "CyberkrillTests"
         ],
         "status": 0,
-        "seconds": 13.808
+        "seconds": 15.053
       },
       "checks": [
         {
@@ -2759,7 +2761,7 @@
               "synthetic-psbt/witness-precedence"
             ],
             "status": 1,
-            "seconds": 0.114
+            "seconds": 0.125
           },
           "failure": "AssertionError: offline unlisted difference: synthetic-psbt/witness-precedence",
           "green": {
@@ -2774,7 +2776,7 @@
               "synthetic-psbt/witness-precedence"
             ],
             "status": 0,
-            "seconds": 0.11
+            "seconds": 0.118
           }
         }
       ]
@@ -2795,7 +2797,7 @@
           "CyberkrillTests"
         ],
         "status": 0,
-        "seconds": 13.926
+        "seconds": 15.148
       },
       "restore_build": {
         "command": [
@@ -2808,7 +2810,7 @@
           "CyberkrillTests"
         ],
         "status": 0,
-        "seconds": 13.73
+        "seconds": 15.236
       },
       "checks": [
         {
@@ -2826,7 +2828,7 @@
               "synthetic-psbt/nonwitness-out-of-range"
             ],
             "status": 1,
-            "seconds": 0.116
+            "seconds": 0.124
           },
           "failure": "AssertionError: field set: stdout[\"inputs\"][0]",
           "green": {
@@ -2841,7 +2843,7 @@
               "synthetic-psbt/nonwitness-out-of-range"
             ],
             "status": 0,
-            "seconds": 0.108
+            "seconds": 0.116
           }
         }
       ]
@@ -2862,7 +2864,7 @@
           "CyberkrillTests"
         ],
         "status": 0,
-        "seconds": 13.913
+        "seconds": 14.95
       },
       "restore_build": {
         "command": [
@@ -2875,7 +2877,7 @@
           "CyberkrillTests"
         ],
         "status": 0,
-        "seconds": 15.64
+        "seconds": 15.142
       },
       "checks": [
         {
@@ -2893,7 +2895,7 @@
               "synthetic-psbt/fee-saturates"
             ],
             "status": 1,
-            "seconds": 0.125
+            "seconds": 0.123
           },
           "failure": "AssertionError: offline unlisted difference: synthetic-psbt/fee-saturates",
           "green": {
@@ -2908,7 +2910,7 @@
               "synthetic-psbt/fee-saturates"
             ],
             "status": 0,
-            "seconds": 0.128
+            "seconds": 0.11
           }
         }
       ]
@@ -2929,7 +2931,7 @@
           "CyberkrillTests"
         ],
         "status": 0,
-        "seconds": 14.774
+        "seconds": 15.852
       },
       "restore_build": {
         "command": [
@@ -2942,7 +2944,7 @@
           "CyberkrillTests"
         ],
         "status": 0,
-        "seconds": 14.122
+        "seconds": 15.867
       },
       "checks": [
         {
@@ -2960,7 +2962,7 @@
               "synthetic-psbt/fee-saturates"
             ],
             "status": 1,
-            "seconds": 0.121
+            "seconds": 0.131
           },
           "failure": "AssertionError: offline unlisted difference: synthetic-psbt/fee-saturates",
           "green": {
@@ -2996,7 +2998,7 @@
           "CyberkrillTests"
         ],
         "status": 0,
-        "seconds": 13.944
+        "seconds": 14.827
       },
       "restore_build": {
         "command": [
@@ -3009,7 +3011,7 @@
           "CyberkrillTests"
         ],
         "status": 0,
-        "seconds": 13.624
+        "seconds": 15.144
       },
       "checks": [
         {
@@ -3027,7 +3029,7 @@
               "synthetic-psbt/fee-saturates"
             ],
             "status": 1,
-            "seconds": 0.117
+            "seconds": 0.118
           },
           "failure": "AssertionError: offline unlisted difference: synthetic-psbt/fee-saturates",
           "green": {
@@ -3042,7 +3044,7 @@
               "synthetic-psbt/fee-saturates"
             ],
             "status": 0,
-            "seconds": 0.106
+            "seconds": 0.116
           }
         }
       ]
@@ -3063,7 +3065,7 @@
           "CyberkrillTests"
         ],
         "status": 0,
-        "seconds": 13.505
+        "seconds": 15.344
       },
       "restore_build": {
         "command": [
@@ -3076,7 +3078,7 @@
           "CyberkrillTests"
         ],
         "status": 0,
-        "seconds": 14.11
+        "seconds": 15.022
       },
       "checks": [
         {
@@ -3094,7 +3096,7 @@
               "synthetic-psbt/max-output"
             ],
             "status": 1,
-            "seconds": 0.112
+            "seconds": 0.126
           },
           "failure": "AssertionError: offline numeric value pin: synthetic-psbt/max-output",
           "green": {
@@ -3109,7 +3111,7 @@
               "synthetic-psbt/max-output"
             ],
             "status": 0,
-            "seconds": 0.106
+            "seconds": 0.115
           }
         },
         {
@@ -3127,7 +3129,7 @@
               "synthetic-psbt/witness"
             ],
             "status": 1,
-            "seconds": 0.111
+            "seconds": 0.125
           },
           "failure": "AssertionError: offline unlisted difference: synthetic-psbt/witness",
           "green": {
@@ -3142,7 +3144,7 @@
               "synthetic-psbt/witness"
             ],
             "status": 0,
-            "seconds": 0.108
+            "seconds": 0.12
           }
         }
       ]
@@ -3163,7 +3165,7 @@
           "CyberkrillTests"
         ],
         "status": 0,
-        "seconds": 13.726
+        "seconds": 14.943
       },
       "restore_build": {
         "command": [
@@ -3176,7 +3178,7 @@
           "CyberkrillTests"
         ],
         "status": 0,
-        "seconds": 13.704
+        "seconds": 16.046
       },
       "checks": [
         {
@@ -3194,7 +3196,7 @@
               "parity/bip370-invalid-1"
             ],
             "status": 1,
-            "seconds": 0.115
+            "seconds": 0.125
           },
           "failure": "AssertionError: offline exception stream/file identity: parity/bip370-invalid-1",
           "green": {
@@ -3209,7 +3211,7 @@
               "parity/bip370-invalid-1"
             ],
             "status": 0,
-            "seconds": 0.108
+            "seconds": 0.115
           }
         }
       ]
@@ -3230,7 +3232,7 @@
           "CyberkrillTests"
         ],
         "status": 0,
-        "seconds": 13.821
+        "seconds": 15.859
       },
       "restore_build": {
         "command": [
@@ -3243,7 +3245,7 @@
           "CyberkrillTests"
         ],
         "status": 0,
-        "seconds": 13.617
+        "seconds": 14.637
       },
       "checks": [
         {
@@ -3261,7 +3263,7 @@
               "parity/key-type-fd01"
             ],
             "status": 1,
-            "seconds": 0.118
+            "seconds": 0.119
           },
           "failure": "AssertionError: offline exception stream/file identity: parity/key-type-fd01",
           "green": {
@@ -3276,7 +3278,7 @@
               "parity/key-type-fd01"
             ],
             "status": 0,
-            "seconds": 0.106
+            "seconds": 0.117
           }
         }
       ]
@@ -3297,7 +3299,7 @@
           "CyberkrillTests"
         ],
         "status": 0,
-        "seconds": 14.01
+        "seconds": 15.16
       },
       "restore_build": {
         "command": [
@@ -3310,7 +3312,7 @@
           "CyberkrillTests"
         ],
         "status": 0,
-        "seconds": 13.422
+        "seconds": 15.061
       },
       "checks": [
         {
@@ -3328,7 +3330,7 @@
               "parity/xpub-depth"
             ],
             "status": 1,
-            "seconds": 0.118
+            "seconds": 0.131
           },
           "failure": "AssertionError: offline exception stream/file identity: parity/xpub-depth",
           "green": {
@@ -3343,7 +3345,7 @@
               "parity/xpub-depth"
             ],
             "status": 0,
-            "seconds": 0.108
+            "seconds": 0.113
           }
         }
       ]
@@ -3364,7 +3366,7 @@
           "CyberkrillTests"
         ],
         "status": 0,
-        "seconds": 11.103
+        "seconds": 12.134
       },
       "restore_build": {
         "command": [
@@ -3377,7 +3379,7 @@
           "CyberkrillTests"
         ],
         "status": 0,
-        "seconds": 11.111
+        "seconds": 12.651
       },
       "checks": [
         {
@@ -3394,7 +3396,7 @@
               "import subprocess; p=subprocess.run([\".lake/build/bin/CyberkrillTests\",\"--offline-boundaries\"],stdin=subprocess.DEVNULL,capture_output=True,timeout=30); assert p.returncode == 0, p.stderr.decode()"
             ],
             "status": 1,
-            "seconds": 0.069
+            "seconds": 0.075
           },
           "failure": "AssertionError: assertion failed: offline error order inputFailure",
           "green": {
@@ -3408,7 +3410,7 @@
               "import subprocess; p=subprocess.run([\".lake/build/bin/CyberkrillTests\",\"--offline-boundaries\"],stdin=subprocess.DEVNULL,capture_output=True,timeout=30); assert p.returncode == 0, p.stderr.decode()"
             ],
             "status": 0,
-            "seconds": 0.058
+            "seconds": 0.062
           }
         }
       ]
@@ -3429,7 +3431,7 @@
           "CyberkrillTests"
         ],
         "status": 0,
-        "seconds": 11.418
+        "seconds": 12.751
       },
       "restore_build": {
         "command": [
@@ -3442,7 +3444,7 @@
           "CyberkrillTests"
         ],
         "status": 0,
-        "seconds": 11.73
+        "seconds": 13.075
       },
       "checks": [
         {
@@ -3460,7 +3462,7 @@
               "routing/fm-encode-invite/bad-json-preserve"
             ],
             "status": 1,
-            "seconds": 0.13
+            "seconds": 0.129
           },
           "failure": "AssertionError: offline failed output existence/bytes: routing/fm-encode-invite/bad-json-preserve",
           "green": {
@@ -3475,7 +3477,7 @@
               "routing/fm-encode-invite/bad-json-preserve"
             ],
             "status": 0,
-            "seconds": 0.106
+            "seconds": 0.117
           }
         }
       ]
@@ -3496,7 +3498,7 @@
           "CyberkrillTests"
         ],
         "status": 0,
-        "seconds": 11.101
+        "seconds": 12.034
       },
       "restore_build": {
         "command": [
@@ -3509,7 +3511,7 @@
           "CyberkrillTests"
         ],
         "status": 0,
-        "seconds": 11.107
+        "seconds": 12.587
       },
       "checks": [
         {
@@ -3527,7 +3529,7 @@
               "routing/onchain-decode-psbt/bad-psbt-preserve"
             ],
             "status": 1,
-            "seconds": 0.124
+            "seconds": 0.121
           },
           "failure": "AssertionError: offline failed output existence/bytes: routing/onchain-decode-psbt/bad-psbt-preserve",
           "green": {
@@ -3542,7 +3544,7 @@
               "routing/onchain-decode-psbt/bad-psbt-preserve"
             ],
             "status": 0,
-            "seconds": 0.107
+            "seconds": 0.176
           }
         }
       ]
@@ -3563,7 +3565,7 @@
           "CyberkrillTests"
         ],
         "status": 0,
-        "seconds": 11.021
+        "seconds": 12.561
       },
       "restore_build": {
         "command": [
@@ -3576,7 +3578,7 @@
           "CyberkrillTests"
         ],
         "status": 0,
-        "seconds": 11.001
+        "seconds": 12.236
       },
       "checks": [
         {
@@ -3593,7 +3595,7 @@
               "import subprocess; p=subprocess.run([\".lake/build/bin/CyberkrillTests\",\"--offline-boundaries\"],stdin=subprocess.DEVNULL,capture_output=True,timeout=30); assert p.returncode == 0, p.stderr.decode()"
             ],
             "status": 1,
-            "seconds": 0.07
+            "seconds": 0.072
           },
           "failure": "AssertionError: assertion failed: offline boundary events invalidNetwork",
           "green": {
@@ -3607,7 +3609,7 @@
               "import subprocess; p=subprocess.run([\".lake/build/bin/CyberkrillTests\",\"--offline-boundaries\"],stdin=subprocess.DEVNULL,capture_output=True,timeout=30); assert p.returncode == 0, p.stderr.decode()"
             ],
             "status": 0,
-            "seconds": 0.056
+            "seconds": 0.061
           }
         }
       ]
@@ -3628,7 +3630,7 @@
           "CyberkrillTests"
         ],
         "status": 0,
-        "seconds": 11.009
+        "seconds": 13.062
       },
       "restore_build": {
         "command": [
@@ -3641,7 +3643,7 @@
           "CyberkrillTests"
         ],
         "status": 0,
-        "seconds": 11.003
+        "seconds": 12.231
       },
       "checks": [
         {
@@ -3659,7 +3661,7 @@
               "routing/fm-encode-invite/output-0"
             ],
             "status": 1,
-            "seconds": 0.117
+            "seconds": 0.125
           },
           "failure": "AssertionError: offline output newline: routing/fm-encode-invite/output-0",
           "green": {
@@ -3674,7 +3676,7 @@
               "routing/fm-encode-invite/output-0"
             ],
             "status": 0,
-            "seconds": 0.114
+            "seconds": 0.11
           }
         }
       ]
@@ -3695,7 +3697,7 @@
           "CyberkrillTests"
         ],
         "status": 0,
-        "seconds": 11.313
+        "seconds": 12.336
       },
       "restore_build": {
         "command": [
@@ -3708,7 +3710,7 @@
           "CyberkrillTests"
         ],
         "status": 0,
-        "seconds": 10.906
+        "seconds": 12.429
       },
       "checks": [
         {
@@ -3726,7 +3728,7 @@
               "routing/onchain-decode-psbt/output-0"
             ],
             "status": 1,
-            "seconds": 0.117
+            "seconds": 0.118
           },
           "failure": "AssertionError: offline output newline: routing/onchain-decode-psbt/output-0",
           "green": {
@@ -3741,7 +3743,7 @@
               "routing/onchain-decode-psbt/output-0"
             ],
             "status": 0,
-            "seconds": 0.108
+            "seconds": 0.124
           }
         }
       ]
@@ -3762,7 +3764,7 @@
           "CyberkrillTests"
         ],
         "status": 0,
-        "seconds": 0.422
+        "seconds": 0.445
       },
       "restore_build": {
         "command": [
@@ -3792,7 +3794,7 @@
               "--verify"
             ],
             "status": 1,
-            "seconds": 0.088
+            "seconds": 0.085
           },
           "failure": "AssertionError: exact comparator accepted incorrect final newline: bip370Valid/0",
           "green": {
@@ -3806,7 +3808,7 @@
               "--verify"
             ],
             "status": 0,
-            "seconds": 0.093
+            "seconds": 0.1
           }
         }
       ]
@@ -3827,7 +3829,7 @@
           "CyberkrillTests"
         ],
         "status": 0,
-        "seconds": 11.114
+        "seconds": 12.43
       },
       "restore_build": {
         "command": [
@@ -3840,7 +3842,7 @@
           "CyberkrillTests"
         ],
         "status": 0,
-        "seconds": 11.008
+        "seconds": 12.245
       },
       "checks": [
         {
@@ -3857,7 +3859,7 @@
               "fm-decode-invite"
             ],
             "status": 1,
-            "seconds": 0.082
+            "seconds": 0.088
           },
           "failure": "AssertionError: FIFO output bytes before EOF: fm-decode-invite",
           "green": {
@@ -3871,7 +3873,7 @@
               "fm-decode-invite"
             ],
             "status": 0,
-            "seconds": 0.073
+            "seconds": 0.083
           }
         },
         {
@@ -3888,7 +3890,7 @@
               "fm-encode-invite"
             ],
             "status": 1,
-            "seconds": 0.085
+            "seconds": 0.088
           },
           "failure": "AssertionError: FIFO output bytes before EOF: fm-encode-invite",
           "green": {
@@ -3902,7 +3904,7 @@
               "fm-encode-invite"
             ],
             "status": 0,
-            "seconds": 0.074
+            "seconds": 0.081
           }
         },
         {
@@ -3919,7 +3921,7 @@
               "onchain-decode-psbt"
             ],
             "status": 1,
-            "seconds": 0.082
+            "seconds": 0.086
           },
           "failure": "AssertionError: FIFO output bytes before EOF: onchain-decode-psbt",
           "green": {
@@ -3933,7 +3935,7 @@
               "onchain-decode-psbt"
             ],
             "status": 0,
-            "seconds": 0.075
+            "seconds": 0.081
           }
         }
       ]
@@ -3954,7 +3956,7 @@
           "CyberkrillTests"
         ],
         "status": 0,
-        "seconds": 11.506
+        "seconds": 12.734
       },
       "restore_build": {
         "command": [
@@ -3967,7 +3969,7 @@
           "CyberkrillTests"
         ],
         "status": 0,
-        "seconds": 11.114
+        "seconds": 12.443
       },
       "checks": [
         {
@@ -3984,7 +3986,7 @@
               "ordered-help/fm-decode-invite/help-unknown"
             ],
             "status": 1,
-            "seconds": 0.09
+            "seconds": 0.098
           },
           "failure": "AssertionError: ordered help short circuit: ordered-help/fm-decode-invite/help-unknown",
           "green": {
@@ -3998,7 +4000,7 @@
               "ordered-help/fm-decode-invite/help-unknown"
             ],
             "status": 0,
-            "seconds": 0.084
+            "seconds": 0.087
           }
         },
         {
@@ -4015,7 +4017,7 @@
               "ordered-help/fm-encode-invite/help-unknown"
             ],
             "status": 1,
-            "seconds": 0.092
+            "seconds": 0.102
           },
           "failure": "AssertionError: ordered help short circuit: ordered-help/fm-encode-invite/help-unknown",
           "green": {
@@ -4029,7 +4031,7 @@
               "ordered-help/fm-encode-invite/help-unknown"
             ],
             "status": 0,
-            "seconds": 0.083
+            "seconds": 0.085
           }
         },
         {
@@ -4046,7 +4048,7 @@
               "ordered-help/onchain-decode-psbt/help-unknown"
             ],
             "status": 1,
-            "seconds": 0.091
+            "seconds": 0.099
           },
           "failure": "AssertionError: ordered help short circuit: ordered-help/onchain-decode-psbt/help-unknown",
           "green": {
@@ -4060,7 +4062,7 @@
               "ordered-help/onchain-decode-psbt/help-unknown"
             ],
             "status": 0,
-            "seconds": 0.087
+            "seconds": 0.085
           }
         }
       ]
@@ -4081,7 +4083,7 @@
           "CyberkrillTests"
         ],
         "status": 0,
-        "seconds": 11.212
+        "seconds": 12.326
       },
       "restore_build": {
         "command": [
@@ -4094,7 +4096,7 @@
           "CyberkrillTests"
         ],
         "status": 0,
-        "seconds": 11.008
+        "seconds": 12.649
       },
       "checks": [
         {
@@ -4111,7 +4113,7 @@
               "ordered-help/fm-decode-invite/unknown-help"
             ],
             "status": 1,
-            "seconds": 0.097
+            "seconds": 0.1
           },
           "failure": "AssertionError: ordered help earlier error or operand: ordered-help/fm-decode-invite/unknown-help",
           "green": {
@@ -4125,7 +4127,7 @@
               "ordered-help/fm-decode-invite/unknown-help"
             ],
             "status": 0,
-            "seconds": 0.081
+            "seconds": 0.091
           }
         },
         {
@@ -4142,7 +4144,7 @@
               "ordered-help/fm-encode-invite/unknown-help"
             ],
             "status": 1,
-            "seconds": 0.096
+            "seconds": 0.098
           },
           "failure": "AssertionError: ordered help earlier error or operand: ordered-help/fm-encode-invite/unknown-help",
           "green": {
@@ -4156,7 +4158,7 @@
               "ordered-help/fm-encode-invite/unknown-help"
             ],
             "status": 0,
-            "seconds": 0.081
+            "seconds": 0.085
           }
         },
         {
@@ -4173,7 +4175,7 @@
               "ordered-help/onchain-decode-psbt/unknown-help"
             ],
             "status": 1,
-            "seconds": 0.097
+            "seconds": 0.1
           },
           "failure": "AssertionError: ordered help earlier error or operand: ordered-help/onchain-decode-psbt/unknown-help",
           "green": {
@@ -4187,7 +4189,7 @@
               "ordered-help/onchain-decode-psbt/unknown-help"
             ],
             "status": 0,
-            "seconds": 0.082
+            "seconds": 0.085
           }
         }
       ]
@@ -4208,7 +4210,7 @@
           "CyberkrillTests"
         ],
         "status": 0,
-        "seconds": 0.394
+        "seconds": 0.421
       },
       "restore_build": {
         "command": [
@@ -4221,7 +4223,7 @@
           "CyberkrillTests"
         ],
         "status": 0,
-        "seconds": 0.387
+        "seconds": 0.422
       },
       "checks": [
         {
@@ -4238,7 +4240,7 @@
               "fm-encode-invite/crlf"
             ],
             "status": 1,
-            "seconds": 0.089
+            "seconds": 0.096
           },
           "failure": "AssertionError: file comparator accepted newline/field: fm-encode-invite/crlf",
           "green": {
@@ -4252,7 +4254,7 @@
               "fm-encode-invite/crlf"
             ],
             "status": 0,
-            "seconds": 0.077
+            "seconds": 0.084
           }
         },
         {
@@ -4269,7 +4271,7 @@
               "fm-encode-invite/cr"
             ],
             "status": 1,
-            "seconds": 0.088
+            "seconds": 0.1
           },
           "failure": "AssertionError: file comparator accepted newline/field: fm-encode-invite/cr",
           "green": {
@@ -4283,7 +4285,7 @@
               "fm-encode-invite/cr"
             ],
             "status": 0,
-            "seconds": 0.077
+            "seconds": 0.092
           }
         },
         {
@@ -4300,7 +4302,7 @@
               "onchain-decode-psbt/crlf"
             ],
             "status": 1,
-            "seconds": 0.088
+            "seconds": 0.096
           },
           "failure": "AssertionError: file comparator accepted newline/field: onchain-decode-psbt/crlf",
           "green": {
@@ -4314,7 +4316,7 @@
               "onchain-decode-psbt/crlf"
             ],
             "status": 0,
-            "seconds": 0.077
+            "seconds": 0.081
           }
         },
         {
@@ -4331,7 +4333,7 @@
               "onchain-decode-psbt/cr"
             ],
             "status": 1,
-            "seconds": 0.086
+            "seconds": 0.095
           },
           "failure": "AssertionError: file comparator accepted newline/field: onchain-decode-psbt/cr",
           "green": {
@@ -4345,7 +4347,7 @@
               "onchain-decode-psbt/cr"
             ],
             "status": 0,
-            "seconds": 0.079
+            "seconds": 0.089
           }
         }
       ]
@@ -4366,7 +4368,7 @@
           "CyberkrillTests"
         ],
         "status": 0,
-        "seconds": 11.207
+        "seconds": 13.06
       },
       "restore_build": {
         "command": [
@@ -4379,7 +4381,7 @@
           "CyberkrillTests"
         ],
         "status": 0,
-        "seconds": 10.9
+        "seconds": 14.685
       },
       "checks": [
         {
@@ -4396,7 +4398,7 @@
               "cluster-help/fm-decode-invite/hx"
             ],
             "status": 1,
-            "seconds": 0.1
+            "seconds": 0.108
           },
           "failure": "AssertionError: cluster help short circuit: cluster-help/fm-decode-invite/hx",
           "green": {
@@ -4410,7 +4412,7 @@
               "cluster-help/fm-decode-invite/hx"
             ],
             "status": 0,
-            "seconds": 0.088
+            "seconds": 0.099
           }
         },
         {
@@ -4427,7 +4429,7 @@
               "cluster-help/fm-decode-invite/hh"
             ],
             "status": 1,
-            "seconds": 0.098
+            "seconds": 0.109
           },
           "failure": "AssertionError: cluster help short circuit: cluster-help/fm-decode-invite/hh",
           "green": {
@@ -4441,7 +4443,7 @@
               "cluster-help/fm-decode-invite/hh"
             ],
             "status": 0,
-            "seconds": 0.088
+            "seconds": 0.095
           }
         },
         {
@@ -4458,7 +4460,7 @@
               "cluster-help/fm-decode-invite/h-equals-one"
             ],
             "status": 1,
-            "seconds": 0.104
+            "seconds": 0.112
           },
           "failure": "AssertionError: cluster help short circuit: cluster-help/fm-decode-invite/h-equals-one",
           "green": {
@@ -4472,7 +4474,7 @@
               "cluster-help/fm-decode-invite/h-equals-one"
             ],
             "status": 0,
-            "seconds": 0.085
+            "seconds": 0.099
           }
         },
         {
@@ -4489,7 +4491,7 @@
               "cluster-help/fm-encode-invite/hx"
             ],
             "status": 1,
-            "seconds": 0.098
+            "seconds": 0.11
           },
           "failure": "AssertionError: cluster help short circuit: cluster-help/fm-encode-invite/hx",
           "green": {
@@ -4503,7 +4505,7 @@
               "cluster-help/fm-encode-invite/hx"
             ],
             "status": 0,
-            "seconds": 0.088
+            "seconds": 0.095
           }
         },
         {
@@ -4520,7 +4522,7 @@
               "cluster-help/fm-encode-invite/hh"
             ],
             "status": 1,
-            "seconds": 0.096
+            "seconds": 0.115
           },
           "failure": "AssertionError: cluster help short circuit: cluster-help/fm-encode-invite/hh",
           "green": {
@@ -4534,7 +4536,7 @@
               "cluster-help/fm-encode-invite/hh"
             ],
             "status": 0,
-            "seconds": 0.09
+            "seconds": 0.091
           }
         },
         {
@@ -4551,7 +4553,7 @@
               "cluster-help/fm-encode-invite/h-equals-one"
             ],
             "status": 1,
-            "seconds": 0.098
+            "seconds": 0.116
           },
           "failure": "AssertionError: cluster help short circuit: cluster-help/fm-encode-invite/h-equals-one",
           "green": {
@@ -4565,7 +4567,7 @@
               "cluster-help/fm-encode-invite/h-equals-one"
             ],
             "status": 0,
-            "seconds": 0.088
+            "seconds": 0.091
           }
         },
         {
@@ -4582,7 +4584,7 @@
               "cluster-help/onchain-decode-psbt/hx"
             ],
             "status": 1,
-            "seconds": 0.098
+            "seconds": 0.113
           },
           "failure": "AssertionError: cluster help short circuit: cluster-help/onchain-decode-psbt/hx",
           "green": {
@@ -4596,7 +4598,7 @@
               "cluster-help/onchain-decode-psbt/hx"
             ],
             "status": 0,
-            "seconds": 0.087
+            "seconds": 0.093
           }
         },
         {
@@ -4613,7 +4615,7 @@
               "cluster-help/onchain-decode-psbt/hh"
             ],
             "status": 1,
-            "seconds": 0.096
+            "seconds": 0.123
           },
           "failure": "AssertionError: cluster help short circuit: cluster-help/onchain-decode-psbt/hh",
           "green": {
@@ -4627,7 +4629,7 @@
               "cluster-help/onchain-decode-psbt/hh"
             ],
             "status": 0,
-            "seconds": 0.088
+            "seconds": 0.108
           }
         },
         {
@@ -4644,7 +4646,7 @@
               "cluster-help/onchain-decode-psbt/h-equals-one"
             ],
             "status": 1,
-            "seconds": 0.096
+            "seconds": 0.117
           },
           "failure": "AssertionError: cluster help short circuit: cluster-help/onchain-decode-psbt/h-equals-one",
           "green": {
@@ -4658,7 +4660,7 @@
               "cluster-help/onchain-decode-psbt/h-equals-one"
             ],
             "status": 0,
-            "seconds": 0.087
+            "seconds": 0.098
           }
         }
       ]
@@ -4679,7 +4681,7 @@
           "CyberkrillTests"
         ],
         "status": 0,
-        "seconds": 10.912
+        "seconds": 14.37
       },
       "restore_build": {
         "command": [
@@ -4692,7 +4694,7 @@
           "CyberkrillTests"
         ],
         "status": 0,
-        "seconds": 11.007
+        "seconds": 13.465
       },
       "checks": [
         {
@@ -4709,7 +4711,7 @@
               "cluster-help/fm-decode-invite/unknown-hh"
             ],
             "status": 1,
-            "seconds": 0.099
+            "seconds": 0.161
           },
           "failure": "AssertionError: cluster help earlier error or operand: cluster-help/fm-decode-invite/unknown-hh",
           "green": {
@@ -4723,7 +4725,7 @@
               "cluster-help/fm-decode-invite/unknown-hh"
             ],
             "status": 0,
-            "seconds": 0.09
+            "seconds": 0.115
           }
         },
         {
@@ -4740,7 +4742,7 @@
               "cluster-help/fm-decode-invite/repeat-output-cluster"
             ],
             "status": 1,
-            "seconds": 0.097
+            "seconds": 0.116
           },
           "failure": "AssertionError: cluster help earlier error or operand: cluster-help/fm-decode-invite/repeat-output-cluster",
           "green": {
@@ -4754,7 +4756,7 @@
               "cluster-help/fm-decode-invite/repeat-output-cluster"
             ],
             "status": 0,
-            "seconds": 0.088
+            "seconds": 0.097
           }
         },
         {
@@ -4771,7 +4773,7 @@
               "cluster-help/fm-encode-invite/unknown-hh"
             ],
             "status": 1,
-            "seconds": 0.097
+            "seconds": 0.116
           },
           "failure": "AssertionError: cluster help earlier error or operand: cluster-help/fm-encode-invite/unknown-hh",
           "green": {
@@ -4785,7 +4787,7 @@
               "cluster-help/fm-encode-invite/unknown-hh"
             ],
             "status": 0,
-            "seconds": 0.091
+            "seconds": 0.103
           }
         },
         {
@@ -4802,7 +4804,7 @@
               "cluster-help/fm-encode-invite/repeat-output-cluster"
             ],
             "status": 1,
-            "seconds": 0.101
+            "seconds": 0.11
           },
           "failure": "AssertionError: cluster help earlier error or operand: cluster-help/fm-encode-invite/repeat-output-cluster",
           "green": {
@@ -4816,7 +4818,7 @@
               "cluster-help/fm-encode-invite/repeat-output-cluster"
             ],
             "status": 0,
-            "seconds": 0.09
+            "seconds": 0.105
           }
         },
         {
@@ -4833,7 +4835,7 @@
               "cluster-help/onchain-decode-psbt/unknown-hh"
             ],
             "status": 1,
-            "seconds": 0.097
+            "seconds": 0.123
           },
           "failure": "AssertionError: cluster help earlier error or operand: cluster-help/onchain-decode-psbt/unknown-hh",
           "green": {
@@ -4847,7 +4849,7 @@
               "cluster-help/onchain-decode-psbt/unknown-hh"
             ],
             "status": 0,
-            "seconds": 0.089
+            "seconds": 0.102
           }
         },
         {
@@ -4864,7 +4866,7 @@
               "cluster-help/onchain-decode-psbt/repeat-output-cluster"
             ],
             "status": 1,
-            "seconds": 0.096
+            "seconds": 0.115
           },
           "failure": "AssertionError: cluster help earlier error or operand: cluster-help/onchain-decode-psbt/repeat-output-cluster",
           "green": {
@@ -4878,7 +4880,7 @@
               "cluster-help/onchain-decode-psbt/repeat-output-cluster"
             ],
             "status": 0,
-            "seconds": 0.088
+            "seconds": 0.104
           }
         },
         {
@@ -4895,7 +4897,7 @@
               "cluster-help/fm-encode-invite/repeat-skip-cluster"
             ],
             "status": 1,
-            "seconds": 0.098
+            "seconds": 0.121
           },
           "failure": "AssertionError: cluster help earlier error or operand: cluster-help/fm-encode-invite/repeat-skip-cluster",
           "green": {
@@ -4909,7 +4911,7 @@
               "cluster-help/fm-encode-invite/repeat-skip-cluster"
             ],
             "status": 0,
-            "seconds": 0.087
+            "seconds": 0.106
           }
         },
         {
@@ -4926,7 +4928,7 @@
               "cluster-help/onchain-decode-psbt/repeat-network-cluster"
             ],
             "status": 1,
-            "seconds": 0.098
+            "seconds": 0.114
           },
           "failure": "AssertionError: cluster help earlier error or operand: cluster-help/onchain-decode-psbt/repeat-network-cluster",
           "green": {
@@ -4940,7 +4942,7 @@
               "cluster-help/onchain-decode-psbt/repeat-network-cluster"
             ],
             "status": 0,
-            "seconds": 0.086
+            "seconds": 0.106
           }
         }
       ]
@@ -4961,7 +4963,7 @@
           "CyberkrillTests"
         ],
         "status": 0,
-        "seconds": 11.005
+        "seconds": 12.973
       },
       "restore_build": {
         "command": [
@@ -4974,7 +4976,7 @@
           "CyberkrillTests"
         ],
         "status": 0,
-        "seconds": 11.001
+        "seconds": 12.875
       },
       "checks": [
         {
@@ -4991,7 +4993,7 @@
               "cluster-help/fm-decode-invite/output-short-h"
             ],
             "status": 1,
-            "seconds": 0.097
+            "seconds": 0.113
           },
           "failure": "AssertionError: offline output existence: cluster-help/fm-decode-invite/output-short-h",
           "green": {
@@ -5005,7 +5007,7 @@
               "cluster-help/fm-decode-invite/output-short-h"
             ],
             "status": 0,
-            "seconds": 0.089
+            "seconds": 0.101
           }
         },
         {
@@ -5022,7 +5024,7 @@
               "cluster-help/fm-decode-invite/output-short-hyphen"
             ],
             "status": 1,
-            "seconds": 0.098
+            "seconds": 0.114
           },
           "failure": "AssertionError: offline output newline: cluster-help/fm-decode-invite/output-short-hyphen",
           "green": {
@@ -5036,7 +5038,7 @@
               "cluster-help/fm-decode-invite/output-short-hyphen"
             ],
             "status": 0,
-            "seconds": 0.095
+            "seconds": 0.099
           }
         },
         {
@@ -5053,7 +5055,7 @@
               "cluster-help/fm-encode-invite/output-short-h"
             ],
             "status": 1,
-            "seconds": 0.098
+            "seconds": 0.116
           },
           "failure": "AssertionError: offline output existence: cluster-help/fm-encode-invite/output-short-h",
           "green": {
@@ -5067,7 +5069,7 @@
               "cluster-help/fm-encode-invite/output-short-h"
             ],
             "status": 0,
-            "seconds": 0.09
+            "seconds": 0.124
           }
         },
         {
@@ -5084,7 +5086,7 @@
               "cluster-help/fm-encode-invite/output-short-hyphen"
             ],
             "status": 1,
-            "seconds": 0.095
+            "seconds": 0.119
           },
           "failure": "AssertionError: offline output newline: cluster-help/fm-encode-invite/output-short-hyphen",
           "green": {
@@ -5098,7 +5100,7 @@
               "cluster-help/fm-encode-invite/output-short-hyphen"
             ],
             "status": 0,
-            "seconds": 0.088
+            "seconds": 0.119
           }
         },
         {
@@ -5115,7 +5117,7 @@
               "cluster-help/onchain-decode-psbt/output-short-h"
             ],
             "status": 1,
-            "seconds": 0.097
+            "seconds": 0.117
           },
           "failure": "AssertionError: offline output existence: cluster-help/onchain-decode-psbt/output-short-h",
           "green": {
@@ -5129,7 +5131,7 @@
               "cluster-help/onchain-decode-psbt/output-short-h"
             ],
             "status": 0,
-            "seconds": 0.09
+            "seconds": 0.096
           }
         },
         {
@@ -5146,7 +5148,7 @@
               "cluster-help/onchain-decode-psbt/output-short-hyphen"
             ],
             "status": 1,
-            "seconds": 0.101
+            "seconds": 0.118
           },
           "failure": "AssertionError: offline output newline: cluster-help/onchain-decode-psbt/output-short-hyphen",
           "green": {
@@ -5160,7 +5162,7 @@
               "cluster-help/onchain-decode-psbt/output-short-hyphen"
             ],
             "status": 0,
-            "seconds": 0.103
+            "seconds": 0.096
           }
         }
       ]
@@ -5181,7 +5183,7 @@
           "CyberkrillTests"
         ],
         "status": 0,
-        "seconds": 11.616
+        "seconds": 12.478
       },
       "restore_build": {
         "command": [
@@ -5194,7 +5196,7 @@
           "CyberkrillTests"
         ],
         "status": 0,
-        "seconds": 11.517
+        "seconds": 12.65
       },
       "checks": [
         {
@@ -5211,7 +5213,7 @@
               "cluster-help/fm-decode-invite/output-long-hyphen"
             ],
             "status": 1,
-            "seconds": 0.099
+            "seconds": 0.105
           },
           "failure": "AssertionError: offline output newline: cluster-help/fm-decode-invite/output-long-hyphen",
           "green": {
@@ -5225,7 +5227,7 @@
               "cluster-help/fm-decode-invite/output-long-hyphen"
             ],
             "status": 0,
-            "seconds": 0.091
+            "seconds": 0.092
           }
         },
         {
@@ -5242,7 +5244,7 @@
               "cluster-help/fm-encode-invite/output-long-hyphen"
             ],
             "status": 1,
-            "seconds": 0.097
+            "seconds": 0.117
           },
           "failure": "AssertionError: offline output newline: cluster-help/fm-encode-invite/output-long-hyphen",
           "green": {
@@ -5256,7 +5258,7 @@
               "cluster-help/fm-encode-invite/output-long-hyphen"
             ],
             "status": 0,
-            "seconds": 0.091
+            "seconds": 0.103
           }
         },
         {
@@ -5273,7 +5275,7 @@
               "cluster-help/onchain-decode-psbt/output-long-hyphen"
             ],
             "status": 1,
-            "seconds": 0.098
+            "seconds": 0.133
           },
           "failure": "AssertionError: offline output newline: cluster-help/onchain-decode-psbt/output-long-hyphen",
           "green": {
@@ -5287,7 +5289,7 @@
               "cluster-help/onchain-decode-psbt/output-long-hyphen"
             ],
             "status": 0,
-            "seconds": 0.091
+            "seconds": 0.092
           }
         }
       ]
@@ -5308,7 +5310,7 @@
           "CyberkrillTests"
         ],
         "status": 0,
-        "seconds": 11.626
+        "seconds": 12.145
       },
       "restore_build": {
         "command": [
@@ -5321,7 +5323,7 @@
           "CyberkrillTests"
         ],
         "status": 0,
-        "seconds": 14.0
+        "seconds": 12.442
       },
       "checks": [
         {
@@ -5338,7 +5340,7 @@
               "cluster-help/fm-decode-invite/value-missing-then-help"
             ],
             "status": 1,
-            "seconds": 0.119
+            "seconds": 0.107
           },
           "failure": "AssertionError: cluster help earlier error or operand: cluster-help/fm-decode-invite/value-missing-then-help",
           "green": {
@@ -5352,7 +5354,7 @@
               "cluster-help/fm-decode-invite/value-missing-then-help"
             ],
             "status": 0,
-            "seconds": 0.111
+            "seconds": 0.098
           }
         },
         {
@@ -5369,7 +5371,7 @@
               "cluster-help/fm-encode-invite/value-missing-then-help"
             ],
             "status": 1,
-            "seconds": 0.107
+            "seconds": 0.106
           },
           "failure": "AssertionError: cluster help earlier error or operand: cluster-help/fm-encode-invite/value-missing-then-help",
           "green": {
@@ -5383,7 +5385,7 @@
               "cluster-help/fm-encode-invite/value-missing-then-help"
             ],
             "status": 0,
-            "seconds": 0.109
+            "seconds": 0.096
           }
         },
         {
@@ -5400,7 +5402,7 @@
               "cluster-help/onchain-decode-psbt/value-missing-then-help"
             ],
             "status": 1,
-            "seconds": 0.109
+            "seconds": 0.114
           },
           "failure": "AssertionError: cluster help earlier error or operand: cluster-help/onchain-decode-psbt/value-missing-then-help",
           "green": {
@@ -5414,7 +5416,7 @@
               "cluster-help/onchain-decode-psbt/value-missing-then-help"
             ],
             "status": 0,
-            "seconds": 0.118
+            "seconds": 0.093
           }
         }
       ]
@@ -5435,7 +5437,7 @@
           "CyberkrillTests"
         ],
         "status": 0,
-        "seconds": 12.301
+        "seconds": 12.634
       },
       "restore_build": {
         "command": [
@@ -5448,7 +5450,7 @@
           "CyberkrillTests"
         ],
         "status": 0,
-        "seconds": 11.615
+        "seconds": 12.339
       },
       "checks": [
         {
@@ -5465,7 +5467,7 @@
               "cluster-help/fm-decode-invite/terminator-long-help"
             ],
             "status": 1,
-            "seconds": 0.103
+            "seconds": 0.108
           },
           "failure": "AssertionError: cluster help earlier error or operand: cluster-help/fm-decode-invite/terminator-long-help",
           "green": {
@@ -5479,7 +5481,7 @@
               "cluster-help/fm-decode-invite/terminator-long-help"
             ],
             "status": 0,
-            "seconds": 0.091
+            "seconds": 0.095
           }
         },
         {
@@ -5496,7 +5498,7 @@
               "cluster-help/fm-encode-invite/terminator-long-help"
             ],
             "status": 1,
-            "seconds": 0.098
+            "seconds": 0.111
           },
           "failure": "AssertionError: cluster help earlier error or operand: cluster-help/fm-encode-invite/terminator-long-help",
           "green": {
@@ -5510,7 +5512,7 @@
               "cluster-help/fm-encode-invite/terminator-long-help"
             ],
             "status": 0,
-            "seconds": 0.088
+            "seconds": 0.091
           }
         },
         {
@@ -5527,7 +5529,7 @@
               "cluster-help/onchain-decode-psbt/terminator-long-help"
             ],
             "status": 1,
-            "seconds": 0.1
+            "seconds": 0.114
           },
           "failure": "AssertionError: cluster help earlier error or operand: cluster-help/onchain-decode-psbt/terminator-long-help",
           "green": {
@@ -5541,7 +5543,7 @@
               "cluster-help/onchain-decode-psbt/terminator-long-help"
             ],
             "status": 0,
-            "seconds": 0.095
+            "seconds": 0.097
           }
         }
       ]
@@ -5562,7 +5564,7 @@
           "CyberkrillTests"
         ],
         "status": 0,
-        "seconds": 11.924
+        "seconds": 12.536
       },
       "restore_build": {
         "command": [
@@ -5575,7 +5577,7 @@
           "CyberkrillTests"
         ],
         "status": 0,
-        "seconds": 11.211
+        "seconds": 12.46
       },
       "checks": [
         {
@@ -5592,7 +5594,7 @@
               "cluster-help/fm-decode-invite/long-help-value"
             ],
             "status": 1,
-            "seconds": 0.096
+            "seconds": 0.104
           },
           "failure": "AssertionError: cluster help earlier error or operand: cluster-help/fm-decode-invite/long-help-value",
           "green": {
@@ -5606,7 +5608,7 @@
               "cluster-help/fm-decode-invite/long-help-value"
             ],
             "status": 0,
-            "seconds": 0.091
+            "seconds": 0.103
           }
         },
         {
@@ -5623,7 +5625,7 @@
               "cluster-help/fm-encode-invite/long-help-value"
             ],
             "status": 1,
-            "seconds": 0.098
+            "seconds": 0.123
           },
           "failure": "AssertionError: cluster help earlier error or operand: cluster-help/fm-encode-invite/long-help-value",
           "green": {
@@ -5637,7 +5639,7 @@
               "cluster-help/fm-encode-invite/long-help-value"
             ],
             "status": 0,
-            "seconds": 0.088
+            "seconds": 0.098
           }
         },
         {
@@ -5654,7 +5656,7 @@
               "cluster-help/onchain-decode-psbt/long-help-value"
             ],
             "status": 1,
-            "seconds": 0.097
+            "seconds": 0.118
           },
           "failure": "AssertionError: cluster help earlier error or operand: cluster-help/onchain-decode-psbt/long-help-value",
           "green": {
@@ -5668,7 +5670,7 @@
               "cluster-help/onchain-decode-psbt/long-help-value"
             ],
             "status": 0,
-            "seconds": 0.088
+            "seconds": 0.101
           }
         }
       ]
@@ -5689,7 +5691,7 @@
           "CyberkrillTests"
         ],
         "status": 0,
-        "seconds": 0.397
+        "seconds": 0.416
       },
       "restore_build": {
         "command": [
@@ -5702,7 +5704,7 @@
           "CyberkrillTests"
         ],
         "status": 0,
-        "seconds": 0.403
+        "seconds": 0.412
       },
       "checks": [
         {
@@ -5719,7 +5721,7 @@
               "--selftest"
             ],
             "status": 1,
-            "seconds": 0.14
+            "seconds": 0.133
           },
           "failure": "AssertionError: offline comparator accepted changed input bytes: cluster-help/fm-decode-invite/output-short-h",
           "green": {
@@ -5733,7 +5735,7 @@
               "--selftest"
             ],
             "status": 0,
-            "seconds": 0.148
+            "seconds": 0.151
           }
         }
       ]
@@ -5754,7 +5756,7 @@
           "CyberkrillTests"
         ],
         "status": 0,
-        "seconds": 11.212
+        "seconds": 12.132
       },
       "restore_build": {
         "command": [
@@ -5767,7 +5769,7 @@
           "CyberkrillTests"
         ],
         "status": 0,
-        "seconds": 11.322
+        "seconds": 12.335
       },
       "checks": [
         {
@@ -5784,7 +5786,7 @@
               "carried-help/enum-attached"
             ],
             "status": 1,
-            "seconds": 0.095
+            "seconds": 0.104
           },
           "failure": "AssertionError: carried help preceding typed error: carried-help/enum-attached",
           "green": {
@@ -5798,7 +5800,7 @@
               "carried-help/enum-attached"
             ],
             "status": 0,
-            "seconds": 0.09
+            "seconds": 0.093
           }
         },
         {
@@ -5846,7 +5848,7 @@
               "carried-help/enum-missing-terminator"
             ],
             "status": 1,
-            "seconds": 0.095
+            "seconds": 0.101
           },
           "failure": "AssertionError: carried help preceding typed error: carried-help/enum-missing-terminator",
           "green": {
@@ -5860,7 +5862,7 @@
               "carried-help/enum-missing-terminator"
             ],
             "status": 0,
-            "seconds": 0.089
+            "seconds": 0.09
           }
         }
       ]
@@ -5881,7 +5883,7 @@
           "CyberkrillTests"
         ],
         "status": 0,
-        "seconds": 11.327
+        "seconds": 12.554
       },
       "restore_build": {
         "command": [
@@ -5894,7 +5896,7 @@
           "CyberkrillTests"
         ],
         "status": 0,
-        "seconds": 11.228
+        "seconds": 13.082
       },
       "checks": [
         {
@@ -5911,7 +5913,7 @@
               "carried-help/words-spaced"
             ],
             "status": 1,
-            "seconds": 0.108
+            "seconds": 0.113
           },
           "failure": "AssertionError: carried help preceding typed error: carried-help/words-spaced",
           "green": {
@@ -5925,7 +5927,7 @@
               "carried-help/words-spaced"
             ],
             "status": 0,
-            "seconds": 0.095
+            "seconds": 0.093
           }
         },
         {
@@ -5942,7 +5944,7 @@
               "carried-help/words-equals"
             ],
             "status": 1,
-            "seconds": 0.105
+            "seconds": 0.11
           },
           "failure": "AssertionError: carried help preceding typed error: carried-help/words-equals",
           "green": {
@@ -5956,7 +5958,7 @@
               "carried-help/words-equals"
             ],
             "status": 0,
-            "seconds": 0.089
+            "seconds": 0.09
           }
         }
       ]
@@ -5977,7 +5979,7 @@
           "CyberkrillTests"
         ],
         "status": 0,
-        "seconds": 11.307
+        "seconds": 13.556
       },
       "restore_build": {
         "command": [
@@ -5990,7 +5992,7 @@
           "CyberkrillTests"
         ],
         "status": 0,
-        "seconds": 11.31
+        "seconds": 13.491
       },
       "checks": [
         {
@@ -6007,7 +6009,7 @@
               "carried-help/words-u32-overflow"
             ],
             "status": 1,
-            "seconds": 0.1
+            "seconds": 0.111
           },
           "failure": "AssertionError: carried help preceding typed error: carried-help/words-u32-overflow",
           "green": {
@@ -6021,7 +6023,7 @@
               "carried-help/words-u32-overflow"
             ],
             "status": 0,
-            "seconds": 0.086
+            "seconds": 0.095
           }
         },
         {
@@ -6038,7 +6040,7 @@
               "carried-help/words-long-overflow"
             ],
             "status": 1,
-            "seconds": 0.097
+            "seconds": 0.117
           },
           "failure": "AssertionError: carried help preceding typed error: carried-help/words-long-overflow",
           "green": {
@@ -6052,7 +6054,7 @@
               "carried-help/words-long-overflow"
             ],
             "status": 0,
-            "seconds": 0.086
+            "seconds": 0.092
           }
         }
       ]
@@ -6073,7 +6075,7 @@
           "CyberkrillTests"
         ],
         "status": 0,
-        "seconds": 11.417
+        "seconds": 14.166
       },
       "restore_build": {
         "command": [
@@ -6086,7 +6088,7 @@
           "CyberkrillTests"
         ],
         "status": 0,
-        "seconds": 11.313
+        "seconds": 13.263
       },
       "checks": [
         {
@@ -6103,7 +6105,7 @@
               "carried-help/enum-missing-terminator"
             ],
             "status": 1,
-            "seconds": 0.124
+            "seconds": 0.115
           },
           "failure": "AssertionError: carried help preceding typed error: carried-help/enum-missing-terminator",
           "green": {
@@ -6117,7 +6119,7 @@
               "carried-help/enum-missing-terminator"
             ],
             "status": 0,
-            "seconds": 0.088
+            "seconds": 0.093
           }
         },
         {
@@ -6134,7 +6136,7 @@
               "carried-help/words-missing-terminator"
             ],
             "status": 1,
-            "seconds": 0.1
+            "seconds": 0.106
           },
           "failure": "AssertionError: carried help preceding typed error: carried-help/words-missing-terminator",
           "green": {
@@ -6148,7 +6150,7 @@
               "carried-help/words-missing-terminator"
             ],
             "status": 0,
-            "seconds": 0.086
+            "seconds": 0.094
           }
         }
       ]
@@ -6169,7 +6171,7 @@
           "CyberkrillTests"
         ],
         "status": 0,
-        "seconds": 11.109
+        "seconds": 13.051
       },
       "restore_build": {
         "command": [
@@ -6182,7 +6184,7 @@
           "CyberkrillTests"
         ],
         "status": 0,
-        "seconds": 11.214
+        "seconds": 12.847
       },
       "checks": [
         {
@@ -6199,7 +6201,7 @@
               "carried-help/enum-help-first-attached"
             ],
             "status": 1,
-            "seconds": 0.103
+            "seconds": 0.11
           },
           "failure": "AssertionError: carried help before runtime: carried-help/enum-help-first-attached",
           "green": {
@@ -6213,7 +6215,7 @@
               "carried-help/enum-help-first-attached"
             ],
             "status": 0,
-            "seconds": 0.086
+            "seconds": 0.089
           }
         },
         {
@@ -6230,7 +6232,7 @@
               "carried-help/words-help-first-grammar"
             ],
             "status": 1,
-            "seconds": 0.097
+            "seconds": 0.111
           },
           "failure": "AssertionError: carried help before runtime: carried-help/words-help-first-grammar",
           "green": {
@@ -6244,7 +6246,7 @@
               "carried-help/words-help-first-grammar"
             ],
             "status": 0,
-            "seconds": 0.089
+            "seconds": 0.094
           }
         }
       ]
@@ -6265,7 +6267,7 @@
           "CyberkrillTests"
         ],
         "status": 0,
-        "seconds": 11.318
+        "seconds": 12.353
       },
       "restore_build": {
         "command": [
@@ -6278,7 +6280,7 @@
           "CyberkrillTests"
         ],
         "status": 0,
-        "seconds": 11.52
+        "seconds": 12.336
       },
       "checks": [
         {
@@ -6295,7 +6297,7 @@
               "carried-help/words-semantic-13"
             ],
             "status": 1,
-            "seconds": 0.102
+            "seconds": 0.107
           },
           "failure": "AssertionError: carried help before runtime: carried-help/words-semantic-13",
           "green": {
@@ -6309,7 +6311,7 @@
               "carried-help/words-semantic-13"
             ],
             "status": 0,
-            "seconds": 0.092
+            "seconds": 0.091
           }
         },
         {
@@ -6326,7 +6328,7 @@
               "carried-help/words-semantic-attached"
             ],
             "status": 1,
-            "seconds": 0.098
+            "seconds": 0.101
           },
           "failure": "AssertionError: carried help before runtime: carried-help/words-semantic-attached",
           "green": {
@@ -6340,7 +6342,7 @@
               "carried-help/words-semantic-attached"
             ],
             "status": 0,
-            "seconds": 0.088
+            "seconds": 0.094
           }
         }
       ]
@@ -6355,6 +6357,6 @@
       "test"
     ],
     "status": 0,
-    "seconds": 248.142
+    "seconds": 282.992
   }
 }

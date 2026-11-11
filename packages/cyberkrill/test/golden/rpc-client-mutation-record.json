@@ -4,10 +4,10 @@
     "Cyberkrill/CoreRpc.lean": "63fab1a1540c05eac769322a77fc799dc86cdb210da98a35696f8f46d3848a6d",
     "Cyberkrill/RpcFlags.lean": "d07ca3f7d647bfabceb6eeaa90954d59dc30a76401677a16226dd9171b65b1d0",
     "CyberkrillTests/Rpc.lean": "3f1887f1dad6d82d421e7bbeecaea6486431b33ba134051d07d5d828809419bf",
-    "CyberkrillTests.lean": "980964d989490659aac1f7e1c6333a224f49d5f8d0ed1a73536bcaa429d9d87d",
+    "CyberkrillTests.lean": "fa8145e57e7ae2b4b1a0d88c8fcf67af4c40c63d379da398ee9b69f4f2ef2896",
     "test/rpc-client.py": "1b6645f1a9792192dac46775de68bb9a7b34cdd7f06e6b71b6168f277badeb3d",
-    "test/network.py": "053bc627decb80b256efe256fb5aa4b81027c93693e3dd9c9c630b689cb98297",
-    "test/network-safety.py": "1198ecc57a1b75e49e3a2a1ee99a76d9d665e854b6e3d4409a20b76454e388a7",
+    "test/network.py": "3a5b3f894949631e715a89b53f978ca888184ea22dacc6ed1213fcac37e132a8",
+    "test/network-safety.py": "e7675047887167c7a9dbd14073071e9616252e59bdadf6d91f069f1601fc2afe",
     "test/rpc-client-mutations.py": "c310108b622af7e1dd7808dd8b9e32e0b7a5bdd15bcabb3e609a2ba05eb2bade",
     "test/rpc-recordings.py": "b3e5028686b9265b807860a91320d27eb8f2950bc516ac737c185710b9a2e4f0",
     "test/generate-rpc-recordings.py": "dbda6a005be31470f2a53a5b6fdbe19fae4f5dd7478596a61a0564b43a532e31"
