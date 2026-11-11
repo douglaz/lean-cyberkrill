@@ -105,7 +105,7 @@ missing/invalid Location, and `Policy::limited(10)`'s eleven total requests on a
 loop. Script-generated synthetic redirect replies are our own; the independently
 pinned base fixtures and invoice expectations remain unchanged.
 
-`test/generate-invoice.py` is registered in `lake test`. Its 77 cases make 78
+`test/generate-invoice.py` is registered in `lake test`. Its 91 cases make 92
 invocations against the owned TLS responder on fixed port 19443, including a
 same-process repeat proving fresh quotes. It asserts complete exact JSON,
 ordered well-known/callback GET paths and counts, no callback after early failure,
@@ -120,7 +120,7 @@ three injected writer ordering cases, six pre-spawn refusals, one in-process
 guard, four injected initial refusals, one injected redirect refusal before
 transport, normalization-error refusal before output acquisition and fixed-port collision refusal. Pure Lightning tests add eight
 callback serialization cases, three request normalization cases, nineteen URI-resolution cases and two HTTP-URI
-checks and two sets of five subset refusals. Twenty-one compiled runtime
+checks and two sets of five subset refusals. Twenty-two compiled runtime
 mutations detect range, inclusive maximum, comment bytes, original query, form
 encoding, Millisat conversion, trailing-query separation, dispatch, initial
 normalization, initial/callback following, redirect limits, relative resolution,
@@ -162,6 +162,13 @@ ignored numeric fields lexically rather than expanding their exponents
 the price parser's token separation without adopting its value rewriting or
 extra whole-document validation.
 
+The same quote-aware scan counts JSON arrays and objects before either LNURL
+reply reaches the recursive parser. As in the price parser, it rejects depth
+128 or greater with `malformedResponse: JSON`; the root container counts as
+one. This also refuses otherwise valid deeply nested ignored fields. Tests at
+both endpoints accept depth 127, refuse depth 128 and 100,000-container arrays
+and objects cleanly, and keep quoted delimiters and escaped quotes as strings.
+
 URL serialization validates components without decoding query pairs. Original
 query order, duplicate keys and escape spelling are retained. Controls cover
 100,000 distinct query parameters through initial normalization, callback
@@ -187,15 +194,15 @@ For the evidence command below, `TMP_ROOT` denotes that owned temporary director
 | Final command | Directory | Exit | Observation |
 |---|---|---|---|
 | `nix develop -c lake build`; `nix develop -c lake test` | `packages/lightning` | 0; 0 | Existing vectors and axiom gate retained; callback serialization 8/8, request normalization 3/3, redirect resolution 19/19 and subset refusals 5/5 each. |
-| `nix develop -c lake build`; `nix develop -c lake test` | `packages/cyberkrill` | 0; 0 | Complete registered app suite, including LNURL 77/77 cases and 78/78 invocations. |
+| `nix develop -c lake build`; `nix develop -c lake test` | `packages/cyberkrill` | 0; 0 | Complete registered app suite, including LNURL 91/91 cases and 92/92 invocations. |
 | `nix develop -c env TMPDIR="$TMP_ROOT" python3 -B packages/cyberkrill/test/validate.py evidence` | root | 0 | 40/40 checks, including current source/evidence bindings, scope and lifecycle shapes, exact comparators and retained replays. |
 | `nix flake check -L` | root | 0 | All seven package build/test pairs and the link checks. |
 | `nix build -L` | root | 0 | Normal reuse after the flake check; installed version, Lightning, offline and RPC checks also exit 0. |
-| `nix build --rebuild -L` | root | 0 | Actual fresh sandbox execution, including LNURL 77/77 cases, 78/78 invocations, delayed timeout and callback tests; zero `SKIP` results. |
+| `nix build --rebuild -L` | root | 0 | Actual fresh sandbox execution, including LNURL 91/91 cases, 92/92 invocations, delayed timeout and callback tests; zero `SKIP` results. |
 | Explicit native-decision, proof-token and private-key scans in `validate.py repo` | root | 0 each | 86/86 tracked library/proof files, zero native-decision offenders; proof and private-key scans empty. |
 
 The actual sequential campaigns also completed with exit 0: invoice requests
-(21 compiled detections), fiat consumers (6), prices (36), move (56), creation
+(22 compiled detections), fiat consumers (6), prices (36), move (56), creation
 (57), listing (63), lexical listing (9), listing lifecycle (34 boundaries), and
 Core client/capture/safety (68 compiled selections plus 213 safety selections).
 The affected retained, Lightning, revision, regression, output, attached-output

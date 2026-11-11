@@ -55,7 +55,7 @@ def mutations():
         '| .error _ => throw (.onchain "testLnurlRefused: Explicit loopback Lightning address is required")',
         '| .error _ => pure ()',probe("guard-invalid-initial"),"LNURL refusal guard-invalid-initial"))
     rows.append(("response-number-bound",flow,
-        'unless numbersBounded text do throw (.lightning "malformedResponse: JSON")',
+        'unless jsonBounded text do throw (.lightning "malformedResponse: JSON")',
         'unless true do throw (.lightning "malformedResponse: JSON")',
         probe("well-numeric-limit"),"LNURL refusal well-numeric-limit"))
     rows.append(("callback-path-work",url,
@@ -73,7 +73,11 @@ def mutations():
         'if significant.length > maxDigits && false then none',
         ["python3","-B","test/generate-invoice.py","--url-number-stress"],
         "LNURL large URL numeric parsing exceeds 10s budget"))
-    assert len(rows)==21, "LNURL runtime mutation inventory"
+    rows.append(("response-depth-bound",flow,
+        'if depth ≥ 128 then return false',
+        'if depth ≥ 128 && false then return false',
+        probe("well-array-depth-limit"),"LNURL refusal well-array-depth-limit"))
+    assert len(rows)==22, "LNURL runtime mutation inventory"
     return rows
 
 
@@ -90,13 +94,13 @@ def fingerprints():
 def verify():
     record = json.loads(DEST.read_bytes())
     assert record["source_sha256"]==fingerprints(), "stale LNURL runtime evidence"
-    assert len(record["checks"])==len(mutations())==21, "LNURL detecting count"
+    assert len(record["checks"])==len(mutations())==22, "LNURL detecting count"
     for check,row in zip(record["checks"],mutations()):
         assert [check[k] for k in ["property","file","replace","with_text","command","assertion"]]==list(row), "LNURL mutation identity"
         assert [check[k]["status"] for k in ["build","red","restore_build","green"]]==[0,1,0,0], "LNURL compiled/runtime/restored statuses"
         assert row[-1] in check["failure"] and ("AssertionError:" in check["failure"] or "assertion failed:" in check["failure"]), "LNURL intended runtime assertion"
     assert all(record[k]["status"]==0 for k in ["initial_build","initial_green","restored_full"])
-    print("LNURL mutations: 21/21 compiled intended runtime reds; 21/21 restored builds and greens",flush=True)
+    print("LNURL mutations: 22/22 compiled intended runtime reds; 22/22 restored builds and greens",flush=True)
 
 
 if __name__ == "__main__":

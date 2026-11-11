@@ -51,9 +51,12 @@ private def numberBounded (token : String) : Bool := Id.run do
   if digits.length > 4 then return false
   return digits.toNat?.getD 0 ≤ 1024
 
-private def numbersBounded (body : String) : Bool := Id.run do
+/-- Bound provider numbers and containers before recursive JSON parsing.
+The container limit matches the price parser: depth 128 or greater is refused. -/
+private def jsonBounded (body : String) : Bool := Id.run do
   let mut rest := body.toList
   let mut quoted := false
+  let mut depth := 0
   for _ in [:rest.length] do
     let c :: tail := rest | break
     rest := tail
@@ -65,6 +68,12 @@ private def numbersBounded (body : String) : Bool := Id.run do
       let chars := rest.takeWhile (fun ch => "0123456789eE+.-".contains ch)
       rest := rest.drop chars.length
       unless numberBounded (String.ofList (c :: chars)) do return false
+    else if c == '[' || c == '{' then
+      depth := depth + 1
+      if depth ≥ 128 then return false
+    else if c == ']' || c == '}' then
+      if depth == 0 then return false
+      depth := depth - 1
   return true
 
 /-- HTTP status is intentionally not a JSON success condition. -/
@@ -74,7 +83,7 @@ private def getJson (request : HttpCurl.Request → IO (Except HttpCurl.Error Ht
   | .error e => return .error e
   | .ok response => return do
     let some text := String.fromUTF8? response.body | throw (.lightning "malformedResponse: UTF-8")
-    unless numbersBounded text do throw (.lightning "malformedResponse: JSON")
+    unless jsonBounded text do throw (.lightning "malformedResponse: JSON")
     (Json.parse text).mapError (fun _ => .lightning "malformedResponse: JSON")
 
 /-- LNURL-pay invoice acquisition only. Invoice validation and JSON use the

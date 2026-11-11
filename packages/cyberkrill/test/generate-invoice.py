@@ -121,7 +121,18 @@ def cases():
              dict(name="well-exponent-boundary",well_number="1e1024"),
              dict(name="well-numeric-string",well_string="1e1000000000\\\"tail"),
              dict(name="callback-numeric-string",callback_string="1e-1000000000")]
-    assert len(rows) == 77, "LNURL matrix inventory"
+    # The response object itself is container one. Keep raw nested values out
+    # of Python's recursive JSON encoder, including the far-over-limit cases.
+    for side, requests in [("well", 1), ("callback", 2)]:
+        for kind, opening, closing in [("array", "[", "]"), ("object", '{"x":', "}")]:
+            for label, depth in [("boundary", 127), ("limit", 128), ("deep", 100000)]:
+                row = dict(name=side+"-"+kind+"-depth-"+label,
+                           **{side+"_raw":opening*(depth-1)+"0"+closing*(depth-1)})
+                if depth >= 128:
+                    row.update(error="malformedResponse: JSON",requests=requests)
+                rows.append(row)
+        rows.append(dict(name=side+"-quoted-depth", **{side+"_string":'[{\\"' * 1000 + '} ]' * 1000}))
+    assert len(rows) == 91, "LNURL matrix inventory"
     return rows
 
 
@@ -211,10 +222,12 @@ def replay(only=None):
             for side, entry in [("well", entries[0]), ("callback", entries[1])]:
                 if side+"_string" in row:
                     entry["responses"][0]["json"]["ignored"] = row[side+"_string"]
-                if side+"_number" in row:
+                raw = row.get(side+"_raw",row.get(side+"_number"))
+                if raw is not None:
                     response = entry["responses"][0]
                     text = json.dumps(response.pop("json"))
-                    response["text"] = text[:-1] + ',"ignored":' + row[side+"_number"] + '}'
+                    response["text"] = text[:-1] + ',"ignored":' + raw + '}'
+                    assert len(response["text"].encode()) <= 1048576, "LNURL raw control fits response bound"
             paths = [well_path,request_path(row)][:row.get("requests",2)]
             if "location" in row and not row.get("well_redirect"):
                 for entry in entries: entry["responses"][0]["headers"] = {"Location":row["location"]}
@@ -310,7 +323,7 @@ def replay(only=None):
             path_stress(environment)
             query_stress(environment)
             url_number_stress(environment)
-    print("LNURL selected control passed" if only else "LNURL replay: 77/77 cases, 78/78 invocations; exact five-field JSON, ordered GETs and no early callback; collision 1/1",flush=True)
+    print("LNURL selected control passed" if only else "LNURL replay: 91/91 cases, 92/92 invocations; exact five-field JSON, ordered GETs and no early callback; collision 1/1",flush=True)
 
 
 def guards(root, env):
