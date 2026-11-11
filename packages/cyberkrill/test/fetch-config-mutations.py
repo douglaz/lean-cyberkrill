@@ -25,7 +25,7 @@ def mutations():
         ("transport-bytes",flow,'maxResponseBytes := 1048576','maxResponseBytes := 1048577',probe("bytes-1048577"),'config transport body bound'),
         ("injected-bytes",flow,'if r.body.size > req.maxResponseBytes.toNat then','if false then',probe("injected-bytes-1048577"),success("injected-bytes-1048577")),
         ("connect-deadline",flow,'connectTimeoutMs := 1000','connectTimeoutMs := 0',
-         ["python3","-B","test/fetch-config.py","--connect"],'config connect deadline before total deadline'),
+         ["python3","-B","test/fetch-config.py","--connect-contention"],'config connect deadline before total deadline'),
         ("total-deadline",flow,'totalTimeoutMs := 2000','totalTimeoutMs := 0',probe("total-2100"),success("total-2100")),
         ("location-work",flow,'if location.utf8ByteSize > 8192 then','if false then',probe("location-limit"),success("location-limit")),
         ("resolved-url-work",flow,'if req.url.utf8ByteSize > 8192 then','if false then',probe("resolved-url-limit"),success("resolved-url-limit")),
@@ -66,7 +66,18 @@ def mutations():
     for name in ["array","null","bad-peer","peer-overflow","endpoint-type"]:
         rows.append(("semantic-abort-"+name,flow,'return parseConfig config invite.federationId',
             'match parseConfig config invite.federationId with\n        | .ok result => return .ok result\n        | .error _ => pure ()',probe(name),'config refusal '+name))
-    assert len(rows)==39,"config compiled mutation inventory"
+    rows.append(("acquired-body-next",flow,
+        'if r.body.size > req.maxResponseBytes.toNat then',
+        'if r.bodyError.isSome then return .error (.transport "fmTransport")\n  if r.body.size > req.maxResponseBytes.toNat then',
+        probe("short-length-200"),success("short-length-200")))
+    previous_guard = '        expected = urlsplit(stub_url or "")\n        # Inspect decoded invite material before creating a child. The guarded\n        # app entry separately checks decoded guardians and every redirect.\n        for token in args[1:]:\n            for material in url_material(token):\n                for match in re.finditer(r"(?:wss?|https?)://[^\\x00-\\x20\\x7f-\\xff]+", material):\n                    target = match[0].replace("wss://", "https://").replace("ws://", "http://")\n                    try:\n                        parsed = urlsplit(target)\n                        valid = (parsed.hostname == expected.hostname == "127.0.0.1" and\n                                 parsed.port == expected.port and parsed.port not in {None, 0, 8332} and\n                                 parsed.username is None and parsed.password is None)\n                    except ValueError:\n                        valid = False\n                    if not valid:\n                        raise ValueError("spawn refused: explicit stub guardian required")\n'
+    guarded_targets = '        for token in args[1:]:\n            for target in effective_guardians(token):\n                if not permitted_guardian(target, stub_url):\n                    raise ValueError("spawn refused: explicit stub guardian required")\n'
+    for name in ["guard-upper-first","guard-upper-later","guard-slashless-first","guard-slashless-later"]:
+        rows.append((name,"test/network.py",guarded_targets,previous_guard,probe(name),'config no child '+name))
+    rows.append(("legacy-transfer-error-order","../http-curl/HttpCurl.lean",
+        "if code != 0 && (!detailed || !incomplete) then", "if code != 0 && !incomplete then",
+        ["python3","-B","test/fetch-config.py","--http"], "config legacy transfer error before header decode"))
+    assert len(rows)==45,"config compiled mutation inventory"
     return rows
 
 
@@ -75,6 +86,8 @@ def fingerprints():
         "CyberkrillTests/FetchConfig.lean","CyberkrillTests.lean","test/network.py","test/fetch-config.py",
         "test/fetch-config-mutations.py","test/price-mutations.py","test/http/fetch-config.json",
         "test/http/fetch-config-reference.json","test/http/fetch-config.provenance.json",
+        "test/capture-fetch-config-short.py","test/http/fetch-config-short-reference.json",
+        "test/http/fetch-config-short.provenance.json",
         "../http-curl/HttpCurl.lean","../http-curl/link_shim.c","../http-curl/test/responder.py",
         "../lightning/Lightning/Lnurl/Url.lean"]
     return {p:hashlib.sha256((APP/p).read_bytes()).hexdigest() for p in paths}
@@ -83,13 +96,13 @@ def fingerprints():
 def verify():
     record=json.loads(DEST.read_bytes())
     assert record["source_sha256"]==fingerprints(),"stale config runtime evidence"
-    assert len(record["checks"])==len(mutations())==39,"config runtime detecting inventory"
+    assert len(record["checks"])==len(mutations())==45,"config runtime detecting inventory"
     for check,row in zip(record["checks"],mutations()):
         assert [check[k] for k in ["property","file","replace","with_text","command","assertion"]]==list(row),"config mutation identity"
         assert [check[k]["status"] for k in ["build","red","restore_build","green"]]==[0,1,0,0],"config compiled/runtime/restored statuses"
         assert row[-1] in check["failure"] and ("AssertionError:" in check["failure"] or "assertion failed:" in check["failure"]),"config intended runtime assertion"
     assert all(record[k]["status"]==0 for k in ["initial_build","initial_green","restored_full"])
-    print("config mutations: 39/39 compiled intended runtime reds; 39/39 restored builds and greens",flush=True)
+    print("config mutations: 45/45 compiled intended runtime reds; 45/45 restored builds and greens",flush=True)
 
 
 if __name__=="__main__":

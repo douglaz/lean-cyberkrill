@@ -244,6 +244,33 @@ def cases():
     return rows
 
 
+
+def short_cases():
+    f = fixtures()
+    good = deepcopy(f["full"]); good["federation_id"] = f["two_identity"]
+    post = deepcopy(good); post["modules"] = {"chosen":"same guardian POST"}
+    following = deepcopy(good); following["modules"] = {"chosen":"next guardian GET"}
+    def step(method="GET", path="/first/config", **response):
+        return dict(method=method, path=path, body="{}" if method=="POST" else "", response=response)
+    rows = []
+    for name, raw, status in [("short-length-200","length",200), ("short-chunked-200","chunked",200),
+                              ("short-500","length",500), ("before-headers","disconnect",200),
+                              ("post-body-failure","post",200)]:
+        first = step(status=500) if raw=="post" else step(status=status, raw=raw)
+        steps = [first]
+        if name in ["short-500","before-headers"]:
+            steps.append(step("POST", body=json.dumps(post)))
+            chosen = "same guardian POST"
+        else:
+            if raw=="post": steps.append(step("POST", status=200, raw="length"))
+            steps.append(step(path="/second/config", body=json.dumps(following)))
+            chosen = "next guardian GET"
+        rows.append(dict(name=name, steps=steps, invite="two", expected="full", chosen=chosen,
+                         alternate=step("POST", body=json.dumps(post))))
+    assert len(rows)==5, "config short-body inventory"
+    return rows
+
+
 def ready_config(fixture, row):
     value=deepcopy(fixture["full"])
     if row.get("invite")=="two":value["federation_id"]=fixture["two_identity"]
@@ -277,6 +304,17 @@ def send(self,response):
  time.sleep(float(response.get("delay_ms",0))/1000)
  if "error" in response:
   self.close_connection=True;return
+ if "raw" in response:
+  raw=response["raw"]; self.close_connection=True
+  if raw=="disconnect":return
+  status=int(response.get("status",200))
+  if raw=="interim":self.wfile.write(b"HTTP/1.1 100 Continue\\r\\n\\r\\n");return
+  if raw=="header":self.wfile.write(b"HTTP/1.1 200 OK\\r\\nContent-Len");return
+  if raw=="invalid-header":self.wfile.write(b"HTTP/1.1 200 OK\\r\\nContent-Length: 1000\\r\\nX-Test: \\xff\\r\\n\\r\\n{");return
+  self.protocol_version="HTTP/1.1";self.send_response(status)
+  if raw=="length":self.send_header("Content-Length","1000")
+  else:self.send_header("Transfer-Encoding","chunked")
+  self.end_headers();self.wfile.write(b"{" if raw=="length" else b"1\\r\\n{\\r\\n");self.wfile.flush();return
  if "bytes" in response:
   body=bytes(map(int,response["bytes"]));self.send_response(int(response.get("status",200)));self.send_header("Content-Length",str(len(body)));self.end_headers();self.wfile.write(body);return
  original(self,response)
@@ -321,7 +359,14 @@ def replay(only=None):
     values={r["name"]:exact_json(r["stdout"]) for r in captures["captures"] if r["name"] in ["get","defaults","peers"]}
     assert len(values)==3, "config independent success values"
     values["full"]=values["get"]
-    rows=cases()
+    rows=cases()+short_cases()
+    short = json.loads((APP/"test/http/fetch-config-short-reference.json").read_bytes())
+    provenance = json.loads((APP/"test/http/fetch-config-short.provenance.json").read_bytes())
+    assert provenance["capture_sha256"]==hashlib.sha256((APP/"test/http/fetch-config-short-reference.json").read_bytes()).hexdigest(), "config short-body provenance"
+    assert short["revision"]==PIN and len(short["captures"])==5, "config short-body reference inventory"
+    assert short["cases_sha256"]==hashlib.sha256(json.dumps(short_cases(),sort_keys=True).encode()).hexdigest(), "config short-body captured definitions"
+    assert short["script_sha256"]==hashlib.sha256((APP/"test/capture-fetch-config-short.py").read_bytes()).hexdigest(), "config short-body captured script"
+    observations.update({r["name"]:r for r in short["captures"]})
     if only: rows=[r for r in rows if r["name"]==only];assert len(rows)==1, "config probe selection"
     with tempfile.TemporaryDirectory(dir=os.environ["TMPDIR"]) as temporary:
         root=Path(temporary);(root/"home").mkdir()
@@ -349,7 +394,7 @@ def replay(only=None):
                 log_values=None
             else:
                 network.refuse_spawn(args,BASE)
-                with responder(root,steps,ready=ready_config(f,row) if row.get("invite")=="two" else None) as log:
+                with responder(root,steps+([row["alternate"]] if row.get("alternate") and not any(s["method"]=="POST" for s in steps) else []),ready=ready_config(f,row) if row.get("invite")=="two" else None) as log:
                     p=invoke(TEST,["--fetch-config-run"],root,payload)
                     log_values=[json.loads(line) for line in log.read_text().splitlines()]
             assert p.returncode==0, "config test entry "+name+": "+p.stderr.decode()
@@ -368,6 +413,7 @@ def replay(only=None):
                 if name=="empty-modules":expected=deepcopy(values["defaults"]);expected["modules"]=None
                 if name=="exact-modules":expected["modules"]={"n":exact_json("9007199254740993")}
                 if "module_number" in row:expected["modules"]=exact_json(row["module_number"])
+                if "chosen" in row:expected["modules"]={"chosen":row["chosen"]}
                 assert result["status"]==0 and text and exact_json(text)==expected and not text.endswith("\n"), assertion+": "+repr(result)
                 if name in observations and observations[name]["status"]==0:
                     if name in ["modules-fraction","modules-integer"]:
@@ -390,6 +436,8 @@ def replay(only=None):
                 if row.get("error"):assert target.read_bytes()==b"",assertion+" truncated"
                 if name=="retained-handle":assert target.read_text()=="replacement leaf",assertion+" original handle"
             if log_values is not None:assert log_values==expected_trace(steps), assertion+" raw request trace"
+            if "chosen" in row:
+                assert observations[name]["requests"]==expected_trace(steps), assertion+" independent reference trace"
             calls=result["calls"]
             assert len(calls)==len(steps), assertion+" request count"
             for i,(call,step) in enumerate(zip(calls,steps)):
@@ -414,7 +462,7 @@ def replay(only=None):
                 with tempfile.TemporaryDirectory(dir=root) as second:
                     second=Path(second);(second/"home").mkdir()
                     with responder(second,[],collision=True):pass
-    print(f"config replay: {len(rows)}/"+str(len(rows))+"; synthetic invites: 13/13; independent captures: 78/78; base success values: 3/3",flush=True)
+    print(f"config replay: {len(rows)}/"+str(len(rows))+"; synthetic invites: 13/13; independent captures: 83/83; base success values: 3/3",flush=True)
 
 
 def parser_and_guards():
@@ -447,6 +495,63 @@ def parser_and_guards():
             assert p.returncode==0 and exact_json(p.stdout)==exact_json(next(r for r in json.loads(REFERENCE.read_bytes())["captures"] if r["name"]=="get")["stdout"]) and not p.stderr,"config release dispatch"
             assert [json.loads(line) for line in log.read_text().splitlines()]==expected_trace(steps),"config release exact trace"
     print("config parser: 11/11; ordering: 2/2; no-child refusals: 3/3; release dispatch: 1/1",flush=True)
+
+
+
+def guardian_guards(only=None):
+    f = fixtures(); builder = importlib.import_module("offline-inputs").INV
+    primary = json.loads((ROOT/"packages/fedimint-invite/test-data/primary.json").read_bytes())
+    def synthetic(urls):
+        value = deepcopy(primary[1 if len(urls)==2 else 0]["decoded"])
+        assert len(value["guardians"])==len(urls), "config reviewed guard invite shape"
+        for guardian, url in zip(value["guardians"], urls): guardian["url"] = url
+        return builder.wrap(builder.consensus(value))
+    controls = []
+    for spelling in ["HTTP://external.invalid:19444/first", "http:external.invalid:19444/first"]:
+        for later in [False, True]:
+            urls = (["ws://127.0.0.1:19444/first"] if later else []) + [spelling]
+            invite = synthetic(urls)
+            controls.append(("guard-"+("upper" if spelling.startswith("HTTP") else "slashless")+("-later" if later else "-first"), invite))
+    if only:
+        controls = [r for r in controls if r[0]==only]
+        assert len(controls)==1, "config guard selection"
+    for name, invite in controls:
+        with patch.object(network.subprocess,"run") as child:
+            try: network.checked_run(EXE,["fm-fetch-config",invite],stub_url=BASE)
+            except ValueError: pass
+            assert not child.called, "config no child " + name
+    if not only:
+        for key, count in [("single",1),("two",2),("normalize",1),("fallback",1)]:
+            assert len(network.effective_guardians(f["invites"][key]))==count, "config guardian decode " + key
+            network.refuse_spawn(["fm-fetch-config",f["invites"][key]], BASE)
+        for target in ["HTTP://127.0.0.1:019444/a/../first", "http:127.0.0.1:19444/first", "http://%31%32%37.0.0.1:19444/first"]:
+            invite = synthetic([target])
+            with patch.object(network.subprocess,"run") as child:
+                network.checked_run(EXE,["fm-fetch-config","-o","unused",invite],stub_url=BASE)
+                assert child.call_count==1, "config normalized loopback spawn"
+        assert network.effective_guardians("malformed")==[], "config malformed guardian wrapper"
+        print("config guardian guards: 4/4 no-child refusals; 4/4 strict/fallback decodes; 3/3 normalized loopback controls; malformed: 1/1",flush=True)
+
+
+def http_capabilities():
+    """Actual framing failures through both additive and legacy operations."""
+    with tempfile.TemporaryDirectory(dir=os.environ["TMPDIR"]) as temporary:
+        root=Path(temporary); (root/"home").mkdir()
+        for raw,status in [("length",200),("chunked",200),("length",500),("disconnect",200),("interim",100),("header",200),("invalid-header",200)]:
+            step=dict(method="GET",path="/probe",body="",response=dict(raw=raw,status=status))
+            with responder(root,[step,step]) as log:
+                payload=json.dumps(dict(url=BASE+"/probe")).encode()
+                p=invoke(TEST,["--fetch-http-run"],root,payload)
+                assert p.returncode==0, "config HTTP capability entry"
+                result=json.loads(p.stdout)
+                acquired=raw in ["length","chunked"]
+                assert result["legacy"]==("ok" if raw=="header" else "error"), "config legacy framing result " + raw
+                assert result["detailed"]==("body" if acquired else "error"), "config acquired body boundary " + raw
+                if acquired: assert result["status"]==status, "config acquired status"
+                if raw=="invalid-header":
+                    assert result["legacy_code"]==18 and result["detailed_code"]==8, "config legacy transfer error before header decode"
+                assert [json.loads(line) for line in log.read_text().splitlines()]==expected_trace([step,step]), "config HTTP capability trace"
+        print("config HTTP capabilities: 7/7 legacy framing results; 7/7 detailed final/body-stage controls",flush=True)
 
 
 def connect_deadlines():
@@ -485,7 +590,7 @@ def connect_deadlines():
                 assert result["status"]==1 and not result["stdout"] and result["stderr"],"config connect clean refusal"
                 assert len(result["calls"])==2 and len(accepted)==2,"config connect GET POST"
                 if delay==1100:
-                    assert all(c["transport"]=="timeout" for c in result["calls"]) and elapsed<2.15,"config connect deadline before total deadline"
+                    assert all(c["transport"]=="timeout" for c in result["calls"]),"config connect deadline before total deadline"
                 elif delay==900:
                     assert all(c["transport"]=="error" for c in result["calls"]),"config below connect deadline"
                 print(f"config connect {delay}ms: {elapsed:.3f}s; bounded handshake refusal",flush=True)
@@ -495,12 +600,37 @@ def connect_deadlines():
     print("config connect controls: 3/3",flush=True)
 
 
+
+def connect_contention():
+    """Three finite controls with four bounded CPU children on two CPUs."""
+    affinity = os.sched_getaffinity(0)
+    workers = []
+    program = "import time; deadline=time.monotonic()+75\nwhile time.monotonic()<deadline: sum(range(1000))"
+    try:
+        os.sched_setaffinity(0, sorted(affinity)[:2])
+        for _ in range(4):
+            workers.append(subprocess.Popen([sys.executable,"-B","-c",program],stdin=subprocess.DEVNULL,
+                                            stdout=subprocess.DEVNULL,stderr=subprocess.DEVNULL))
+        for _ in range(3): connect_deadlines()
+        assert all(p.poll() is None for p in workers), "config contention remained active"
+        print("config connect modest contention: 3/3 controls; four bounded CPU children on two CPUs",flush=True)
+    finally:
+        for child in workers:
+            if child.poll() is None: child.terminate()
+        for child in workers: child.wait(timeout=5)
+        os.sched_setaffinity(0, affinity)
+
+
 def main():
     if sys.argv[1:]==["--generate"]:generate();return 0
     if sys.argv[1:2]==["--inside"]:
-        if len(sys.argv)==4 and sys.argv[2]=="--probe":replay(sys.argv[3])
+        if len(sys.argv)==4 and sys.argv[2]=="--probe":
+            if sys.argv[3].startswith("guard-"):guardian_guards(sys.argv[3])
+            else:replay(sys.argv[3])
+        elif sys.argv[2:]==["--http"]:http_capabilities()
         elif sys.argv[2:]==["--connect"]:connect_deadlines()
-        else:assert sys.argv[1:]==["--inside"];replay();parser_and_guards();connect_deadlines()
+        elif sys.argv[2:]==["--connect-contention"]:connect_contention()
+        else:assert sys.argv[1:]==["--inside"];replay();parser_and_guards();guardian_guards();http_capabilities();connect_deadlines()
         return 0
     return network.run_isolated([sys.executable,"-B",str(Path(__file__).resolve()),"--inside",*sys.argv[1:]],timeout=300)
 

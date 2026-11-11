@@ -68,6 +68,8 @@ def main():
         "test/http/fetch-config.provenance.json", "test/golden/fetch-config-mutation-record.json",
         "test/scope.py", "test/validate.py", "test/verify.py", "test/network.py",
         "test/http/mutation-record.json",
+        "test/capture-fetch-config-short.py", "test/http/fetch-config-short-reference.json",
+        "test/http/fetch-config-short.provenance.json",
     ]}
     allowed |= {"packages/cyberkrill/test/golden/" + p for p in [
         "ln-generate-mutation-record.json", "fiat-onchain-mutation-record.json", "move-utxos-mutation-record.json", "psbt-commands-mutation-record.json",
@@ -78,6 +80,7 @@ def main():
         "regression-refresh.json", "output-regression-refresh.json",
         "attached-output-refresh.json", "offline-history-recapture.json",
     ]}
+    allowed |= {"packages/http-curl/HttpCurl.lean", "packages/http-curl/link_shim.c"}
     changed = set(filter(None, git("diff", BASE, "--name-only", "-z").decode().split("\0")))
     new = set(filter(None, git("ls-files", "--others", "--exclude-standard", "-z").decode().split("\0")))
     base_paths = set(git("ls-tree", "-r", "--name-only", BASE).decode().splitlines())

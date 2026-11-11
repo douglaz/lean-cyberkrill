@@ -60,8 +60,8 @@ replaces every `wss://` with `https://`, then every `ws://` with `http://`, trim
 all trailing slashes, and appends `/config`. HTTP URL normalization follows the
 existing approved subset, retaining meaningful path/query text. A GET transport
 error or non-2xx status triggers POST to that original config URL with literal
-`{}` bytes and `Content-Type: application/json`. A successful GET with an invalid
-UTF-8/JSON body advances to the next guardian without POST. POST transport,
+`{}` bytes and `Content-Type: application/json`. An acquired 2xx GET with an incomplete
+Content-Length/chunked body or invalid UTF-8/JSON body advances to the next guardian without POST. POST transport,
 status or decode failure also advances. Decoded validation or semantic config
 errors abort immediately, including when a later guardian is ready to succeed.
 The first parsed/validated result stops iteration.
@@ -98,7 +98,11 @@ source, licence, fixture hash and independent capture hash.
 [cyberkrill at 27cad1f](https://github.com/douglaz/cyberkrill/tree/27cad1faba86260b06665a89f0af5134d23525c2)
 before entering a new `unshare -rn` namespace with loopback up, an owned
 temporary HOME/TMPDIR/cwd, and the owned plain-HTTP responder with stdin kept
-open. Its 78 captures bind the fixture, definitions and script, preserving
+open. Its 78 original captures bind the fixture, definitions and script.
+`test/capture-fetch-config-short.py` adds five independent captures against the
+same responder: incomplete Content-Length 200, incomplete chunked 200, truncated
+500, failure before headers, and POST body failure with a following guardian.
+The original captures remain pinned separately. The 83 captures preserve
 actual statuses, separate streams and raw requests. Config expectations come
 from these captures, compared as exact JSON values with ordered arrays.
 
@@ -112,19 +116,25 @@ and [url 2.5.7](https://github.com/servo/rust-url/blob/v2.5.7/url/src/parser.rs)
 Numeric/recursion comparisons use the same captured command and
 [serde_json 1.0.148](https://github.com/serde-rs/json/blob/v1.0.148/src/de.rs).
 
-`test/fetch-config.py` runs in `lake test`: 127 replay cases, 78 loaded captures,
+`test/fetch-config.py` runs in `lake test`: 132 replay cases, 83 loaded captures,
 13 invite vectors, 11 parser/help checks, two injected output-order assertions,
-three no-child-before-guard refusals, one release-dispatch replay, one fixed-port
+seven no-child-before-guard refusals (including both uppercase and slashless
+HTTP schemes in first/later guardians), four strict/fallback decode controls,
+three normalized loopback controls, one malformed-wrapper control, seven checks of
+both HTTP capabilities, one release-dispatch replay, one fixed-port
 collision and three held-local-socket connect controls. Assertions cover full
 JSON/streams/files, original open handles, exact verbs/paths/bodies/order/counts,
 fallback versus abort, weak validation, defaults, stable peers, all five redirect
 statuses and bounded input. The responder's raw log records only verb, path and
 body; exact content-type, Referer and transport settings are asserted separately
 at the injected request boundary, not claimed as raw-log observations.
-The compiled campaign defines 39 independent runtime detections, including
+The compiled campaign defines 45 independent runtime detections, including
 separate transport/injected byte checks, each numeric/container limit,
 connect/total deadlines, Location/resolved URL work, and continuation/abort
-boundaries. Its latest completed record is
+boundaries. The four guardian regressions reintroduce the previous regex guard
+and assert that a subprocess spy is never reached; an independent compiled
+reintroduction turns acquired-body failure back into GET-to-POST fallback.
+Its latest completed record is
 `test/golden/fetch-config-mutation-record.json`, written atomically only after
 all intended runtime failures, exact restoration, rebuilds and green reruns.
 
@@ -132,14 +142,22 @@ all intended runtime failures, exact restoration, rebuilds and green reruns.
 
 These explicit resource bounds are bounded-behavior differences, not full
 reqwest resource parity. Each actual request has a 1000 ms connect deadline,
-2000 ms total deadline and inclusive 1 MiB body cap. Injected responses receive
+2000 ms total deadline and inclusive 1 MiB body cap. Each GET, possible POST
+and redirect hop has its own deadline; 2000 ms is not an aggregate guardian or
+whole-command budget. Injected responses receive
 the same byte check before any UTF-8/JSON work, including non-2xx and redirect
 responses. Tests use 1 MiB minus one, exactly 1 MiB and plus one byte in both
 paths. Local response delays of 1900, 2000 and 2100 ms exercise the total
 deadline; held TLS sockets at 900, 1000 and 1100 ms exercise connection
 establishment. These controls generate an owned test CA bundle rather than
 relying on host certificates; the held sockets never complete TLS. The
-exact-boundary race can produce either a connection failure or timeout. These are finite local controls, without a universal latency claim.
+exact-boundary race can produce either a connection failure or timeout. The
+1100 ms control requires timeout outcomes for both requests; disabling only the
+connect deadline instead produces handshake errors before the unchanged
+2000 ms total deadline. Process startup is outside this outcome assertion.
+Three repeated controls with four bounded CPU processes on two CPUs exercise
+modest contention, including the independent connect-deadline mutation. These
+are finite local controls, without a universal latency claim.
 
 Before recursive JSON parsing or numeric expansion, a quote/escape-aware lexical
 scan covers all body fields, including ignored values, metadata and modules.
@@ -182,12 +200,25 @@ Two scalar-module captures pin the existing exact-parsing/formatting kind:
 module leaves differ; all other fields and streams remain checked. No blanket
 tolerance or nonnumeric validity exception is introduced.
 
-`fmUtf8Decode` and `fmJsonDecode` are decode failures. Missing endpoints,
+`fmBodyRead`, `fmUtf8Decode` and `fmJsonDecode` are decode failures. The additive
+`HttpCurl.requestDetailed` retains completed final headers/status plus a bounded
+body error for partial-file/receive failures. Interim or incomplete final headers
+do not count as acquisition. Byte/deadline failures still permit GET-to-POST,
+even after a status. The legacy `HttpCurl.request` retains its signature, error
+classes and whole-transfer behavior, including errors on incomplete bodies.
+The required missing-ID warning is emitted explicitly; the reference tracing
+filter suppresses it by default in the pinned capture.
+
+ Missing endpoints,
 ID mismatch/type, invalid endpoint objects, peer IDs and endpoint value types
 retain separate abort diagnostics. Exhaustion reports `fmAllGuardiansFailed`
 with the last bounded failure code. Diagnostics never render guardian data.
-Pure libraries, the C shims, package/link/flake contracts, earlier fixtures and
-recordings, and all plan decisions remain unchanged. The documented late-signal
+Pure libraries, package/link/flake contracts, earlier fixtures and recordings,
+and all plan decisions remain unchanged. The narrow HTTP addition shares input
+guards, TLS/CA/proxy policy and byte/header/deadline limits with the legacy path.
+The pre-spawn helper decodes all effective guardians in process, including the
+app fallback, and checks their rewritten, normalized authorities before any child.
+Malformed wrappers retain their ordinary command rejection path. The documented late-signal
 supervision limitation remains unchanged.
 
 ## Phase 9b: Lightning address invoice requests

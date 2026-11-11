@@ -48,6 +48,108 @@ def url_material(token):
         yield decoded.decode("latin1")
 
 
+
+def effective_guardians(token):
+    """Bounded in-process Phase 7c wrapper, consensus and fallback inspection.
+
+    Invalid wrappers cannot reach fetch. Consensus errors use the same printable
+    six-byte-marker fallback; unknown parts stop consensus parsing immediately.
+    No decoder executable is started to establish destination safety.
+    """
+    whitespace = "\t\n\v\f\r \x85\xa0\u1680\u2000\u2001\u2002\u2003\u2004\u2005\u2006\u2007\u2008\u2009\u200a\u2028\u2029\u202f\u205f\u3000"
+    text = token.strip(whitespace)
+    alphabet = "qpzry9x8gf2tvdw0s3jn54khce6mua7l"
+    if not text.startswith("fed1") or len(text) > 1023 or text != text.lower():
+        return []
+    separator = text.rfind("1")
+    if text[:separator] != "fed1" or len(text) - separator - 1 < 6:
+        return []
+    try: symbols = [alphabet.index(c) for c in text[separator+1:]]
+    except ValueError: return []
+    checksum = 1
+    for value in [ord(c) >> 5 for c in "fed1"] + [0] + [ord(c) & 31 for c in "fed1"] + symbols:
+        top = checksum >> 25
+        checksum = ((checksum & 0x1ffffff) << 5) ^ value
+        for i, generator in enumerate([0x3b6a57b2, 0x26508e6d, 0x1ea119fa, 0x3d4233dd, 0x2a1462b3]):
+            if (top >> i) & 1: checksum ^= generator
+    if checksum != 0x2bc830a3: return []
+    bits = count = 0
+    data = bytearray()
+    for value in symbols[:-6]:
+        bits = (bits << 5) | value
+        count += 5
+        if count >= 8:
+            count -= 8
+            data.append((bits >> count) & 255)
+            bits &= (1 << count) - 1
+    position = 0
+    def big():
+        nonlocal position
+        if position >= len(data): raise ValueError("truncated")
+        tag = data[position]; position += 1
+        if tag < 253: return tag
+        width = {253:2, 254:4, 255:8}[tag]
+        return int.from_bytes(take(width), "big")
+    def take(size):
+        nonlocal position
+        if size > len(data) - position: raise ValueError("overrun")
+        result = data[position:position+size]; position += size
+        return result
+    def string(): return take(big()).decode("utf-8")
+    try:
+        parts = big(); guardians = []; federation = False
+        # Every consumed part needs at least one byte. A larger count can only
+        # stop on an unknown discriminator or fail before exhausting this fuel.
+        for _ in range(min(parts, len(data) + 1)):
+            kind = big()
+            if kind == 0:
+                declared = big(); start = position
+                target = string(); big()
+                if position - start != declared: raise ValueError("guardian length")
+                guardians.append(target)
+            elif kind == 1:
+                if big() != 32: raise ValueError("federation length")
+                take(32); federation = True
+            elif kind == 2: string()
+            else: break
+        else:
+            if parts > len(data) + 1: raise ValueError("part count")
+        if not federation or not guardians: raise ValueError("missing part")
+        return guardians
+    except (ValueError, UnicodeDecodeError):
+        guardians = []
+        for pos in range(len(data)):
+            marker = data[pos:pos+6]
+            if pos + 6 < len(data) and marker in [b"wss://", b"https:"]:
+                end = pos + 6
+                while end < len(data) and 31 < data[end] < 127: end += 1
+                if end > pos + 6: guardians.append(data[pos:end].decode("ascii"))
+        return guardians
+
+
+def permitted_guardian(target, stub_url):
+    """Match the app's whole rewrite and special HTTP authority normalization.
+
+    Fail closed outside the approved subset. Path/query text cannot change the
+    already separated authority, including embedded ws:// text in fixture paths.
+    """
+    target = target.replace("wss://", "https://").replace("ws://", "http://").rstrip("/") + "/config"
+    cleaned = target.strip("".join(map(chr, range(33)))).replace("\t", "").replace("\r", "").replace("\n", "")
+    scheme, colon, rest = cleaned.partition(":")
+    if not colon or scheme.lower() not in {"http", "https"}: return False
+    authority = re.split(r"[/\\?#]", rest.lstrip("/\\"), maxsplit=1)[0]
+    if "@" in authority or "[" in authority or "]" in authority: return False
+    host, separator, port = authority.partition(":")
+    if re.search(r"%(?![0-9a-fA-F]{2})", host): return False
+    try:
+        host = unquote(host, errors="strict").lower()
+        expected = urlsplit(stub_url or "")
+        return (host == expected.hostname == "127.0.0.1" and separator == ":" and
+                bool(re.fullmatch(r"[0-9]+", port)) and len(port.lstrip("0")) <= 5 and
+                int(port) == expected.port == 19444)
+    except (ValueError, UnicodeError): return False
+
+
 def refuse_spawn(args, stub_url=None):
     """Validate command argv before starting either implementation's binary."""
     args = list(map(str, args))
@@ -76,22 +178,10 @@ def refuse_spawn(args, stub_url=None):
         if not valid:
             raise ValueError("spawn refused: explicit stub RPC URL required")
     if command == "fm-fetch-config":
-        expected = urlsplit(stub_url or "")
-        # Inspect decoded invite material before creating a child. The guarded
-        # app entry separately checks decoded guardians and every redirect.
         for token in args[1:]:
-            for material in url_material(token):
-                for match in re.finditer(r"(?:wss?|https?)://[^\x00-\x20\x7f-\xff]+", material):
-                    target = match[0].replace("wss://", "https://").replace("ws://", "http://")
-                    try:
-                        parsed = urlsplit(target)
-                        valid = (parsed.hostname == expected.hostname == "127.0.0.1" and
-                                 parsed.port == expected.port and parsed.port not in {None, 0, 8332} and
-                                 parsed.username is None and parsed.password is None)
-                    except ValueError:
-                        valid = False
-                    if not valid:
-                        raise ValueError("spawn refused: explicit stub guardian required")
+            for target in effective_guardians(token):
+                if not permitted_guardian(target, stub_url):
+                    raise ValueError("spawn refused: explicit stub guardian required")
     amounts = flag_values(args, "--max-amount")
     for value in flag_values(args, "--outputs"):
         # Commas also occur in fiat grouping; examine each amount suffix and whole tail.

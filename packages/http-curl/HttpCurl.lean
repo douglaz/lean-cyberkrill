@@ -70,6 +70,11 @@ inductive Error where
   | curl (code : UInt32) (message : String)
   deriving Repr
 
+/-- A final acquired response may have an incomplete body. Only receive/partial-file
+errors enter this channel; byte limits and deadlines remain transport errors. -/
+structure AcquiredResponse extends Response where
+  bodyError : Option Error := none
+
 private structure RawResponse where
   headers : ByteArray
   body : ByteArray
@@ -85,7 +90,7 @@ private opaque perform (post : Bool) (url : @& String) (headers : @& Array Strin
 @[extern "lck_curl_error_message"]
 private opaque errorMessage (code : UInt32) : IO String
 
-private def invalid : Except Error Response :=
+private def invalid : Except Error AcquiredResponse :=
   .error (.curl 43 "Invalid request input")
 
 private def hasNul (s : String) : Bool := s.contains '\x00'
@@ -98,7 +103,7 @@ private def headerName (s : String) : Bool :=
 without embedded credentials are accepted. NUL in C-string inputs, invalid header
 names, CR/LF in values, and GET bodies return a structured error before connecting.
 HTTPS selects SSL_CERT_FILE per request, then the test hook, then system probes. -/
-def request (req : Request) : IO (Except Error Response) := do
+private def requestImpl (req : Request) (detailed : Bool) : IO (Except Error AcquiredResponse) := do
   if hasNul req.url || !(req.url.startsWith "http://" || req.url.startsWith "https://") then
     return invalid
   let authority := ((req.url.splitOn "://").drop 1).headD ""
@@ -123,7 +128,14 @@ def request (req : Request) : IO (Except Error Response) := do
   if code == 28 then return .error (.timeout code "Request timed out")
   if [35, 51, 53, 54, 58, 59, 60, 64, 66, 77, 80, 82, 83, 90, 91, 98].contains code then
     return .error (.tls code "TLS or certificate failure")
-  if code != 0 then return .error (.curl code (← errorMessage code))
+  -- A status alone does not prove final headers were acquired (e.g. interim
+  -- 100 or an interrupted header). Require a completed final header block.
+  let acquired := raw.status >= 200 && raw.headers.size >= 4 &&
+    raw.headers.extract (raw.headers.size - 4) raw.headers.size == "\r\n\r\n".toUTF8
+  let incomplete := acquired && (code == 18 || code == 56)
+  if detailed && code == 0 && !acquired then
+    return .error (.curl 8 "Incomplete response headers")
+  if code != 0 && (!detailed || !incomplete) then return .error (.curl code (← errorMessage code))
   let some headerText := String.fromUTF8? raw.headers
     | return .error (.curl 8 "Invalid response header encoding")
   let mut headers := #[]
@@ -132,6 +144,27 @@ def request (req : Request) : IO (Except Error Response) := do
     | name :: value :: rest =>
       headers := headers.push (name.toLower, (String.intercalate ":" (value :: rest)).trimAscii.toString)
     | _ => pure ()
-  return .ok { status := raw.status, headers, body := raw.body }
+  let description ← if incomplete then errorMessage code else pure ""
+  let bodyError := if incomplete then some (.curl code description) else none
+  return .ok {
+    status := raw.status
+    headers := headers
+    body := raw.body
+    bodyError := bodyError }
+
+/-- Opt-in final response acquisition, with incomplete bodies kept separate.
+Interim or incomplete final headers never count as acquired responses. -/
+def requestDetailed (req : Request) : IO (Except Error AcquiredResponse) :=
+  requestImpl req true
+
+/-- Legacy whole-transfer operation: incomplete bodies remain transport errors.
+The opt-in requestDetailed shares every input guard and resource bound. -/
+def request (req : Request) : IO (Except Error Response) := do
+  let result ← requestImpl req false
+  return do
+    let acquired ← result
+    match acquired.bodyError with
+    | some error => throw error
+    | none => return acquired.toResponse
 
 end HttpCurl

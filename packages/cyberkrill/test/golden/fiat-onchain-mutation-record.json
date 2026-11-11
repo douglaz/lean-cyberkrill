@@ -1,10 +1,10 @@
 {
   "source_sha256": {
-    "Cyberkrill/App.lean": "c4988419b9aec54141f3d2355de8b0481843a7f142295e427921e5cd28517dd3",
+    "Cyberkrill/App.lean": "4df61df3fb65b0acde136805ecda6c663134265abc6423747d0b891f4e44ec1b",
     "Cyberkrill/Fiat.lean": "877f5980527ae043b44b059ac99fb96413aa294e6f827141cdabedce37318159",
     "Cyberkrill/PsbtCommands.lean": "5444b59f8d0ecb066a8ae921d052471f5913276700f9d01d8d31fd78f9b49abc",
     "Cyberkrill/MoveUtxos.lean": "af33e3af9886104b115f4f6cd91b1b58a5762d049cbbd6656822b664960de286",
-    "CyberkrillTests.lean": "4a8c61cbe208f66da5da6cde1e8a0db64a843f46a7ba6e24d2d4bdfc5773ab2e",
+    "CyberkrillTests.lean": "ece4b9a3f0453f0d5a24796f86db55c6fe315975dfc0bce38d04a99af684f4ee",
     "CyberkrillTests/FiatOnchain.lean": "8ee610b7c08e1b96237f1e7f7751731ba6901f65cdbfa7b46b7348215455475b",
     "test/fiat-onchain.py": "7a5a110d8c686d42e98d8a73ca3a1025a11e8ed2d4e32579e242b4f3fcde28e5",
     "test/fiat-onchain-mutations.py": "cdc004c0d4c20dfa6f63160824b84006d9dce85ecc2f828c9556a2de2c66ab89",
@@ -23,7 +23,7 @@
       "CyberkrillTests"
     ],
     "status": 0,
-    "seconds": 0.429
+    "seconds": 0.421
   },
   "initial_green": {
     "command": [
@@ -32,7 +32,7 @@
       "test/fiat-onchain.py"
     ],
     "status": 0,
-    "seconds": 52.584
+    "seconds": 49.279
   },
   "checks": [
     {
@@ -57,7 +57,7 @@
           "CyberkrillTests"
         ],
         "status": 0,
-        "seconds": 13.044
+        "seconds": 12.432
       },
       "red": {
         "command": [
@@ -68,7 +68,7 @@
           "create-fiat"
         ],
         "status": 1,
-        "seconds": 0.496
+        "seconds": 1.541
       },
       "restore_build": {
         "command": [
@@ -78,7 +78,7 @@
           "CyberkrillTests"
         ],
         "status": 0,
-        "seconds": 12.444
+        "seconds": 12.252
       },
       "green": {
         "command": [
@@ -89,7 +89,7 @@
           "create-fiat"
         ],
         "status": 0,
-        "seconds": 0.744
+        "seconds": 0.692
       }
     },
     {
@@ -114,7 +114,7 @@
           "CyberkrillTests"
         ],
         "status": 0,
-        "seconds": 12.544
+        "seconds": 12.237
       },
       "red": {
         "command": [
@@ -125,7 +125,7 @@
           "create-at"
         ],
         "status": 1,
-        "seconds": 1.545
+        "seconds": 0.69
       },
       "restore_build": {
         "command": [
@@ -135,7 +135,7 @@
           "CyberkrillTests"
         ],
         "status": 0,
-        "seconds": 13.355
+        "seconds": 12.235
       },
       "green": {
         "command": [
@@ -146,7 +146,7 @@
           "create-at"
         ],
         "status": 0,
-        "seconds": 1.545
+        "seconds": 1.489
       }
     },
     {
@@ -171,7 +171,7 @@
           "CyberkrillTests"
         ],
         "status": 0,
-        "seconds": 12.122
+        "seconds": 12.231
       },
       "red": {
         "command": [
@@ -182,7 +182,7 @@
           "move-floor"
         ],
         "status": 1,
-        "seconds": 0.686
+        "seconds": 1.547
       },
       "restore_build": {
         "command": [
@@ -192,7 +192,7 @@
           "CyberkrillTests"
         ],
         "status": 0,
-        "seconds": 12.226
+        "seconds": 12.229
       },
       "green": {
         "command": [
@@ -203,7 +203,7 @@
           "move-floor"
         ],
         "status": 0,
-        "seconds": 0.702
+        "seconds": 0.692
       }
     },
     {
@@ -228,7 +228,7 @@
           "CyberkrillTests"
         ],
         "status": 0,
-        "seconds": 13.044
+        "seconds": 12.223
       },
       "red": {
         "command": [
@@ -239,7 +239,7 @@
           "create-normalized"
         ],
         "status": 1,
-        "seconds": 1.162
+        "seconds": 1.747
       },
       "restore_build": {
         "command": [
@@ -249,7 +249,7 @@
           "CyberkrillTests"
         ],
         "status": 0,
-        "seconds": 12.689
+        "seconds": 12.234
       },
       "green": {
         "command": [
@@ -260,7 +260,7 @@
           "create-normalized"
         ],
         "status": 0,
-        "seconds": 0.697
+        "seconds": 1.49
       }
     },
     {
@@ -285,7 +285,7 @@
           "CyberkrillTests"
         ],
         "status": 0,
-        "seconds": 14.835
+        "seconds": 15.044
       },
       "red": {
         "command": [
@@ -296,7 +296,7 @@
           "create-at"
         ],
         "status": 1,
-        "seconds": 1.545
+        "seconds": 1.543
       },
       "restore_build": {
         "command": [
@@ -306,7 +306,7 @@
           "CyberkrillTests"
         ],
         "status": 0,
-        "seconds": 15.555
+        "seconds": 14.834
       },
       "green": {
         "command": [
@@ -317,7 +317,7 @@
           "create-at"
         ],
         "status": 0,
-        "seconds": 1.655
+        "seconds": 0.693
       }
     },
     {
@@ -342,7 +342,7 @@
           "CyberkrillTests"
         ],
         "status": 0,
-        "seconds": 12.561
+        "seconds": 12.434
       },
       "red": {
         "command": [
@@ -353,7 +353,7 @@
           "lifetime"
         ],
         "status": 1,
-        "seconds": 0.491
+        "seconds": 1.49
       },
       "restore_build": {
         "command": [
@@ -363,7 +363,7 @@
           "CyberkrillTests"
         ],
         "status": 0,
-        "seconds": 12.231
+        "seconds": 12.127
       },
       "green": {
         "command": [
@@ -374,7 +374,7 @@
           "lifetime"
         ],
         "status": 0,
-        "seconds": 2.544
+        "seconds": 1.744
       }
     }
   ],
@@ -385,6 +385,6 @@
       "test/fiat-onchain.py"
     ],
     "status": 0,
-    "seconds": 46.636
+    "seconds": 42.913
   }
 }

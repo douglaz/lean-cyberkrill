@@ -33,12 +33,16 @@ print(f'library/proof native-decision scan: {len(paths)}/87 tracked files; zero 
 def main():
     mode, *selected = sys.argv[1:]
     assert not selected or mode in ["campaigns", "refresh"], "only campaign and refresh batches support named selection"
-    assert mode in ["app", "repo", "evidence", "refresh", "campaigns", "fiat", "lightning", "lnurl", "sandbox"]
+    assert mode in ["app", "repo", "evidence", "refresh", "campaigns", "fiat", "lightning", "lnurl", "http", "sandbox"]
     directory = APP / ".lake/validation"
     directory.mkdir(parents=True, exist_ok=True)
     if mode == "app":
         checks = [("build", APP, ["nix", "develop", "-c", "lake", "build"], 600),
                   ("test", APP, ["nix", "develop", "-c", "lake", "test"], 600)]
+    elif mode == "http":
+        package = ROOT / "packages/http-curl"
+        checks = [("http-build", package, ["nix", "develop", "-c", "lake", "build"], 600),
+                  ("http-test", package, ["nix", "develop", "-c", "lake", "test"], 600)]
     elif mode == "lightning":
         package = ROOT / "packages/lightning"
         checks = [("lightning-build", package, ["nix", "develop", "-c", "lake", "build"], 600),
@@ -105,6 +109,8 @@ def main():
         ]
     elif mode == "campaigns":
         checks = [
+            ("http-negative", ROOT / "packages/http-curl", ["python3", "-B", "check-negative-mutations.py"], 3600),
+            ("http-stub", ROOT / "packages/http-curl", ["python3", "-B", "check-stub-mutations.py"], 3600),
             ("config-campaign", ROOT, ["python3", "-B", "packages/cyberkrill/test/fetch-config-mutations.py"], 3600),
             ("lnurl-campaign", ROOT, ["python3", "-B", "packages/cyberkrill/test/generate-invoice-mutations.py"], 2400),
             ("fiat-campaign", ROOT, ["python3", "-B", "packages/cyberkrill/test/fiat-onchain-mutations.py"], 2400),

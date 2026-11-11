@@ -128,8 +128,8 @@ private def transportError : HttpCurl.Error → FetchError
 /-- Each hop reaches the supplied capability, so tests guard every destination.
 POST switches to GET on 301/302/303, dropping its body and content headers;
 307/308 retain them, as in tower-http 0.6.8. -/
-private def response (request : HttpCurl.Request → IO (Except HttpCurl.Error HttpCurl.Response))
-    (req : HttpCurl.Request) (remaining : Nat) : IO (Except FetchError HttpCurl.Response) := do
+private def response (request : HttpCurl.Request → IO (Except HttpCurl.Error HttpCurl.AcquiredResponse))
+    (req : HttpCurl.Request) (remaining : Nat) : IO (Except FetchError HttpCurl.AcquiredResponse) := do
   if req.url.utf8ByteSize > 8192 then return .error (.transport "fmUrlLimit")
   let result ← request req
   let r ← match result with
@@ -158,9 +158,9 @@ private def response (request : HttpCurl.Request → IO (Except HttpCurl.Error H
         | n + 1 => return ← response request { req with url := next } n
   return .ok r
 
-private def successful (r : HttpCurl.Response) : Bool := 200 ≤ r.status.toNat && r.status.toNat < 300
+private def successful (r : HttpCurl.AcquiredResponse) : Bool := 200 ≤ r.status.toNat && r.status.toNat < 300
 
-private def fromGuardian (request : HttpCurl.Request → IO (Except HttpCurl.Error HttpCurl.Response))
+private def fromGuardian (request : HttpCurl.Request → IO (Except HttpCurl.Error HttpCurl.AcquiredResponse))
     (url : String) : IO (Except FetchError Json) := do
   let url ← match Lightning.Lnurl.normalizeUrl url with
     | .error e => return .error (urlError e)
@@ -182,6 +182,7 @@ private def fromGuardian (request : HttpCurl.Request → IO (Except HttpCurl.Err
   return do
     let r ← result
     unless successful r do throw (.transport "fmHttpStatus")
+    if r.bodyError.isSome then throw (.decode "fmBodyRead")
     let some text := String.fromUTF8? r.body | throw (.decode "fmUtf8Decode")
     preflight text
     (Json.parse text).mapError (fun _ => .decode "fmJsonDecode")
@@ -233,7 +234,7 @@ private def parseConfig (config : Json) (id : String) : Except Error Json := do
     ("modules", (field config "modules").getD (Json.mkObj [])),
     ("meta", Json.mkObj (metadata.map fun (k, v) => (k, .str v)))]
 
-def fetch (input : String) (request := HttpCurl.request)
+def fetch (input : String) (request := HttpCurl.requestDetailed)
     (warn : String → IO Unit := fun _ => pure ()) : IO (Except Error Json) := do
   let invite ← match InviteCli.decode input with
     | .error e => return .error e | .ok invite => pure invite

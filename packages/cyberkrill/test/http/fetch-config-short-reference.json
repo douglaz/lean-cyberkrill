@@ -1,0 +1,110 @@
+{
+  "source": "https://github.com/douglaz/cyberkrill",
+  "revision": "27cad1faba86260b06665a89f0af5134d23525c2",
+  "licence": "MIT",
+  "kind": "independent pinned CLI capture on authored synthetic incomplete response bodies; fedimint-lite/src/lib.rs:499-524; MIT",
+  "command": [
+    "fm-fetch-config",
+    "synthetic invite from fetch-config.json"
+  ],
+  "fixture_sha256": "97df201d4345eead3271ab84772fc9c35f1f4ee3291ea84ff5021005bf8f256d",
+  "cases_sha256": "1eb3702bcc79dcf2c5756ceabd5d143903f803c016d31372a8df8e9baf31921f",
+  "script_sha256": "c5a0fe1a691021ba8f89855ddb65274ad7acd08c22d0678e9e431f73da9e30b2",
+  "captures": [
+    {
+      "name": "short-length-200",
+      "status": 0,
+      "stdout": "{\n  \"federation_id\": \"1234567890abcdef1234567890abcdef1234567890abcdef1234567890abcdef\",\n  \"federation_name\": \"Synthetic Federation\",\n  \"guardians\": [\n    {\n      \"peer_id\": 0,\n      \"name\": \"Zero\",\n      \"url\": \"\"\n    },\n    {\n      \"peer_id\": 2,\n      \"name\": \"Two\",\n      \"url\": \"wss://synthetic.invalid/two\"\n    },\n    {\n      \"peer_id\": 10,\n      \"name\": null,\n      \"url\": \"opaque endpoint ten\"\n    }\n  ],\n  \"consensus_version\": \"2.1\",\n  \"modules\": {\n    \"chosen\": \"next guardian GET\"\n  },\n  \"meta\": {\n    \"guardian_2_name\": \"Two\",\n    \"guardian_0_name\": \"Zero\",\n    \"federation_name\": \"Synthetic Federation\",\n    \"note\": \"authored fixture\"\n  }\n}",
+      "stderr": "",
+      "requests": [
+        {
+          "method": "GET",
+          "path": "/first/config",
+          "body": ""
+        },
+        {
+          "method": "GET",
+          "path": "/second/config",
+          "body": ""
+        }
+      ]
+    },
+    {
+      "name": "short-chunked-200",
+      "status": 0,
+      "stdout": "{\n  \"federation_id\": \"1234567890abcdef1234567890abcdef1234567890abcdef1234567890abcdef\",\n  \"federation_name\": \"Synthetic Federation\",\n  \"guardians\": [\n    {\n      \"peer_id\": 0,\n      \"name\": \"Zero\",\n      \"url\": \"\"\n    },\n    {\n      \"peer_id\": 2,\n      \"name\": \"Two\",\n      \"url\": \"wss://synthetic.invalid/two\"\n    },\n    {\n      \"peer_id\": 10,\n      \"name\": null,\n      \"url\": \"opaque endpoint ten\"\n    }\n  ],\n  \"consensus_version\": \"2.1\",\n  \"modules\": {\n    \"chosen\": \"next guardian GET\"\n  },\n  \"meta\": {\n    \"note\": \"authored fixture\",\n    \"guardian_0_name\": \"Zero\",\n    \"guardian_2_name\": \"Two\",\n    \"federation_name\": \"Synthetic Federation\"\n  }\n}",
+      "stderr": "",
+      "requests": [
+        {
+          "method": "GET",
+          "path": "/first/config",
+          "body": ""
+        },
+        {
+          "method": "GET",
+          "path": "/second/config",
+          "body": ""
+        }
+      ]
+    },
+    {
+      "name": "short-500",
+      "status": 0,
+      "stdout": "{\n  \"federation_id\": \"1234567890abcdef1234567890abcdef1234567890abcdef1234567890abcdef\",\n  \"federation_name\": \"Synthetic Federation\",\n  \"guardians\": [\n    {\n      \"peer_id\": 0,\n      \"name\": \"Zero\",\n      \"url\": \"\"\n    },\n    {\n      \"peer_id\": 2,\n      \"name\": \"Two\",\n      \"url\": \"wss://synthetic.invalid/two\"\n    },\n    {\n      \"peer_id\": 10,\n      \"name\": null,\n      \"url\": \"opaque endpoint ten\"\n    }\n  ],\n  \"consensus_version\": \"2.1\",\n  \"modules\": {\n    \"chosen\": \"same guardian POST\"\n  },\n  \"meta\": {\n    \"guardian_0_name\": \"Zero\",\n    \"federation_name\": \"Synthetic Federation\",\n    \"note\": \"authored fixture\",\n    \"guardian_2_name\": \"Two\"\n  }\n}",
+      "stderr": "",
+      "requests": [
+        {
+          "method": "GET",
+          "path": "/first/config",
+          "body": ""
+        },
+        {
+          "method": "POST",
+          "path": "/first/config",
+          "body": "{}"
+        }
+      ]
+    },
+    {
+      "name": "before-headers",
+      "status": 0,
+      "stdout": "{\n  \"federation_id\": \"1234567890abcdef1234567890abcdef1234567890abcdef1234567890abcdef\",\n  \"federation_name\": \"Synthetic Federation\",\n  \"guardians\": [\n    {\n      \"peer_id\": 0,\n      \"name\": \"Zero\",\n      \"url\": \"\"\n    },\n    {\n      \"peer_id\": 2,\n      \"name\": \"Two\",\n      \"url\": \"wss://synthetic.invalid/two\"\n    },\n    {\n      \"peer_id\": 10,\n      \"name\": null,\n      \"url\": \"opaque endpoint ten\"\n    }\n  ],\n  \"consensus_version\": \"2.1\",\n  \"modules\": {\n    \"chosen\": \"same guardian POST\"\n  },\n  \"meta\": {\n    \"guardian_0_name\": \"Zero\",\n    \"guardian_2_name\": \"Two\",\n    \"note\": \"authored fixture\",\n    \"federation_name\": \"Synthetic Federation\"\n  }\n}",
+      "stderr": "",
+      "requests": [
+        {
+          "method": "GET",
+          "path": "/first/config",
+          "body": ""
+        },
+        {
+          "method": "POST",
+          "path": "/first/config",
+          "body": "{}"
+        }
+      ]
+    },
+    {
+      "name": "post-body-failure",
+      "status": 0,
+      "stdout": "{\n  \"federation_id\": \"1234567890abcdef1234567890abcdef1234567890abcdef1234567890abcdef\",\n  \"federation_name\": \"Synthetic Federation\",\n  \"guardians\": [\n    {\n      \"peer_id\": 0,\n      \"name\": \"Zero\",\n      \"url\": \"\"\n    },\n    {\n      \"peer_id\": 2,\n      \"name\": \"Two\",\n      \"url\": \"wss://synthetic.invalid/two\"\n    },\n    {\n      \"peer_id\": 10,\n      \"name\": null,\n      \"url\": \"opaque endpoint ten\"\n    }\n  ],\n  \"consensus_version\": \"2.1\",\n  \"modules\": {\n    \"chosen\": \"next guardian GET\"\n  },\n  \"meta\": {\n    \"guardian_0_name\": \"Zero\",\n    \"note\": \"authored fixture\",\n    \"guardian_2_name\": \"Two\",\n    \"federation_name\": \"Synthetic Federation\"\n  }\n}",
+      "stderr": "",
+      "requests": [
+        {
+          "method": "GET",
+          "path": "/first/config",
+          "body": ""
+        },
+        {
+          "method": "POST",
+          "path": "/first/config",
+          "body": "{}"
+        },
+        {
+          "method": "GET",
+          "path": "/second/config",
+          "body": ""
+        }
+      ]
+    }
+  ]
+}

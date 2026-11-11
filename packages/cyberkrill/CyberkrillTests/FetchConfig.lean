@@ -24,7 +24,7 @@ def fetchConfigRun : IO Unit := do
         ("headers", toJson req.headers), ("bytes", toJson req.maxResponseBytes.toNat),
         ("connect", toJson req.connectTimeoutMs.toNat), ("total", toJson req.totalTimeoutMs.toNat)]))
       if !injected then
-        let result ← HttpCurl.request req
+        let result ← HttpCurl.requestDetailed req
         let tag := match result with
           | .ok _ => "ok"
           | .error (.tooLarge _) => "tooLarge"
@@ -62,7 +62,7 @@ def fetchConfigRun : IO Unit := do
         pure (⟨status, out, err⟩ : TestRun)
       else
         let bases := Array.replicate 9 "http://127.0.0.1:19444"
-        runWithTestUrls version ⟨bases, bases[0]!, bases[0]!⟩ args services request
+        runWithTestUrls version ⟨bases, bases[0]!, bases[0]!⟩ args services (configRequest := request)
     results := results.push (Json.mkObj [("status", toJson result.status.toNat),
       ("stdout", .str result.stdout), ("stderr", .str result.stderr), ("calls", toJson (← calls.get))])
   IO.println (Json.arr results).compress
@@ -80,5 +80,22 @@ def fetchConfigOrdering : IO Unit := do
   check "config writer before invite decode" (status == 1 && out.isEmpty && err.startsWith "outputFailure:")
   check "config no action before writer" ((← events.get) == ["open"])
   IO.println "config injected ordering: 2/2"
+
+/-- Both operations see the same owned local framing fixture independently. -/
+def fetchHttpRun : IO Unit := do
+  let input ← getOk "config HTTP input" (Json.parse (← (← IO.getStdin).readToEnd))
+  let url ← getOk "config HTTP URL" (input.getObjValAs? String "url")
+  check "config HTTP loopback" (TestUrls.permitted url && !TestUrls.forbiddenPort url)
+  let req : HttpCurl.Request := { url := url, totalTimeoutMs := 2000 }
+  let legacy ← HttpCurl.request req
+  let detailed ← HttpCurl.requestDetailed req
+  let (kind, status) := match detailed with
+    | .error _ => ("error", 0)
+    | .ok r => (if r.bodyError.isSome then "body" else "ok", r.status.toNat)
+  let legacyCode := match legacy with | .error (.curl code _) => code.toNat | _ => 0
+  let detailedCode := match detailed with | .error (.curl code _) => code.toNat | _ => 0
+  IO.println (Json.mkObj [("legacy", .str (match legacy with | .error _ => "error" | .ok _ => "ok")),
+    ("legacy_code", toJson legacyCode), ("detailed_code", toJson detailedCode),
+    ("detailed", .str kind), ("status", toJson status)]).compress
 
 end CyberkrillTests

@@ -1,0 +1,7 @@
+{
+  "source": "https://github.com/douglaz/cyberkrill",
+  "revision": "27cad1faba86260b06665a89f0af5134d23525c2",
+  "licence": "MIT",
+  "origin": "Authored synthetic HTTP framing failures on the owned fixed-port responder; fedimint-lite/src/lib.rs:499-524.",
+  "capture_sha256": "c3ef344935b8ddffd6ca349613f2f695e1544b5597daca7a5281010703400439"
+}

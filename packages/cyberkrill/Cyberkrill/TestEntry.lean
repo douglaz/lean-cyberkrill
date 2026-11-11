@@ -121,7 +121,8 @@ structure TestRun where
 /-- Guard every URL and argv before any service action, then use the real app
 dispatch and supplied bounded transport. Captured streams stay separate. -/
 def runWithTestUrls (version : String) (urls : TestUrls) (args : List String)
-    (services : Services := productionServices) (request := HttpCurl.request) : IO TestRun := do
+    (services : Services := productionServices) (request := HttpCurl.request)
+    (configRequest := HttpCurl.requestDetailed) : IO TestRun := do
   let out ← IO.mkRef ""
   let err ← IO.mkRef ""
   let services := { services with
@@ -131,7 +132,7 @@ def runWithTestUrls (version : String) (urls : TestUrls) (args : List String)
     configRequest := fun req => do
       unless TestUrls.permitted req.url && !TestUrls.forbiddenPort req.url do
         return .error (.curl 43 "Test config target refused")
-      request req
+      configRequest req
     lnurlRequest := fun req => do
       unless TestUrls.permitted req.url true && !TestUrls.forbiddenPort req.url do
         return .error (.curl 43 "Test LNURL target refused")

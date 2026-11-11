@@ -427,7 +427,7 @@ structure Services where
   writeOrdinaryFile : String → String → IO Unit := fun path text => IO.FS.writeFile path text
   price : String → IO PriceFeed.Result := PriceFeed.fetch
   lnurlRequest : HttpCurl.Request → IO (Except HttpCurl.Error HttpCurl.Response) := HttpCurl.request
-  configRequest : HttpCurl.Request → IO (Except HttpCurl.Error HttpCurl.Response) := HttpCurl.request
+  configRequest : HttpCurl.Request → IO (Except HttpCurl.Error HttpCurl.AcquiredResponse) := HttpCurl.requestDetailed
 
 def productionServices : Services where
   entropy := fun n => IO.getRandomBytes n.toUSize

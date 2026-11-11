@@ -143,7 +143,9 @@ LEAN_EXPORT lean_obj_res lck_curl_request(uint8_t post, b_lean_obj_arg url,
         SET(CURLOPT_POSTFIELDS, length ? (const char *)lean_sarray_cptr(body) : "");
     }
     code = curl_easy_perform(curl);
-    if (code == CURLE_OK) code = curl_easy_getinfo(curl, CURLINFO_RESPONSE_CODE, &status);
+    /* Keep the transfer error while retaining bounded final-status metadata. */
+    CURLcode info = curl_easy_getinfo(curl, CURLINFO_RESPONSE_CODE, &status);
+    if (code == CURLE_OK) code = info;
 done:
     if (curl) curl_easy_cleanup(curl);
     curl_slist_free_all(list);

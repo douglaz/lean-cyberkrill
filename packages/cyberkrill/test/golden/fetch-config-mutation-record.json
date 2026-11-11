@@ -1,20 +1,23 @@
 {
   "source_sha256": {
-    "Cyberkrill/App.lean": "c4988419b9aec54141f3d2355de8b0481843a7f142295e427921e5cd28517dd3",
-    "Cyberkrill/FetchConfig.lean": "8ff88b49985bd008060d1a913fa0daa4e5ec9533ddf10f08cfb915610c2f43cb",
+    "Cyberkrill/App.lean": "4df61df3fb65b0acde136805ecda6c663134265abc6423747d0b891f4e44ec1b",
+    "Cyberkrill/FetchConfig.lean": "7a2c23cd4993b2b41eb6a5b54e0737477022d5ef236d8f7b91c969d57c353442",
     "Cyberkrill/Invite.lean": "ca3df94074fc673cabe6bff3ddec1ac9007a00ebc432b05b130b15af46a3e321",
-    "Cyberkrill/TestEntry.lean": "c4bb325067bc0639c40cbffdaa1a3b0c6a888af1c63631a68db8263bd7625ee0",
-    "CyberkrillTests/FetchConfig.lean": "5da86af97d1063bef9064b0083387448c91314ff2b783d0eac0c79e5e167cf97",
-    "CyberkrillTests.lean": "4a8c61cbe208f66da5da6cde1e8a0db64a843f46a7ba6e24d2d4bdfc5773ab2e",
-    "test/network.py": "eda4c160a91bb73ddc43d8b9a48c36c6c240d6fcbd0926f1b542934ff0ba673e",
-    "test/fetch-config.py": "5158952b0e9264a1315f294885e92e562888525a65aafad22a48cba2b4771d48",
-    "test/fetch-config-mutations.py": "a8e817d7d3a2b3451a1265317b3f98341111f5ac12170f60033a43919efb00b6",
+    "Cyberkrill/TestEntry.lean": "6e2c70497a995dba27e7cb2113dab1a2a9b4239f36bdf6776653421bd72abb2e",
+    "CyberkrillTests/FetchConfig.lean": "7bd264a5c6d743820a0c154a65ecbf82db06a366216f9100ff73c59e8cbc18a4",
+    "CyberkrillTests.lean": "ece4b9a3f0453f0d5a24796f86db55c6fe315975dfc0bce38d04a99af684f4ee",
+    "test/network.py": "9ebe919f0f39913b2e26ea8e739365afab6e6ad3aa60823777e448eb26afdbcf",
+    "test/fetch-config.py": "12d2cd220747ed982844581c0f9cdabf22650851039b4bbe25e63a0454dfea2d",
+    "test/fetch-config-mutations.py": "f71a33b08fafce8a9c9f23ce0b91f9a61a94890e8475ae39a51ee96a8381d7aa",
     "test/price-mutations.py": "7d64067f00df09ec76a8f944e78e1d1f2af8b058321e7d5078f6aa2f15e94506",
     "test/http/fetch-config.json": "97df201d4345eead3271ab84772fc9c35f1f4ee3291ea84ff5021005bf8f256d",
     "test/http/fetch-config-reference.json": "c9d8aee4026752e184b2aed384c8f22f6885b2fcd40cc84ab422deb9221d4936",
     "test/http/fetch-config.provenance.json": "8474e401e471fe4489c2b32e81d4e0a7136a0f857857b0edfc643e8ff5daf511",
-    "../http-curl/HttpCurl.lean": "a7f7646c563d612e23f2d432798dfa751f47cf208a516d515f0e69c853926a6b",
-    "../http-curl/link_shim.c": "87942ff9a9870fa580ce0f6b2f0aa4ef3032eaea10e187f848243d892f01070e",
+    "test/capture-fetch-config-short.py": "c5a0fe1a691021ba8f89855ddb65274ad7acd08c22d0678e9e431f73da9e30b2",
+    "test/http/fetch-config-short-reference.json": "c3ef344935b8ddffd6ca349613f2f695e1544b5597daca7a5281010703400439",
+    "test/http/fetch-config-short.provenance.json": "b6d2be4b352a5165778bbe8a3cf2692d1ec47681a253bf5101a53ef694066ea6",
+    "../http-curl/HttpCurl.lean": "c51c31b8dbcb246dba76fdbfcd26b50e1f24496d463abdfbf69e5642f3902f94",
+    "../http-curl/link_shim.c": "0c638d1df46dec755d0454be4a2659f39a677fd6a64e7d12d7723088a2f3f941",
     "../http-curl/test/responder.py": "9b661f268f6693cee0d268952aab862d15183b2c3cc24c9058bc226f5606795a",
     "../lightning/Lightning/Lnurl/Url.lean": "24efaa167d2dae47f95b2252fb27945e06e8865d89051fdd1e386a2d472f5356"
   },
@@ -35,7 +38,7 @@
       "test/fetch-config.py"
     ],
     "status": 0,
-    "seconds": 25.515
+    "seconds": 27.025
   },
   "checks": [
     {
@@ -71,7 +74,7 @@
           "token-2049"
         ],
         "status": 1,
-        "seconds": 0.374
+        "seconds": 0.373
       },
       "restore_build": {
         "command": [
@@ -81,7 +84,7 @@
           "CyberkrillTests"
         ],
         "status": 0,
-        "seconds": 12.841
+        "seconds": 12.931
       },
       "green": {
         "command": [
@@ -92,7 +95,7 @@
           "token-2049"
         ],
         "status": 0,
-        "seconds": 0.37
+        "seconds": 0.373
       }
     },
     {
@@ -117,7 +120,7 @@
           "CyberkrillTests"
         ],
         "status": 0,
-        "seconds": 13.039
+        "seconds": 12.934
       },
       "red": {
         "command": [
@@ -128,7 +131,7 @@
           "coefficient-1025"
         ],
         "status": 1,
-        "seconds": 0.372
+        "seconds": 0.375
       },
       "restore_build": {
         "command": [
@@ -138,7 +141,7 @@
           "CyberkrillTests"
         ],
         "status": 0,
-        "seconds": 13.05
+        "seconds": 12.938
       },
       "green": {
         "command": [
@@ -149,7 +152,7 @@
           "coefficient-1025"
         ],
         "status": 0,
-        "seconds": 0.368
+        "seconds": 0.378
       }
     },
     {
@@ -174,7 +177,7 @@
           "CyberkrillTests"
         ],
         "status": 0,
-        "seconds": 13.034
+        "seconds": 13.033
       },
       "red": {
         "command": [
@@ -195,7 +198,7 @@
           "CyberkrillTests"
         ],
         "status": 0,
-        "seconds": 13.234
+        "seconds": 12.938
       },
       "green": {
         "command": [
@@ -206,7 +209,7 @@
           "exponent-1025"
         ],
         "status": 0,
-        "seconds": 0.375
+        "seconds": 0.371
       }
     },
     {
@@ -231,7 +234,7 @@
           "CyberkrillTests"
         ],
         "status": 0,
-        "seconds": 13.04
+        "seconds": 12.828
       },
       "red": {
         "command": [
@@ -242,7 +245,7 @@
           "array-depth-128"
         ],
         "status": 1,
-        "seconds": 0.376
+        "seconds": 0.378
       },
       "restore_build": {
         "command": [
@@ -252,7 +255,7 @@
           "CyberkrillTests"
         ],
         "status": 0,
-        "seconds": 12.844
+        "seconds": 12.93
       },
       "green": {
         "command": [
@@ -263,7 +266,7 @@
           "array-depth-128"
         ],
         "status": 0,
-        "seconds": 0.372
+        "seconds": 0.376
       }
     },
     {
@@ -288,7 +291,7 @@
           "CyberkrillTests"
         ],
         "status": 0,
-        "seconds": 13.141
+        "seconds": 12.833
       },
       "red": {
         "command": [
@@ -299,7 +302,7 @@
           "ignored-overflow"
         ],
         "status": 1,
-        "seconds": 0.424
+        "seconds": 0.377
       },
       "restore_build": {
         "command": [
@@ -309,7 +312,7 @@
           "CyberkrillTests"
         ],
         "status": 0,
-        "seconds": 13.155
+        "seconds": 12.939
       },
       "green": {
         "command": [
@@ -320,7 +323,7 @@
           "ignored-overflow"
         ],
         "status": 0,
-        "seconds": 0.369
+        "seconds": 0.38
       }
     },
     {
@@ -345,7 +348,7 @@
           "CyberkrillTests"
         ],
         "status": 0,
-        "seconds": 12.933
+        "seconds": 13.04
       },
       "red": {
         "command": [
@@ -356,7 +359,7 @@
           "bytes-1048577"
         ],
         "status": 1,
-        "seconds": 0.419
+        "seconds": 0.427
       },
       "restore_build": {
         "command": [
@@ -366,7 +369,7 @@
           "CyberkrillTests"
         ],
         "status": 0,
-        "seconds": 12.937
+        "seconds": 13.233
       },
       "green": {
         "command": [
@@ -377,7 +380,7 @@
           "bytes-1048577"
         ],
         "status": 0,
-        "seconds": 0.38
+        "seconds": 0.375
       }
     },
     {
@@ -402,7 +405,7 @@
           "CyberkrillTests"
         ],
         "status": 0,
-        "seconds": 13.15
+        "seconds": 13.045
       },
       "red": {
         "command": [
@@ -423,7 +426,7 @@
           "CyberkrillTests"
         ],
         "status": 0,
-        "seconds": 13.339
+        "seconds": 12.939
       },
       "green": {
         "command": [
@@ -434,7 +437,7 @@
           "injected-bytes-1048577"
         ],
         "status": 0,
-        "seconds": 0.322
+        "seconds": 0.329
       }
     },
     {
@@ -446,7 +449,7 @@
         "python3",
         "-B",
         "test/fetch-config.py",
-        "--connect"
+        "--connect-contention"
       ],
       "assertion": "config connect deadline before total deadline",
       "failure": "AssertionError: config connect deadline before total deadline",
@@ -458,17 +461,17 @@
           "CyberkrillTests"
         ],
         "status": 0,
-        "seconds": 13.155
+        "seconds": 13.329
       },
       "red": {
         "command": [
           "python3",
           "-B",
           "test/fetch-config.py",
-          "--connect"
+          "--connect-contention"
         ],
         "status": 1,
-        "seconds": 6.442
+        "seconds": 6.839
       },
       "restore_build": {
         "command": [
@@ -478,17 +481,17 @@
           "CyberkrillTests"
         ],
         "status": 0,
-        "seconds": 12.944
+        "seconds": 13.142
       },
       "green": {
         "command": [
           "python3",
           "-B",
           "test/fetch-config.py",
-          "--connect"
+          "--connect-contention"
         ],
         "status": 0,
-        "seconds": 6.228
+        "seconds": 19.461
       }
     },
     {
@@ -513,7 +516,7 @@
           "CyberkrillTests"
         ],
         "status": 0,
-        "seconds": 13.057
+        "seconds": 12.944
       },
       "red": {
         "command": [
@@ -524,7 +527,7 @@
           "total-2100"
         ],
         "status": 1,
-        "seconds": 2.481
+        "seconds": 2.479
       },
       "restore_build": {
         "command": [
@@ -534,7 +537,7 @@
           "CyberkrillTests"
         ],
         "status": 0,
-        "seconds": 12.828
+        "seconds": 12.937
       },
       "green": {
         "command": [
@@ -545,7 +548,7 @@
           "total-2100"
         ],
         "status": 0,
-        "seconds": 2.476
+        "seconds": 2.483
       }
     },
     {
@@ -570,7 +573,7 @@
           "CyberkrillTests"
         ],
         "status": 0,
-        "seconds": 13.232
+        "seconds": 13.034
       },
       "red": {
         "command": [
@@ -581,7 +584,7 @@
           "location-limit"
         ],
         "status": 1,
-        "seconds": 0.319
+        "seconds": 0.323
       },
       "restore_build": {
         "command": [
@@ -591,7 +594,7 @@
           "CyberkrillTests"
         ],
         "status": 0,
-        "seconds": 12.836
+        "seconds": 13.036
       },
       "green": {
         "command": [
@@ -627,7 +630,7 @@
           "CyberkrillTests"
         ],
         "status": 0,
-        "seconds": 12.831
+        "seconds": 13.336
       },
       "red": {
         "command": [
@@ -638,7 +641,7 @@
           "resolved-url-limit"
         ],
         "status": 1,
-        "seconds": 0.321
+        "seconds": 0.323
       },
       "restore_build": {
         "command": [
@@ -648,7 +651,7 @@
           "CyberkrillTests"
         ],
         "status": 0,
-        "seconds": 13.038
+        "seconds": 12.921
       },
       "green": {
         "command": [
@@ -659,7 +662,7 @@
           "resolved-url-limit"
         ],
         "status": 0,
-        "seconds": 0.325
+        "seconds": 0.321
       }
     },
     {
@@ -684,7 +687,7 @@
           "CyberkrillTests"
         ],
         "status": 0,
-        "seconds": 13.028
+        "seconds": 13.339
       },
       "red": {
         "command": [
@@ -695,7 +698,7 @@
           "utf8-next"
         ],
         "status": 1,
-        "seconds": 0.373
+        "seconds": 0.375
       },
       "restore_build": {
         "command": [
@@ -705,7 +708,7 @@
           "CyberkrillTests"
         ],
         "status": 0,
-        "seconds": 13.043
+        "seconds": 13.138
       },
       "green": {
         "command": [
@@ -716,7 +719,7 @@
           "utf8-next"
         ],
         "status": 0,
-        "seconds": 0.373
+        "seconds": 0.375
       }
     },
     {
@@ -741,7 +744,7 @@
           "CyberkrillTests"
         ],
         "status": 0,
-        "seconds": 12.93
+        "seconds": 12.936
       },
       "red": {
         "command": [
@@ -752,7 +755,7 @@
           "get-status-post"
         ],
         "status": 1,
-        "seconds": 0.37
+        "seconds": 0.375
       },
       "restore_build": {
         "command": [
@@ -762,7 +765,7 @@
           "CyberkrillTests"
         ],
         "status": 0,
-        "seconds": 12.946
+        "seconds": 12.93
       },
       "green": {
         "command": [
@@ -773,7 +776,7 @@
           "get-status-post"
         ],
         "status": 0,
-        "seconds": 0.37
+        "seconds": 0.373
       }
     },
     {
@@ -798,7 +801,7 @@
           "CyberkrillTests"
         ],
         "status": 0,
-        "seconds": 13.137
+        "seconds": 13.13
       },
       "red": {
         "command": [
@@ -809,7 +812,7 @@
           "get-transport-post"
         ],
         "status": 1,
-        "seconds": 0.373
+        "seconds": 0.374
       },
       "restore_build": {
         "command": [
@@ -819,7 +822,7 @@
           "CyberkrillTests"
         ],
         "status": 0,
-        "seconds": 12.944
+        "seconds": 13.031
       },
       "green": {
         "command": [
@@ -855,7 +858,7 @@
           "CyberkrillTests"
         ],
         "status": 0,
-        "seconds": 12.826
+        "seconds": 12.925
       },
       "red": {
         "command": [
@@ -866,7 +869,7 @@
           "get-status-post"
         ],
         "status": 1,
-        "seconds": 0.377
+        "seconds": 0.376
       },
       "restore_build": {
         "command": [
@@ -876,7 +879,7 @@
           "CyberkrillTests"
         ],
         "status": 0,
-        "seconds": 13.031
+        "seconds": 12.93
       },
       "green": {
         "command": [
@@ -887,7 +890,7 @@
           "get-status-post"
         ],
         "status": 0,
-        "seconds": 0.372
+        "seconds": 0.373
       }
     },
     {
@@ -912,7 +915,7 @@
           "CyberkrillTests"
         ],
         "status": 0,
-        "seconds": 12.943
+        "seconds": 13.635
       },
       "red": {
         "command": [
@@ -923,7 +926,7 @@
           "non-json-next"
         ],
         "status": 1,
-        "seconds": 0.374
+        "seconds": 0.424
       },
       "restore_build": {
         "command": [
@@ -933,7 +936,7 @@
           "CyberkrillTests"
         ],
         "status": 0,
-        "seconds": 13.036
+        "seconds": 13.039
       },
       "green": {
         "command": [
@@ -944,7 +947,7 @@
           "non-json-next"
         ],
         "status": 0,
-        "seconds": 0.373
+        "seconds": 0.375
       }
     },
     {
@@ -969,7 +972,7 @@
           "CyberkrillTests"
         ],
         "status": 0,
-        "seconds": 12.841
+        "seconds": 13.125
       },
       "red": {
         "command": [
@@ -980,7 +983,7 @@
           "post-json-next"
         ],
         "status": 1,
-        "seconds": 0.372
+        "seconds": 0.377
       },
       "restore_build": {
         "command": [
@@ -990,7 +993,7 @@
           "CyberkrillTests"
         ],
         "status": 0,
-        "seconds": 13.332
+        "seconds": 13.033
       },
       "green": {
         "command": [
@@ -1001,7 +1004,7 @@
           "post-json-next"
         ],
         "status": 0,
-        "seconds": 0.37
+        "seconds": 0.38
       }
     },
     {
@@ -1026,7 +1029,7 @@
           "CyberkrillTests"
         ],
         "status": 0,
-        "seconds": 12.83
+        "seconds": 12.941
       },
       "red": {
         "command": [
@@ -1037,7 +1040,7 @@
           "post-status-next"
         ],
         "status": 1,
-        "seconds": 0.371
+        "seconds": 0.433
       },
       "restore_build": {
         "command": [
@@ -1047,7 +1050,7 @@
           "CyberkrillTests"
         ],
         "status": 0,
-        "seconds": 13.026
+        "seconds": 13.049
       },
       "green": {
         "command": [
@@ -1083,7 +1086,7 @@
           "CyberkrillTests"
         ],
         "status": 0,
-        "seconds": 13.029
+        "seconds": 13.036
       },
       "red": {
         "command": [
@@ -1104,7 +1107,7 @@
           "CyberkrillTests"
         ],
         "status": 0,
-        "seconds": 13.027
+        "seconds": 13.125
       },
       "green": {
         "command": [
@@ -1115,7 +1118,7 @@
           "first-success"
         ],
         "status": 0,
-        "seconds": 0.373
+        "seconds": 0.371
       }
     },
     {
@@ -1140,7 +1143,7 @@
           "CyberkrillTests"
         ],
         "status": 0,
-        "seconds": 13.334
+        "seconds": 13.236
       },
       "red": {
         "command": [
@@ -1151,7 +1154,7 @@
           "absent-id"
         ],
         "status": 1,
-        "seconds": 0.37
+        "seconds": 0.379
       },
       "restore_build": {
         "command": [
@@ -1161,7 +1164,7 @@
           "CyberkrillTests"
         ],
         "status": 0,
-        "seconds": 13.524
+        "seconds": 13.233
       },
       "green": {
         "command": [
@@ -1172,7 +1175,7 @@
           "absent-id"
         ],
         "status": 0,
-        "seconds": 0.373
+        "seconds": 0.374
       }
     },
     {
@@ -1197,7 +1200,7 @@
           "CyberkrillTests"
         ],
         "status": 0,
-        "seconds": 12.922
+        "seconds": 13.036
       },
       "red": {
         "command": [
@@ -1208,7 +1211,7 @@
           "peers"
         ],
         "status": 1,
-        "seconds": 0.37
+        "seconds": 0.374
       },
       "restore_build": {
         "command": [
@@ -1218,7 +1221,7 @@
           "CyberkrillTests"
         ],
         "status": 0,
-        "seconds": 12.949
+        "seconds": 12.824
       },
       "green": {
         "command": [
@@ -1229,7 +1232,7 @@
           "peers"
         ],
         "status": 0,
-        "seconds": 0.372
+        "seconds": 0.373
       }
     },
     {
@@ -1254,7 +1257,7 @@
           "CyberkrillTests"
         ],
         "status": 0,
-        "seconds": 13.048
+        "seconds": 13.029
       },
       "red": {
         "command": [
@@ -1265,7 +1268,7 @@
           "embedded"
         ],
         "status": 1,
-        "seconds": 0.321
+        "seconds": 0.323
       },
       "restore_build": {
         "command": [
@@ -1275,7 +1278,7 @@
           "CyberkrillTests"
         ],
         "status": 0,
-        "seconds": 12.934
+        "seconds": 13.036
       },
       "green": {
         "command": [
@@ -1286,7 +1289,7 @@
           "embedded"
         ],
         "status": 0,
-        "seconds": 0.328
+        "seconds": 0.323
       }
     },
     {
@@ -1311,7 +1314,7 @@
           "CyberkrillTests"
         ],
         "status": 0,
-        "seconds": 12.936
+        "seconds": 12.925
       },
       "red": {
         "command": [
@@ -1322,7 +1325,7 @@
           "injected-double-slash"
         ],
         "status": 1,
-        "seconds": 0.321
+        "seconds": 0.322
       },
       "restore_build": {
         "command": [
@@ -1332,7 +1335,7 @@
           "CyberkrillTests"
         ],
         "status": 0,
-        "seconds": 13.329
+        "seconds": 12.928
       },
       "green": {
         "command": [
@@ -1343,7 +1346,7 @@
           "injected-double-slash"
         ],
         "status": 0,
-        "seconds": 0.325
+        "seconds": 0.322
       }
     },
     {
@@ -1368,7 +1371,7 @@
           "CyberkrillTests"
         ],
         "status": 0,
-        "seconds": 12.93
+        "seconds": 12.932
       },
       "red": {
         "command": [
@@ -1379,7 +1382,7 @@
           "fallback"
         ],
         "status": 1,
-        "seconds": 0.326
+        "seconds": 0.325
       },
       "restore_build": {
         "command": [
@@ -1389,7 +1392,7 @@
           "CyberkrillTests"
         ],
         "status": 0,
-        "seconds": 12.928
+        "seconds": 13.327
       },
       "green": {
         "command": [
@@ -1400,7 +1403,7 @@
           "fallback"
         ],
         "status": 0,
-        "seconds": 0.321
+        "seconds": 0.33
       }
     },
     {
@@ -1425,7 +1428,7 @@
           "CyberkrillTests"
         ],
         "status": 0,
-        "seconds": 12.329
+        "seconds": 12.237
       },
       "red": {
         "command": [
@@ -1436,7 +1439,7 @@
           "get"
         ],
         "status": 1,
-        "seconds": 0.372
+        "seconds": 0.374
       },
       "restore_build": {
         "command": [
@@ -1446,7 +1449,7 @@
           "CyberkrillTests"
         ],
         "status": 0,
-        "seconds": 12.336
+        "seconds": 12.333
       },
       "green": {
         "command": [
@@ -1457,7 +1460,7 @@
           "get"
         ],
         "status": 0,
-        "seconds": 0.371
+        "seconds": 0.372
       }
     },
     {
@@ -1482,7 +1485,7 @@
           "CyberkrillTests"
         ],
         "status": 0,
-        "seconds": 12.237
+        "seconds": 12.324
       },
       "red": {
         "command": [
@@ -1493,7 +1496,7 @@
           "retained-handle"
         ],
         "status": 1,
-        "seconds": 0.377
+        "seconds": 0.376
       },
       "restore_build": {
         "command": [
@@ -1503,7 +1506,7 @@
           "CyberkrillTests"
         ],
         "status": 0,
-        "seconds": 12.326
+        "seconds": 12.33
       },
       "green": {
         "command": [
@@ -1539,7 +1542,7 @@
           "CyberkrillTests"
         ],
         "status": 0,
-        "seconds": 12.733
+        "seconds": 13.034
       },
       "red": {
         "command": [
@@ -1560,7 +1563,7 @@
           "CyberkrillTests"
         ],
         "status": 0,
-        "seconds": 12.841
+        "seconds": 12.935
       },
       "green": {
         "command": [
@@ -1571,7 +1574,7 @@
           "injected-get-redirect-302"
         ],
         "status": 0,
-        "seconds": 0.318
+        "seconds": 0.323
       }
     },
     {
@@ -1596,7 +1599,7 @@
           "CyberkrillTests"
         ],
         "status": 0,
-        "seconds": 13.037
+        "seconds": 12.931
       },
       "red": {
         "command": [
@@ -1607,7 +1610,7 @@
           "injected-post-redirect-302"
         ],
         "status": 1,
-        "seconds": 0.318
+        "seconds": 0.323
       },
       "restore_build": {
         "command": [
@@ -1617,7 +1620,7 @@
           "CyberkrillTests"
         ],
         "status": 0,
-        "seconds": 12.835
+        "seconds": 12.935
       },
       "green": {
         "command": [
@@ -1628,7 +1631,7 @@
           "injected-post-redirect-302"
         ],
         "status": 0,
-        "seconds": 0.319
+        "seconds": 0.329
       }
     },
     {
@@ -1653,7 +1656,7 @@
           "CyberkrillTests"
         ],
         "status": 0,
-        "seconds": 12.94
+        "seconds": 13.028
       },
       "red": {
         "command": [
@@ -1664,7 +1667,7 @@
           "injected-get-redirect-302"
         ],
         "status": 1,
-        "seconds": 0.318
+        "seconds": 0.325
       },
       "restore_build": {
         "command": [
@@ -1674,7 +1677,7 @@
           "CyberkrillTests"
         ],
         "status": 0,
-        "seconds": 13.134
+        "seconds": 12.935
       },
       "green": {
         "command": [
@@ -1685,7 +1688,7 @@
           "injected-get-redirect-302"
         ],
         "status": 0,
-        "seconds": 0.319
+        "seconds": 0.325
       }
     },
     {
@@ -1710,7 +1713,7 @@
           "CyberkrillTests"
         ],
         "status": 0,
-        "seconds": 12.934
+        "seconds": 13.23
       },
       "red": {
         "command": [
@@ -1721,7 +1724,7 @@
           "injected-redirect-ten"
         ],
         "status": 1,
-        "seconds": 0.33
+        "seconds": 0.325
       },
       "restore_build": {
         "command": [
@@ -1731,7 +1734,7 @@
           "CyberkrillTests"
         ],
         "status": 0,
-        "seconds": 13.032
+        "seconds": 12.935
       },
       "green": {
         "command": [
@@ -1742,7 +1745,7 @@
           "injected-redirect-ten"
         ],
         "status": 0,
-        "seconds": 0.325
+        "seconds": 0.323
       }
     },
     {
@@ -1767,7 +1770,7 @@
           "CyberkrillTests"
         ],
         "status": 0,
-        "seconds": 10.54
+        "seconds": 10.63
       },
       "red": {
         "command": [
@@ -1778,7 +1781,7 @@
           "unsafe-redirect-307"
         ],
         "status": 1,
-        "seconds": 0.325
+        "seconds": 0.324
       },
       "restore_build": {
         "command": [
@@ -1788,7 +1791,7 @@
           "CyberkrillTests"
         ],
         "status": 0,
-        "seconds": 10.644
+        "seconds": 10.73
       },
       "green": {
         "command": [
@@ -1799,7 +1802,7 @@
           "unsafe-redirect-307"
         ],
         "status": 0,
-        "seconds": 0.322
+        "seconds": 0.321
       }
     },
     {
@@ -1824,7 +1827,7 @@
           "CyberkrillTests"
         ],
         "status": 0,
-        "seconds": 12.935
+        "seconds": 13.024
       },
       "red": {
         "command": [
@@ -1835,7 +1838,7 @@
           "missing-endpoints"
         ],
         "status": 1,
-        "seconds": 0.371
+        "seconds": 0.373
       },
       "restore_build": {
         "command": [
@@ -1845,7 +1848,7 @@
           "CyberkrillTests"
         ],
         "status": 0,
-        "seconds": 12.926
+        "seconds": 12.921
       },
       "green": {
         "command": [
@@ -1856,7 +1859,7 @@
           "missing-endpoints"
         ],
         "status": 0,
-        "seconds": 0.37
+        "seconds": 0.38
       }
     },
     {
@@ -1881,7 +1884,7 @@
           "CyberkrillTests"
         ],
         "status": 0,
-        "seconds": 13.031
+        "seconds": 13.145
       },
       "red": {
         "command": [
@@ -1892,7 +1895,7 @@
           "id-mismatch"
         ],
         "status": 1,
-        "seconds": 0.371
+        "seconds": 0.376
       },
       "restore_build": {
         "command": [
@@ -1902,7 +1905,7 @@
           "CyberkrillTests"
         ],
         "status": 0,
-        "seconds": 12.939
+        "seconds": 13.027
       },
       "green": {
         "command": [
@@ -1913,7 +1916,7 @@
           "id-mismatch"
         ],
         "status": 0,
-        "seconds": 0.375
+        "seconds": 0.38
       }
     },
     {
@@ -1938,7 +1941,7 @@
           "CyberkrillTests"
         ],
         "status": 0,
-        "seconds": 13.235
+        "seconds": 12.928
       },
       "red": {
         "command": [
@@ -1949,7 +1952,7 @@
           "id-type"
         ],
         "status": 1,
-        "seconds": 0.371
+        "seconds": 0.376
       },
       "restore_build": {
         "command": [
@@ -1959,7 +1962,7 @@
           "CyberkrillTests"
         ],
         "status": 0,
-        "seconds": 13.035
+        "seconds": 12.944
       },
       "green": {
         "command": [
@@ -1970,7 +1973,7 @@
           "id-type"
         ],
         "status": 0,
-        "seconds": 0.371
+        "seconds": 0.375
       }
     },
     {
@@ -1995,7 +1998,7 @@
           "CyberkrillTests"
         ],
         "status": 0,
-        "seconds": 13.037
+        "seconds": 13.144
       },
       "red": {
         "command": [
@@ -2006,7 +2009,7 @@
           "array"
         ],
         "status": 1,
-        "seconds": 0.373
+        "seconds": 0.371
       },
       "restore_build": {
         "command": [
@@ -2016,7 +2019,7 @@
           "CyberkrillTests"
         ],
         "status": 0,
-        "seconds": 13.036
+        "seconds": 12.926
       },
       "green": {
         "command": [
@@ -2052,7 +2055,7 @@
           "CyberkrillTests"
         ],
         "status": 0,
-        "seconds": 13.13
+        "seconds": 13.339
       },
       "red": {
         "command": [
@@ -2063,7 +2066,7 @@
           "null"
         ],
         "status": 1,
-        "seconds": 0.375
+        "seconds": 0.371
       },
       "restore_build": {
         "command": [
@@ -2073,7 +2076,7 @@
           "CyberkrillTests"
         ],
         "status": 0,
-        "seconds": 12.831
+        "seconds": 13.041
       },
       "green": {
         "command": [
@@ -2084,7 +2087,7 @@
           "null"
         ],
         "status": 0,
-        "seconds": 0.377
+        "seconds": 0.371
       }
     },
     {
@@ -2109,7 +2112,7 @@
           "CyberkrillTests"
         ],
         "status": 0,
-        "seconds": 12.935
+        "seconds": 13.134
       },
       "red": {
         "command": [
@@ -2120,7 +2123,7 @@
           "bad-peer"
         ],
         "status": 1,
-        "seconds": 0.366
+        "seconds": 0.382
       },
       "restore_build": {
         "command": [
@@ -2130,7 +2133,7 @@
           "CyberkrillTests"
         ],
         "status": 0,
-        "seconds": 12.84
+        "seconds": 13.127
       },
       "green": {
         "command": [
@@ -2141,7 +2144,7 @@
           "bad-peer"
         ],
         "status": 0,
-        "seconds": 0.375
+        "seconds": 0.384
       }
     },
     {
@@ -2166,7 +2169,7 @@
           "CyberkrillTests"
         ],
         "status": 0,
-        "seconds": 12.924
+        "seconds": 13.127
       },
       "red": {
         "command": [
@@ -2177,7 +2180,7 @@
           "peer-overflow"
         ],
         "status": 1,
-        "seconds": 0.374
+        "seconds": 0.381
       },
       "restore_build": {
         "command": [
@@ -2187,7 +2190,7 @@
           "CyberkrillTests"
         ],
         "status": 0,
-        "seconds": 12.938
+        "seconds": 13.329
       },
       "green": {
         "command": [
@@ -2198,7 +2201,7 @@
           "peer-overflow"
         ],
         "status": 0,
-        "seconds": 0.375
+        "seconds": 0.374
       }
     },
     {
@@ -2223,7 +2226,7 @@
           "CyberkrillTests"
         ],
         "status": 0,
-        "seconds": 13.028
+        "seconds": 13.135
       },
       "red": {
         "command": [
@@ -2234,7 +2237,7 @@
           "endpoint-type"
         ],
         "status": 1,
-        "seconds": 0.371
+        "seconds": 0.38
       },
       "restore_build": {
         "command": [
@@ -2244,7 +2247,7 @@
           "CyberkrillTests"
         ],
         "status": 0,
-        "seconds": 13.045
+        "seconds": 13.031
       },
       "green": {
         "command": [
@@ -2255,7 +2258,346 @@
           "endpoint-type"
         ],
         "status": 0,
-        "seconds": 0.376
+        "seconds": 0.37
+      }
+    },
+    {
+      "property": "acquired-body-next",
+      "file": "Cyberkrill/FetchConfig.lean",
+      "replace": "if r.body.size > req.maxResponseBytes.toNat then",
+      "with_text": "if r.bodyError.isSome then return .error (.transport \"fmTransport\")\n  if r.body.size > req.maxResponseBytes.toNat then",
+      "command": [
+        "python3",
+        "-B",
+        "test/fetch-config.py",
+        "--probe",
+        "short-length-200"
+      ],
+      "assertion": "config success short-length-200",
+      "failure": "AssertionError: config success short-length-200: {'calls': [{'body': '', 'bytes': 1048576, 'connect': 1000, 'headers': [], 'method': 'GET', 'total': 2000, 'transport': 'ok', 'url': 'http://127.0.0.1:19444/first/config'}, {'body': '{}', 'bytes': 1048576, 'connect': 1000, 'headers': [['Content-Type', 'application/json']], 'method': 'POST', 'total': 2000, 'transport': 'ok', 'url': 'http://127.0.0.1:19444/first/config'}], 'status': 0, 'stderr': '', 'stdout': '{\"modules\": {\"chosen\": \"same guardian POST\"},\\n \"meta\":\\n {\"note\": \"authored fixture\",\\n  \"guardian_2_name\": \"Two\",\\n  \"guardian_0_name\": \"Zero\",\\n  \"federation_name\": \"Synthetic Federation\"},\\n \"guardians\":\\n [{\"url\": \"\", \"peer_id\": 0, \"name\": \"Zero\"},\\n  {\"url\": \"wss://synthetic.invalid/two\", \"peer_id\": 2, \"name\": \"Two\"},\\n  {\"url\": \"opaque endpoint ten\", \"peer_id\": 10, \"name\": null}],\\n \"federation_name\": \"Synthetic Federation\",\\n \"federation_id\":\\n \"1234567890abcdef1234567890abcdef1234567890abcdef1234567890abcdef\",\\n \"consensus_version\": \"2.1\"}'}",
+      "build": {
+        "command": [
+          "lake",
+          "build",
+          "cyberkrill",
+          "CyberkrillTests"
+        ],
+        "status": 0,
+        "seconds": 15.655
+      },
+      "red": {
+        "command": [
+          "python3",
+          "-B",
+          "test/fetch-config.py",
+          "--probe",
+          "short-length-200"
+        ],
+        "status": 1,
+        "seconds": 0.38
+      },
+      "restore_build": {
+        "command": [
+          "lake",
+          "build",
+          "cyberkrill",
+          "CyberkrillTests"
+        ],
+        "status": 0,
+        "seconds": 13.976
+      },
+      "green": {
+        "command": [
+          "python3",
+          "-B",
+          "test/fetch-config.py",
+          "--probe",
+          "short-length-200"
+        ],
+        "status": 0,
+        "seconds": 0.374
+      }
+    },
+    {
+      "property": "guard-upper-first",
+      "file": "test/network.py",
+      "replace": "        for token in args[1:]:\n            for target in effective_guardians(token):\n                if not permitted_guardian(target, stub_url):\n                    raise ValueError(\"spawn refused: explicit stub guardian required\")\n",
+      "with_text": "        expected = urlsplit(stub_url or \"\")\n        # Inspect decoded invite material before creating a child. The guarded\n        # app entry separately checks decoded guardians and every redirect.\n        for token in args[1:]:\n            for material in url_material(token):\n                for match in re.finditer(r\"(?:wss?|https?)://[^\\x00-\\x20\\x7f-\\xff]+\", material):\n                    target = match[0].replace(\"wss://\", \"https://\").replace(\"ws://\", \"http://\")\n                    try:\n                        parsed = urlsplit(target)\n                        valid = (parsed.hostname == expected.hostname == \"127.0.0.1\" and\n                                 parsed.port == expected.port and parsed.port not in {None, 0, 8332} and\n                                 parsed.username is None and parsed.password is None)\n                    except ValueError:\n                        valid = False\n                    if not valid:\n                        raise ValueError(\"spawn refused: explicit stub guardian required\")\n",
+      "command": [
+        "python3",
+        "-B",
+        "test/fetch-config.py",
+        "--probe",
+        "guard-upper-first"
+      ],
+      "assertion": "config no child guard-upper-first",
+      "failure": "AssertionError: config no child guard-upper-first",
+      "build": {
+        "command": [
+          "lake",
+          "build",
+          "cyberkrill",
+          "CyberkrillTests"
+        ],
+        "status": 0,
+        "seconds": 0.413
+      },
+      "red": {
+        "command": [
+          "python3",
+          "-B",
+          "test/fetch-config.py",
+          "--probe",
+          "guard-upper-first"
+        ],
+        "status": 1,
+        "seconds": 0.277
+      },
+      "restore_build": {
+        "command": [
+          "lake",
+          "build",
+          "cyberkrill",
+          "CyberkrillTests"
+        ],
+        "status": 0,
+        "seconds": 0.416
+      },
+      "green": {
+        "command": [
+          "python3",
+          "-B",
+          "test/fetch-config.py",
+          "--probe",
+          "guard-upper-first"
+        ],
+        "status": 0,
+        "seconds": 0.278
+      }
+    },
+    {
+      "property": "guard-upper-later",
+      "file": "test/network.py",
+      "replace": "        for token in args[1:]:\n            for target in effective_guardians(token):\n                if not permitted_guardian(target, stub_url):\n                    raise ValueError(\"spawn refused: explicit stub guardian required\")\n",
+      "with_text": "        expected = urlsplit(stub_url or \"\")\n        # Inspect decoded invite material before creating a child. The guarded\n        # app entry separately checks decoded guardians and every redirect.\n        for token in args[1:]:\n            for material in url_material(token):\n                for match in re.finditer(r\"(?:wss?|https?)://[^\\x00-\\x20\\x7f-\\xff]+\", material):\n                    target = match[0].replace(\"wss://\", \"https://\").replace(\"ws://\", \"http://\")\n                    try:\n                        parsed = urlsplit(target)\n                        valid = (parsed.hostname == expected.hostname == \"127.0.0.1\" and\n                                 parsed.port == expected.port and parsed.port not in {None, 0, 8332} and\n                                 parsed.username is None and parsed.password is None)\n                    except ValueError:\n                        valid = False\n                    if not valid:\n                        raise ValueError(\"spawn refused: explicit stub guardian required\")\n",
+      "command": [
+        "python3",
+        "-B",
+        "test/fetch-config.py",
+        "--probe",
+        "guard-upper-later"
+      ],
+      "assertion": "config no child guard-upper-later",
+      "failure": "AssertionError: config no child guard-upper-later",
+      "build": {
+        "command": [
+          "lake",
+          "build",
+          "cyberkrill",
+          "CyberkrillTests"
+        ],
+        "status": 0,
+        "seconds": 0.418
+      },
+      "red": {
+        "command": [
+          "python3",
+          "-B",
+          "test/fetch-config.py",
+          "--probe",
+          "guard-upper-later"
+        ],
+        "status": 1,
+        "seconds": 0.274
+      },
+      "restore_build": {
+        "command": [
+          "lake",
+          "build",
+          "cyberkrill",
+          "CyberkrillTests"
+        ],
+        "status": 0,
+        "seconds": 0.413
+      },
+      "green": {
+        "command": [
+          "python3",
+          "-B",
+          "test/fetch-config.py",
+          "--probe",
+          "guard-upper-later"
+        ],
+        "status": 0,
+        "seconds": 0.278
+      }
+    },
+    {
+      "property": "guard-slashless-first",
+      "file": "test/network.py",
+      "replace": "        for token in args[1:]:\n            for target in effective_guardians(token):\n                if not permitted_guardian(target, stub_url):\n                    raise ValueError(\"spawn refused: explicit stub guardian required\")\n",
+      "with_text": "        expected = urlsplit(stub_url or \"\")\n        # Inspect decoded invite material before creating a child. The guarded\n        # app entry separately checks decoded guardians and every redirect.\n        for token in args[1:]:\n            for material in url_material(token):\n                for match in re.finditer(r\"(?:wss?|https?)://[^\\x00-\\x20\\x7f-\\xff]+\", material):\n                    target = match[0].replace(\"wss://\", \"https://\").replace(\"ws://\", \"http://\")\n                    try:\n                        parsed = urlsplit(target)\n                        valid = (parsed.hostname == expected.hostname == \"127.0.0.1\" and\n                                 parsed.port == expected.port and parsed.port not in {None, 0, 8332} and\n                                 parsed.username is None and parsed.password is None)\n                    except ValueError:\n                        valid = False\n                    if not valid:\n                        raise ValueError(\"spawn refused: explicit stub guardian required\")\n",
+      "command": [
+        "python3",
+        "-B",
+        "test/fetch-config.py",
+        "--probe",
+        "guard-slashless-first"
+      ],
+      "assertion": "config no child guard-slashless-first",
+      "failure": "AssertionError: config no child guard-slashless-first",
+      "build": {
+        "command": [
+          "lake",
+          "build",
+          "cyberkrill",
+          "CyberkrillTests"
+        ],
+        "status": 0,
+        "seconds": 0.41
+      },
+      "red": {
+        "command": [
+          "python3",
+          "-B",
+          "test/fetch-config.py",
+          "--probe",
+          "guard-slashless-first"
+        ],
+        "status": 1,
+        "seconds": 0.272
+      },
+      "restore_build": {
+        "command": [
+          "lake",
+          "build",
+          "cyberkrill",
+          "CyberkrillTests"
+        ],
+        "status": 0,
+        "seconds": 0.415
+      },
+      "green": {
+        "command": [
+          "python3",
+          "-B",
+          "test/fetch-config.py",
+          "--probe",
+          "guard-slashless-first"
+        ],
+        "status": 0,
+        "seconds": 0.272
+      }
+    },
+    {
+      "property": "guard-slashless-later",
+      "file": "test/network.py",
+      "replace": "        for token in args[1:]:\n            for target in effective_guardians(token):\n                if not permitted_guardian(target, stub_url):\n                    raise ValueError(\"spawn refused: explicit stub guardian required\")\n",
+      "with_text": "        expected = urlsplit(stub_url or \"\")\n        # Inspect decoded invite material before creating a child. The guarded\n        # app entry separately checks decoded guardians and every redirect.\n        for token in args[1:]:\n            for material in url_material(token):\n                for match in re.finditer(r\"(?:wss?|https?)://[^\\x00-\\x20\\x7f-\\xff]+\", material):\n                    target = match[0].replace(\"wss://\", \"https://\").replace(\"ws://\", \"http://\")\n                    try:\n                        parsed = urlsplit(target)\n                        valid = (parsed.hostname == expected.hostname == \"127.0.0.1\" and\n                                 parsed.port == expected.port and parsed.port not in {None, 0, 8332} and\n                                 parsed.username is None and parsed.password is None)\n                    except ValueError:\n                        valid = False\n                    if not valid:\n                        raise ValueError(\"spawn refused: explicit stub guardian required\")\n",
+      "command": [
+        "python3",
+        "-B",
+        "test/fetch-config.py",
+        "--probe",
+        "guard-slashless-later"
+      ],
+      "assertion": "config no child guard-slashless-later",
+      "failure": "AssertionError: config no child guard-slashless-later",
+      "build": {
+        "command": [
+          "lake",
+          "build",
+          "cyberkrill",
+          "CyberkrillTests"
+        ],
+        "status": 0,
+        "seconds": 0.41
+      },
+      "red": {
+        "command": [
+          "python3",
+          "-B",
+          "test/fetch-config.py",
+          "--probe",
+          "guard-slashless-later"
+        ],
+        "status": 1,
+        "seconds": 0.272
+      },
+      "restore_build": {
+        "command": [
+          "lake",
+          "build",
+          "cyberkrill",
+          "CyberkrillTests"
+        ],
+        "status": 0,
+        "seconds": 0.414
+      },
+      "green": {
+        "command": [
+          "python3",
+          "-B",
+          "test/fetch-config.py",
+          "--probe",
+          "guard-slashless-later"
+        ],
+        "status": 0,
+        "seconds": 0.276
+      }
+    },
+    {
+      "property": "legacy-transfer-error-order",
+      "file": "../http-curl/HttpCurl.lean",
+      "replace": "if code != 0 && (!detailed || !incomplete) then",
+      "with_text": "if code != 0 && !incomplete then",
+      "command": [
+        "python3",
+        "-B",
+        "test/fetch-config.py",
+        "--http"
+      ],
+      "assertion": "config legacy transfer error before header decode",
+      "failure": "AssertionError: config legacy transfer error before header decode",
+      "build": {
+        "command": [
+          "lake",
+          "build",
+          "cyberkrill",
+          "CyberkrillTests"
+        ],
+        "status": 0,
+        "seconds": 15.436
+      },
+      "red": {
+        "command": [
+          "python3",
+          "-B",
+          "test/fetch-config.py",
+          "--http"
+        ],
+        "status": 1,
+        "seconds": 1.942
+      },
+      "restore_build": {
+        "command": [
+          "lake",
+          "build",
+          "cyberkrill",
+          "CyberkrillTests"
+        ],
+        "status": 0,
+        "seconds": 17.196
+      },
+      "green": {
+        "command": [
+          "python3",
+          "-B",
+          "test/fetch-config.py",
+          "--http"
+        ],
+        "status": 0,
+        "seconds": 1.03
       }
     }
   ],
@@ -2266,6 +2608,6 @@
       "test/fetch-config.py"
     ],
     "status": 0,
-    "seconds": 25.566
+    "seconds": 27.431
   }
 }
