@@ -308,6 +308,8 @@ def replay(only=None):
             guards(root,environment)
             parser(root,environment)
             path_stress(environment)
+            query_stress(environment)
+            url_number_stress(environment)
     print("LNURL selected control passed" if only else "LNURL replay: 77/77 cases, 78/78 invocations; exact five-field JSON, ordered GETs and no early callback; collision 1/1",flush=True)
 
 
@@ -349,6 +351,30 @@ def path_stress(environment):
     print("LNURL large callback normalization: 2/2 within 10s test budget",flush=True)
 
 
+def url_stress(environment, selector, marker, label):
+    package = ROOT/"packages/lightning"
+    with chdir(package):
+        built = network.run_owned(["lake","build","LightningTests"],env=environment,
+            capture_output=True,timeout=120)
+    assert built.returncode==0, "LNURL "+label+" build: "+built.stderr.decode()
+    try:
+        with chdir(package):
+            result = network.run_owned([str(package/".lake/build/bin/LightningTests"),
+                "--lnurl-case",selector],env=environment,capture_output=True,timeout=10)
+    except subprocess.TimeoutExpired:
+        raise AssertionError("LNURL "+label+" exceeds 10s budget") from None
+    assert result.returncode==0 and marker in result.stdout, "LNURL "+label+" exact results: "+result.stderr.decode()
+    print("LNURL "+label+": 3/3 within 10s test budget",flush=True)
+
+
+def query_stress(environment):
+    url_stress(environment,"large-query",b"large URL queries: 3/3","large query normalization")
+
+
+def url_number_stress(environment):
+    url_stress(environment,"large-url-numbers",b"large URL numbers: 3/3","large URL numeric parsing")
+
+
 def parser(root,env):
     # Help and consumed option values are parsed before any network is possible.
     rows = [(["--help"],0), ([ADDRESS,"bad","--help"],0), (["-c","--help"],1),
@@ -364,6 +390,8 @@ def parser(root,env):
 
 if __name__ == "__main__":
     if sys.argv[1:] == ["--path-stress"]: path_stress(dict(os.environ))
+    elif sys.argv[1:] == ["--query-stress"]: query_stress(dict(os.environ))
+    elif sys.argv[1:] == ["--url-number-stress"]: url_number_stress(dict(os.environ))
     elif sys.argv[1:2]==["--isolated"]: replay(sys.argv[2] if len(sys.argv)>2 else None)
     else:
         assert not sys.argv[1:] or (len(sys.argv)==3 and sys.argv[1]=="--probe")

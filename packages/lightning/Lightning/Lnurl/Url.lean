@@ -101,6 +101,15 @@ private def endsInNumber (host : String) : Bool :=
     else parts.getLast?.getD ""
   asciiDigits last || ipv4Number last
 
+/-- Ignore leading zeroes and reject oversized decimal values before conversion. -/
+private def boundedNat? (source : String) (maxDigits : Nat) : Option Nat :=
+  if source.isEmpty then none
+  else
+    let significant := String.ofList (source.toList.dropWhile (· == '0'))
+    if significant.length > maxDigits then none
+    else if significant.isEmpty then some 0
+    else significant.toNat?
+
 private def normalizeHost (raw : String) : Except LnurlError String := do
   let bytes ← percentDecode raw
   let some decoded := String.fromUTF8? bytes | throw .invalidHost
@@ -116,15 +125,15 @@ private def normalizeHost (raw : String) : Except LnurlError String := do
     if parts.length != 4 || !(parts.all asciiDigits) ||
         parts.any (fun p => p.length > 1 && p.startsWith "0") then
       throw (.unsupportedUrlForm .ipv4Form)
-    if parts.any (fun p => p.toNat?.getD 256 > 255) then throw .invalidIpv4
+    if parts.any (fun p => (boundedNat? p 3).getD 256 > 255) then throw .invalidIpv4
   return host
 
 private def validatePort (port : String) : Except LnurlError Unit := do
   if port.isEmpty then return
-  if !asciiDigits port || port.toNat?.getD 65536 > 65535 then throw .invalidPort
+  if !asciiDigits port || (boundedNat? port 5).getD 65536 > 65535 then throw .invalidPort
 
-/-- Pure HTTP(S) subset parser. The source string is never rewritten in the output. -/
-def parseUrl (source : String) : Except LnurlError UrlParts := do
+/-- Validate HTTP(S) components without decoding or deduplicating query pairs. -/
+private def parseUrlComponents (source : String) : Except LnurlError UrlParts := do
   let endTrimmed := source.toList.dropWhile (fun c => c.toNat ≤ 32)
     |>.reverse.dropWhile (fun c => c.toNat ≤ 32) |>.reverse
   let cleaned := endTrimmed.filter (fun c => c != '\t' && c != '\r' && c != '\n')
@@ -143,8 +152,13 @@ def parseUrl (source : String) : Except LnurlError UrlParts := do
   let beforeFragment := rest.takeWhile (· != '#')
   let queryStart := beforeFragment.dropWhile (· != '?')
   let query := if queryStart.isEmpty then none else some (specialQuery (String.ofList (queryStart.drop 1)))
-  let pairs ← match query with | none => pure [] | some q => queryPairs q
-  return ⟨scheme, host, scheme ++ "://" ++ host ++ "/", query, pairs⟩
+  return ⟨scheme, host, scheme ++ "://" ++ host ++ "/", query, []⟩
+
+/-- Pure HTTP(S) subset parser. The source string is never rewritten in the output. -/
+def parseUrl (source : String) : Except LnurlError UrlParts := do
+  let parts ← parseUrlComponents source
+  let pairs ← match parts.query with | none => pure [] | some q => queryPairs q
+  return { parts with queryParams := pairs }
 
 /-- Application/x-www-form-urlencoded component, over UTF-8 bytes. -/
 def formEncode (s : String) : String :=
@@ -178,7 +192,7 @@ private def normalizePath (raw : String) : String := Id.run do
 The decode projection deliberately keeps its existing host-only `base` field. -/
 private def serializeParts (source : String) (requestUri : Bool := false) :
     Except LnurlError (String × Option String × String) := do
-  let parts ← parseUrl source
+  let parts ← parseUrlComponents source
   let cleaned := source.toList.dropWhile (fun c => c.toNat ≤ 32)
     |>.reverse.dropWhile (fun c => c.toNat ≤ 32) |>.reverse
     |>.filter (fun c => c != '\t' && c != '\r' && c != '\n')
@@ -187,7 +201,7 @@ private def serializeParts (source : String) (requestUri : Bool := false) :
   let authority := afterSlashes.takeWhile (fun c => c != '/' && c != '\\' && c != '?' && c != '#')
   let rest := afterSlashes.drop authority.length
   let portChars := (authority.dropWhile (· != ':')).drop 1
-  let port := (String.ofList portChars).toNat?
+  let port := boundedNat? (String.ofList portChars) 5
   let portText := match port with
     | some n => if (parts.scheme == "https" && n == 443) || (parts.scheme == "http" && n == 80)
         then "" else ":" ++ toString n

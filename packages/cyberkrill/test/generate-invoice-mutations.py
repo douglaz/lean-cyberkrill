@@ -63,7 +63,17 @@ def mutations():
         '  let mut stack : List String := []\n  for (piece, index) in pieces.drop 1 |>.zipIdx do\n    let dot := (Bitcoin.Bech32.lower piece).replace "%2e" "."\n    if dot == "." || dot == ".." then\n      if dot == ".." then stack := stack.dropLast\n      if index + 2 == pieces.length then stack := stack ++ [""]\n    else stack := stack ++ [urlEscape true piece]\n  return "/" ++ String.intercalate "/" stack\n',
         ["python3","-B","test/generate-invoice.py","--path-stress"],
         "LNURL large callback normalization exceeds 10s budget"))
-    assert len(rows)==19, "LNURL runtime mutation inventory"
+    rows.append(("serialization-query-work",url,
+        '  let parts ← parseUrlComponents source\n  let cleaned :=',
+        '  let parts ← parseUrl source\n  let cleaned :=',
+        ["python3","-B","test/generate-invoice.py","--query-stress"],
+        "LNURL large query normalization exceeds 10s budget"))
+    rows.append(("url-decimal-work",url,
+        'if significant.length > maxDigits then none',
+        'if significant.length > maxDigits && false then none',
+        ["python3","-B","test/generate-invoice.py","--url-number-stress"],
+        "LNURL large URL numeric parsing exceeds 10s budget"))
+    assert len(rows)==21, "LNURL runtime mutation inventory"
     return rows
 
 
@@ -80,13 +90,13 @@ def fingerprints():
 def verify():
     record = json.loads(DEST.read_bytes())
     assert record["source_sha256"]==fingerprints(), "stale LNURL runtime evidence"
-    assert len(record["checks"])==len(mutations())==19, "LNURL detecting count"
+    assert len(record["checks"])==len(mutations())==21, "LNURL detecting count"
     for check,row in zip(record["checks"],mutations()):
         assert [check[k] for k in ["property","file","replace","with_text","command","assertion"]]==list(row), "LNURL mutation identity"
         assert [check[k]["status"] for k in ["build","red","restore_build","green"]]==[0,1,0,0], "LNURL compiled/runtime/restored statuses"
         assert row[-1] in check["failure"] and ("AssertionError:" in check["failure"] or "assertion failed:" in check["failure"]), "LNURL intended runtime assertion"
     assert all(record[k]["status"]==0 for k in ["initial_build","initial_green","restored_full"])
-    print("LNURL mutations: 19/19 compiled intended runtime reds; 19/19 restored builds and greens",flush=True)
+    print("LNURL mutations: 21/21 compiled intended runtime reds; 21/21 restored builds and greens",flush=True)
 
 
 if __name__ == "__main__":

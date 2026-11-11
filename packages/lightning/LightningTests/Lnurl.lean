@@ -131,6 +131,31 @@ def run (selector : Option String := none) : IO Unit := do
       ((Lnurl.callbackUrl ("https://example.com" ++ dotted) 1 none).toOption ==
         some "https://example.com/?amount=1")
     IO.println "large callback paths: 2/2 (100000 ordinary segments; 100000 dot-segment pairs)"
+  if selector.isNone || selector == some "large-query" then
+    let query := String.intercalate "&" ((List.range 100000).map fun i => s!"k{i}=v") ++
+      "&dup=first&%64up=last&quoted='raw'"
+    let source := "https://example.com/pay?" ++ query
+    check "large query fits response bound" (source.toUTF8.size < 1048576)
+    let escaped := query.replace "'" "%27"
+    check "large request query exact result"
+      ((Lnurl.normalizeUrl source).toOption == some ("https://example.com/pay?" ++ escaped))
+    check "large callback query exact result"
+      ((Lnurl.callbackUrl source 1 none).toOption ==
+        some ("https://example.com/pay?" ++ escaped ++ "&amount=1"))
+    check "large redirect query exact result"
+      ((Lnurl.resolveRedirect "https://example.com/start" ("/pay?" ++ query)).toOption == some (some source))
+    IO.println "large URL queries: 3/3 (100000 distinct parameters; raw duplicates and spelling retained)"
+  if selector.isNone || selector == some "large-url-numbers" then
+    let zeroes := String.ofList (List.replicate 900000 '0')
+    check "large zero-padded port exact result"
+      ((Lnurl.callbackUrl ("https://example.com:" ++ zeroes ++ "443/pay") 1 none).toOption ==
+        some "https://example.com/pay?amount=1")
+    let digits := String.ofList (List.replicate 900000 '9')
+    expectError "large invalid decimal port" "invalidPort"
+      (Lnurl.callbackUrl ("https://example.com:" ++ digits ++ "/pay") 1 none)
+    expectError "large invalid decimal IPv4 component" "invalidIpv4"
+      (Lnurl.callbackUrl ("https://1." ++ String.ofList (List.replicate 50000 '9') ++ ".1.1/pay") 1 none)
+    IO.println "large URL numbers: 3/3 (900000-digit ports; 50000-digit IPv4 component)"
   if selector.isNone || selector == some "callback-url" then
     let rows : List (String × Nat × Option String × String) := [
       ("HTTPS://EXAMPLE.COM:00443/p?q=a+b&%61=first&a=last#frag", 123, some "a + café",

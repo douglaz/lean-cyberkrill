@@ -162,6 +162,15 @@ ignored numeric fields lexically rather than expanding their exponents
 the price parser's token separation without adopting its value rewriting or
 extra whole-document validation.
 
+URL serialization validates components without decoding query pairs. Original
+query order, duplicate keys and escape spelling are retained. Controls cover
+100,000 distinct query parameters through initial normalization, callback
+construction and redirects within the same 10-second test budget as the large
+path controls. Decimal port and IPv4 components are checked by significant
+digit count before conversion; controls preserve 900,000-digit zero-padded
+ports and reject out-of-range ports and a 50,000-digit IPv4 component without
+constructing large integers.
+
 The reference's permissive checks are retained: no required `payRequest` tag,
 special interpretation of `status: ERROR`, HTTP-success requirement,
 requested/invoice amount equality, metadata-hash validation or invoice-network
@@ -186,7 +195,7 @@ For the evidence command below, `TMP_ROOT` denotes that owned temporary director
 | Explicit native-decision, proof-token and private-key scans in `validate.py repo` | root | 0 each | 86/86 tracked library/proof files, zero native-decision offenders; proof and private-key scans empty. |
 
 The actual sequential campaigns also completed with exit 0: invoice requests
-(19 compiled detections), fiat consumers (6), prices (36), move (56), creation
+(21 compiled detections), fiat consumers (6), prices (36), move (56), creation
 (57), listing (63), lexical listing (9), listing lifecycle (34 boundaries), and
 Core client/capture/safety (68 compiled selections plus 213 safety selections).
 The affected retained, Lightning, revision, regression, output, attached-output
