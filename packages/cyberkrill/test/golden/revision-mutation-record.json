@@ -1,7 +1,7 @@
 {
   "count": 30,
   "source_sha256": {
-    "Cyberkrill/App.lean": "c4988419b9aec54141f3d2355de8b0481843a7f142295e427921e5cd28517dd3",
+    "Cyberkrill/App.lean": "ace8e6b87a4bfe537a51a38f7472671ccc8a197b5deda1b40091533d101f25c6",
     "Cyberkrill/Amounts.lean": "5c61afca50ba859e8dba2fea4fd04d3db1c70905684815aec03c9174a1ac327f",
     "Cyberkrill/Capabilities.lean": "35a0f3dc6dff6a88989c9de7665c93a117f26341f8869ba28c4c01e298d064a8",
     "Cyberkrill/Lightning.lean": "30728c403b57686af70f6461ac2141152b7b09ae062799583129e82963e0d2b1",
@@ -17,11 +17,11 @@
     "test/verify.py": "17539f9bbf38f28d97e1dd2f9d6e7d943a48d5bd4ba37cf3c7ac3ae633b3a2e7",
     "test/fifo.py": "014cff9f435f23f2d553379f7d014fd65753c620c0f0f9975d5b9072d23ced0c",
     "Main.lean": "915167be1211cea874cd9f781d9651bc3e441b81dd9979415ba55d44e34f2eb1",
-    "CyberkrillTests.lean": "4a8c61cbe208f66da5da6cde1e8a0db64a843f46a7ba6e24d2d4bdfc5773ab2e",
+    "CyberkrillTests.lean": "ece4b9a3f0453f0d5a24796f86db55c6fe315975dfc0bce38d04a99af684f4ee",
     "lakefile.lean": "091b5366403a589d69a1226b5728588a7d7b4907cbe3b32199f22d5a0ed4093d",
     "private_output.c": "5bf3940e88b4d8dfba6214e5e489a0c3d6dbd94e0d26f212126c8fd8ef1d3308",
     "CyberkrillTests/Capabilities.lean": "50172673976ead4aef29242efa591ed2237d2db4f60a6a323c2d5f9f4555fd66",
-    "CyberkrillTests/FetchConfig.lean": "5da86af97d1063bef9064b0083387448c91314ff2b783d0eac0c79e5e167cf97",
+    "CyberkrillTests/FetchConfig.lean": "40242a87fd239f17ef54d0722fa5ae3cbe81640d71a700010e1bbacdef32357a",
     "CyberkrillTests/FiatOnchain.lean": "8ee610b7c08e1b96237f1e7f7751731ba6901f65cdbfa7b46b7348215455475b",
     "CyberkrillTests/GenerateInvoice.lean": "5ebf3a0a6ad5e197d2458a005ed0a8a90e87e1dedaf87a48da2d320c665f96e9",
     "CyberkrillTests/Helpers.lean": "d4484cedac1da7a20e5bc0a05080c7d6c171e7ec49f7a64e3a80ad3d075bc70a",
@@ -42,8 +42,8 @@
     "test/revision-cases.py": "34b9422908c0b1dbce438133de14ed5b8cb28aa3756a9132bbad021e01122491",
     "test/capture-revisions.py": "0fb9a5134ad73137a14db31208fd78b61f695cac98ee0cded5c7561189e45694",
     "test/revision-mutate.py": "0f5ca1aa827e87027bc6cc91dc65588bafa72c06241a9980df2663e324c8e620",
-    "test/scope.py": "0b5ce3eac1784420ba3eba0fb0ea7ec080d73242b704124f45c5b0637b706c9c",
-    "test/validate.py": "feaf4038b01dbf5e4932ecd45e872683c18b78fb08536b981b155822afb7835b",
+    "test/scope.py": "7611f7cd3110cc0b255108876fc7a59bd452eb0960c6ab3c7c995a06b6065734",
+    "test/validate.py": "9f2e6227a6560d05457f3a74d69ff0ad957fbf57b29e0bbf33dfac450195796c",
     "test/record-revision-regressions.py": "835793fffcab60c1b7d340211788fd37b55695f86843ea7d0c5c0774df360fee",
     "test/golden/revision-reference.json": "c168ba949234dc118dc0fb89de5e065c0ba39e3024686334536eec155b5e187e",
     "test/golden/revision-provenance.json": "ee2e60e5e3d6ec507be8181b742531ba67c19434496f6c1ecd1584c876ba3568",
@@ -69,7 +69,7 @@
           "CyberkrillTests"
         ],
         "status": 0,
-        "seconds": 15.52
+        "seconds": 15.874
       },
       "red": {
         "command": [
@@ -83,7 +83,7 @@
           "timestamp/compact-zone"
         ],
         "status": 1,
-        "seconds": 0.105
+        "seconds": 0.108
       },
       "restore_build": {
         "command": [
@@ -96,7 +96,7 @@
           "CyberkrillTests"
         ],
         "status": 0,
-        "seconds": 14.828
+        "seconds": 16.035
       },
       "green": {
         "command": [
@@ -110,7 +110,7 @@
           "timestamp/compact-zone"
         ],
         "status": 0,
-        "seconds": 0.103
+        "seconds": 0.106
       }
     },
     {
@@ -132,7 +132,7 @@
           "CyberkrillTests"
         ],
         "status": 0,
-        "seconds": 14.826
+        "seconds": 15.54
       },
       "red": {
         "command": [
@@ -159,7 +159,7 @@
           "CyberkrillTests"
         ],
         "status": 0,
-        "seconds": 14.828
+        "seconds": 15.651
       },
       "green": {
         "command": [
@@ -173,7 +173,7 @@
           "timestamp/expanded-year"
         ],
         "status": 0,
-        "seconds": 0.107
+        "seconds": 0.109
       }
     },
     {
@@ -195,7 +195,7 @@
           "CyberkrillTests"
         ],
         "status": 0,
-        "seconds": 15.43
+        "seconds": 15.737
       },
       "red": {
         "command": [
@@ -209,7 +209,7 @@
           "timestamp/zone-nbsp"
         ],
         "status": 1,
-        "seconds": 0.104
+        "seconds": 0.114
       },
       "restore_build": {
         "command": [
@@ -222,7 +222,7 @@
           "CyberkrillTests"
         ],
         "status": 0,
-        "seconds": 14.631
+        "seconds": 15.548
       },
       "green": {
         "command": [
@@ -236,7 +236,7 @@
           "timestamp/zone-nbsp"
         ],
         "status": 0,
-        "seconds": 0.104
+        "seconds": 0.109
       }
     },
     {
@@ -258,7 +258,7 @@
           "CyberkrillTests"
         ],
         "status": 0,
-        "seconds": 15.026
+        "seconds": 15.543
       },
       "red": {
         "command": [
@@ -272,7 +272,7 @@
           "timestamp/utc-underflow"
         ],
         "status": 1,
-        "seconds": 0.111
+        "seconds": 0.116
       },
       "restore_build": {
         "command": [
@@ -285,7 +285,7 @@
           "CyberkrillTests"
         ],
         "status": 0,
-        "seconds": 14.823
+        "seconds": 15.858
       },
       "green": {
         "command": [
@@ -299,7 +299,7 @@
           "timestamp/utc-underflow"
         ],
         "status": 0,
-        "seconds": 0.103
+        "seconds": 0.107
       }
     },
     {
@@ -321,7 +321,7 @@
           "CyberkrillTests"
         ],
         "status": 0,
-        "seconds": 14.92
+        "seconds": 15.74
       },
       "red": {
         "command": [
@@ -335,7 +335,7 @@
           "timestamp/utc-overflow"
         ],
         "status": 1,
-        "seconds": 0.106
+        "seconds": 0.112
       },
       "restore_build": {
         "command": [
@@ -348,7 +348,7 @@
           "CyberkrillTests"
         ],
         "status": 0,
-        "seconds": 15.026
+        "seconds": 15.551
       },
       "green": {
         "command": [
@@ -362,7 +362,7 @@
           "timestamp/utc-overflow"
         ],
         "status": 0,
-        "seconds": 0.107
+        "seconds": 0.114
       }
     },
     {
@@ -384,7 +384,7 @@
           "CyberkrillTests"
         ],
         "status": 0,
-        "seconds": 14.926
+        "seconds": 15.948
       },
       "red": {
         "command": [
@@ -398,7 +398,7 @@
           "timestamp/date-leap-invalid"
         ],
         "status": 1,
-        "seconds": 0.11
+        "seconds": 0.108
       },
       "restore_build": {
         "command": [
@@ -411,7 +411,7 @@
           "CyberkrillTests"
         ],
         "status": 0,
-        "seconds": 14.855
+        "seconds": 15.443
       },
       "green": {
         "command": [
@@ -425,7 +425,7 @@
           "timestamp/date-leap-invalid"
         ],
         "status": 0,
-        "seconds": 0.115
+        "seconds": 0.106
       }
     },
     {
@@ -447,7 +447,7 @@
           "CyberkrillTests"
         ],
         "status": 0,
-        "seconds": 14.85
+        "seconds": 17.65
       },
       "red": {
         "command": [
@@ -461,7 +461,7 @@
           "timestamp/tab-separator"
         ],
         "status": 1,
-        "seconds": 0.104
+        "seconds": 0.115
       },
       "restore_build": {
         "command": [
@@ -474,7 +474,7 @@
           "CyberkrillTests"
         ],
         "status": 0,
-        "seconds": 15.321
+        "seconds": 15.846
       },
       "green": {
         "command": [
@@ -488,7 +488,7 @@
           "timestamp/tab-separator"
         ],
         "status": 0,
-        "seconds": 0.117
+        "seconds": 0.106
       }
     },
     {
@@ -510,7 +510,7 @@
           "CyberkrillTests"
         ],
         "status": 0,
-        "seconds": 15.981
+        "seconds": 15.547
       },
       "red": {
         "command": [
@@ -524,7 +524,7 @@
           "timestamp/zone-hour-overflow"
         ],
         "status": 1,
-        "seconds": 0.107
+        "seconds": 0.113
       },
       "restore_build": {
         "command": [
@@ -537,7 +537,7 @@
           "CyberkrillTests"
         ],
         "status": 0,
-        "seconds": 14.815
+        "seconds": 15.331
       },
       "green": {
         "command": [
@@ -551,7 +551,7 @@
           "timestamp/zone-hour-overflow"
         ],
         "status": 0,
-        "seconds": 0.107
+        "seconds": 0.109
       }
     },
     {
@@ -573,7 +573,7 @@
           "CyberkrillTests"
         ],
         "status": 0,
-        "seconds": 14.719
+        "seconds": 15.735
       },
       "red": {
         "command": [
@@ -587,7 +587,7 @@
           "unicode/known-high"
         ],
         "status": 1,
-        "seconds": 0.108
+        "seconds": 0.109
       },
       "restore_build": {
         "command": [
@@ -600,7 +600,7 @@
           "CyberkrillTests"
         ],
         "status": 0,
-        "seconds": 14.827
+        "seconds": 15.743
       },
       "green": {
         "command": [
@@ -614,7 +614,7 @@
           "unicode/known-high"
         ],
         "status": 0,
-        "seconds": 0.106
+        "seconds": 0.11
       }
     },
     {
@@ -636,7 +636,7 @@
           "CyberkrillTests"
         ],
         "status": 0,
-        "seconds": 14.825
+        "seconds": 15.54
       },
       "red": {
         "command": [
@@ -650,7 +650,7 @@
           "unicode/known-low"
         ],
         "status": 1,
-        "seconds": 0.105
+        "seconds": 0.112
       },
       "restore_build": {
         "command": [
@@ -663,7 +663,7 @@
           "CyberkrillTests"
         ],
         "status": 0,
-        "seconds": 14.829
+        "seconds": 15.631
       },
       "green": {
         "command": [
@@ -677,7 +677,7 @@
           "unicode/known-low"
         ],
         "status": 0,
-        "seconds": 0.105
+        "seconds": 0.109
       }
     },
     {
@@ -699,7 +699,7 @@
           "CyberkrillTests"
         ],
         "status": 0,
-        "seconds": 14.637
+        "seconds": 15.441
       },
       "red": {
         "command": [
@@ -713,7 +713,7 @@
           "unicode/known-high-ascii"
         ],
         "status": 1,
-        "seconds": 0.106
+        "seconds": 0.11
       },
       "restore_build": {
         "command": [
@@ -726,7 +726,7 @@
           "CyberkrillTests"
         ],
         "status": 0,
-        "seconds": 15.725
+        "seconds": 15.535
       },
       "green": {
         "command": [
@@ -740,7 +740,7 @@
           "unicode/known-high-ascii"
         ],
         "status": 0,
-        "seconds": 0.107
+        "seconds": 0.111
       }
     },
     {
@@ -762,7 +762,7 @@
           "CyberkrillTests"
         ],
         "status": 0,
-        "seconds": 14.514
+        "seconds": 15.748
       },
       "red": {
         "command": [
@@ -776,7 +776,7 @@
           "unicode/field-name-high"
         ],
         "status": 1,
-        "seconds": 0.106
+        "seconds": 0.108
       },
       "restore_build": {
         "command": [
@@ -789,7 +789,7 @@
           "CyberkrillTests"
         ],
         "status": 0,
-        "seconds": 14.831
+        "seconds": 15.837
       },
       "green": {
         "command": [
@@ -803,7 +803,7 @@
           "unicode/field-name-high"
         ],
         "status": 0,
-        "seconds": 0.107
+        "seconds": 0.105
       }
     },
     {
@@ -825,7 +825,7 @@
           "CyberkrillTests"
         ],
         "status": 0,
-        "seconds": 14.62
+        "seconds": 15.132
       },
       "red": {
         "command": [
@@ -839,7 +839,7 @@
           "unicode/ignored-high"
         ],
         "status": 1,
-        "seconds": 0.106
+        "seconds": 0.105
       },
       "restore_build": {
         "command": [
@@ -852,7 +852,7 @@
           "CyberkrillTests"
         ],
         "status": 0,
-        "seconds": 15.522
+        "seconds": 15.338
       },
       "green": {
         "command": [
@@ -866,7 +866,7 @@
           "unicode/ignored-high"
         ],
         "status": 0,
-        "seconds": 0.121
+        "seconds": 0.105
       }
     },
     {
@@ -888,7 +888,7 @@
           "CyberkrillTests"
         ],
         "status": 0,
-        "seconds": 14.765
+        "seconds": 14.128
       },
       "red": {
         "command": [
@@ -902,7 +902,7 @@
           "sequence/root-length-14"
         ],
         "status": 1,
-        "seconds": 0.113
+        "seconds": 0.107
       },
       "restore_build": {
         "command": [
@@ -915,7 +915,7 @@
           "CyberkrillTests"
         ],
         "status": 0,
-        "seconds": 14.337
+        "seconds": 13.942
       },
       "green": {
         "command": [
@@ -929,7 +929,7 @@
           "sequence/root-length-14"
         ],
         "status": 0,
-        "seconds": 0.106
+        "seconds": 0.104
       }
     },
     {
@@ -951,7 +951,7 @@
           "CyberkrillTests"
         ],
         "status": 0,
-        "seconds": 13.934
+        "seconds": 13.861
       },
       "red": {
         "command": [
@@ -965,7 +965,7 @@
           "sequence/hop-length-6"
         ],
         "status": 1,
-        "seconds": 0.118
+        "seconds": 0.104
       },
       "restore_build": {
         "command": [
@@ -978,7 +978,7 @@
           "CyberkrillTests"
         ],
         "status": 0,
-        "seconds": 13.732
+        "seconds": 13.836
       },
       "green": {
         "command": [
@@ -992,7 +992,7 @@
           "sequence/hop-length-6"
         ],
         "status": 0,
-        "seconds": 0.109
+        "seconds": 0.106
       }
     },
     {
@@ -1014,7 +1014,7 @@
           "CyberkrillTests"
         ],
         "status": 0,
-        "seconds": 13.825
+        "seconds": 13.923
       },
       "red": {
         "command": [
@@ -1028,7 +1028,7 @@
           "sequence/fees-length-2"
         ],
         "status": 1,
-        "seconds": 0.102
+        "seconds": 0.105
       },
       "restore_build": {
         "command": [
@@ -1041,7 +1041,7 @@
           "CyberkrillTests"
         ],
         "status": 0,
-        "seconds": 13.728
+        "seconds": 13.823
       },
       "green": {
         "command": [
@@ -1055,7 +1055,7 @@
           "sequence/fees-length-2"
         ],
         "status": 0,
-        "seconds": 0.113
+        "seconds": 0.105
       }
     },
     {
@@ -1077,7 +1077,7 @@
           "CyberkrillTests"
         ],
         "status": 0,
-        "seconds": 14.832
+        "seconds": 14.925
       },
       "red": {
         "command": [
@@ -1091,7 +1091,7 @@
           "sequence/root-unsigned"
         ],
         "status": 1,
-        "seconds": 0.106
+        "seconds": 0.114
       },
       "restore_build": {
         "command": [
@@ -1104,7 +1104,7 @@
           "CyberkrillTests"
         ],
         "status": 0,
-        "seconds": 15.02
+        "seconds": 14.927
       },
       "green": {
         "command": [
@@ -1118,7 +1118,7 @@
           "sequence/root-unsigned"
         ],
         "status": 0,
-        "seconds": 0.104
+        "seconds": 0.102
       }
     },
     {
@@ -1140,7 +1140,7 @@
           "CyberkrillTests"
         ],
         "status": 0,
-        "seconds": 14.922
+        "seconds": 14.932
       },
       "red": {
         "command": [
@@ -1154,7 +1154,7 @@
           "sequence/root-length-15"
         ],
         "status": 1,
-        "seconds": 0.103
+        "seconds": 0.105
       },
       "restore_build": {
         "command": [
@@ -1167,7 +1167,7 @@
           "CyberkrillTests"
         ],
         "status": 0,
-        "seconds": 14.835
+        "seconds": 15.027
       },
       "green": {
         "command": [
@@ -1181,7 +1181,7 @@
           "sequence/root-length-15"
         ],
         "status": 0,
-        "seconds": 0.102
+        "seconds": 0.114
       }
     },
     {
@@ -1203,7 +1203,7 @@
           "CyberkrillTests"
         ],
         "status": 0,
-        "seconds": 13.624
+        "seconds": 14.234
       },
       "red": {
         "command": [
@@ -1230,7 +1230,7 @@
           "CyberkrillTests"
         ],
         "status": 0,
-        "seconds": 13.723
+        "seconds": 13.826
       },
       "green": {
         "command": [
@@ -1244,7 +1244,7 @@
           "simnet/decode"
         ],
         "status": 0,
-        "seconds": 0.107
+        "seconds": 0.112
       }
     },
     {
@@ -1266,7 +1266,7 @@
           "CyberkrillTests"
         ],
         "status": 0,
-        "seconds": 13.726
+        "seconds": 13.835
       },
       "red": {
         "command": [
@@ -1280,7 +1280,7 @@
           "simnet/encode"
         ],
         "status": 1,
-        "seconds": 0.112
+        "seconds": 0.106
       },
       "restore_build": {
         "command": [
@@ -1293,7 +1293,7 @@
           "CyberkrillTests"
         ],
         "status": 0,
-        "seconds": 13.82
+        "seconds": 13.836
       },
       "green": {
         "command": [
@@ -1307,7 +1307,7 @@
           "simnet/encode"
         ],
         "status": 0,
-        "seconds": 0.122
+        "seconds": 0.114
       }
     },
     {
@@ -1318,6 +1318,195 @@
       "case": "output/ln-decode-invoice-create",
       "assertion": "failed output existence/bytes",
       "failure": "AssertionError: output/ln-decode-invoice-create failed output existence/bytes",
+      "build": {
+        "command": [
+          "timeout",
+          "--foreground",
+          "180",
+          "lake",
+          "build",
+          "cyberkrill",
+          "CyberkrillTests"
+        ],
+        "status": 0,
+        "seconds": 15.593
+      },
+      "red": {
+        "command": [
+          "timeout",
+          "--foreground",
+          "180",
+          "python3",
+          "-B",
+          "test/revisions.py",
+          "--case",
+          "output/ln-decode-invoice-create"
+        ],
+        "status": 1,
+        "seconds": 0.109
+      },
+      "restore_build": {
+        "command": [
+          "timeout",
+          "--foreground",
+          "180",
+          "lake",
+          "build",
+          "cyberkrill",
+          "CyberkrillTests"
+        ],
+        "status": 0,
+        "seconds": 13.534
+      },
+      "green": {
+        "command": [
+          "timeout",
+          "--foreground",
+          "180",
+          "python3",
+          "-B",
+          "test/revisions.py",
+          "--case",
+          "output/ln-decode-invoice-create"
+        ],
+        "status": 0,
+        "seconds": 0.104
+      }
+    },
+    {
+      "property": "decoder-truncate-lnurl",
+      "file": "Cyberkrill/App.lean",
+      "replace": "let .ok writer \u2190 prepareDecodeOutput services path | return .error .outputFailure\n    return (LightningCli.decodeLnurl",
+      "with_text": "let .ok writer \u2190 prepareDecodeOutput services none | return .error .outputFailure\n    return (LightningCli.decodeLnurl",
+      "case": "output/ln-decode-lnurl-truncate",
+      "assertion": "failed output existence/bytes",
+      "failure": "AssertionError: output/ln-decode-lnurl-truncate failed output existence/bytes",
+      "build": {
+        "command": [
+          "timeout",
+          "--foreground",
+          "180",
+          "lake",
+          "build",
+          "cyberkrill",
+          "CyberkrillTests"
+        ],
+        "status": 0,
+        "seconds": 12.326
+      },
+      "red": {
+        "command": [
+          "timeout",
+          "--foreground",
+          "180",
+          "python3",
+          "-B",
+          "test/revisions.py",
+          "--case",
+          "output/ln-decode-lnurl-truncate"
+        ],
+        "status": 1,
+        "seconds": 0.107
+      },
+      "restore_build": {
+        "command": [
+          "timeout",
+          "--foreground",
+          "180",
+          "lake",
+          "build",
+          "cyberkrill",
+          "CyberkrillTests"
+        ],
+        "status": 0,
+        "seconds": 12.424
+      },
+      "green": {
+        "command": [
+          "timeout",
+          "--foreground",
+          "180",
+          "python3",
+          "-B",
+          "test/revisions.py",
+          "--case",
+          "output/ln-decode-lnurl-truncate"
+        ],
+        "status": 0,
+        "seconds": 0.11
+      }
+    },
+    {
+      "property": "decoder-open-before-decode",
+      "file": "Cyberkrill/App.lean",
+      "replace": "catch _ => return .error .outputFailure\n\ndef execute",
+      "with_text": "catch _ => return .ok none\n\ndef execute",
+      "case": "output/ln-decode-invoice-open-error",
+      "assertion": "error ordering/identity",
+      "failure": "AssertionError: output/ln-decode-invoice-open-error error ordering/identity",
+      "build": {
+        "command": [
+          "timeout",
+          "--foreground",
+          "180",
+          "lake",
+          "build",
+          "cyberkrill",
+          "CyberkrillTests"
+        ],
+        "status": 0,
+        "seconds": 12.424
+      },
+      "red": {
+        "command": [
+          "timeout",
+          "--foreground",
+          "180",
+          "python3",
+          "-B",
+          "test/revisions.py",
+          "--case",
+          "output/ln-decode-invoice-open-error"
+        ],
+        "status": 1,
+        "seconds": 0.106
+      },
+      "restore_build": {
+        "command": [
+          "timeout",
+          "--foreground",
+          "180",
+          "lake",
+          "build",
+          "cyberkrill",
+          "CyberkrillTests"
+        ],
+        "status": 0,
+        "seconds": 12.422
+      },
+      "green": {
+        "command": [
+          "timeout",
+          "--foreground",
+          "180",
+          "python3",
+          "-B",
+          "test/revisions.py",
+          "--case",
+          "output/ln-decode-invoice-open-error"
+        ],
+        "status": 0,
+        "seconds": 0.107
+      }
+    },
+    {
+      "property": "decoder-read-before-open",
+      "file": "Cyberkrill/App.lean",
+      "replace": "let .ok text \u2190 lightningInput services input false | return .error .inputFailure\n    let .ok writer \u2190 prepareDecodeOutput services path | return .error .outputFailure\n    return (LightningCli.decodeLnurl",
+      "with_text": "let .ok writer \u2190 prepareDecodeOutput services path | return .error .outputFailure\n    let .ok text \u2190 lightningInput services input false | return .error .inputFailure\n    return (LightningCli.decodeLnurl",
+      "case": "output/ln-decode-lnurl-read-before-open",
+      "assertion": "error ordering/identity",
+      "failure": "AssertionError: output/ln-decode-lnurl-read-before-open error ordering/identity",
       "build": {
         "command": [
           "timeout",
@@ -1340,199 +1529,10 @@
           "-B",
           "test/revisions.py",
           "--case",
-          "output/ln-decode-invoice-create"
-        ],
-        "status": 1,
-        "seconds": 0.105
-      },
-      "restore_build": {
-        "command": [
-          "timeout",
-          "--foreground",
-          "180",
-          "lake",
-          "build",
-          "cyberkrill",
-          "CyberkrillTests"
-        ],
-        "status": 0,
-        "seconds": 12.335
-      },
-      "green": {
-        "command": [
-          "timeout",
-          "--foreground",
-          "180",
-          "python3",
-          "-B",
-          "test/revisions.py",
-          "--case",
-          "output/ln-decode-invoice-create"
-        ],
-        "status": 0,
-        "seconds": 0.106
-      }
-    },
-    {
-      "property": "decoder-truncate-lnurl",
-      "file": "Cyberkrill/App.lean",
-      "replace": "let .ok writer \u2190 prepareDecodeOutput services path | return .error .outputFailure\n    return (LightningCli.decodeLnurl",
-      "with_text": "let .ok writer \u2190 prepareDecodeOutput services none | return .error .outputFailure\n    return (LightningCli.decodeLnurl",
-      "case": "output/ln-decode-lnurl-truncate",
-      "assertion": "failed output existence/bytes",
-      "failure": "AssertionError: output/ln-decode-lnurl-truncate failed output existence/bytes",
-      "build": {
-        "command": [
-          "timeout",
-          "--foreground",
-          "180",
-          "lake",
-          "build",
-          "cyberkrill",
-          "CyberkrillTests"
-        ],
-        "status": 0,
-        "seconds": 12.32
-      },
-      "red": {
-        "command": [
-          "timeout",
-          "--foreground",
-          "180",
-          "python3",
-          "-B",
-          "test/revisions.py",
-          "--case",
-          "output/ln-decode-lnurl-truncate"
-        ],
-        "status": 1,
-        "seconds": 0.103
-      },
-      "restore_build": {
-        "command": [
-          "timeout",
-          "--foreground",
-          "180",
-          "lake",
-          "build",
-          "cyberkrill",
-          "CyberkrillTests"
-        ],
-        "status": 0,
-        "seconds": 12.529
-      },
-      "green": {
-        "command": [
-          "timeout",
-          "--foreground",
-          "180",
-          "python3",
-          "-B",
-          "test/revisions.py",
-          "--case",
-          "output/ln-decode-lnurl-truncate"
-        ],
-        "status": 0,
-        "seconds": 0.112
-      }
-    },
-    {
-      "property": "decoder-open-before-decode",
-      "file": "Cyberkrill/App.lean",
-      "replace": "catch _ => return .error .outputFailure\n\ndef execute",
-      "with_text": "catch _ => return .ok none\n\ndef execute",
-      "case": "output/ln-decode-invoice-open-error",
-      "assertion": "error ordering/identity",
-      "failure": "AssertionError: output/ln-decode-invoice-open-error error ordering/identity",
-      "build": {
-        "command": [
-          "timeout",
-          "--foreground",
-          "180",
-          "lake",
-          "build",
-          "cyberkrill",
-          "CyberkrillTests"
-        ],
-        "status": 0,
-        "seconds": 12.235
-      },
-      "red": {
-        "command": [
-          "timeout",
-          "--foreground",
-          "180",
-          "python3",
-          "-B",
-          "test/revisions.py",
-          "--case",
-          "output/ln-decode-invoice-open-error"
-        ],
-        "status": 1,
-        "seconds": 0.105
-      },
-      "restore_build": {
-        "command": [
-          "timeout",
-          "--foreground",
-          "180",
-          "lake",
-          "build",
-          "cyberkrill",
-          "CyberkrillTests"
-        ],
-        "status": 0,
-        "seconds": 12.225
-      },
-      "green": {
-        "command": [
-          "timeout",
-          "--foreground",
-          "180",
-          "python3",
-          "-B",
-          "test/revisions.py",
-          "--case",
-          "output/ln-decode-invoice-open-error"
-        ],
-        "status": 0,
-        "seconds": 0.106
-      }
-    },
-    {
-      "property": "decoder-read-before-open",
-      "file": "Cyberkrill/App.lean",
-      "replace": "let .ok text \u2190 lightningInput services input false | return .error .inputFailure\n    let .ok writer \u2190 prepareDecodeOutput services path | return .error .outputFailure\n    return (LightningCli.decodeLnurl",
-      "with_text": "let .ok writer \u2190 prepareDecodeOutput services path | return .error .outputFailure\n    let .ok text \u2190 lightningInput services input false | return .error .inputFailure\n    return (LightningCli.decodeLnurl",
-      "case": "output/ln-decode-lnurl-read-before-open",
-      "assertion": "error ordering/identity",
-      "failure": "AssertionError: output/ln-decode-lnurl-read-before-open error ordering/identity",
-      "build": {
-        "command": [
-          "timeout",
-          "--foreground",
-          "180",
-          "lake",
-          "build",
-          "cyberkrill",
-          "CyberkrillTests"
-        ],
-        "status": 0,
-        "seconds": 12.325
-      },
-      "red": {
-        "command": [
-          "timeout",
-          "--foreground",
-          "180",
-          "python3",
-          "-B",
-          "test/revisions.py",
-          "--case",
           "output/ln-decode-lnurl-read-before-open"
         ],
         "status": 1,
-        "seconds": 0.103
+        "seconds": 0.102
       },
       "restore_build": {
         "command": [
@@ -1559,7 +1559,7 @@
           "output/ln-decode-lnurl-read-before-open"
         ],
         "status": 0,
-        "seconds": 0.103
+        "seconds": 0.106
       }
     },
     {
@@ -1581,7 +1581,7 @@
           "CyberkrillTests"
         ],
         "status": 0,
-        "seconds": 12.419
+        "seconds": 12.324
       },
       "red": {
         "command": [
@@ -1595,7 +1595,7 @@
           "output/encode-preserve"
         ],
         "status": 1,
-        "seconds": 0.109
+        "seconds": 0.103
       },
       "restore_build": {
         "command": [
@@ -1608,7 +1608,7 @@
           "CyberkrillTests"
         ],
         "status": 0,
-        "seconds": 12.233
+        "seconds": 12.528
       },
       "green": {
         "command": [
@@ -1622,7 +1622,7 @@
           "output/encode-preserve"
         ],
         "status": 0,
-        "seconds": 0.115
+        "seconds": 0.112
       }
     },
     {
@@ -1644,7 +1644,7 @@
           "CyberkrillTests"
         ],
         "status": 0,
-        "seconds": 0.414
+        "seconds": 0.415
       },
       "red": {
         "command": [
@@ -1658,7 +1658,7 @@
           "closed"
         ],
         "status": 1,
-        "seconds": 0.098
+        "seconds": 0.104
       },
       "restore_build": {
         "command": [
@@ -1671,7 +1671,7 @@
           "CyberkrillTests"
         ],
         "status": 0,
-        "seconds": 0.399
+        "seconds": 0.408
       },
       "green": {
         "command": [
@@ -1685,7 +1685,7 @@
           "closed"
         ],
         "status": 0,
-        "seconds": 0.92
+        "seconds": 0.973
       }
     },
     {
@@ -1707,7 +1707,7 @@
           "CyberkrillTests"
         ],
         "status": 0,
-        "seconds": 0.408
+        "seconds": 0.493
       },
       "red": {
         "command": [
@@ -1721,7 +1721,7 @@
           "closed-empty-reason"
         ],
         "status": 1,
-        "seconds": 0.911
+        "seconds": 2.271
       },
       "restore_build": {
         "command": [
@@ -1734,7 +1734,7 @@
           "CyberkrillTests"
         ],
         "status": 0,
-        "seconds": 0.41
+        "seconds": 0.466
       },
       "green": {
         "command": [
@@ -1748,7 +1748,7 @@
           "closed-empty-reason"
         ],
         "status": 0,
-        "seconds": 0.1
+        "seconds": 0.116
       }
     },
     {
@@ -1770,7 +1770,7 @@
           "CyberkrillTests"
         ],
         "status": 0,
-        "seconds": 0.405
+        "seconds": 0.485
       },
       "red": {
         "command": [
@@ -1784,7 +1784,7 @@
           "closed-wrong-order"
         ],
         "status": 1,
-        "seconds": 0.932
+        "seconds": 1.06
       },
       "restore_build": {
         "command": [
@@ -1797,7 +1797,7 @@
           "CyberkrillTests"
         ],
         "status": 0,
-        "seconds": 0.405
+        "seconds": 0.426
       },
       "green": {
         "command": [
@@ -1811,7 +1811,7 @@
           "closed-wrong-order"
         ],
         "status": 0,
-        "seconds": 0.101
+        "seconds": 0.111
       }
     },
     {
@@ -1833,7 +1833,7 @@
           "CyberkrillTests"
         ],
         "status": 0,
-        "seconds": 0.41
+        "seconds": 0.433
       },
       "red": {
         "command": [
@@ -1847,7 +1847,7 @@
           "unrelated"
         ],
         "status": 1,
-        "seconds": 0.931
+        "seconds": 1.029
       },
       "restore_build": {
         "command": [
@@ -1860,7 +1860,7 @@
           "CyberkrillTests"
         ],
         "status": 0,
-        "seconds": 0.408
+        "seconds": 0.414
       },
       "green": {
         "command": [
@@ -1874,7 +1874,7 @@
           "unrelated"
         ],
         "status": 0,
-        "seconds": 0.099
+        "seconds": 0.095
       }
     },
     {
@@ -1896,7 +1896,7 @@
           "CyberkrillTests"
         ],
         "status": 0,
-        "seconds": 0.407
+        "seconds": 0.419
       },
       "red": {
         "command": [
@@ -1910,7 +1910,7 @@
           "decision-text"
         ],
         "status": 1,
-        "seconds": 0.916
+        "seconds": 1.014
       },
       "restore_build": {
         "command": [
@@ -1937,7 +1937,7 @@
           "decision-text"
         ],
         "status": 0,
-        "seconds": 0.098
+        "seconds": 0.107
       }
     }
   ],
@@ -1950,7 +1950,7 @@
       "test"
     ],
     "status": 0,
-    "seconds": 300.282
+    "seconds": 326.906
   },
   "regressions_green": {
     "command": [
@@ -1962,7 +1962,7 @@
       "test/revisions.py"
     ],
     "status": 0,
-    "seconds": 4.675
+    "seconds": 4.793
   },
   "scope_green": {
     "command": [
@@ -1975,6 +1975,6 @@
       "--scope"
     ],
     "status": 0,
-    "seconds": 1.899
+    "seconds": 2.043
   }
 }

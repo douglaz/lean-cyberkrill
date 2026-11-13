@@ -16,6 +16,7 @@ def fetchConfigRun : IO Unit := do
     let calls ← IO.mkRef (#[] : Array Json)
     let injected := (row.getObjValAs? Bool "injected").toOption.getD false
     let guarded := (row.getObjValAs? Bool "guarded").toOption.getD false
+    let shortLimits := (row.getObjValAs? Bool "short_limits").toOption.getD false
     let replies := (row.getObjValAs? (Array Json) "replies").toOption.getD #[]
     let request := fun (req : HttpCurl.Request) => do
       let index := (← calls.get).size
@@ -47,6 +48,8 @@ def fetchConfigRun : IO Unit := do
         return .ok {
           status := UInt32.ofNat ((reply.getObjValAs? Nat "status").toOption.getD 200)
           headers := (reply.getObjValAs? (Array (String × String)) "headers").toOption.getD #[]
+          headerBytes := (reply.getObjValAs? (Array (String × Array Nat)) "header_bytes").toOption.map
+            (·.map fun (name, bytes) => (name, ByteArray.mk (bytes.map UInt8.ofNat)))
           body := body }
     let replace := (row.getObjValAs? Bool "replace").toOption.getD false
     let services := { productionServices with
@@ -57,12 +60,15 @@ def fetchConfigRun : IO Unit := do
           IO.FS.rename path (path ++ ".opened")
           IO.FS.writeFile path "replacement leaf"
         return write }
-    let result ← if injected && !guarded then do
+    let result ← if injected && !guarded && !shortLimits then do
         let (status, out, err) ← runCase services args
         pure (⟨status, out, err⟩ : TestRun)
       else
         let bases := Array.replicate 9 "http://127.0.0.1:19444"
-        runWithTestUrls version ⟨bases, bases[0]!, bases[0]!⟩ args services (configRequest := request)
+        let limits : FetchConfig.Limits := if shortLimits then
+          { connectTimeoutMs := 1000, totalTimeoutMs := 2000 } else {}
+        runWithTestUrls version ⟨bases, bases[0]!, bases[0]!⟩ args services
+          (configRequest := request) (configLimits := limits)
     results := results.push (Json.mkObj [("status", toJson result.status.toNat),
       ("stdout", .str result.stdout), ("stderr", .str result.stderr), ("calls", toJson (← calls.get))])
   IO.println (Json.arr results).compress
@@ -86,6 +92,9 @@ def fetchHttpRun : IO Unit := do
   let input ← getOk "config HTTP input" (Json.parse (← (← IO.getStdin).readToEnd))
   let url ← getOk "config HTTP URL" (input.getObjValAs? String "url")
   check "config HTTP loopback" (TestUrls.permitted url && !TestUrls.forbiddenPort url)
+  if let .ok bytes := input.getObjValAs? (Array Nat) "header_bytes" then
+    IO.println (toJson (HttpCurl.validResponseHeaders (ByteArray.mk (bytes.map UInt8.ofNat)))).compress
+    return
   let req : HttpCurl.Request := { url := url, totalTimeoutMs := 2000 }
   let legacy ← HttpCurl.request req
   let detailed ← HttpCurl.requestDetailed req
@@ -94,8 +103,25 @@ def fetchHttpRun : IO Unit := do
     | .ok r => (if r.bodyError.isSome then "body" else "ok", r.status.toNat)
   let legacyCode := match legacy with | .error (.curl code _) => code.toNat | _ => 0
   let detailedCode := match detailed with | .error (.curl code _) => code.toNat | _ => 0
+  let legacyLocation := match legacy with
+    | .ok r => (r.headers.find? (fun h => h.1 == "location")).map (·.2) |>.getD ""
+    | .error _ => ""
+  let detailedLocation := match detailed with
+    | .ok r => (r.headers.find? (fun h => h.1 == "location")).map (·.2) |>.getD ""
+    | .error _ => ""
+  let responseJson (status : UInt32) (headers : Array (String × String)) (body : ByteArray) :=
+    Json.mkObj [("status", toJson status.toNat), ("headers", toJson headers),
+      ("body", toJson (body.data.map UInt8.toNat))]
+  let legacyResponse := match legacy with
+    | .ok r => responseJson r.status r.headers r.body
+    | .error _ => Json.null
+  let detailedResponse := match detailed with
+    | .ok r => responseJson r.status r.headers r.body
+    | .error _ => Json.null
   IO.println (Json.mkObj [("legacy", .str (match legacy with | .error _ => "error" | .ok _ => "ok")),
+    ("legacy_response", legacyResponse), ("detailed_response", detailedResponse),
     ("legacy_code", toJson legacyCode), ("detailed_code", toJson detailedCode),
+    ("legacy_location", .str legacyLocation), ("detailed_location", .str detailedLocation),
     ("detailed", .str kind), ("status", toJson status)]).compress
 
 end CyberkrillTests

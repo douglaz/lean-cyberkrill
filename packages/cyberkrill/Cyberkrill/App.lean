@@ -316,7 +316,7 @@ def parseCommand (args : List String) : Except Error Command := do
   validateTypedArgs (args.head?.getD "") args.tail
   let routed := ["generate-mnemonic", "ln-decode-invoice", "ln-decode-lnurl", "ln-encode-invoice",
     "ln-generate-invoice",
-    "fm-decode-invite", "fm-encode-invite", "onchain-decode-psbt", "onchain-list-utxos",
+    "fm-decode-invite", "fm-encode-invite", "fm-fetch-config", "onchain-decode-psbt", "onchain-list-utxos",
     "onchain-create-psbt", "onchain-create-funded-psbt", "onchain-move-utxos"].contains
     (args.head?.getD "")
   if routed then
@@ -564,10 +564,11 @@ private def prepareDecodeOutput (services : Services) (path : Option String) :
     | some path => return .ok (some (← services.openOrdinaryFile path))
   catch _ => return .error .outputFailure
 
-def execute (version : String) (services : Services) : Command → IO (Except Error Output)
+def execute (version : String) (services : Services)
+    (configLimits : FetchConfig.Limits := {}) : Command → IO (Except Error Output)
   | .fetchConfig invite path => do
     let .ok writer ← prepareDecodeOutput services path | return .error .outputFailure
-    match ← FetchConfig.fetch invite services.configRequest services.stderr with
+    match ← FetchConfig.fetch invite services.configRequest services.stderr configLimits with
     | .error e => return .error e
     | .ok result => return .ok (lightningOutput result.pretty writer false)
   | .generateInvoice address input comment path => do
@@ -714,11 +715,12 @@ def reportError (services : Services) (error : Error) : IO UInt32 := do
   try services.stderr (error.message ++ "\n") catch _ => pure ()
   return 1
 
-def runWith (version : String) (services : Services) (args : List String) : IO UInt32 := do
+def runWith (version : String) (services : Services) (args : List String)
+    (configLimits : FetchConfig.Limits := {}) : IO UInt32 := do
   let cmd ← match parseCommand args with
     | .error e => return ← reportError services e
     | .ok cmd => pure cmd
-  match ← execute version services cmd with
+  match ← execute version services configLimits cmd with
   | .error e => reportError services e
   | .ok out =>
     try

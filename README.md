@@ -99,10 +99,28 @@ source, licence, fixture hash and independent capture hash.
 before entering a new `unshare -rn` namespace with loopback up, an owned
 temporary HOME/TMPDIR/cwd, and the owned plain-HTTP responder with stdin kept
 open. Its 78 original captures bind the fixture, definitions and script.
-`test/capture-fetch-config-short.py` adds five independent captures against the
+`test/capture-fetch-config-short.py` adds 101 independent captures against the
 same responder: incomplete Content-Length 200, incomplete chunked 200, truncated
-500, failure before headers, and POST body failure with a following guardian.
-The original captures remain pinned separately. The 83 captures preserve
+500, failure before headers, POST body failure with a following guardian, and
+an interim Location that must not redirect the final response, a complete
+chunked body with trailers, and a trailer Location that must not redirect.
+The unfolded-header control and two folded-field cases pin the named exception
+below. A status-looking malformed trailer `HTTP/1.1: x` after a complete chunked
+200 remains a body failure: GET first, GET second, no POST, next-guardian config.
+It also captures complete LF-delimited success and redirect responses, and six
+malformed-invite output-option controls. Flag-looking output operands are refused
+before creating files or requests; attached `a=b` values create that filename
+before invite decoding fails. The incomplete-body cases deliver otherwise valid
+JSON so ignoring the body-read failure would select the wrong configuration.
+Fifty added byte-grammar rows cover final/interim field counts, token/name/colon
+and value rules, arbitrary value bytes and first-Location identity, trailer
+syntax/count/aggregate bytes, status/framing, library-side differences and
+five exhausted-fallback failures. Thirty-one body-handling rows add the four
+large Content-Length boundaries, equal-length/status/POST/Transfer-Encoding
+controls and the six library body-handling members described below. Thirty-two
+callback probes independently qualify
+the listed library-side members and separate the single-field trailer buffer
+from the aggregate trailer limit. The original captures remain pinned separately. The 179 captures preserve
 actual statuses, separate streams and raw requests. Config expectations come
 from these captures, compared as exact JSON values with ordered arrays.
 
@@ -116,24 +134,50 @@ and [url 2.5.7](https://github.com/servo/rust-url/blob/v2.5.7/url/src/parser.rs)
 Numeric/recursion comparisons use the same captured command and
 [serde_json 1.0.148](https://github.com/serde-rs/json/blob/v1.0.148/src/de.rs).
 
-`test/fetch-config.py` runs in `lake test`: 132 replay cases, 83 loaded captures,
-13 invite vectors, 11 parser/help checks, two injected output-order assertions,
+`test/fetch-config.py` runs in `lake test`: 225 replay cases, 179 loaded captures,
+13 invite vectors, 11 parser/help checks, six output-option checks, two injected output-order assertions,
 seven no-child-before-guard refusals (including both uppercase and slashless
 HTTP schemes in first/later guardians), four strict/fallback decode controls,
-three normalized loopback controls, one malformed-wrapper control, seven checks of
-both HTTP capabilities, one release-dispatch replay, one fixed-port
+three normalized loopback controls, one malformed-wrapper control, fourteen framing checks of
+both HTTP capabilities, nine large-length acquisition/precedence checks,
+eight direct byte-parser controls, and eight complete-response equivalence controls for folded
+and unfolded fields and Location over plain HTTP and owned-CA TLS, one dual-protocol TLS
+negotiation/equality control, one release-dispatch replay, one fixed-port
 collision and three held-local-socket connect controls. Assertions cover full
 JSON/streams/files, original open handles, exact verbs/paths/bodies/order/counts,
 fallback versus abort, weak validation, defaults, stable peers, all five redirect
 statuses and bounded input. The responder's raw log records only verb, path and
 body; exact content-type, Referer and transport settings are asserted separately
 at the injected request boundary, not claimed as raw-log observations.
-The compiled campaign defines 45 independent runtime detections, including
+The compiled campaign defines 84 independent runtime detections, including
 separate transport/injected byte checks, each numeric/container limit,
-connect/total deadlines, Location/resolved URL work, and continuation/abort
+separate production-default spies and short-limit connect/total deadline controls,
+Location/resolved URL work, and continuation/abort
 boundaries. The four guardian regressions reintroduce the previous regex guard
 and assert that a subprocess spy is never reached; an independent compiled
 reintroduction turns acquired-body failure back into GET-to-POST fallback.
+Another restores interim-header aggregation in the opt-in operation and fails
+the exact request-trace assertion; the legacy operation keeps its earlier headers.
+Separate reintroductions reject complete chunked trailers or use a trailer's
+Location; each must fail its own exact request-trace assertion. Further controls
+remove output-option routing, reject LF completion, lose LF Location extraction,
+or ignore body-read failures on GET and POST; each fails its intended file/stage
+or exact request-trace assertion before restoration and a green rerun. Three
+independent mutations detect loss of the final-acquisition latch, final-header
+extraction latch or malformed-trailer body error. Two more force POST after a
+successful GET or disable redirects; each fails the corresponding folded-header
+or folded-Location port trace, retaining separate pinned reference assertions.
+Twenty further compiled controls independently detect name, empty-name,
+colon whitespace, value-byte and per-head-capacity errors; interim-head
+validation; trailer grammar/count/bytes; post-head codes 8 and 100;
+UTF-8 acceptance and first-Location identity; status/framing rules; and the
+reference's HTTP/1-only negotiation on a TLS server offering both HTTP/1 and
+HTTP/2. That last control keeps legacy HTTP/2 negotiation and compares exact
+responses while the detailed operation selects HTTP/1, matching the pinned
+reference's disabled `http2` feature. Its narrow shim flag is internal to the
+detailed operation; legacy request defaults and negotiation stay unchanged.
+An independent Content-Length reconciliation removal must fail its named
+large-length request-trace assertion, then rebuild and pass after exact restoration.
 Its latest completed record is
 `test/golden/fetch-config-mutation-record.json`, written atomically only after
 all intended runtime failures, exact restoration, rebuilds and green reruns.
@@ -141,22 +185,30 @@ all intended runtime failures, exact restoration, rebuilds and green reruns.
 ### Deltas taken for configuration fetch
 
 These explicit resource bounds are bounded-behavior differences, not full
-reqwest resource parity. Each actual request has a 1000 ms connect deadline,
-2000 ms total deadline and inclusive 1 MiB body cap. Each GET, possible POST
-and redirect hop has its own deadline; 2000 ms is not an aggregate guardian or
-whole-command budget. Injected responses receive
+reqwest resource parity. The reference uses `reqwest::Client::new()` without a
+timeout. Each actual production request has a 10000 ms connect deadline,
+60000 ms total deadline and inclusive 1 MiB body cap. Each GET, possible POST
+and redirect hop has its own deadline; 60000 ms is not an aggregate guardian or
+whole-command budget. Request spies on app dispatch verify these settings on
+every built request, including GET, fallback POST and redirect hops. Separate
+compiled mutations of each production default fail the corresponding spy assertion.
+Injected responses receive
 the same byte check before any UTF-8/JSON work, including non-2xx and redirect
 responses. Tests use 1 MiB minus one, exactly 1 MiB and plus one byte in both
-paths. Local response delays of 1900, 2000 and 2100 ms exercise the total
-deadline; held TLS sockets at 900, 1000 and 1100 ms exercise connection
+paths. Short test-only limits (1000 ms connect, 2000 ms total) enter through a
+Lean API parameter in the test entry and use the same request-building path.
+No release CLI or environment override is provided. Local response delays of
+1900, 2000 and 2100 ms exercise the injected total deadline; held TLS sockets
+at 900, 1000 and 1100 ms exercise injected connection
 establishment. These controls generate an owned test CA bundle rather than
 relying on host certificates; the held sockets never complete TLS. The
 exact-boundary race can produce either a connection failure or timeout. The
 1100 ms control requires timeout outcomes for both requests; disabling only the
 connect deadline instead produces handshake errors before the unchanged
 2000 ms total deadline. Process startup is outside this outcome assertion.
-Three repeated controls with four bounded CPU processes on two CPUs exercise
-modest contention, including the independent connect-deadline mutation. These
+The restored controls repeat three times with four bounded CPU processes on
+two CPUs. The independent removed-connect-limit mutation is detected under the
+same modest contention. These
 are finite local controls, without a universal latency claim.
 
 Before recursive JSON parsing or numeric expansion, a quote/escape-aware lexical
@@ -172,7 +224,7 @@ and escaped quotes do not count toward numeric/container limits.
 | Bound / named diagnostic | Tested below / at / above | Failure stage and continuation |
 |---|---|---|
 | Body bytes: `fmResponseTooLarge` | 1048575 / 1048576 / 1048577 | Transport; GET permits POST, POST advances guardian. |
-| Deadline: `fmTimeout` | Connect 900 / 1000 / 1100 ms; total 1900 / 2000 / 2100 ms | Transport; same GET/POST staging. |
+| Deadline: `fmTimeout` | Production 10000 / 60000 ms checked by spies; short test-only connect 900 / 1000 / 1100 ms, total 1900 / 2000 / 2100 ms | Transport; same GET/POST staging; independent default-spy and shared-path runtime mutations. |
 | Numeric token: `fmJsonTokenLimit` | 2047 / 2048 / 2049 characters, zero-padded exponent | Decode; next guardian, no POST after GET success. |
 | Coefficient: `fmJsonCoefficientLimit` | 1023 / 1024 / 1025 digits | Decode; same continuation. |
 | Exponent: `fmJsonExponentLimit` | magnitude 1023 / 1024 / 1025, including negative exponents | Decode; same continuation. |
@@ -198,12 +250,46 @@ Two scalar-module captures pin the existing exact-parsing/formatting kind:
 `18446744073709551617` remains exact versus reference `18446744073709552000`
 (the latter is serialized from binary64 as `1.8446744073709552e19`). Only those
 module leaves differ; all other fields and streams remain checked. No blanket
-tolerance or nonnumeric validity exception is introduced.
+tolerance is introduced; response handling before delivery by the HTTP library below
+is the only non-numeric parity delta kind for configuration fetch.
+
+Response handling that the HTTP library does before delivery is a named non-numeric parity delta kind for configuration fetch: the library decides these cases before the port sees any bytes. It joins an obsolete folded header line (a line beginning with a space or tab that continues the previous field) into one field in a final or interim response head, as RFC 9112 §5.2 requires of a user agent. The reference's HTTP client rejects such a head and retries the same guardian with POST `{}`; the port treats the joined field as ordinary, so a folded 200 is accepted after one GET and a folded Location is followed. The library refuses a response with two different Location values; the reference follows the first, and the port retries the same guardian with POST `{}`. It also refuses a blank line before the status line, which the reference skips, and the port then retries the same guardian with POST `{}`. These differences can change the selected configuration and can turn a failure into success or a success into failure. Conforming servers send none of them. Captured cases pin both traces for each member. A newly found case belongs to this kind only when the library is shown to decide it before delivery. Everything the port does see (the status line, field names, whitespace before the colon, value bytes, field counts, trailers as delivered and the framing headers) is checked as the reference checks it; apart from the body handling described next, no other difference is excepted.
+
+The library removes chunked transfer coding when the Transfer-Encoding fields list `chunked` and otherwise only `identity` or a repeated `chunked`, which it ignores, except that it refuses before delivery, like an unrequested coding below, any coding other than `chunked` that follows `chunked` in the same field (the port then retries the same guardian with POST `{}`); the reference frames the body by the last coding of the last Transfer-Encoding field: separate `chunked` then `identity` fields select the first config here and the next guardian's config in the reference. With those same fields, `0\r\n\r\n` and `0;x=y\r\n\r\n` both arrive as empty bodies here and advance; the reference aborts validation of JSON zero for the former (exit 1) and advances for the latter (exit 0). The library rewrites bare-LF trailer endings to CRLF (port first config, reference next); it refuses unrequested `Transfer-Encoding: gzip` and malformed Content-Length beside chunked in either field order (port same-guardian POST config, reference first GET config), and chunk sizes over 16 hexadecimal digits (port next config, reference first). Under non-chunked Transfer-Encoding it cuts at Content-Length (port next config, reference first), with equal-length controls succeeding on both. Captured cases pin both traces for each member, alongside ordinary matching controls. Source and delivery observations are pinned to [libcurl 8.22.0](https://github.com/curl/curl/tree/curl-8_22_0/lib): `content_encoding.c:757-808,827-854`, `http_chunks.c:125-149,199-214,245-280`, `http_chunks.h:34-39`, `http.c:3274-3320,3643-3662,3832-3855` and `sendf.c:156-162,227-283`.
+
+The conforming-server sentence above describes the malformed fold, conflicting
+Location and leading-blank forms enumerated in that paragraph. This same delta
+kind also includes a library buffer limit on otherwise valid trailer fields:
+libcurl 8.22.0 delivers a 4095-byte field (including CRLF), but refuses 4096 and
+4097 bytes, and the separately pinned 16381-byte field, with code 100 before
+that field reaches the callback. After the complete successful GET head, the
+port treats this as a body-read failure and tries the next guardian without
+POST; the reference accepts the first guardian's configuration with one GET.
+An equal-size aggregate split across five smaller fields succeeds on both.
+The reference's aggregate trailer limit is independent: 16383 bytes including
+the final CRLF is accepted; 16384 and 16385 are refused. Likewise 99 trailers
+are accepted and 100 are refused, while every interim or final head allows
+100 fields. Visible names, colon placement, value bytes, status and framing headers
+are validated with the pinned httparse/hyper rules. Arbitrary accepted header
+value bytes retain their order and identity; an invalid-UTF-8 first Location
+is not followed or replaced by a later decodable value. The legacy operation
+retains its complete-header UTF-8 refusal and whole-transfer error behavior.
+Independent callback probes pin all listed transformations/refusals alongside
+the reference captures, including the leading CRLF delimiter being delivered
+without the subsequent status/head. Eight in-process byte-parser controls also
+exercise status/framing grammar for lines the library itself refuses to deliver.
+
 
 `fmBodyRead`, `fmUtf8Decode` and `fmJsonDecode` are decode failures. The additive
 `HttpCurl.requestDetailed` retains completed final headers/status plus a bounded
 body error for partial-file/receive failures. Interim or incomplete final headers
-do not count as acquisition. Byte/deadline failures still permit GET-to-POST,
+do not count as acquisition. A permitted Content-Length without Transfer-Encoding
+also fails in this body stage when delivered bytes fall short, including lengths
+2^63−1, 2^63 and 2^64−3. At 2^64−2 the head is refused and GET permits POST;
+an equal-length success, bodyless statuses, POST and Transfer-Encoding precedence
+have independently captured controls. Completed final headers remain acquired when trailers
+follow; interim fields and trailers cannot supply a redirect Location.
+Byte/deadline failures still permit GET-to-POST,
 even after a status. The legacy `HttpCurl.request` retains its signature, error
 classes and whole-transfer behavior, including errors on incomplete bodies.
 The required missing-ID warning is emitted explicitly; the reference tracing
@@ -214,7 +300,7 @@ ID mismatch/type, invalid endpoint objects, peer IDs and endpoint value types
 retain separate abort diagnostics. Exhaustion reports `fmAllGuardiansFailed`
 with the last bounded failure code. Diagnostics never render guardian data.
 Pure libraries, package/link/flake contracts, earlier fixtures and recordings,
-and all plan decisions remain unchanged. The narrow HTTP addition shares input
+and the plan's other decisions remain unchanged. The narrow HTTP addition shares input
 guards, TLS/CA/proxy policy and byte/header/deadline limits with the legacy path.
 The pre-spawn helper decodes all effective guardians in process, including the
 app fallback, and checks their rewritten, normalized authorities before any child.
@@ -370,11 +456,11 @@ For the evidence command below, `TMP_ROOT` denotes that owned temporary director
 |---|---|---|---|
 | `nix develop -c lake build`; `nix develop -c lake test` | `packages/lightning` | 0; 0 | Existing vectors and axiom gate retained; callback serialization 8/8, request normalization 3/3, redirect resolution 19/19 and subset refusals 5/5 each. |
 | `nix develop -c lake build`; `nix develop -c lake test` | `packages/cyberkrill` | 0; 0 | Complete registered app suite, including LNURL 91/91 cases and 92/92 invocations. |
-| `nix develop -c env TMPDIR="$TMP_ROOT" python3 -B packages/cyberkrill/test/validate.py evidence` | root | 0 | 40/40 checks, including current source/evidence bindings, scope and lifecycle shapes, exact comparators and retained replays. |
+| `nix develop -c env TMPDIR="$TMP_ROOT" python3 -B packages/cyberkrill/test/validate.py evidence` | root | 0 | 42/42 checks, including current source/evidence bindings, scope and lifecycle shapes, exact comparators and retained replays. |
 | `nix flake check -L` | root | 0 | All seven package build/test pairs and the link checks. |
 | `nix build -L` | root | 0 | Normal reuse after the flake check; installed version, Lightning, offline and RPC checks also exit 0. |
 | `nix build --rebuild -L` | root | 0 | Actual fresh sandbox execution, including LNURL 91/91 cases, 92/92 invocations, delayed timeout and callback tests; zero `SKIP` results. |
-| Explicit native-decision, proof-token and private-key scans in `validate.py repo` | root | 0 each | 86/86 tracked library/proof files, zero native-decision offenders; proof and private-key scans empty. |
+| Explicit native-decision, proof-token and private-key scans in `validate.py repo` | root | 0 each | 87/87 tracked library/proof files, zero native-decision offenders; proof and private-key scans empty. |
 
 The actual sequential campaigns also completed with exit 0: invoice requests
 (22 compiled detections), fiat consumers (6), prices (36), move (56), creation
@@ -385,8 +471,14 @@ and offline refresh commands all exited 0; the offline campaign retains 67
 mutations and 125 selected runtime checks. Their latest evidence records bind
 the exact commands, definitions, detecting assertions, restored green results
 and current sources. Reference captures and provenance stay independently pinned.
-The scope gate retains all 59 issue identities, all 58 unrelated raw records,
-and rejects 42/42 unrelated edits. Refreshed records contain no added history or
+The current scope gate retains the 59 landed issue identities plus the fixed
+later deadline follow-up (60 total), preserving all 58 unrelated landed records
+and that follow-up's raw bytes. It rejects 44/44 unrelated path edits and 3/3
+controls for extra records, removed records and edits to the fixed follow-up.
+Three more read-only controls reject an appended plan decision, an altered
+exception and the missing insertion; only the landed plan plus the exact eighth
+exception is admitted.
+Refreshed records contain no added history or
 growth beyond one completed run. No required implementation check remains unrun;
 acceptance judgement and tracker finalization are separate from these gates.
 
@@ -457,10 +549,10 @@ and pass after exact restoration: conversion wiring, both flag precision modes,
 normalized-currency reuse, msat-before-sat rounding and invocation cache lifetime.
 The latest run is `test/golden/fiat-onchain-mutation-record.json`.
 
-The scope gate uses 41 explicit authorized paths. Its 42 read-only regression
-views check that edits to each of 21 unrelated files fail both changed-path
-admission and independent baseline-byte enforcement. All 58 unrelated tracker
-records retain their original bytes.
+The scope gate covers 42 changed paths with explicit path admissions. Its 44 read-only regression
+views check that edits to each of 22 unrelated files fail both changed-path
+admission and independent baseline-byte enforcement. All 58 unrelated landed
+tracker records and the fixed later deadline follow-up retain their original bytes.
 
 The app requests all nine pinned feeds: CoinGecko, Coinbase, blockchain.info,
 Kraken, Fedi, CEX.io, Bitstamp, Yadio and Gemini. Each request uses `HttpCurl`,
@@ -7949,7 +8041,7 @@ at `27cad1faba86260b06665a89f0af5134d23525c2`:
 | [lightning-invoice 0.34.0 semantics](https://docs.rs/crate/lightning-invoice/0.34.0/source/src/lib.rs) | `src/lib.rs:143-175,468-476,678-686,1009-1028,1048-1052,1164-1215,1314-1440,1585-1603`: defaults, limits, getters, signature rule, check order and fallback addresses |
 | [lightning-invoice 0.34.0 encoding](https://docs.rs/crate/lightning-invoice/0.34.0/source/src/ser.rs) | `src/ser.rs:158-172,221-235,408`: total length, minimal integers and field length |
 | [lightning-types 0.3.0](https://docs.rs/crate/lightning-types/0.3.0/source/src/features.rs) | `src/features.rs:214-231,1191-1211`: known features and unknown required bits |
-| [bech32 0.11.1](https://docs.rs/crate/bech32/0.11.1/source/src/primitives/decode.rs) | `src/primitives/decode.rs:131-141,253-283`; `src/primitives/hrp.rs:78-88`: HRP and total-length check order |
+| [bech32 0.11.1](https://docs.rs/crate/bech32/0.11.1/source/src/primitives/decode.rs) | `src/primitives/decode.rs:131-191,253-283`; `src/primitives/hrp.rs:78-88`: HRP and total-length check order |
 | [secp256k1 0.29.1](https://docs.rs/crate/secp256k1/0.29.1/source/src/ecdsa/recovery.rs) | `src/ecdsa/recovery.rs:26-31,42-64`: recovery-id and compact-signature parsing |
 | [cyberkrill decoder](https://github.com/douglaz/cyberkrill/blob/27cad1faba86260b06665a89f0af5134d23525c2/cyberkrill-core/src/decoder.rs#L242-L433) | `cyberkrill-core/src/decoder.rs:242-257,306-341,360-368,398-402,429-433`: later CLI output and feature classification |
 

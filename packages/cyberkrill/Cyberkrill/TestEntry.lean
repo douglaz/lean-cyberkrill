@@ -122,7 +122,7 @@ structure TestRun where
 dispatch and supplied bounded transport. Captured streams stay separate. -/
 def runWithTestUrls (version : String) (urls : TestUrls) (args : List String)
     (services : Services := productionServices) (request := HttpCurl.request)
-    (configRequest := HttpCurl.requestDetailed) : IO TestRun := do
+    (configRequest := HttpCurl.requestDetailed) (configLimits : FetchConfig.Limits := {}) : IO TestRun := do
   let out ← IO.mkRef ""
   let err ← IO.mkRef ""
   let services := { services with
@@ -139,7 +139,7 @@ def runWithTestUrls (version : String) (urls : TestUrls) (args : List String)
       request req }
   let status ← match urls.validate args with
     | .error e => reportError services e
-    | .ok _ => runWith version services args
+    | .ok _ => runWith version services args configLimits
   return ⟨status, ← out.get, ← err.get⟩
 
 end Cyberkrill

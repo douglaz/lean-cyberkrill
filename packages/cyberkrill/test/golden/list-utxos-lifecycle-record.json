@@ -3,7 +3,7 @@
     "test/list-utxos-lifecycle.py": "1ce59b46e78c8cd32e0a45020cb8f54af96ed2026d55f917a53d4e1ef4d62430",
     "test/list-utxos-mutations.py": "36d8880cccd56a5bd6d6115afaf26d033a22a87fc7a563abc6950050bc57a675",
     "test/list-utxos-lexical-mutations.py": "595b4ee5070c31f7174761d4d6bdd955500f3f0acb0c55c0f022d76e6993cbe3",
-    "test/network.py": "eda4c160a91bb73ddc43d8b9a48c36c6c240d6fcbd0926f1b542934ff0ba673e",
+    "test/network.py": "9ebe919f0f39913b2e26ea8e739365afab6e6ad3aa60823777e448eb26afdbcf",
     "test/gate.py": "eedecf0a183ba3eeefccc86f54fabb771f58dae820178d779500260ef18d2871"
   },
   "checks": [
@@ -38,7 +38,7 @@
           "immediate_present": false
         }
       ],
-      "python_version": "3.14.7",
+      "python_version": "3.13.15",
       "worker_status": 0,
       "gate_survivors": [],
       "gate_restored": [],
@@ -83,7 +83,7 @@
           "immediate_present": false
         }
       ],
-      "python_version": "3.14.7",
+      "python_version": "3.13.15",
       "worker_status": 0,
       "gate_survivors": [],
       "gate_restored": [],
@@ -128,7 +128,7 @@
           "immediate_present": false
         }
       ],
-      "python_version": "3.14.7",
+      "python_version": "3.13.15",
       "worker_status": 0,
       "gate_survivors": [],
       "gate_restored": [],
@@ -173,7 +173,7 @@
           "immediate_present": false
         }
       ],
-      "python_version": "3.14.7",
+      "python_version": "3.13.15",
       "worker_status": 0,
       "gate_survivors": [],
       "gate_restored": [],
@@ -218,7 +218,7 @@
           "immediate_present": false
         }
       ],
-      "python_version": "3.14.7",
+      "python_version": "3.13.15",
       "worker_status": 0,
       "gate_survivors": [],
       "gate_restored": [],
@@ -263,7 +263,7 @@
           "immediate_present": false
         }
       ],
-      "python_version": "3.14.7",
+      "python_version": "3.13.15",
       "worker_status": 143,
       "gate_survivors": [],
       "gate_restored": [
@@ -310,7 +310,7 @@
           "immediate_present": false
         }
       ],
-      "python_version": "3.14.7",
+      "python_version": "3.13.15",
       "worker_status": 0,
       "gate_survivors": [],
       "gate_restored": [],
@@ -355,7 +355,7 @@
           "immediate_present": false
         }
       ],
-      "python_version": "3.14.7",
+      "python_version": "3.13.15",
       "worker_status": 0,
       "gate_survivors": [],
       "gate_restored": [],
@@ -402,7 +402,7 @@
           "immediate_present": false
         }
       ],
-      "python_version": "3.14.7",
+      "python_version": "3.13.15",
       "worker_status": 0,
       "gate_survivors": [],
       "gate_restored": [],
@@ -449,7 +449,7 @@
           "immediate_present": false
         }
       ],
-      "python_version": "3.14.7",
+      "python_version": "3.13.15",
       "worker_status": 143,
       "gate_survivors": [],
       "gate_restored": [
@@ -498,7 +498,7 @@
           "immediate_present": false
         }
       ],
-      "python_version": "3.14.7",
+      "python_version": "3.13.15",
       "worker_status": 0,
       "gate_survivors": [],
       "gate_restored": [],
@@ -557,7 +557,7 @@
           "immediate_present": false
         }
       ],
-      "python_version": "3.14.7",
+      "python_version": "3.13.15",
       "worker_status": 0,
       "gate_survivors": [],
       "gate_restored": [],
@@ -616,7 +616,7 @@
           "immediate_present": false
         }
       ],
-      "python_version": "3.14.7",
+      "python_version": "3.13.15",
       "worker_status": 0,
       "gate_survivors": [],
       "gate_restored": [],
@@ -685,7 +685,7 @@
           "immediate_present": false
         }
       ],
-      "python_version": "3.14.7",
+      "python_version": "3.13.15",
       "worker_status": 0,
       "gate_survivors": [],
       "gate_restored": [],
@@ -758,7 +758,7 @@
           "immediate_present": false
         }
       ],
-      "python_version": "3.14.7",
+      "python_version": "3.13.15",
       "worker_status": 0,
       "gate_survivors": [],
       "gate_restored": [],
@@ -825,7 +825,7 @@
           "immediate_present": false
         }
       ],
-      "python_version": "3.14.7",
+      "python_version": "3.13.15",
       "worker_status": 0,
       "gate_survivors": [],
       "gate_restored": [],
@@ -897,7 +897,7 @@
           "immediate_present": false
         }
       ],
-      "python_version": "3.14.7",
+      "python_version": "3.13.15",
       "worker_status": 0,
       "gate_survivors": [],
       "gate_restored": [],
@@ -974,7 +974,7 @@
           "immediate_present": false
         }
       ],
-      "python_version": "3.14.7",
+      "python_version": "3.13.15",
       "worker_status": 0,
       "gate_survivors": [],
       "gate_restored": [],
@@ -1019,7 +1019,7 @@
           "immediate_present": false
         }
       ],
-      "python_version": "3.14.7",
+      "python_version": "3.13.15",
       "worker_status": 0,
       "gate_survivors": [],
       "gate_restored": [],
@@ -1064,7 +1064,7 @@
           "immediate_present": false
         }
       ],
-      "python_version": "3.14.7",
+      "python_version": "3.13.15",
       "worker_status": 0,
       "gate_survivors": [],
       "gate_restored": [],
@@ -1109,7 +1109,7 @@
           "immediate_present": false
         }
       ],
-      "python_version": "3.14.7",
+      "python_version": "3.13.15",
       "worker_status": 0,
       "gate_survivors": [],
       "gate_restored": [],
@@ -1154,7 +1154,7 @@
           "immediate_present": false
         }
       ],
-      "python_version": "3.14.7",
+      "python_version": "3.13.15",
       "worker_status": 0,
       "gate_survivors": [],
       "gate_restored": [],
@@ -1199,7 +1199,7 @@
           "immediate_present": false
         }
       ],
-      "python_version": "3.14.7",
+      "python_version": "3.13.15",
       "worker_status": 143,
       "gate_survivors": [],
       "gate_restored": [
@@ -1246,7 +1246,7 @@
           "immediate_present": false
         }
       ],
-      "python_version": "3.14.7",
+      "python_version": "3.13.15",
       "worker_status": 0,
       "gate_survivors": [],
       "gate_restored": [],
@@ -1291,7 +1291,7 @@
           "immediate_present": false
         }
       ],
-      "python_version": "3.14.7",
+      "python_version": "3.13.15",
       "worker_status": 0,
       "gate_survivors": [],
       "gate_restored": [],
@@ -1338,7 +1338,7 @@
           "immediate_present": false
         }
       ],
-      "python_version": "3.14.7",
+      "python_version": "3.13.15",
       "worker_status": 0,
       "gate_survivors": [],
       "gate_restored": [],
@@ -1385,7 +1385,7 @@
           "immediate_present": false
         }
       ],
-      "python_version": "3.14.7",
+      "python_version": "3.13.15",
       "worker_status": 143,
       "gate_survivors": [],
       "gate_restored": [
@@ -1434,7 +1434,7 @@
           "immediate_present": false
         }
       ],
-      "python_version": "3.14.7",
+      "python_version": "3.13.15",
       "worker_status": 0,
       "gate_survivors": [],
       "gate_restored": [],
@@ -1493,7 +1493,7 @@
           "immediate_present": false
         }
       ],
-      "python_version": "3.14.7",
+      "python_version": "3.13.15",
       "worker_status": 0,
       "gate_survivors": [],
       "gate_restored": [],
@@ -1552,7 +1552,7 @@
           "immediate_present": false
         }
       ],
-      "python_version": "3.14.7",
+      "python_version": "3.13.15",
       "worker_status": 0,
       "gate_survivors": [],
       "gate_restored": [],
@@ -1621,7 +1621,7 @@
           "immediate_present": false
         }
       ],
-      "python_version": "3.14.7",
+      "python_version": "3.13.15",
       "worker_status": 0,
       "gate_survivors": [],
       "gate_restored": [],
@@ -1694,7 +1694,7 @@
           "immediate_present": false
         }
       ],
-      "python_version": "3.14.7",
+      "python_version": "3.13.15",
       "worker_status": 0,
       "gate_survivors": [],
       "gate_restored": [],
@@ -1761,7 +1761,7 @@
           "immediate_present": false
         }
       ],
-      "python_version": "3.14.7",
+      "python_version": "3.13.15",
       "worker_status": 0,
       "gate_survivors": [],
       "gate_restored": [],
@@ -1833,7 +1833,7 @@
           "immediate_present": false
         }
       ],
-      "python_version": "3.14.7",
+      "python_version": "3.13.15",
       "worker_status": 0,
       "gate_survivors": [],
       "gate_restored": [],

@@ -2,19 +2,19 @@
   "source": "https://github.com/douglaz/cyberkrill",
   "revision": "27cad1faba86260b06665a89f0af5134d23525c2",
   "licence": "MIT",
-  "kind": "independent pinned CLI capture on authored synthetic incomplete response bodies; fedimint-lite/src/lib.rs:499-524; MIT",
+  "kind": "independent pinned CLI capture on authored synthetic complete/incomplete response bodies, LF framing, folded fields, interim/final headers, malformed trailers and offline output parsing; fedimint-lite/src/lib.rs:499-524; MIT",
   "command": [
     "fm-fetch-config",
     "synthetic invite from fetch-config.json"
   ],
   "fixture_sha256": "97df201d4345eead3271ab84772fc9c35f1f4ee3291ea84ff5021005bf8f256d",
-  "cases_sha256": "1eb3702bcc79dcf2c5756ceabd5d143903f803c016d31372a8df8e9baf31921f",
-  "script_sha256": "c5a0fe1a691021ba8f89855ddb65274ad7acd08c22d0678e9e431f73da9e30b2",
+  "cases_sha256": "d3abf8c739c9b8bb3c5fbded8387e7b11b175d115bda32ced84474e678018bf7",
+  "script_sha256": "a26f2fe21c7311ec707caf1a306a8290258309ad5f05e941a875210c5e5afd17",
   "captures": [
     {
       "name": "short-length-200",
       "status": 0,
-      "stdout": "{\n  \"federation_id\": \"1234567890abcdef1234567890abcdef1234567890abcdef1234567890abcdef\",\n  \"federation_name\": \"Synthetic Federation\",\n  \"guardians\": [\n    {\n      \"peer_id\": 0,\n      \"name\": \"Zero\",\n      \"url\": \"\"\n    },\n    {\n      \"peer_id\": 2,\n      \"name\": \"Two\",\n      \"url\": \"wss://synthetic.invalid/two\"\n    },\n    {\n      \"peer_id\": 10,\n      \"name\": null,\n      \"url\": \"opaque endpoint ten\"\n    }\n  ],\n  \"consensus_version\": \"2.1\",\n  \"modules\": {\n    \"chosen\": \"next guardian GET\"\n  },\n  \"meta\": {\n    \"guardian_2_name\": \"Two\",\n    \"guardian_0_name\": \"Zero\",\n    \"federation_name\": \"Synthetic Federation\",\n    \"note\": \"authored fixture\"\n  }\n}",
+      "stdout": "{\n  \"federation_id\": \"1234567890abcdef1234567890abcdef1234567890abcdef1234567890abcdef\",\n  \"federation_name\": \"Synthetic Federation\",\n  \"guardians\": [\n    {\n      \"peer_id\": 0,\n      \"name\": \"Zero\",\n      \"url\": \"\"\n    },\n    {\n      \"peer_id\": 2,\n      \"name\": \"Two\",\n      \"url\": \"wss://synthetic.invalid/two\"\n    },\n    {\n      \"peer_id\": 10,\n      \"name\": null,\n      \"url\": \"opaque endpoint ten\"\n    }\n  ],\n  \"consensus_version\": \"2.1\",\n  \"modules\": {\n    \"chosen\": \"next guardian GET\"\n  },\n  \"meta\": {\n    \"note\": \"authored fixture\",\n    \"federation_name\": \"Synthetic Federation\",\n    \"guardian_2_name\": \"Two\",\n    \"guardian_0_name\": \"Zero\"\n  }\n}",
       "stderr": "",
       "requests": [
         {
@@ -32,7 +32,7 @@
     {
       "name": "short-chunked-200",
       "status": 0,
-      "stdout": "{\n  \"federation_id\": \"1234567890abcdef1234567890abcdef1234567890abcdef1234567890abcdef\",\n  \"federation_name\": \"Synthetic Federation\",\n  \"guardians\": [\n    {\n      \"peer_id\": 0,\n      \"name\": \"Zero\",\n      \"url\": \"\"\n    },\n    {\n      \"peer_id\": 2,\n      \"name\": \"Two\",\n      \"url\": \"wss://synthetic.invalid/two\"\n    },\n    {\n      \"peer_id\": 10,\n      \"name\": null,\n      \"url\": \"opaque endpoint ten\"\n    }\n  ],\n  \"consensus_version\": \"2.1\",\n  \"modules\": {\n    \"chosen\": \"next guardian GET\"\n  },\n  \"meta\": {\n    \"note\": \"authored fixture\",\n    \"guardian_0_name\": \"Zero\",\n    \"guardian_2_name\": \"Two\",\n    \"federation_name\": \"Synthetic Federation\"\n  }\n}",
+      "stdout": "{\n  \"federation_id\": \"1234567890abcdef1234567890abcdef1234567890abcdef1234567890abcdef\",\n  \"federation_name\": \"Synthetic Federation\",\n  \"guardians\": [\n    {\n      \"peer_id\": 0,\n      \"name\": \"Zero\",\n      \"url\": \"\"\n    },\n    {\n      \"peer_id\": 2,\n      \"name\": \"Two\",\n      \"url\": \"wss://synthetic.invalid/two\"\n    },\n    {\n      \"peer_id\": 10,\n      \"name\": null,\n      \"url\": \"opaque endpoint ten\"\n    }\n  ],\n  \"consensus_version\": \"2.1\",\n  \"modules\": {\n    \"chosen\": \"next guardian GET\"\n  },\n  \"meta\": {\n    \"note\": \"authored fixture\",\n    \"federation_name\": \"Synthetic Federation\",\n    \"guardian_2_name\": \"Two\",\n    \"guardian_0_name\": \"Zero\"\n  }\n}",
       "stderr": "",
       "requests": [
         {
@@ -50,7 +50,7 @@
     {
       "name": "short-500",
       "status": 0,
-      "stdout": "{\n  \"federation_id\": \"1234567890abcdef1234567890abcdef1234567890abcdef1234567890abcdef\",\n  \"federation_name\": \"Synthetic Federation\",\n  \"guardians\": [\n    {\n      \"peer_id\": 0,\n      \"name\": \"Zero\",\n      \"url\": \"\"\n    },\n    {\n      \"peer_id\": 2,\n      \"name\": \"Two\",\n      \"url\": \"wss://synthetic.invalid/two\"\n    },\n    {\n      \"peer_id\": 10,\n      \"name\": null,\n      \"url\": \"opaque endpoint ten\"\n    }\n  ],\n  \"consensus_version\": \"2.1\",\n  \"modules\": {\n    \"chosen\": \"same guardian POST\"\n  },\n  \"meta\": {\n    \"guardian_0_name\": \"Zero\",\n    \"federation_name\": \"Synthetic Federation\",\n    \"note\": \"authored fixture\",\n    \"guardian_2_name\": \"Two\"\n  }\n}",
+      "stdout": "{\n  \"federation_id\": \"1234567890abcdef1234567890abcdef1234567890abcdef1234567890abcdef\",\n  \"federation_name\": \"Synthetic Federation\",\n  \"guardians\": [\n    {\n      \"peer_id\": 0,\n      \"name\": \"Zero\",\n      \"url\": \"\"\n    },\n    {\n      \"peer_id\": 2,\n      \"name\": \"Two\",\n      \"url\": \"wss://synthetic.invalid/two\"\n    },\n    {\n      \"peer_id\": 10,\n      \"name\": null,\n      \"url\": \"opaque endpoint ten\"\n    }\n  ],\n  \"consensus_version\": \"2.1\",\n  \"modules\": {\n    \"chosen\": \"same guardian POST\"\n  },\n  \"meta\": {\n    \"guardian_2_name\": \"Two\",\n    \"note\": \"authored fixture\",\n    \"guardian_0_name\": \"Zero\",\n    \"federation_name\": \"Synthetic Federation\"\n  }\n}",
       "stderr": "",
       "requests": [
         {
@@ -68,7 +68,7 @@
     {
       "name": "before-headers",
       "status": 0,
-      "stdout": "{\n  \"federation_id\": \"1234567890abcdef1234567890abcdef1234567890abcdef1234567890abcdef\",\n  \"federation_name\": \"Synthetic Federation\",\n  \"guardians\": [\n    {\n      \"peer_id\": 0,\n      \"name\": \"Zero\",\n      \"url\": \"\"\n    },\n    {\n      \"peer_id\": 2,\n      \"name\": \"Two\",\n      \"url\": \"wss://synthetic.invalid/two\"\n    },\n    {\n      \"peer_id\": 10,\n      \"name\": null,\n      \"url\": \"opaque endpoint ten\"\n    }\n  ],\n  \"consensus_version\": \"2.1\",\n  \"modules\": {\n    \"chosen\": \"same guardian POST\"\n  },\n  \"meta\": {\n    \"guardian_0_name\": \"Zero\",\n    \"guardian_2_name\": \"Two\",\n    \"note\": \"authored fixture\",\n    \"federation_name\": \"Synthetic Federation\"\n  }\n}",
+      "stdout": "{\n  \"federation_id\": \"1234567890abcdef1234567890abcdef1234567890abcdef1234567890abcdef\",\n  \"federation_name\": \"Synthetic Federation\",\n  \"guardians\": [\n    {\n      \"peer_id\": 0,\n      \"name\": \"Zero\",\n      \"url\": \"\"\n    },\n    {\n      \"peer_id\": 2,\n      \"name\": \"Two\",\n      \"url\": \"wss://synthetic.invalid/two\"\n    },\n    {\n      \"peer_id\": 10,\n      \"name\": null,\n      \"url\": \"opaque endpoint ten\"\n    }\n  ],\n  \"consensus_version\": \"2.1\",\n  \"modules\": {\n    \"chosen\": \"same guardian POST\"\n  },\n  \"meta\": {\n    \"federation_name\": \"Synthetic Federation\",\n    \"guardian_0_name\": \"Zero\",\n    \"guardian_2_name\": \"Two\",\n    \"note\": \"authored fixture\"\n  }\n}",
       "stderr": "",
       "requests": [
         {
@@ -86,7 +86,7 @@
     {
       "name": "post-body-failure",
       "status": 0,
-      "stdout": "{\n  \"federation_id\": \"1234567890abcdef1234567890abcdef1234567890abcdef1234567890abcdef\",\n  \"federation_name\": \"Synthetic Federation\",\n  \"guardians\": [\n    {\n      \"peer_id\": 0,\n      \"name\": \"Zero\",\n      \"url\": \"\"\n    },\n    {\n      \"peer_id\": 2,\n      \"name\": \"Two\",\n      \"url\": \"wss://synthetic.invalid/two\"\n    },\n    {\n      \"peer_id\": 10,\n      \"name\": null,\n      \"url\": \"opaque endpoint ten\"\n    }\n  ],\n  \"consensus_version\": \"2.1\",\n  \"modules\": {\n    \"chosen\": \"next guardian GET\"\n  },\n  \"meta\": {\n    \"guardian_0_name\": \"Zero\",\n    \"note\": \"authored fixture\",\n    \"guardian_2_name\": \"Two\",\n    \"federation_name\": \"Synthetic Federation\"\n  }\n}",
+      "stdout": "{\n  \"federation_id\": \"1234567890abcdef1234567890abcdef1234567890abcdef1234567890abcdef\",\n  \"federation_name\": \"Synthetic Federation\",\n  \"guardians\": [\n    {\n      \"peer_id\": 0,\n      \"name\": \"Zero\",\n      \"url\": \"\"\n    },\n    {\n      \"peer_id\": 2,\n      \"name\": \"Two\",\n      \"url\": \"wss://synthetic.invalid/two\"\n    },\n    {\n      \"peer_id\": 10,\n      \"name\": null,\n      \"url\": \"opaque endpoint ten\"\n    }\n  ],\n  \"consensus_version\": \"2.1\",\n  \"modules\": {\n    \"chosen\": \"next guardian GET\"\n  },\n  \"meta\": {\n    \"guardian_2_name\": \"Two\",\n    \"federation_name\": \"Synthetic Federation\",\n    \"guardian_0_name\": \"Zero\",\n    \"note\": \"authored fixture\"\n  }\n}",
       "stderr": "",
       "requests": [
         {
@@ -105,6 +105,2051 @@
           "body": ""
         }
       ]
+    },
+    {
+      "name": "interim-location",
+      "status": 0,
+      "stdout": "{\n  \"federation_id\": \"1234567890abcdef1234567890abcdef1234567890abcdef1234567890abcdef\",\n  \"federation_name\": \"Synthetic Federation\",\n  \"guardians\": [\n    {\n      \"peer_id\": 0,\n      \"name\": \"Zero\",\n      \"url\": \"\"\n    },\n    {\n      \"peer_id\": 2,\n      \"name\": \"Two\",\n      \"url\": \"wss://synthetic.invalid/two\"\n    },\n    {\n      \"peer_id\": 10,\n      \"name\": null,\n      \"url\": \"opaque endpoint ten\"\n    }\n  ],\n  \"consensus_version\": \"2.1\",\n  \"modules\": {\n    \"chosen\": \"same guardian POST\"\n  },\n  \"meta\": {\n    \"note\": \"authored fixture\",\n    \"guardian_2_name\": \"Two\",\n    \"federation_name\": \"Synthetic Federation\",\n    \"guardian_0_name\": \"Zero\"\n  }\n}",
+      "stderr": "",
+      "requests": [
+        {
+          "method": "GET",
+          "path": "/first/config",
+          "body": ""
+        },
+        {
+          "method": "POST",
+          "path": "/first/config",
+          "body": "{}"
+        }
+      ]
+    },
+    {
+      "name": "complete-chunked-trailer",
+      "status": 0,
+      "stdout": "{\n  \"federation_id\": \"1234567890abcdef1234567890abcdef1234567890abcdef1234567890abcdef\",\n  \"federation_name\": \"Synthetic Federation\",\n  \"guardians\": [\n    {\n      \"peer_id\": 0,\n      \"name\": \"Zero\",\n      \"url\": \"\"\n    },\n    {\n      \"peer_id\": 2,\n      \"name\": \"Two\",\n      \"url\": \"wss://synthetic.invalid/two\"\n    },\n    {\n      \"peer_id\": 10,\n      \"name\": null,\n      \"url\": \"opaque endpoint ten\"\n    }\n  ],\n  \"consensus_version\": \"2.1\",\n  \"modules\": {\n    \"chosen\": \"complete chunked GET\"\n  },\n  \"meta\": {\n    \"federation_name\": \"Synthetic Federation\",\n    \"note\": \"authored fixture\",\n    \"guardian_2_name\": \"Two\",\n    \"guardian_0_name\": \"Zero\"\n  }\n}",
+      "stderr": "",
+      "requests": [
+        {
+          "method": "GET",
+          "path": "/first/config",
+          "body": ""
+        }
+      ]
+    },
+    {
+      "name": "trailer-location",
+      "status": 0,
+      "stdout": "{\n  \"federation_id\": \"1234567890abcdef1234567890abcdef1234567890abcdef1234567890abcdef\",\n  \"federation_name\": \"Synthetic Federation\",\n  \"guardians\": [\n    {\n      \"peer_id\": 0,\n      \"name\": \"Zero\",\n      \"url\": \"\"\n    },\n    {\n      \"peer_id\": 2,\n      \"name\": \"Two\",\n      \"url\": \"wss://synthetic.invalid/two\"\n    },\n    {\n      \"peer_id\": 10,\n      \"name\": null,\n      \"url\": \"opaque endpoint ten\"\n    }\n  ],\n  \"consensus_version\": \"2.1\",\n  \"modules\": {\n    \"chosen\": \"same guardian POST\"\n  },\n  \"meta\": {\n    \"federation_name\": \"Synthetic Federation\",\n    \"note\": \"authored fixture\",\n    \"guardian_2_name\": \"Two\",\n    \"guardian_0_name\": \"Zero\"\n  }\n}",
+      "stderr": "",
+      "requests": [
+        {
+          "method": "GET",
+          "path": "/first/config",
+          "body": ""
+        },
+        {
+          "method": "POST",
+          "path": "/first/config",
+          "body": "{}"
+        }
+      ]
+    },
+    {
+      "name": "lf-complete",
+      "status": 0,
+      "stdout": "{\n  \"federation_id\": \"1234567890abcdef1234567890abcdef1234567890abcdef1234567890abcdef\",\n  \"federation_name\": \"Synthetic Federation\",\n  \"guardians\": [\n    {\n      \"peer_id\": 0,\n      \"name\": \"Zero\",\n      \"url\": \"\"\n    },\n    {\n      \"peer_id\": 2,\n      \"name\": \"Two\",\n      \"url\": \"wss://synthetic.invalid/two\"\n    },\n    {\n      \"peer_id\": 10,\n      \"name\": null,\n      \"url\": \"opaque endpoint ten\"\n    }\n  ],\n  \"consensus_version\": \"2.1\",\n  \"modules\": {\n    \"chosen\": \"LF first GET\"\n  },\n  \"meta\": {\n    \"guardian_0_name\": \"Zero\",\n    \"note\": \"authored fixture\",\n    \"federation_name\": \"Synthetic Federation\",\n    \"guardian_2_name\": \"Two\"\n  }\n}",
+      "stderr": "",
+      "requests": [
+        {
+          "method": "GET",
+          "path": "/first/config",
+          "body": ""
+        }
+      ]
+    },
+    {
+      "name": "lf-redirect",
+      "status": 0,
+      "stdout": "{\n  \"federation_id\": \"1234567890abcdef1234567890abcdef1234567890abcdef1234567890abcdef\",\n  \"federation_name\": \"Synthetic Federation\",\n  \"guardians\": [\n    {\n      \"peer_id\": 0,\n      \"name\": \"Zero\",\n      \"url\": \"\"\n    },\n    {\n      \"peer_id\": 2,\n      \"name\": \"Two\",\n      \"url\": \"wss://synthetic.invalid/two\"\n    },\n    {\n      \"peer_id\": 10,\n      \"name\": null,\n      \"url\": \"opaque endpoint ten\"\n    }\n  ],\n  \"consensus_version\": \"2.1\",\n  \"modules\": {\n    \"chosen\": \"LF redirect target\"\n  },\n  \"meta\": {\n    \"guardian_0_name\": \"Zero\",\n    \"note\": \"authored fixture\",\n    \"federation_name\": \"Synthetic Federation\",\n    \"guardian_2_name\": \"Two\"\n  }\n}",
+      "stderr": "",
+      "requests": [
+        {
+          "method": "GET",
+          "path": "/first/config",
+          "body": ""
+        },
+        {
+          "method": "GET",
+          "path": "/lf-target",
+          "body": ""
+        }
+      ]
+    },
+    {
+      "name": "unfolded-header",
+      "status": 0,
+      "stdout": "{\n  \"federation_id\": \"1234567890abcdef1234567890abcdef1234567890abcdef1234567890abcdef\",\n  \"federation_name\": \"Synthetic Federation\",\n  \"guardians\": [\n    {\n      \"peer_id\": 0,\n      \"name\": \"Zero\",\n      \"url\": \"\"\n    },\n    {\n      \"peer_id\": 2,\n      \"name\": \"Two\",\n      \"url\": \"wss://synthetic.invalid/two\"\n    },\n    {\n      \"peer_id\": 10,\n      \"name\": null,\n      \"url\": \"opaque endpoint ten\"\n    }\n  ],\n  \"consensus_version\": \"2.1\",\n  \"modules\": {\n    \"chosen\": \"first guardian GET\"\n  },\n  \"meta\": {\n    \"guardian_2_name\": \"Two\",\n    \"note\": \"authored fixture\",\n    \"federation_name\": \"Synthetic Federation\",\n    \"guardian_0_name\": \"Zero\"\n  }\n}",
+      "stderr": "",
+      "requests": [
+        {
+          "method": "GET",
+          "path": "/first/config",
+          "body": ""
+        }
+      ]
+    },
+    {
+      "name": "folded-header",
+      "status": 0,
+      "stdout": "{\n  \"federation_id\": \"1234567890abcdef1234567890abcdef1234567890abcdef1234567890abcdef\",\n  \"federation_name\": \"Synthetic Federation\",\n  \"guardians\": [\n    {\n      \"peer_id\": 0,\n      \"name\": \"Zero\",\n      \"url\": \"\"\n    },\n    {\n      \"peer_id\": 2,\n      \"name\": \"Two\",\n      \"url\": \"wss://synthetic.invalid/two\"\n    },\n    {\n      \"peer_id\": 10,\n      \"name\": null,\n      \"url\": \"opaque endpoint ten\"\n    }\n  ],\n  \"consensus_version\": \"2.1\",\n  \"modules\": {\n    \"chosen\": \"same guardian POST\"\n  },\n  \"meta\": {\n    \"federation_name\": \"Synthetic Federation\",\n    \"guardian_2_name\": \"Two\",\n    \"note\": \"authored fixture\",\n    \"guardian_0_name\": \"Zero\"\n  }\n}",
+      "stderr": "",
+      "requests": [
+        {
+          "method": "GET",
+          "path": "/first/config",
+          "body": ""
+        },
+        {
+          "method": "POST",
+          "path": "/first/config",
+          "body": "{}"
+        }
+      ]
+    },
+    {
+      "name": "folded-location",
+      "status": 0,
+      "stdout": "{\n  \"federation_id\": \"1234567890abcdef1234567890abcdef1234567890abcdef1234567890abcdef\",\n  \"federation_name\": \"Synthetic Federation\",\n  \"guardians\": [\n    {\n      \"peer_id\": 0,\n      \"name\": \"Zero\",\n      \"url\": \"\"\n    },\n    {\n      \"peer_id\": 2,\n      \"name\": \"Two\",\n      \"url\": \"wss://synthetic.invalid/two\"\n    },\n    {\n      \"peer_id\": 10,\n      \"name\": null,\n      \"url\": \"opaque endpoint ten\"\n    }\n  ],\n  \"consensus_version\": \"2.1\",\n  \"modules\": {\n    \"chosen\": \"same guardian POST\"\n  },\n  \"meta\": {\n    \"federation_name\": \"Synthetic Federation\",\n    \"guardian_2_name\": \"Two\",\n    \"note\": \"authored fixture\",\n    \"guardian_0_name\": \"Zero\"\n  }\n}",
+      "stderr": "",
+      "requests": [
+        {
+          "method": "GET",
+          "path": "/first/config",
+          "body": ""
+        },
+        {
+          "method": "POST",
+          "path": "/first/config",
+          "body": "{}"
+        }
+      ]
+    },
+    {
+      "name": "status-trailer",
+      "status": 0,
+      "stdout": "{\n  \"federation_id\": \"1234567890abcdef1234567890abcdef1234567890abcdef1234567890abcdef\",\n  \"federation_name\": \"Synthetic Federation\",\n  \"guardians\": [\n    {\n      \"peer_id\": 0,\n      \"name\": \"Zero\",\n      \"url\": \"\"\n    },\n    {\n      \"peer_id\": 2,\n      \"name\": \"Two\",\n      \"url\": \"wss://synthetic.invalid/two\"\n    },\n    {\n      \"peer_id\": 10,\n      \"name\": null,\n      \"url\": \"opaque endpoint ten\"\n    }\n  ],\n  \"consensus_version\": \"2.1\",\n  \"modules\": {\n    \"chosen\": \"next guardian GET\"\n  },\n  \"meta\": {\n    \"guardian_2_name\": \"Two\",\n    \"federation_name\": \"Synthetic Federation\",\n    \"note\": \"authored fixture\",\n    \"guardian_0_name\": \"Zero\"\n  }\n}",
+      "stderr": "",
+      "requests": [
+        {
+          "method": "GET",
+          "path": "/first/config",
+          "body": ""
+        },
+        {
+          "method": "GET",
+          "path": "/second/config",
+          "body": ""
+        }
+      ]
+    },
+    {
+      "name": "space-before-colon",
+      "status": 0,
+      "stdout": "{\n  \"federation_id\": \"1234567890abcdef1234567890abcdef1234567890abcdef1234567890abcdef\",\n  \"federation_name\": \"Synthetic Federation\",\n  \"guardians\": [\n    {\n      \"peer_id\": 0,\n      \"name\": \"Zero\",\n      \"url\": \"\"\n    },\n    {\n      \"peer_id\": 2,\n      \"name\": \"Two\",\n      \"url\": \"wss://synthetic.invalid/two\"\n    },\n    {\n      \"peer_id\": 10,\n      \"name\": null,\n      \"url\": \"opaque endpoint ten\"\n    }\n  ],\n  \"consensus_version\": \"2.1\",\n  \"modules\": {\n    \"chosen\": \"same guardian POST\"\n  },\n  \"meta\": {\n    \"guardian_2_name\": \"Two\",\n    \"federation_name\": \"Synthetic Federation\",\n    \"note\": \"authored fixture\",\n    \"guardian_0_name\": \"Zero\"\n  }\n}",
+      "stderr": "",
+      "requests": [
+        {
+          "method": "GET",
+          "path": "/first/config",
+          "body": ""
+        },
+        {
+          "method": "POST",
+          "path": "/first/config",
+          "body": "{}"
+        }
+      ]
+    },
+    {
+      "name": "slash-name",
+      "status": 0,
+      "stdout": "{\n  \"federation_id\": \"1234567890abcdef1234567890abcdef1234567890abcdef1234567890abcdef\",\n  \"federation_name\": \"Synthetic Federation\",\n  \"guardians\": [\n    {\n      \"peer_id\": 0,\n      \"name\": \"Zero\",\n      \"url\": \"\"\n    },\n    {\n      \"peer_id\": 2,\n      \"name\": \"Two\",\n      \"url\": \"wss://synthetic.invalid/two\"\n    },\n    {\n      \"peer_id\": 10,\n      \"name\": null,\n      \"url\": \"opaque endpoint ten\"\n    }\n  ],\n  \"consensus_version\": \"2.1\",\n  \"modules\": {\n    \"chosen\": \"same guardian POST\"\n  },\n  \"meta\": {\n    \"note\": \"authored fixture\",\n    \"guardian_0_name\": \"Zero\",\n    \"federation_name\": \"Synthetic Federation\",\n    \"guardian_2_name\": \"Two\"\n  }\n}",
+      "stderr": "",
+      "requests": [
+        {
+          "method": "GET",
+          "path": "/first/config",
+          "body": ""
+        },
+        {
+          "method": "POST",
+          "path": "/first/config",
+          "body": "{}"
+        }
+      ]
+    },
+    {
+      "name": "empty-name",
+      "status": 0,
+      "stdout": "{\n  \"federation_id\": \"1234567890abcdef1234567890abcdef1234567890abcdef1234567890abcdef\",\n  \"federation_name\": \"Synthetic Federation\",\n  \"guardians\": [\n    {\n      \"peer_id\": 0,\n      \"name\": \"Zero\",\n      \"url\": \"\"\n    },\n    {\n      \"peer_id\": 2,\n      \"name\": \"Two\",\n      \"url\": \"wss://synthetic.invalid/two\"\n    },\n    {\n      \"peer_id\": 10,\n      \"name\": null,\n      \"url\": \"opaque endpoint ten\"\n    }\n  ],\n  \"consensus_version\": \"2.1\",\n  \"modules\": {\n    \"chosen\": \"same guardian POST\"\n  },\n  \"meta\": {\n    \"note\": \"authored fixture\",\n    \"guardian_0_name\": \"Zero\",\n    \"federation_name\": \"Synthetic Federation\",\n    \"guardian_2_name\": \"Two\"\n  }\n}",
+      "stderr": "",
+      "requests": [
+        {
+          "method": "GET",
+          "path": "/first/config",
+          "body": ""
+        },
+        {
+          "method": "POST",
+          "path": "/first/config",
+          "body": "{}"
+        }
+      ]
+    },
+    {
+      "name": "tab-before-colon",
+      "status": 0,
+      "stdout": "{\n  \"federation_id\": \"1234567890abcdef1234567890abcdef1234567890abcdef1234567890abcdef\",\n  \"federation_name\": \"Synthetic Federation\",\n  \"guardians\": [\n    {\n      \"peer_id\": 0,\n      \"name\": \"Zero\",\n      \"url\": \"\"\n    },\n    {\n      \"peer_id\": 2,\n      \"name\": \"Two\",\n      \"url\": \"wss://synthetic.invalid/two\"\n    },\n    {\n      \"peer_id\": 10,\n      \"name\": null,\n      \"url\": \"opaque endpoint ten\"\n    }\n  ],\n  \"consensus_version\": \"2.1\",\n  \"modules\": {\n    \"chosen\": \"same guardian POST\"\n  },\n  \"meta\": {\n    \"federation_name\": \"Synthetic Federation\",\n    \"note\": \"authored fixture\",\n    \"guardian_2_name\": \"Two\",\n    \"guardian_0_name\": \"Zero\"\n  }\n}",
+      "stderr": "",
+      "requests": [
+        {
+          "method": "GET",
+          "path": "/first/config",
+          "body": ""
+        },
+        {
+          "method": "POST",
+          "path": "/first/config",
+          "body": "{}"
+        }
+      ]
+    },
+    {
+      "name": "space-in-name",
+      "status": 0,
+      "stdout": "{\n  \"federation_id\": \"1234567890abcdef1234567890abcdef1234567890abcdef1234567890abcdef\",\n  \"federation_name\": \"Synthetic Federation\",\n  \"guardians\": [\n    {\n      \"peer_id\": 0,\n      \"name\": \"Zero\",\n      \"url\": \"\"\n    },\n    {\n      \"peer_id\": 2,\n      \"name\": \"Two\",\n      \"url\": \"wss://synthetic.invalid/two\"\n    },\n    {\n      \"peer_id\": 10,\n      \"name\": null,\n      \"url\": \"opaque endpoint ten\"\n    }\n  ],\n  \"consensus_version\": \"2.1\",\n  \"modules\": {\n    \"chosen\": \"same guardian POST\"\n  },\n  \"meta\": {\n    \"guardian_0_name\": \"Zero\",\n    \"note\": \"authored fixture\",\n    \"guardian_2_name\": \"Two\",\n    \"federation_name\": \"Synthetic Federation\"\n  }\n}",
+      "stderr": "",
+      "requests": [
+        {
+          "method": "GET",
+          "path": "/first/config",
+          "body": ""
+        },
+        {
+          "method": "POST",
+          "path": "/first/config",
+          "body": "{}"
+        }
+      ]
+    },
+    {
+      "name": "value-control",
+      "status": 0,
+      "stdout": "{\n  \"federation_id\": \"1234567890abcdef1234567890abcdef1234567890abcdef1234567890abcdef\",\n  \"federation_name\": \"Synthetic Federation\",\n  \"guardians\": [\n    {\n      \"peer_id\": 0,\n      \"name\": \"Zero\",\n      \"url\": \"\"\n    },\n    {\n      \"peer_id\": 2,\n      \"name\": \"Two\",\n      \"url\": \"wss://synthetic.invalid/two\"\n    },\n    {\n      \"peer_id\": 10,\n      \"name\": null,\n      \"url\": \"opaque endpoint ten\"\n    }\n  ],\n  \"consensus_version\": \"2.1\",\n  \"modules\": {\n    \"chosen\": \"same guardian POST\"\n  },\n  \"meta\": {\n    \"note\": \"authored fixture\",\n    \"federation_name\": \"Synthetic Federation\",\n    \"guardian_0_name\": \"Zero\",\n    \"guardian_2_name\": \"Two\"\n  }\n}",
+      "stderr": "",
+      "requests": [
+        {
+          "method": "GET",
+          "path": "/first/config",
+          "body": ""
+        },
+        {
+          "method": "POST",
+          "path": "/first/config",
+          "body": "{}"
+        }
+      ]
+    },
+    {
+      "name": "value-del",
+      "status": 0,
+      "stdout": "{\n  \"federation_id\": \"1234567890abcdef1234567890abcdef1234567890abcdef1234567890abcdef\",\n  \"federation_name\": \"Synthetic Federation\",\n  \"guardians\": [\n    {\n      \"peer_id\": 0,\n      \"name\": \"Zero\",\n      \"url\": \"\"\n    },\n    {\n      \"peer_id\": 2,\n      \"name\": \"Two\",\n      \"url\": \"wss://synthetic.invalid/two\"\n    },\n    {\n      \"peer_id\": 10,\n      \"name\": null,\n      \"url\": \"opaque endpoint ten\"\n    }\n  ],\n  \"consensus_version\": \"2.1\",\n  \"modules\": {\n    \"chosen\": \"same guardian POST\"\n  },\n  \"meta\": {\n    \"guardian_2_name\": \"Two\",\n    \"guardian_0_name\": \"Zero\",\n    \"note\": \"authored fixture\",\n    \"federation_name\": \"Synthetic Federation\"\n  }\n}",
+      "stderr": "",
+      "requests": [
+        {
+          "method": "GET",
+          "path": "/first/config",
+          "body": ""
+        },
+        {
+          "method": "POST",
+          "path": "/first/config",
+          "body": "{}"
+        }
+      ]
+    },
+    {
+      "name": "tab-value",
+      "status": 0,
+      "stdout": "{\n  \"federation_id\": \"1234567890abcdef1234567890abcdef1234567890abcdef1234567890abcdef\",\n  \"federation_name\": \"Synthetic Federation\",\n  \"guardians\": [\n    {\n      \"peer_id\": 0,\n      \"name\": \"Zero\",\n      \"url\": \"\"\n    },\n    {\n      \"peer_id\": 2,\n      \"name\": \"Two\",\n      \"url\": \"wss://synthetic.invalid/two\"\n    },\n    {\n      \"peer_id\": 10,\n      \"name\": null,\n      \"url\": \"opaque endpoint ten\"\n    }\n  ],\n  \"consensus_version\": \"2.1\",\n  \"modules\": {\n    \"chosen\": \"first guardian GET\"\n  },\n  \"meta\": {\n    \"note\": \"authored fixture\",\n    \"guardian_2_name\": \"Two\",\n    \"federation_name\": \"Synthetic Federation\",\n    \"guardian_0_name\": \"Zero\"\n  }\n}",
+      "stderr": "",
+      "requests": [
+        {
+          "method": "GET",
+          "path": "/first/config",
+          "body": ""
+        }
+      ]
+    },
+    {
+      "name": "empty-value",
+      "status": 0,
+      "stdout": "{\n  \"federation_id\": \"1234567890abcdef1234567890abcdef1234567890abcdef1234567890abcdef\",\n  \"federation_name\": \"Synthetic Federation\",\n  \"guardians\": [\n    {\n      \"peer_id\": 0,\n      \"name\": \"Zero\",\n      \"url\": \"\"\n    },\n    {\n      \"peer_id\": 2,\n      \"name\": \"Two\",\n      \"url\": \"wss://synthetic.invalid/two\"\n    },\n    {\n      \"peer_id\": 10,\n      \"name\": null,\n      \"url\": \"opaque endpoint ten\"\n    }\n  ],\n  \"consensus_version\": \"2.1\",\n  \"modules\": {\n    \"chosen\": \"first guardian GET\"\n  },\n  \"meta\": {\n    \"note\": \"authored fixture\",\n    \"federation_name\": \"Synthetic Federation\",\n    \"guardian_2_name\": \"Two\",\n    \"guardian_0_name\": \"Zero\"\n  }\n}",
+      "stderr": "",
+      "requests": [
+        {
+          "method": "GET",
+          "path": "/first/config",
+          "body": ""
+        }
+      ]
+    },
+    {
+      "name": "nonutf8-value",
+      "status": 0,
+      "stdout": "{\n  \"federation_id\": \"1234567890abcdef1234567890abcdef1234567890abcdef1234567890abcdef\",\n  \"federation_name\": \"Synthetic Federation\",\n  \"guardians\": [\n    {\n      \"peer_id\": 0,\n      \"name\": \"Zero\",\n      \"url\": \"\"\n    },\n    {\n      \"peer_id\": 2,\n      \"name\": \"Two\",\n      \"url\": \"wss://synthetic.invalid/two\"\n    },\n    {\n      \"peer_id\": 10,\n      \"name\": null,\n      \"url\": \"opaque endpoint ten\"\n    }\n  ],\n  \"consensus_version\": \"2.1\",\n  \"modules\": {\n    \"chosen\": \"first guardian GET\"\n  },\n  \"meta\": {\n    \"guardian_0_name\": \"Zero\",\n    \"federation_name\": \"Synthetic Federation\",\n    \"guardian_2_name\": \"Two\",\n    \"note\": \"authored fixture\"\n  }\n}",
+      "stderr": "",
+      "requests": [
+        {
+          "method": "GET",
+          "path": "/first/config",
+          "body": ""
+        }
+      ]
+    },
+    {
+      "name": "final-fields-99",
+      "status": 0,
+      "stdout": "{\n  \"federation_id\": \"1234567890abcdef1234567890abcdef1234567890abcdef1234567890abcdef\",\n  \"federation_name\": \"Synthetic Federation\",\n  \"guardians\": [\n    {\n      \"peer_id\": 0,\n      \"name\": \"Zero\",\n      \"url\": \"\"\n    },\n    {\n      \"peer_id\": 2,\n      \"name\": \"Two\",\n      \"url\": \"wss://synthetic.invalid/two\"\n    },\n    {\n      \"peer_id\": 10,\n      \"name\": null,\n      \"url\": \"opaque endpoint ten\"\n    }\n  ],\n  \"consensus_version\": \"2.1\",\n  \"modules\": {\n    \"chosen\": \"first guardian GET\"\n  },\n  \"meta\": {\n    \"guardian_0_name\": \"Zero\",\n    \"federation_name\": \"Synthetic Federation\",\n    \"guardian_2_name\": \"Two\",\n    \"note\": \"authored fixture\"\n  }\n}",
+      "stderr": "",
+      "requests": [
+        {
+          "method": "GET",
+          "path": "/first/config",
+          "body": ""
+        }
+      ]
+    },
+    {
+      "name": "interim-fields-99",
+      "status": 0,
+      "stdout": "{\n  \"federation_id\": \"1234567890abcdef1234567890abcdef1234567890abcdef1234567890abcdef\",\n  \"federation_name\": \"Synthetic Federation\",\n  \"guardians\": [\n    {\n      \"peer_id\": 0,\n      \"name\": \"Zero\",\n      \"url\": \"\"\n    },\n    {\n      \"peer_id\": 2,\n      \"name\": \"Two\",\n      \"url\": \"wss://synthetic.invalid/two\"\n    },\n    {\n      \"peer_id\": 10,\n      \"name\": null,\n      \"url\": \"opaque endpoint ten\"\n    }\n  ],\n  \"consensus_version\": \"2.1\",\n  \"modules\": {\n    \"chosen\": \"first guardian GET\"\n  },\n  \"meta\": {\n    \"guardian_2_name\": \"Two\",\n    \"guardian_0_name\": \"Zero\",\n    \"federation_name\": \"Synthetic Federation\",\n    \"note\": \"authored fixture\"\n  }\n}",
+      "stderr": "",
+      "requests": [
+        {
+          "method": "GET",
+          "path": "/first/config",
+          "body": ""
+        }
+      ]
+    },
+    {
+      "name": "final-fields-100",
+      "status": 0,
+      "stdout": "{\n  \"federation_id\": \"1234567890abcdef1234567890abcdef1234567890abcdef1234567890abcdef\",\n  \"federation_name\": \"Synthetic Federation\",\n  \"guardians\": [\n    {\n      \"peer_id\": 0,\n      \"name\": \"Zero\",\n      \"url\": \"\"\n    },\n    {\n      \"peer_id\": 2,\n      \"name\": \"Two\",\n      \"url\": \"wss://synthetic.invalid/two\"\n    },\n    {\n      \"peer_id\": 10,\n      \"name\": null,\n      \"url\": \"opaque endpoint ten\"\n    }\n  ],\n  \"consensus_version\": \"2.1\",\n  \"modules\": {\n    \"chosen\": \"first guardian GET\"\n  },\n  \"meta\": {\n    \"note\": \"authored fixture\",\n    \"guardian_0_name\": \"Zero\",\n    \"federation_name\": \"Synthetic Federation\",\n    \"guardian_2_name\": \"Two\"\n  }\n}",
+      "stderr": "",
+      "requests": [
+        {
+          "method": "GET",
+          "path": "/first/config",
+          "body": ""
+        }
+      ]
+    },
+    {
+      "name": "interim-fields-100",
+      "status": 0,
+      "stdout": "{\n  \"federation_id\": \"1234567890abcdef1234567890abcdef1234567890abcdef1234567890abcdef\",\n  \"federation_name\": \"Synthetic Federation\",\n  \"guardians\": [\n    {\n      \"peer_id\": 0,\n      \"name\": \"Zero\",\n      \"url\": \"\"\n    },\n    {\n      \"peer_id\": 2,\n      \"name\": \"Two\",\n      \"url\": \"wss://synthetic.invalid/two\"\n    },\n    {\n      \"peer_id\": 10,\n      \"name\": null,\n      \"url\": \"opaque endpoint ten\"\n    }\n  ],\n  \"consensus_version\": \"2.1\",\n  \"modules\": {\n    \"chosen\": \"first guardian GET\"\n  },\n  \"meta\": {\n    \"note\": \"authored fixture\",\n    \"guardian_0_name\": \"Zero\",\n    \"federation_name\": \"Synthetic Federation\",\n    \"guardian_2_name\": \"Two\"\n  }\n}",
+      "stderr": "",
+      "requests": [
+        {
+          "method": "GET",
+          "path": "/first/config",
+          "body": ""
+        }
+      ]
+    },
+    {
+      "name": "final-fields-101",
+      "status": 0,
+      "stdout": "{\n  \"federation_id\": \"1234567890abcdef1234567890abcdef1234567890abcdef1234567890abcdef\",\n  \"federation_name\": \"Synthetic Federation\",\n  \"guardians\": [\n    {\n      \"peer_id\": 0,\n      \"name\": \"Zero\",\n      \"url\": \"\"\n    },\n    {\n      \"peer_id\": 2,\n      \"name\": \"Two\",\n      \"url\": \"wss://synthetic.invalid/two\"\n    },\n    {\n      \"peer_id\": 10,\n      \"name\": null,\n      \"url\": \"opaque endpoint ten\"\n    }\n  ],\n  \"consensus_version\": \"2.1\",\n  \"modules\": {\n    \"chosen\": \"same guardian POST\"\n  },\n  \"meta\": {\n    \"guardian_2_name\": \"Two\",\n    \"guardian_0_name\": \"Zero\",\n    \"federation_name\": \"Synthetic Federation\",\n    \"note\": \"authored fixture\"\n  }\n}",
+      "stderr": "",
+      "requests": [
+        {
+          "method": "GET",
+          "path": "/first/config",
+          "body": ""
+        },
+        {
+          "method": "POST",
+          "path": "/first/config",
+          "body": "{}"
+        }
+      ]
+    },
+    {
+      "name": "interim-fields-101",
+      "status": 0,
+      "stdout": "{\n  \"federation_id\": \"1234567890abcdef1234567890abcdef1234567890abcdef1234567890abcdef\",\n  \"federation_name\": \"Synthetic Federation\",\n  \"guardians\": [\n    {\n      \"peer_id\": 0,\n      \"name\": \"Zero\",\n      \"url\": \"\"\n    },\n    {\n      \"peer_id\": 2,\n      \"name\": \"Two\",\n      \"url\": \"wss://synthetic.invalid/two\"\n    },\n    {\n      \"peer_id\": 10,\n      \"name\": null,\n      \"url\": \"opaque endpoint ten\"\n    }\n  ],\n  \"consensus_version\": \"2.1\",\n  \"modules\": {\n    \"chosen\": \"same guardian POST\"\n  },\n  \"meta\": {\n    \"guardian_2_name\": \"Two\",\n    \"note\": \"authored fixture\",\n    \"guardian_0_name\": \"Zero\",\n    \"federation_name\": \"Synthetic Federation\"\n  }\n}",
+      "stderr": "",
+      "requests": [
+        {
+          "method": "GET",
+          "path": "/first/config",
+          "body": ""
+        },
+        {
+          "method": "POST",
+          "path": "/first/config",
+          "body": "{}"
+        }
+      ]
+    },
+    {
+      "name": "interim-invalid-name",
+      "status": 0,
+      "stdout": "{\n  \"federation_id\": \"1234567890abcdef1234567890abcdef1234567890abcdef1234567890abcdef\",\n  \"federation_name\": \"Synthetic Federation\",\n  \"guardians\": [\n    {\n      \"peer_id\": 0,\n      \"name\": \"Zero\",\n      \"url\": \"\"\n    },\n    {\n      \"peer_id\": 2,\n      \"name\": \"Two\",\n      \"url\": \"wss://synthetic.invalid/two\"\n    },\n    {\n      \"peer_id\": 10,\n      \"name\": null,\n      \"url\": \"opaque endpoint ten\"\n    }\n  ],\n  \"consensus_version\": \"2.1\",\n  \"modules\": {\n    \"chosen\": \"same guardian POST\"\n  },\n  \"meta\": {\n    \"guardian_0_name\": \"Zero\",\n    \"guardian_2_name\": \"Two\",\n    \"federation_name\": \"Synthetic Federation\",\n    \"note\": \"authored fixture\"\n  }\n}",
+      "stderr": "",
+      "requests": [
+        {
+          "method": "GET",
+          "path": "/first/config",
+          "body": ""
+        },
+        {
+          "method": "POST",
+          "path": "/first/config",
+          "body": "{}"
+        }
+      ]
+    },
+    {
+      "name": "trailer-slash",
+      "status": 0,
+      "stdout": "{\n  \"federation_id\": \"1234567890abcdef1234567890abcdef1234567890abcdef1234567890abcdef\",\n  \"federation_name\": \"Synthetic Federation\",\n  \"guardians\": [\n    {\n      \"peer_id\": 0,\n      \"name\": \"Zero\",\n      \"url\": \"\"\n    },\n    {\n      \"peer_id\": 2,\n      \"name\": \"Two\",\n      \"url\": \"wss://synthetic.invalid/two\"\n    },\n    {\n      \"peer_id\": 10,\n      \"name\": null,\n      \"url\": \"opaque endpoint ten\"\n    }\n  ],\n  \"consensus_version\": \"2.1\",\n  \"modules\": {\n    \"chosen\": \"next guardian GET\"\n  },\n  \"meta\": {\n    \"guardian_0_name\": \"Zero\",\n    \"note\": \"authored fixture\",\n    \"federation_name\": \"Synthetic Federation\",\n    \"guardian_2_name\": \"Two\"\n  }\n}",
+      "stderr": "",
+      "requests": [
+        {
+          "method": "GET",
+          "path": "/first/config",
+          "body": ""
+        },
+        {
+          "method": "GET",
+          "path": "/second/config",
+          "body": ""
+        }
+      ]
+    },
+    {
+      "name": "trailer-garbage",
+      "status": 0,
+      "stdout": "{\n  \"federation_id\": \"1234567890abcdef1234567890abcdef1234567890abcdef1234567890abcdef\",\n  \"federation_name\": \"Synthetic Federation\",\n  \"guardians\": [\n    {\n      \"peer_id\": 0,\n      \"name\": \"Zero\",\n      \"url\": \"\"\n    },\n    {\n      \"peer_id\": 2,\n      \"name\": \"Two\",\n      \"url\": \"wss://synthetic.invalid/two\"\n    },\n    {\n      \"peer_id\": 10,\n      \"name\": null,\n      \"url\": \"opaque endpoint ten\"\n    }\n  ],\n  \"consensus_version\": \"2.1\",\n  \"modules\": {\n    \"chosen\": \"next guardian GET\"\n  },\n  \"meta\": {\n    \"guardian_0_name\": \"Zero\",\n    \"federation_name\": \"Synthetic Federation\",\n    \"note\": \"authored fixture\",\n    \"guardian_2_name\": \"Two\"\n  }\n}",
+      "stderr": "",
+      "requests": [
+        {
+          "method": "GET",
+          "path": "/first/config",
+          "body": ""
+        },
+        {
+          "method": "GET",
+          "path": "/second/config",
+          "body": ""
+        }
+      ]
+    },
+    {
+      "name": "trailer-fold",
+      "status": 0,
+      "stdout": "{\n  \"federation_id\": \"1234567890abcdef1234567890abcdef1234567890abcdef1234567890abcdef\",\n  \"federation_name\": \"Synthetic Federation\",\n  \"guardians\": [\n    {\n      \"peer_id\": 0,\n      \"name\": \"Zero\",\n      \"url\": \"\"\n    },\n    {\n      \"peer_id\": 2,\n      \"name\": \"Two\",\n      \"url\": \"wss://synthetic.invalid/two\"\n    },\n    {\n      \"peer_id\": 10,\n      \"name\": null,\n      \"url\": \"opaque endpoint ten\"\n    }\n  ],\n  \"consensus_version\": \"2.1\",\n  \"modules\": {\n    \"chosen\": \"next guardian GET\"\n  },\n  \"meta\": {\n    \"note\": \"authored fixture\",\n    \"guardian_0_name\": \"Zero\",\n    \"federation_name\": \"Synthetic Federation\",\n    \"guardian_2_name\": \"Two\"\n  }\n}",
+      "stderr": "",
+      "requests": [
+        {
+          "method": "GET",
+          "path": "/first/config",
+          "body": ""
+        },
+        {
+          "method": "GET",
+          "path": "/second/config",
+          "body": ""
+        }
+      ]
+    },
+    {
+      "name": "ordinary-trailer",
+      "status": 0,
+      "stdout": "{\n  \"federation_id\": \"1234567890abcdef1234567890abcdef1234567890abcdef1234567890abcdef\",\n  \"federation_name\": \"Synthetic Federation\",\n  \"guardians\": [\n    {\n      \"peer_id\": 0,\n      \"name\": \"Zero\",\n      \"url\": \"\"\n    },\n    {\n      \"peer_id\": 2,\n      \"name\": \"Two\",\n      \"url\": \"wss://synthetic.invalid/two\"\n    },\n    {\n      \"peer_id\": 10,\n      \"name\": null,\n      \"url\": \"opaque endpoint ten\"\n    }\n  ],\n  \"consensus_version\": \"2.1\",\n  \"modules\": {\n    \"chosen\": \"first guardian GET\"\n  },\n  \"meta\": {\n    \"note\": \"authored fixture\",\n    \"guardian_0_name\": \"Zero\",\n    \"federation_name\": \"Synthetic Federation\",\n    \"guardian_2_name\": \"Two\"\n  }\n}",
+      "stderr": "",
+      "requests": [
+        {
+          "method": "GET",
+          "path": "/first/config",
+          "body": ""
+        }
+      ]
+    },
+    {
+      "name": "trailer-fields-98",
+      "status": 0,
+      "stdout": "{\n  \"federation_id\": \"1234567890abcdef1234567890abcdef1234567890abcdef1234567890abcdef\",\n  \"federation_name\": \"Synthetic Federation\",\n  \"guardians\": [\n    {\n      \"peer_id\": 0,\n      \"name\": \"Zero\",\n      \"url\": \"\"\n    },\n    {\n      \"peer_id\": 2,\n      \"name\": \"Two\",\n      \"url\": \"wss://synthetic.invalid/two\"\n    },\n    {\n      \"peer_id\": 10,\n      \"name\": null,\n      \"url\": \"opaque endpoint ten\"\n    }\n  ],\n  \"consensus_version\": \"2.1\",\n  \"modules\": {\n    \"chosen\": \"first guardian GET\"\n  },\n  \"meta\": {\n    \"guardian_2_name\": \"Two\",\n    \"note\": \"authored fixture\",\n    \"federation_name\": \"Synthetic Federation\",\n    \"guardian_0_name\": \"Zero\"\n  }\n}",
+      "stderr": "",
+      "requests": [
+        {
+          "method": "GET",
+          "path": "/first/config",
+          "body": ""
+        }
+      ]
+    },
+    {
+      "name": "trailer-fields-99",
+      "status": 0,
+      "stdout": "{\n  \"federation_id\": \"1234567890abcdef1234567890abcdef1234567890abcdef1234567890abcdef\",\n  \"federation_name\": \"Synthetic Federation\",\n  \"guardians\": [\n    {\n      \"peer_id\": 0,\n      \"name\": \"Zero\",\n      \"url\": \"\"\n    },\n    {\n      \"peer_id\": 2,\n      \"name\": \"Two\",\n      \"url\": \"wss://synthetic.invalid/two\"\n    },\n    {\n      \"peer_id\": 10,\n      \"name\": null,\n      \"url\": \"opaque endpoint ten\"\n    }\n  ],\n  \"consensus_version\": \"2.1\",\n  \"modules\": {\n    \"chosen\": \"first guardian GET\"\n  },\n  \"meta\": {\n    \"note\": \"authored fixture\",\n    \"federation_name\": \"Synthetic Federation\",\n    \"guardian_0_name\": \"Zero\",\n    \"guardian_2_name\": \"Two\"\n  }\n}",
+      "stderr": "",
+      "requests": [
+        {
+          "method": "GET",
+          "path": "/first/config",
+          "body": ""
+        }
+      ]
+    },
+    {
+      "name": "trailer-fields-100",
+      "status": 0,
+      "stdout": "{\n  \"federation_id\": \"1234567890abcdef1234567890abcdef1234567890abcdef1234567890abcdef\",\n  \"federation_name\": \"Synthetic Federation\",\n  \"guardians\": [\n    {\n      \"peer_id\": 0,\n      \"name\": \"Zero\",\n      \"url\": \"\"\n    },\n    {\n      \"peer_id\": 2,\n      \"name\": \"Two\",\n      \"url\": \"wss://synthetic.invalid/two\"\n    },\n    {\n      \"peer_id\": 10,\n      \"name\": null,\n      \"url\": \"opaque endpoint ten\"\n    }\n  ],\n  \"consensus_version\": \"2.1\",\n  \"modules\": {\n    \"chosen\": \"next guardian GET\"\n  },\n  \"meta\": {\n    \"guardian_0_name\": \"Zero\",\n    \"federation_name\": \"Synthetic Federation\",\n    \"guardian_2_name\": \"Two\",\n    \"note\": \"authored fixture\"\n  }\n}",
+      "stderr": "",
+      "requests": [
+        {
+          "method": "GET",
+          "path": "/first/config",
+          "body": ""
+        },
+        {
+          "method": "GET",
+          "path": "/second/config",
+          "body": ""
+        }
+      ]
+    },
+    {
+      "name": "trailer-fields-101",
+      "status": 0,
+      "stdout": "{\n  \"federation_id\": \"1234567890abcdef1234567890abcdef1234567890abcdef1234567890abcdef\",\n  \"federation_name\": \"Synthetic Federation\",\n  \"guardians\": [\n    {\n      \"peer_id\": 0,\n      \"name\": \"Zero\",\n      \"url\": \"\"\n    },\n    {\n      \"peer_id\": 2,\n      \"name\": \"Two\",\n      \"url\": \"wss://synthetic.invalid/two\"\n    },\n    {\n      \"peer_id\": 10,\n      \"name\": null,\n      \"url\": \"opaque endpoint ten\"\n    }\n  ],\n  \"consensus_version\": \"2.1\",\n  \"modules\": {\n    \"chosen\": \"next guardian GET\"\n  },\n  \"meta\": {\n    \"guardian_2_name\": \"Two\",\n    \"note\": \"authored fixture\",\n    \"guardian_0_name\": \"Zero\",\n    \"federation_name\": \"Synthetic Federation\"\n  }\n}",
+      "stderr": "",
+      "requests": [
+        {
+          "method": "GET",
+          "path": "/first/config",
+          "body": ""
+        },
+        {
+          "method": "GET",
+          "path": "/second/config",
+          "body": ""
+        }
+      ]
+    },
+    {
+      "name": "trailer-bytes-16383",
+      "status": 0,
+      "stdout": "{\n  \"federation_id\": \"1234567890abcdef1234567890abcdef1234567890abcdef1234567890abcdef\",\n  \"federation_name\": \"Synthetic Federation\",\n  \"guardians\": [\n    {\n      \"peer_id\": 0,\n      \"name\": \"Zero\",\n      \"url\": \"\"\n    },\n    {\n      \"peer_id\": 2,\n      \"name\": \"Two\",\n      \"url\": \"wss://synthetic.invalid/two\"\n    },\n    {\n      \"peer_id\": 10,\n      \"name\": null,\n      \"url\": \"opaque endpoint ten\"\n    }\n  ],\n  \"consensus_version\": \"2.1\",\n  \"modules\": {\n    \"chosen\": \"first guardian GET\"\n  },\n  \"meta\": {\n    \"note\": \"authored fixture\",\n    \"guardian_0_name\": \"Zero\",\n    \"guardian_2_name\": \"Two\",\n    \"federation_name\": \"Synthetic Federation\"\n  }\n}",
+      "stderr": "",
+      "requests": [
+        {
+          "method": "GET",
+          "path": "/first/config",
+          "body": ""
+        }
+      ]
+    },
+    {
+      "name": "trailer-bytes-16384",
+      "status": 0,
+      "stdout": "{\n  \"federation_id\": \"1234567890abcdef1234567890abcdef1234567890abcdef1234567890abcdef\",\n  \"federation_name\": \"Synthetic Federation\",\n  \"guardians\": [\n    {\n      \"peer_id\": 0,\n      \"name\": \"Zero\",\n      \"url\": \"\"\n    },\n    {\n      \"peer_id\": 2,\n      \"name\": \"Two\",\n      \"url\": \"wss://synthetic.invalid/two\"\n    },\n    {\n      \"peer_id\": 10,\n      \"name\": null,\n      \"url\": \"opaque endpoint ten\"\n    }\n  ],\n  \"consensus_version\": \"2.1\",\n  \"modules\": {\n    \"chosen\": \"next guardian GET\"\n  },\n  \"meta\": {\n    \"guardian_0_name\": \"Zero\",\n    \"note\": \"authored fixture\",\n    \"federation_name\": \"Synthetic Federation\",\n    \"guardian_2_name\": \"Two\"\n  }\n}",
+      "stderr": "",
+      "requests": [
+        {
+          "method": "GET",
+          "path": "/first/config",
+          "body": ""
+        },
+        {
+          "method": "GET",
+          "path": "/second/config",
+          "body": ""
+        }
+      ]
+    },
+    {
+      "name": "trailer-bytes-16385",
+      "status": 0,
+      "stdout": "{\n  \"federation_id\": \"1234567890abcdef1234567890abcdef1234567890abcdef1234567890abcdef\",\n  \"federation_name\": \"Synthetic Federation\",\n  \"guardians\": [\n    {\n      \"peer_id\": 0,\n      \"name\": \"Zero\",\n      \"url\": \"\"\n    },\n    {\n      \"peer_id\": 2,\n      \"name\": \"Two\",\n      \"url\": \"wss://synthetic.invalid/two\"\n    },\n    {\n      \"peer_id\": 10,\n      \"name\": null,\n      \"url\": \"opaque endpoint ten\"\n    }\n  ],\n  \"consensus_version\": \"2.1\",\n  \"modules\": {\n    \"chosen\": \"next guardian GET\"\n  },\n  \"meta\": {\n    \"federation_name\": \"Synthetic Federation\",\n    \"guardian_0_name\": \"Zero\",\n    \"note\": \"authored fixture\",\n    \"guardian_2_name\": \"Two\"\n  }\n}",
+      "stderr": "",
+      "requests": [
+        {
+          "method": "GET",
+          "path": "/first/config",
+          "body": ""
+        },
+        {
+          "method": "GET",
+          "path": "/second/config",
+          "body": ""
+        }
+      ]
+    },
+    {
+      "name": "trailer-field-bytes-4095",
+      "status": 0,
+      "stdout": "{\n  \"federation_id\": \"1234567890abcdef1234567890abcdef1234567890abcdef1234567890abcdef\",\n  \"federation_name\": \"Synthetic Federation\",\n  \"guardians\": [\n    {\n      \"peer_id\": 0,\n      \"name\": \"Zero\",\n      \"url\": \"\"\n    },\n    {\n      \"peer_id\": 2,\n      \"name\": \"Two\",\n      \"url\": \"wss://synthetic.invalid/two\"\n    },\n    {\n      \"peer_id\": 10,\n      \"name\": null,\n      \"url\": \"opaque endpoint ten\"\n    }\n  ],\n  \"consensus_version\": \"2.1\",\n  \"modules\": {\n    \"chosen\": \"first guardian GET\"\n  },\n  \"meta\": {\n    \"guardian_2_name\": \"Two\",\n    \"note\": \"authored fixture\",\n    \"guardian_0_name\": \"Zero\",\n    \"federation_name\": \"Synthetic Federation\"\n  }\n}",
+      "stderr": "",
+      "requests": [
+        {
+          "method": "GET",
+          "path": "/first/config",
+          "body": ""
+        }
+      ]
+    },
+    {
+      "name": "trailer-field-bytes-4096",
+      "status": 0,
+      "stdout": "{\n  \"federation_id\": \"1234567890abcdef1234567890abcdef1234567890abcdef1234567890abcdef\",\n  \"federation_name\": \"Synthetic Federation\",\n  \"guardians\": [\n    {\n      \"peer_id\": 0,\n      \"name\": \"Zero\",\n      \"url\": \"\"\n    },\n    {\n      \"peer_id\": 2,\n      \"name\": \"Two\",\n      \"url\": \"wss://synthetic.invalid/two\"\n    },\n    {\n      \"peer_id\": 10,\n      \"name\": null,\n      \"url\": \"opaque endpoint ten\"\n    }\n  ],\n  \"consensus_version\": \"2.1\",\n  \"modules\": {\n    \"chosen\": \"first guardian GET\"\n  },\n  \"meta\": {\n    \"guardian_0_name\": \"Zero\",\n    \"federation_name\": \"Synthetic Federation\",\n    \"note\": \"authored fixture\",\n    \"guardian_2_name\": \"Two\"\n  }\n}",
+      "stderr": "",
+      "requests": [
+        {
+          "method": "GET",
+          "path": "/first/config",
+          "body": ""
+        }
+      ]
+    },
+    {
+      "name": "trailer-field-bytes-4097",
+      "status": 0,
+      "stdout": "{\n  \"federation_id\": \"1234567890abcdef1234567890abcdef1234567890abcdef1234567890abcdef\",\n  \"federation_name\": \"Synthetic Federation\",\n  \"guardians\": [\n    {\n      \"peer_id\": 0,\n      \"name\": \"Zero\",\n      \"url\": \"\"\n    },\n    {\n      \"peer_id\": 2,\n      \"name\": \"Two\",\n      \"url\": \"wss://synthetic.invalid/two\"\n    },\n    {\n      \"peer_id\": 10,\n      \"name\": null,\n      \"url\": \"opaque endpoint ten\"\n    }\n  ],\n  \"consensus_version\": \"2.1\",\n  \"modules\": {\n    \"chosen\": \"first guardian GET\"\n  },\n  \"meta\": {\n    \"federation_name\": \"Synthetic Federation\",\n    \"guardian_0_name\": \"Zero\",\n    \"note\": \"authored fixture\",\n    \"guardian_2_name\": \"Two\"\n  }\n}",
+      "stderr": "",
+      "requests": [
+        {
+          "method": "GET",
+          "path": "/first/config",
+          "body": ""
+        }
+      ]
+    },
+    {
+      "name": "trailer-field-bytes-16381",
+      "status": 0,
+      "stdout": "{\n  \"federation_id\": \"1234567890abcdef1234567890abcdef1234567890abcdef1234567890abcdef\",\n  \"federation_name\": \"Synthetic Federation\",\n  \"guardians\": [\n    {\n      \"peer_id\": 0,\n      \"name\": \"Zero\",\n      \"url\": \"\"\n    },\n    {\n      \"peer_id\": 2,\n      \"name\": \"Two\",\n      \"url\": \"wss://synthetic.invalid/two\"\n    },\n    {\n      \"peer_id\": 10,\n      \"name\": null,\n      \"url\": \"opaque endpoint ten\"\n    }\n  ],\n  \"consensus_version\": \"2.1\",\n  \"modules\": {\n    \"chosen\": \"first guardian GET\"\n  },\n  \"meta\": {\n    \"guardian_0_name\": \"Zero\",\n    \"guardian_2_name\": \"Two\",\n    \"note\": \"authored fixture\",\n    \"federation_name\": \"Synthetic Federation\"\n  }\n}",
+      "stderr": "",
+      "requests": [
+        {
+          "method": "GET",
+          "path": "/first/config",
+          "body": ""
+        }
+      ]
+    },
+    {
+      "name": "status-four-digits",
+      "status": 0,
+      "stdout": "{\n  \"federation_id\": \"1234567890abcdef1234567890abcdef1234567890abcdef1234567890abcdef\",\n  \"federation_name\": \"Synthetic Federation\",\n  \"guardians\": [\n    {\n      \"peer_id\": 0,\n      \"name\": \"Zero\",\n      \"url\": \"\"\n    },\n    {\n      \"peer_id\": 2,\n      \"name\": \"Two\",\n      \"url\": \"wss://synthetic.invalid/two\"\n    },\n    {\n      \"peer_id\": 10,\n      \"name\": null,\n      \"url\": \"opaque endpoint ten\"\n    }\n  ],\n  \"consensus_version\": \"2.1\",\n  \"modules\": {\n    \"chosen\": \"same guardian POST\"\n  },\n  \"meta\": {\n    \"note\": \"authored fixture\",\n    \"guardian_0_name\": \"Zero\",\n    \"federation_name\": \"Synthetic Federation\",\n    \"guardian_2_name\": \"Two\"\n  }\n}",
+      "stderr": "",
+      "requests": [
+        {
+          "method": "GET",
+          "path": "/first/config",
+          "body": ""
+        },
+        {
+          "method": "POST",
+          "path": "/first/config",
+          "body": "{}"
+        }
+      ]
+    },
+    {
+      "name": "reason-control",
+      "status": 0,
+      "stdout": "{\n  \"federation_id\": \"1234567890abcdef1234567890abcdef1234567890abcdef1234567890abcdef\",\n  \"federation_name\": \"Synthetic Federation\",\n  \"guardians\": [\n    {\n      \"peer_id\": 0,\n      \"name\": \"Zero\",\n      \"url\": \"\"\n    },\n    {\n      \"peer_id\": 2,\n      \"name\": \"Two\",\n      \"url\": \"wss://synthetic.invalid/two\"\n    },\n    {\n      \"peer_id\": 10,\n      \"name\": null,\n      \"url\": \"opaque endpoint ten\"\n    }\n  ],\n  \"consensus_version\": \"2.1\",\n  \"modules\": {\n    \"chosen\": \"same guardian POST\"\n  },\n  \"meta\": {\n    \"federation_name\": \"Synthetic Federation\",\n    \"note\": \"authored fixture\",\n    \"guardian_2_name\": \"Two\",\n    \"guardian_0_name\": \"Zero\"\n  }\n}",
+      "stderr": "",
+      "requests": [
+        {
+          "method": "GET",
+          "path": "/first/config",
+          "body": ""
+        },
+        {
+          "method": "POST",
+          "path": "/first/config",
+          "body": "{}"
+        }
+      ]
+    },
+    {
+      "name": "status-tab",
+      "status": 0,
+      "stdout": "{\n  \"federation_id\": \"1234567890abcdef1234567890abcdef1234567890abcdef1234567890abcdef\",\n  \"federation_name\": \"Synthetic Federation\",\n  \"guardians\": [\n    {\n      \"peer_id\": 0,\n      \"name\": \"Zero\",\n      \"url\": \"\"\n    },\n    {\n      \"peer_id\": 2,\n      \"name\": \"Two\",\n      \"url\": \"wss://synthetic.invalid/two\"\n    },\n    {\n      \"peer_id\": 10,\n      \"name\": null,\n      \"url\": \"opaque endpoint ten\"\n    }\n  ],\n  \"consensus_version\": \"2.1\",\n  \"modules\": {\n    \"chosen\": \"same guardian POST\"\n  },\n  \"meta\": {\n    \"guardian_2_name\": \"Two\",\n    \"federation_name\": \"Synthetic Federation\",\n    \"note\": \"authored fixture\",\n    \"guardian_0_name\": \"Zero\"\n  }\n}",
+      "stderr": "",
+      "requests": [
+        {
+          "method": "GET",
+          "path": "/first/config",
+          "body": ""
+        },
+        {
+          "method": "POST",
+          "path": "/first/config",
+          "body": "{}"
+        }
+      ]
+    },
+    {
+      "name": "status-no-reason",
+      "status": 0,
+      "stdout": "{\n  \"federation_id\": \"1234567890abcdef1234567890abcdef1234567890abcdef1234567890abcdef\",\n  \"federation_name\": \"Synthetic Federation\",\n  \"guardians\": [\n    {\n      \"peer_id\": 0,\n      \"name\": \"Zero\",\n      \"url\": \"\"\n    },\n    {\n      \"peer_id\": 2,\n      \"name\": \"Two\",\n      \"url\": \"wss://synthetic.invalid/two\"\n    },\n    {\n      \"peer_id\": 10,\n      \"name\": null,\n      \"url\": \"opaque endpoint ten\"\n    }\n  ],\n  \"consensus_version\": \"2.1\",\n  \"modules\": {\n    \"chosen\": \"first guardian GET\"\n  },\n  \"meta\": {\n    \"federation_name\": \"Synthetic Federation\",\n    \"guardian_0_name\": \"Zero\",\n    \"note\": \"authored fixture\",\n    \"guardian_2_name\": \"Two\"\n  }\n}",
+      "stderr": "",
+      "requests": [
+        {
+          "method": "GET",
+          "path": "/first/config",
+          "body": ""
+        }
+      ]
+    },
+    {
+      "name": "length-overflow",
+      "status": 0,
+      "stdout": "{\n  \"federation_id\": \"1234567890abcdef1234567890abcdef1234567890abcdef1234567890abcdef\",\n  \"federation_name\": \"Synthetic Federation\",\n  \"guardians\": [\n    {\n      \"peer_id\": 0,\n      \"name\": \"Zero\",\n      \"url\": \"\"\n    },\n    {\n      \"peer_id\": 2,\n      \"name\": \"Two\",\n      \"url\": \"wss://synthetic.invalid/two\"\n    },\n    {\n      \"peer_id\": 10,\n      \"name\": null,\n      \"url\": \"opaque endpoint ten\"\n    }\n  ],\n  \"consensus_version\": \"2.1\",\n  \"modules\": {\n    \"chosen\": \"same guardian POST\"\n  },\n  \"meta\": {\n    \"federation_name\": \"Synthetic Federation\",\n    \"guardian_2_name\": \"Two\",\n    \"note\": \"authored fixture\",\n    \"guardian_0_name\": \"Zero\"\n  }\n}",
+      "stderr": "",
+      "requests": [
+        {
+          "method": "GET",
+          "path": "/first/config",
+          "body": ""
+        },
+        {
+          "method": "POST",
+          "path": "/first/config",
+          "body": "{}"
+        }
+      ]
+    },
+    {
+      "name": "length-plus",
+      "status": 0,
+      "stdout": "{\n  \"federation_id\": \"1234567890abcdef1234567890abcdef1234567890abcdef1234567890abcdef\",\n  \"federation_name\": \"Synthetic Federation\",\n  \"guardians\": [\n    {\n      \"peer_id\": 0,\n      \"name\": \"Zero\",\n      \"url\": \"\"\n    },\n    {\n      \"peer_id\": 2,\n      \"name\": \"Two\",\n      \"url\": \"wss://synthetic.invalid/two\"\n    },\n    {\n      \"peer_id\": 10,\n      \"name\": null,\n      \"url\": \"opaque endpoint ten\"\n    }\n  ],\n  \"consensus_version\": \"2.1\",\n  \"modules\": {\n    \"chosen\": \"same guardian POST\"\n  },\n  \"meta\": {\n    \"guardian_2_name\": \"Two\",\n    \"guardian_0_name\": \"Zero\",\n    \"note\": \"authored fixture\",\n    \"federation_name\": \"Synthetic Federation\"\n  }\n}",
+      "stderr": "",
+      "requests": [
+        {
+          "method": "GET",
+          "path": "/first/config",
+          "body": ""
+        },
+        {
+          "method": "POST",
+          "path": "/first/config",
+          "body": "{}"
+        }
+      ]
+    },
+    {
+      "name": "http10-transfer-encoding",
+      "status": 0,
+      "stdout": "{\n  \"federation_id\": \"1234567890abcdef1234567890abcdef1234567890abcdef1234567890abcdef\",\n  \"federation_name\": \"Synthetic Federation\",\n  \"guardians\": [\n    {\n      \"peer_id\": 0,\n      \"name\": \"Zero\",\n      \"url\": \"\"\n    },\n    {\n      \"peer_id\": 2,\n      \"name\": \"Two\",\n      \"url\": \"wss://synthetic.invalid/two\"\n    },\n    {\n      \"peer_id\": 10,\n      \"name\": null,\n      \"url\": \"opaque endpoint ten\"\n    }\n  ],\n  \"consensus_version\": \"2.1\",\n  \"modules\": {\n    \"chosen\": \"same guardian POST\"\n  },\n  \"meta\": {\n    \"federation_name\": \"Synthetic Federation\",\n    \"guardian_2_name\": \"Two\",\n    \"note\": \"authored fixture\",\n    \"guardian_0_name\": \"Zero\"\n  }\n}",
+      "stderr": "",
+      "requests": [
+        {
+          "method": "GET",
+          "path": "/first/config",
+          "body": ""
+        },
+        {
+          "method": "POST",
+          "path": "/first/config",
+          "body": "{}"
+        }
+      ]
+    },
+    {
+      "name": "first-nonutf8-location",
+      "status": 0,
+      "stdout": "{\n  \"federation_id\": \"1234567890abcdef1234567890abcdef1234567890abcdef1234567890abcdef\",\n  \"federation_name\": \"Synthetic Federation\",\n  \"guardians\": [\n    {\n      \"peer_id\": 0,\n      \"name\": \"Zero\",\n      \"url\": \"\"\n    },\n    {\n      \"peer_id\": 2,\n      \"name\": \"Two\",\n      \"url\": \"wss://synthetic.invalid/two\"\n    },\n    {\n      \"peer_id\": 10,\n      \"name\": null,\n      \"url\": \"opaque endpoint ten\"\n    }\n  ],\n  \"consensus_version\": \"2.1\",\n  \"modules\": {\n    \"chosen\": \"same guardian POST\"\n  },\n  \"meta\": {\n    \"federation_name\": \"Synthetic Federation\",\n    \"guardian_2_name\": \"Two\",\n    \"note\": \"authored fixture\",\n    \"guardian_0_name\": \"Zero\"\n  }\n}",
+      "stderr": "",
+      "requests": [
+        {
+          "method": "GET",
+          "path": "/first/config",
+          "body": ""
+        },
+        {
+          "method": "POST",
+          "path": "/first/config",
+          "body": "{}"
+        }
+      ]
+    },
+    {
+      "name": "repeated-location",
+      "status": 0,
+      "stdout": "{\n  \"federation_id\": \"1234567890abcdef1234567890abcdef1234567890abcdef1234567890abcdef\",\n  \"federation_name\": \"Synthetic Federation\",\n  \"guardians\": [\n    {\n      \"peer_id\": 0,\n      \"name\": \"Zero\",\n      \"url\": \"\"\n    },\n    {\n      \"peer_id\": 2,\n      \"name\": \"Two\",\n      \"url\": \"wss://synthetic.invalid/two\"\n    },\n    {\n      \"peer_id\": 10,\n      \"name\": null,\n      \"url\": \"opaque endpoint ten\"\n    }\n  ],\n  \"consensus_version\": \"2.1\",\n  \"modules\": {\n    \"chosen\": \"redirect target\"\n  },\n  \"meta\": {\n    \"guardian_0_name\": \"Zero\",\n    \"note\": \"authored fixture\",\n    \"federation_name\": \"Synthetic Federation\",\n    \"guardian_2_name\": \"Two\"\n  }\n}",
+      "stderr": "",
+      "requests": [
+        {
+          "method": "GET",
+          "path": "/first/config",
+          "body": ""
+        },
+        {
+          "method": "GET",
+          "path": "/a",
+          "body": ""
+        }
+      ]
+    },
+    {
+      "name": "first-nonutf8-location-identity",
+      "status": 0,
+      "stdout": "{\n  \"federation_id\": \"1234567890abcdef1234567890abcdef1234567890abcdef1234567890abcdef\",\n  \"federation_name\": \"Synthetic Federation\",\n  \"guardians\": [\n    {\n      \"peer_id\": 0,\n      \"name\": \"Zero\",\n      \"url\": \"\"\n    },\n    {\n      \"peer_id\": 2,\n      \"name\": \"Two\",\n      \"url\": \"wss://synthetic.invalid/two\"\n    },\n    {\n      \"peer_id\": 10,\n      \"name\": null,\n      \"url\": \"opaque endpoint ten\"\n    }\n  ],\n  \"consensus_version\": \"2.1\",\n  \"modules\": {\n    \"chosen\": \"same guardian POST\"\n  },\n  \"meta\": {\n    \"guardian_0_name\": \"Zero\",\n    \"federation_name\": \"Synthetic Federation\",\n    \"guardian_2_name\": \"Two\",\n    \"note\": \"authored fixture\"\n  }\n}",
+      "stderr": "",
+      "requests": [
+        {
+          "method": "GET",
+          "path": "/first/config",
+          "body": ""
+        },
+        {
+          "method": "POST",
+          "path": "/first/config",
+          "body": "{}"
+        }
+      ]
+    },
+    {
+      "name": "interim-fold",
+      "status": 0,
+      "stdout": "{\n  \"federation_id\": \"1234567890abcdef1234567890abcdef1234567890abcdef1234567890abcdef\",\n  \"federation_name\": \"Synthetic Federation\",\n  \"guardians\": [\n    {\n      \"peer_id\": 0,\n      \"name\": \"Zero\",\n      \"url\": \"\"\n    },\n    {\n      \"peer_id\": 2,\n      \"name\": \"Two\",\n      \"url\": \"wss://synthetic.invalid/two\"\n    },\n    {\n      \"peer_id\": 10,\n      \"name\": null,\n      \"url\": \"opaque endpoint ten\"\n    }\n  ],\n  \"consensus_version\": \"2.1\",\n  \"modules\": {\n    \"chosen\": \"same guardian POST\"\n  },\n  \"meta\": {\n    \"guardian_2_name\": \"Two\",\n    \"federation_name\": \"Synthetic Federation\",\n    \"guardian_0_name\": \"Zero\",\n    \"note\": \"authored fixture\"\n  }\n}",
+      "stderr": "",
+      "requests": [
+        {
+          "method": "GET",
+          "path": "/first/config",
+          "body": ""
+        },
+        {
+          "method": "POST",
+          "path": "/first/config",
+          "body": "{}"
+        }
+      ]
+    },
+    {
+      "name": "conflicting-location",
+      "status": 0,
+      "stdout": "{\n  \"federation_id\": \"1234567890abcdef1234567890abcdef1234567890abcdef1234567890abcdef\",\n  \"federation_name\": \"Synthetic Federation\",\n  \"guardians\": [\n    {\n      \"peer_id\": 0,\n      \"name\": \"Zero\",\n      \"url\": \"\"\n    },\n    {\n      \"peer_id\": 2,\n      \"name\": \"Two\",\n      \"url\": \"wss://synthetic.invalid/two\"\n    },\n    {\n      \"peer_id\": 10,\n      \"name\": null,\n      \"url\": \"opaque endpoint ten\"\n    }\n  ],\n  \"consensus_version\": \"2.1\",\n  \"modules\": {\n    \"chosen\": \"redirect target\"\n  },\n  \"meta\": {\n    \"federation_name\": \"Synthetic Federation\",\n    \"guardian_0_name\": \"Zero\",\n    \"guardian_2_name\": \"Two\",\n    \"note\": \"authored fixture\"\n  }\n}",
+      "stderr": "",
+      "requests": [
+        {
+          "method": "GET",
+          "path": "/first/config",
+          "body": ""
+        },
+        {
+          "method": "GET",
+          "path": "/a",
+          "body": ""
+        }
+      ]
+    },
+    {
+      "name": "leading-blank",
+      "status": 0,
+      "stdout": "{\n  \"federation_id\": \"1234567890abcdef1234567890abcdef1234567890abcdef1234567890abcdef\",\n  \"federation_name\": \"Synthetic Federation\",\n  \"guardians\": [\n    {\n      \"peer_id\": 0,\n      \"name\": \"Zero\",\n      \"url\": \"\"\n    },\n    {\n      \"peer_id\": 2,\n      \"name\": \"Two\",\n      \"url\": \"wss://synthetic.invalid/two\"\n    },\n    {\n      \"peer_id\": 10,\n      \"name\": null,\n      \"url\": \"opaque endpoint ten\"\n    }\n  ],\n  \"consensus_version\": \"2.1\",\n  \"modules\": {\n    \"chosen\": \"first guardian GET\"\n  },\n  \"meta\": {\n    \"guardian_2_name\": \"Two\",\n    \"federation_name\": \"Synthetic Federation\",\n    \"guardian_0_name\": \"Zero\",\n    \"note\": \"authored fixture\"\n  }\n}",
+      "stderr": "",
+      "requests": [
+        {
+          "method": "GET",
+          "path": "/first/config",
+          "body": ""
+        }
+      ]
+    },
+    {
+      "name": "space-before-colon-exhaust",
+      "status": 1,
+      "stdout": "",
+      "stderr": "Error: Failed to fetch config from any guardian. Last error: Some(HTTP request failed with status: 500 Internal Server Error)\n",
+      "requests": [
+        {
+          "method": "GET",
+          "path": "/first/config",
+          "body": ""
+        },
+        {
+          "method": "POST",
+          "path": "/first/config",
+          "body": "{}"
+        },
+        {
+          "method": "GET",
+          "path": "/second/config",
+          "body": ""
+        },
+        {
+          "method": "POST",
+          "path": "/second/config",
+          "body": "{}"
+        }
+      ]
+    },
+    {
+      "name": "slash-name-exhaust",
+      "status": 1,
+      "stdout": "",
+      "stderr": "Error: Failed to fetch config from any guardian. Last error: Some(HTTP request failed with status: 500 Internal Server Error)\n",
+      "requests": [
+        {
+          "method": "GET",
+          "path": "/first/config",
+          "body": ""
+        },
+        {
+          "method": "POST",
+          "path": "/first/config",
+          "body": "{}"
+        },
+        {
+          "method": "GET",
+          "path": "/second/config",
+          "body": ""
+        },
+        {
+          "method": "POST",
+          "path": "/second/config",
+          "body": "{}"
+        }
+      ]
+    },
+    {
+      "name": "value-control-exhaust",
+      "status": 1,
+      "stdout": "",
+      "stderr": "Error: Failed to fetch config from any guardian. Last error: Some(HTTP request failed with status: 500 Internal Server Error)\n",
+      "requests": [
+        {
+          "method": "GET",
+          "path": "/first/config",
+          "body": ""
+        },
+        {
+          "method": "POST",
+          "path": "/first/config",
+          "body": "{}"
+        },
+        {
+          "method": "GET",
+          "path": "/second/config",
+          "body": ""
+        },
+        {
+          "method": "POST",
+          "path": "/second/config",
+          "body": "{}"
+        }
+      ]
+    },
+    {
+      "name": "final-fields-exhaust",
+      "status": 1,
+      "stdout": "",
+      "stderr": "Error: Failed to fetch config from any guardian. Last error: Some(HTTP request failed with status: 500 Internal Server Error)\n",
+      "requests": [
+        {
+          "method": "GET",
+          "path": "/first/config",
+          "body": ""
+        },
+        {
+          "method": "POST",
+          "path": "/first/config",
+          "body": "{}"
+        },
+        {
+          "method": "GET",
+          "path": "/second/config",
+          "body": ""
+        },
+        {
+          "method": "POST",
+          "path": "/second/config",
+          "body": "{}"
+        }
+      ]
+    },
+    {
+      "name": "trailer-slash-exhaust",
+      "status": 1,
+      "stdout": "",
+      "stderr": "Error: Failed to fetch config from any guardian. Last error: Some(HTTP request failed with status: 500 Internal Server Error)\n",
+      "requests": [
+        {
+          "method": "GET",
+          "path": "/first/config",
+          "body": ""
+        },
+        {
+          "method": "GET",
+          "path": "/second/config",
+          "body": ""
+        },
+        {
+          "method": "POST",
+          "path": "/second/config",
+          "body": "{}"
+        }
+      ]
+    },
+    {
+      "name": "body-length-9223372036854775807",
+      "status": 0,
+      "stdout": "{\n  \"federation_id\": \"1234567890abcdef1234567890abcdef1234567890abcdef1234567890abcdef\",\n  \"federation_name\": \"Synthetic Federation\",\n  \"guardians\": [\n    {\n      \"peer_id\": 0,\n      \"name\": \"Zero\",\n      \"url\": \"\"\n    },\n    {\n      \"peer_id\": 2,\n      \"name\": \"Two\",\n      \"url\": \"wss://synthetic.invalid/two\"\n    },\n    {\n      \"peer_id\": 10,\n      \"name\": null,\n      \"url\": \"opaque endpoint ten\"\n    }\n  ],\n  \"consensus_version\": \"2.1\",\n  \"modules\": {\n    \"chosen\": \"next guardian GET\"\n  },\n  \"meta\": {\n    \"note\": \"authored fixture\",\n    \"federation_name\": \"Synthetic Federation\",\n    \"guardian_0_name\": \"Zero\",\n    \"guardian_2_name\": \"Two\"\n  }\n}",
+      "stderr": "",
+      "requests": [
+        {
+          "method": "GET",
+          "path": "/first/config",
+          "body": ""
+        },
+        {
+          "method": "GET",
+          "path": "/second/config",
+          "body": ""
+        }
+      ]
+    },
+    {
+      "name": "body-length-9223372036854775808",
+      "status": 0,
+      "stdout": "{\n  \"federation_id\": \"1234567890abcdef1234567890abcdef1234567890abcdef1234567890abcdef\",\n  \"federation_name\": \"Synthetic Federation\",\n  \"guardians\": [\n    {\n      \"peer_id\": 0,\n      \"name\": \"Zero\",\n      \"url\": \"\"\n    },\n    {\n      \"peer_id\": 2,\n      \"name\": \"Two\",\n      \"url\": \"wss://synthetic.invalid/two\"\n    },\n    {\n      \"peer_id\": 10,\n      \"name\": null,\n      \"url\": \"opaque endpoint ten\"\n    }\n  ],\n  \"consensus_version\": \"2.1\",\n  \"modules\": {\n    \"chosen\": \"next guardian GET\"\n  },\n  \"meta\": {\n    \"guardian_0_name\": \"Zero\",\n    \"guardian_2_name\": \"Two\",\n    \"note\": \"authored fixture\",\n    \"federation_name\": \"Synthetic Federation\"\n  }\n}",
+      "stderr": "",
+      "requests": [
+        {
+          "method": "GET",
+          "path": "/first/config",
+          "body": ""
+        },
+        {
+          "method": "GET",
+          "path": "/second/config",
+          "body": ""
+        }
+      ]
+    },
+    {
+      "name": "body-length-18446744073709551613",
+      "status": 0,
+      "stdout": "{\n  \"federation_id\": \"1234567890abcdef1234567890abcdef1234567890abcdef1234567890abcdef\",\n  \"federation_name\": \"Synthetic Federation\",\n  \"guardians\": [\n    {\n      \"peer_id\": 0,\n      \"name\": \"Zero\",\n      \"url\": \"\"\n    },\n    {\n      \"peer_id\": 2,\n      \"name\": \"Two\",\n      \"url\": \"wss://synthetic.invalid/two\"\n    },\n    {\n      \"peer_id\": 10,\n      \"name\": null,\n      \"url\": \"opaque endpoint ten\"\n    }\n  ],\n  \"consensus_version\": \"2.1\",\n  \"modules\": {\n    \"chosen\": \"next guardian GET\"\n  },\n  \"meta\": {\n    \"guardian_2_name\": \"Two\",\n    \"note\": \"authored fixture\",\n    \"guardian_0_name\": \"Zero\",\n    \"federation_name\": \"Synthetic Federation\"\n  }\n}",
+      "stderr": "",
+      "requests": [
+        {
+          "method": "GET",
+          "path": "/first/config",
+          "body": ""
+        },
+        {
+          "method": "GET",
+          "path": "/second/config",
+          "body": ""
+        }
+      ]
+    },
+    {
+      "name": "body-length-18446744073709551614",
+      "status": 0,
+      "stdout": "{\n  \"federation_id\": \"1234567890abcdef1234567890abcdef1234567890abcdef1234567890abcdef\",\n  \"federation_name\": \"Synthetic Federation\",\n  \"guardians\": [\n    {\n      \"peer_id\": 0,\n      \"name\": \"Zero\",\n      \"url\": \"\"\n    },\n    {\n      \"peer_id\": 2,\n      \"name\": \"Two\",\n      \"url\": \"wss://synthetic.invalid/two\"\n    },\n    {\n      \"peer_id\": 10,\n      \"name\": null,\n      \"url\": \"opaque endpoint ten\"\n    }\n  ],\n  \"consensus_version\": \"2.1\",\n  \"modules\": {\n    \"chosen\": \"same guardian POST\"\n  },\n  \"meta\": {\n    \"guardian_2_name\": \"Two\",\n    \"note\": \"authored fixture\",\n    \"federation_name\": \"Synthetic Federation\",\n    \"guardian_0_name\": \"Zero\"\n  }\n}",
+      "stderr": "",
+      "requests": [
+        {
+          "method": "GET",
+          "path": "/first/config",
+          "body": ""
+        },
+        {
+          "method": "POST",
+          "path": "/first/config",
+          "body": "{}"
+        }
+      ]
+    },
+    {
+      "name": "body-length-equal",
+      "status": 0,
+      "stdout": "{\n  \"federation_id\": \"1234567890abcdef1234567890abcdef1234567890abcdef1234567890abcdef\",\n  \"federation_name\": \"Synthetic Federation\",\n  \"guardians\": [\n    {\n      \"peer_id\": 0,\n      \"name\": \"Zero\",\n      \"url\": \"\"\n    },\n    {\n      \"peer_id\": 2,\n      \"name\": \"Two\",\n      \"url\": \"wss://synthetic.invalid/two\"\n    },\n    {\n      \"peer_id\": 10,\n      \"name\": null,\n      \"url\": \"opaque endpoint ten\"\n    }\n  ],\n  \"consensus_version\": \"2.1\",\n  \"modules\": {\n    \"chosen\": \"first guardian GET\"\n  },\n  \"meta\": {\n    \"federation_name\": \"Synthetic Federation\",\n    \"guardian_2_name\": \"Two\",\n    \"note\": \"authored fixture\",\n    \"guardian_0_name\": \"Zero\"\n  }\n}",
+      "stderr": "",
+      "requests": [
+        {
+          "method": "GET",
+          "path": "/first/config",
+          "body": ""
+        }
+      ]
+    },
+    {
+      "name": "body-length-500",
+      "status": 0,
+      "stdout": "{\n  \"federation_id\": \"1234567890abcdef1234567890abcdef1234567890abcdef1234567890abcdef\",\n  \"federation_name\": \"Synthetic Federation\",\n  \"guardians\": [\n    {\n      \"peer_id\": 0,\n      \"name\": \"Zero\",\n      \"url\": \"\"\n    },\n    {\n      \"peer_id\": 2,\n      \"name\": \"Two\",\n      \"url\": \"wss://synthetic.invalid/two\"\n    },\n    {\n      \"peer_id\": 10,\n      \"name\": null,\n      \"url\": \"opaque endpoint ten\"\n    }\n  ],\n  \"consensus_version\": \"2.1\",\n  \"modules\": {\n    \"chosen\": \"same guardian POST\"\n  },\n  \"meta\": {\n    \"federation_name\": \"Synthetic Federation\",\n    \"guardian_0_name\": \"Zero\",\n    \"guardian_2_name\": \"Two\",\n    \"note\": \"authored fixture\"\n  }\n}",
+      "stderr": "",
+      "requests": [
+        {
+          "method": "GET",
+          "path": "/first/config",
+          "body": ""
+        },
+        {
+          "method": "POST",
+          "path": "/first/config",
+          "body": "{}"
+        }
+      ]
+    },
+    {
+      "name": "body-length-post",
+      "status": 0,
+      "stdout": "{\n  \"federation_id\": \"1234567890abcdef1234567890abcdef1234567890abcdef1234567890abcdef\",\n  \"federation_name\": \"Synthetic Federation\",\n  \"guardians\": [\n    {\n      \"peer_id\": 0,\n      \"name\": \"Zero\",\n      \"url\": \"\"\n    },\n    {\n      \"peer_id\": 2,\n      \"name\": \"Two\",\n      \"url\": \"wss://synthetic.invalid/two\"\n    },\n    {\n      \"peer_id\": 10,\n      \"name\": null,\n      \"url\": \"opaque endpoint ten\"\n    }\n  ],\n  \"consensus_version\": \"2.1\",\n  \"modules\": {\n    \"chosen\": \"next guardian GET\"\n  },\n  \"meta\": {\n    \"guardian_0_name\": \"Zero\",\n    \"note\": \"authored fixture\",\n    \"federation_name\": \"Synthetic Federation\",\n    \"guardian_2_name\": \"Two\"\n  }\n}",
+      "stderr": "",
+      "requests": [
+        {
+          "method": "GET",
+          "path": "/first/config",
+          "body": ""
+        },
+        {
+          "method": "POST",
+          "path": "/first/config",
+          "body": "{}"
+        },
+        {
+          "method": "GET",
+          "path": "/second/config",
+          "body": ""
+        }
+      ]
+    },
+    {
+      "name": "body-length-204",
+      "status": 0,
+      "stdout": "{\n  \"federation_id\": \"1234567890abcdef1234567890abcdef1234567890abcdef1234567890abcdef\",\n  \"federation_name\": \"Synthetic Federation\",\n  \"guardians\": [\n    {\n      \"peer_id\": 0,\n      \"name\": \"Zero\",\n      \"url\": \"\"\n    },\n    {\n      \"peer_id\": 2,\n      \"name\": \"Two\",\n      \"url\": \"wss://synthetic.invalid/two\"\n    },\n    {\n      \"peer_id\": 10,\n      \"name\": null,\n      \"url\": \"opaque endpoint ten\"\n    }\n  ],\n  \"consensus_version\": \"2.1\",\n  \"modules\": {\n    \"chosen\": \"next guardian GET\"\n  },\n  \"meta\": {\n    \"guardian_2_name\": \"Two\",\n    \"guardian_0_name\": \"Zero\",\n    \"federation_name\": \"Synthetic Federation\",\n    \"note\": \"authored fixture\"\n  }\n}",
+      "stderr": "",
+      "requests": [
+        {
+          "method": "GET",
+          "path": "/first/config",
+          "body": ""
+        },
+        {
+          "method": "GET",
+          "path": "/second/config",
+          "body": ""
+        }
+      ]
+    },
+    {
+      "name": "body-length-304",
+      "status": 0,
+      "stdout": "{\n  \"federation_id\": \"1234567890abcdef1234567890abcdef1234567890abcdef1234567890abcdef\",\n  \"federation_name\": \"Synthetic Federation\",\n  \"guardians\": [\n    {\n      \"peer_id\": 0,\n      \"name\": \"Zero\",\n      \"url\": \"\"\n    },\n    {\n      \"peer_id\": 2,\n      \"name\": \"Two\",\n      \"url\": \"wss://synthetic.invalid/two\"\n    },\n    {\n      \"peer_id\": 10,\n      \"name\": null,\n      \"url\": \"opaque endpoint ten\"\n    }\n  ],\n  \"consensus_version\": \"2.1\",\n  \"modules\": {\n    \"chosen\": \"same guardian POST\"\n  },\n  \"meta\": {\n    \"federation_name\": \"Synthetic Federation\",\n    \"guardian_0_name\": \"Zero\",\n    \"guardian_2_name\": \"Two\",\n    \"note\": \"authored fixture\"\n  }\n}",
+      "stderr": "",
+      "requests": [
+        {
+          "method": "GET",
+          "path": "/first/config",
+          "body": ""
+        },
+        {
+          "method": "POST",
+          "path": "/first/config",
+          "body": "{}"
+        }
+      ]
+    },
+    {
+      "name": "body-length-chunked",
+      "status": 0,
+      "stdout": "{\n  \"federation_id\": \"1234567890abcdef1234567890abcdef1234567890abcdef1234567890abcdef\",\n  \"federation_name\": \"Synthetic Federation\",\n  \"guardians\": [\n    {\n      \"peer_id\": 0,\n      \"name\": \"Zero\",\n      \"url\": \"\"\n    },\n    {\n      \"peer_id\": 2,\n      \"name\": \"Two\",\n      \"url\": \"wss://synthetic.invalid/two\"\n    },\n    {\n      \"peer_id\": 10,\n      \"name\": null,\n      \"url\": \"opaque endpoint ten\"\n    }\n  ],\n  \"consensus_version\": \"2.1\",\n  \"modules\": {\n    \"chosen\": \"first guardian GET\"\n  },\n  \"meta\": {\n    \"guardian_2_name\": \"Two\",\n    \"guardian_0_name\": \"Zero\",\n    \"federation_name\": \"Synthetic Federation\",\n    \"note\": \"authored fixture\"\n  }\n}",
+      "stderr": "",
+      "requests": [
+        {
+          "method": "GET",
+          "path": "/first/config",
+          "body": ""
+        }
+      ]
+    },
+    {
+      "name": "body-length-identity",
+      "status": 0,
+      "stdout": "{\n  \"federation_id\": \"1234567890abcdef1234567890abcdef1234567890abcdef1234567890abcdef\",\n  \"federation_name\": \"Synthetic Federation\",\n  \"guardians\": [\n    {\n      \"peer_id\": 0,\n      \"name\": \"Zero\",\n      \"url\": \"\"\n    },\n    {\n      \"peer_id\": 2,\n      \"name\": \"Two\",\n      \"url\": \"wss://synthetic.invalid/two\"\n    },\n    {\n      \"peer_id\": 10,\n      \"name\": null,\n      \"url\": \"opaque endpoint ten\"\n    }\n  ],\n  \"consensus_version\": \"2.1\",\n  \"modules\": {\n    \"chosen\": \"first guardian GET\"\n  },\n  \"meta\": {\n    \"guardian_0_name\": \"Zero\",\n    \"federation_name\": \"Synthetic Federation\",\n    \"guardian_2_name\": \"Two\",\n    \"note\": \"authored fixture\"\n  }\n}",
+      "stderr": "",
+      "requests": [
+        {
+          "method": "GET",
+          "path": "/first/config",
+          "body": ""
+        }
+      ]
+    },
+    {
+      "name": "body-dechunk-conflict",
+      "status": 0,
+      "stdout": "{\n  \"federation_id\": \"1234567890abcdef1234567890abcdef1234567890abcdef1234567890abcdef\",\n  \"federation_name\": \"Synthetic Federation\",\n  \"guardians\": [\n    {\n      \"peer_id\": 0,\n      \"name\": \"Zero\",\n      \"url\": \"\"\n    },\n    {\n      \"peer_id\": 2,\n      \"name\": \"Two\",\n      \"url\": \"wss://synthetic.invalid/two\"\n    },\n    {\n      \"peer_id\": 10,\n      \"name\": null,\n      \"url\": \"opaque endpoint ten\"\n    }\n  ],\n  \"consensus_version\": \"2.1\",\n  \"modules\": {\n    \"chosen\": \"next guardian GET\"\n  },\n  \"meta\": {\n    \"note\": \"authored fixture\",\n    \"guardian_0_name\": \"Zero\",\n    \"guardian_2_name\": \"Two\",\n    \"federation_name\": \"Synthetic Federation\"\n  }\n}",
+      "stderr": "",
+      "requests": [
+        {
+          "method": "GET",
+          "path": "/first/config",
+          "body": ""
+        },
+        {
+          "method": "GET",
+          "path": "/second/config",
+          "body": ""
+        }
+      ]
+    },
+    {
+      "name": "body-dechunk-zero",
+      "status": 1,
+      "stdout": "",
+      "stderr": "Error: Config missing api_endpoints\n",
+      "requests": [
+        {
+          "method": "GET",
+          "path": "/first/config",
+          "body": ""
+        }
+      ]
+    },
+    {
+      "name": "body-dechunk-extension",
+      "status": 0,
+      "stdout": "{\n  \"federation_id\": \"1234567890abcdef1234567890abcdef1234567890abcdef1234567890abcdef\",\n  \"federation_name\": \"Synthetic Federation\",\n  \"guardians\": [\n    {\n      \"peer_id\": 0,\n      \"name\": \"Zero\",\n      \"url\": \"\"\n    },\n    {\n      \"peer_id\": 2,\n      \"name\": \"Two\",\n      \"url\": \"wss://synthetic.invalid/two\"\n    },\n    {\n      \"peer_id\": 10,\n      \"name\": null,\n      \"url\": \"opaque endpoint ten\"\n    }\n  ],\n  \"consensus_version\": \"2.1\",\n  \"modules\": {\n    \"chosen\": \"next guardian GET\"\n  },\n  \"meta\": {\n    \"note\": \"authored fixture\",\n    \"federation_name\": \"Synthetic Federation\",\n    \"guardian_0_name\": \"Zero\",\n    \"guardian_2_name\": \"Two\"\n  }\n}",
+      "stderr": "",
+      "requests": [
+        {
+          "method": "GET",
+          "path": "/first/config",
+          "body": ""
+        },
+        {
+          "method": "GET",
+          "path": "/second/config",
+          "body": ""
+        }
+      ]
+    },
+    {
+      "name": "body-dechunk-empty",
+      "status": 0,
+      "stdout": "{\n  \"federation_id\": \"1234567890abcdef1234567890abcdef1234567890abcdef1234567890abcdef\",\n  \"federation_name\": \"Synthetic Federation\",\n  \"guardians\": [\n    {\n      \"peer_id\": 0,\n      \"name\": \"Zero\",\n      \"url\": \"\"\n    },\n    {\n      \"peer_id\": 2,\n      \"name\": \"Two\",\n      \"url\": \"wss://synthetic.invalid/two\"\n    },\n    {\n      \"peer_id\": 10,\n      \"name\": null,\n      \"url\": \"opaque endpoint ten\"\n    }\n  ],\n  \"consensus_version\": \"2.1\",\n  \"modules\": {\n    \"chosen\": \"next guardian GET\"\n  },\n  \"meta\": {\n    \"guardian_0_name\": \"Zero\",\n    \"note\": \"authored fixture\",\n    \"federation_name\": \"Synthetic Federation\",\n    \"guardian_2_name\": \"Two\"\n  }\n}",
+      "stderr": "",
+      "requests": [
+        {
+          "method": "GET",
+          "path": "/first/config",
+          "body": ""
+        },
+        {
+          "method": "GET",
+          "path": "/second/config",
+          "body": ""
+        }
+      ]
+    },
+    {
+      "name": "body-dechunk-comma",
+      "status": 0,
+      "stdout": "{\n  \"federation_id\": \"1234567890abcdef1234567890abcdef1234567890abcdef1234567890abcdef\",\n  \"federation_name\": \"Synthetic Federation\",\n  \"guardians\": [\n    {\n      \"peer_id\": 0,\n      \"name\": \"Zero\",\n      \"url\": \"\"\n    },\n    {\n      \"peer_id\": 2,\n      \"name\": \"Two\",\n      \"url\": \"wss://synthetic.invalid/two\"\n    },\n    {\n      \"peer_id\": 10,\n      \"name\": null,\n      \"url\": \"opaque endpoint ten\"\n    }\n  ],\n  \"consensus_version\": \"2.1\",\n  \"modules\": {\n    \"chosen\": \"next guardian GET\"\n  },\n  \"meta\": {\n    \"federation_name\": \"Synthetic Federation\",\n    \"guardian_0_name\": \"Zero\",\n    \"note\": \"authored fixture\",\n    \"guardian_2_name\": \"Two\"\n  }\n}",
+      "stderr": "",
+      "requests": [
+        {
+          "method": "GET",
+          "path": "/first/config",
+          "body": ""
+        },
+        {
+          "method": "GET",
+          "path": "/second/config",
+          "body": ""
+        }
+      ]
+    },
+    {
+      "name": "body-dechunk-obs",
+      "status": 0,
+      "stdout": "{\n  \"federation_id\": \"1234567890abcdef1234567890abcdef1234567890abcdef1234567890abcdef\",\n  \"federation_name\": \"Synthetic Federation\",\n  \"guardians\": [\n    {\n      \"peer_id\": 0,\n      \"name\": \"Zero\",\n      \"url\": \"\"\n    },\n    {\n      \"peer_id\": 2,\n      \"name\": \"Two\",\n      \"url\": \"wss://synthetic.invalid/two\"\n    },\n    {\n      \"peer_id\": 10,\n      \"name\": null,\n      \"url\": \"opaque endpoint ten\"\n    }\n  ],\n  \"consensus_version\": \"2.1\",\n  \"modules\": {\n    \"chosen\": \"next guardian GET\"\n  },\n  \"meta\": {\n    \"guardian_0_name\": \"Zero\",\n    \"note\": \"authored fixture\",\n    \"guardian_2_name\": \"Two\",\n    \"federation_name\": \"Synthetic Federation\"\n  }\n}",
+      "stderr": "",
+      "requests": [
+        {
+          "method": "GET",
+          "path": "/first/config",
+          "body": ""
+        },
+        {
+          "method": "GET",
+          "path": "/second/config",
+          "body": ""
+        }
+      ]
+    },
+    {
+      "name": "body-chunked",
+      "status": 0,
+      "stdout": "{\n  \"federation_id\": \"1234567890abcdef1234567890abcdef1234567890abcdef1234567890abcdef\",\n  \"federation_name\": \"Synthetic Federation\",\n  \"guardians\": [\n    {\n      \"peer_id\": 0,\n      \"name\": \"Zero\",\n      \"url\": \"\"\n    },\n    {\n      \"peer_id\": 2,\n      \"name\": \"Two\",\n      \"url\": \"wss://synthetic.invalid/two\"\n    },\n    {\n      \"peer_id\": 10,\n      \"name\": null,\n      \"url\": \"opaque endpoint ten\"\n    }\n  ],\n  \"consensus_version\": \"2.1\",\n  \"modules\": {\n    \"chosen\": \"first guardian GET\"\n  },\n  \"meta\": {\n    \"guardian_0_name\": \"Zero\",\n    \"guardian_2_name\": \"Two\",\n    \"federation_name\": \"Synthetic Federation\",\n    \"note\": \"authored fixture\"\n  }\n}",
+      "stderr": "",
+      "requests": [
+        {
+          "method": "GET",
+          "path": "/first/config",
+          "body": ""
+        }
+      ]
+    },
+    {
+      "name": "body-last-chunked",
+      "status": 0,
+      "stdout": "{\n  \"federation_id\": \"1234567890abcdef1234567890abcdef1234567890abcdef1234567890abcdef\",\n  \"federation_name\": \"Synthetic Federation\",\n  \"guardians\": [\n    {\n      \"peer_id\": 0,\n      \"name\": \"Zero\",\n      \"url\": \"\"\n    },\n    {\n      \"peer_id\": 2,\n      \"name\": \"Two\",\n      \"url\": \"wss://synthetic.invalid/two\"\n    },\n    {\n      \"peer_id\": 10,\n      \"name\": null,\n      \"url\": \"opaque endpoint ten\"\n    }\n  ],\n  \"consensus_version\": \"2.1\",\n  \"modules\": {\n    \"chosen\": \"first guardian GET\"\n  },\n  \"meta\": {\n    \"guardian_2_name\": \"Two\",\n    \"note\": \"authored fixture\",\n    \"federation_name\": \"Synthetic Federation\",\n    \"guardian_0_name\": \"Zero\"\n  }\n}",
+      "stderr": "",
+      "requests": [
+        {
+          "method": "GET",
+          "path": "/first/config",
+          "body": ""
+        }
+      ]
+    },
+    {
+      "name": "body-lf-trailer",
+      "status": 0,
+      "stdout": "{\n  \"federation_id\": \"1234567890abcdef1234567890abcdef1234567890abcdef1234567890abcdef\",\n  \"federation_name\": \"Synthetic Federation\",\n  \"guardians\": [\n    {\n      \"peer_id\": 0,\n      \"name\": \"Zero\",\n      \"url\": \"\"\n    },\n    {\n      \"peer_id\": 2,\n      \"name\": \"Two\",\n      \"url\": \"wss://synthetic.invalid/two\"\n    },\n    {\n      \"peer_id\": 10,\n      \"name\": null,\n      \"url\": \"opaque endpoint ten\"\n    }\n  ],\n  \"consensus_version\": \"2.1\",\n  \"modules\": {\n    \"chosen\": \"next guardian GET\"\n  },\n  \"meta\": {\n    \"federation_name\": \"Synthetic Federation\",\n    \"note\": \"authored fixture\",\n    \"guardian_2_name\": \"Two\",\n    \"guardian_0_name\": \"Zero\"\n  }\n}",
+      "stderr": "",
+      "requests": [
+        {
+          "method": "GET",
+          "path": "/first/config",
+          "body": ""
+        },
+        {
+          "method": "GET",
+          "path": "/second/config",
+          "body": ""
+        }
+      ]
+    },
+    {
+      "name": "body-gzip-refusal",
+      "status": 0,
+      "stdout": "{\n  \"federation_id\": \"1234567890abcdef1234567890abcdef1234567890abcdef1234567890abcdef\",\n  \"federation_name\": \"Synthetic Federation\",\n  \"guardians\": [\n    {\n      \"peer_id\": 0,\n      \"name\": \"Zero\",\n      \"url\": \"\"\n    },\n    {\n      \"peer_id\": 2,\n      \"name\": \"Two\",\n      \"url\": \"wss://synthetic.invalid/two\"\n    },\n    {\n      \"peer_id\": 10,\n      \"name\": null,\n      \"url\": \"opaque endpoint ten\"\n    }\n  ],\n  \"consensus_version\": \"2.1\",\n  \"modules\": {\n    \"chosen\": \"first guardian GET\"\n  },\n  \"meta\": {\n    \"guardian_2_name\": \"Two\",\n    \"note\": \"authored fixture\",\n    \"federation_name\": \"Synthetic Federation\",\n    \"guardian_0_name\": \"Zero\"\n  }\n}",
+      "stderr": "",
+      "requests": [
+        {
+          "method": "GET",
+          "path": "/first/config",
+          "body": ""
+        }
+      ]
+    },
+    {
+      "name": "body-close",
+      "status": 0,
+      "stdout": "{\n  \"federation_id\": \"1234567890abcdef1234567890abcdef1234567890abcdef1234567890abcdef\",\n  \"federation_name\": \"Synthetic Federation\",\n  \"guardians\": [\n    {\n      \"peer_id\": 0,\n      \"name\": \"Zero\",\n      \"url\": \"\"\n    },\n    {\n      \"peer_id\": 2,\n      \"name\": \"Two\",\n      \"url\": \"wss://synthetic.invalid/two\"\n    },\n    {\n      \"peer_id\": 10,\n      \"name\": null,\n      \"url\": \"opaque endpoint ten\"\n    }\n  ],\n  \"consensus_version\": \"2.1\",\n  \"modules\": {\n    \"chosen\": \"first guardian GET\"\n  },\n  \"meta\": {\n    \"note\": \"authored fixture\",\n    \"federation_name\": \"Synthetic Federation\",\n    \"guardian_2_name\": \"Two\",\n    \"guardian_0_name\": \"Zero\"\n  }\n}",
+      "stderr": "",
+      "requests": [
+        {
+          "method": "GET",
+          "path": "/first/config",
+          "body": ""
+        }
+      ]
+    },
+    {
+      "name": "body-chunk-width-16",
+      "status": 0,
+      "stdout": "{\n  \"federation_id\": \"1234567890abcdef1234567890abcdef1234567890abcdef1234567890abcdef\",\n  \"federation_name\": \"Synthetic Federation\",\n  \"guardians\": [\n    {\n      \"peer_id\": 0,\n      \"name\": \"Zero\",\n      \"url\": \"\"\n    },\n    {\n      \"peer_id\": 2,\n      \"name\": \"Two\",\n      \"url\": \"wss://synthetic.invalid/two\"\n    },\n    {\n      \"peer_id\": 10,\n      \"name\": null,\n      \"url\": \"opaque endpoint ten\"\n    }\n  ],\n  \"consensus_version\": \"2.1\",\n  \"modules\": {\n    \"chosen\": \"first guardian GET\"\n  },\n  \"meta\": {\n    \"note\": \"authored fixture\",\n    \"federation_name\": \"Synthetic Federation\",\n    \"guardian_2_name\": \"Two\",\n    \"guardian_0_name\": \"Zero\"\n  }\n}",
+      "stderr": "",
+      "requests": [
+        {
+          "method": "GET",
+          "path": "/first/config",
+          "body": ""
+        }
+      ]
+    },
+    {
+      "name": "body-chunk-width-17",
+      "status": 0,
+      "stdout": "{\n  \"federation_id\": \"1234567890abcdef1234567890abcdef1234567890abcdef1234567890abcdef\",\n  \"federation_name\": \"Synthetic Federation\",\n  \"guardians\": [\n    {\n      \"peer_id\": 0,\n      \"name\": \"Zero\",\n      \"url\": \"\"\n    },\n    {\n      \"peer_id\": 2,\n      \"name\": \"Two\",\n      \"url\": \"wss://synthetic.invalid/two\"\n    },\n    {\n      \"peer_id\": 10,\n      \"name\": null,\n      \"url\": \"opaque endpoint ten\"\n    }\n  ],\n  \"consensus_version\": \"2.1\",\n  \"modules\": {\n    \"chosen\": \"first guardian GET\"\n  },\n  \"meta\": {\n    \"federation_name\": \"Synthetic Federation\",\n    \"guardian_2_name\": \"Two\",\n    \"note\": \"authored fixture\",\n    \"guardian_0_name\": \"Zero\"\n  }\n}",
+      "stderr": "",
+      "requests": [
+        {
+          "method": "GET",
+          "path": "/first/config",
+          "body": ""
+        }
+      ]
+    },
+    {
+      "name": "body-bad-length-before",
+      "status": 0,
+      "stdout": "{\n  \"federation_id\": \"1234567890abcdef1234567890abcdef1234567890abcdef1234567890abcdef\",\n  \"federation_name\": \"Synthetic Federation\",\n  \"guardians\": [\n    {\n      \"peer_id\": 0,\n      \"name\": \"Zero\",\n      \"url\": \"\"\n    },\n    {\n      \"peer_id\": 2,\n      \"name\": \"Two\",\n      \"url\": \"wss://synthetic.invalid/two\"\n    },\n    {\n      \"peer_id\": 10,\n      \"name\": null,\n      \"url\": \"opaque endpoint ten\"\n    }\n  ],\n  \"consensus_version\": \"2.1\",\n  \"modules\": {\n    \"chosen\": \"first guardian GET\"\n  },\n  \"meta\": {\n    \"federation_name\": \"Synthetic Federation\",\n    \"note\": \"authored fixture\",\n    \"guardian_2_name\": \"Two\",\n    \"guardian_0_name\": \"Zero\"\n  }\n}",
+      "stderr": "",
+      "requests": [
+        {
+          "method": "GET",
+          "path": "/first/config",
+          "body": ""
+        }
+      ]
+    },
+    {
+      "name": "body-bad-length-after",
+      "status": 0,
+      "stdout": "{\n  \"federation_id\": \"1234567890abcdef1234567890abcdef1234567890abcdef1234567890abcdef\",\n  \"federation_name\": \"Synthetic Federation\",\n  \"guardians\": [\n    {\n      \"peer_id\": 0,\n      \"name\": \"Zero\",\n      \"url\": \"\"\n    },\n    {\n      \"peer_id\": 2,\n      \"name\": \"Two\",\n      \"url\": \"wss://synthetic.invalid/two\"\n    },\n    {\n      \"peer_id\": 10,\n      \"name\": null,\n      \"url\": \"opaque endpoint ten\"\n    }\n  ],\n  \"consensus_version\": \"2.1\",\n  \"modules\": {\n    \"chosen\": \"first guardian GET\"\n  },\n  \"meta\": {\n    \"federation_name\": \"Synthetic Federation\",\n    \"guardian_0_name\": \"Zero\",\n    \"note\": \"authored fixture\",\n    \"guardian_2_name\": \"Two\"\n  }\n}",
+      "stderr": "",
+      "requests": [
+        {
+          "method": "GET",
+          "path": "/first/config",
+          "body": ""
+        }
+      ]
+    },
+    {
+      "name": "body-chunked-valid-length",
+      "status": 0,
+      "stdout": "{\n  \"federation_id\": \"1234567890abcdef1234567890abcdef1234567890abcdef1234567890abcdef\",\n  \"federation_name\": \"Synthetic Federation\",\n  \"guardians\": [\n    {\n      \"peer_id\": 0,\n      \"name\": \"Zero\",\n      \"url\": \"\"\n    },\n    {\n      \"peer_id\": 2,\n      \"name\": \"Two\",\n      \"url\": \"wss://synthetic.invalid/two\"\n    },\n    {\n      \"peer_id\": 10,\n      \"name\": null,\n      \"url\": \"opaque endpoint ten\"\n    }\n  ],\n  \"consensus_version\": \"2.1\",\n  \"modules\": {\n    \"chosen\": \"first guardian GET\"\n  },\n  \"meta\": {\n    \"note\": \"authored fixture\",\n    \"federation_name\": \"Synthetic Federation\",\n    \"guardian_0_name\": \"Zero\",\n    \"guardian_2_name\": \"Two\"\n  }\n}",
+      "stderr": "",
+      "requests": [
+        {
+          "method": "GET",
+          "path": "/first/config",
+          "body": ""
+        }
+      ]
+    },
+    {
+      "name": "body-cut-identity-short",
+      "status": 0,
+      "stdout": "{\n  \"federation_id\": \"1234567890abcdef1234567890abcdef1234567890abcdef1234567890abcdef\",\n  \"federation_name\": \"Synthetic Federation\",\n  \"guardians\": [\n    {\n      \"peer_id\": 0,\n      \"name\": \"Zero\",\n      \"url\": \"\"\n    },\n    {\n      \"peer_id\": 2,\n      \"name\": \"Two\",\n      \"url\": \"wss://synthetic.invalid/two\"\n    },\n    {\n      \"peer_id\": 10,\n      \"name\": null,\n      \"url\": \"opaque endpoint ten\"\n    }\n  ],\n  \"consensus_version\": \"2.1\",\n  \"modules\": {\n    \"chosen\": \"first guardian GET\"\n  },\n  \"meta\": {\n    \"guardian_2_name\": \"Two\",\n    \"federation_name\": \"Synthetic Federation\",\n    \"note\": \"authored fixture\",\n    \"guardian_0_name\": \"Zero\"\n  }\n}",
+      "stderr": "",
+      "requests": [
+        {
+          "method": "GET",
+          "path": "/first/config",
+          "body": ""
+        }
+      ]
+    },
+    {
+      "name": "body-cut-identity-equal",
+      "status": 0,
+      "stdout": "{\n  \"federation_id\": \"1234567890abcdef1234567890abcdef1234567890abcdef1234567890abcdef\",\n  \"federation_name\": \"Synthetic Federation\",\n  \"guardians\": [\n    {\n      \"peer_id\": 0,\n      \"name\": \"Zero\",\n      \"url\": \"\"\n    },\n    {\n      \"peer_id\": 2,\n      \"name\": \"Two\",\n      \"url\": \"wss://synthetic.invalid/two\"\n    },\n    {\n      \"peer_id\": 10,\n      \"name\": null,\n      \"url\": \"opaque endpoint ten\"\n    }\n  ],\n  \"consensus_version\": \"2.1\",\n  \"modules\": {\n    \"chosen\": \"first guardian GET\"\n  },\n  \"meta\": {\n    \"guardian_0_name\": \"Zero\",\n    \"federation_name\": \"Synthetic Federation\",\n    \"note\": \"authored fixture\",\n    \"guardian_2_name\": \"Two\"\n  }\n}",
+      "stderr": "",
+      "requests": [
+        {
+          "method": "GET",
+          "path": "/first/config",
+          "body": ""
+        }
+      ]
+    },
+    {
+      "name": "body-cut-empty-short",
+      "status": 0,
+      "stdout": "{\n  \"federation_id\": \"1234567890abcdef1234567890abcdef1234567890abcdef1234567890abcdef\",\n  \"federation_name\": \"Synthetic Federation\",\n  \"guardians\": [\n    {\n      \"peer_id\": 0,\n      \"name\": \"Zero\",\n      \"url\": \"\"\n    },\n    {\n      \"peer_id\": 2,\n      \"name\": \"Two\",\n      \"url\": \"wss://synthetic.invalid/two\"\n    },\n    {\n      \"peer_id\": 10,\n      \"name\": null,\n      \"url\": \"opaque endpoint ten\"\n    }\n  ],\n  \"consensus_version\": \"2.1\",\n  \"modules\": {\n    \"chosen\": \"first guardian GET\"\n  },\n  \"meta\": {\n    \"federation_name\": \"Synthetic Federation\",\n    \"note\": \"authored fixture\",\n    \"guardian_2_name\": \"Two\",\n    \"guardian_0_name\": \"Zero\"\n  }\n}",
+      "stderr": "",
+      "requests": [
+        {
+          "method": "GET",
+          "path": "/first/config",
+          "body": ""
+        }
+      ]
+    },
+    {
+      "name": "body-cut-empty-equal",
+      "status": 0,
+      "stdout": "{\n  \"federation_id\": \"1234567890abcdef1234567890abcdef1234567890abcdef1234567890abcdef\",\n  \"federation_name\": \"Synthetic Federation\",\n  \"guardians\": [\n    {\n      \"peer_id\": 0,\n      \"name\": \"Zero\",\n      \"url\": \"\"\n    },\n    {\n      \"peer_id\": 2,\n      \"name\": \"Two\",\n      \"url\": \"wss://synthetic.invalid/two\"\n    },\n    {\n      \"peer_id\": 10,\n      \"name\": null,\n      \"url\": \"opaque endpoint ten\"\n    }\n  ],\n  \"consensus_version\": \"2.1\",\n  \"modules\": {\n    \"chosen\": \"first guardian GET\"\n  },\n  \"meta\": {\n    \"federation_name\": \"Synthetic Federation\",\n    \"note\": \"authored fixture\",\n    \"guardian_2_name\": \"Two\",\n    \"guardian_0_name\": \"Zero\"\n  }\n}",
+      "stderr": "",
+      "requests": [
+        {
+          "method": "GET",
+          "path": "/first/config",
+          "body": ""
+        }
+      ]
     }
-  ]
+  ],
+  "parser_cases_sha256": "32a328bd52acc6a1d64fb64b20e5c5de221e30cae5a76842c3b83def66f2b001",
+  "parser_captures": [
+    {
+      "name": "output-short-flag",
+      "status": 2,
+      "stdout": "",
+      "stderr": "error: unexpected argument '-x' found\n\n  tip: to pass '-x' as a value, use '-- -x'\n\nUsage: cyberkrill fm-fetch-config [OPTIONS] <INVITE_CODE>\n\nFor more information, try '--help'.\n",
+      "files": [],
+      "requests": []
+    },
+    {
+      "name": "output-long-flag",
+      "status": 2,
+      "stdout": "",
+      "stderr": "error: unexpected argument '-x' found\n\n  tip: to pass '-x' as a value, use '-- -x'\n\nUsage: cyberkrill fm-fetch-config [OPTIONS] <INVITE_CODE>\n\nFor more information, try '--help'.\n",
+      "files": [],
+      "requests": []
+    },
+    {
+      "name": "output-help-value",
+      "status": 2,
+      "stdout": "",
+      "stderr": "error: a value is required for '--output <OUTPUT>' but none was supplied\n\nFor more information, try '--help'.\n",
+      "files": [],
+      "requests": []
+    },
+    {
+      "name": "output-short-help-value",
+      "status": 2,
+      "stdout": "",
+      "stderr": "error: a value is required for '--output <OUTPUT>' but none was supplied\n\nFor more information, try '--help'.\n",
+      "files": [],
+      "requests": []
+    },
+    {
+      "name": "output-attached-equals",
+      "status": 1,
+      "stdout": "",
+      "stderr": "Error: Invalid fedimint invite code format. Expected to start with 'fed1' (bech32m)\n",
+      "files": [
+        "a=b"
+      ],
+      "requests": []
+    },
+    {
+      "name": "output-long-equals",
+      "status": 1,
+      "stdout": "",
+      "stderr": "Error: Invalid fedimint invite code format. Expected to start with 'fed1' (bech32m)\n",
+      "files": [
+        "a=b"
+      ],
+      "requests": []
+    }
+  ],
+  "delivery": {
+    "version": "curl 8.22.0 (x86_64-pc-linux-gnu) libcurl/8.22.0 OpenSSL/3.5.8 zlib/1.3.2 brotli/1.2.0 zstd/1.5.7 libidn2/2.3.8 libpsl/0.21.5 libssh2/1.11.1 nghttp2/1.70.0 ngtcp2/1.23.0 nghttp3/1.17.0 mit-krb5/1.22.2",
+    "source": "https://github.com/curl/curl/tree/curl-8_22_0/lib",
+    "paths": [
+      "http.c:3418-3434,4396-4423,4565-4596",
+      "http_chunks.c:CHUNK_TRAILER,4096-byte trailer dynbuf",
+      "content_encoding.c:780-808,827-854 (transfer decoder selection)",
+      "http_chunks.c:125-135,140-149,199-214,245-280 (delivery, width and trailers)",
+      "http_chunks.h:34-39 (CHUNK_MAXNUM_LEN)",
+      "http.c:3274-3320,3643-3662,3832-3855 (length refusal and cutting)",
+      "sendf.c:156-162,227-283 (length-limited delivery)"
+    ],
+    "command": [
+      "curl",
+      "--noproxy",
+      "*",
+      "--dump-header",
+      "$TMP_ROOT/headers",
+      "--output",
+      "$TMP_ROOT/body",
+      "owned loopback URL"
+    ],
+    "checks": [
+      {
+        "name": "unfolded-header",
+        "status": 0,
+        "stdout": "",
+        "stderr": "",
+        "headers_base64": "SFRUUC8xLjEgMjAwIFN5bnRoZXRpYw0KQ29udGVudC1MZW5ndGg6IDQxNQ0KWC1UZXN0OiBmaXJzdCBzZWNvbmQNCg0K",
+        "body_base64": "eyJmZWRlcmF0aW9uX2lkIjogIjEyMzQ1Njc4OTBhYmNkZWYxMjM0NTY3ODkwYWJjZGVmMTIzNDU2Nzg5MGFiY2RlZjEyMzQ1Njc4OTBhYmNkZWYiLCAiZ2xvYmFsIjogeyJhcGlfZW5kcG9pbnRzIjogeyIxMCI6ICJvcGFxdWUgZW5kcG9pbnQgdGVuIiwgIjIiOiAid3NzOi8vc3ludGhldGljLmludmFsaWQvdHdvIiwgIjAiOiAiIn0sICJtZXRhIjogeyJmZWRlcmF0aW9uX25hbWUiOiAiU3ludGhldGljIEZlZGVyYXRpb24iLCAiZ3VhcmRpYW5fMF9uYW1lIjogIlplcm8iLCAiZ3VhcmRpYW5fMl9uYW1lIjogIlR3byIsICJub3RlIjogImF1dGhvcmVkIGZpeHR1cmUiLCAiaWdub3JlZCI6IGZhbHNlfSwgImNvbnNlbnN1c192ZXJzaW9uIjogIjIuMSJ9LCAibW9kdWxlcyI6IHsiY2hvc2VuIjogImZpcnN0IGd1YXJkaWFuIEdFVCJ9fQ==",
+        "requests": [
+          {
+            "method": "GET",
+            "path": "/first/config",
+            "body": ""
+          }
+        ]
+      },
+      {
+        "name": "folded-header",
+        "status": 0,
+        "stdout": "",
+        "stderr": "",
+        "headers_base64": "SFRUUC8xLjEgMjAwIFN5bnRoZXRpYw0KQ29udGVudC1MZW5ndGg6IDQxNQ0KWC1UZXN0OiBmaXJzdCBzZWNvbmQNCg0K",
+        "body_base64": "eyJmZWRlcmF0aW9uX2lkIjogIjEyMzQ1Njc4OTBhYmNkZWYxMjM0NTY3ODkwYWJjZGVmMTIzNDU2Nzg5MGFiY2RlZjEyMzQ1Njc4OTBhYmNkZWYiLCAiZ2xvYmFsIjogeyJhcGlfZW5kcG9pbnRzIjogeyIxMCI6ICJvcGFxdWUgZW5kcG9pbnQgdGVuIiwgIjIiOiAid3NzOi8vc3ludGhldGljLmludmFsaWQvdHdvIiwgIjAiOiAiIn0sICJtZXRhIjogeyJmZWRlcmF0aW9uX25hbWUiOiAiU3ludGhldGljIEZlZGVyYXRpb24iLCAiZ3VhcmRpYW5fMF9uYW1lIjogIlplcm8iLCAiZ3VhcmRpYW5fMl9uYW1lIjogIlR3byIsICJub3RlIjogImF1dGhvcmVkIGZpeHR1cmUiLCAiaWdub3JlZCI6IGZhbHNlfSwgImNvbnNlbnN1c192ZXJzaW9uIjogIjIuMSJ9LCAibW9kdWxlcyI6IHsiY2hvc2VuIjogImZpcnN0IGd1YXJkaWFuIEdFVCJ9fQ==",
+        "requests": [
+          {
+            "method": "GET",
+            "path": "/first/config",
+            "body": ""
+          }
+        ]
+      },
+      {
+        "name": "folded-location",
+        "status": 0,
+        "stdout": "",
+        "stderr": "",
+        "headers_base64": "SFRUUC8xLjEgMzAyIFN5bnRoZXRpYw0KQ29udGVudC1MZW5ndGg6IDQxNQ0KTG9jYXRpb246IC9mb2xkDQoNCg==",
+        "body_base64": "eyJmZWRlcmF0aW9uX2lkIjogIjEyMzQ1Njc4OTBhYmNkZWYxMjM0NTY3ODkwYWJjZGVmMTIzNDU2Nzg5MGFiY2RlZjEyMzQ1Njc4OTBhYmNkZWYiLCAiZ2xvYmFsIjogeyJhcGlfZW5kcG9pbnRzIjogeyIxMCI6ICJvcGFxdWUgZW5kcG9pbnQgdGVuIiwgIjIiOiAid3NzOi8vc3ludGhldGljLmludmFsaWQvdHdvIiwgIjAiOiAiIn0sICJtZXRhIjogeyJmZWRlcmF0aW9uX25hbWUiOiAiU3ludGhldGljIEZlZGVyYXRpb24iLCAiZ3VhcmRpYW5fMF9uYW1lIjogIlplcm8iLCAiZ3VhcmRpYW5fMl9uYW1lIjogIlR3byIsICJub3RlIjogImF1dGhvcmVkIGZpeHR1cmUiLCAiaWdub3JlZCI6IGZhbHNlfSwgImNvbnNlbnN1c192ZXJzaW9uIjogIjIuMSJ9LCAibW9kdWxlcyI6IHsiY2hvc2VuIjogImZpcnN0IGd1YXJkaWFuIEdFVCJ9fQ==",
+        "requests": [
+          {
+            "method": "GET",
+            "path": "/first/config",
+            "body": ""
+          }
+        ]
+      },
+      {
+        "name": "trailer-bytes-16383",
+        "status": 0,
+        "stdout": "",
+        "stderr": "",
+        "headers_base64": "SFRUUC8xLjEgMjAwIFN5bnRoZXRpYw0KVHJhbnNmZXItRW5jb2Rpbmc6IGNodW5rZWQNCg0KWDogeHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eA0KWDogeHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eA0KWDogeHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eA0KWDogeHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eA0KWDogeHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHgNCg==",
+        "body_base64": "eyJmZWRlcmF0aW9uX2lkIjogIjEyMzQ1Njc4OTBhYmNkZWYxMjM0NTY3ODkwYWJjZGVmMTIzNDU2Nzg5MGFiY2RlZjEyMzQ1Njc4OTBhYmNkZWYiLCAiZ2xvYmFsIjogeyJhcGlfZW5kcG9pbnRzIjogeyIxMCI6ICJvcGFxdWUgZW5kcG9pbnQgdGVuIiwgIjIiOiAid3NzOi8vc3ludGhldGljLmludmFsaWQvdHdvIiwgIjAiOiAiIn0sICJtZXRhIjogeyJmZWRlcmF0aW9uX25hbWUiOiAiU3ludGhldGljIEZlZGVyYXRpb24iLCAiZ3VhcmRpYW5fMF9uYW1lIjogIlplcm8iLCAiZ3VhcmRpYW5fMl9uYW1lIjogIlR3byIsICJub3RlIjogImF1dGhvcmVkIGZpeHR1cmUiLCAiaWdub3JlZCI6IGZhbHNlfSwgImNvbnNlbnN1c192ZXJzaW9uIjogIjIuMSJ9LCAibW9kdWxlcyI6IHsiY2hvc2VuIjogImZpcnN0IGd1YXJkaWFuIEdFVCJ9fQ==",
+        "requests": [
+          {
+            "method": "GET",
+            "path": "/first/config",
+            "body": ""
+          }
+        ]
+      },
+      {
+        "name": "trailer-field-bytes-4095",
+        "status": 0,
+        "stdout": "",
+        "stderr": "",
+        "headers_base64": "SFRUUC8xLjEgMjAwIFN5bnRoZXRpYw0KVHJhbnNmZXItRW5jb2Rpbmc6IGNodW5rZWQNCg0KWDogeHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eA0K",
+        "body_base64": "eyJmZWRlcmF0aW9uX2lkIjogIjEyMzQ1Njc4OTBhYmNkZWYxMjM0NTY3ODkwYWJjZGVmMTIzNDU2Nzg5MGFiY2RlZjEyMzQ1Njc4OTBhYmNkZWYiLCAiZ2xvYmFsIjogeyJhcGlfZW5kcG9pbnRzIjogeyIxMCI6ICJvcGFxdWUgZW5kcG9pbnQgdGVuIiwgIjIiOiAid3NzOi8vc3ludGhldGljLmludmFsaWQvdHdvIiwgIjAiOiAiIn0sICJtZXRhIjogeyJmZWRlcmF0aW9uX25hbWUiOiAiU3ludGhldGljIEZlZGVyYXRpb24iLCAiZ3VhcmRpYW5fMF9uYW1lIjogIlplcm8iLCAiZ3VhcmRpYW5fMl9uYW1lIjogIlR3byIsICJub3RlIjogImF1dGhvcmVkIGZpeHR1cmUiLCAiaWdub3JlZCI6IGZhbHNlfSwgImNvbnNlbnN1c192ZXJzaW9uIjogIjIuMSJ9LCAibW9kdWxlcyI6IHsiY2hvc2VuIjogImZpcnN0IGd1YXJkaWFuIEdFVCJ9fQ==",
+        "requests": [
+          {
+            "method": "GET",
+            "path": "/first/config",
+            "body": ""
+          }
+        ]
+      },
+      {
+        "name": "trailer-field-bytes-4096",
+        "status": 100,
+        "stdout": "",
+        "stderr": "curl: (100) Out of memory in chunked-encoding\n",
+        "headers_base64": "SFRUUC8xLjEgMjAwIFN5bnRoZXRpYw0KVHJhbnNmZXItRW5jb2Rpbmc6IGNodW5rZWQNCg0K",
+        "body_base64": "eyJmZWRlcmF0aW9uX2lkIjogIjEyMzQ1Njc4OTBhYmNkZWYxMjM0NTY3ODkwYWJjZGVmMTIzNDU2Nzg5MGFiY2RlZjEyMzQ1Njc4OTBhYmNkZWYiLCAiZ2xvYmFsIjogeyJhcGlfZW5kcG9pbnRzIjogeyIxMCI6ICJvcGFxdWUgZW5kcG9pbnQgdGVuIiwgIjIiOiAid3NzOi8vc3ludGhldGljLmludmFsaWQvdHdvIiwgIjAiOiAiIn0sICJtZXRhIjogeyJmZWRlcmF0aW9uX25hbWUiOiAiU3ludGhldGljIEZlZGVyYXRpb24iLCAiZ3VhcmRpYW5fMF9uYW1lIjogIlplcm8iLCAiZ3VhcmRpYW5fMl9uYW1lIjogIlR3byIsICJub3RlIjogImF1dGhvcmVkIGZpeHR1cmUiLCAiaWdub3JlZCI6IGZhbHNlfSwgImNvbnNlbnN1c192ZXJzaW9uIjogIjIuMSJ9LCAibW9kdWxlcyI6IHsiY2hvc2VuIjogImZpcnN0IGd1YXJkaWFuIEdFVCJ9fQ==",
+        "requests": [
+          {
+            "method": "GET",
+            "path": "/first/config",
+            "body": ""
+          }
+        ]
+      },
+      {
+        "name": "trailer-field-bytes-4097",
+        "status": 100,
+        "stdout": "",
+        "stderr": "curl: (100) Out of memory in chunked-encoding\n",
+        "headers_base64": "SFRUUC8xLjEgMjAwIFN5bnRoZXRpYw0KVHJhbnNmZXItRW5jb2Rpbmc6IGNodW5rZWQNCg0K",
+        "body_base64": "eyJmZWRlcmF0aW9uX2lkIjogIjEyMzQ1Njc4OTBhYmNkZWYxMjM0NTY3ODkwYWJjZGVmMTIzNDU2Nzg5MGFiY2RlZjEyMzQ1Njc4OTBhYmNkZWYiLCAiZ2xvYmFsIjogeyJhcGlfZW5kcG9pbnRzIjogeyIxMCI6ICJvcGFxdWUgZW5kcG9pbnQgdGVuIiwgIjIiOiAid3NzOi8vc3ludGhldGljLmludmFsaWQvdHdvIiwgIjAiOiAiIn0sICJtZXRhIjogeyJmZWRlcmF0aW9uX25hbWUiOiAiU3ludGhldGljIEZlZGVyYXRpb24iLCAiZ3VhcmRpYW5fMF9uYW1lIjogIlplcm8iLCAiZ3VhcmRpYW5fMl9uYW1lIjogIlR3byIsICJub3RlIjogImF1dGhvcmVkIGZpeHR1cmUiLCAiaWdub3JlZCI6IGZhbHNlfSwgImNvbnNlbnN1c192ZXJzaW9uIjogIjIuMSJ9LCAibW9kdWxlcyI6IHsiY2hvc2VuIjogImZpcnN0IGd1YXJkaWFuIEdFVCJ9fQ==",
+        "requests": [
+          {
+            "method": "GET",
+            "path": "/first/config",
+            "body": ""
+          }
+        ]
+      },
+      {
+        "name": "trailer-field-bytes-16381",
+        "status": 100,
+        "stdout": "",
+        "stderr": "curl: (100) Out of memory in chunked-encoding\n",
+        "headers_base64": "SFRUUC8xLjEgMjAwIFN5bnRoZXRpYw0KVHJhbnNmZXItRW5jb2Rpbmc6IGNodW5rZWQNCg0K",
+        "body_base64": "eyJmZWRlcmF0aW9uX2lkIjogIjEyMzQ1Njc4OTBhYmNkZWYxMjM0NTY3ODkwYWJjZGVmMTIzNDU2Nzg5MGFiY2RlZjEyMzQ1Njc4OTBhYmNkZWYiLCAiZ2xvYmFsIjogeyJhcGlfZW5kcG9pbnRzIjogeyIxMCI6ICJvcGFxdWUgZW5kcG9pbnQgdGVuIiwgIjIiOiAid3NzOi8vc3ludGhldGljLmludmFsaWQvdHdvIiwgIjAiOiAiIn0sICJtZXRhIjogeyJmZWRlcmF0aW9uX25hbWUiOiAiU3ludGhldGljIEZlZGVyYXRpb24iLCAiZ3VhcmRpYW5fMF9uYW1lIjogIlplcm8iLCAiZ3VhcmRpYW5fMl9uYW1lIjogIlR3byIsICJub3RlIjogImF1dGhvcmVkIGZpeHR1cmUiLCAiaWdub3JlZCI6IGZhbHNlfSwgImNvbnNlbnN1c192ZXJzaW9uIjogIjIuMSJ9LCAibW9kdWxlcyI6IHsiY2hvc2VuIjogImZpcnN0IGd1YXJkaWFuIEdFVCJ9fQ==",
+        "requests": [
+          {
+            "method": "GET",
+            "path": "/first/config",
+            "body": ""
+          }
+        ]
+      },
+      {
+        "name": "interim-fold",
+        "status": 0,
+        "stdout": "",
+        "stderr": "",
+        "headers_base64": "SFRUUC8xLjEgMTAwIENvbnRpbnVlDQpYLVRlc3Q6IGZpcnN0IHNlY29uZA0KDQpIVFRQLzEuMSAyMDAgU3ludGhldGljDQpDb250ZW50LUxlbmd0aDogNDE1DQoNCg==",
+        "body_base64": "eyJmZWRlcmF0aW9uX2lkIjogIjEyMzQ1Njc4OTBhYmNkZWYxMjM0NTY3ODkwYWJjZGVmMTIzNDU2Nzg5MGFiY2RlZjEyMzQ1Njc4OTBhYmNkZWYiLCAiZ2xvYmFsIjogeyJhcGlfZW5kcG9pbnRzIjogeyIxMCI6ICJvcGFxdWUgZW5kcG9pbnQgdGVuIiwgIjIiOiAid3NzOi8vc3ludGhldGljLmludmFsaWQvdHdvIiwgIjAiOiAiIn0sICJtZXRhIjogeyJmZWRlcmF0aW9uX25hbWUiOiAiU3ludGhldGljIEZlZGVyYXRpb24iLCAiZ3VhcmRpYW5fMF9uYW1lIjogIlplcm8iLCAiZ3VhcmRpYW5fMl9uYW1lIjogIlR3byIsICJub3RlIjogImF1dGhvcmVkIGZpeHR1cmUiLCAiaWdub3JlZCI6IGZhbHNlfSwgImNvbnNlbnN1c192ZXJzaW9uIjogIjIuMSJ9LCAibW9kdWxlcyI6IHsiY2hvc2VuIjogImZpcnN0IGd1YXJkaWFuIEdFVCJ9fQ==",
+        "requests": [
+          {
+            "method": "GET",
+            "path": "/first/config",
+            "body": ""
+          }
+        ]
+      },
+      {
+        "name": "conflicting-location",
+        "status": 8,
+        "stdout": "",
+        "stderr": "curl: (8) Multiple Location headers\n",
+        "headers_base64": "SFRUUC8xLjEgMzAyIEZvdW5kDQpDb250ZW50LUxlbmd0aDogNDE1DQpMb2NhdGlvbjogL2ENCg==",
+        "body_base64": "",
+        "requests": [
+          {
+            "method": "GET",
+            "path": "/first/config",
+            "body": ""
+          }
+        ]
+      },
+      {
+        "name": "leading-blank",
+        "status": 1,
+        "stdout": "",
+        "stderr": "curl: (1) Received HTTP/0.9 when not allowed\n",
+        "headers_base64": "DQo=",
+        "body_base64": "",
+        "requests": [
+          {
+            "method": "GET",
+            "path": "/first/config",
+            "body": ""
+          }
+        ]
+      },
+      {
+        "name": "body-length-equal",
+        "status": 0,
+        "stdout": "",
+        "stderr": "",
+        "headers_base64": "SFRUUC8xLjEgMjAwIFN5bnRoZXRpYw0KQ29udGVudC1MZW5ndGg6IDQxNQ0KDQo=",
+        "body_base64": "eyJmZWRlcmF0aW9uX2lkIjogIjEyMzQ1Njc4OTBhYmNkZWYxMjM0NTY3ODkwYWJjZGVmMTIzNDU2Nzg5MGFiY2RlZjEyMzQ1Njc4OTBhYmNkZWYiLCAiZ2xvYmFsIjogeyJhcGlfZW5kcG9pbnRzIjogeyIxMCI6ICJvcGFxdWUgZW5kcG9pbnQgdGVuIiwgIjIiOiAid3NzOi8vc3ludGhldGljLmludmFsaWQvdHdvIiwgIjAiOiAiIn0sICJtZXRhIjogeyJmZWRlcmF0aW9uX25hbWUiOiAiU3ludGhldGljIEZlZGVyYXRpb24iLCAiZ3VhcmRpYW5fMF9uYW1lIjogIlplcm8iLCAiZ3VhcmRpYW5fMl9uYW1lIjogIlR3byIsICJub3RlIjogImF1dGhvcmVkIGZpeHR1cmUiLCAiaWdub3JlZCI6IGZhbHNlfSwgImNvbnNlbnN1c192ZXJzaW9uIjogIjIuMSJ9LCAibW9kdWxlcyI6IHsiY2hvc2VuIjogImZpcnN0IGd1YXJkaWFuIEdFVCJ9fQ==",
+        "requests": [
+          {
+            "method": "GET",
+            "path": "/first/config",
+            "body": ""
+          }
+        ]
+      },
+      {
+        "name": "body-dechunk-conflict",
+        "status": 0,
+        "stdout": "",
+        "stderr": "",
+        "headers_base64": "SFRUUC8xLjEgMjAwIFN5bnRoZXRpYw0KVHJhbnNmZXItRW5jb2Rpbmc6IGNodW5rZWQNClRyYW5zZmVyLUVuY29kaW5nOiBpZGVudGl0eQ0KDQo=",
+        "body_base64": "eyJmZWRlcmF0aW9uX2lkIjogIjEyMzQ1Njc4OTBhYmNkZWYxMjM0NTY3ODkwYWJjZGVmMTIzNDU2Nzg5MGFiY2RlZjEyMzQ1Njc4OTBhYmNkZWYiLCAiZ2xvYmFsIjogeyJhcGlfZW5kcG9pbnRzIjogeyIxMCI6ICJvcGFxdWUgZW5kcG9pbnQgdGVuIiwgIjIiOiAid3NzOi8vc3ludGhldGljLmludmFsaWQvdHdvIiwgIjAiOiAiIn0sICJtZXRhIjogeyJmZWRlcmF0aW9uX25hbWUiOiAiU3ludGhldGljIEZlZGVyYXRpb24iLCAiZ3VhcmRpYW5fMF9uYW1lIjogIlplcm8iLCAiZ3VhcmRpYW5fMl9uYW1lIjogIlR3byIsICJub3RlIjogImF1dGhvcmVkIGZpeHR1cmUiLCAiaWdub3JlZCI6IGZhbHNlfSwgImNvbnNlbnN1c192ZXJzaW9uIjogIjIuMSJ9LCAibW9kdWxlcyI6IHsiY2hvc2VuIjogImZpcnN0IGd1YXJkaWFuIEdFVCJ9fQ==",
+        "requests": [
+          {
+            "method": "GET",
+            "path": "/first/config",
+            "body": ""
+          }
+        ]
+      },
+      {
+        "name": "body-dechunk-zero",
+        "status": 0,
+        "stdout": "",
+        "stderr": "",
+        "headers_base64": "SFRUUC8xLjEgMjAwIFN5bnRoZXRpYw0KVHJhbnNmZXItRW5jb2Rpbmc6IGNodW5rZWQNClRyYW5zZmVyLUVuY29kaW5nOiBpZGVudGl0eQ0KDQo=",
+        "body_base64": "",
+        "requests": [
+          {
+            "method": "GET",
+            "path": "/first/config",
+            "body": ""
+          }
+        ]
+      },
+      {
+        "name": "body-dechunk-extension",
+        "status": 0,
+        "stdout": "",
+        "stderr": "",
+        "headers_base64": "SFRUUC8xLjEgMjAwIFN5bnRoZXRpYw0KVHJhbnNmZXItRW5jb2Rpbmc6IGNodW5rZWQNClRyYW5zZmVyLUVuY29kaW5nOiBpZGVudGl0eQ0KDQo=",
+        "body_base64": "",
+        "requests": [
+          {
+            "method": "GET",
+            "path": "/first/config",
+            "body": ""
+          }
+        ]
+      },
+      {
+        "name": "body-dechunk-empty",
+        "status": 0,
+        "stdout": "",
+        "stderr": "",
+        "headers_base64": "SFRUUC8xLjEgMjAwIFN5bnRoZXRpYw0KVHJhbnNmZXItRW5jb2Rpbmc6IGNodW5rZWQNClRyYW5zZmVyLUVuY29kaW5nOg0KDQo=",
+        "body_base64": "eyJmZWRlcmF0aW9uX2lkIjogIjEyMzQ1Njc4OTBhYmNkZWYxMjM0NTY3ODkwYWJjZGVmMTIzNDU2Nzg5MGFiY2RlZjEyMzQ1Njc4OTBhYmNkZWYiLCAiZ2xvYmFsIjogeyJhcGlfZW5kcG9pbnRzIjogeyIxMCI6ICJvcGFxdWUgZW5kcG9pbnQgdGVuIiwgIjIiOiAid3NzOi8vc3ludGhldGljLmludmFsaWQvdHdvIiwgIjAiOiAiIn0sICJtZXRhIjogeyJmZWRlcmF0aW9uX25hbWUiOiAiU3ludGhldGljIEZlZGVyYXRpb24iLCAiZ3VhcmRpYW5fMF9uYW1lIjogIlplcm8iLCAiZ3VhcmRpYW5fMl9uYW1lIjogIlR3byIsICJub3RlIjogImF1dGhvcmVkIGZpeHR1cmUiLCAiaWdub3JlZCI6IGZhbHNlfSwgImNvbnNlbnN1c192ZXJzaW9uIjogIjIuMSJ9LCAibW9kdWxlcyI6IHsiY2hvc2VuIjogImZpcnN0IGd1YXJkaWFuIEdFVCJ9fQ==",
+        "requests": [
+          {
+            "method": "GET",
+            "path": "/first/config",
+            "body": ""
+          }
+        ]
+      },
+      {
+        "name": "body-dechunk-comma",
+        "status": 0,
+        "stdout": "",
+        "stderr": "",
+        "headers_base64": "SFRUUC8xLjEgMjAwIFN5bnRoZXRpYw0KVHJhbnNmZXItRW5jb2Rpbmc6IGNodW5rZWQsDQoNCg==",
+        "body_base64": "eyJmZWRlcmF0aW9uX2lkIjogIjEyMzQ1Njc4OTBhYmNkZWYxMjM0NTY3ODkwYWJjZGVmMTIzNDU2Nzg5MGFiY2RlZjEyMzQ1Njc4OTBhYmNkZWYiLCAiZ2xvYmFsIjogeyJhcGlfZW5kcG9pbnRzIjogeyIxMCI6ICJvcGFxdWUgZW5kcG9pbnQgdGVuIiwgIjIiOiAid3NzOi8vc3ludGhldGljLmludmFsaWQvdHdvIiwgIjAiOiAiIn0sICJtZXRhIjogeyJmZWRlcmF0aW9uX25hbWUiOiAiU3ludGhldGljIEZlZGVyYXRpb24iLCAiZ3VhcmRpYW5fMF9uYW1lIjogIlplcm8iLCAiZ3VhcmRpYW5fMl9uYW1lIjogIlR3byIsICJub3RlIjogImF1dGhvcmVkIGZpeHR1cmUiLCAiaWdub3JlZCI6IGZhbHNlfSwgImNvbnNlbnN1c192ZXJzaW9uIjogIjIuMSJ9LCAibW9kdWxlcyI6IHsiY2hvc2VuIjogImZpcnN0IGd1YXJkaWFuIEdFVCJ9fQ==",
+        "requests": [
+          {
+            "method": "GET",
+            "path": "/first/config",
+            "body": ""
+          }
+        ]
+      },
+      {
+        "name": "body-dechunk-obs",
+        "status": 0,
+        "stdout": "",
+        "stderr": "",
+        "headers_base64": "SFRUUC8xLjEgMjAwIFN5bnRoZXRpYw0KVHJhbnNmZXItRW5jb2Rpbmc6IP8sIGNodW5rZWQNCg0K",
+        "body_base64": "eyJmZWRlcmF0aW9uX2lkIjogIjEyMzQ1Njc4OTBhYmNkZWYxMjM0NTY3ODkwYWJjZGVmMTIzNDU2Nzg5MGFiY2RlZjEyMzQ1Njc4OTBhYmNkZWYiLCAiZ2xvYmFsIjogeyJhcGlfZW5kcG9pbnRzIjogeyIxMCI6ICJvcGFxdWUgZW5kcG9pbnQgdGVuIiwgIjIiOiAid3NzOi8vc3ludGhldGljLmludmFsaWQvdHdvIiwgIjAiOiAiIn0sICJtZXRhIjogeyJmZWRlcmF0aW9uX25hbWUiOiAiU3ludGhldGljIEZlZGVyYXRpb24iLCAiZ3VhcmRpYW5fMF9uYW1lIjogIlplcm8iLCAiZ3VhcmRpYW5fMl9uYW1lIjogIlR3byIsICJub3RlIjogImF1dGhvcmVkIGZpeHR1cmUiLCAiaWdub3JlZCI6IGZhbHNlfSwgImNvbnNlbnN1c192ZXJzaW9uIjogIjIuMSJ9LCAibW9kdWxlcyI6IHsiY2hvc2VuIjogImZpcnN0IGd1YXJkaWFuIEdFVCJ9fQ==",
+        "requests": [
+          {
+            "method": "GET",
+            "path": "/first/config",
+            "body": ""
+          }
+        ]
+      },
+      {
+        "name": "body-chunked",
+        "status": 0,
+        "stdout": "",
+        "stderr": "",
+        "headers_base64": "SFRUUC8xLjEgMjAwIFN5bnRoZXRpYw0KVHJhbnNmZXItRW5jb2Rpbmc6IGNodW5rZWQNCg0K",
+        "body_base64": "eyJmZWRlcmF0aW9uX2lkIjogIjEyMzQ1Njc4OTBhYmNkZWYxMjM0NTY3ODkwYWJjZGVmMTIzNDU2Nzg5MGFiY2RlZjEyMzQ1Njc4OTBhYmNkZWYiLCAiZ2xvYmFsIjogeyJhcGlfZW5kcG9pbnRzIjogeyIxMCI6ICJvcGFxdWUgZW5kcG9pbnQgdGVuIiwgIjIiOiAid3NzOi8vc3ludGhldGljLmludmFsaWQvdHdvIiwgIjAiOiAiIn0sICJtZXRhIjogeyJmZWRlcmF0aW9uX25hbWUiOiAiU3ludGhldGljIEZlZGVyYXRpb24iLCAiZ3VhcmRpYW5fMF9uYW1lIjogIlplcm8iLCAiZ3VhcmRpYW5fMl9uYW1lIjogIlR3byIsICJub3RlIjogImF1dGhvcmVkIGZpeHR1cmUiLCAiaWdub3JlZCI6IGZhbHNlfSwgImNvbnNlbnN1c192ZXJzaW9uIjogIjIuMSJ9LCAibW9kdWxlcyI6IHsiY2hvc2VuIjogImZpcnN0IGd1YXJkaWFuIEdFVCJ9fQ==",
+        "requests": [
+          {
+            "method": "GET",
+            "path": "/first/config",
+            "body": ""
+          }
+        ]
+      },
+      {
+        "name": "body-last-chunked",
+        "status": 0,
+        "stdout": "",
+        "stderr": "",
+        "headers_base64": "SFRUUC8xLjEgMjAwIFN5bnRoZXRpYw0KVHJhbnNmZXItRW5jb2Rpbmc6IGlkZW50aXR5LCBjaHVua2VkDQoNCg==",
+        "body_base64": "eyJmZWRlcmF0aW9uX2lkIjogIjEyMzQ1Njc4OTBhYmNkZWYxMjM0NTY3ODkwYWJjZGVmMTIzNDU2Nzg5MGFiY2RlZjEyMzQ1Njc4OTBhYmNkZWYiLCAiZ2xvYmFsIjogeyJhcGlfZW5kcG9pbnRzIjogeyIxMCI6ICJvcGFxdWUgZW5kcG9pbnQgdGVuIiwgIjIiOiAid3NzOi8vc3ludGhldGljLmludmFsaWQvdHdvIiwgIjAiOiAiIn0sICJtZXRhIjogeyJmZWRlcmF0aW9uX25hbWUiOiAiU3ludGhldGljIEZlZGVyYXRpb24iLCAiZ3VhcmRpYW5fMF9uYW1lIjogIlplcm8iLCAiZ3VhcmRpYW5fMl9uYW1lIjogIlR3byIsICJub3RlIjogImF1dGhvcmVkIGZpeHR1cmUiLCAiaWdub3JlZCI6IGZhbHNlfSwgImNvbnNlbnN1c192ZXJzaW9uIjogIjIuMSJ9LCAibW9kdWxlcyI6IHsiY2hvc2VuIjogImZpcnN0IGd1YXJkaWFuIEdFVCJ9fQ==",
+        "requests": [
+          {
+            "method": "GET",
+            "path": "/first/config",
+            "body": ""
+          }
+        ]
+      },
+      {
+        "name": "body-lf-trailer",
+        "status": 0,
+        "stdout": "",
+        "stderr": "",
+        "headers_base64": "SFRUUC8xLjEgMjAwIFN5bnRoZXRpYw0KVHJhbnNmZXItRW5jb2Rpbmc6IGNodW5rZWQNCg0KWC1UZXN0OiB4DQo=",
+        "body_base64": "eyJmZWRlcmF0aW9uX2lkIjogIjEyMzQ1Njc4OTBhYmNkZWYxMjM0NTY3ODkwYWJjZGVmMTIzNDU2Nzg5MGFiY2RlZjEyMzQ1Njc4OTBhYmNkZWYiLCAiZ2xvYmFsIjogeyJhcGlfZW5kcG9pbnRzIjogeyIxMCI6ICJvcGFxdWUgZW5kcG9pbnQgdGVuIiwgIjIiOiAid3NzOi8vc3ludGhldGljLmludmFsaWQvdHdvIiwgIjAiOiAiIn0sICJtZXRhIjogeyJmZWRlcmF0aW9uX25hbWUiOiAiU3ludGhldGljIEZlZGVyYXRpb24iLCAiZ3VhcmRpYW5fMF9uYW1lIjogIlplcm8iLCAiZ3VhcmRpYW5fMl9uYW1lIjogIlR3byIsICJub3RlIjogImF1dGhvcmVkIGZpeHR1cmUiLCAiaWdub3JlZCI6IGZhbHNlfSwgImNvbnNlbnN1c192ZXJzaW9uIjogIjIuMSJ9LCAibW9kdWxlcyI6IHsiY2hvc2VuIjogImZpcnN0IGd1YXJkaWFuIEdFVCJ9fQ==",
+        "requests": [
+          {
+            "method": "GET",
+            "path": "/first/config",
+            "body": ""
+          }
+        ]
+      },
+      {
+        "name": "body-gzip-refusal",
+        "status": 61,
+        "stdout": "",
+        "stderr": "curl: (61) Unsolicited Transfer-Encoding (gzip) found\n",
+        "headers_base64": "SFRUUC8xLjEgMjAwIFN5bnRoZXRpYw0K",
+        "body_base64": "",
+        "requests": [
+          {
+            "method": "GET",
+            "path": "/first/config",
+            "body": ""
+          }
+        ]
+      },
+      {
+        "name": "body-close",
+        "status": 0,
+        "stdout": "",
+        "stderr": "",
+        "headers_base64": "SFRUUC8xLjEgMjAwIFN5bnRoZXRpYw0KDQo=",
+        "body_base64": "eyJmZWRlcmF0aW9uX2lkIjogIjEyMzQ1Njc4OTBhYmNkZWYxMjM0NTY3ODkwYWJjZGVmMTIzNDU2Nzg5MGFiY2RlZjEyMzQ1Njc4OTBhYmNkZWYiLCAiZ2xvYmFsIjogeyJhcGlfZW5kcG9pbnRzIjogeyIxMCI6ICJvcGFxdWUgZW5kcG9pbnQgdGVuIiwgIjIiOiAid3NzOi8vc3ludGhldGljLmludmFsaWQvdHdvIiwgIjAiOiAiIn0sICJtZXRhIjogeyJmZWRlcmF0aW9uX25hbWUiOiAiU3ludGhldGljIEZlZGVyYXRpb24iLCAiZ3VhcmRpYW5fMF9uYW1lIjogIlplcm8iLCAiZ3VhcmRpYW5fMl9uYW1lIjogIlR3byIsICJub3RlIjogImF1dGhvcmVkIGZpeHR1cmUiLCAiaWdub3JlZCI6IGZhbHNlfSwgImNvbnNlbnN1c192ZXJzaW9uIjogIjIuMSJ9LCAibW9kdWxlcyI6IHsiY2hvc2VuIjogImZpcnN0IGd1YXJkaWFuIEdFVCJ9fQ==",
+        "requests": [
+          {
+            "method": "GET",
+            "path": "/first/config",
+            "body": ""
+          }
+        ]
+      },
+      {
+        "name": "body-chunk-width-16",
+        "status": 0,
+        "stdout": "",
+        "stderr": "",
+        "headers_base64": "SFRUUC8xLjEgMjAwIFN5bnRoZXRpYw0KVHJhbnNmZXItRW5jb2Rpbmc6IGNodW5rZWQNCg0K",
+        "body_base64": "eyJmZWRlcmF0aW9uX2lkIjogIjEyMzQ1Njc4OTBhYmNkZWYxMjM0NTY3ODkwYWJjZGVmMTIzNDU2Nzg5MGFiY2RlZjEyMzQ1Njc4OTBhYmNkZWYiLCAiZ2xvYmFsIjogeyJhcGlfZW5kcG9pbnRzIjogeyIxMCI6ICJvcGFxdWUgZW5kcG9pbnQgdGVuIiwgIjIiOiAid3NzOi8vc3ludGhldGljLmludmFsaWQvdHdvIiwgIjAiOiAiIn0sICJtZXRhIjogeyJmZWRlcmF0aW9uX25hbWUiOiAiU3ludGhldGljIEZlZGVyYXRpb24iLCAiZ3VhcmRpYW5fMF9uYW1lIjogIlplcm8iLCAiZ3VhcmRpYW5fMl9uYW1lIjogIlR3byIsICJub3RlIjogImF1dGhvcmVkIGZpeHR1cmUiLCAiaWdub3JlZCI6IGZhbHNlfSwgImNvbnNlbnN1c192ZXJzaW9uIjogIjIuMSJ9LCAibW9kdWxlcyI6IHsiY2hvc2VuIjogImZpcnN0IGd1YXJkaWFuIEdFVCJ9fQ==",
+        "requests": [
+          {
+            "method": "GET",
+            "path": "/first/config",
+            "body": ""
+          }
+        ]
+      },
+      {
+        "name": "body-chunk-width-17",
+        "status": 56,
+        "stdout": "",
+        "stderr": "curl: (56) chunk hex-length longer than 16\n",
+        "headers_base64": "SFRUUC8xLjEgMjAwIFN5bnRoZXRpYw0KVHJhbnNmZXItRW5jb2Rpbmc6IGNodW5rZWQNCg0K",
+        "body_base64": "",
+        "requests": [
+          {
+            "method": "GET",
+            "path": "/first/config",
+            "body": ""
+          }
+        ]
+      },
+      {
+        "name": "body-bad-length-before",
+        "status": 8,
+        "stdout": "",
+        "stderr": "curl: (8) Invalid Content-Length: value\n",
+        "headers_base64": "SFRUUC8xLjEgMjAwIFN5bnRoZXRpYw0K",
+        "body_base64": "",
+        "requests": [
+          {
+            "method": "GET",
+            "path": "/first/config",
+            "body": ""
+          }
+        ]
+      },
+      {
+        "name": "body-bad-length-after",
+        "status": 8,
+        "stdout": "",
+        "stderr": "curl: (8) Invalid Content-Length: value\n",
+        "headers_base64": "SFRUUC8xLjEgMjAwIFN5bnRoZXRpYw0KVHJhbnNmZXItRW5jb2Rpbmc6IGNodW5rZWQNCg==",
+        "body_base64": "",
+        "requests": [
+          {
+            "method": "GET",
+            "path": "/first/config",
+            "body": ""
+          }
+        ]
+      },
+      {
+        "name": "body-chunked-valid-length",
+        "status": 0,
+        "stdout": "",
+        "stderr": "",
+        "headers_base64": "SFRUUC8xLjEgMjAwIFN5bnRoZXRpYw0KQ29udGVudC1MZW5ndGg6IDUNClRyYW5zZmVyLUVuY29kaW5nOiBjaHVua2VkDQoNCg==",
+        "body_base64": "eyJmZWRlcmF0aW9uX2lkIjogIjEyMzQ1Njc4OTBhYmNkZWYxMjM0NTY3ODkwYWJjZGVmMTIzNDU2Nzg5MGFiY2RlZjEyMzQ1Njc4OTBhYmNkZWYiLCAiZ2xvYmFsIjogeyJhcGlfZW5kcG9pbnRzIjogeyIxMCI6ICJvcGFxdWUgZW5kcG9pbnQgdGVuIiwgIjIiOiAid3NzOi8vc3ludGhldGljLmludmFsaWQvdHdvIiwgIjAiOiAiIn0sICJtZXRhIjogeyJmZWRlcmF0aW9uX25hbWUiOiAiU3ludGhldGljIEZlZGVyYXRpb24iLCAiZ3VhcmRpYW5fMF9uYW1lIjogIlplcm8iLCAiZ3VhcmRpYW5fMl9uYW1lIjogIlR3byIsICJub3RlIjogImF1dGhvcmVkIGZpeHR1cmUiLCAiaWdub3JlZCI6IGZhbHNlfSwgImNvbnNlbnN1c192ZXJzaW9uIjogIjIuMSJ9LCAibW9kdWxlcyI6IHsiY2hvc2VuIjogImZpcnN0IGd1YXJkaWFuIEdFVCJ9fQ==",
+        "requests": [
+          {
+            "method": "GET",
+            "path": "/first/config",
+            "body": ""
+          }
+        ]
+      },
+      {
+        "name": "body-cut-identity-short",
+        "status": 0,
+        "stdout": "",
+        "stderr": "",
+        "headers_base64": "SFRUUC8xLjEgMjAwIFN5bnRoZXRpYw0KQ29udGVudC1MZW5ndGg6IDQxNA0KVHJhbnNmZXItRW5jb2Rpbmc6IGlkZW50aXR5DQoNCg==",
+        "body_base64": "eyJmZWRlcmF0aW9uX2lkIjogIjEyMzQ1Njc4OTBhYmNkZWYxMjM0NTY3ODkwYWJjZGVmMTIzNDU2Nzg5MGFiY2RlZjEyMzQ1Njc4OTBhYmNkZWYiLCAiZ2xvYmFsIjogeyJhcGlfZW5kcG9pbnRzIjogeyIxMCI6ICJvcGFxdWUgZW5kcG9pbnQgdGVuIiwgIjIiOiAid3NzOi8vc3ludGhldGljLmludmFsaWQvdHdvIiwgIjAiOiAiIn0sICJtZXRhIjogeyJmZWRlcmF0aW9uX25hbWUiOiAiU3ludGhldGljIEZlZGVyYXRpb24iLCAiZ3VhcmRpYW5fMF9uYW1lIjogIlplcm8iLCAiZ3VhcmRpYW5fMl9uYW1lIjogIlR3byIsICJub3RlIjogImF1dGhvcmVkIGZpeHR1cmUiLCAiaWdub3JlZCI6IGZhbHNlfSwgImNvbnNlbnN1c192ZXJzaW9uIjogIjIuMSJ9LCAibW9kdWxlcyI6IHsiY2hvc2VuIjogImZpcnN0IGd1YXJkaWFuIEdFVCJ9",
+        "requests": [
+          {
+            "method": "GET",
+            "path": "/first/config",
+            "body": ""
+          }
+        ]
+      },
+      {
+        "name": "body-cut-identity-equal",
+        "status": 0,
+        "stdout": "",
+        "stderr": "",
+        "headers_base64": "SFRUUC8xLjEgMjAwIFN5bnRoZXRpYw0KQ29udGVudC1MZW5ndGg6IDQxNQ0KVHJhbnNmZXItRW5jb2Rpbmc6IGlkZW50aXR5DQoNCg==",
+        "body_base64": "eyJmZWRlcmF0aW9uX2lkIjogIjEyMzQ1Njc4OTBhYmNkZWYxMjM0NTY3ODkwYWJjZGVmMTIzNDU2Nzg5MGFiY2RlZjEyMzQ1Njc4OTBhYmNkZWYiLCAiZ2xvYmFsIjogeyJhcGlfZW5kcG9pbnRzIjogeyIxMCI6ICJvcGFxdWUgZW5kcG9pbnQgdGVuIiwgIjIiOiAid3NzOi8vc3ludGhldGljLmludmFsaWQvdHdvIiwgIjAiOiAiIn0sICJtZXRhIjogeyJmZWRlcmF0aW9uX25hbWUiOiAiU3ludGhldGljIEZlZGVyYXRpb24iLCAiZ3VhcmRpYW5fMF9uYW1lIjogIlplcm8iLCAiZ3VhcmRpYW5fMl9uYW1lIjogIlR3byIsICJub3RlIjogImF1dGhvcmVkIGZpeHR1cmUiLCAiaWdub3JlZCI6IGZhbHNlfSwgImNvbnNlbnN1c192ZXJzaW9uIjogIjIuMSJ9LCAibW9kdWxlcyI6IHsiY2hvc2VuIjogImZpcnN0IGd1YXJkaWFuIEdFVCJ9fQ==",
+        "requests": [
+          {
+            "method": "GET",
+            "path": "/first/config",
+            "body": ""
+          }
+        ]
+      },
+      {
+        "name": "body-cut-empty-short",
+        "status": 0,
+        "stdout": "",
+        "stderr": "",
+        "headers_base64": "SFRUUC8xLjEgMjAwIFN5bnRoZXRpYw0KQ29udGVudC1MZW5ndGg6IDQxNA0KVHJhbnNmZXItRW5jb2Rpbmc6IA0KDQo=",
+        "body_base64": "eyJmZWRlcmF0aW9uX2lkIjogIjEyMzQ1Njc4OTBhYmNkZWYxMjM0NTY3ODkwYWJjZGVmMTIzNDU2Nzg5MGFiY2RlZjEyMzQ1Njc4OTBhYmNkZWYiLCAiZ2xvYmFsIjogeyJhcGlfZW5kcG9pbnRzIjogeyIxMCI6ICJvcGFxdWUgZW5kcG9pbnQgdGVuIiwgIjIiOiAid3NzOi8vc3ludGhldGljLmludmFsaWQvdHdvIiwgIjAiOiAiIn0sICJtZXRhIjogeyJmZWRlcmF0aW9uX25hbWUiOiAiU3ludGhldGljIEZlZGVyYXRpb24iLCAiZ3VhcmRpYW5fMF9uYW1lIjogIlplcm8iLCAiZ3VhcmRpYW5fMl9uYW1lIjogIlR3byIsICJub3RlIjogImF1dGhvcmVkIGZpeHR1cmUiLCAiaWdub3JlZCI6IGZhbHNlfSwgImNvbnNlbnN1c192ZXJzaW9uIjogIjIuMSJ9LCAibW9kdWxlcyI6IHsiY2hvc2VuIjogImZpcnN0IGd1YXJkaWFuIEdFVCJ9",
+        "requests": [
+          {
+            "method": "GET",
+            "path": "/first/config",
+            "body": ""
+          }
+        ]
+      },
+      {
+        "name": "body-cut-empty-equal",
+        "status": 0,
+        "stdout": "",
+        "stderr": "",
+        "headers_base64": "SFRUUC8xLjEgMjAwIFN5bnRoZXRpYw0KQ29udGVudC1MZW5ndGg6IDQxNQ0KVHJhbnNmZXItRW5jb2Rpbmc6IA0KDQo=",
+        "body_base64": "eyJmZWRlcmF0aW9uX2lkIjogIjEyMzQ1Njc4OTBhYmNkZWYxMjM0NTY3ODkwYWJjZGVmMTIzNDU2Nzg5MGFiY2RlZjEyMzQ1Njc4OTBhYmNkZWYiLCAiZ2xvYmFsIjogeyJhcGlfZW5kcG9pbnRzIjogeyIxMCI6ICJvcGFxdWUgZW5kcG9pbnQgdGVuIiwgIjIiOiAid3NzOi8vc3ludGhldGljLmludmFsaWQvdHdvIiwgIjAiOiAiIn0sICJtZXRhIjogeyJmZWRlcmF0aW9uX25hbWUiOiAiU3ludGhldGljIEZlZGVyYXRpb24iLCAiZ3VhcmRpYW5fMF9uYW1lIjogIlplcm8iLCAiZ3VhcmRpYW5fMl9uYW1lIjogIlR3byIsICJub3RlIjogImF1dGhvcmVkIGZpeHR1cmUiLCAiaWdub3JlZCI6IGZhbHNlfSwgImNvbnNlbnN1c192ZXJzaW9uIjogIjIuMSJ9LCAibW9kdWxlcyI6IHsiY2hvc2VuIjogImZpcnN0IGd1YXJkaWFuIEdFVCJ9fQ==",
+        "requests": [
+          {
+            "method": "GET",
+            "path": "/first/config",
+            "body": ""
+          }
+        ]
+      }
+    ]
+  }
 }

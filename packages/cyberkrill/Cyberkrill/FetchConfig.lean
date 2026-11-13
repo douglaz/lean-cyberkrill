@@ -137,7 +137,10 @@ private def response (request : HttpCurl.Request → IO (Except HttpCurl.Error H
     | .ok r => pure r
   if r.body.size > req.maxResponseBytes.toNat then return .error (.transport "fmResponseTooLarge")
   if [301, 302, 303, 307, 308].contains r.status.toNat then
-    if let some (_, location) := r.headers.find? (fun h => h.1 == "location") then
+    let location : Option String := match r.headerBytes with
+      | some fields => (fields.find? (fun h => h.1 == "location")).bind (fun h => String.fromUTF8? h.2)
+      | none => (r.headers.find? (fun h => h.1 == "location")).map (·.2)
+    if let some location := location then
       if location.utf8ByteSize > 8192 then return .error (.transport "fmUrlLimit")
       match Lightning.Lnurl.resolveRedirect req.url location with
       | .error e => return .error (urlError e)
@@ -151,8 +154,9 @@ private def response (request : HttpCurl.Request → IO (Except HttpCurl.Error H
                 "content-encoding", "transfer-encoding"].contains h.1.toLower) }
           else req
         let referer := ((Lightning.Lnurl.normalizeUrl previous).toOption.getD previous).splitOn "#" |>.headD ""
+        let req := { req with headers := req.headers.filter (fun h => h.1.toLower != "referer") }
         let req := if previous.startsWith "https://" && next.startsWith "http://" then req else
-          { req with headers := (req.headers.filter (fun h => h.1.toLower != "referer")).push ("Referer", referer) }
+          { req with headers := req.headers.push ("Referer", referer) }
         match remaining with
         | 0 => return .error (.transport "fmRedirectLimit")
         | n + 1 => return ← response request { req with url := next } n
@@ -160,15 +164,21 @@ private def response (request : HttpCurl.Request → IO (Except HttpCurl.Error H
 
 private def successful (r : HttpCurl.AcquiredResponse) : Bool := 200 ≤ r.status.toNat && r.status.toNat < 300
 
+/-- Production limits per actual request. Tests supply shorter deadlines through
+the library entry; release dispatch uses these defaults without overrides. -/
+structure Limits where
+  connectTimeoutMs : UInt32 := 10000
+  totalTimeoutMs : UInt32 := 60000
+
 private def fromGuardian (request : HttpCurl.Request → IO (Except HttpCurl.Error HttpCurl.AcquiredResponse))
-    (url : String) : IO (Except FetchError Json) := do
+    (limits : Limits) (url : String) : IO (Except FetchError Json) := do
   let url ← match Lightning.Lnurl.normalizeUrl url with
     | .error e => return .error (urlError e)
     | .ok url => pure ((url.splitOn "#").headD "")
   let req : HttpCurl.Request := {
     url := url
-    connectTimeoutMs := 1000
-    totalTimeoutMs := 2000
+    connectTimeoutMs := limits.connectTimeoutMs
+    totalTimeoutMs := limits.totalTimeoutMs
     maxResponseBytes := 1048576 }
   let get ← response request req 10
   let result ← match get with
@@ -235,12 +245,12 @@ private def parseConfig (config : Json) (id : String) : Except Error Json := do
     ("meta", Json.mkObj (metadata.map fun (k, v) => (k, .str v)))]
 
 def fetch (input : String) (request := HttpCurl.requestDetailed)
-    (warn : String → IO Unit := fun _ => pure ()) : IO (Except Error Json) := do
+    (warn : String → IO Unit := fun _ => pure ()) (limits : Limits := {}) : IO (Except Error Json) := do
   let invite ← match InviteCli.decode input with
     | .error e => return .error e | .ok invite => pure invite
   let mut last := "fmNoGuardian"
   for guardian in invite.guardians do
-    match ← fromGuardian request (configUrl guardian.url) with
+    match ← fromGuardian request limits (configUrl guardian.url) with
     | .error e => last := e.message
     | .ok config =>
       match validate config invite.federationId with
