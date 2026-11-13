@@ -81,6 +81,14 @@ def validate (urls : TestUrls) (args : List String) : Except Error Unit := do
       (urls.feedBases ++ #[urls.coinGeckoHistory, urls.dcaRpc]).all (fun url => permitted url && !forbiddenPort url) do
     throw (.onchain "testUrlRefused: Complete explicit loopback URLs with permitted ports are required")
   if args.any forbiddenPort then throw (.onchain "testArgRefused: Default RPC port is forbidden")
+  if args.head? == some "fm-fetch-config" then
+    if let .ok (.fetchConfig input _) := parseCommand args then
+      if let .ok invite := InviteCli.decode input then
+        for guardian in invite.guardians do
+          let .ok url := Lightning.Lnurl.normalizeUrl (FetchConfig.configUrl guardian.url)
+            | throw (.onchain "testConfigRefused: Explicit loopback guardian is required")
+          unless permitted url && !forbiddenPort url do
+            throw (.onchain "testConfigRefused: Explicit loopback guardian is required")
   if args.head? == some "ln-generate-invoice" then
     if let .ok (.generateInvoice address _ _ _) := parseCommand args then
       if let .ok raw := Lightning.lightningAddressUrl address then
@@ -113,20 +121,25 @@ structure TestRun where
 /-- Guard every URL and argv before any service action, then use the real app
 dispatch and supplied bounded transport. Captured streams stay separate. -/
 def runWithTestUrls (version : String) (urls : TestUrls) (args : List String)
-    (services : Services := productionServices) (request := HttpCurl.request) : IO TestRun := do
+    (services : Services := productionServices) (request := HttpCurl.request)
+    (configRequest := HttpCurl.requestDetailed) (configLimits : FetchConfig.Limits := {}) : IO TestRun := do
   let out ← IO.mkRef ""
   let err ← IO.mkRef ""
   let services := { services with
     stdout := fun s => out.modify (· ++ s)
     stderr := fun s => err.modify (· ++ s)
     price := fun currency => PriceFeed.fetch currency urls.feedBases request
+    configRequest := fun req => do
+      unless TestUrls.permitted req.url && !TestUrls.forbiddenPort req.url do
+        return .error (.curl 43 "Test config target refused")
+      configRequest req
     lnurlRequest := fun req => do
       unless TestUrls.permitted req.url true && !TestUrls.forbiddenPort req.url do
         return .error (.curl 43 "Test LNURL target refused")
       request req }
   let status ← match urls.validate args with
     | .error e => reportError services e
-    | .ok _ => runWith version services args
+    | .ok _ => runWith version services args configLimits
   return ⟨status, ← out.get, ← err.get⟩
 
 end Cyberkrill

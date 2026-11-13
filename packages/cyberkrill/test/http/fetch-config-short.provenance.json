@@ -1,0 +1,7 @@
+{
+  "source": "https://github.com/douglaz/cyberkrill",
+  "revision": "27cad1faba86260b06665a89f0af5134d23525c2",
+  "licence": "MIT",
+  "origin": "Authored synthetic HTTP framing controls, folded fields, interim/final headers, malformed trailers and malformed-invite output parsing on the owned fixed-port responder; fedimint-lite/src/lib.rs:499-524.",
+  "capture_sha256": "18f493d754aec92332ca99eaf52e1349a60a86bfdb3ffe89f90f4cd79887e83f"
+}

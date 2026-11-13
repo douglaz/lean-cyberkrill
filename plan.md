@@ -89,7 +89,19 @@ v1 commands (from the `Commands` enum in `cyberkrill/src/main.rs`): `ln-decode-i
   tests are recorded in Phase 4a's PSBT field-parity follow-up). The LNURL URL subset below is a
   fifth exception (owner decision, 2026-10-25), and the explicit fee-unit rule below is a sixth
   (owner decision, 2026-10-26). Private, new-file-only mnemonic output below is a seventh
-  (owner decision, 2026-10-28); otherwise the port exits non-zero wherever cyberkrill does.
+  (owner decision, 2026-10-28), and response handling that the HTTP library does before delivery
+  in `fm-fetch-config` is an eighth (owner decisions, 2026-11-12 and 2026-11-13): the
+  library joins folded header lines in any response head and refuses two different Location
+  values and a blank line before the status line before the port sees them, so the port accepts
+  or follows a folded head that cyberkrill's HTTP client rejects before retrying with POST, and
+  retries with POST where cyberkrill follows the first Location; it also handles the response
+  body before delivery (it removes chunked transfer coding, rewrites trailer line endings,
+  refuses unrequested codings, a malformed Content-Length and an over-long chunk size, and stops
+  at the declared length), so the port reads the body the library delivers where cyberkrill
+  frames it from the last Transfer-Encoding field; a new case belongs to this kind only when
+  the library is shown to decide it before delivery, every rule applied to what the port does
+  see matches cyberkrill, and the README lists each pinned case; otherwise the port exits
+  non-zero wherever cyberkrill does.
   Goldens cover v0; v2 gets its own tests from the BIP370 vectors; the README lists each delta.
 - **BOLT11 signing hash.** The port hashes the invoice's own lower-cased hrp and its data part as
   written (BOLT #11 L117-119; owner decision, 2026-10-21), as LND and Core Lightning do.

@@ -26,6 +26,7 @@ def main():
         for path in (APP / directory).glob("*.json"):
             latest_only(json.loads(path.read_bytes()))
     from importlib import import_module
+    import_module("fetch-config-mutations").verify()
     import_module("generate-invoice-mutations").verify()
     import_module("move-utxos-mutations").verify()
     move = json.loads((APP / "test/move-utxos-provenance.json").read_bytes())

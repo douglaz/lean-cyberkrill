@@ -1,0 +1,1354 @@
+{
+  "source": "https://github.com/douglaz/cyberkrill",
+  "revision": "27cad1faba86260b06665a89f0af5134d23525c2",
+  "licence": "MIT",
+  "kind": "independent pinned CLI capture on synthetic local guardian replies",
+  "command": [
+    "fm-fetch-config",
+    "synthetic invite from fetch-config.json"
+  ],
+  "fixture_sha256": "97df201d4345eead3271ab84772fc9c35f1f4ee3291ea84ff5021005bf8f256d",
+  "cases_sha256": "42a86fe0b23c61d9b3ab59293588590bac608480132b0e30f3e6c48994a84daa",
+  "script_sha256": "bf2d9f67e66a868015960e4a58bf3d25bf886af93639a797908f0b12bf6d03d3",
+  "captures": [
+    {
+      "name": "get",
+      "status": 0,
+      "stdout": "{\n  \"federation_id\": \"b21068c84f5b12ca4fdf93f3e443d3bd7c27e8642d0d52ea2e4dce6fdbbee9df\",\n  \"federation_name\": \"Synthetic Federation\",\n  \"guardians\": [\n    {\n      \"peer_id\": 0,\n      \"name\": \"Zero\",\n      \"url\": \"\"\n    },\n    {\n      \"peer_id\": 2,\n      \"name\": \"Two\",\n      \"url\": \"wss://synthetic.invalid/two\"\n    },\n    {\n      \"peer_id\": 10,\n      \"name\": null,\n      \"url\": \"opaque endpoint ten\"\n    }\n  ],\n  \"consensus_version\": \"2.1\",\n  \"modules\": {\n    \"0\": {\n      \"amount\": 123,\n      \"kind\": \"mint\"\n    },\n    \"nested\": [\n      true,\n      null,\n      \"fixture\"\n    ]\n  },\n  \"meta\": {\n    \"federation_name\": \"Synthetic Federation\",\n    \"guardian_2_name\": \"Two\",\n    \"guardian_0_name\": \"Zero\",\n    \"note\": \"authored fixture\"\n  }\n}",
+      "stderr": "",
+      "requests": [
+        {
+          "method": "GET",
+          "path": "/first/config",
+          "body": ""
+        }
+      ]
+    },
+    {
+      "name": "get-status-post",
+      "status": 0,
+      "stdout": "{\n  \"federation_id\": \"b21068c84f5b12ca4fdf93f3e443d3bd7c27e8642d0d52ea2e4dce6fdbbee9df\",\n  \"federation_name\": \"Synthetic Federation\",\n  \"guardians\": [\n    {\n      \"peer_id\": 0,\n      \"name\": \"Zero\",\n      \"url\": \"\"\n    },\n    {\n      \"peer_id\": 2,\n      \"name\": \"Two\",\n      \"url\": \"wss://synthetic.invalid/two\"\n    },\n    {\n      \"peer_id\": 10,\n      \"name\": null,\n      \"url\": \"opaque endpoint ten\"\n    }\n  ],\n  \"consensus_version\": \"2.1\",\n  \"modules\": {\n    \"0\": {\n      \"amount\": 123,\n      \"kind\": \"mint\"\n    },\n    \"nested\": [\n      true,\n      null,\n      \"fixture\"\n    ]\n  },\n  \"meta\": {\n    \"guardian_2_name\": \"Two\",\n    \"federation_name\": \"Synthetic Federation\",\n    \"guardian_0_name\": \"Zero\",\n    \"note\": \"authored fixture\"\n  }\n}",
+      "stderr": "",
+      "requests": [
+        {
+          "method": "GET",
+          "path": "/first/config",
+          "body": ""
+        },
+        {
+          "method": "POST",
+          "path": "/first/config",
+          "body": "{}"
+        }
+      ]
+    },
+    {
+      "name": "get-transport-post",
+      "status": 0,
+      "stdout": "{\n  \"federation_id\": \"b21068c84f5b12ca4fdf93f3e443d3bd7c27e8642d0d52ea2e4dce6fdbbee9df\",\n  \"federation_name\": \"Synthetic Federation\",\n  \"guardians\": [\n    {\n      \"peer_id\": 0,\n      \"name\": \"Zero\",\n      \"url\": \"\"\n    },\n    {\n      \"peer_id\": 2,\n      \"name\": \"Two\",\n      \"url\": \"wss://synthetic.invalid/two\"\n    },\n    {\n      \"peer_id\": 10,\n      \"name\": null,\n      \"url\": \"opaque endpoint ten\"\n    }\n  ],\n  \"consensus_version\": \"2.1\",\n  \"modules\": {\n    \"0\": {\n      \"amount\": 123,\n      \"kind\": \"mint\"\n    },\n    \"nested\": [\n      true,\n      null,\n      \"fixture\"\n    ]\n  },\n  \"meta\": {\n    \"federation_name\": \"Synthetic Federation\",\n    \"guardian_0_name\": \"Zero\",\n    \"guardian_2_name\": \"Two\",\n    \"note\": \"authored fixture\"\n  }\n}",
+      "stderr": "",
+      "requests": [
+        {
+          "method": "GET",
+          "path": "/first/config",
+          "body": ""
+        },
+        {
+          "method": "POST",
+          "path": "/first/config",
+          "body": "{}"
+        }
+      ]
+    },
+    {
+      "name": "post-transport-next",
+      "status": 0,
+      "stdout": "{\n  \"federation_id\": \"1234567890abcdef1234567890abcdef1234567890abcdef1234567890abcdef\",\n  \"federation_name\": \"Synthetic Federation\",\n  \"guardians\": [\n    {\n      \"peer_id\": 0,\n      \"name\": \"Zero\",\n      \"url\": \"\"\n    },\n    {\n      \"peer_id\": 2,\n      \"name\": \"Two\",\n      \"url\": \"wss://synthetic.invalid/two\"\n    },\n    {\n      \"peer_id\": 10,\n      \"name\": null,\n      \"url\": \"opaque endpoint ten\"\n    }\n  ],\n  \"consensus_version\": \"2.1\",\n  \"modules\": {\n    \"0\": {\n      \"amount\": 123,\n      \"kind\": \"mint\"\n    },\n    \"nested\": [\n      true,\n      null,\n      \"fixture\"\n    ]\n  },\n  \"meta\": {\n    \"guardian_0_name\": \"Zero\",\n    \"guardian_2_name\": \"Two\",\n    \"note\": \"authored fixture\",\n    \"federation_name\": \"Synthetic Federation\"\n  }\n}",
+      "stderr": "",
+      "requests": [
+        {
+          "method": "GET",
+          "path": "/first/config",
+          "body": ""
+        },
+        {
+          "method": "POST",
+          "path": "/first/config",
+          "body": "{}"
+        },
+        {
+          "method": "GET",
+          "path": "/second/config",
+          "body": ""
+        }
+      ]
+    },
+    {
+      "name": "post-status-next",
+      "status": 0,
+      "stdout": "{\n  \"federation_id\": \"1234567890abcdef1234567890abcdef1234567890abcdef1234567890abcdef\",\n  \"federation_name\": \"Synthetic Federation\",\n  \"guardians\": [\n    {\n      \"peer_id\": 0,\n      \"name\": \"Zero\",\n      \"url\": \"\"\n    },\n    {\n      \"peer_id\": 2,\n      \"name\": \"Two\",\n      \"url\": \"wss://synthetic.invalid/two\"\n    },\n    {\n      \"peer_id\": 10,\n      \"name\": null,\n      \"url\": \"opaque endpoint ten\"\n    }\n  ],\n  \"consensus_version\": \"2.1\",\n  \"modules\": {\n    \"0\": {\n      \"amount\": 123,\n      \"kind\": \"mint\"\n    },\n    \"nested\": [\n      true,\n      null,\n      \"fixture\"\n    ]\n  },\n  \"meta\": {\n    \"guardian_0_name\": \"Zero\",\n    \"note\": \"authored fixture\",\n    \"guardian_2_name\": \"Two\",\n    \"federation_name\": \"Synthetic Federation\"\n  }\n}",
+      "stderr": "",
+      "requests": [
+        {
+          "method": "GET",
+          "path": "/first/config",
+          "body": ""
+        },
+        {
+          "method": "POST",
+          "path": "/first/config",
+          "body": "{}"
+        },
+        {
+          "method": "GET",
+          "path": "/second/config",
+          "body": ""
+        }
+      ]
+    },
+    {
+      "name": "post-json-next",
+      "status": 0,
+      "stdout": "{\n  \"federation_id\": \"1234567890abcdef1234567890abcdef1234567890abcdef1234567890abcdef\",\n  \"federation_name\": \"Synthetic Federation\",\n  \"guardians\": [\n    {\n      \"peer_id\": 0,\n      \"name\": \"Zero\",\n      \"url\": \"\"\n    },\n    {\n      \"peer_id\": 2,\n      \"name\": \"Two\",\n      \"url\": \"wss://synthetic.invalid/two\"\n    },\n    {\n      \"peer_id\": 10,\n      \"name\": null,\n      \"url\": \"opaque endpoint ten\"\n    }\n  ],\n  \"consensus_version\": \"2.1\",\n  \"modules\": {\n    \"0\": {\n      \"amount\": 123,\n      \"kind\": \"mint\"\n    },\n    \"nested\": [\n      true,\n      null,\n      \"fixture\"\n    ]\n  },\n  \"meta\": {\n    \"federation_name\": \"Synthetic Federation\",\n    \"guardian_2_name\": \"Two\",\n    \"note\": \"authored fixture\",\n    \"guardian_0_name\": \"Zero\"\n  }\n}",
+      "stderr": "",
+      "requests": [
+        {
+          "method": "GET",
+          "path": "/first/config",
+          "body": ""
+        },
+        {
+          "method": "POST",
+          "path": "/first/config",
+          "body": "{}"
+        },
+        {
+          "method": "GET",
+          "path": "/second/config",
+          "body": ""
+        }
+      ]
+    },
+    {
+      "name": "all-fail",
+      "status": 1,
+      "stdout": "",
+      "stderr": "Error: Failed to fetch config from any guardian. Last error: Some(HTTP request failed with status: 403 Forbidden)\n",
+      "requests": [
+        {
+          "method": "GET",
+          "path": "/first/config",
+          "body": ""
+        },
+        {
+          "method": "POST",
+          "path": "/first/config",
+          "body": "{}"
+        },
+        {
+          "method": "GET",
+          "path": "/second/config",
+          "body": ""
+        },
+        {
+          "method": "POST",
+          "path": "/second/config",
+          "body": "{}"
+        }
+      ]
+    },
+    {
+      "name": "non-json-next",
+      "status": 0,
+      "stdout": "{\n  \"federation_id\": \"1234567890abcdef1234567890abcdef1234567890abcdef1234567890abcdef\",\n  \"federation_name\": \"Synthetic Federation\",\n  \"guardians\": [\n    {\n      \"peer_id\": 0,\n      \"name\": \"Zero\",\n      \"url\": \"\"\n    },\n    {\n      \"peer_id\": 2,\n      \"name\": \"Two\",\n      \"url\": \"wss://synthetic.invalid/two\"\n    },\n    {\n      \"peer_id\": 10,\n      \"name\": null,\n      \"url\": \"opaque endpoint ten\"\n    }\n  ],\n  \"consensus_version\": \"2.1\",\n  \"modules\": {\n    \"0\": {\n      \"amount\": 123,\n      \"kind\": \"mint\"\n    },\n    \"nested\": [\n      true,\n      null,\n      \"fixture\"\n    ]\n  },\n  \"meta\": {\n    \"guardian_0_name\": \"Zero\",\n    \"guardian_2_name\": \"Two\",\n    \"federation_name\": \"Synthetic Federation\",\n    \"note\": \"authored fixture\"\n  }\n}",
+      "stderr": "",
+      "requests": [
+        {
+          "method": "GET",
+          "path": "/first/config",
+          "body": ""
+        },
+        {
+          "method": "GET",
+          "path": "/second/config",
+          "body": ""
+        }
+      ]
+    },
+    {
+      "name": "utf8-next",
+      "status": 0,
+      "stdout": "{\n  \"federation_id\": \"1234567890abcdef1234567890abcdef1234567890abcdef1234567890abcdef\",\n  \"federation_name\": \"Synthetic Federation\",\n  \"guardians\": [\n    {\n      \"peer_id\": 0,\n      \"name\": \"Zero\",\n      \"url\": \"\"\n    },\n    {\n      \"peer_id\": 2,\n      \"name\": \"Two\",\n      \"url\": \"wss://synthetic.invalid/two\"\n    },\n    {\n      \"peer_id\": 10,\n      \"name\": null,\n      \"url\": \"opaque endpoint ten\"\n    }\n  ],\n  \"consensus_version\": \"2.1\",\n  \"modules\": {\n    \"0\": {\n      \"amount\": 123,\n      \"kind\": \"mint\"\n    },\n    \"nested\": [\n      true,\n      null,\n      \"fixture\"\n    ]\n  },\n  \"meta\": {\n    \"guardian_2_name\": \"Two\",\n    \"federation_name\": \"Synthetic Federation\",\n    \"note\": \"authored fixture\",\n    \"guardian_0_name\": \"Zero\"\n  }\n}",
+      "stderr": "",
+      "requests": [
+        {
+          "method": "GET",
+          "path": "/first/config",
+          "body": ""
+        },
+        {
+          "method": "GET",
+          "path": "/second/config",
+          "body": ""
+        }
+      ]
+    },
+    {
+      "name": "first-success",
+      "status": 0,
+      "stdout": "{\n  \"federation_id\": \"1234567890abcdef1234567890abcdef1234567890abcdef1234567890abcdef\",\n  \"federation_name\": \"Synthetic Federation\",\n  \"guardians\": [\n    {\n      \"peer_id\": 0,\n      \"name\": \"Zero\",\n      \"url\": \"\"\n    },\n    {\n      \"peer_id\": 2,\n      \"name\": \"Two\",\n      \"url\": \"wss://synthetic.invalid/two\"\n    },\n    {\n      \"peer_id\": 10,\n      \"name\": null,\n      \"url\": \"opaque endpoint ten\"\n    }\n  ],\n  \"consensus_version\": \"2.1\",\n  \"modules\": {\n    \"0\": {\n      \"amount\": 123,\n      \"kind\": \"mint\"\n    },\n    \"nested\": [\n      true,\n      null,\n      \"fixture\"\n    ]\n  },\n  \"meta\": {\n    \"federation_name\": \"Synthetic Federation\",\n    \"guardian_2_name\": \"Two\",\n    \"note\": \"authored fixture\",\n    \"guardian_0_name\": \"Zero\"\n  }\n}",
+      "stderr": "",
+      "requests": [
+        {
+          "method": "GET",
+          "path": "/first/config",
+          "body": ""
+        }
+      ]
+    },
+    {
+      "name": "slash",
+      "status": 0,
+      "stdout": "{\n  \"federation_id\": \"b21068c84f5b12ca4fdf93f3e443d3bd7c27e8642d0d52ea2e4dce6fdbbee9df\",\n  \"federation_name\": \"Synthetic Federation\",\n  \"guardians\": [\n    {\n      \"peer_id\": 0,\n      \"name\": \"Zero\",\n      \"url\": \"\"\n    },\n    {\n      \"peer_id\": 2,\n      \"name\": \"Two\",\n      \"url\": \"wss://synthetic.invalid/two\"\n    },\n    {\n      \"peer_id\": 10,\n      \"name\": null,\n      \"url\": \"opaque endpoint ten\"\n    }\n  ],\n  \"consensus_version\": \"2.1\",\n  \"modules\": {\n    \"0\": {\n      \"amount\": 123,\n      \"kind\": \"mint\"\n    },\n    \"nested\": [\n      true,\n      null,\n      \"fixture\"\n    ]\n  },\n  \"meta\": {\n    \"federation_name\": \"Synthetic Federation\",\n    \"guardian_0_name\": \"Zero\",\n    \"note\": \"authored fixture\",\n    \"guardian_2_name\": \"Two\"\n  }\n}",
+      "stderr": "",
+      "requests": [
+        {
+          "method": "GET",
+          "path": "/first/config",
+          "body": ""
+        }
+      ]
+    },
+    {
+      "name": "double-slash",
+      "status": 0,
+      "stdout": "{\n  \"federation_id\": \"b21068c84f5b12ca4fdf93f3e443d3bd7c27e8642d0d52ea2e4dce6fdbbee9df\",\n  \"federation_name\": \"Synthetic Federation\",\n  \"guardians\": [\n    {\n      \"peer_id\": 0,\n      \"name\": \"Zero\",\n      \"url\": \"\"\n    },\n    {\n      \"peer_id\": 2,\n      \"name\": \"Two\",\n      \"url\": \"wss://synthetic.invalid/two\"\n    },\n    {\n      \"peer_id\": 10,\n      \"name\": null,\n      \"url\": \"opaque endpoint ten\"\n    }\n  ],\n  \"consensus_version\": \"2.1\",\n  \"modules\": {\n    \"0\": {\n      \"amount\": 123,\n      \"kind\": \"mint\"\n    },\n    \"nested\": [\n      true,\n      null,\n      \"fixture\"\n    ]\n  },\n  \"meta\": {\n    \"federation_name\": \"Synthetic Federation\",\n    \"guardian_2_name\": \"Two\",\n    \"note\": \"authored fixture\",\n    \"guardian_0_name\": \"Zero\"\n  }\n}",
+      "stderr": "",
+      "requests": [
+        {
+          "method": "GET",
+          "path": "/first/config",
+          "body": ""
+        }
+      ]
+    },
+    {
+      "name": "many-slashes",
+      "status": 0,
+      "stdout": "{\n  \"federation_id\": \"b21068c84f5b12ca4fdf93f3e443d3bd7c27e8642d0d52ea2e4dce6fdbbee9df\",\n  \"federation_name\": \"Synthetic Federation\",\n  \"guardians\": [\n    {\n      \"peer_id\": 0,\n      \"name\": \"Zero\",\n      \"url\": \"\"\n    },\n    {\n      \"peer_id\": 2,\n      \"name\": \"Two\",\n      \"url\": \"wss://synthetic.invalid/two\"\n    },\n    {\n      \"peer_id\": 10,\n      \"name\": null,\n      \"url\": \"opaque endpoint ten\"\n    }\n  ],\n  \"consensus_version\": \"2.1\",\n  \"modules\": {\n    \"0\": {\n      \"amount\": 123,\n      \"kind\": \"mint\"\n    },\n    \"nested\": [\n      true,\n      null,\n      \"fixture\"\n    ]\n  },\n  \"meta\": {\n    \"note\": \"authored fixture\",\n    \"guardian_2_name\": \"Two\",\n    \"federation_name\": \"Synthetic Federation\",\n    \"guardian_0_name\": \"Zero\"\n  }\n}",
+      "stderr": "",
+      "requests": [
+        {
+          "method": "GET",
+          "path": "/first/config",
+          "body": ""
+        }
+      ]
+    },
+    {
+      "name": "normalize",
+      "status": 0,
+      "stdout": "{\n  \"federation_id\": \"b21068c84f5b12ca4fdf93f3e443d3bd7c27e8642d0d52ea2e4dce6fdbbee9df\",\n  \"federation_name\": \"Synthetic Federation\",\n  \"guardians\": [\n    {\n      \"peer_id\": 0,\n      \"name\": \"Zero\",\n      \"url\": \"\"\n    },\n    {\n      \"peer_id\": 2,\n      \"name\": \"Two\",\n      \"url\": \"wss://synthetic.invalid/two\"\n    },\n    {\n      \"peer_id\": 10,\n      \"name\": null,\n      \"url\": \"opaque endpoint ten\"\n    }\n  ],\n  \"consensus_version\": \"2.1\",\n  \"modules\": {\n    \"0\": {\n      \"amount\": 123,\n      \"kind\": \"mint\"\n    },\n    \"nested\": [\n      true,\n      null,\n      \"fixture\"\n    ]\n  },\n  \"meta\": {\n    \"note\": \"authored fixture\",\n    \"guardian_0_name\": \"Zero\",\n    \"federation_name\": \"Synthetic Federation\",\n    \"guardian_2_name\": \"Two\"\n  }\n}",
+      "stderr": "",
+      "requests": [
+        {
+          "method": "GET",
+          "path": "/first/config",
+          "body": ""
+        }
+      ]
+    },
+    {
+      "name": "query",
+      "status": 0,
+      "stdout": "{\n  \"federation_id\": \"b21068c84f5b12ca4fdf93f3e443d3bd7c27e8642d0d52ea2e4dce6fdbbee9df\",\n  \"federation_name\": \"Synthetic Federation\",\n  \"guardians\": [\n    {\n      \"peer_id\": 0,\n      \"name\": \"Zero\",\n      \"url\": \"\"\n    },\n    {\n      \"peer_id\": 2,\n      \"name\": \"Two\",\n      \"url\": \"wss://synthetic.invalid/two\"\n    },\n    {\n      \"peer_id\": 10,\n      \"name\": null,\n      \"url\": \"opaque endpoint ten\"\n    }\n  ],\n  \"consensus_version\": \"2.1\",\n  \"modules\": {\n    \"0\": {\n      \"amount\": 123,\n      \"kind\": \"mint\"\n    },\n    \"nested\": [\n      true,\n      null,\n      \"fixture\"\n    ]\n  },\n  \"meta\": {\n    \"note\": \"authored fixture\",\n    \"guardian_0_name\": \"Zero\",\n    \"federation_name\": \"Synthetic Federation\",\n    \"guardian_2_name\": \"Two\"\n  }\n}",
+      "stderr": "",
+      "requests": [
+        {
+          "method": "GET",
+          "path": "/first?note=%27raw%27/config",
+          "body": ""
+        }
+      ]
+    },
+    {
+      "name": "missing-endpoints",
+      "status": 1,
+      "stdout": "",
+      "stderr": "Error: Config missing api_endpoints\n",
+      "requests": [
+        {
+          "method": "GET",
+          "path": "/first/config",
+          "body": ""
+        }
+      ]
+    },
+    {
+      "name": "id-mismatch",
+      "status": 1,
+      "stdout": "",
+      "stderr": "Error: Federation ID mismatch. Expected: 1234567890abcdef1234567890abcdef1234567890abcdef1234567890abcdef, Got: synthetic mismatch\n",
+      "requests": [
+        {
+          "method": "GET",
+          "path": "/first/config",
+          "body": ""
+        }
+      ]
+    },
+    {
+      "name": "id-type",
+      "status": 1,
+      "stdout": "",
+      "stderr": "Error: Federation ID is not a string\n",
+      "requests": [
+        {
+          "method": "GET",
+          "path": "/first/config",
+          "body": ""
+        }
+      ]
+    },
+    {
+      "name": "array",
+      "status": 1,
+      "stdout": "",
+      "stderr": "Error: Config missing or invalid api_endpoints\n",
+      "requests": [
+        {
+          "method": "GET",
+          "path": "/first/config",
+          "body": ""
+        }
+      ]
+    },
+    {
+      "name": "null",
+      "status": 1,
+      "stdout": "",
+      "stderr": "Error: Config missing or invalid api_endpoints\n",
+      "requests": [
+        {
+          "method": "GET",
+          "path": "/first/config",
+          "body": ""
+        }
+      ]
+    },
+    {
+      "name": "bad-peer",
+      "status": 1,
+      "stdout": "",
+      "stderr": "Error: Failed to parse peer ID\n\nCaused by:\n    invalid digit found in string\n",
+      "requests": [
+        {
+          "method": "GET",
+          "path": "/first/config",
+          "body": ""
+        }
+      ]
+    },
+    {
+      "name": "peer-overflow",
+      "status": 1,
+      "stdout": "",
+      "stderr": "Error: Failed to parse peer ID\n\nCaused by:\n    number too large to fit in target type\n",
+      "requests": [
+        {
+          "method": "GET",
+          "path": "/first/config",
+          "body": ""
+        }
+      ]
+    },
+    {
+      "name": "peer-underscore",
+      "status": 1,
+      "stdout": "",
+      "stderr": "Error: Failed to parse peer ID\n\nCaused by:\n    invalid digit found in string\n",
+      "requests": [
+        {
+          "method": "GET",
+          "path": "/first/config",
+          "body": ""
+        }
+      ]
+    },
+    {
+      "name": "peer-negative",
+      "status": 1,
+      "stdout": "",
+      "stderr": "Error: Failed to parse peer ID\n\nCaused by:\n    invalid digit found in string\n",
+      "requests": [
+        {
+          "method": "GET",
+          "path": "/first/config",
+          "body": ""
+        }
+      ]
+    },
+    {
+      "name": "endpoint-type",
+      "status": 1,
+      "stdout": "",
+      "stderr": "Error: Endpoint URL is not a string\n",
+      "requests": [
+        {
+          "method": "GET",
+          "path": "/first/config",
+          "body": ""
+        }
+      ]
+    },
+    {
+      "name": "defaults",
+      "status": 0,
+      "stdout": "{\n  \"federation_id\": \"b21068c84f5b12ca4fdf93f3e443d3bd7c27e8642d0d52ea2e4dce6fdbbee9df\",\n  \"federation_name\": null,\n  \"guardians\": [],\n  \"consensus_version\": \"unknown\",\n  \"modules\": {},\n  \"meta\": {}\n}",
+      "stderr": "",
+      "requests": [
+        {
+          "method": "GET",
+          "path": "/first/config",
+          "body": ""
+        }
+      ]
+    },
+    {
+      "name": "peers",
+      "status": 0,
+      "stdout": "{\n  \"federation_id\": \"b21068c84f5b12ca4fdf93f3e443d3bd7c27e8642d0d52ea2e4dce6fdbbee9df\",\n  \"federation_name\": null,\n  \"guardians\": [\n    {\n      \"peer_id\": 0,\n      \"name\": null,\n      \"url\": \"plus-zero\"\n    },\n    {\n      \"peer_id\": 0,\n      \"name\": null,\n      \"url\": \"zero\"\n    },\n    {\n      \"peer_id\": 1,\n      \"name\": null,\n      \"url\": \"plus-one\"\n    },\n    {\n      \"peer_id\": 1,\n      \"name\": null,\n      \"url\": \"zero-one\"\n    },\n    {\n      \"peer_id\": 1,\n      \"name\": null,\n      \"url\": \"one\"\n    },\n    {\n      \"peer_id\": 65535,\n      \"name\": null,\n      \"url\": \"last\"\n    }\n  ],\n  \"consensus_version\": \"unknown\",\n  \"modules\": {},\n  \"meta\": {}\n}",
+      "stderr": "",
+      "requests": [
+        {
+          "method": "GET",
+          "path": "/first/config",
+          "body": ""
+        }
+      ]
+    },
+    {
+      "name": "absent-id",
+      "status": 0,
+      "stdout": "{\n  \"federation_id\": \"b21068c84f5b12ca4fdf93f3e443d3bd7c27e8642d0d52ea2e4dce6fdbbee9df\",\n  \"federation_name\": \"Synthetic Federation\",\n  \"guardians\": [\n    {\n      \"peer_id\": 0,\n      \"name\": \"Zero\",\n      \"url\": \"\"\n    },\n    {\n      \"peer_id\": 2,\n      \"name\": \"Two\",\n      \"url\": \"wss://synthetic.invalid/two\"\n    },\n    {\n      \"peer_id\": 10,\n      \"name\": null,\n      \"url\": \"opaque endpoint ten\"\n    }\n  ],\n  \"consensus_version\": \"2.1\",\n  \"modules\": {\n    \"0\": {\n      \"amount\": 123,\n      \"kind\": \"mint\"\n    },\n    \"nested\": [\n      true,\n      null,\n      \"fixture\"\n    ]\n  },\n  \"meta\": {\n    \"guardian_0_name\": \"Zero\",\n    \"guardian_2_name\": \"Two\",\n    \"note\": \"authored fixture\",\n    \"federation_name\": \"Synthetic Federation\"\n  }\n}",
+      "stderr": "",
+      "requests": [
+        {
+          "method": "GET",
+          "path": "/first/config",
+          "body": ""
+        }
+      ]
+    },
+    {
+      "name": "optional-types",
+      "status": 0,
+      "stdout": "{\n  \"federation_id\": \"b21068c84f5b12ca4fdf93f3e443d3bd7c27e8642d0d52ea2e4dce6fdbbee9df\",\n  \"federation_name\": null,\n  \"guardians\": [],\n  \"consensus_version\": \"unknown\",\n  \"modules\": {},\n  \"meta\": {}\n}",
+      "stderr": "",
+      "requests": [
+        {
+          "method": "GET",
+          "path": "/first/config",
+          "body": ""
+        }
+      ]
+    },
+    {
+      "name": "get-redirect-301",
+      "status": 0,
+      "stdout": "{\n  \"federation_id\": \"b21068c84f5b12ca4fdf93f3e443d3bd7c27e8642d0d52ea2e4dce6fdbbee9df\",\n  \"federation_name\": \"Synthetic Federation\",\n  \"guardians\": [\n    {\n      \"peer_id\": 0,\n      \"name\": \"Zero\",\n      \"url\": \"\"\n    },\n    {\n      \"peer_id\": 2,\n      \"name\": \"Two\",\n      \"url\": \"wss://synthetic.invalid/two\"\n    },\n    {\n      \"peer_id\": 10,\n      \"name\": null,\n      \"url\": \"opaque endpoint ten\"\n    }\n  ],\n  \"consensus_version\": \"2.1\",\n  \"modules\": {\n    \"0\": {\n      \"amount\": 123,\n      \"kind\": \"mint\"\n    },\n    \"nested\": [\n      true,\n      null,\n      \"fixture\"\n    ]\n  },\n  \"meta\": {\n    \"federation_name\": \"Synthetic Federation\",\n    \"guardian_2_name\": \"Two\",\n    \"note\": \"authored fixture\",\n    \"guardian_0_name\": \"Zero\"\n  }\n}",
+      "stderr": "",
+      "requests": [
+        {
+          "method": "GET",
+          "path": "/first/config",
+          "body": ""
+        },
+        {
+          "method": "GET",
+          "path": "/first/done?note='raw'",
+          "body": ""
+        }
+      ]
+    },
+    {
+      "name": "post-redirect-301",
+      "status": 0,
+      "stdout": "{\n  \"federation_id\": \"b21068c84f5b12ca4fdf93f3e443d3bd7c27e8642d0d52ea2e4dce6fdbbee9df\",\n  \"federation_name\": \"Synthetic Federation\",\n  \"guardians\": [\n    {\n      \"peer_id\": 0,\n      \"name\": \"Zero\",\n      \"url\": \"\"\n    },\n    {\n      \"peer_id\": 2,\n      \"name\": \"Two\",\n      \"url\": \"wss://synthetic.invalid/two\"\n    },\n    {\n      \"peer_id\": 10,\n      \"name\": null,\n      \"url\": \"opaque endpoint ten\"\n    }\n  ],\n  \"consensus_version\": \"2.1\",\n  \"modules\": {\n    \"0\": {\n      \"amount\": 123,\n      \"kind\": \"mint\"\n    },\n    \"nested\": [\n      true,\n      null,\n      \"fixture\"\n    ]\n  },\n  \"meta\": {\n    \"note\": \"authored fixture\",\n    \"guardian_2_name\": \"Two\",\n    \"guardian_0_name\": \"Zero\",\n    \"federation_name\": \"Synthetic Federation\"\n  }\n}",
+      "stderr": "",
+      "requests": [
+        {
+          "method": "GET",
+          "path": "/first/config",
+          "body": ""
+        },
+        {
+          "method": "POST",
+          "path": "/first/config",
+          "body": "{}"
+        },
+        {
+          "method": "GET",
+          "path": "/done",
+          "body": ""
+        }
+      ]
+    },
+    {
+      "name": "get-redirect-302",
+      "status": 0,
+      "stdout": "{\n  \"federation_id\": \"b21068c84f5b12ca4fdf93f3e443d3bd7c27e8642d0d52ea2e4dce6fdbbee9df\",\n  \"federation_name\": \"Synthetic Federation\",\n  \"guardians\": [\n    {\n      \"peer_id\": 0,\n      \"name\": \"Zero\",\n      \"url\": \"\"\n    },\n    {\n      \"peer_id\": 2,\n      \"name\": \"Two\",\n      \"url\": \"wss://synthetic.invalid/two\"\n    },\n    {\n      \"peer_id\": 10,\n      \"name\": null,\n      \"url\": \"opaque endpoint ten\"\n    }\n  ],\n  \"consensus_version\": \"2.1\",\n  \"modules\": {\n    \"0\": {\n      \"amount\": 123,\n      \"kind\": \"mint\"\n    },\n    \"nested\": [\n      true,\n      null,\n      \"fixture\"\n    ]\n  },\n  \"meta\": {\n    \"guardian_2_name\": \"Two\",\n    \"federation_name\": \"Synthetic Federation\",\n    \"note\": \"authored fixture\",\n    \"guardian_0_name\": \"Zero\"\n  }\n}",
+      "stderr": "",
+      "requests": [
+        {
+          "method": "GET",
+          "path": "/first/config",
+          "body": ""
+        },
+        {
+          "method": "GET",
+          "path": "/first/done?note='raw'",
+          "body": ""
+        }
+      ]
+    },
+    {
+      "name": "post-redirect-302",
+      "status": 0,
+      "stdout": "{\n  \"federation_id\": \"b21068c84f5b12ca4fdf93f3e443d3bd7c27e8642d0d52ea2e4dce6fdbbee9df\",\n  \"federation_name\": \"Synthetic Federation\",\n  \"guardians\": [\n    {\n      \"peer_id\": 0,\n      \"name\": \"Zero\",\n      \"url\": \"\"\n    },\n    {\n      \"peer_id\": 2,\n      \"name\": \"Two\",\n      \"url\": \"wss://synthetic.invalid/two\"\n    },\n    {\n      \"peer_id\": 10,\n      \"name\": null,\n      \"url\": \"opaque endpoint ten\"\n    }\n  ],\n  \"consensus_version\": \"2.1\",\n  \"modules\": {\n    \"0\": {\n      \"amount\": 123,\n      \"kind\": \"mint\"\n    },\n    \"nested\": [\n      true,\n      null,\n      \"fixture\"\n    ]\n  },\n  \"meta\": {\n    \"guardian_2_name\": \"Two\",\n    \"note\": \"authored fixture\",\n    \"federation_name\": \"Synthetic Federation\",\n    \"guardian_0_name\": \"Zero\"\n  }\n}",
+      "stderr": "",
+      "requests": [
+        {
+          "method": "GET",
+          "path": "/first/config",
+          "body": ""
+        },
+        {
+          "method": "POST",
+          "path": "/first/config",
+          "body": "{}"
+        },
+        {
+          "method": "GET",
+          "path": "/done",
+          "body": ""
+        }
+      ]
+    },
+    {
+      "name": "get-redirect-303",
+      "status": 0,
+      "stdout": "{\n  \"federation_id\": \"b21068c84f5b12ca4fdf93f3e443d3bd7c27e8642d0d52ea2e4dce6fdbbee9df\",\n  \"federation_name\": \"Synthetic Federation\",\n  \"guardians\": [\n    {\n      \"peer_id\": 0,\n      \"name\": \"Zero\",\n      \"url\": \"\"\n    },\n    {\n      \"peer_id\": 2,\n      \"name\": \"Two\",\n      \"url\": \"wss://synthetic.invalid/two\"\n    },\n    {\n      \"peer_id\": 10,\n      \"name\": null,\n      \"url\": \"opaque endpoint ten\"\n    }\n  ],\n  \"consensus_version\": \"2.1\",\n  \"modules\": {\n    \"0\": {\n      \"amount\": 123,\n      \"kind\": \"mint\"\n    },\n    \"nested\": [\n      true,\n      null,\n      \"fixture\"\n    ]\n  },\n  \"meta\": {\n    \"guardian_0_name\": \"Zero\",\n    \"federation_name\": \"Synthetic Federation\",\n    \"note\": \"authored fixture\",\n    \"guardian_2_name\": \"Two\"\n  }\n}",
+      "stderr": "",
+      "requests": [
+        {
+          "method": "GET",
+          "path": "/first/config",
+          "body": ""
+        },
+        {
+          "method": "GET",
+          "path": "/first/done?note='raw'",
+          "body": ""
+        }
+      ]
+    },
+    {
+      "name": "post-redirect-303",
+      "status": 0,
+      "stdout": "{\n  \"federation_id\": \"b21068c84f5b12ca4fdf93f3e443d3bd7c27e8642d0d52ea2e4dce6fdbbee9df\",\n  \"federation_name\": \"Synthetic Federation\",\n  \"guardians\": [\n    {\n      \"peer_id\": 0,\n      \"name\": \"Zero\",\n      \"url\": \"\"\n    },\n    {\n      \"peer_id\": 2,\n      \"name\": \"Two\",\n      \"url\": \"wss://synthetic.invalid/two\"\n    },\n    {\n      \"peer_id\": 10,\n      \"name\": null,\n      \"url\": \"opaque endpoint ten\"\n    }\n  ],\n  \"consensus_version\": \"2.1\",\n  \"modules\": {\n    \"0\": {\n      \"amount\": 123,\n      \"kind\": \"mint\"\n    },\n    \"nested\": [\n      true,\n      null,\n      \"fixture\"\n    ]\n  },\n  \"meta\": {\n    \"guardian_2_name\": \"Two\",\n    \"note\": \"authored fixture\",\n    \"federation_name\": \"Synthetic Federation\",\n    \"guardian_0_name\": \"Zero\"\n  }\n}",
+      "stderr": "",
+      "requests": [
+        {
+          "method": "GET",
+          "path": "/first/config",
+          "body": ""
+        },
+        {
+          "method": "POST",
+          "path": "/first/config",
+          "body": "{}"
+        },
+        {
+          "method": "GET",
+          "path": "/done",
+          "body": ""
+        }
+      ]
+    },
+    {
+      "name": "get-redirect-307",
+      "status": 0,
+      "stdout": "{\n  \"federation_id\": \"b21068c84f5b12ca4fdf93f3e443d3bd7c27e8642d0d52ea2e4dce6fdbbee9df\",\n  \"federation_name\": \"Synthetic Federation\",\n  \"guardians\": [\n    {\n      \"peer_id\": 0,\n      \"name\": \"Zero\",\n      \"url\": \"\"\n    },\n    {\n      \"peer_id\": 2,\n      \"name\": \"Two\",\n      \"url\": \"wss://synthetic.invalid/two\"\n    },\n    {\n      \"peer_id\": 10,\n      \"name\": null,\n      \"url\": \"opaque endpoint ten\"\n    }\n  ],\n  \"consensus_version\": \"2.1\",\n  \"modules\": {\n    \"0\": {\n      \"amount\": 123,\n      \"kind\": \"mint\"\n    },\n    \"nested\": [\n      true,\n      null,\n      \"fixture\"\n    ]\n  },\n  \"meta\": {\n    \"federation_name\": \"Synthetic Federation\",\n    \"guardian_0_name\": \"Zero\",\n    \"note\": \"authored fixture\",\n    \"guardian_2_name\": \"Two\"\n  }\n}",
+      "stderr": "",
+      "requests": [
+        {
+          "method": "GET",
+          "path": "/first/config",
+          "body": ""
+        },
+        {
+          "method": "GET",
+          "path": "/first/done?note='raw'",
+          "body": ""
+        }
+      ]
+    },
+    {
+      "name": "post-redirect-307",
+      "status": 0,
+      "stdout": "{\n  \"federation_id\": \"b21068c84f5b12ca4fdf93f3e443d3bd7c27e8642d0d52ea2e4dce6fdbbee9df\",\n  \"federation_name\": \"Synthetic Federation\",\n  \"guardians\": [\n    {\n      \"peer_id\": 0,\n      \"name\": \"Zero\",\n      \"url\": \"\"\n    },\n    {\n      \"peer_id\": 2,\n      \"name\": \"Two\",\n      \"url\": \"wss://synthetic.invalid/two\"\n    },\n    {\n      \"peer_id\": 10,\n      \"name\": null,\n      \"url\": \"opaque endpoint ten\"\n    }\n  ],\n  \"consensus_version\": \"2.1\",\n  \"modules\": {\n    \"0\": {\n      \"amount\": 123,\n      \"kind\": \"mint\"\n    },\n    \"nested\": [\n      true,\n      null,\n      \"fixture\"\n    ]\n  },\n  \"meta\": {\n    \"note\": \"authored fixture\",\n    \"federation_name\": \"Synthetic Federation\",\n    \"guardian_2_name\": \"Two\",\n    \"guardian_0_name\": \"Zero\"\n  }\n}",
+      "stderr": "",
+      "requests": [
+        {
+          "method": "GET",
+          "path": "/first/config",
+          "body": ""
+        },
+        {
+          "method": "POST",
+          "path": "/first/config",
+          "body": "{}"
+        },
+        {
+          "method": "POST",
+          "path": "/done",
+          "body": "{}"
+        }
+      ]
+    },
+    {
+      "name": "get-redirect-308",
+      "status": 0,
+      "stdout": "{\n  \"federation_id\": \"b21068c84f5b12ca4fdf93f3e443d3bd7c27e8642d0d52ea2e4dce6fdbbee9df\",\n  \"federation_name\": \"Synthetic Federation\",\n  \"guardians\": [\n    {\n      \"peer_id\": 0,\n      \"name\": \"Zero\",\n      \"url\": \"\"\n    },\n    {\n      \"peer_id\": 2,\n      \"name\": \"Two\",\n      \"url\": \"wss://synthetic.invalid/two\"\n    },\n    {\n      \"peer_id\": 10,\n      \"name\": null,\n      \"url\": \"opaque endpoint ten\"\n    }\n  ],\n  \"consensus_version\": \"2.1\",\n  \"modules\": {\n    \"0\": {\n      \"amount\": 123,\n      \"kind\": \"mint\"\n    },\n    \"nested\": [\n      true,\n      null,\n      \"fixture\"\n    ]\n  },\n  \"meta\": {\n    \"guardian_2_name\": \"Two\",\n    \"note\": \"authored fixture\",\n    \"guardian_0_name\": \"Zero\",\n    \"federation_name\": \"Synthetic Federation\"\n  }\n}",
+      "stderr": "",
+      "requests": [
+        {
+          "method": "GET",
+          "path": "/first/config",
+          "body": ""
+        },
+        {
+          "method": "GET",
+          "path": "/first/done?note='raw'",
+          "body": ""
+        }
+      ]
+    },
+    {
+      "name": "post-redirect-308",
+      "status": 0,
+      "stdout": "{\n  \"federation_id\": \"b21068c84f5b12ca4fdf93f3e443d3bd7c27e8642d0d52ea2e4dce6fdbbee9df\",\n  \"federation_name\": \"Synthetic Federation\",\n  \"guardians\": [\n    {\n      \"peer_id\": 0,\n      \"name\": \"Zero\",\n      \"url\": \"\"\n    },\n    {\n      \"peer_id\": 2,\n      \"name\": \"Two\",\n      \"url\": \"wss://synthetic.invalid/two\"\n    },\n    {\n      \"peer_id\": 10,\n      \"name\": null,\n      \"url\": \"opaque endpoint ten\"\n    }\n  ],\n  \"consensus_version\": \"2.1\",\n  \"modules\": {\n    \"0\": {\n      \"amount\": 123,\n      \"kind\": \"mint\"\n    },\n    \"nested\": [\n      true,\n      null,\n      \"fixture\"\n    ]\n  },\n  \"meta\": {\n    \"guardian_0_name\": \"Zero\",\n    \"note\": \"authored fixture\",\n    \"guardian_2_name\": \"Two\",\n    \"federation_name\": \"Synthetic Federation\"\n  }\n}",
+      "stderr": "",
+      "requests": [
+        {
+          "method": "GET",
+          "path": "/first/config",
+          "body": ""
+        },
+        {
+          "method": "POST",
+          "path": "/first/config",
+          "body": "{}"
+        },
+        {
+          "method": "POST",
+          "path": "/done",
+          "body": "{}"
+        }
+      ]
+    },
+    {
+      "name": "redirect-missing",
+      "status": 0,
+      "stdout": "{\n  \"federation_id\": \"b21068c84f5b12ca4fdf93f3e443d3bd7c27e8642d0d52ea2e4dce6fdbbee9df\",\n  \"federation_name\": \"Synthetic Federation\",\n  \"guardians\": [\n    {\n      \"peer_id\": 0,\n      \"name\": \"Zero\",\n      \"url\": \"\"\n    },\n    {\n      \"peer_id\": 2,\n      \"name\": \"Two\",\n      \"url\": \"wss://synthetic.invalid/two\"\n    },\n    {\n      \"peer_id\": 10,\n      \"name\": null,\n      \"url\": \"opaque endpoint ten\"\n    }\n  ],\n  \"consensus_version\": \"2.1\",\n  \"modules\": {\n    \"0\": {\n      \"amount\": 123,\n      \"kind\": \"mint\"\n    },\n    \"nested\": [\n      true,\n      null,\n      \"fixture\"\n    ]\n  },\n  \"meta\": {\n    \"guardian_0_name\": \"Zero\",\n    \"guardian_2_name\": \"Two\",\n    \"note\": \"authored fixture\",\n    \"federation_name\": \"Synthetic Federation\"\n  }\n}",
+      "stderr": "",
+      "requests": [
+        {
+          "method": "GET",
+          "path": "/first/config",
+          "body": ""
+        },
+        {
+          "method": "POST",
+          "path": "/first/config",
+          "body": "{}"
+        }
+      ]
+    },
+    {
+      "name": "redirect-invalid",
+      "status": 0,
+      "stdout": "{\n  \"federation_id\": \"b21068c84f5b12ca4fdf93f3e443d3bd7c27e8642d0d52ea2e4dce6fdbbee9df\",\n  \"federation_name\": \"Synthetic Federation\",\n  \"guardians\": [\n    {\n      \"peer_id\": 0,\n      \"name\": \"Zero\",\n      \"url\": \"\"\n    },\n    {\n      \"peer_id\": 2,\n      \"name\": \"Two\",\n      \"url\": \"wss://synthetic.invalid/two\"\n    },\n    {\n      \"peer_id\": 10,\n      \"name\": null,\n      \"url\": \"opaque endpoint ten\"\n    }\n  ],\n  \"consensus_version\": \"2.1\",\n  \"modules\": {\n    \"0\": {\n      \"amount\": 123,\n      \"kind\": \"mint\"\n    },\n    \"nested\": [\n      true,\n      null,\n      \"fixture\"\n    ]\n  },\n  \"meta\": {\n    \"guardian_2_name\": \"Two\",\n    \"federation_name\": \"Synthetic Federation\",\n    \"guardian_0_name\": \"Zero\",\n    \"note\": \"authored fixture\"\n  }\n}",
+      "stderr": "",
+      "requests": [
+        {
+          "method": "GET",
+          "path": "/first/config",
+          "body": ""
+        },
+        {
+          "method": "POST",
+          "path": "/first/config",
+          "body": "{}"
+        }
+      ]
+    },
+    {
+      "name": "redirect-ten",
+      "status": 0,
+      "stdout": "{\n  \"federation_id\": \"b21068c84f5b12ca4fdf93f3e443d3bd7c27e8642d0d52ea2e4dce6fdbbee9df\",\n  \"federation_name\": \"Synthetic Federation\",\n  \"guardians\": [\n    {\n      \"peer_id\": 0,\n      \"name\": \"Zero\",\n      \"url\": \"\"\n    },\n    {\n      \"peer_id\": 2,\n      \"name\": \"Two\",\n      \"url\": \"wss://synthetic.invalid/two\"\n    },\n    {\n      \"peer_id\": 10,\n      \"name\": null,\n      \"url\": \"opaque endpoint ten\"\n    }\n  ],\n  \"consensus_version\": \"2.1\",\n  \"modules\": {\n    \"0\": {\n      \"amount\": 123,\n      \"kind\": \"mint\"\n    },\n    \"nested\": [\n      true,\n      null,\n      \"fixture\"\n    ]\n  },\n  \"meta\": {\n    \"guardian_2_name\": \"Two\",\n    \"federation_name\": \"Synthetic Federation\",\n    \"guardian_0_name\": \"Zero\",\n    \"note\": \"authored fixture\"\n  }\n}",
+      "stderr": "",
+      "requests": [
+        {
+          "method": "GET",
+          "path": "/first/config",
+          "body": ""
+        },
+        {
+          "method": "GET",
+          "path": "/hop1",
+          "body": ""
+        },
+        {
+          "method": "GET",
+          "path": "/hop2",
+          "body": ""
+        },
+        {
+          "method": "GET",
+          "path": "/hop3",
+          "body": ""
+        },
+        {
+          "method": "GET",
+          "path": "/hop4",
+          "body": ""
+        },
+        {
+          "method": "GET",
+          "path": "/hop5",
+          "body": ""
+        },
+        {
+          "method": "GET",
+          "path": "/hop6",
+          "body": ""
+        },
+        {
+          "method": "GET",
+          "path": "/hop7",
+          "body": ""
+        },
+        {
+          "method": "GET",
+          "path": "/hop8",
+          "body": ""
+        },
+        {
+          "method": "GET",
+          "path": "/hop9",
+          "body": ""
+        },
+        {
+          "method": "GET",
+          "path": "/hop10",
+          "body": ""
+        }
+      ]
+    },
+    {
+      "name": "redirect-limit",
+      "status": 0,
+      "stdout": "{\n  \"federation_id\": \"b21068c84f5b12ca4fdf93f3e443d3bd7c27e8642d0d52ea2e4dce6fdbbee9df\",\n  \"federation_name\": \"Synthetic Federation\",\n  \"guardians\": [\n    {\n      \"peer_id\": 0,\n      \"name\": \"Zero\",\n      \"url\": \"\"\n    },\n    {\n      \"peer_id\": 2,\n      \"name\": \"Two\",\n      \"url\": \"wss://synthetic.invalid/two\"\n    },\n    {\n      \"peer_id\": 10,\n      \"name\": null,\n      \"url\": \"opaque endpoint ten\"\n    }\n  ],\n  \"consensus_version\": \"2.1\",\n  \"modules\": {\n    \"0\": {\n      \"amount\": 123,\n      \"kind\": \"mint\"\n    },\n    \"nested\": [\n      true,\n      null,\n      \"fixture\"\n    ]\n  },\n  \"meta\": {\n    \"federation_name\": \"Synthetic Federation\",\n    \"guardian_0_name\": \"Zero\",\n    \"note\": \"authored fixture\",\n    \"guardian_2_name\": \"Two\"\n  }\n}",
+      "stderr": "",
+      "requests": [
+        {
+          "method": "GET",
+          "path": "/first/config",
+          "body": ""
+        },
+        {
+          "method": "GET",
+          "path": "/first/config",
+          "body": ""
+        },
+        {
+          "method": "GET",
+          "path": "/first/config",
+          "body": ""
+        },
+        {
+          "method": "GET",
+          "path": "/first/config",
+          "body": ""
+        },
+        {
+          "method": "GET",
+          "path": "/first/config",
+          "body": ""
+        },
+        {
+          "method": "GET",
+          "path": "/first/config",
+          "body": ""
+        },
+        {
+          "method": "GET",
+          "path": "/first/config",
+          "body": ""
+        },
+        {
+          "method": "GET",
+          "path": "/first/config",
+          "body": ""
+        },
+        {
+          "method": "GET",
+          "path": "/first/config",
+          "body": ""
+        },
+        {
+          "method": "GET",
+          "path": "/first/config",
+          "body": ""
+        },
+        {
+          "method": "GET",
+          "path": "/first/config",
+          "body": ""
+        },
+        {
+          "method": "POST",
+          "path": "/first/config",
+          "body": "{}"
+        }
+      ]
+    },
+    {
+      "name": "token-2047",
+      "status": 0,
+      "stdout": "{\n  \"federation_id\": \"1234567890abcdef1234567890abcdef1234567890abcdef1234567890abcdef\",\n  \"federation_name\": \"Synthetic Federation\",\n  \"guardians\": [\n    {\n      \"peer_id\": 0,\n      \"name\": \"Zero\",\n      \"url\": \"\"\n    },\n    {\n      \"peer_id\": 2,\n      \"name\": \"Two\",\n      \"url\": \"wss://synthetic.invalid/two\"\n    },\n    {\n      \"peer_id\": 10,\n      \"name\": null,\n      \"url\": \"opaque endpoint ten\"\n    }\n  ],\n  \"consensus_version\": \"2.1\",\n  \"modules\": {\n    \"0\": {\n      \"amount\": 123,\n      \"kind\": \"mint\"\n    },\n    \"nested\": [\n      true,\n      null,\n      \"fixture\"\n    ]\n  },\n  \"meta\": {\n    \"federation_name\": \"Synthetic Federation\",\n    \"guardian_0_name\": \"Zero\",\n    \"note\": \"authored fixture\",\n    \"guardian_2_name\": \"Two\"\n  }\n}",
+      "stderr": "",
+      "requests": [
+        {
+          "method": "GET",
+          "path": "/first/config",
+          "body": ""
+        }
+      ]
+    },
+    {
+      "name": "token-2048",
+      "status": 0,
+      "stdout": "{\n  \"federation_id\": \"1234567890abcdef1234567890abcdef1234567890abcdef1234567890abcdef\",\n  \"federation_name\": \"Synthetic Federation\",\n  \"guardians\": [\n    {\n      \"peer_id\": 0,\n      \"name\": \"Zero\",\n      \"url\": \"\"\n    },\n    {\n      \"peer_id\": 2,\n      \"name\": \"Two\",\n      \"url\": \"wss://synthetic.invalid/two\"\n    },\n    {\n      \"peer_id\": 10,\n      \"name\": null,\n      \"url\": \"opaque endpoint ten\"\n    }\n  ],\n  \"consensus_version\": \"2.1\",\n  \"modules\": {\n    \"0\": {\n      \"amount\": 123,\n      \"kind\": \"mint\"\n    },\n    \"nested\": [\n      true,\n      null,\n      \"fixture\"\n    ]\n  },\n  \"meta\": {\n    \"guardian_0_name\": \"Zero\",\n    \"guardian_2_name\": \"Two\",\n    \"federation_name\": \"Synthetic Federation\",\n    \"note\": \"authored fixture\"\n  }\n}",
+      "stderr": "",
+      "requests": [
+        {
+          "method": "GET",
+          "path": "/first/config",
+          "body": ""
+        }
+      ]
+    },
+    {
+      "name": "token-2049",
+      "status": 0,
+      "stdout": "{\n  \"federation_id\": \"1234567890abcdef1234567890abcdef1234567890abcdef1234567890abcdef\",\n  \"federation_name\": \"Synthetic Federation\",\n  \"guardians\": [\n    {\n      \"peer_id\": 0,\n      \"name\": \"Zero\",\n      \"url\": \"\"\n    },\n    {\n      \"peer_id\": 2,\n      \"name\": \"Two\",\n      \"url\": \"wss://synthetic.invalid/two\"\n    },\n    {\n      \"peer_id\": 10,\n      \"name\": null,\n      \"url\": \"opaque endpoint ten\"\n    }\n  ],\n  \"consensus_version\": \"2.1\",\n  \"modules\": {\n    \"0\": {\n      \"amount\": 123,\n      \"kind\": \"mint\"\n    },\n    \"nested\": [\n      true,\n      null,\n      \"fixture\"\n    ]\n  },\n  \"meta\": {\n    \"guardian_0_name\": \"Zero\",\n    \"guardian_2_name\": \"Two\",\n    \"federation_name\": \"Synthetic Federation\",\n    \"note\": \"authored fixture\"\n  }\n}",
+      "stderr": "",
+      "requests": [
+        {
+          "method": "GET",
+          "path": "/first/config",
+          "body": ""
+        }
+      ]
+    },
+    {
+      "name": "coefficient-1023",
+      "status": 0,
+      "stdout": "{\n  \"federation_id\": \"1234567890abcdef1234567890abcdef1234567890abcdef1234567890abcdef\",\n  \"federation_name\": \"Synthetic Federation\",\n  \"guardians\": [\n    {\n      \"peer_id\": 0,\n      \"name\": \"Zero\",\n      \"url\": \"\"\n    },\n    {\n      \"peer_id\": 2,\n      \"name\": \"Two\",\n      \"url\": \"wss://synthetic.invalid/two\"\n    },\n    {\n      \"peer_id\": 10,\n      \"name\": null,\n      \"url\": \"opaque endpoint ten\"\n    }\n  ],\n  \"consensus_version\": \"2.1\",\n  \"modules\": {\n    \"0\": {\n      \"amount\": 123,\n      \"kind\": \"mint\"\n    },\n    \"nested\": [\n      true,\n      null,\n      \"fixture\"\n    ]\n  },\n  \"meta\": {\n    \"federation_name\": \"Synthetic Federation\",\n    \"guardian_0_name\": \"Zero\",\n    \"note\": \"authored fixture\",\n    \"guardian_2_name\": \"Two\"\n  }\n}",
+      "stderr": "",
+      "requests": [
+        {
+          "method": "GET",
+          "path": "/first/config",
+          "body": ""
+        }
+      ]
+    },
+    {
+      "name": "exponent-1023",
+      "status": 0,
+      "stdout": "{\n  \"federation_id\": \"1234567890abcdef1234567890abcdef1234567890abcdef1234567890abcdef\",\n  \"federation_name\": \"Synthetic Federation\",\n  \"guardians\": [\n    {\n      \"peer_id\": 0,\n      \"name\": \"Zero\",\n      \"url\": \"\"\n    },\n    {\n      \"peer_id\": 2,\n      \"name\": \"Two\",\n      \"url\": \"wss://synthetic.invalid/two\"\n    },\n    {\n      \"peer_id\": 10,\n      \"name\": null,\n      \"url\": \"opaque endpoint ten\"\n    }\n  ],\n  \"consensus_version\": \"2.1\",\n  \"modules\": {\n    \"0\": {\n      \"amount\": 123,\n      \"kind\": \"mint\"\n    },\n    \"nested\": [\n      true,\n      null,\n      \"fixture\"\n    ]\n  },\n  \"meta\": {\n    \"federation_name\": \"Synthetic Federation\",\n    \"guardian_0_name\": \"Zero\",\n    \"note\": \"authored fixture\",\n    \"guardian_2_name\": \"Two\"\n  }\n}",
+      "stderr": "",
+      "requests": [
+        {
+          "method": "GET",
+          "path": "/first/config",
+          "body": ""
+        }
+      ]
+    },
+    {
+      "name": "negative-exponent-1023",
+      "status": 0,
+      "stdout": "{\n  \"federation_id\": \"1234567890abcdef1234567890abcdef1234567890abcdef1234567890abcdef\",\n  \"federation_name\": \"Synthetic Federation\",\n  \"guardians\": [\n    {\n      \"peer_id\": 0,\n      \"name\": \"Zero\",\n      \"url\": \"\"\n    },\n    {\n      \"peer_id\": 2,\n      \"name\": \"Two\",\n      \"url\": \"wss://synthetic.invalid/two\"\n    },\n    {\n      \"peer_id\": 10,\n      \"name\": null,\n      \"url\": \"opaque endpoint ten\"\n    }\n  ],\n  \"consensus_version\": \"2.1\",\n  \"modules\": {\n    \"0\": {\n      \"amount\": 123,\n      \"kind\": \"mint\"\n    },\n    \"nested\": [\n      true,\n      null,\n      \"fixture\"\n    ]\n  },\n  \"meta\": {\n    \"note\": \"authored fixture\",\n    \"guardian_2_name\": \"Two\",\n    \"federation_name\": \"Synthetic Federation\",\n    \"guardian_0_name\": \"Zero\"\n  }\n}",
+      "stderr": "",
+      "requests": [
+        {
+          "method": "GET",
+          "path": "/first/config",
+          "body": ""
+        }
+      ]
+    },
+    {
+      "name": "coefficient-1024",
+      "status": 0,
+      "stdout": "{\n  \"federation_id\": \"1234567890abcdef1234567890abcdef1234567890abcdef1234567890abcdef\",\n  \"federation_name\": \"Synthetic Federation\",\n  \"guardians\": [\n    {\n      \"peer_id\": 0,\n      \"name\": \"Zero\",\n      \"url\": \"\"\n    },\n    {\n      \"peer_id\": 2,\n      \"name\": \"Two\",\n      \"url\": \"wss://synthetic.invalid/two\"\n    },\n    {\n      \"peer_id\": 10,\n      \"name\": null,\n      \"url\": \"opaque endpoint ten\"\n    }\n  ],\n  \"consensus_version\": \"2.1\",\n  \"modules\": {\n    \"0\": {\n      \"amount\": 123,\n      \"kind\": \"mint\"\n    },\n    \"nested\": [\n      true,\n      null,\n      \"fixture\"\n    ]\n  },\n  \"meta\": {\n    \"guardian_2_name\": \"Two\",\n    \"note\": \"authored fixture\",\n    \"guardian_0_name\": \"Zero\",\n    \"federation_name\": \"Synthetic Federation\"\n  }\n}",
+      "stderr": "",
+      "requests": [
+        {
+          "method": "GET",
+          "path": "/first/config",
+          "body": ""
+        }
+      ]
+    },
+    {
+      "name": "exponent-1024",
+      "status": 0,
+      "stdout": "{\n  \"federation_id\": \"1234567890abcdef1234567890abcdef1234567890abcdef1234567890abcdef\",\n  \"federation_name\": \"Synthetic Federation\",\n  \"guardians\": [\n    {\n      \"peer_id\": 0,\n      \"name\": \"Zero\",\n      \"url\": \"\"\n    },\n    {\n      \"peer_id\": 2,\n      \"name\": \"Two\",\n      \"url\": \"wss://synthetic.invalid/two\"\n    },\n    {\n      \"peer_id\": 10,\n      \"name\": null,\n      \"url\": \"opaque endpoint ten\"\n    }\n  ],\n  \"consensus_version\": \"2.1\",\n  \"modules\": {\n    \"0\": {\n      \"amount\": 123,\n      \"kind\": \"mint\"\n    },\n    \"nested\": [\n      true,\n      null,\n      \"fixture\"\n    ]\n  },\n  \"meta\": {\n    \"note\": \"authored fixture\",\n    \"federation_name\": \"Synthetic Federation\",\n    \"guardian_2_name\": \"Two\",\n    \"guardian_0_name\": \"Zero\"\n  }\n}",
+      "stderr": "",
+      "requests": [
+        {
+          "method": "GET",
+          "path": "/first/config",
+          "body": ""
+        }
+      ]
+    },
+    {
+      "name": "negative-exponent-1024",
+      "status": 0,
+      "stdout": "{\n  \"federation_id\": \"1234567890abcdef1234567890abcdef1234567890abcdef1234567890abcdef\",\n  \"federation_name\": \"Synthetic Federation\",\n  \"guardians\": [\n    {\n      \"peer_id\": 0,\n      \"name\": \"Zero\",\n      \"url\": \"\"\n    },\n    {\n      \"peer_id\": 2,\n      \"name\": \"Two\",\n      \"url\": \"wss://synthetic.invalid/two\"\n    },\n    {\n      \"peer_id\": 10,\n      \"name\": null,\n      \"url\": \"opaque endpoint ten\"\n    }\n  ],\n  \"consensus_version\": \"2.1\",\n  \"modules\": {\n    \"0\": {\n      \"amount\": 123,\n      \"kind\": \"mint\"\n    },\n    \"nested\": [\n      true,\n      null,\n      \"fixture\"\n    ]\n  },\n  \"meta\": {\n    \"guardian_0_name\": \"Zero\",\n    \"federation_name\": \"Synthetic Federation\",\n    \"guardian_2_name\": \"Two\",\n    \"note\": \"authored fixture\"\n  }\n}",
+      "stderr": "",
+      "requests": [
+        {
+          "method": "GET",
+          "path": "/first/config",
+          "body": ""
+        }
+      ]
+    },
+    {
+      "name": "coefficient-1025",
+      "status": 0,
+      "stdout": "{\n  \"federation_id\": \"1234567890abcdef1234567890abcdef1234567890abcdef1234567890abcdef\",\n  \"federation_name\": \"Synthetic Federation\",\n  \"guardians\": [\n    {\n      \"peer_id\": 0,\n      \"name\": \"Zero\",\n      \"url\": \"\"\n    },\n    {\n      \"peer_id\": 2,\n      \"name\": \"Two\",\n      \"url\": \"wss://synthetic.invalid/two\"\n    },\n    {\n      \"peer_id\": 10,\n      \"name\": null,\n      \"url\": \"opaque endpoint ten\"\n    }\n  ],\n  \"consensus_version\": \"2.1\",\n  \"modules\": {\n    \"0\": {\n      \"amount\": 123,\n      \"kind\": \"mint\"\n    },\n    \"nested\": [\n      true,\n      null,\n      \"fixture\"\n    ]\n  },\n  \"meta\": {\n    \"guardian_2_name\": \"Two\",\n    \"note\": \"authored fixture\",\n    \"federation_name\": \"Synthetic Federation\",\n    \"guardian_0_name\": \"Zero\"\n  }\n}",
+      "stderr": "",
+      "requests": [
+        {
+          "method": "GET",
+          "path": "/first/config",
+          "body": ""
+        }
+      ]
+    },
+    {
+      "name": "exponent-1025",
+      "status": 0,
+      "stdout": "{\n  \"federation_id\": \"1234567890abcdef1234567890abcdef1234567890abcdef1234567890abcdef\",\n  \"federation_name\": \"Synthetic Federation\",\n  \"guardians\": [\n    {\n      \"peer_id\": 0,\n      \"name\": \"Zero\",\n      \"url\": \"\"\n    },\n    {\n      \"peer_id\": 2,\n      \"name\": \"Two\",\n      \"url\": \"wss://synthetic.invalid/two\"\n    },\n    {\n      \"peer_id\": 10,\n      \"name\": null,\n      \"url\": \"opaque endpoint ten\"\n    }\n  ],\n  \"consensus_version\": \"2.1\",\n  \"modules\": {\n    \"0\": {\n      \"amount\": 123,\n      \"kind\": \"mint\"\n    },\n    \"nested\": [\n      true,\n      null,\n      \"fixture\"\n    ]\n  },\n  \"meta\": {\n    \"guardian_2_name\": \"Two\",\n    \"federation_name\": \"Synthetic Federation\",\n    \"guardian_0_name\": \"Zero\",\n    \"note\": \"authored fixture\"\n  }\n}",
+      "stderr": "",
+      "requests": [
+        {
+          "method": "GET",
+          "path": "/first/config",
+          "body": ""
+        }
+      ]
+    },
+    {
+      "name": "negative-exponent-1025",
+      "status": 0,
+      "stdout": "{\n  \"federation_id\": \"1234567890abcdef1234567890abcdef1234567890abcdef1234567890abcdef\",\n  \"federation_name\": \"Synthetic Federation\",\n  \"guardians\": [\n    {\n      \"peer_id\": 0,\n      \"name\": \"Zero\",\n      \"url\": \"\"\n    },\n    {\n      \"peer_id\": 2,\n      \"name\": \"Two\",\n      \"url\": \"wss://synthetic.invalid/two\"\n    },\n    {\n      \"peer_id\": 10,\n      \"name\": null,\n      \"url\": \"opaque endpoint ten\"\n    }\n  ],\n  \"consensus_version\": \"2.1\",\n  \"modules\": {\n    \"0\": {\n      \"amount\": 123,\n      \"kind\": \"mint\"\n    },\n    \"nested\": [\n      true,\n      null,\n      \"fixture\"\n    ]\n  },\n  \"meta\": {\n    \"guardian_0_name\": \"Zero\",\n    \"guardian_2_name\": \"Two\",\n    \"note\": \"authored fixture\",\n    \"federation_name\": \"Synthetic Federation\"\n  }\n}",
+      "stderr": "",
+      "requests": [
+        {
+          "method": "GET",
+          "path": "/first/config",
+          "body": ""
+        }
+      ]
+    },
+    {
+      "name": "array-depth-126",
+      "status": 0,
+      "stdout": "{\n  \"federation_id\": \"1234567890abcdef1234567890abcdef1234567890abcdef1234567890abcdef\",\n  \"federation_name\": \"Synthetic Federation\",\n  \"guardians\": [\n    {\n      \"peer_id\": 0,\n      \"name\": \"Zero\",\n      \"url\": \"\"\n    },\n    {\n      \"peer_id\": 2,\n      \"name\": \"Two\",\n      \"url\": \"wss://synthetic.invalid/two\"\n    },\n    {\n      \"peer_id\": 10,\n      \"name\": null,\n      \"url\": \"opaque endpoint ten\"\n    }\n  ],\n  \"consensus_version\": \"2.1\",\n  \"modules\": {\n    \"0\": {\n      \"amount\": 123,\n      \"kind\": \"mint\"\n    },\n    \"nested\": [\n      true,\n      null,\n      \"fixture\"\n    ]\n  },\n  \"meta\": {\n    \"guardian_2_name\": \"Two\",\n    \"guardian_0_name\": \"Zero\",\n    \"federation_name\": \"Synthetic Federation\",\n    \"note\": \"authored fixture\"\n  }\n}",
+      "stderr": "",
+      "requests": [
+        {
+          "method": "GET",
+          "path": "/first/config",
+          "body": ""
+        }
+      ]
+    },
+    {
+      "name": "array-depth-127",
+      "status": 0,
+      "stdout": "{\n  \"federation_id\": \"1234567890abcdef1234567890abcdef1234567890abcdef1234567890abcdef\",\n  \"federation_name\": \"Synthetic Federation\",\n  \"guardians\": [\n    {\n      \"peer_id\": 0,\n      \"name\": \"Zero\",\n      \"url\": \"\"\n    },\n    {\n      \"peer_id\": 2,\n      \"name\": \"Two\",\n      \"url\": \"wss://synthetic.invalid/two\"\n    },\n    {\n      \"peer_id\": 10,\n      \"name\": null,\n      \"url\": \"opaque endpoint ten\"\n    }\n  ],\n  \"consensus_version\": \"2.1\",\n  \"modules\": {\n    \"0\": {\n      \"amount\": 123,\n      \"kind\": \"mint\"\n    },\n    \"nested\": [\n      true,\n      null,\n      \"fixture\"\n    ]\n  },\n  \"meta\": {\n    \"guardian_2_name\": \"Two\",\n    \"note\": \"authored fixture\",\n    \"federation_name\": \"Synthetic Federation\",\n    \"guardian_0_name\": \"Zero\"\n  }\n}",
+      "stderr": "",
+      "requests": [
+        {
+          "method": "GET",
+          "path": "/first/config",
+          "body": ""
+        }
+      ]
+    },
+    {
+      "name": "array-depth-128",
+      "status": 0,
+      "stdout": "{\n  \"federation_id\": \"1234567890abcdef1234567890abcdef1234567890abcdef1234567890abcdef\",\n  \"federation_name\": \"Synthetic Federation\",\n  \"guardians\": [\n    {\n      \"peer_id\": 0,\n      \"name\": \"Zero\",\n      \"url\": \"\"\n    },\n    {\n      \"peer_id\": 2,\n      \"name\": \"Two\",\n      \"url\": \"wss://synthetic.invalid/two\"\n    },\n    {\n      \"peer_id\": 10,\n      \"name\": null,\n      \"url\": \"opaque endpoint ten\"\n    }\n  ],\n  \"consensus_version\": \"2.1\",\n  \"modules\": {\n    \"0\": {\n      \"amount\": 123,\n      \"kind\": \"mint\"\n    },\n    \"nested\": [\n      true,\n      null,\n      \"fixture\"\n    ]\n  },\n  \"meta\": {\n    \"note\": \"authored fixture\",\n    \"federation_name\": \"Synthetic Federation\",\n    \"guardian_2_name\": \"Two\",\n    \"guardian_0_name\": \"Zero\"\n  }\n}",
+      "stderr": "",
+      "requests": [
+        {
+          "method": "GET",
+          "path": "/first/config",
+          "body": ""
+        },
+        {
+          "method": "GET",
+          "path": "/second/config",
+          "body": ""
+        }
+      ]
+    },
+    {
+      "name": "object-depth-126",
+      "status": 0,
+      "stdout": "{\n  \"federation_id\": \"1234567890abcdef1234567890abcdef1234567890abcdef1234567890abcdef\",\n  \"federation_name\": \"Synthetic Federation\",\n  \"guardians\": [\n    {\n      \"peer_id\": 0,\n      \"name\": \"Zero\",\n      \"url\": \"\"\n    },\n    {\n      \"peer_id\": 2,\n      \"name\": \"Two\",\n      \"url\": \"wss://synthetic.invalid/two\"\n    },\n    {\n      \"peer_id\": 10,\n      \"name\": null,\n      \"url\": \"opaque endpoint ten\"\n    }\n  ],\n  \"consensus_version\": \"2.1\",\n  \"modules\": {\n    \"0\": {\n      \"amount\": 123,\n      \"kind\": \"mint\"\n    },\n    \"nested\": [\n      true,\n      null,\n      \"fixture\"\n    ]\n  },\n  \"meta\": {\n    \"guardian_0_name\": \"Zero\",\n    \"federation_name\": \"Synthetic Federation\",\n    \"guardian_2_name\": \"Two\",\n    \"note\": \"authored fixture\"\n  }\n}",
+      "stderr": "",
+      "requests": [
+        {
+          "method": "GET",
+          "path": "/first/config",
+          "body": ""
+        }
+      ]
+    },
+    {
+      "name": "object-depth-127",
+      "status": 0,
+      "stdout": "{\n  \"federation_id\": \"1234567890abcdef1234567890abcdef1234567890abcdef1234567890abcdef\",\n  \"federation_name\": \"Synthetic Federation\",\n  \"guardians\": [\n    {\n      \"peer_id\": 0,\n      \"name\": \"Zero\",\n      \"url\": \"\"\n    },\n    {\n      \"peer_id\": 2,\n      \"name\": \"Two\",\n      \"url\": \"wss://synthetic.invalid/two\"\n    },\n    {\n      \"peer_id\": 10,\n      \"name\": null,\n      \"url\": \"opaque endpoint ten\"\n    }\n  ],\n  \"consensus_version\": \"2.1\",\n  \"modules\": {\n    \"0\": {\n      \"amount\": 123,\n      \"kind\": \"mint\"\n    },\n    \"nested\": [\n      true,\n      null,\n      \"fixture\"\n    ]\n  },\n  \"meta\": {\n    \"guardian_2_name\": \"Two\",\n    \"note\": \"authored fixture\",\n    \"guardian_0_name\": \"Zero\",\n    \"federation_name\": \"Synthetic Federation\"\n  }\n}",
+      "stderr": "",
+      "requests": [
+        {
+          "method": "GET",
+          "path": "/first/config",
+          "body": ""
+        }
+      ]
+    },
+    {
+      "name": "object-depth-128",
+      "status": 0,
+      "stdout": "{\n  \"federation_id\": \"1234567890abcdef1234567890abcdef1234567890abcdef1234567890abcdef\",\n  \"federation_name\": \"Synthetic Federation\",\n  \"guardians\": [\n    {\n      \"peer_id\": 0,\n      \"name\": \"Zero\",\n      \"url\": \"\"\n    },\n    {\n      \"peer_id\": 2,\n      \"name\": \"Two\",\n      \"url\": \"wss://synthetic.invalid/two\"\n    },\n    {\n      \"peer_id\": 10,\n      \"name\": null,\n      \"url\": \"opaque endpoint ten\"\n    }\n  ],\n  \"consensus_version\": \"2.1\",\n  \"modules\": {\n    \"0\": {\n      \"amount\": 123,\n      \"kind\": \"mint\"\n    },\n    \"nested\": [\n      true,\n      null,\n      \"fixture\"\n    ]\n  },\n  \"meta\": {\n    \"guardian_2_name\": \"Two\",\n    \"federation_name\": \"Synthetic Federation\",\n    \"guardian_0_name\": \"Zero\",\n    \"note\": \"authored fixture\"\n  }\n}",
+      "stderr": "",
+      "requests": [
+        {
+          "method": "GET",
+          "path": "/first/config",
+          "body": ""
+        },
+        {
+          "method": "GET",
+          "path": "/second/config",
+          "body": ""
+        }
+      ]
+    },
+    {
+      "name": "quoted",
+      "status": 0,
+      "stdout": "{\n  \"federation_id\": \"b21068c84f5b12ca4fdf93f3e443d3bd7c27e8642d0d52ea2e4dce6fdbbee9df\",\n  \"federation_name\": \"Synthetic Federation\",\n  \"guardians\": [\n    {\n      \"peer_id\": 0,\n      \"name\": \"Zero\",\n      \"url\": \"\"\n    },\n    {\n      \"peer_id\": 2,\n      \"name\": \"Two\",\n      \"url\": \"wss://synthetic.invalid/two\"\n    },\n    {\n      \"peer_id\": 10,\n      \"name\": null,\n      \"url\": \"opaque endpoint ten\"\n    }\n  ],\n  \"consensus_version\": \"2.1\",\n  \"modules\": {\n    \"0\": {\n      \"amount\": 123,\n      \"kind\": \"mint\"\n    },\n    \"nested\": [\n      true,\n      null,\n      \"fixture\"\n    ]\n  },\n  \"meta\": {\n    \"federation_name\": \"Synthetic Federation\",\n    \"guardian_2_name\": \"Two\",\n    \"note\": \"authored fixture\",\n    \"guardian_0_name\": \"Zero\"\n  }\n}",
+      "stderr": "",
+      "requests": [
+        {
+          "method": "GET",
+          "path": "/first/config",
+          "body": ""
+        }
+      ]
+    },
+    {
+      "name": "surrogate",
+      "status": 0,
+      "stdout": "{\n  \"federation_id\": \"1234567890abcdef1234567890abcdef1234567890abcdef1234567890abcdef\",\n  \"federation_name\": \"Synthetic Federation\",\n  \"guardians\": [\n    {\n      \"peer_id\": 0,\n      \"name\": \"Zero\",\n      \"url\": \"\"\n    },\n    {\n      \"peer_id\": 2,\n      \"name\": \"Two\",\n      \"url\": \"wss://synthetic.invalid/two\"\n    },\n    {\n      \"peer_id\": 10,\n      \"name\": null,\n      \"url\": \"opaque endpoint ten\"\n    }\n  ],\n  \"consensus_version\": \"2.1\",\n  \"modules\": {\n    \"0\": {\n      \"amount\": 123,\n      \"kind\": \"mint\"\n    },\n    \"nested\": [\n      true,\n      null,\n      \"fixture\"\n    ]\n  },\n  \"meta\": {\n    \"federation_name\": \"Synthetic Federation\",\n    \"guardian_0_name\": \"Zero\",\n    \"guardian_2_name\": \"Two\",\n    \"note\": \"authored fixture\"\n  }\n}",
+      "stderr": "",
+      "requests": [
+        {
+          "method": "GET",
+          "path": "/first/config",
+          "body": ""
+        },
+        {
+          "method": "GET",
+          "path": "/second/config",
+          "body": ""
+        }
+      ]
+    },
+    {
+      "name": "numeric-key",
+      "status": 0,
+      "stdout": "{\n  \"federation_id\": \"1234567890abcdef1234567890abcdef1234567890abcdef1234567890abcdef\",\n  \"federation_name\": \"Synthetic Federation\",\n  \"guardians\": [\n    {\n      \"peer_id\": 0,\n      \"name\": \"Zero\",\n      \"url\": \"\"\n    },\n    {\n      \"peer_id\": 2,\n      \"name\": \"Two\",\n      \"url\": \"wss://synthetic.invalid/two\"\n    },\n    {\n      \"peer_id\": 10,\n      \"name\": null,\n      \"url\": \"opaque endpoint ten\"\n    }\n  ],\n  \"consensus_version\": \"2.1\",\n  \"modules\": {\n    \"0\": {\n      \"amount\": 123,\n      \"kind\": \"mint\"\n    },\n    \"nested\": [\n      true,\n      null,\n      \"fixture\"\n    ]\n  },\n  \"meta\": {\n    \"federation_name\": \"Synthetic Federation\",\n    \"guardian_2_name\": \"Two\",\n    \"note\": \"authored fixture\",\n    \"guardian_0_name\": \"Zero\"\n  }\n}",
+      "stderr": "",
+      "requests": [
+        {
+          "method": "GET",
+          "path": "/first/config",
+          "body": ""
+        },
+        {
+          "method": "GET",
+          "path": "/second/config",
+          "body": ""
+        }
+      ]
+    },
+    {
+      "name": "invalid-number",
+      "status": 0,
+      "stdout": "{\n  \"federation_id\": \"1234567890abcdef1234567890abcdef1234567890abcdef1234567890abcdef\",\n  \"federation_name\": \"Synthetic Federation\",\n  \"guardians\": [\n    {\n      \"peer_id\": 0,\n      \"name\": \"Zero\",\n      \"url\": \"\"\n    },\n    {\n      \"peer_id\": 2,\n      \"name\": \"Two\",\n      \"url\": \"wss://synthetic.invalid/two\"\n    },\n    {\n      \"peer_id\": 10,\n      \"name\": null,\n      \"url\": \"opaque endpoint ten\"\n    }\n  ],\n  \"consensus_version\": \"2.1\",\n  \"modules\": {\n    \"0\": {\n      \"amount\": 123,\n      \"kind\": \"mint\"\n    },\n    \"nested\": [\n      true,\n      null,\n      \"fixture\"\n    ]\n  },\n  \"meta\": {\n    \"guardian_0_name\": \"Zero\",\n    \"guardian_2_name\": \"Two\",\n    \"federation_name\": \"Synthetic Federation\",\n    \"note\": \"authored fixture\"\n  }\n}",
+      "stderr": "",
+      "requests": [
+        {
+          "method": "GET",
+          "path": "/first/config",
+          "body": ""
+        },
+        {
+          "method": "GET",
+          "path": "/second/config",
+          "body": ""
+        }
+      ]
+    },
+    {
+      "name": "post-utf8-next",
+      "status": 0,
+      "stdout": "{\n  \"federation_id\": \"1234567890abcdef1234567890abcdef1234567890abcdef1234567890abcdef\",\n  \"federation_name\": \"Synthetic Federation\",\n  \"guardians\": [\n    {\n      \"peer_id\": 0,\n      \"name\": \"Zero\",\n      \"url\": \"\"\n    },\n    {\n      \"peer_id\": 2,\n      \"name\": \"Two\",\n      \"url\": \"wss://synthetic.invalid/two\"\n    },\n    {\n      \"peer_id\": 10,\n      \"name\": null,\n      \"url\": \"opaque endpoint ten\"\n    }\n  ],\n  \"consensus_version\": \"2.1\",\n  \"modules\": {\n    \"0\": {\n      \"amount\": 123,\n      \"kind\": \"mint\"\n    },\n    \"nested\": [\n      true,\n      null,\n      \"fixture\"\n    ]\n  },\n  \"meta\": {\n    \"note\": \"authored fixture\",\n    \"guardian_2_name\": \"Two\",\n    \"federation_name\": \"Synthetic Federation\",\n    \"guardian_0_name\": \"Zero\"\n  }\n}",
+      "stderr": "",
+      "requests": [
+        {
+          "method": "GET",
+          "path": "/first/config",
+          "body": ""
+        },
+        {
+          "method": "POST",
+          "path": "/first/config",
+          "body": "{}"
+        },
+        {
+          "method": "GET",
+          "path": "/second/config",
+          "body": ""
+        }
+      ]
+    },
+    {
+      "name": "post-preflight-next",
+      "status": 0,
+      "stdout": "{\n  \"federation_id\": \"1234567890abcdef1234567890abcdef1234567890abcdef1234567890abcdef\",\n  \"federation_name\": \"Synthetic Federation\",\n  \"guardians\": [\n    {\n      \"peer_id\": 0,\n      \"name\": \"Zero\",\n      \"url\": \"\"\n    },\n    {\n      \"peer_id\": 2,\n      \"name\": \"Two\",\n      \"url\": \"wss://synthetic.invalid/two\"\n    },\n    {\n      \"peer_id\": 10,\n      \"name\": null,\n      \"url\": \"opaque endpoint ten\"\n    }\n  ],\n  \"consensus_version\": \"2.1\",\n  \"modules\": 0.0,\n  \"meta\": {\n    \"guardian_0_name\": \"Zero\",\n    \"federation_name\": \"Synthetic Federation\",\n    \"note\": \"authored fixture\",\n    \"guardian_2_name\": \"Two\"\n  }\n}",
+      "stderr": "",
+      "requests": [
+        {
+          "method": "GET",
+          "path": "/first/config",
+          "body": ""
+        },
+        {
+          "method": "POST",
+          "path": "/first/config",
+          "body": "{}"
+        }
+      ]
+    },
+    {
+      "name": "empty-modules",
+      "status": 0,
+      "stdout": "{\n  \"federation_id\": \"b21068c84f5b12ca4fdf93f3e443d3bd7c27e8642d0d52ea2e4dce6fdbbee9df\",\n  \"federation_name\": null,\n  \"guardians\": [],\n  \"consensus_version\": \"unknown\",\n  \"modules\": null,\n  \"meta\": {}\n}",
+      "stderr": "",
+      "requests": [
+        {
+          "method": "GET",
+          "path": "/first/config",
+          "body": ""
+        }
+      ]
+    },
+    {
+      "name": "exact-modules",
+      "status": 0,
+      "stdout": "{\n  \"federation_id\": \"b21068c84f5b12ca4fdf93f3e443d3bd7c27e8642d0d52ea2e4dce6fdbbee9df\",\n  \"federation_name\": \"Synthetic Federation\",\n  \"guardians\": [\n    {\n      \"peer_id\": 0,\n      \"name\": \"Zero\",\n      \"url\": \"\"\n    },\n    {\n      \"peer_id\": 2,\n      \"name\": \"Two\",\n      \"url\": \"wss://synthetic.invalid/two\"\n    },\n    {\n      \"peer_id\": 10,\n      \"name\": null,\n      \"url\": \"opaque endpoint ten\"\n    }\n  ],\n  \"consensus_version\": \"2.1\",\n  \"modules\": {\n    \"n\": 9007199254740993\n  },\n  \"meta\": {\n    \"federation_name\": \"Synthetic Federation\",\n    \"guardian_0_name\": \"Zero\",\n    \"note\": \"authored fixture\",\n    \"guardian_2_name\": \"Two\"\n  }\n}",
+      "stderr": "",
+      "requests": [
+        {
+          "method": "GET",
+          "path": "/first/config",
+          "body": ""
+        }
+      ]
+    },
+    {
+      "name": "finite-below",
+      "status": 0,
+      "stdout": "{\n  \"federation_id\": \"1234567890abcdef1234567890abcdef1234567890abcdef1234567890abcdef\",\n  \"federation_name\": \"Synthetic Federation\",\n  \"guardians\": [\n    {\n      \"peer_id\": 0,\n      \"name\": \"Zero\",\n      \"url\": \"\"\n    },\n    {\n      \"peer_id\": 2,\n      \"name\": \"Two\",\n      \"url\": \"wss://synthetic.invalid/two\"\n    },\n    {\n      \"peer_id\": 10,\n      \"name\": null,\n      \"url\": \"opaque endpoint ten\"\n    }\n  ],\n  \"consensus_version\": \"2.1\",\n  \"modules\": {\n    \"0\": {\n      \"amount\": 123,\n      \"kind\": \"mint\"\n    },\n    \"nested\": [\n      true,\n      null,\n      \"fixture\"\n    ]\n  },\n  \"meta\": {\n    \"federation_name\": \"Synthetic Federation\",\n    \"guardian_2_name\": \"Two\",\n    \"guardian_0_name\": \"Zero\",\n    \"note\": \"authored fixture\"\n  }\n}",
+      "stderr": "",
+      "requests": [
+        {
+          "method": "GET",
+          "path": "/first/config",
+          "body": ""
+        }
+      ]
+    },
+    {
+      "name": "finite-midpoint",
+      "status": 0,
+      "stdout": "{\n  \"federation_id\": \"1234567890abcdef1234567890abcdef1234567890abcdef1234567890abcdef\",\n  \"federation_name\": \"Synthetic Federation\",\n  \"guardians\": [\n    {\n      \"peer_id\": 0,\n      \"name\": \"Zero\",\n      \"url\": \"\"\n    },\n    {\n      \"peer_id\": 2,\n      \"name\": \"Two\",\n      \"url\": \"wss://synthetic.invalid/two\"\n    },\n    {\n      \"peer_id\": 10,\n      \"name\": null,\n      \"url\": \"opaque endpoint ten\"\n    }\n  ],\n  \"consensus_version\": \"2.1\",\n  \"modules\": {\n    \"0\": {\n      \"amount\": 123,\n      \"kind\": \"mint\"\n    },\n    \"nested\": [\n      true,\n      null,\n      \"fixture\"\n    ]\n  },\n  \"meta\": {\n    \"guardian_2_name\": \"Two\",\n    \"guardian_0_name\": \"Zero\",\n    \"federation_name\": \"Synthetic Federation\",\n    \"note\": \"authored fixture\"\n  }\n}",
+      "stderr": "",
+      "requests": [
+        {
+          "method": "GET",
+          "path": "/first/config",
+          "body": ""
+        },
+        {
+          "method": "GET",
+          "path": "/second/config",
+          "body": ""
+        }
+      ]
+    },
+    {
+      "name": "finite-above",
+      "status": 0,
+      "stdout": "{\n  \"federation_id\": \"1234567890abcdef1234567890abcdef1234567890abcdef1234567890abcdef\",\n  \"federation_name\": \"Synthetic Federation\",\n  \"guardians\": [\n    {\n      \"peer_id\": 0,\n      \"name\": \"Zero\",\n      \"url\": \"\"\n    },\n    {\n      \"peer_id\": 2,\n      \"name\": \"Two\",\n      \"url\": \"wss://synthetic.invalid/two\"\n    },\n    {\n      \"peer_id\": 10,\n      \"name\": null,\n      \"url\": \"opaque endpoint ten\"\n    }\n  ],\n  \"consensus_version\": \"2.1\",\n  \"modules\": {\n    \"0\": {\n      \"amount\": 123,\n      \"kind\": \"mint\"\n    },\n    \"nested\": [\n      true,\n      null,\n      \"fixture\"\n    ]\n  },\n  \"meta\": {\n    \"federation_name\": \"Synthetic Federation\",\n    \"guardian_2_name\": \"Two\",\n    \"note\": \"authored fixture\",\n    \"guardian_0_name\": \"Zero\"\n  }\n}",
+      "stderr": "",
+      "requests": [
+        {
+          "method": "GET",
+          "path": "/first/config",
+          "body": ""
+        },
+        {
+          "method": "GET",
+          "path": "/second/config",
+          "body": ""
+        }
+      ]
+    },
+    {
+      "name": "ignored-overflow",
+      "status": 0,
+      "stdout": "{\n  \"federation_id\": \"1234567890abcdef1234567890abcdef1234567890abcdef1234567890abcdef\",\n  \"federation_name\": \"Synthetic Federation\",\n  \"guardians\": [\n    {\n      \"peer_id\": 0,\n      \"name\": \"Zero\",\n      \"url\": \"\"\n    },\n    {\n      \"peer_id\": 2,\n      \"name\": \"Two\",\n      \"url\": \"wss://synthetic.invalid/two\"\n    },\n    {\n      \"peer_id\": 10,\n      \"name\": null,\n      \"url\": \"opaque endpoint ten\"\n    }\n  ],\n  \"consensus_version\": \"2.1\",\n  \"modules\": {\n    \"0\": {\n      \"amount\": 123,\n      \"kind\": \"mint\"\n    },\n    \"nested\": [\n      true,\n      null,\n      \"fixture\"\n    ]\n  },\n  \"meta\": {\n    \"guardian_0_name\": \"Zero\",\n    \"guardian_2_name\": \"Two\",\n    \"note\": \"authored fixture\",\n    \"federation_name\": \"Synthetic Federation\"\n  }\n}",
+      "stderr": "",
+      "requests": [
+        {
+          "method": "GET",
+          "path": "/first/config",
+          "body": ""
+        },
+        {
+          "method": "GET",
+          "path": "/second/config",
+          "body": ""
+        }
+      ]
+    },
+    {
+      "name": "ignored-negative-overflow",
+      "status": 0,
+      "stdout": "{\n  \"federation_id\": \"1234567890abcdef1234567890abcdef1234567890abcdef1234567890abcdef\",\n  \"federation_name\": \"Synthetic Federation\",\n  \"guardians\": [\n    {\n      \"peer_id\": 0,\n      \"name\": \"Zero\",\n      \"url\": \"\"\n    },\n    {\n      \"peer_id\": 2,\n      \"name\": \"Two\",\n      \"url\": \"wss://synthetic.invalid/two\"\n    },\n    {\n      \"peer_id\": 10,\n      \"name\": null,\n      \"url\": \"opaque endpoint ten\"\n    }\n  ],\n  \"consensus_version\": \"2.1\",\n  \"modules\": {\n    \"0\": {\n      \"amount\": 123,\n      \"kind\": \"mint\"\n    },\n    \"nested\": [\n      true,\n      null,\n      \"fixture\"\n    ]\n  },\n  \"meta\": {\n    \"guardian_0_name\": \"Zero\",\n    \"note\": \"authored fixture\",\n    \"guardian_2_name\": \"Two\",\n    \"federation_name\": \"Synthetic Federation\"\n  }\n}",
+      "stderr": "",
+      "requests": [
+        {
+          "method": "GET",
+          "path": "/first/config",
+          "body": ""
+        },
+        {
+          "method": "GET",
+          "path": "/second/config",
+          "body": ""
+        }
+      ]
+    },
+    {
+      "name": "root-overflow",
+      "status": 0,
+      "stdout": "{\n  \"federation_id\": \"1234567890abcdef1234567890abcdef1234567890abcdef1234567890abcdef\",\n  \"federation_name\": \"Synthetic Federation\",\n  \"guardians\": [\n    {\n      \"peer_id\": 0,\n      \"name\": \"Zero\",\n      \"url\": \"\"\n    },\n    {\n      \"peer_id\": 2,\n      \"name\": \"Two\",\n      \"url\": \"wss://synthetic.invalid/two\"\n    },\n    {\n      \"peer_id\": 10,\n      \"name\": null,\n      \"url\": \"opaque endpoint ten\"\n    }\n  ],\n  \"consensus_version\": \"2.1\",\n  \"modules\": {\n    \"0\": {\n      \"amount\": 123,\n      \"kind\": \"mint\"\n    },\n    \"nested\": [\n      true,\n      null,\n      \"fixture\"\n    ]\n  },\n  \"meta\": {\n    \"guardian_2_name\": \"Two\",\n    \"note\": \"authored fixture\",\n    \"federation_name\": \"Synthetic Federation\",\n    \"guardian_0_name\": \"Zero\"\n  }\n}",
+      "stderr": "",
+      "requests": [
+        {
+          "method": "GET",
+          "path": "/first/config",
+          "body": ""
+        },
+        {
+          "method": "GET",
+          "path": "/second/config",
+          "body": ""
+        }
+      ]
+    },
+    {
+      "name": "modules-overflow",
+      "status": 0,
+      "stdout": "{\n  \"federation_id\": \"1234567890abcdef1234567890abcdef1234567890abcdef1234567890abcdef\",\n  \"federation_name\": \"Synthetic Federation\",\n  \"guardians\": [\n    {\n      \"peer_id\": 0,\n      \"name\": \"Zero\",\n      \"url\": \"\"\n    },\n    {\n      \"peer_id\": 2,\n      \"name\": \"Two\",\n      \"url\": \"wss://synthetic.invalid/two\"\n    },\n    {\n      \"peer_id\": 10,\n      \"name\": null,\n      \"url\": \"opaque endpoint ten\"\n    }\n  ],\n  \"consensus_version\": \"2.1\",\n  \"modules\": {\n    \"0\": {\n      \"amount\": 123,\n      \"kind\": \"mint\"\n    },\n    \"nested\": [\n      true,\n      null,\n      \"fixture\"\n    ]\n  },\n  \"meta\": {\n    \"guardian_2_name\": \"Two\",\n    \"federation_name\": \"Synthetic Federation\",\n    \"note\": \"authored fixture\",\n    \"guardian_0_name\": \"Zero\"\n  }\n}",
+      "stderr": "",
+      "requests": [
+        {
+          "method": "GET",
+          "path": "/first/config",
+          "body": ""
+        },
+        {
+          "method": "GET",
+          "path": "/second/config",
+          "body": ""
+        }
+      ]
+    },
+    {
+      "name": "modules-fraction",
+      "status": 0,
+      "stdout": "{\n  \"federation_id\": \"b21068c84f5b12ca4fdf93f3e443d3bd7c27e8642d0d52ea2e4dce6fdbbee9df\",\n  \"federation_name\": \"Synthetic Federation\",\n  \"guardians\": [\n    {\n      \"peer_id\": 0,\n      \"name\": \"Zero\",\n      \"url\": \"\"\n    },\n    {\n      \"peer_id\": 2,\n      \"name\": \"Two\",\n      \"url\": \"wss://synthetic.invalid/two\"\n    },\n    {\n      \"peer_id\": 10,\n      \"name\": null,\n      \"url\": \"opaque endpoint ten\"\n    }\n  ],\n  \"consensus_version\": \"2.1\",\n  \"modules\": 1.0,\n  \"meta\": {\n    \"guardian_2_name\": \"Two\",\n    \"note\": \"authored fixture\",\n    \"guardian_0_name\": \"Zero\",\n    \"federation_name\": \"Synthetic Federation\"\n  }\n}",
+      "stderr": "",
+      "requests": [
+        {
+          "method": "GET",
+          "path": "/first/config",
+          "body": ""
+        }
+      ]
+    },
+    {
+      "name": "modules-integer",
+      "status": 0,
+      "stdout": "{\n  \"federation_id\": \"b21068c84f5b12ca4fdf93f3e443d3bd7c27e8642d0d52ea2e4dce6fdbbee9df\",\n  \"federation_name\": \"Synthetic Federation\",\n  \"guardians\": [\n    {\n      \"peer_id\": 0,\n      \"name\": \"Zero\",\n      \"url\": \"\"\n    },\n    {\n      \"peer_id\": 2,\n      \"name\": \"Two\",\n      \"url\": \"wss://synthetic.invalid/two\"\n    },\n    {\n      \"peer_id\": 10,\n      \"name\": null,\n      \"url\": \"opaque endpoint ten\"\n    }\n  ],\n  \"consensus_version\": \"2.1\",\n  \"modules\": 1.8446744073709552e+19,\n  \"meta\": {\n    \"guardian_0_name\": \"Zero\",\n    \"federation_name\": \"Synthetic Federation\",\n    \"guardian_2_name\": \"Two\",\n    \"note\": \"authored fixture\"\n  }\n}",
+      "stderr": "",
+      "requests": [
+        {
+          "method": "GET",
+          "path": "/first/config",
+          "body": ""
+        }
+      ]
+    }
+  ]
+}

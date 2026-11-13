@@ -15,8 +15,10 @@ from unittest.mock import patch
 
 from cases import APP, ROOT
 
-BASE = "6e3bbefbbb954ac391cd04000eca61b0a6b41c04"
-ISSUE = "lck-phase-9b-ln-generate-invoice-edn"
+BASE = "d2d7ad1a788f3aa2dda67f6804c14d959ff66c4d"
+ISSUE = "lck-phase-9c-fm-fetch-config-z4e"
+FOLLOWUP = "lck-network-deadlines-3no"
+FOLLOWUP_SHA256 = "68fabb8a4f57f8ca62ea6cca7378ddf28309e75d3327f6fb75f232d284af4e1e"
 # Fixed reference fixtures. Never derive
 # these expected values from HEAD, the index, or the current fixture bytes.
 FIXTURE_DIGESTS = {
@@ -57,42 +59,52 @@ def check_lifecycle(original, current):
         assert not current.get("closed_at") and not current.get("close_reason"), "in-progress closure fields"
 
 
+def expected_plan():
+    """The landed plan plus only the expressly recorded eighth exception."""
+    original = git("show", BASE + ":plan.md").decode()
+    before = '  (owner decision, 2026-10-28); otherwise the port exits non-zero wherever cyberkrill does.\n'
+    after = "  (owner decision, 2026-10-28), and response handling that the HTTP library does before delivery\n  in `fm-fetch-config` is an eighth (owner decisions, 2026-11-12 and 2026-11-13): the\n  library joins folded header lines in any response head and refuses two different Location\n  values and a blank line before the status line before the port sees them, so the port accepts\n  or follows a folded head that cyberkrill's HTTP client rejects before retrying with POST, and\n  retries with POST where cyberkrill follows the first Location; it also handles the response\n  body before delivery (it removes chunked transfer coding, rewrites trailer line endings,\n  refuses unrequested codings, a malformed Content-Length and an over-long chunk size, and stops\n  at the declared length), so the port reads the body the library delivers where cyberkrill\n  frames it from the last Transfer-Encoding field; a new case belongs to this kind only when\n  the library is shown to decide it before delivery, every rule applied to what the port does\n  see matches cyberkrill, and the README lists each pinned case; otherwise the port exits\n  non-zero wherever cyberkrill does.\n"
+    assert original.count(before) == 1, "landed plan exception anchor"
+    return original.replace(before, after)
+
+
 def main():
-    allowed = {"README.md", ".beads/issues.jsonl"}
-    # LNURL command, pure callback serialization and necessary verification refreshes.
-    allowed |= {"packages/lightning/Lightning/Lnurl/Url.lean",
-                "packages/lightning/LightningTests/Lnurl.lean"}
+    allowed = {"README.md", ".beads/issues.jsonl", "plan.md"}
+    # App-local config command and affected verification/evidence records.
     allowed |= {"packages/cyberkrill/" + p for p in [
-        "Cyberkrill/App.lean", "Cyberkrill/GenerateInvoice.lean", "Cyberkrill/TestEntry.lean",
-        "CyberkrillTests/GenerateInvoice.lean", "CyberkrillTests.lean",
-        "test/generate-invoice.py", "test/generate-invoice-mutations.py",
-        "test/http/ln-generate.json", "test/http/ln-generate-expected.json",
-        "test/http/ln-generate.provenance.json", "test/golden/ln-generate-mutation-record.json",
+        "Cyberkrill/App.lean", "Cyberkrill/FetchConfig.lean", "Cyberkrill/TestEntry.lean",
+        "CyberkrillTests/FetchConfig.lean", "CyberkrillTests.lean",
+        "test/fetch-config.py", "test/fetch-config-mutations.py", "test/capture-fetch-config.py",
+        "test/http/fetch-config.json", "test/http/fetch-config-reference.json",
+        "test/http/fetch-config.provenance.json", "test/golden/fetch-config-mutation-record.json",
         "test/scope.py", "test/validate.py", "test/verify.py", "test/network.py", "test/network-safety.py",
         "test/http/mutation-record.json",
+        "test/capture-fetch-config-short.py", "test/http/fetch-config-short-reference.json",
+        "test/http/fetch-config-short.provenance.json",
     ]}
     allowed |= {"packages/cyberkrill/test/golden/" + p for p in [
-        "fiat-onchain-mutation-record.json", "move-utxos-mutation-record.json", "psbt-commands-mutation-record.json",
+        "ln-generate-mutation-record.json", "fiat-onchain-mutation-record.json", "move-utxos-mutation-record.json", "psbt-commands-mutation-record.json",
         "mutation-record.json", "lightning-mutation-record.json", "revision-mutation-record.json",
         "offline-mutation-record.json", "rpc-client-mutation-record.json",
         "list-utxos-mutation-record.json", "list-utxos-lexical-mutation-record.json",
         "list-utxos-lifecycle-record.json",
         "regression-refresh.json", "output-regression-refresh.json",
-        "attached-output-refresh.json",
+        "attached-output-refresh.json", "offline-history-recapture.json",
     ]}
+    allowed |= {"packages/http-curl/HttpCurl.lean", "packages/http-curl/link_shim.c"}
     changed = set(filter(None, git("diff", BASE, "--name-only", "-z").decode().split("\0")))
     new = set(filter(None, git("ls-files", "--others", "--exclude-standard", "-z").decode().split("\0")))
     base_paths = set(git("ls-tree", "-r", "--name-only", BASE).decode().splitlines())
-    assert changed | new <= allowed, "path outside invoice generation scope: " + repr(sorted((changed | new) - allowed))
+    assert changed | new <= allowed, "path outside config fetch scope: " + repr(sorted((changed | new) - allowed))
     # Equality against the base for each unrelated issue includes every field.
-    def issues(data):
+    def issues(data, count):
         rows = [json.loads(line) for line in data.splitlines()]
         result = {row["id"]: row for row in rows}
-        assert len(rows) == len(result) == 59, "issue inventory"
+        assert len(rows) == len(result) == count, "issue inventory"
         return result
-    original = issues(git("show", BASE + ":.beads/issues.jsonl"))
-    current = issues((ROOT / ".beads/issues.jsonl").read_bytes())
-    assert original.keys() == current.keys(), "issue identity set"
+    original = issues(git("show", BASE + ":.beads/issues.jsonl"), 59)
+    current = issues((ROOT / ".beads/issues.jsonl").read_bytes(), 60)
+    assert current.keys() == original.keys() | {FOLLOWUP}, "issue identity set"
     assert all(original[k] == current[k] for k in original if k != ISSUE), "unrelated issue changed"
     def raw_issues(data):
         return {json.loads(line)["id"]: line for line in data.splitlines(keepends=True)}
@@ -101,6 +113,8 @@ def main():
     with (ROOT / ".beads/issues.jsonl").open("rb") as exported:
         current_raw = raw_issues(exported.read())
     assert all(original_raw[k] == current_raw[k] for k in original_raw if k != ISSUE), "unrelated raw issue bytes changed"
+    assert hashlib.sha256(current_raw[FOLLOWUP]).hexdigest() == FOLLOWUP_SHA256, "follow-up raw issue bytes changed"
+    assert current[FOLLOWUP] == json.loads(current_raw[FOLLOWUP]), "follow-up issue changed"
     amended = current[ISSUE]
     check_lifecycle(original[ISSUE], amended)
     # Reference captures and fixture provenance remain fixed.
@@ -115,6 +129,7 @@ def main():
     assert 'lakePackages = [ "sha256" "secp256k1" "bitcoin" "lightning" "fedimint-invite" "http-curl" "cyberkrill" ];' in flake
     assert 'lake build && lake test' in flake and 'bash scripts/check-link-spike.sh' in flake
     assert git("diff", BASE, "--", "scripts/check-link-spike.sh", "scripts/check-one-openssl.sh") == b""
+    assert (ROOT / "plan.md").read_bytes() == expected_plan().encode(), "only the recorded before-delivery plan insertion is admitted"
     original_flake = git("show", BASE + ":flake.nix").decode()
     assert flake == original_flake, "landed flake and network isolation contract unchanged"
     for relative in base_paths:
@@ -140,14 +155,14 @@ def main():
         assert not attribution.search(text), "tool attribution in: " + relative
         if Path(relative).suffix in [".lean", ".py", ".c"]:
             assert any(header in line for line in text.splitlines()[:4]), "authored file licence header: " + relative
-    print(f"scope: {len(changed | new)} allowed paths; 58/58 unrelated issues unchanged; claim/closure valid")
+    print(f"scope: {len(changed | new)} allowed paths; 60 identities; 58/58 unrelated landed issues and one fixed follow-up unchanged; claim/closure valid")
     print("reference captures/fixtures unchanged; seven packages/link gates retained; whitespace/public-text checks passed")
 
 
 def check_admission():
     """Exercise the real gate in read-only views of unrelated source/evidence edits."""
     protected = [
-        "Cyberkrill/PriceFeed.lean", "Cyberkrill/Fiat.lean", "Cyberkrill/CoreRpc.lean",
+        "Cyberkrill/GenerateInvoice.lean", "Cyberkrill/PriceFeed.lean", "Cyberkrill/Fiat.lean", "Cyberkrill/CoreRpc.lean",
         "Cyberkrill/PsbtCommands.lean", "Cyberkrill/MoveUtxos.lean",
         "CyberkrillTests/PriceFeed.lean", "test/capture-price-reference.py",
         "test/driver.py", "test/http/exact-deltas.json", "test/http/reference.json",
@@ -156,7 +171,7 @@ def check_admission():
         "test/move-utxos.py", "test/mutate.py", "test/price-cases.py",
         "test/price-feeds.py", "test/price-parity.py", "test/recordings/fiat-create.json", "test/recordings/fiat-funded.json",
     ]
-    assert len(protected) == len(set(protected)) == 21, "scope protected path inventory"
+    assert len(protected) == len(set(protected)) == 22, "scope protected path inventory"
     real_git, real_bytes, real_text = git, Path.read_bytes, Path.read_text
     checks = 0
     for relative in protected:
@@ -177,7 +192,7 @@ def check_admission():
                     return result + relative.encode() + b"\0"
                 return result
 
-            expected = ("path outside invoice generation scope: " if reported
+            expected = ("path outside config fetch scope: " if reported
                         else "forbidden path changed: ")
             with patch(__name__ + ".git", virtual_git), \
                     patch.object(Path, "read_bytes", read_bytes), \
@@ -190,10 +205,64 @@ def check_admission():
                 else:
                     raise AssertionError("scope admission accepted unrelated edit: " + relative)
             checks += 1
-    assert checks == 42, "scope admission check inventory"
-    print("scope admission: 42/42 unrelated edits rejected at path/baseline assertions; read-only views")
+    assert checks == 44, "scope admission check inventory"
+    print("scope admission: 44/44 unrelated edits rejected at path/baseline assertions; read-only views")
+
+
+def check_plan_admission():
+    """A path admission never permits any other plan edit or missing decision."""
+    path = ROOT / "plan.md"
+    intended = expected_plan()
+    controls = [intended + "\nUnrelated decision.\n",
+                intended.replace("an eighth", "a ninth", 1),
+                git("show", BASE + ":plan.md").decode()]
+    real_bytes = Path.read_bytes
+    for content in controls:
+        def read_bytes(target):
+            return content.encode() if target == path else real_bytes(target)
+        with patch.object(Path, "read_bytes", read_bytes), redirect_stdout(io.StringIO()):
+            try:
+                main()
+            except AssertionError as error:
+                assert str(error) == "only the recorded before-delivery plan insertion is admitted", "scope plan wrong rejection"
+            else:
+                raise AssertionError("scope accepted unrelated or absent plan insertion")
+    assert len(controls) == 3, "scope plan admission inventory"
+    print("scope plan admission: 3/3 appended, altered and missing insertion controls rejected by the exact-content gate")
+
+
+def check_issue_admission():
+    """Exercise main's inventory and fixed-record checks without tracker writes."""
+    path = ROOT / ".beads/issues.jsonl"
+    data = path.read_bytes()
+    lines = data.splitlines(keepends=True)
+    followup = next(line for line in lines if json.loads(line)["id"] == FOLLOWUP)
+    edited = json.loads(followup)
+    edited["title"] += " changed"
+    controls = [
+        ("added", data + b'{"id":"unrelated-extra"}\n', "issue inventory"),
+        ("removed", b"".join(line for line in lines if line != followup), "issue inventory"),
+        ("edited", data.replace(followup, (json.dumps(edited) + "\n").encode()), "follow-up raw issue bytes changed"),
+    ]
+    real_bytes, real_open = Path.read_bytes, Path.open
+    for name, content, expected in controls:
+        def read_bytes(target):
+            return content if target == path else real_bytes(target)
+        def opened(target, *args, **kwargs):
+            return io.BytesIO(content) if target == path and args == ("rb",) else real_open(target, *args, **kwargs)
+        with patch.object(Path, "read_bytes", read_bytes), patch.object(Path, "open", opened), redirect_stdout(io.StringIO()):
+            try:
+                main()
+            except AssertionError as error:
+                assert str(error) == expected, "scope issue wrong rejection: " + name + ": " + str(error)
+            else:
+                raise AssertionError("scope issue accepted: " + name)
+    assert len(controls) == 3, "scope issue admission inventory"
+    print("scope issue admission: 3/3 added, removed and edited fixed follow-up records rejected by the gate")
 
 
 if __name__ == "__main__":
     main()
     check_admission()
+    check_issue_admission()
+    check_plan_admission()

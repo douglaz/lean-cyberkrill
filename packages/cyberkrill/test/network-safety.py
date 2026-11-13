@@ -31,7 +31,8 @@ def encoded_controls():
     spec.loader.exec_module(fixtures)
     rows = []
     for port in ["8332", "0008332", "18444"]:
-        invite = fixtures.wrap(fixtures.consensus(fixtures.invite([(0, "ws://127.0.0.1:" + port + "/")])) )
+        guardian_port = "19444" if port == "18444" else port
+        invite = fixtures.wrap(fixtures.consensus(fixtures.invite([(0, "ws://127.0.0.1:" + guardian_port + "/")])) )
         assert invite.startswith("fed11"), "actual fed1 HRP separator"
         lnurl = fixtures.wrap(("http://127.0.0.1:" + port + "/pay").encode(), hrp="lnurl", variant=1)
         rows.extend([(f"valid-fed1/{port}", ["fm-fetch-config", invite], port == "18444"),
@@ -125,20 +126,27 @@ def spawn_checks(only=None):
         generator = importlib.import_module("generate-rpc-recordings")
         for name, args in rows:
             if only is not None and name != only: continue
-            refused = False
-            try:
-                network.checked_run(executable, args, stub_url="http://127.0.0.1:18444", timeout=5, check=True)
-            except ValueError as error:
-                assert str(error).startswith("spawn refused:"), "named spawn refusal"
-                refused = True
-            assert refused and not sentinel.exists(), "spawn sentinel did not start: " + name
-            for reference in references:
+            variants = [args]
+            if name.startswith("valid-fed1/"):
+                # Exercise the command-independent encoded-port check as well
+                # as the fetch-specific guardian check. Neither can mask loss
+                # of the other when decoding the HRP's embedded separator.
+                variants.append(["fm-decode-invite", *args[1:]])
+            for actual in variants:
                 refused = False
                 try:
-                    generator.run([str(reference), *args], reference=True, stub_url="http://127.0.0.1:18444", timeout=5)
-                except ValueError:
+                    network.checked_run(executable, actual, stub_url="http://127.0.0.1:18444", timeout=5, check=True)
+                except ValueError as error:
+                    assert str(error).startswith("spawn refused:"), "named spawn refusal"
                     refused = True
-                assert refused and not sentinel.exists(), "capture sentinel did not start: " + name + "/" + reference.name
+                assert refused and not sentinel.exists(), "spawn sentinel did not start: " + name
+                for reference in references:
+                    refused = False
+                    try:
+                        generator.run([str(reference), *actual], reference=True, stub_url="http://127.0.0.1:18444", timeout=5)
+                    except ValueError:
+                        refused = True
+                    assert refused and not sentinel.exists(), "capture sentinel did not start: " + name + "/" + reference.name
         accepted = [[command, "--rpc-url" + separator + "http://127.0.0.1:18444/wallet/synthetic"]
                     if separator == "=" else [command, "--rpc-url", "http://127.0.0.1:18444/wallet/synthetic"]
                     for command in sorted(network.CORE_COMMANDS) for separator in ["=", " "]]
@@ -147,6 +155,7 @@ def spawn_checks(only=None):
         for index, args in enumerate(accepted):
             if only is not None and only != f"allowed/{index}": continue
             stub = ("https" if args[0] == "ln-generate-invoice" else "http") + "://127.0.0.1:18444"
+            if args[0] == "fm-fetch-config": stub = "http://127.0.0.1:19444"
             for boundary in ["port", *references]:
                 try:
                     if boundary == "port":

@@ -92,7 +92,7 @@ LEAN_EXPORT lean_obj_res lck_curl_request(uint8_t post, b_lean_obj_arg url,
         b_lean_obj_arg headers, b_lean_obj_arg body, uint8_t auth,
         b_lean_obj_arg user, b_lean_obj_arg password, size_t limit,
         uint32_t connect_ms, uint32_t total_ms, uint8_t has_fallback,
-        b_lean_obj_arg fallback) {
+        b_lean_obj_arg fallback, uint8_t http1) {
     struct buffer received = { .limit = limit };
     struct buffer received_headers = { .limit = 65536 };
     CURLcode code = CURLE_OK;
@@ -110,6 +110,9 @@ LEAN_EXPORT lean_obj_res lck_curl_request(uint8_t post, b_lean_obj_arg url,
     SET(CURLOPT_PROTOCOLS_STR, "http,https");
     SET(CURLOPT_NOSIGNAL, 1L);
     SET(CURLOPT_PROXY, "");
+    /* The detailed byte grammar follows the reference's HTTP/1-only client.
+       Keep legacy protocol negotiation unchanged. */
+    if (http1) SET(CURLOPT_HTTP_VERSION, (long)CURL_HTTP_VERSION_1_1);
     SET(CURLOPT_CONNECTTIMEOUT_MS, (long)connect_ms);
     SET(CURLOPT_TIMEOUT_MS, (long)total_ms);
     SET(CURLOPT_WRITEFUNCTION, receive);
@@ -143,7 +146,9 @@ LEAN_EXPORT lean_obj_res lck_curl_request(uint8_t post, b_lean_obj_arg url,
         SET(CURLOPT_POSTFIELDS, length ? (const char *)lean_sarray_cptr(body) : "");
     }
     code = curl_easy_perform(curl);
-    if (code == CURLE_OK) code = curl_easy_getinfo(curl, CURLINFO_RESPONSE_CODE, &status);
+    /* Keep the transfer error while retaining bounded final-status metadata. */
+    CURLcode info = curl_easy_getinfo(curl, CURLINFO_RESPONSE_CODE, &status);
+    if (code == CURLE_OK) code = info;
 done:
     if (curl) curl_easy_cleanup(curl);
     curl_slist_free_all(list);

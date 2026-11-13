@@ -19,25 +19,30 @@ roots = {'Sha256', 'Secp256k1', 'Bitcoin', 'Lightning', 'FedimintInvite', 'HttpC
 tracked = subprocess.check_output(['git', 'ls-files', '-z', '--', 'packages']).decode().split(chr(0))
 paths = [pathlib.Path(p) for p in tracked if p and pathlib.Path(p).suffix == '.lean']
 paths = [p for p in paths if len(p.parts) >= 3 and (p.parts[2] in roots or p.parts[2].removesuffix('.lean') in roots)]
-assert len(paths) == 86, 'library/proof source inventory'
+assert len(paths) == 87, 'library/proof source inventory'
 assert 'packages/cyberkrill/Cyberkrill/GenerateInvoice.lean' in {str(p) for p in paths}, 'LNURL flow source inventory'
+assert 'packages/cyberkrill/Cyberkrill/FetchConfig.lean' in {str(p) for p in paths}, 'config fetch source inventory'
 assert {'packages/cyberkrill/Cyberkrill/CoreRpc.lean', 'packages/cyberkrill/Cyberkrill/RpcFlags.lean'} <= {str(p) for p in paths}, 'Core RPC/flags source inventory'
 assert {p.parts[2].removesuffix('.lean') for p in paths} == roots, 'library root inventory'
 bad = [str(p) for p in paths if re.search(r'\\b(?:native_decide|bv_decide)\\b', p.read_text())]
 assert not bad, 'native decision in library: ' + ', '.join(bad)
-print(f'library/proof native-decision scan: {len(paths)}/86 tracked files; zero offenders')
+print(f'library/proof native-decision scan: {len(paths)}/87 tracked files; zero offenders')
 """
 
 
 def main():
     mode, *selected = sys.argv[1:]
     assert not selected or mode in ["campaigns", "refresh"], "only campaign and refresh batches support named selection"
-    assert mode in ["app", "repo", "evidence", "refresh", "campaigns", "fiat", "lightning", "lnurl", "sandbox"]
+    assert mode in ["app", "repo", "evidence", "refresh", "campaigns", "fiat", "lightning", "lnurl", "http", "sandbox"]
     directory = APP / ".lake/validation"
     directory.mkdir(parents=True, exist_ok=True)
     if mode == "app":
         checks = [("build", APP, ["nix", "develop", "-c", "lake", "build"], 600),
                   ("test", APP, ["nix", "develop", "-c", "lake", "test"], 600)]
+    elif mode == "http":
+        package = ROOT / "packages/http-curl"
+        checks = [("http-build", package, ["nix", "develop", "-c", "lake", "build"], 600),
+                  ("http-test", package, ["nix", "develop", "-c", "lake", "test"], 600)]
     elif mode == "lightning":
         package = ROOT / "packages/lightning"
         checks = [("lightning-build", package, ["nix", "develop", "-c", "lake", "build"], 600),
@@ -59,6 +64,8 @@ def main():
         ]
     elif mode == "evidence":
         checks = [
+            ("config-replay", ROOT, ["python3", "-B", "packages/cyberkrill/test/fetch-config.py"], 300),
+            ("config-mutations", ROOT, ["python3", "-B", "packages/cyberkrill/test/fetch-config-mutations.py", "--verify"], 120),
             ("lnurl-replay", ROOT, ["python3", "-B", "packages/cyberkrill/test/generate-invoice.py"], 300),
             ("lnurl-mutations", ROOT, ["python3", "-B", "packages/cyberkrill/test/generate-invoice-mutations.py", "--verify"], 120),
             ("fiat-onchain", ROOT, ["python3", "-B", "packages/cyberkrill/test/fiat-onchain.py"], 300),
@@ -102,6 +109,9 @@ def main():
         ]
     elif mode == "campaigns":
         checks = [
+            ("http-negative", ROOT / "packages/http-curl", ["python3", "-B", "check-negative-mutations.py"], 3600),
+            ("http-stub", ROOT / "packages/http-curl", ["python3", "-B", "check-stub-mutations.py"], 3600),
+            ("config-campaign", ROOT, ["python3", "-B", "packages/cyberkrill/test/fetch-config-mutations.py"], 3600),
             ("lnurl-campaign", ROOT, ["python3", "-B", "packages/cyberkrill/test/generate-invoice-mutations.py"], 2400),
             ("fiat-campaign", ROOT, ["python3", "-B", "packages/cyberkrill/test/fiat-onchain-mutations.py"], 2400),
             ("price-campaign", ROOT, ["python3", "-B", "packages/cyberkrill/test/price-mutations.py"], 7200),

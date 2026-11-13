@@ -1,14 +1,14 @@
 {
   "source_sha256": {
-    "Cyberkrill/App.lean": "b733b974f3aaf929ab7c8086d1f8ed0438cc0abc9ff49992008d7cdc4d12f0a2",
+    "Cyberkrill/App.lean": "ace8e6b87a4bfe537a51a38f7472671ccc8a197b5deda1b40091533d101f25c6",
     "Cyberkrill/GenerateInvoice.lean": "e84e2df47eb6d2804a0f2af756c91f76837fdbc666ab62e928c35626141aaa5b",
-    "Cyberkrill/TestEntry.lean": "fd05678593e99380b4269e4deb58815bd7e6e4cae93e48a8d14152bfb0d0bae5",
+    "Cyberkrill/TestEntry.lean": "ea6afb3ef1ce3cdb85f4b91ca58be0f80d3358bc1bb7146002980e5b458d0bf6",
     "CyberkrillTests/GenerateInvoice.lean": "5ebf3a0a6ad5e197d2458a005ed0a8a90e87e1dedaf87a48da2d320c665f96e9",
-    "CyberkrillTests.lean": "fa8145e57e7ae2b4b1a0d88c8fcf67af4c40c63d379da398ee9b69f4f2ef2896",
+    "CyberkrillTests.lean": "ece4b9a3f0453f0d5a24796f86db55c6fe315975dfc0bce38d04a99af684f4ee",
     "../lightning/Lightning/Lnurl/Url.lean": "24efaa167d2dae47f95b2252fb27945e06e8865d89051fdd1e386a2d472f5356",
     "test/generate-invoice.py": "a2937629c6a18f77a2fb0d30d8d040412ee9665d41101d402e7aea6b4a5673ad",
     "test/generate-invoice-mutations.py": "9d6137f8f0f9f57fc8988d656af770b19e6e145d3d9fb69800670d4b6e472178",
-    "test/network.py": "3a5b3f894949631e715a89b53f978ca888184ea22dacc6ed1213fcac37e132a8",
+    "test/network.py": "9ebe919f0f39913b2e26ea8e739365afab6e6ad3aa60823777e448eb26afdbcf",
     "../lightning/LightningTests/Lnurl.lean": "3fd4718f307d667a3af4982f4b7128c47f02eea4c4ad7ea04c7b5c7b2bd695f4",
     "test/price-mutations.py": "7d64067f00df09ec76a8f944e78e1d1f2af8b058321e7d5078f6aa2f15e94506",
     "test/http/ln-generate.json": "a504d9075ce81633032192b58f291020eae5bc8159f522901772f1d5f3cb3e57",
@@ -23,7 +23,7 @@
       "CyberkrillTests"
     ],
     "status": 0,
-    "seconds": 0.406
+    "seconds": 0.441
   },
   "initial_green": {
     "command": [
@@ -32,7 +32,7 @@
       "test/generate-invoice.py"
     ],
     "status": 0,
-    "seconds": 16.023
+    "seconds": 15.879
   },
   "checks": [
     {
@@ -57,7 +57,7 @@
           "CyberkrillTests"
         ],
         "status": 0,
-        "seconds": 12.31
+        "seconds": 13.756
       },
       "red": {
         "command": [
@@ -68,7 +68,7 @@
           "below"
         ],
         "status": 1,
-        "seconds": 0.441
+        "seconds": 0.463
       },
       "restore_build": {
         "command": [
@@ -78,7 +78,7 @@
           "CyberkrillTests"
         ],
         "status": 0,
-        "seconds": 12.419
+        "seconds": 15.584
       },
       "green": {
         "command": [
@@ -89,7 +89,7 @@
           "below"
         ],
         "status": 0,
-        "seconds": 0.39
+        "seconds": 0.46
       }
     },
     {
@@ -114,7 +114,7 @@
           "CyberkrillTests"
         ],
         "status": 0,
-        "seconds": 12.508
+        "seconds": 14.689
       },
       "red": {
         "command": [
@@ -125,7 +125,7 @@
           "maximum"
         ],
         "status": 1,
-        "seconds": 0.438
+        "seconds": 0.578
       },
       "restore_build": {
         "command": [
@@ -135,7 +135,7 @@
           "CyberkrillTests"
         ],
         "status": 0,
-        "seconds": 13.024
+        "seconds": 13.496
       },
       "green": {
         "command": [
@@ -146,7 +146,7 @@
           "maximum"
         ],
         "status": 0,
-        "seconds": 0.459
+        "seconds": 0.447
       }
     },
     {
@@ -171,7 +171,7 @@
           "CyberkrillTests"
         ],
         "status": 0,
-        "seconds": 13.757
+        "seconds": 13.783
       },
       "red": {
         "command": [
@@ -182,7 +182,7 @@
           "byte-over"
         ],
         "status": 1,
-        "seconds": 0.463
+        "seconds": 0.456
       },
       "restore_build": {
         "command": [
@@ -192,7 +192,7 @@
           "CyberkrillTests"
         ],
         "status": 0,
-        "seconds": 13.047
+        "seconds": 14.488
       },
       "green": {
         "command": [
@@ -203,7 +203,7 @@
           "byte-over"
         ],
         "status": 0,
-        "seconds": 0.465
+        "seconds": 0.508
       }
     },
     {
@@ -228,7 +228,7 @@
           "CyberkrillTests"
         ],
         "status": 0,
-        "seconds": 18.559
+        "seconds": 19.36
       },
       "red": {
         "command": [
@@ -239,7 +239,7 @@
           "sats"
         ],
         "status": 1,
-        "seconds": 0.453
+        "seconds": 0.512
       },
       "restore_build": {
         "command": [
@@ -249,7 +249,7 @@
           "CyberkrillTests"
         ],
         "status": 0,
-        "seconds": 17.518
+        "seconds": 19.302
       },
       "green": {
         "command": [
@@ -260,7 +260,7 @@
           "sats"
         ],
         "status": 0,
-        "seconds": 0.448
+        "seconds": 0.45
       }
     },
     {
@@ -285,7 +285,7 @@
           "CyberkrillTests"
         ],
         "status": 0,
-        "seconds": 17.224
+        "seconds": 18.959
       },
       "red": {
         "command": [
@@ -296,7 +296,7 @@
           "unicode"
         ],
         "status": 1,
-        "seconds": 0.411
+        "seconds": 0.447
       },
       "restore_build": {
         "command": [
@@ -306,7 +306,7 @@
           "CyberkrillTests"
         ],
         "status": 0,
-        "seconds": 17.327
+        "seconds": 22.297
       },
       "green": {
         "command": [
@@ -317,7 +317,7 @@
           "unicode"
         ],
         "status": 0,
-        "seconds": 0.493
+        "seconds": 0.445
       }
     },
     {
@@ -342,7 +342,7 @@
           "CyberkrillTests"
         ],
         "status": 0,
-        "seconds": 22.83
+        "seconds": 19.068
       },
       "red": {
         "command": [
@@ -353,7 +353,7 @@
           "trailing-query"
         ],
         "status": 1,
-        "seconds": 0.452
+        "seconds": 0.503
       },
       "restore_build": {
         "command": [
@@ -363,7 +363,7 @@
           "CyberkrillTests"
         ],
         "status": 0,
-        "seconds": 20.633
+        "seconds": 19.849
       },
       "green": {
         "command": [
@@ -374,7 +374,7 @@
           "trailing-query"
         ],
         "status": 0,
-        "seconds": 0.47
+        "seconds": 0.493
       }
     },
     {
@@ -390,7 +390,7 @@
         "fiat-at"
       ],
       "assertion": "LNURL success fiat-at",
-      "failure": "AssertionError: LNURL success fiat-at: {'status': Decimal('1'), 'stderr': '[price-feed] median BTC/USD = 100000000.00 from 9 feeds: bitstamp, blockchain.info, cex.io, coinbase, coingecko, fedi, gemini, kraken, yadio\\nmalformedResponse \"pr\": Invalid Lightning input\\n', 'stdout': ''}; observed paths=['/convert/1/BTC/USD', '/latest', '/api/ticker/BTC/USD', '/v2/exchange-rates?currency=BTC', '/api/v3/simple/price?ids=bitcoin&vs_currencies=usd', '/api/v2/ticker/btcusd', '/0/public/Ticker?pair=XBTUSD', '/ticker', '/v1/pubticker/btcusd', '/.well-known/lnurlp/user', '/pay?dup=first&dup=last&flag&amount=2000']",
+      "failure": "AssertionError: LNURL success fiat-at: {'status': Decimal('1'), 'stderr': '[price-feed] median BTC/USD = 100000000.00 from 9 feeds: bitstamp, blockchain.info, cex.io, coinbase, coingecko, fedi, gemini, kraken, yadio\\nmalformedResponse \"pr\": Invalid Lightning input\\n', 'stdout': ''}; observed paths=['/v1/pubticker/btcusd', '/0/public/Ticker?pair=XBTUSD', '/api/v2/ticker/btcusd', '/v2/exchange-rates?currency=BTC', '/api/ticker/BTC/USD', '/ticker', '/latest', '/convert/1/BTC/USD', '/api/v3/simple/price?ids=bitcoin&vs_currencies=usd', '/.well-known/lnurlp/user', '/pay?dup=first&dup=last&flag&amount=2000']",
       "build": {
         "command": [
           "lake",
@@ -399,7 +399,7 @@
           "CyberkrillTests"
         ],
         "status": 0,
-        "seconds": 17.26
+        "seconds": 13.063
       },
       "red": {
         "command": [
@@ -410,7 +410,7 @@
           "fiat-at"
         ],
         "status": 1,
-        "seconds": 0.617
+        "seconds": 0.698
       },
       "restore_build": {
         "command": [
@@ -420,7 +420,7 @@
           "CyberkrillTests"
         ],
         "status": 0,
-        "seconds": 15.931
+        "seconds": 13.155
       },
       "green": {
         "command": [
@@ -431,7 +431,7 @@
           "fiat-at"
         ],
         "status": 0,
-        "seconds": 0.613
+        "seconds": 1.447
       }
     },
     {
@@ -456,7 +456,7 @@
           "CyberkrillTests"
         ],
         "status": 0,
-        "seconds": 15.861
+        "seconds": 12.852
       },
       "red": {
         "command": [
@@ -467,7 +467,7 @@
           "sats"
         ],
         "status": 1,
-        "seconds": 0.448
+        "seconds": 0.454
       },
       "restore_build": {
         "command": [
@@ -477,7 +477,7 @@
           "CyberkrillTests"
         ],
         "status": 0,
-        "seconds": 14.014
+        "seconds": 12.86
       },
       "green": {
         "command": [
@@ -488,7 +488,7 @@
           "sats"
         ],
         "status": 0,
-        "seconds": 0.617
+        "seconds": 0.447
       }
     },
     {
@@ -513,7 +513,7 @@
           "CyberkrillTests"
         ],
         "status": 0,
-        "seconds": 15.917
+        "seconds": 13.353
       },
       "red": {
         "command": [
@@ -524,7 +524,7 @@
           "address-space"
         ],
         "status": 1,
-        "seconds": 0.395
+        "seconds": 0.473
       },
       "restore_build": {
         "command": [
@@ -534,7 +534,7 @@
           "CyberkrillTests"
         ],
         "status": 0,
-        "seconds": 13.131
+        "seconds": 16.716
       },
       "green": {
         "command": [
@@ -545,7 +545,7 @@
           "address-space"
         ],
         "status": 0,
-        "seconds": 0.445
+        "seconds": 0.525
       }
     },
     {
@@ -570,7 +570,7 @@
           "CyberkrillTests"
         ],
         "status": 0,
-        "seconds": 13.033
+        "seconds": 14.938
       },
       "red": {
         "command": [
@@ -581,7 +581,7 @@
           "redirect-well-302"
         ],
         "status": 1,
-        "seconds": 0.502
+        "seconds": 1.212
       },
       "restore_build": {
         "command": [
@@ -591,7 +591,7 @@
           "CyberkrillTests"
         ],
         "status": 0,
-        "seconds": 12.824
+        "seconds": 16.865
       },
       "green": {
         "command": [
@@ -602,7 +602,7 @@
           "redirect-well-302"
         ],
         "status": 0,
-        "seconds": 0.441
+        "seconds": 0.6
       }
     },
     {
@@ -627,7 +627,7 @@
           "CyberkrillTests"
         ],
         "status": 0,
-        "seconds": 12.934
+        "seconds": 14.321
       },
       "red": {
         "command": [
@@ -638,7 +638,7 @@
           "redirect-callback"
         ],
         "status": 1,
-        "seconds": 0.44
+        "seconds": 0.455
       },
       "restore_build": {
         "command": [
@@ -648,7 +648,7 @@
           "CyberkrillTests"
         ],
         "status": 0,
-        "seconds": 12.834
+        "seconds": 15.483
       },
       "green": {
         "command": [
@@ -659,7 +659,7 @@
           "redirect-callback"
         ],
         "status": 0,
-        "seconds": 0.445
+        "seconds": 0.581
       }
     },
     {
@@ -684,7 +684,7 @@
           "CyberkrillTests"
         ],
         "status": 0,
-        "seconds": 13.125
+        "seconds": 15.346
       },
       "red": {
         "command": [
@@ -695,7 +695,7 @@
           "redirect-ten"
         ],
         "status": 1,
-        "seconds": 0.439
+        "seconds": 0.871
       },
       "restore_build": {
         "command": [
@@ -705,7 +705,7 @@
           "CyberkrillTests"
         ],
         "status": 0,
-        "seconds": 12.934
+        "seconds": 16.214
       },
       "green": {
         "command": [
@@ -716,7 +716,7 @@
           "redirect-ten"
         ],
         "status": 0,
-        "seconds": 0.448
+        "seconds": 0.539
       }
     },
     {
@@ -741,7 +741,7 @@
           "CyberkrillTests"
         ],
         "status": 0,
-        "seconds": 18.227
+        "seconds": 21.732
       },
       "red": {
         "command": [
@@ -752,7 +752,7 @@
           "redirect-limit"
         ],
         "status": 1,
-        "seconds": 0.442
+        "seconds": 0.507
       },
       "restore_build": {
         "command": [
@@ -762,7 +762,7 @@
           "CyberkrillTests"
         ],
         "status": 0,
-        "seconds": 17.645
+        "seconds": 20.838
       },
       "green": {
         "command": [
@@ -773,7 +773,7 @@
           "redirect-limit"
         ],
         "status": 0,
-        "seconds": 0.442
+        "seconds": 1.012
       }
     },
     {
@@ -795,7 +795,7 @@
           "CyberkrillTests"
         ],
         "status": 0,
-        "seconds": 10.523
+        "seconds": 12.435
       },
       "red": {
         "command": [
@@ -803,7 +803,7 @@
           "--generate-invoice-ordering"
         ],
         "status": 1,
-        "seconds": 0.038
+        "seconds": 0.042
       },
       "restore_build": {
         "command": [
@@ -813,7 +813,7 @@
           "CyberkrillTests"
         ],
         "status": 0,
-        "seconds": 10.642
+        "seconds": 12.468
       },
       "green": {
         "command": [
@@ -821,7 +821,7 @@
           "--generate-invoice-ordering"
         ],
         "status": 0,
-        "seconds": 0.038
+        "seconds": 0.05
       }
     },
     {
@@ -846,7 +846,7 @@
           "CyberkrillTests"
         ],
         "status": 0,
-        "seconds": 17.824
+        "seconds": 20.88
       },
       "red": {
         "command": [
@@ -857,7 +857,7 @@
           "redirect-invalid-path"
         ],
         "status": 1,
-        "seconds": 0.39
+        "seconds": 0.453
       },
       "restore_build": {
         "command": [
@@ -867,7 +867,7 @@
           "CyberkrillTests"
         ],
         "status": 0,
-        "seconds": 19.979
+        "seconds": 21.874
       },
       "green": {
         "command": [
@@ -878,7 +878,7 @@
           "redirect-invalid-path"
         ],
         "status": 0,
-        "seconds": 0.453
+        "seconds": 0.394
       }
     },
     {
@@ -903,7 +903,7 @@
           "CyberkrillTests"
         ],
         "status": 0,
-        "seconds": 19.965
+        "seconds": 20.759
       },
       "red": {
         "command": [
@@ -914,7 +914,7 @@
           "redirect-raw-query"
         ],
         "status": 1,
-        "seconds": 0.46
+        "seconds": 0.506
       },
       "restore_build": {
         "command": [
@@ -924,7 +924,7 @@
           "CyberkrillTests"
         ],
         "status": 0,
-        "seconds": 20.512
+        "seconds": 20.47
       },
       "green": {
         "command": [
@@ -935,7 +935,7 @@
           "redirect-raw-query"
         ],
         "status": 0,
-        "seconds": 0.455
+        "seconds": 0.449
       }
     },
     {
@@ -960,7 +960,7 @@
           "CyberkrillTests"
         ],
         "status": 0,
-        "seconds": 12.002
+        "seconds": 11.392
       },
       "red": {
         "command": [
@@ -971,7 +971,7 @@
           "guard-invalid-initial"
         ],
         "status": 1,
-        "seconds": 0.455
+        "seconds": 0.458
       },
       "restore_build": {
         "command": [
@@ -981,7 +981,7 @@
           "CyberkrillTests"
         ],
         "status": 0,
-        "seconds": 11.93
+        "seconds": 13.567
       },
       "green": {
         "command": [
@@ -992,7 +992,7 @@
           "guard-invalid-initial"
         ],
         "status": 0,
-        "seconds": 0.467
+        "seconds": 0.469
       }
     },
     {
@@ -1017,7 +1017,7 @@
           "CyberkrillTests"
         ],
         "status": 0,
-        "seconds": 14.631
+        "seconds": 15.131
       },
       "red": {
         "command": [
@@ -1028,7 +1028,7 @@
           "well-numeric-limit"
         ],
         "status": 1,
-        "seconds": 0.511
+        "seconds": 0.891
       },
       "restore_build": {
         "command": [
@@ -1038,7 +1038,7 @@
           "CyberkrillTests"
         ],
         "status": 0,
-        "seconds": 13.245
+        "seconds": 16.287
       },
       "green": {
         "command": [
@@ -1049,7 +1049,7 @@
           "well-numeric-limit"
         ],
         "status": 0,
-        "seconds": 0.443
+        "seconds": 0.455
       }
     },
     {
@@ -1073,7 +1073,7 @@
           "CyberkrillTests"
         ],
         "status": 0,
-        "seconds": 18.233
+        "seconds": 20.359
       },
       "red": {
         "command": [
@@ -1083,7 +1083,7 @@
           "--path-stress"
         ],
         "status": 1,
-        "seconds": 18.871
+        "seconds": 20.22
       },
       "restore_build": {
         "command": [
@@ -1093,7 +1093,7 @@
           "CyberkrillTests"
         ],
         "status": 0,
-        "seconds": 18.952
+        "seconds": 21.878
       },
       "green": {
         "command": [
@@ -1103,7 +1103,7 @@
           "--path-stress"
         ],
         "status": 0,
-        "seconds": 10.324
+        "seconds": 10.992
       }
     },
     {
@@ -1127,7 +1127,7 @@
           "CyberkrillTests"
         ],
         "status": 0,
-        "seconds": 18.457
+        "seconds": 19.692
       },
       "red": {
         "command": [
@@ -1137,7 +1137,7 @@
           "--query-stress"
         ],
         "status": 1,
-        "seconds": 18.747
+        "seconds": 20.65
       },
       "restore_build": {
         "command": [
@@ -1147,7 +1147,7 @@
           "CyberkrillTests"
         ],
         "status": 0,
-        "seconds": 20.479
+        "seconds": 22.094
       },
       "green": {
         "command": [
@@ -1157,7 +1157,7 @@
           "--query-stress"
         ],
         "status": 0,
-        "seconds": 16.147
+        "seconds": 11.391
       }
     },
     {
@@ -1181,7 +1181,7 @@
           "CyberkrillTests"
         ],
         "status": 0,
-        "seconds": 29.278
+        "seconds": 23.359
       },
       "red": {
         "command": [
@@ -1191,7 +1191,7 @@
           "--url-number-stress"
         ],
         "status": 1,
-        "seconds": 21.586
+        "seconds": 20.465
       },
       "restore_build": {
         "command": [
@@ -1201,7 +1201,7 @@
           "CyberkrillTests"
         ],
         "status": 0,
-        "seconds": 25.785
+        "seconds": 23.936
       },
       "green": {
         "command": [
@@ -1211,7 +1211,7 @@
           "--url-number-stress"
         ],
         "status": 0,
-        "seconds": 11.514
+        "seconds": 11.277
       }
     },
     {
@@ -1236,7 +1236,7 @@
           "CyberkrillTests"
         ],
         "status": 0,
-        "seconds": 16.548
+        "seconds": 16.216
       },
       "red": {
         "command": [
@@ -1247,7 +1247,7 @@
           "well-array-depth-limit"
         ],
         "status": 1,
-        "seconds": 0.511
+        "seconds": 0.461
       },
       "restore_build": {
         "command": [
@@ -1257,7 +1257,7 @@
           "CyberkrillTests"
         ],
         "status": 0,
-        "seconds": 16.284
+        "seconds": 18.22
       },
       "green": {
         "command": [
@@ -1268,7 +1268,7 @@
           "well-array-depth-limit"
         ],
         "status": 0,
-        "seconds": 0.513
+        "seconds": 0.548
       }
     }
   ],
@@ -1279,6 +1279,6 @@
       "test/generate-invoice.py"
     ],
     "status": 0,
-    "seconds": 18.596
+    "seconds": 20.444
   }
 }

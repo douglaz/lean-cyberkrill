@@ -15,6 +15,7 @@ import CyberkrillTests.MoveUtxos
 import CyberkrillTests.PriceFeed
 import CyberkrillTests.FiatOnchain
 import CyberkrillTests.GenerateInvoice
+import CyberkrillTests.FetchConfig
 
 open CyberkrillTests
 
@@ -33,6 +34,9 @@ private def suite (name : String) (action : IO Unit) : IO Unit := do
 def main (args : List String) : IO UInt32 := do
   try
     match args with
+    | ["--fetch-config-run"] => fetchConfigRun
+    | ["--fetch-http-run"] => fetchHttpRun
+    | ["--fetch-config-ordering"] => fetchConfigOrdering
     | ["--generate-invoice-run"] => generateInvoiceRun
     | ["--generate-invoice-ordering"] => generateInvoiceOrdering
     | ["--fiat-onchain-run"] => fiatOnchainRun
@@ -70,6 +74,12 @@ def main (args : List String) : IO UInt32 := do
       outputEquals i
     | ["--check", name] => helpers name; capabilities name
     | [] =>
+      suite "Fedimint config replay" do
+        fetchConfigOrdering
+        let result ← IO.Process.output { cmd := "python3", args := #["-B", "test/fetch-config.py"] }
+        (← IO.getStdout).putStr result.stdout
+        (← IO.getStderr).putStr result.stderr
+        check "Fedimint config replay" (result.exitCode == 0)
       suite "LNURL invoice replay" do
         generateInvoiceOrdering
         let result ← IO.Process.output { cmd := "python3", args := #["-B", "test/generate-invoice.py"] }
